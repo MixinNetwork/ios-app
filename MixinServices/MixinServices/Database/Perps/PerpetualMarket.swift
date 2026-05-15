@@ -33,6 +33,16 @@ public struct PerpetualMarket {
     public let updatedAt: String
     public let category: UnknownableEnum<Category>
     public let tags: [String]
+    public let priceScale: Int
+    
+    public var canonicalPriceFormatStyle: Decimal.FormatStyle {
+        Decimal.FormatStyle.number
+            .locale(.enUSPOSIX)
+            .grouping(.never)
+            .sign(strategy: .never)
+            .rounded(rule: .towardZero)
+            .precision(.fractionLength(0...priceScale))
+    }
     
 }
 
@@ -61,6 +71,7 @@ extension PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchableRec
         case updatedAt = "updated_at"
         case category = "category"
         case tags = "tags"
+        case priceScale = "price_scale"
     }
     
 }
@@ -68,5 +79,18 @@ extension PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchableRec
 extension PerpetualMarket: TableRecord, PersistableRecord {
     
     public static let databaseTableName = "markets"
+    
+}
+
+extension PerpetualMarket {
+    
+    public static func userDisplayPriceFormatStyle(
+        scale: Int
+    ) -> Decimal.FormatStyle.Currency {
+        .currency(code: "USD")
+        .presentation(.narrow)
+        .precision(.fractionLength(0...scale))
+        .rounded(rule: .towardZero)
+    }
     
 }

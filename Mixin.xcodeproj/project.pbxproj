@@ -653,6 +653,7 @@
 		9404AD502F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD4F2F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift */; };
 		9404AD5E2F5DAA45007FC231 /* PerpsManualLongPositionProfitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionProfitView.swift */; };
 		9404AD872F5DB4EF007FC231 /* PerpsManualPositionSizePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD862F5DB4EF007FC231 /* PerpsManualPositionSizePageView.swift */; };
+		9404D7702FB1A72B00F5563A /* SignPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404D76F2FB1A72600F5563A /* SignPosition.swift */; };
 		94051FA42E812D64005B3A16 /* DepositFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94051FA32E812D61005B3A16 /* DepositFilter.swift */; };
 		94051FB22E81306F005B3A16 /* RefreshTokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */; };
 		94062C592AE8C61700ADAE87 /* SnapshotTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94062C582AE8C61700ADAE87 /* SnapshotTableHeaderView.xib */; };
@@ -870,7 +871,8 @@
 		94386ADB2F7E599200FF1FB9 /* PopupTipRecoveryKitOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94386ADA2F7E598800FF1FB9 /* PopupTipRecoveryKitOptionsView.swift */; };
 		94386B3A2F7E9FC500FF1FB9 /* AccountRecoveryOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94386B392F7E9FC200FF1FB9 /* AccountRecoveryOption.swift */; };
 		9438EDB52FAB8C9C0030C00E /* MarketStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438EDB42FAB8C980030C00E /* MarketStatistics.swift */; };
-		9438EFDB2FAC57BB0030C00E /* PerpsPrice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438EFD72FAC57AF0030C00E /* PerpsPrice.swift */; };
+		9438F0D42FACD95C0030C00E /* EditPerpClosingConditionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438F0D22FACD95C0030C00E /* EditPerpClosingConditionViewController.swift */; };
+		9438F0D52FACD95C0030C00E /* EditPerpClosingConditionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9438F0D32FACD95C0030C00E /* EditPerpClosingConditionView.xib */; };
 		94396D4B2CE3597E009DA4E9 /* InputMnemonicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396D4A2CE3597E009DA4E9 /* InputMnemonicsViewController.swift */; };
 		94396F2629EB11E300A57833 /* DeviceTransferProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2529EB11E300A57833 /* DeviceTransferProtocol.swift */; };
 		94396F2829EB475500A57833 /* NWParameters+DeviceTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */; };
@@ -1167,6 +1169,8 @@
 		947084C52D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947084C42D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift */; };
 		9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */; };
 		9471007D2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9471007C2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift */; };
+		94728C7E2FB6E6C3004F087F /* PerpsManualPositionLiquidationPricePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94728C7D2FB6E6B9004F087F /* PerpsManualPositionLiquidationPricePageView.swift */; };
+		94728C8C2FB6E839004F087F /* PerpsManualOrderSideControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94728C882FB6E828004F087F /* PerpsManualOrderSideControl.swift */; };
 		94735E182E28E8D30001C179 /* ExportPrivateKeyNetworkSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94735E172E28E8D30001C179 /* ExportPrivateKeyNetworkSelectorViewController.swift */; };
 		94735E272E28EBF80001C179 /* ImportedWalletNetworkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94735E262E28EBF80001C179 /* ImportedWalletNetworkCell.xib */; };
 		94735E282E28EBF80001C179 /* ImportedWalletNetworkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94735E252E28EBF80001C179 /* ImportedWalletNetworkCell.swift */; };
@@ -1208,6 +1212,8 @@
 		948374822A5D49110011A2CA /* PopupSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948374802A5D49110011A2CA /* PopupSelectorViewController.swift */; };
 		948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948374812A5D49110011A2CA /* PopupSelectorView.xib */; };
 		94838A442C02ADFB005B6A27 /* Solana.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94838A432C02ADFB005B6A27 /* Solana.swift */; };
+		9484BA392FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9484BA372FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.swift */; };
+		9484BA3A2FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9484BA382FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib */; };
 		948513592E4313C0008D6FDB /* AddWalletIntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948513582E4313C0008D6FDB /* AddWalletIntroductionViewController.swift */; };
 		948513792E432297008D6FDB /* Web3Wallet+Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948513782E432285008D6FDB /* Web3Wallet+Account.swift */; };
 		948664DD2CF85B490032B9BE /* TokenActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948664DC2CF85B440032B9BE /* TokenActionView.swift */; };
@@ -1241,6 +1247,9 @@
 		948ACAA52AF3950C0057D76B /* SnapshotMessageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */; };
 		948AF9AB2EB9CB140035C9BF /* TradeTokenSelectorStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AF9AA2EB9CB0F0035C9BF /* TradeTokenSelectorStyle.swift */; };
 		948AF9D42EB9EDB10035C9BF /* TradePricingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AF9D32EB9EDB00035C9BF /* TradePricingModel.swift */; };
+		948B81632FB6142D00D1D167 /* PerpsManualPositionTPSLPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948B81622FB6142800D1D167 /* PerpsManualPositionTPSLPageView.swift */; };
+		948C1CC32FAF3F22005C8653 /* FixedInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948C1CC12FAF3F22005C8653 /* FixedInputCell.swift */; };
+		948C1CC42FAF3F22005C8653 /* FixedInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948C1CC22FAF3F22005C8653 /* FixedInputCell.xib */; };
 		948CFAED2F2CB4C000BC34C3 /* QRCodeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CFAE92F2CB4B200BC34C3 /* QRCodeDetector.swift */; };
 		948DFB6B2F18BE0800200EFA /* WebViewMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948DFB6A2F18BE0700200EFA /* WebViewMessageHandler.swift */; };
 		948DFCEE2F192E4600200EFA /* Web3OutputsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948DFCED2F192E4000200EFA /* Web3OutputsViewController.swift */; };
@@ -1306,6 +1315,7 @@
 		94A72C9A2C2EBE1E001E8782 /* InscriptionTraitsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A72C972C2EBE1E001E8782 /* InscriptionTraitsCell.swift */; };
 		94A72CA52C2EBFF9001E8782 /* InscriptionTraitCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A72CA42C2EBFF9001E8782 /* InscriptionTraitCell.xib */; };
 		94A72CA62C2EBFF9001E8782 /* InscriptionTraitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A72CA32C2EBFF9001E8782 /* InscriptionTraitCell.swift */; };
+		94A8095C2FB1C1B200755E1A /* PerpsAutoClosingCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A8095B2FB1C1B100755E1A /* PerpsAutoClosingCondition.swift */; };
 		94AA26522EE188980047E04B /* WalletSummaryIntroductionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94AA26502EE188980047E04B /* WalletSummaryIntroductionCell.swift */; };
 		94AA26532EE188980047E04B /* WalletSummaryIntroductionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94AA26512EE188980047E04B /* WalletSummaryIntroductionCell.xib */; };
 		94AA266D2EE18C2F0047E04B /* WalletTipCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94AA266C2EE18C2F0047E04B /* WalletTipCell.xib */; };
@@ -2532,6 +2542,7 @@
 		9404AD4F2F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualLeveragePageView.swift; sourceTree = "<group>"; };
 		9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionProfitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualLongPositionProfitView.swift; sourceTree = "<group>"; };
 		9404AD862F5DB4EF007FC231 /* PerpsManualPositionSizePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualPositionSizePageView.swift; sourceTree = "<group>"; };
+		9404D76F2FB1A72600F5563A /* SignPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignPosition.swift; sourceTree = "<group>"; };
 		94051FA32E812D61005B3A16 /* DepositFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFilter.swift; sourceTree = "<group>"; };
 		94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenJob.swift; sourceTree = "<group>"; };
 		94062C582AE8C61700ADAE87 /* SnapshotTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotTableHeaderView.xib; sourceTree = "<group>"; };
@@ -2748,7 +2759,8 @@
 		94386ADA2F7E598800FF1FB9 /* PopupTipRecoveryKitOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTipRecoveryKitOptionsView.swift; sourceTree = "<group>"; };
 		94386B392F7E9FC200FF1FB9 /* AccountRecoveryOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRecoveryOption.swift; sourceTree = "<group>"; };
 		9438EDB42FAB8C980030C00E /* MarketStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketStatistics.swift; sourceTree = "<group>"; };
-		9438EFD72FAC57AF0030C00E /* PerpsPrice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsPrice.swift; sourceTree = "<group>"; };
+		9438F0D22FACD95C0030C00E /* EditPerpClosingConditionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPerpClosingConditionViewController.swift; sourceTree = "<group>"; };
+		9438F0D32FACD95C0030C00E /* EditPerpClosingConditionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditPerpClosingConditionView.xib; sourceTree = "<group>"; };
 		94396D4A2CE3597E009DA4E9 /* InputMnemonicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputMnemonicsViewController.swift; sourceTree = "<group>"; };
 		94396F2529EB11E300A57833 /* DeviceTransferProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferProtocol.swift; sourceTree = "<group>"; };
 		94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NWParameters+DeviceTransfer.swift"; sourceTree = "<group>"; };
@@ -3063,6 +3075,8 @@
 		947084C42D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonAtomicInvoicePaymentOperation.swift; sourceTree = "<group>"; };
 		9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+General.swift"; sourceTree = "<group>"; };
 		9471007C2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyReferralCodeViewController.swift; sourceTree = "<group>"; };
+		94728C7D2FB6E6B9004F087F /* PerpsManualPositionLiquidationPricePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualPositionLiquidationPricePageView.swift; sourceTree = "<group>"; };
+		94728C882FB6E828004F087F /* PerpsManualOrderSideControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualOrderSideControl.swift; sourceTree = "<group>"; };
 		94735E172E28E8D30001C179 /* ExportPrivateKeyNetworkSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPrivateKeyNetworkSelectorViewController.swift; sourceTree = "<group>"; };
 		94735E252E28EBF80001C179 /* ImportedWalletNetworkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedWalletNetworkCell.swift; sourceTree = "<group>"; };
 		94735E262E28EBF80001C179 /* ImportedWalletNetworkCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImportedWalletNetworkCell.xib; sourceTree = "<group>"; };
@@ -3103,6 +3117,8 @@
 		948374812A5D49110011A2CA /* PopupSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSelectorView.xib; sourceTree = "<group>"; };
 		94838A432C02ADFB005B6A27 /* Solana.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solana.swift; sourceTree = "<group>"; };
 		94841CC72797D89500B3593B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9484BA372FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsAutoClosingIntroCell.swift; sourceTree = "<group>"; };
+		9484BA382FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpsAutoClosingIntroCell.xib; sourceTree = "<group>"; };
 		948513582E4313C0008D6FDB /* AddWalletIntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletIntroductionViewController.swift; sourceTree = "<group>"; };
 		948513782E432285008D6FDB /* Web3Wallet+Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Wallet+Account.swift"; sourceTree = "<group>"; };
 		948664DC2CF85B440032B9BE /* TokenActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenActionView.swift; sourceTree = "<group>"; };
@@ -3133,6 +3149,9 @@
 		948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMessageContentView.swift; sourceTree = "<group>"; };
 		948AF9AA2EB9CB0F0035C9BF /* TradeTokenSelectorStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeTokenSelectorStyle.swift; sourceTree = "<group>"; };
 		948AF9D32EB9EDB00035C9BF /* TradePricingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradePricingModel.swift; sourceTree = "<group>"; };
+		948B81622FB6142800D1D167 /* PerpsManualPositionTPSLPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualPositionTPSLPageView.swift; sourceTree = "<group>"; };
+		948C1CC12FAF3F22005C8653 /* FixedInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedInputCell.swift; sourceTree = "<group>"; };
+		948C1CC22FAF3F22005C8653 /* FixedInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FixedInputCell.xib; sourceTree = "<group>"; };
 		948CFAE92F2CB4B200BC34C3 /* QRCodeDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeDetector.swift; sourceTree = "<group>"; };
 		948DFB6A2F18BE0700200EFA /* WebViewMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewMessageHandler.swift; sourceTree = "<group>"; };
 		948DFCED2F192E4000200EFA /* Web3OutputsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3OutputsViewController.swift; sourceTree = "<group>"; };
@@ -3197,6 +3216,7 @@
 		94A72C982C2EBE1E001E8782 /* InscriptionTraitsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionTraitsCell.xib; sourceTree = "<group>"; };
 		94A72CA32C2EBFF9001E8782 /* InscriptionTraitCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionTraitCell.swift; sourceTree = "<group>"; };
 		94A72CA42C2EBFF9001E8782 /* InscriptionTraitCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionTraitCell.xib; sourceTree = "<group>"; };
+		94A8095B2FB1C1B100755E1A /* PerpsAutoClosingCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsAutoClosingCondition.swift; sourceTree = "<group>"; };
 		94AA26502EE188980047E04B /* WalletSummaryIntroductionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSummaryIntroductionCell.swift; sourceTree = "<group>"; };
 		94AA26512EE188980047E04B /* WalletSummaryIntroductionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletSummaryIntroductionCell.xib; sourceTree = "<group>"; };
 		94AA266C2EE18C2F0047E04B /* WalletTipCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletTipCell.xib; sourceTree = "<group>"; };
@@ -4636,10 +4656,16 @@
 				940FC5202F5031D7000C4260 /* PerpetualMarketPriceCell.swift */,
 				940CA18F2F59593500914435 /* PerpetualMarketInfoCell.xib */,
 				940CA18E2F59593500914435 /* PerpetualMarketInfoCell.swift */,
+				9484BA382FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib */,
+				9484BA372FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.swift */,
 				94D9DE432F5AB3C600B3B990 /* PerpetualMarketOpenPositionCell.xib */,
 				94D9DE422F5AB3C600B3B990 /* PerpetualMarketOpenPositionCell.swift */,
 				94FB2ED32F51516E00F85AB4 /* OpenPerpetualPositionView.xib */,
 				94FB2ED22F51516E00F85AB4 /* OpenPerpetualPositionViewController.swift */,
+				948C1CC22FAF3F22005C8653 /* FixedInputCell.xib */,
+				948C1CC12FAF3F22005C8653 /* FixedInputCell.swift */,
+				9438F0D32FACD95C0030C00E /* EditPerpClosingConditionView.xib */,
+				9438F0D22FACD95C0030C00E /* EditPerpClosingConditionViewController.swift */,
 				94FB2EE92F51672200F85AB4 /* LeverageMultiplierInputView.xib */,
 				94FB2EE82F51672200F85AB4 /* LeverageMultiplierInputViewController.swift */,
 				941C75C92F5E9FC8005B70A9 /* AllPerpetualPositionsViewController.swift */,
@@ -4878,6 +4904,8 @@
 				94BC7AFF2F5D876D009D8970 /* PerpsManualShortPageView.swift */,
 				9404AD4F2F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift */,
 				9404AD862F5DB4EF007FC231 /* PerpsManualPositionSizePageView.swift */,
+				948B81622FB6142800D1D167 /* PerpsManualPositionTPSLPageView.swift */,
+				94728C7D2FB6E6B9004F087F /* PerpsManualPositionLiquidationPricePageView.swift */,
 			);
 			path = Manual;
 			sourceTree = "<group>";
@@ -5212,6 +5240,7 @@
 				9463E8472F5D619F0069CF1B /* PerpsManualCalculatingPnLView.swift */,
 				9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionProfitView.swift */,
 				945E18302F62F04A003434AA /* PerpsManualLongPositionLiquidationView.swift */,
+				94728C882FB6E828004F087F /* PerpsManualOrderSideControl.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -5421,7 +5450,6 @@
 		94FB2E6A2F50A50900F85AB4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				9438EFD72FAC57AF0030C00E /* PerpsPrice.swift */,
 				94FB2E6B2F50A50E00F85AB4 /* PerpetualMarketViewModel.swift */,
 				94DC4DB62F51EC3E00D23EB8 /* PerpetualPositionLoader.swift */,
 				94C67FCF2F64250000CB11DC /* PerpetualMarketLoader.swift */,
@@ -5431,6 +5459,7 @@
 				94D9DD512F59CFEF00B3B990 /* PerpetualPositionViewModel.swift */,
 				94E066B12F5B15690090F1BA /* PerpetualLeverage.swift */,
 				941C75DD2F5EA413005B70A9 /* PerpetualPositionType.swift */,
+				94A8095B2FB1C1B100755E1A /* PerpsAutoClosingCondition.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -6570,6 +6599,7 @@
 				94EC9B7D2F2B8E5B00B3CD82 /* PhotoLibrary.swift */,
 				948CFAE92F2CB4B200BC34C3 /* QRCodeDetector.swift */,
 				94EC9CD32F2C7CC000B3CD82 /* VideoCaptureDevice.swift */,
+				9404D76F2FB1A72600F5563A /* SignPosition.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -6868,6 +6898,7 @@
 				94D5C0EF2D5C911D0046C20E /* WalletSummaryView.xib in Resources */,
 				94E683202E6194CC003304DF /* DepositInfoCell.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
+				9484BA3A2FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib in Resources */,
 				940D10A52C5C91630071E36D /* InsetGroupedTitleCell.xib in Resources */,
 				94E206EF2F4EB61100D65D98 /* PerpetualPositionValueCell.xib in Resources */,
 				944ED8D22646535B00C97215 /* WebContentView.xib in Resources */,
@@ -7048,6 +7079,7 @@
 				943BC66F2BCD7227003FA778 /* Web3NoAssetView.xib in Resources */,
 				DF43304722648B4E006D971D /* AssetInfoWindow.xib in Resources */,
 				7B11788E2293D55C000F934E /* BalanceInputAccessoryView.xib in Resources */,
+				948C1CC42FAF3F22005C8653 /* FixedInputCell.xib in Resources */,
 				94F2682A2E15BC9E00A8A1E0 /* AddWalletCandidateCell.xib in Resources */,
 				7B0B01961FEA628F000EEE4F /* StrangerHintView.xib in Resources */,
 				7C1E798A29DAC4D5006A07A2 /* DeviceTransferActionTableHeaderView.xib in Resources */,
@@ -7101,6 +7133,7 @@
 				9495E0812CEF5CCF00124CC7 /* LogoutValidationView.xib in Resources */,
 				94AA266D2EE18C2F0047E04B /* WalletTipCell.xib in Resources */,
 				94A4CCBD2E38A38200C8AFD0 /* UncontrolledWalletWarningView.xib in Resources */,
+				9438F0D52FACD95C0030C00E /* EditPerpClosingConditionView.xib in Resources */,
 				9412AF4D2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib in Resources */,
 				944C610F2B6AB7F600C7DF06 /* TokenAmountCell.xib in Resources */,
 				94227D6F2BEF242200430CAE /* SearchCollectibleView.xib in Resources */,
@@ -7674,6 +7707,7 @@
 				94F267812E12B26000A8A1E0 /* InputBIP39MnemonicsViewController.swift in Sources */,
 				9468E06D2E30E16A00EB79C0 /* CreateWalletResponse.swift in Sources */,
 				DFA063D222B0D0E80031E151 /* PrivacySettingViewController.swift in Sources */,
+				94728C8C2FB6E839004F087F /* PerpsManualOrderSideControl.swift in Sources */,
 				7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */,
 				5260A85F2DDF556500ED9714 /* Web3AddressValidator.swift in Sources */,
 				7C51F3A927E459AD0095B4D6 /* ExpiredMessageManager.swift in Sources */,
@@ -7789,6 +7823,7 @@
 				9495E57E2CF0D71900124CC7 /* AssetChangeAccountRecoveryChecking.swift in Sources */,
 				944075FB2E2EA5B700591B45 /* WalletWatchingIndicatorView.swift in Sources */,
 				94FB2E402F509FA000F85AB4 /* TradeSectionBackgroundView.swift in Sources */,
+				9484BA392FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.swift in Sources */,
 				948513592E4313C0008D6FDB /* AddWalletIntroductionViewController.swift in Sources */,
 				7B54F95422B23A5600908A9D /* RecoveryContactSelectorViewController.swift in Sources */,
 				94EE1C012B4C647500BE9AD1 /* CodeURL.swift in Sources */,
@@ -8061,6 +8096,7 @@
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
 				947C5E5B29B0FE9B00838458 /* WalletConnectSession.swift in Sources */,
 				7BD00F1E2559711A004D8814 /* WalletSearchResultsViewController.swift in Sources */,
+				94728C7E2FB6E6C3004F087F /* PerpsManualPositionLiquidationPricePageView.swift in Sources */,
 				7B8BB592234F37D100991ACB /* SharedMediaAudioCell.swift in Sources */,
 				948922A12D54FC5F00D9BCCB /* IBANAddress.swift in Sources */,
 				7B0BE46021A5630500B91A1E /* CompactAssetCell.swift in Sources */,
@@ -8069,6 +8105,7 @@
 				94C359F628B506D40010F53C /* TIPFullscreenInputViewController.swift in Sources */,
 				E0B53A6923B0C2C9008DA9F1 /* AssetItem+Description.swift in Sources */,
 				941994D22CCAEB9100F5425C /* SignInWithMnemonicsViewController.swift in Sources */,
+				948B81632FB6142D00D1D167 /* PerpsManualPositionTPSLPageView.swift in Sources */,
 				7C9DEA5729F15FA200959D77 /* DeviceTransferApp.swift in Sources */,
 				94D9DD7D2F59D79400B3B990 /* PerpetualPositionProductCell.swift in Sources */,
 				94B0B7462BECD4DE00346AF4 /* CollectibleCell.swift in Sources */,
@@ -8212,6 +8249,7 @@
 				94902E4E2DA6CFA600E52FC6 /* TransactionStatusLabel.swift in Sources */,
 				7B7ABBE02539799900070B71 /* ScreenWidth.swift in Sources */,
 				94ADE11F2CD80AC70040A426 /* ChangeMobileNumberViewController.swift in Sources */,
+				94A8095C2FB1C1B200755E1A /* PerpsAutoClosingCondition.swift in Sources */,
 				9440019E2FA1E57A00105253 /* ShareObiSurroundedView.swift in Sources */,
 				944D17452F616A6F008BBA92 /* SharePerpetualPositionView.swift in Sources */,
 				52A056582BE362FF00CEC8A3 /* InscriptionViewController.swift in Sources */,
@@ -8291,6 +8329,7 @@
 				7CF836F127E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift in Sources */,
 				94F2375C2C691D5C0057D1AB /* TokenPriceChartCell.swift in Sources */,
 				DF46B40B1FA9E7CF00243A8B /* CornerView.swift in Sources */,
+				948C1CC32FAF3F22005C8653 /* FixedInputCell.swift in Sources */,
 				7CEB736E29DBD591006FB5B2 /* DeviceTransferExpiredMessage.swift in Sources */,
 				94D78FD72E3A1B8900552D2E /* Web3Wallet+Availability.swift in Sources */,
 				7B59534B2267206D00D59DB4 /* OneSideShadowView.swift in Sources */,
@@ -8531,6 +8570,7 @@
 				94BD7E772B2983CA0004576D /* MultisigURL.swift in Sources */,
 				7BEED0D9244D752700F3A2B9 /* SettingsRow.swift in Sources */,
 				94C6AA09280D35990011AB02 /* AttachmentDiagnosticViewController.swift in Sources */,
+				9438F0D42FACD95C0030C00E /* EditPerpClosingConditionViewController.swift in Sources */,
 				94DD693E2C90665700B3D089 /* MarketColor.swift in Sources */,
 				94FE128B2DA80FFC0026AB9A /* Web3Transaction+Localization.swift in Sources */,
 				7B72651C209C5F9300F234BE /* Link.swift in Sources */,
@@ -8659,7 +8699,6 @@
 				94CEEAC4277E06A9001E7A24 /* Date+Holiday.swift in Sources */,
 				941C764B2F5EFB10005B70A9 /* TradeURL.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* AvatarPickerController.swift in Sources */,
-				9438EFDB2FAC57BB0030C00E /* PerpsPrice.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				94FB2E0A2F504D9200F85AB4 /* PerpetualPlaceholderCell.swift in Sources */,
 				944731522E71866400ACC49B /* HomeNavigationTitleView.swift in Sources */,
@@ -8735,6 +8774,7 @@
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
 				945A72C02E59C8BF006A11E9 /* TIPQuizAnswer.swift in Sources */,
 				94D9DF6125F89D6E00FC2F28 /* PopupTip.swift in Sources */,
+				9404D7702FB1A72B00F5563A /* SignPosition.swift in Sources */,
 				7B3CDA6824FFF2D8003A3E80 /* AnimatedStickerView.swift in Sources */,
 				7C8FA8F62768926D00855AFD /* SecuritySettingViewController.swift in Sources */,
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,

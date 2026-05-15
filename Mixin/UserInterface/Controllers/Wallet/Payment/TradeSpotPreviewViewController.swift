@@ -95,12 +95,14 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                     receiveSymbol: receiveToken.symbol,
                     numeraire: .receive
                 ),
-                secondary: ExchangeRateQuote.expression(
-                    sendAmount: sendAmount,
-                    sendSymbol: sendToken.symbol,
-                    receiveAmount: receiveAmount,
-                    receiveSymbol: receiveToken.symbol,
-                    numeraire: .send
+                secondary: .plain(
+                    ExchangeRateQuote.expression(
+                        sendAmount: sendAmount,
+                        sendSymbol: sendToken.symbol,
+                        receiveAmount: receiveAmount,
+                        receiveSymbol: receiveToken.symbol,
+                        numeraire: .send
+                    )
                 )
             ),
         ]

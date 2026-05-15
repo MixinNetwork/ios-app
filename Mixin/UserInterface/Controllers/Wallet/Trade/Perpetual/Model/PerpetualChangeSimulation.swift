@@ -48,7 +48,7 @@ enum PerpetualChangeSimulation {
         side: PerpetualOrderSide,
         entryPrice: Decimal,
         leverageMultiplier: Decimal,
-    ) -> String {
+    ) -> Decimal {
         let liquidationChangePercentage = 1 / leverageMultiplier
         let price = switch side {
         case .long:
@@ -56,7 +56,7 @@ enum PerpetualChangeSimulation {
         case .short:
             entryPrice * (1 + liquidationChangePercentage)
         }
-        return price.formatted(PerpsPrice.format(price))
+        return price
     }
     
     static func liquidation(

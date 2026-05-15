@@ -37,6 +37,10 @@ final class OpenPerpetualPositionViewController: UIViewController {
     @IBOutlet weak var leverageMultipliersCollectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var changeSimulationLabel: UILabel!
     
+    @IBOutlet weak var takeProfitTitleLabel: UILabel!
+    @IBOutlet weak var takeProfitContentLabel: UILabel!
+    @IBOutlet weak var stopLossTitleLabel: UILabel!
+    @IBOutlet weak var stopLossContentLabel: UILabel!
     @IBOutlet weak var orderValueTitleLabel: UILabel!
     @IBOutlet weak var orderValueContentLabel: UILabel!
     @IBOutlet weak var liquidationPriceTitleLabel: UILabel!
@@ -107,6 +111,34 @@ final class OpenPerpetualPositionViewController: UIViewController {
     
     private var leverageMultiplier: Decimal
     
+    private var takeProfitPrice: Decimal? {
+        didSet {
+            if let takeProfitPrice {
+                takeProfitContentLabel.text = takeProfitPrice.formatted(
+                    viewModel.userDisplayPriceFormatStyle
+                )
+                takeProfitContentLabel.textColor = MarketColor.rising.uiColor
+            } else {
+                takeProfitContentLabel.text = R.string.localizable.add()
+                takeProfitContentLabel.textColor = R.color.theme()
+            }
+        }
+    }
+    
+    private var stopLossPrice: Decimal? {
+        didSet {
+            if let stopLossPrice {
+                stopLossContentLabel.text = stopLossPrice.formatted(
+                    viewModel.userDisplayPriceFormatStyle
+                )
+                stopLossContentLabel.textColor = MarketColor.falling.uiColor
+            } else {
+                stopLossContentLabel.text = R.string.localizable.add()
+                stopLossContentLabel.textColor = R.color.theme()
+            }
+        }
+    }
+    
     init(
         wallet: Wallet,
         side: PerpetualOrderSide,
@@ -169,6 +201,10 @@ final class OpenPerpetualPositionViewController: UIViewController {
             marginTitleLabel,
             marginNetworkLabel,
             leverageTitleLabel,
+            takeProfitTitleLabel,
+            takeProfitContentLabel,
+            stopLossTitleLabel,
+            stopLossContentLabel,
             orderValueTitleLabel,
             orderValueContentLabel,
             liquidationPriceTitleLabel,
@@ -217,6 +253,11 @@ final class OpenPerpetualPositionViewController: UIViewController {
                 self.view.layoutIfNeeded()
             }
         }
+        
+        takeProfitTitleLabel.text = R.string.localizable.take_profit()
+        takeProfitContentLabel.text = R.string.localizable.add()
+        stopLossTitleLabel.text = R.string.localizable.stop_loss()
+        stopLossContentLabel.text = R.string.localizable.add()
         
         reviewButtonWrapperView.snp.makeConstraints { make in
             make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
@@ -281,7 +322,44 @@ final class OpenPerpetualPositionViewController: UIViewController {
         present(selector, animated: true)
     }
     
-    @IBAction func presentManual(_ sender: Any) {
+    @IBAction func editTakeProfit(_ sender: Any) {
+        let editor = EditPerpClosingConditionViewController(
+            viewModel: viewModel,
+            side: side,
+            margin: marginAmount,
+            behavior: .takeProfit,
+            leverage: leverageMultiplier,
+            orderState: .draft,
+            currentAutoClosingPrice: takeProfitPrice,
+        )
+        editor.onSet = { [weak self] (price) in
+            self?.takeProfitPrice = price
+        }
+        present(editor, animated: true)
+    }
+    
+    @IBAction func editStopLoss(_ sender: Any) {
+        let editor = EditPerpClosingConditionViewController(
+            viewModel: viewModel,
+            side: side,
+            margin: marginAmount,
+            behavior: .stopLoss,
+            leverage: leverageMultiplier,
+            orderState: .draft,
+            currentAutoClosingPrice: stopLossPrice,
+        )
+        editor.onSet = { [weak self] (price) in
+            self?.stopLossPrice = price
+        }
+        present(editor, animated: true)
+    }
+    
+    @IBAction func presentAutoClosingManual(_ sender: Any) {
+        let manual = PerpsManual.viewController(initialPage: .autoClosing)
+        present(manual, animated: true)
+    }
+    
+    @IBAction func presentOrderValueManual(_ sender: Any) {
         let manual = PerpsManual.viewController(initialPage: .size)
         present(manual, animated: true)
     }
@@ -295,15 +373,29 @@ final class OpenPerpetualPositionViewController: UIViewController {
             assetID: marginToken.assetID,
             marketID: viewModel.market.marketID,
             side: side,
-            amount: TokenAmountFormatter.string(from: marginAmount),
+            amount: marginAmount.formatted(
+                marginToken.internalTransferFormatStyle
+            ),
             leverage: (leverageMultiplier as NSDecimalNumber).intValue,
             walletID: wallet.tradingWalletID,
-            destination: nil
+            destination: nil,
+            takeProfitPrice: takeProfitPrice?.formatted(
+                viewModel.market.canonicalPriceFormatStyle
+            ),
+            stopLossPrice: stopLossPrice?.formatted(
+                viewModel.market.canonicalPriceFormatStyle
+            ),
+        )
+        let context = Payment.PerpsContext(
+            wallet: wallet,
+            viewModel: viewModel,
+            side: request.side,
+            leverageMultiplier: leverageMultiplier,
+            takeProfitPrice: takeProfitPrice,
+            stopLossPrice: stopLossPrice,
         )
         sender.isBusy = true
-        RouteAPI.openPerpsOrder(
-            orderRequest: request
-        ) { [weak self, wallet, viewModel, leverageMultiplier] result in
+        RouteAPI.openPerpsOrder(orderRequest: request) { [weak self] result in
             switch result {
             case .success(let response):
                 guard let url = URL(string: response.paymentURL) else {
@@ -313,12 +405,6 @@ final class OpenPerpetualPositionViewController: UIViewController {
                     }
                     return
                 }
-                let context = Payment.PerpsContext(
-                    wallet: wallet,
-                    viewModel: viewModel,
-                    side: request.side,
-                    leverageMultiplier: leverageMultiplier
-                )
                 let source: UrlWindow.Source = .perps(context: context) { description in
                     guard let self else {
                         return
@@ -528,12 +614,18 @@ final class OpenPerpetualPositionViewController: UIViewController {
             leverageMultiplier: leverageMultiplier,
             priceChangePercent: 0.01
         )
+        let orderValue = marginAmount * leverageMultiplier
         orderValueContentLabel.text = CurrencyFormatter.localizedString(
-            from: marginAmount * leverageMultiplier / underlyingAsset.decimalPrice,
+            from: orderValue / underlyingAsset.decimalPrice,
             format: .precision,
             sign: .never,
             symbol: .custom(underlyingAsset.market.tokenSymbol)
-        )
+        ) + " (" + CurrencyFormatter.localizedString(
+            from: orderValue * Currency.current.decimalRate,
+            format: .fiatMoneyPretty,
+            sign: .never,
+            symbol: .currencySymbol,
+        ) + ")"
         if marginAmount > 0 {
             let liquidationPrice = switch side {
             case .long:
@@ -542,7 +634,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
                 underlyingAsset.decimalPrice * (1 + 1 / leverageMultiplier)
             }
             liquidationPriceContentLabel.text = liquidationPrice.formatted(
-                PerpsPrice.format(liquidationPrice)
+                viewModel.userDisplayPriceFormatStyle
             )
         } else {
             liquidationPriceContentLabel.text = "-"

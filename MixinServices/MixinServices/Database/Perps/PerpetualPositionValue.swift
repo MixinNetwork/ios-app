@@ -60,7 +60,7 @@ public struct PerpetualPositionValue {
                 sign: .never,
                 options: .keepOneFractionDigitForZero
             )
-            change += "(" + changeInPercent + ")"
+            change += " (" + changeInPercent + ")"
         }
         
         let state = State(value: decimalPnL)

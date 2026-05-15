@@ -30,7 +30,7 @@ final class PerpetualInactivePositionCell: UICollectionViewCell {
     func load(viewModel: PerpetualPositionViewModel) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
         titleLabel.text = viewModel.directionWithSymbol
-        leverageLabel.text = viewModel.leverageMultiplier
+        leverageLabel.text = viewModel.leverage
         valueLabel.text = viewModel.orderValueInToken
         switch viewModel.type {
         case .open:

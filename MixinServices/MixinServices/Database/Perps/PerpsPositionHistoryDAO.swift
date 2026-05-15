@@ -11,7 +11,8 @@ public final class PerpsPositionHistoryDAO: PerpsDAO {
     SELECT h.*,
         m.token_symbol AS \(PerpetualPositionHistoryItem.JoinedQueryCodingKeys.tokenSymbol.rawValue),
         m.display_symbol AS \(PerpetualPositionHistoryItem.JoinedQueryCodingKeys.displaySymbol.rawValue),
-        m.icon_url AS \(PerpetualPositionHistoryItem.JoinedQueryCodingKeys.iconURL.rawValue)
+        m.icon_url AS \(PerpetualPositionHistoryItem.JoinedQueryCodingKeys.iconURL.rawValue),
+        m.price_scale AS \(PerpetualPositionItem.JoinedQueryCodingKeys.priceScale.rawValue)
     FROM position_histories h
         LEFT JOIN markets m ON h.market_id = m.market_id
     

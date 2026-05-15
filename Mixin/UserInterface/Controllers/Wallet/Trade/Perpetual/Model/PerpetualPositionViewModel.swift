@@ -35,7 +35,8 @@ struct PerpetualPositionViewModel {
     let side: PerpetualOrderSide
     let iconURL: URL?
     let directionWithSymbol: String
-    let leverageMultiplier: String
+    let leverageMultiplier: Int
+    let leverage: String
     let pnl: String
     let pnlColor: MarketColor
     let roeWithSign: String?
@@ -48,12 +49,17 @@ struct PerpetualPositionViewModel {
     let orderValueInToken: String
     let entryPrice: String
     let date: String
+    let priceFormatStyle: Decimal.FormatStyle.Currency
     
     // Only available for open positions
     let state: PerpetualPosition.State?
+    let decimalMargin: Decimal?
     let margin: String?
     let estimatedReceiving: EstimatedReceiving?
     let liquidationPrice: String?
+    let takeProfitPrice: Decimal?
+    let stopLossPrice: Decimal?
+    let orderValueInFiatMoney: String?
     
     // Only available for closed positions
     let closePrice: String?
@@ -63,9 +69,10 @@ struct PerpetualPositionViewModel {
         let pnl = Decimal(string: position.unrealizedPnL, locale: .enUSPOSIX) ?? 0
         let entryPrice = Decimal(string: position.entryPrice, locale: .enUSPOSIX)
         let quantity = abs(Decimal(string: position.quantity, locale: .enUSPOSIX) ?? 0)
-        let multiplier = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
+        let leverage = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
         let side = PerpetualOrderSide(rawValue: position.side) ?? .short
         let margin = Decimal(string: position.margin, locale: .enUSPOSIX)
+        let roe = Decimal(string: position.roe, locale: .enUSPOSIX)
         let localizedPnL = CurrencyFormatter.localizedString(
             from: pnl * Currency.current.decimalRate,
             format: .fiatMoneyPretty,
@@ -85,11 +92,12 @@ struct PerpetualPositionViewModel {
         case .short:
             self.directionWithSymbol = R.string.localizable.short_asset(position.tokenSymbol)
         }
-        self.leverageMultiplier = multiplier
+        self.leverageMultiplier = position.leverage
+        self.leverage = leverage
         self.pnl = localizedPnL
         self.pnlColor = pnl >= 0 ? .rising : .falling
         if let margin, margin != 0 {
-            let roe = max(-1, pnl / margin)
+            let roe = roe ?? max(-1, pnl / margin)
             let roeWithSign = PercentageFormatter.string(
                 from: roe,
                 format: .pretty,
@@ -105,10 +113,17 @@ struct PerpetualPositionViewModel {
             self.roeWithSign = roeWithSign
             self.roeWithoutSign = roeWithoutSign
             self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
+            self.orderValueInFiatMoney = CurrencyFormatter.localizedString(
+                from: margin * Decimal(position.leverage) * Currency.current.decimalRate,
+                format: .fiatMoneyPretty,
+                sign: .never,
+                symbol: .currencySymbol,
+            )
         } else {
             self.roeWithSign = nil
             self.roeWithoutSign = nil
             self.pnlWithROE = localizedPnL
+            self.orderValueInFiatMoney = nil
         }
         self.actions = [.close, .share]
         self.displaySymbol = position.displaySymbol
@@ -125,7 +140,7 @@ struct PerpetualPositionViewModel {
             symbol: .custom(position.tokenSymbol)
         )
         self.entryPrice = if let entryPrice {
-            entryPrice.formatted(PerpsPrice.format(entryPrice))
+            entryPrice.formatted(position.priceFormatStyle)
         } else {
             position.entryPrice
         }
@@ -134,8 +149,10 @@ struct PerpetualPositionViewModel {
         } else {
             position.createdAt
         }
+        self.priceFormatStyle = position.priceFormatStyle
         
         self.state = position.state.knownCase
+        self.decimalMargin = margin
         self.margin = if let margin {
             CurrencyFormatter.localizedString(
                 from: margin * Currency.current.decimalRate,
@@ -155,12 +172,21 @@ struct PerpetualPositionViewModel {
         } else {
             nil
         }
-        self.liquidationPrice = if let entryPrice {
-            PerpetualChangeSimulation.liquidationPrice(
-                side: side,
-                entryPrice: entryPrice,
-                leverageMultiplier: Decimal(position.leverage)
-            )
+        if let price = position.liquidationPrice,
+           !price.isEmpty,
+           let decimalPrice = Decimal(string: price, locale: .enUSPOSIX)
+        {
+            self.liquidationPrice = decimalPrice.formatted(position.priceFormatStyle)
+        } else {
+            self.liquidationPrice = nil
+        }
+        self.takeProfitPrice = if let price = position.takeProfitPrice, !price.isEmpty {
+            Decimal(string: price, locale: .enUSPOSIX)
+        } else {
+            nil
+        }
+        self.stopLossPrice = if let price = position.stopLossPrice, !price.isEmpty {
+            Decimal(string: price, locale: .enUSPOSIX)
         } else {
             nil
         }
@@ -196,7 +222,8 @@ struct PerpetualPositionViewModel {
         default:
             self.directionWithSymbol = "\(history.side) \(history.tokenSymbol)"
         }
-        self.leverageMultiplier = leverage
+        self.leverageMultiplier = history.leverage
+        self.leverage = leverage
         self.pnl = localizedPnL
         self.pnlColor = pnl >= 0 ? .rising : .falling
         if let entryPrice, let closePrice {
@@ -241,7 +268,7 @@ struct PerpetualPositionViewModel {
             symbol: .custom(history.tokenSymbol)
         )
         self.entryPrice = if let entryPrice {
-            entryPrice.formatted(PerpsPrice.format(entryPrice))
+            entryPrice.formatted(history.priceFormatStyle)
         } else {
             history.entryPrice
         }
@@ -250,13 +277,18 @@ struct PerpetualPositionViewModel {
         } else {
             history.closedAt
         }
+        self.priceFormatStyle = history.priceFormatStyle
         
         self.state = nil
+        self.decimalMargin = nil
         self.margin = nil
         self.estimatedReceiving = nil
         self.liquidationPrice = nil
+        self.takeProfitPrice = nil
+        self.stopLossPrice = nil
+        self.orderValueInFiatMoney = nil
         self.closePrice = if let closePrice {
-            closePrice.formatted(PerpsPrice.format(closePrice))
+            closePrice.formatted(history.priceFormatStyle)
         } else {
             history.closePrice
         }

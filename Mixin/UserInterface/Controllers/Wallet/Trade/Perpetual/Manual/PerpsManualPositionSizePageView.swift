@@ -108,19 +108,7 @@ struct PerpsManualPositionSizePageView: View {
                             .frame(height: 1)
                         
                         PerpsManualLongPositionProfitView(
-                            title: R.string.localizable.example_scene1_rises(),
                             change: 0.1,
-                            marginSymbol: marginSymbol,
-                            margin: $margin,
-                            leverageMultiplier: $leverageMultiplier,
-                        )
-                        
-                        Rectangle()
-                            .fill(Color(R.color.background_quaternary()!))
-                            .frame(height: 1)
-                        
-                        PerpsManualLongPositionLiquidationView(
-                            title: R.string.localizable.example_scene2_falls(),
                             marginSymbol: marginSymbol,
                             margin: $margin,
                             leverageMultiplier: $leverageMultiplier,

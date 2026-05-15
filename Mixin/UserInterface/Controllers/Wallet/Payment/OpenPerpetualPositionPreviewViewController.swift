@@ -48,16 +48,6 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
             sign: .never,
             symbol: .custom(operation.token.symbol)
         )
-        let liquidationPrice = PerpetualChangeSimulation.liquidationPrice(
-            side: context.side,
-            entryPrice: context.viewModel.decimalPrice,
-            leverageMultiplier: context.leverageMultiplier
-        )
-        let liquidation = PerpetualChangeSimulation.liquidation(
-            side: context.side,
-            margin: operation.amount,
-            leverageMultiplier: context.leverageMultiplier
-        )
         var rows: [Row]
         rows = [
             .perpsProduct(
@@ -67,16 +57,118 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
             .doubleLineInfo(
                 caption: .string(R.string.localizable.direction()),
                 primary: direction,
-                secondary: profit,
+                secondary: .plain(profit),
             ),
-            .info(caption: .string(R.string.localizable.amount()), content: amount),
-            .info(caption: .string(R.string.localizable.entry_price()), content: context.viewModel.price),
+            .info(
+                caption: .string(R.string.localizable.amount()),
+                content: amount
+            ),
+            .info(
+                caption: .string(R.string.localizable.entry_price()),
+                content: context.viewModel.price
+            ),
+        ]
+        
+        if let takeProfitPrice = context.takeProfitPrice {
+            let price = takeProfitPrice.formatted(
+                context.viewModel.userDisplayPriceFormatStyle
+            )
+            let priceChange = (takeProfitPrice - context.viewModel.decimalPrice) / context.viewModel.decimalPrice
+            let maxChange = PerpsAutoClosingCondition.maxChange(
+                margin: operation.amount,
+                side: context.side,
+                leverage: context.leverageMultiplier,
+                behavior: .takeProfit,
+                currentPrice: context.viewModel.decimalPrice,
+                closingPrice: takeProfitPrice,
+            )
+            let simulation = R.string.localizable.price_change_take_profit(
+                PercentageFormatter.string(
+                    from: priceChange,
+                    format: .pretty,
+                    sign: .always
+                ),
+                maxChange
+            )
+            let attributedSimulation = NSMutableAttributedString(
+                string: simulation,
+                attributes: [.foregroundColor: R.color.text_quaternary()!]
+            )
+            if let range = simulation.range(of: maxChange, options: .backwards) {
+                attributedSimulation.setAttributes(
+                    [.foregroundColor: MarketColor.rising.uiColor],
+                    range: NSRange(range, in: simulation)
+                )
+            }
+            rows.append(
+                .doubleLineInfo(
+                    caption: .string(R.string.localizable.take_profit()),
+                    primary: price,
+                    secondary: .attributed(attributedSimulation),
+                ),
+            )
+        }
+        
+        if let stopLossPrice = context.stopLossPrice {
+            let price = stopLossPrice.formatted(
+                context.viewModel.userDisplayPriceFormatStyle
+            )
+            let priceChange = (stopLossPrice - context.viewModel.decimalPrice) / context.viewModel.decimalPrice
+            let maxChange = PerpsAutoClosingCondition.maxChange(
+                margin: operation.amount,
+                side: context.side,
+                leverage: context.leverageMultiplier,
+                behavior: .stopLoss,
+                currentPrice: context.viewModel.decimalPrice,
+                closingPrice: stopLossPrice,
+            )
+            let simulation = R.string.localizable.price_change_stop_loss(
+                PercentageFormatter.string(
+                    from: priceChange,
+                    format: .pretty,
+                    sign: .always
+                ),
+                maxChange
+            )
+            let attributedSimulation = NSMutableAttributedString(
+                string: simulation,
+                attributes: [.foregroundColor: R.color.text_quaternary()!]
+            )
+            if let range = simulation.range(of: maxChange, options: .backwards) {
+                attributedSimulation.setAttributes(
+                    [.foregroundColor: MarketColor.falling.uiColor],
+                    range: NSRange(range, in: simulation)
+                )
+            }
+            rows.append(
+                .doubleLineInfo(
+                    caption: .string(R.string.localizable.stop_loss()),
+                    primary: price,
+                    secondary: .attributed(attributedSimulation),
+                ),
+            )
+        }
+        
+        let liquidationPrice = PerpetualChangeSimulation.liquidationPrice(
+            side: context.side,
+            entryPrice: context.viewModel.decimalPrice,
+            leverageMultiplier: context.leverageMultiplier
+        ).formatted(
+            context.viewModel.userDisplayPriceFormatStyle
+        )
+        let liquidation = PerpetualChangeSimulation.liquidation(
+            side: context.side,
+            margin: operation.amount,
+            leverageMultiplier: context.leverageMultiplier
+        )
+        rows.append(
             .doubleLineInfo(
                 caption: .string(R.string.localizable.estimated_liquidation_price()),
                 primary: liquidationPrice,
-                secondary: liquidation
-            ),
-        ]
+                secondary: .plain(liquidation)
+            )
+        )
+        
         switch operation.destination {
         case let .user(item):
             rows.append(.receivers([item], threshold: nil))
@@ -87,6 +179,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         if let memo = operation.extra.plainValue {
             rows.append(.info(caption: .memo, content: memo))
         }
+        
         reloadData(with: rows)
     }
     

@@ -45,7 +45,11 @@ final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewV
         
         let host = URL(string: proposal.proposer.url)?.host ?? proposal.proposer.url
         var rows: [Row] = [
-            .doubleLineInfo(caption: .from, primary: proposal.proposer.name, secondary: host)
+            .doubleLineInfo(
+                caption: .from,
+                primary: proposal.proposer.name,
+                secondary: .plain(host)
+            )
         ]
         
         var evmAddress: String?

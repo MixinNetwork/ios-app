@@ -9,7 +9,6 @@ struct PerpsManualCalculatingPnLView: View {
         case short
     }
     
-    let title: String
     let direction: Direction
     let leverage: Decimal
     let margin: Decimal
@@ -21,31 +20,6 @@ struct PerpsManualCalculatingPnLView: View {
     
     private var changeColor: MarketColor {
         change >= 0 ? .rising : .falling
-    }
-    
-    private var canDecrease: Bool {
-        if change > 0 {
-            change > changeStep
-        } else {
-            change < -changeStep
-        }
-    }
-    
-    private var canIncrease: Bool {
-        switch direction {
-        case .long:
-            if change > 0 {
-                true
-            } else {
-                (change - changeStep) * leverage >= -1
-            }
-        case .short:
-            if change > 0 {
-                (change + changeStep) * leverage <= 1
-            } else {
-                change < changeStep
-            }
-        }
     }
     
     private var pnlPercentage: Decimal {
@@ -82,45 +56,23 @@ struct PerpsManualCalculatingPnLView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(title)
-                .modifier(ManualText(.caption1))
+        VStack(alignment: .leading, spacing: 16) {
             HStack {
-                if change >= 0 {
-                    Text(R.string.localizable.example_price_change())
-                        .modifier(ManualText(.caption2))
-                } else {
-                    Text(R.string.localizable.example_price_change())
-                        .modifier(ManualText(.caption2))
-                }
+                Text(R.string.localizable.example_price_change())
+                    .modifier(ManualText(.caption2))
                 Spacer()
                 HStack(alignment: .center, spacing: 6) {
                     Button {
-                        guard canDecrease else {
-                            return
-                        }
-                        if change < 0 {
-                            change += changeStep
-                        } else {
-                            change -= changeStep
-                        }
+                        change -= changeStep
                     } label: {
                         Image(R.image.stepper_decrease)
                     }
-                    .disabled(!canDecrease)
                     
                     Text(PercentageFormatter.string(from: change, format: .pretty, sign: .always))
                         .modifier(ManualText(.subheading(changeColor.uiColor), monospacedDigit: true))
                     
                     Button {
-                        guard canIncrease else {
-                            return
-                        }
-                        if change > 0 {
-                            change += changeStep
-                        } else {
-                            change -= changeStep
-                        }
+                        change += changeStep
                     } label: {
                         Image(R.image.stepper_increase)
                     }

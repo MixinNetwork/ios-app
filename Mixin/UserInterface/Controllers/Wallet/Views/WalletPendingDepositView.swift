@@ -36,7 +36,7 @@ final class WalletPendingDepositView: UIView {
             let view = StackedIconWrapperView<UILabel>()
             view.backgroundColor = .clear
             iconStackView.addArrangedSubview(view)
-            view.iconView.backgroundColor = R.color.background_tag()
+            view.iconView.backgroundColor = R.color.button_background_quaternary()
             view.iconView.textColor = R.color.text_tertiary()
             view.iconView.font = .systemFont(ofSize: 8)
             view.iconView.textAlignment = .center

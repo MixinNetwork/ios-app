@@ -198,7 +198,12 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             cell.primaryLabel.text = primary
-            cell.secondaryLabel.text = secondary
+            switch secondary {
+            case .plain(let text):
+                cell.secondaryLabel.text = text
+            case .attributed(let attributedText):
+                cell.secondaryLabel.attributedText = attributedText
+            }
             cell.setPrimaryLabel(usesBoldFont: false)
             cell.trailingContent = nil
             return cell
@@ -467,10 +472,16 @@ extension AuthenticationPreviewViewController {
     }
     
     enum Row {
+        
+        enum Text {
+            case plain(String)
+            case attributed(NSAttributedString)
+        }
+        
         case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent, boldPrimaryAmount: Bool)
         case info(caption: Caption, content: String)
         case boldInfo(caption: Caption, content: String)
-        case doubleLineInfo(caption: Caption, primary: String, secondary: String)
+        case doubleLineInfo(caption: Caption, primary: String, secondary: Text)
         case address(caption: Caption, address: String, label: AddressLabel?)
         case senders([UserItem], multisigSigners: Set<String>?, threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)

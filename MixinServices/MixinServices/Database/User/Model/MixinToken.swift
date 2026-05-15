@@ -91,4 +91,12 @@ extension MixinToken {
         !(collectionHash?.isEmpty ?? true)
     }
     
+    public var internalTransferFormatStyle: Decimal.FormatStyle {
+        Decimal.FormatStyle.number
+            .locale(.enUSPOSIX)
+            .grouping(.never)
+            .sign(strategy: .never)
+            .precision(.fractionLength(0...Int(Self.internalPrecision)))
+    }
+    
 }

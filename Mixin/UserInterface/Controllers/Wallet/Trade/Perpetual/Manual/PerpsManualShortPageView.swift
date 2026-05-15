@@ -63,27 +63,12 @@ struct PerpsManualShortPageView: View {
                             .frame(height: 1)
                         
                         PerpsManualCalculatingPnLView(
-                            title: R.string.localizable.example_scene1_falls(),
                             direction: .short,
                             leverage: leverageMultiplier,
                             margin: margin,
                             marginSymbol: marginSymbol,
                             changeStep: 0.01,
                             change: -0.1
-                        )
-                        
-                        Rectangle()
-                            .fill(Color(R.color.background_quaternary()!))
-                            .frame(height: 1)
-                        
-                        PerpsManualCalculatingPnLView(
-                            title: R.string.localizable.example_scene2_rises(),
-                            direction: .short,
-                            leverage: leverageMultiplier,
-                            margin: margin,
-                            marginSymbol: marginSymbol,
-                            changeStep: 0.01,
-                            change: 0.1
                         )
                     }
                 }

@@ -135,7 +135,7 @@ public struct CurrencyFormatter {
                 fiatMoneyFormatter.minimumFractionDigits = 2
             } else if abs(decimal) < 0.01 {
                 symbolPrefix.insert("<", at: symbolPrefix.startIndex)
-                value = 0.01
+                value = Decimal(signOf: decimal, magnitudeOf: 0.01) as NSDecimalNumber
             } else {
                 value = number
             }

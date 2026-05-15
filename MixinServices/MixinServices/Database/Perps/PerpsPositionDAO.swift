@@ -12,7 +12,8 @@ public final class PerpsPositionDAO: PerpsDAO {
     SELECT p.*,
         m.token_symbol AS \(PerpetualPositionItem.JoinedQueryCodingKeys.tokenSymbol.rawValue),
         m.display_symbol AS \(PerpetualPositionItem.JoinedQueryCodingKeys.displaySymbol.rawValue),
-        m.icon_url AS \(PerpetualPositionItem.JoinedQueryCodingKeys.iconURL.rawValue)
+        m.icon_url AS \(PerpetualPositionItem.JoinedQueryCodingKeys.iconURL.rawValue),
+        m.price_scale AS \(PerpetualPositionItem.JoinedQueryCodingKeys.priceScale.rawValue)
     FROM positions p
         LEFT JOIN markets m ON p.market_id = m.market_id
     
@@ -34,6 +35,17 @@ public final class PerpsPositionDAO: PerpsDAO {
     
     public func position(marketID: String) -> PerpetualPositionItem? {
         db.select(with: Self.itemSQL + "WHERE p.market_id = ?", arguments: [marketID])
+    }
+    
+    public func save(position: PerpetualPosition) -> PerpetualPositionItem? {
+        try? db.writeAndReturnError { db in
+            try position.save(db)
+            return try PerpetualPositionItem.fetchOne(
+                db,
+                sql: Self.itemSQL + "WHERE p.position_id = ? LIMIT 1",
+                arguments: [position.positionID]
+            )
+        }
     }
     
     public func positionItems() -> [PerpetualPositionItem] {

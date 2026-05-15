@@ -104,6 +104,28 @@ public final class PerpsDatabase: Database {
             }
         }
         
+        migrator.registerMigration("auto_closing") { db in
+            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(positions)")
+            let columnNames = infos.map(\.name)
+            if !columnNames.contains("take_profit_price") {
+                try db.execute(sql: "ALTER TABLE positions ADD COLUMN take_profit_price TEXT")
+            }
+            if !columnNames.contains("stop_loss_price") {
+                try db.execute(sql: "ALTER TABLE positions ADD COLUMN stop_loss_price TEXT")
+            }
+            if !columnNames.contains("liquidation_price") {
+                try db.execute(sql: "ALTER TABLE positions ADD COLUMN liquidation_price TEXT")
+            }
+        }
+        
+        migrator.registerMigration("price_scale") { db in
+            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(markets)")
+            let columnNames = infos.map(\.name)
+            if !columnNames.contains("price_scale") {
+                try db.execute(sql: "ALTER TABLE markets ADD COLUMN price_scale INTEGER DEFAULT 2")
+            }
+        }
+        
         return migrator
     }
     

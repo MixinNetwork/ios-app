@@ -34,6 +34,8 @@ extension URL {
     static let commonWallet         = URL(string: R.string.localizable.url_classic_wallet())!
     static let importWallet         = URL(string: R.string.localizable.url_import_wallet())!
     static let recoveryKit          = URL(string: R.string.localizable.url_recovery_kit())!
+    static let perpsTakeProfit      = URL(string: R.string.localizable.url_perps_take_profit())!
+    static let perpsStopLoss        = URL(string: R.string.localizable.url_perps_stop_loss())!
     
     static func bindReferral(code: String) -> String {
         "https://mixin.one/referrals/" + code

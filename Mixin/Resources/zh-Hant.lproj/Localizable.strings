@@ -178,7 +178,7 @@
 "authorized" = "已授權";
 "auto_back_up_hint" = "只會在 Wi-Fi 下自動備份聊天記錄。";
 "auto_backup" = "自動備份";
-"auto_close_description" = "達到目標時自動平倉";
+"auto_close_description" = "達到觸發價時自動平倉";
 "auto_close_subtitle_after_open" = "開倉 %1$@  ·  當前 %2$@";
 "auto_close_subtitle_before_open" = "當前 %@";
 "auto_download_hint" = "媒體自動下載設定，所有語音訊息將自動下載。";
@@ -875,7 +875,7 @@
 "location_empty" = "找不到 \"%@\"\n換個名字試試吧";
 "location_undetermined" = "目前無法確定位置，請稍候重試";
 "lock_in_profits" = "鎖定收益";
-"lock_in_profits_description" = "價格達到目標時自動平倉，及時鎖定利潤";
+"lock_in_profits_description" = "價格達到觸發價時自動平倉，及時鎖定利潤";
 "lock_with_biometric" = "%@鎖定";
 "log_in" = "登入";
 "log_out" = "退出登入";
@@ -1236,7 +1236,7 @@
 "preparing" = "正在準備...";
 "preparing_progress" = "備份中...（%@）";
 "prevent_further_loss" = "防止進一步虧損";
-"prevent_further_loss_description" = "價格跌至目標時自動平倉，幫助控制虧損";
+"prevent_further_loss_description" = "價格跌至觸發價時自動平倉，幫助控制虧損";
 "preview" = "預覽";
 "price" = "價格";
 "price_alert_notification_permission" = "價格預警需要開啟通知許可權";

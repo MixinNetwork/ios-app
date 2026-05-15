@@ -135,6 +135,8 @@ extension DiagnoseViewController: UITableViewDelegate {
             AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip = false
             AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = false
             AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = false
+            AppGroupUserDefaults.Wallet.perpsOpenPositionTakeProfitDismissalDate = .distantPast
+            AppGroupUserDefaults.Wallet.perpsOpenPositionStopLossDismissalDate = .distantPast
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
         case (10, 0):
             AppGroupUserDefaults.appUpdateTipDismissalDate = nil

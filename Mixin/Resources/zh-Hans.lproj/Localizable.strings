@@ -178,7 +178,7 @@
 "authorized" = "已授权";
 "auto_back_up_hint" = "只会在 Wi-Fi 下自动备份聊天记录。";
 "auto_backup" = "自动备份";
-"auto_close_description" = "达到目标时自动平仓";
+"auto_close_description" = "达到触发价时自动平仓";
 "auto_close_subtitle_after_open" = "开仓 %1$@  ·  当前 %2$@";
 "auto_close_subtitle_before_open" = "当前 %@";
 "auto_download_hint" = "媒体自动下载设定，所有语音消息将自动下载。";
@@ -875,7 +875,7 @@
 "location_empty" = "找不到 \"%@\"\n换个名字试试吧";
 "location_undetermined" = "目前无法确定位置，请稍候重试";
 "lock_in_profits" = "锁定收益";
-"lock_in_profits_description" = "价格达到目标时自动平仓，及时锁定利润";
+"lock_in_profits_description" = "价格达到触发价时自动平仓，及时锁定利润";
 "lock_with_biometric" = "%@锁定";
 "log_in" = "登录";
 "log_out" = "退出登录";
@@ -1236,7 +1236,7 @@
 "preparing" = "正在准备...";
 "preparing_progress" = "备份中...（%@）";
 "prevent_further_loss" = "防止进一步亏损";
-"prevent_further_loss_description" = "价格跌至目标时自动平仓，帮助控制亏损";
+"prevent_further_loss_description" = "价格跌至触发价时自动平仓，帮助控制亏损";
 "preview" = "预览";
 "price" = "价格";
 "price_alert_notification_permission" = "价格预警需要开启通知权限";

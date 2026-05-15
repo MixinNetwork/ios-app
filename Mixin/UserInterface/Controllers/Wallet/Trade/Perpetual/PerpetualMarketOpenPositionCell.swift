@@ -3,8 +3,7 @@ import UIKit
 final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     
     protocol Delegate: AnyObject {
-        func perpetualMarketOpenPositionCellQuestionAboutSize(_ cell: PerpetualMarketOpenPositionCell)
-        func perpetualMarketOpenPositionCellQuestionAboutAutoClosing(_ cell: PerpetualMarketOpenPositionCell)
+        func perpetualMarketOpenPositionCell(_ cell: PerpetualMarketOpenPositionCell, requestManual page: PerpsManual.Page)
         func perpetualMarketOpenPositionCellAskToShare(_ cell: PerpetualMarketOpenPositionCell)
         func perpetualMarketOpenPositionCellRequestTakeProfit(_ cell: PerpetualMarketOpenPositionCell)
         func perpetualMarketOpenPositionCellRequestStopLoss(_ cell: PerpetualMarketOpenPositionCell)
@@ -103,11 +102,15 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     }
     
     @IBAction func questionAboutSize(_ sender: Any) {
-        delegate?.perpetualMarketOpenPositionCellQuestionAboutSize(self)
+        delegate?.perpetualMarketOpenPositionCell(self, requestManual: .size)
+    }
+    
+    @IBAction func questionAboutLiquidation(_ sender: Any) {
+        delegate?.perpetualMarketOpenPositionCell(self, requestManual: .liquidation)
     }
     
     @IBAction func questionAboutAutoClosing(_ sender: Any) {
-        delegate?.perpetualMarketOpenPositionCellQuestionAboutAutoClosing(self)
+        delegate?.perpetualMarketOpenPositionCell(self, requestManual: .autoClosing)
     }
     
     @IBAction func takeProfit(_ sender: Any) {

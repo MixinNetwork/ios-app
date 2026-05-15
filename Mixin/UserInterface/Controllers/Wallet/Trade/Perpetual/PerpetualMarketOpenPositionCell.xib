@@ -174,16 +174,24 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="hFl-6z-Saf">
-                                        <rect key="frame" x="208.33333333333334" y="0.0" width="94.666666666666657" height="41.333333333333336"/>
+                                        <rect key="frame" x="188.33333333333334" y="0.0" width="114.66666666666666" height="41.333333333333336"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Liquidation Price" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bDr-Fv-m4M">
-                                                <rect key="frame" x="0.0" y="0.0" width="94.666666666666671" height="14.333333333333334"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" name="text_quaternary"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="I6g-6e-sOx">
+                                                <rect key="frame" x="0.0" y="0.0" width="114.66666666666667" height="14.333333333333334"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Liquidation Price" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bDr-Fv-m4M">
+                                                        <rect key="frame" x="0.0" y="0.0" width="94.666666666666671" height="14.333333333333334"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" name="text_quaternary"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info" translatesAutoresizingMaskIntoConstraints="NO" id="D20-Bn-Z2V">
+                                                        <rect key="frame" x="98.666666666666657" y="0.0" width="16" height="14.333333333333334"/>
+                                                    </imageView>
+                                                </subviews>
+                                            </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$1,542.02" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ccp-1N-i7L">
-                                                <rect key="frame" x="0.0" y="24.333333333333343" width="94.666666666666671" height="17"/>
+                                                <rect key="frame" x="0.0" y="24.333333333333343" width="114.66666666666667" height="17"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" name="text"/>
                                                 <nil key="highlightedColor"/>
@@ -325,6 +333,17 @@
                             <action selector="questionAboutSize:" destination="sup-Pc-C7A" eventType="touchUpInside" id="W7F-n0-hPf"/>
                         </connections>
                     </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="svB-na-CPX">
+                        <rect key="frame" x="293" y="170" width="36" height="36"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="36" id="lIy-Fh-NBd"/>
+                        </constraints>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain"/>
+                        <connections>
+                            <action selector="questionAboutLiquidation:" destination="sup-Pc-C7A" eventType="touchUpInside" id="Mkq-me-Pfk"/>
+                        </connections>
+                    </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8qY-Zm-GKw">
                         <rect key="frame" x="75.666666666666671" y="232" width="36" height="36"/>
                         <constraints>
@@ -353,6 +372,7 @@
                 <color key="backgroundColor" name="background"/>
                 <constraints>
                     <constraint firstItem="8qY-Zm-GKw" firstAttribute="centerX" secondItem="vfO-er-XWk" secondAttribute="centerX" id="22Y-ta-fVu"/>
+                    <constraint firstItem="svB-na-CPX" firstAttribute="centerY" secondItem="D20-Bn-Z2V" secondAttribute="centerY" id="2X5-dA-0ac"/>
                     <constraint firstItem="wOH-en-RGM" firstAttribute="centerX" secondItem="LJE-hL-T6N" secondAttribute="centerX" constant="-5" id="3nG-kQ-nXw"/>
                     <constraint firstItem="mzf-F7-ZcK" firstAttribute="centerX" secondItem="1ak-wE-I8R" secondAttribute="centerX" id="4Jn-RL-epO"/>
                     <constraint firstAttribute="trailing" secondItem="om6-bJ-L0v" secondAttribute="trailing" constant="6" id="6XV-QS-sqF"/>
@@ -363,9 +383,11 @@
                     <constraint firstAttribute="bottom" secondItem="om6-bJ-L0v" secondAttribute="bottom" constant="6" id="IIv-7v-JSs"/>
                     <constraint firstItem="wOH-en-RGM" firstAttribute="centerY" secondItem="LJE-hL-T6N" secondAttribute="centerY" id="OBb-yK-fgg"/>
                     <constraint firstItem="pTA-U1-gyc" firstAttribute="leading" secondItem="cLJ-fz-r8m" secondAttribute="leading" constant="16" id="bRn-uO-Mwq"/>
+                    <constraint firstItem="svB-na-CPX" firstAttribute="centerX" secondItem="D20-Bn-Z2V" secondAttribute="centerX" id="fh0-zi-kYa"/>
                     <constraint firstItem="zq2-QA-wwO" firstAttribute="leading" secondItem="cLJ-fz-r8m" secondAttribute="leading" id="gNq-Ja-zIL"/>
                     <constraint firstAttribute="trailing" secondItem="pTA-U1-gyc" secondAttribute="trailing" constant="16" id="kL7-40-gQb"/>
                     <constraint firstItem="8qY-Zm-GKw" firstAttribute="centerY" secondItem="vfO-er-XWk" secondAttribute="centerY" id="laa-uf-XXW"/>
+                    <constraint firstItem="svB-na-CPX" firstAttribute="width" secondItem="svB-na-CPX" secondAttribute="height" id="qRi-PT-HQU"/>
                     <constraint firstItem="om6-bJ-L0v" firstAttribute="top" secondItem="pTA-U1-gyc" secondAttribute="bottom" constant="20" id="reA-Nl-enp"/>
                     <constraint firstItem="pTA-U1-gyc" firstAttribute="top" secondItem="zq2-QA-wwO" secondAttribute="bottom" id="uMF-Kd-3IS"/>
                 </constraints>
@@ -420,7 +442,7 @@
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

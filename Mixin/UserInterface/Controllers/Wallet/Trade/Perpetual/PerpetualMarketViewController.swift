@@ -709,13 +709,8 @@ extension PerpetualMarketViewController: PerpetualMarketPriceCell.Delegate {
 
 extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegate {
     
-    func perpetualMarketOpenPositionCellQuestionAboutSize(_ cell: PerpetualMarketOpenPositionCell) {
-        let manual = PerpsManual.viewController(initialPage: .size)
-        present(manual, animated: true)
-    }
-    
-    func perpetualMarketOpenPositionCellQuestionAboutAutoClosing(_ cell: PerpetualMarketOpenPositionCell) {
-        let manual = PerpsManual.viewController(initialPage: .autoClosing)
+    func perpetualMarketOpenPositionCell(_ cell: PerpetualMarketOpenPositionCell, requestManual page: PerpsManual.Page) {
+        let manual = PerpsManual.viewController(initialPage: page)
         present(manual, animated: true)
     }
     

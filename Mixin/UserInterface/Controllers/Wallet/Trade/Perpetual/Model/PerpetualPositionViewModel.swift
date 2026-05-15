@@ -72,6 +72,7 @@ struct PerpetualPositionViewModel {
         let leverage = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
         let side = PerpetualOrderSide(rawValue: position.side) ?? .short
         let margin = Decimal(string: position.margin, locale: .enUSPOSIX)
+        let roe = Decimal(string: position.roe, locale: .enUSPOSIX)
         let localizedPnL = CurrencyFormatter.localizedString(
             from: pnl * Currency.current.decimalRate,
             format: .fiatMoneyPretty,
@@ -96,7 +97,7 @@ struct PerpetualPositionViewModel {
         self.pnl = localizedPnL
         self.pnlColor = pnl >= 0 ? .rising : .falling
         if let margin, margin != 0 {
-            let roe = max(-1, pnl / margin) // FIXME: Use `position.roe`
+            let roe = roe ?? max(-1, pnl / margin)
             let roeWithSign = PercentageFormatter.string(
                 from: roe,
                 format: .pretty,
@@ -171,16 +172,13 @@ struct PerpetualPositionViewModel {
         } else {
             nil
         }
-        self.liquidationPrice = if let entryPrice {
-            PerpetualChangeSimulation.liquidationPrice(
-                side: side,
-                entryPrice: entryPrice,
-                leverageMultiplier: Decimal(position.leverage)
-            ).formatted(
-                position.priceFormatStyle
-            )
+        if let price = position.liquidationPrice,
+           !price.isEmpty,
+           let decimalPrice = Decimal(string: price, locale: .enUSPOSIX)
+        {
+            self.liquidationPrice = decimalPrice.formatted(position.priceFormatStyle)
         } else {
-            nil
+            self.liquidationPrice = nil
         }
         self.takeProfitPrice = if let price = position.takeProfitPrice, !price.isEmpty {
             Decimal(string: price, locale: .enUSPOSIX)

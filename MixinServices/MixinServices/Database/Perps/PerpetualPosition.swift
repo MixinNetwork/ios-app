@@ -28,6 +28,7 @@ public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchab
         case updatedAt = "updated_at"
         case takeProfitPrice = "take_profit_price"
         case stopLossPrice = "stop_loss_price"
+        case liquidationPrice = "liquidation_price"
     }
     
     public let positionID: String
@@ -50,6 +51,7 @@ public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchab
     public let updatedAt: String
     public let takeProfitPrice: String?
     public let stopLossPrice: String?
+    public let liquidationPrice: String?
     
 }
 

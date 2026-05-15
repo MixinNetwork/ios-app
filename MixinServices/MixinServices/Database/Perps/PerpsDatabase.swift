@@ -113,6 +113,9 @@ public final class PerpsDatabase: Database {
             if !columnNames.contains("stop_loss_price") {
                 try db.execute(sql: "ALTER TABLE positions ADD COLUMN stop_loss_price TEXT")
             }
+            if !columnNames.contains("liquidation_price") {
+                try db.execute(sql: "ALTER TABLE positions ADD COLUMN liquidation_price TEXT")
+            }
         }
         
         migrator.registerMigration("price_scale") { db in

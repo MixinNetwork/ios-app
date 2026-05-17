@@ -147,7 +147,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             takeProfitContentLabel.text = takeProfitPrice.formatted(viewModel.priceFormatStyle)
             takeProfitContentLabel.isHidden = false
             if var config = takeProfitButton.configuration {
-                config.image = R.image.delete_compact()
+                config.image = R.image.delete_perps_auto_closing()
                 config.imagePadding = 0
                 config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 4, bottom: 10, trailing: 10)
                 config.attributedTitle = nil
@@ -170,7 +170,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             stopLossContentLabel.text = stopLossPrice.formatted(viewModel.priceFormatStyle)
             stopLossContentLabel.isHidden = false
             if var config = stopLossButton.configuration {
-                config.image = R.image.delete_compact()
+                config.image = R.image.delete_perps_auto_closing()
                 config.imagePadding = 0
                 config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 4, bottom: 10, trailing: 10)
                 config.attributedTitle = nil

@@ -30,8 +30,28 @@ final class CheckSessionEnvironmentViewController: UIViewController {
     
     private var isUsernameJustInitialized = false
     
-    private var allUsersInitialBots: [String] {
-        [BotUserID.teamMixin]
+    private var initialBots: [String] {
+        if Locale.preferredLanguages.first?.hasPrefix("zh-Hans") ?? false {
+            [
+                BotUserID.teamMixin,
+                BotUserID.mixinRoute,
+                BotUserID.marketAlerts,
+                BotUserID.mixinDiscourse,
+                BotUserID.rewards,
+                BotUserID.mixinCard,
+                BotUserID.mixinCash,
+            ]
+        } else {
+            [
+                BotUserID.teamMixin,
+                BotUserID.mixinRoute,
+                BotUserID.marketAlerts,
+                BotUserID.mixinCommunity,
+                BotUserID.rewards,
+                BotUserID.mixinCard,
+                BotUserID.mixinCash,
+            ]
+        }
     }
     
     init(freshAccount account: Account) {
@@ -98,10 +118,19 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                     Logger.login.info(category: "CheckSessionEnvironment", message: "Sync contacts")
                     ContactAPI.syncContacts()
                 }
-                for id in self.allUsersInitialBots {
+                assert(MixinKeys.testAccountPrefix != nil)
+                let initializeBots: Bool
+                if let phone = self.account.phone, let invalidPrefix = MixinKeys.testAccountPrefix {
+                    initializeBots = !phone.hasPrefix(invalidPrefix)
+                } else {
+                    initializeBots = true
+                }
+                if initializeBots {
                     Logger.login.info(category: "CheckSessionEnvironment", message: "Initialize bots")
-                    let job = InitializeBotJob(userID: id)
-                    ConcurrentJobQueue.shared.addJob(job: job)
+                    for id in self.initialBots {
+                        let job = InitializeBotJob(userID: id)
+                        ConcurrentJobQueue.shared.addJob(job: job)
+                    }
                 }
                 self.check()
             }

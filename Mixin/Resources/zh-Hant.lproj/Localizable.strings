@@ -10,9 +10,9 @@
 "add_address" = "新增地址";
 "add_alert" = "添加價格預警";
 "add_bot" = "新增機器人";
-"add_by_id_or_phone_number" = "透過 Mixin ID 或手機號碼新增";
-"add_by_phone_contacts" = "透過手機通訊錄新增";
-"add_by_qr_code" = "透過二維碼新增";
+"add_by_id_or_phone_number" = "通過 Mixin ID 或手機號碼新增";
+"add_by_phone_contacts" = "通過手機通訊錄新增";
+"add_by_qr_code" = "通過二維碼新增";
 "add_circle" = "新增圈子";
 "add_contact" = "新增聯絡人";
 "add_conversations" = "新增會話";
@@ -24,7 +24,7 @@
 "add_now" = "立即新增";
 "add_or_remove_favorite_bots" = "新增或刪除收藏的機器人";
 "add_participants" = "新增成員";
-"add_phone_desc" = "您可以透過手機號碼登入您的帳戶。手機號碼將與您 MPC 錢包的金鑰片段關聯。完整的金鑰僅存在於當前裝置的 TEE 安全環境中。閱讀檔案以瞭解%@。";
+"add_phone_desc" = "您可以通過手機號碼登入您的帳戶。手機號碼將與您 MPC 錢包的金鑰片段關聯。完整的金鑰僅存在於當前裝置的 TEE 安全環境中。閱讀檔案以瞭解%@。";
 "add_phone_instruction_1" = "手機號和助記詞將連結到同一個金鑰分片。";
 "add_phone_instruction_2" = "手機號和助記詞登入的是同一個賬號。";
 "add_phone_instruction_3" = "無法新增一個已註冊為 Mixin 賬號的手機號。";
@@ -33,7 +33,7 @@
 "add_recovery_contact_before_instruction_2" = "要新增的恢復聯絡人保持 Mixin 線上或者正在與您面對面。";
 "add_recovery_contact_before_instruction_3" = "要新增的恢復聯絡人已添加當前賬號（%@）為聯絡人，否則對方可能無法收到驗證碼。";
 "add_recovery_contact_instruction_1" = "新增您信任的人為恢復聯絡人，例如你的家人、朋友或同事。";
-"add_recovery_contact_instruction_2" = "若您無法透過手機號或助記詞登入賬號，請向您的恢復聯絡人當面或致電求助。";
+"add_recovery_contact_instruction_2" = "若您無法通過手機號或助記詞登入賬號，請向您的恢復聯絡人當面或致電求助。";
 "add_recovery_contact_instruction_3" = "恢復聯絡人無法轉移您 Mixin 錢包裡的資產，但可以協助您重新訪問賬號。";
 "add_recovery_contact_instruction_4" = "恢復聯絡人無法恢復您的 PIN 。";
 "add_sticker" = "新增貼紙";
@@ -57,7 +57,7 @@
 "address_book" = "地址簿";
 "address_deleted" = "地址已刪除";
 "address_edited" = "地址已修改";
-"address_edited_description" = "您修改地址的請求已透過 Mixin 伺服器確認，您可以立刻使用該地址進行提現。";
+"address_edited_description" = "您修改地址的請求已通過 Mixin 伺服器確認，您可以立刻使用該地址進行提現。";
 "address_editing_description" = "正在將修改地址的請求傳送到 Mixin 伺服器驗證，請稍候。";
 "address_not_found" = "找不到該地址。";
 "address_validity_reminder" = "您已經超過 %3$@ 天沒有使用地址 %1$@（%2$@），請注意檢查地址是否仍然有效。";
@@ -173,8 +173,8 @@
 "authorization" = "授權";
 "authorizations" = "授權";
 "authorize" = "授權";
-"authorize_desktop_login" = "透過%@授權桌面端登入";
-"authorize_payment_via" = "透過%@驗證支付";
+"authorize_desktop_login" = "通過%@授權桌面端登入";
+"authorize_payment_via" = "通過%@驗證支付";
 "authorized" = "已授權";
 "auto_back_up_hint" = "只會在 Wi-Fi 下自動備份聊天記錄。";
 "auto_backup" = "自動備份";
@@ -258,7 +258,7 @@
 "change_number_instead" = "僅修改手機號碼";
 "change_percent_period_day" = "%d天 %%";
 "change_percent_period_hour" = "%d小時 %%";
-"change_phone_desc" = "您可以透過手機號碼登入您的帳戶。當前手機號碼（%1$@）已與 MPC 錢包的金鑰片段關聯。完整的金鑰僅存在於當前裝置的 TEE 安全環境中。閱讀檔案以瞭解%2$@。";
+"change_phone_desc" = "您可以通過手機號碼登入您的帳戶。當前手機號碼（%1$@）已與 MPC 錢包的金鑰片段關聯。完整的金鑰僅存在於當前裝置的 TEE 安全環境中。閱讀檔案以瞭解%2$@。";
 "change_phone_number" = "修改手機號";
 "change_pin" = "修改 PIN";
 "change_pin_interval_hint" = "輸入 PIN 修改使用間隔";
@@ -283,7 +283,7 @@
 "chat_group_call_invite" = "%@邀請你加入群組語音";
 "chat_group_call_self_did_not_answer" = "你未接聽群組語音";
 "chat_group_exit" = "%@離開了群組";
-"chat_group_join" = "%@透過邀請連結加入群組";
+"chat_group_join" = "%@通過邀請連結加入群組";
 "chat_group_remove" = "%1$@移除了%2$@";
 "chat_list_empty_info" = "你可以與你的 Mixin 好友一起聊天。";
 "chat_not_support" = "不支援此型別訊息。請升級 Mixin 檢視。 %@。";
@@ -648,10 +648,6 @@
 "example_direction" = "方向";
 "example_leverage_multiplier" = "槓桿";
 "example_price_change" = "價格變化";
-"example_scene1_falls" = "場景一：價格下跌";
-"example_scene1_rises" = "場景一：價格上漲";
-"example_scene2_falls" = "場景二：價格下跌";
-"example_scene2_rises" = "場景二：價格上漲";
 "exchanges_or_wallets" = "交易所或其他錢包";
 "exchanging_data" = "正在同步金鑰分片，進度 %@%%...";
 "exit_confirmation" = "退出\"%@\"？";
@@ -767,7 +763,7 @@
 "import_single_chain_wallet" = "匯入單鏈錢包";
 "import_wallet_count" = "匯入 %d 個錢包";
 "import_wallet_count_one" = "匯入 1 個錢包";
-"import_wallet_empty_description" = "透過私鑰或 12/24 個助記詞匯入錢包，支援 Bitcoin、Solana、Ethereum 及其他 EVM 網路。";
+"import_wallet_empty_description" = "通過私鑰或 12/24 個助記詞匯入錢包，支援 Bitcoin、Solana、Ethereum 及其他 EVM 網路。";
 "import_wallet_guide_1" = "· 建立一個 Mixin 賬號。";
 "import_wallet_guide_2" = "· 前往錢包列表 → 新增錢包 > 選擇匯入助記詞。";
 "import_wallet_guide_3" = "· 輸入您的 12 或 24 位助記詞或私鑰完成匯入。";
@@ -843,7 +839,7 @@
 "leverage" = "槓桿";
 "light" = "淺色";
 "lightning_address" = "閃電網路地址";
-"lightning_address_explain" = "%@ 是您的閃電網路地址，透過該地址，您可以便捷、安全地接收支付：";
+"lightning_address_explain" = "%@ 是您的閃電網路地址，通過該地址，您可以便捷、安全地接收支付：";
 "lightning_address_explain_1" = "地址格式類似郵箱，簡單好記。";
 "lightning_address_explain_2" = "可重複使用，無需每次生成新的。";
 "lightning_address_explain_3" = "主流閃電網路錢包都支援。";
@@ -859,7 +855,7 @@
 "line_busy_remote" = "對方忙";
 "link" = "連結";
 "link_desktop" = "連結桌面端";
-"link_desktop_description" = "透過二維碼連結桌面端";
+"link_desktop_description" = "通過二維碼連結桌面端";
 "link_recognition_failure" = "連結識別失敗";
 "link_shareable_false" = "該連結已被設定為不允許分享";
 "liquidation_price" = "強平價格";
@@ -916,7 +912,7 @@
 "membership_benefit_get_stars" = "得到 %d 個 Mixin Stars。";
 "membership_benefit_paid_recovery_service" = "支付 %d Mixin Stars 使用資產恢復服務。";
 "membership_benefit_safe_members" = "每個金庫最多 %1$d 個共管人，所有金庫最多 %2$d 個共管人。";
-"membership_elite" = "精英版";
+"membership_elite" = "開拓版";
 "membership_elite_description" = "與家人、朋友或同事一起使用 Mixin Safe 管理大量資產，從而規避盜竊、意外和託管風險。";
 "membership_plan" = "級別";
 "membership_prosperity" = "傳世版";
@@ -953,7 +949,7 @@
 "mixin_server_encounters_errors" = "伺服器出錯，請稍後重試";
 "mixin_support" = "Mixin 客服";
 "mnemonic_phrase" = "助記詞";
-"mnemonic_phrase_instruction" = "你可以透過助記詞登入你的賬號，當前助記詞已關聯到 MPC 錢包的金鑰分片，完整的金鑰只存在當前裝置的 TEE 安全環境中，閱讀檔案以瞭解%@。";
+"mnemonic_phrase_instruction" = "你可以通過助記詞登入你的賬號，當前助記詞已關聯到 MPC 錢包的金鑰分片，完整的金鑰只存在當前裝置的 TEE 安全環境中，閱讀檔案以瞭解%@。";
 "mnemonic_phrase_take_long" = "這應該不會花太長時間。";
 "mnemonic_phrase_tip_1" = "·存放在保險箱或安全的地方";
 "mnemonic_phrase_tip_2" = "·不要在網路上傳送";
@@ -1156,7 +1152,7 @@
 "perps_category_indices" = "指數";
 "perps_category_stocks" = "股票";
 "perps_current_price" = "最新價格";
-"perps_intro_overview" = "Mixin 永續合約是一種以數字資產結算的衍生品交易方式，支援做多和做空，無到期日。透過槓桿機制，交易者可以放大倉位，把握價格上漲或下跌帶來的交易機會。";
+"perps_intro_overview" = "Mixin 永續合約是一種以數字資產結算的衍生品交易方式，支援做多和做空，無到期日。通過槓桿機制，交易者可以放大倉位，把握價格上漲或下跌帶來的交易機會。";
 "perps_intro_risk_notice_1" = "槓桿交易可能放大收益，同時也會放大虧損";
 "perps_intro_risk_notice_2" = "當保證金不足時，倉位可能被強制平倉";
 "perps_intro_risk_notice_3" = "請合理控制槓桿倍數與倉位規模，謹慎交易";
@@ -1183,7 +1179,7 @@
 "phone_contacts" = "手機通訊錄";
 "phone_number" = "手機號碼";
 "phone_number_change" = "修改手機號";
-"phone_number_privacy" = "誰可以透過手機號找到你";
+"phone_number_privacy" = "誰可以通過手機號找到你";
 "photo" = "照片";
 "photo_saved" = "圖片已成功儲存在相簿";
 "photo_count" = "%d 張圖片";
@@ -1296,8 +1292,8 @@
 "read_your_snapshots" = "讀取你的轉賬記錄";
 "rebate" = "退款";
 "receive" = "充值";
-"receive_from_address_description" = "透過區塊鏈網路從其他交易所或鏈上錢包接收";
-"receive_from_other_wallets_description" = "透過區塊鏈網路從我的另一個錢包接收";
+"receive_from_address_description" = "通過區塊鏈網路從其他交易所或鏈上錢包接收";
+"receive_from_other_wallets_description" = "通過區塊鏈網路從我的另一個錢包接收";
 "receive_money" = "我的收款碼";
 "received" = "收到";
 "receiver" = "至";
@@ -1310,7 +1306,7 @@
 "recovery_kit" = "賬號恢復";
 "recovery_kit_alert" = "為了您的賬戶安全，請儘快備份助記詞、新增手機號並且設定恢復聯絡人，閱讀檔案以瞭解更多。";
 "recovery_kit_attention" = "注意：賬號恢復無法幫助您恢復 PIN";
-"recovery_kit_instruction" = "Mixin 的 MPC 錢包基於去中心化金鑰協議 TIP 構建，您可以透過手機號、助記詞或可信聯絡人登入恢復你的賬號，錢包完整的金鑰只存在當前裝置的 TEE 安全環境中，閱讀檔案以瞭解%@。";
+"recovery_kit_instruction" = "Mixin 的 MPC 錢包基於去中心化金鑰協議 TIP 構建，您可以通過手機號、助記詞或可信聯絡人登入恢復你的賬號，錢包完整的金鑰只存在當前裝置的 TEE 安全環境中，閱讀檔案以瞭解%@。";
 "red_up_green_down" = "紅漲綠跌";
 "referral" = "邀請";
 "referral_banner" = "邀請好友贏取最高 60%% 手續費分傭！";
@@ -1417,12 +1413,12 @@
 "scan_code_description" = "請用其他裝置掃描以下二維碼";
 "scan_qr_code" = "掃描二維碼";
 "scan_qr_code_to_send_token" = "掃描二維碼向我傳送 %@";
-"scan_qr_code_to_transfer_on_mixin" = "掃描二維碼透過 Mixin 向我轉賬 %@";
+"scan_qr_code_to_transfer_on_mixin" = "掃描二維碼通過 Mixin 向我轉賬 %@";
 "scan_to_restore" = "掃描以恢復";
 "scan_to_restore_hint" = "點下面按鈕掃碼建立連線";
 "screen_lock" = "鎖屏";
 "screen_lock_enable_biometric_hint" = "您需要使用%@來解鎖 Mixin。當 Mixin 鎖定時，您仍可以接聽通話或在通知中回覆訊息。";
-"screen_lock_unlock" = "透過%@解鎖 Mixin";
+"screen_lock_unlock" = "通過%@解鎖 Mixin";
 "search" = "搜尋";
 "search_contacts" = "搜尋聯絡人";
 "search_conversation" = "搜尋聊天記錄";
@@ -1559,8 +1555,8 @@
 "sign_in_with_mnemonic_phrase" = "助記詞登入";
 "sign_up_15_secs" = "15 秒完成註冊";
 "sign_up_have_account" = "已有帳戶?";
-"sign_with_emergency_contact" = "透過恢復聯絡人登入";
-"sign_with_mobile_number" = "透過手機號登入";
+"sign_with_emergency_contact" = "通過恢復聯絡人登入";
+"sign_with_mobile_number" = "通過手機號登入";
 "signature_request" = "簽名確認";
 "signature_request_from" = "該簽名請求來自 %@。";
 "signed_message" = "簽名";

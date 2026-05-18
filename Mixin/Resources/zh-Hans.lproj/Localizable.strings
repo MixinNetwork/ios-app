@@ -648,10 +648,6 @@
 "example_direction" = "方向";
 "example_leverage_multiplier" = "杠杆";
 "example_price_change" = "价格变化";
-"example_scene1_falls" = "场景一：价格下跌";
-"example_scene1_rises" = "场景一：价格上涨";
-"example_scene2_falls" = "场景二：价格下跌";
-"example_scene2_rises" = "场景二：价格上涨";
 "exchanges_or_wallets" = "交易所或其他钱包";
 "exchanging_data" = "正在同步密钥分片，进度 %@%%...";
 "exit_confirmation" = "退出\"%@\"？";
@@ -916,7 +912,7 @@
 "membership_benefit_get_stars" = "得到 %d 个 Mixin Stars。";
 "membership_benefit_paid_recovery_service" = "支付 %d Mixin Stars 使用资产恢复服务。";
 "membership_benefit_safe_members" = "每个金库最多 %1$d 个共管人，所有金库最多 %2$d 个共管人。";
-"membership_elite" = "精英版";
+"membership_elite" = "开拓版";
 "membership_elite_description" = "与家人、朋友或同事一起使用 Mixin Safe 管理大量资产，从而规避盗窃、意外和托管风险。";
 "membership_plan" = "级别";
 "membership_prosperity" = "传世版";

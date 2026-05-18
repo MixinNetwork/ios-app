@@ -648,10 +648,6 @@
 "example_direction" = "Direction";
 "example_leverage_multiplier" = "Leverage";
 "example_price_change" = "Price Change";
-"example_scene1_falls" = "Scenario 1: Price Falls";
-"example_scene1_rises" = "Scenario 1: Price Rises";
-"example_scene2_falls" = "Scenario 2: Price Falls";
-"example_scene2_rises" = "Scenario 2: Price Rises";
 "exchanges_or_wallets" = "Exchanges or Wallets";
 "exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "\"%@\"を退出しますか?";
@@ -916,7 +912,7 @@
 "membership_benefit_get_stars" = "Get %d Mixin Stars.";
 "membership_benefit_paid_recovery_service" = "Pay %d Mixin Stars to use the recovery service.";
 "membership_benefit_safe_members" = "%1$d members per Safe, %2$d members in total.";
-"membership_elite" = "Elite";
+"membership_elite" = "Expansion";
 "membership_elite_description" = "Manage large fortune in Mixin Safe with family, friends or colleagues, so you can avoid thefts, accidents and custody risks.";
 "membership_plan" = "Plan";
 "membership_prosperity" = "Prosperity";

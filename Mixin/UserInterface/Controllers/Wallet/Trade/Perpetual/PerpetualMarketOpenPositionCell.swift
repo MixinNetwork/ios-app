@@ -30,6 +30,8 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     @IBOutlet weak var liquidationPriceTitleLabel: UILabel!
     @IBOutlet weak var liquidationPriceContentLabel: UILabel!
     
+    @IBOutlet weak var autoClosingStackView: UIStackView!
+    
     @IBOutlet weak var takeProfitTitleLabel: InsetLabel!
     @IBOutlet weak var takeProfitContentStackView: UIStackView!
     @IBOutlet weak var takeProfitContentLabel: InsetLabel!
@@ -189,6 +191,11 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
                 stopLossButton.configuration = config
             }
         }
+        UIView.performWithoutAnimation {
+            takeProfitButton.sizeToFit()
+            stopLossButton.sizeToFit()
+            autoClosingStackView.layoutIfNeeded()
+        }
     }
     
     func updateTakeProfit(busy: Bool) {
@@ -199,6 +206,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             takeProfitActivityIndicator.stopAnimating()
             takeProfitButton.isHidden = false
         }
+        UIView.performWithoutAnimation(autoClosingStackView.layoutIfNeeded)
     }
     
     func updateStopLoss(busy: Bool) {
@@ -209,6 +217,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             stopLossActivityIndicator.stopAnimating()
             stopLossButton.isHidden = false
         }
+        UIView.performWithoutAnimation(autoClosingStackView.layoutIfNeeded)
     }
     
 }

@@ -225,7 +225,7 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X32-JR-2o1">
                                         <rect key="frame" x="0.0" y="16" width="62" height="37"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" placeholderIntrinsicWidth="0.0" placeholderIntrinsicHeight="37" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JIH-H7-HdT" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" placeholderIntrinsicWidth="0.0" placeholderIntrinsicHeight="37" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JIH-H7-HdT" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="0.0" height="37"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" name="text"/>
@@ -247,8 +247,8 @@
                                                     <action selector="takeProfit:" destination="sup-Pc-C7A" eventType="touchUpInside" id="Gue-RN-qkC"/>
                                                 </connections>
                                             </button>
-                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nah-50-eDy" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="62" y="0.0" width="0.0" height="37"/>
+                                            <view hidden="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Nah-50-eDy" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="62" y="0.0" width="50" height="37"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="tintColor" name="text_tertiary"/>
                                                 <constraints>
@@ -284,7 +284,7 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CNd-dR-Xvh">
                                         <rect key="frame" x="34.333333333333343" y="16" width="62" height="37"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" placeholderIntrinsicWidth="0.0" placeholderIntrinsicHeight="37" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WH1-2L-Tfa" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" placeholderIntrinsicWidth="0.0" placeholderIntrinsicHeight="37" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WH1-2L-Tfa" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="0.0" height="37"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" name="text"/>
@@ -306,8 +306,8 @@
                                                     <action selector="stopLoss:" destination="sup-Pc-C7A" eventType="touchUpInside" id="jR4-ma-BNd"/>
                                                 </connections>
                                             </button>
-                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BnW-En-frp" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="62" y="0.0" width="0.0" height="37"/>
+                                            <view hidden="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="BnW-En-frp" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="62" y="0.0" width="50" height="37"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <color key="tintColor" name="text_tertiary"/>
                                                 <constraints>
@@ -337,6 +337,7 @@
                         <rect key="frame" x="293" y="170" width="36" height="36"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="36" id="lIy-Fh-NBd"/>
+                            <constraint firstAttribute="width" secondItem="svB-na-CPX" secondAttribute="height" id="qRi-PT-HQU"/>
                         </constraints>
                         <state key="normal" title="Button"/>
                         <buttonConfiguration key="configuration" style="plain"/>
@@ -387,13 +388,13 @@
                     <constraint firstItem="zq2-QA-wwO" firstAttribute="leading" secondItem="cLJ-fz-r8m" secondAttribute="leading" id="gNq-Ja-zIL"/>
                     <constraint firstAttribute="trailing" secondItem="pTA-U1-gyc" secondAttribute="trailing" constant="16" id="kL7-40-gQb"/>
                     <constraint firstItem="8qY-Zm-GKw" firstAttribute="centerY" secondItem="vfO-er-XWk" secondAttribute="centerY" id="laa-uf-XXW"/>
-                    <constraint firstItem="svB-na-CPX" firstAttribute="width" secondItem="svB-na-CPX" secondAttribute="height" id="qRi-PT-HQU"/>
                     <constraint firstItem="om6-bJ-L0v" firstAttribute="top" secondItem="pTA-U1-gyc" secondAttribute="bottom" constant="20" id="reA-Nl-enp"/>
                     <constraint firstItem="pTA-U1-gyc" firstAttribute="top" secondItem="zq2-QA-wwO" secondAttribute="bottom" id="uMF-Kd-3IS"/>
                 </constraints>
             </collectionViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
+                <outlet property="autoClosingStackView" destination="om6-bJ-L0v" id="oMW-Le-pX4"/>
                 <outlet property="directionLeverageLabel" destination="Qsy-bK-8wp" id="aF9-77-amh"/>
                 <outlet property="directionSideLabel" destination="Wxn-Pa-lTs" id="FLp-eK-cwO"/>
                 <outlet property="directionTitleLabel" destination="hDw-8w-TA8" id="uCI-ST-X4c"/>
@@ -442,7 +443,7 @@
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

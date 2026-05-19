@@ -29,6 +29,10 @@
 "add_phone_instruction_2" = "The mobile number and mnemonic phrase log into the same account.";
 "add_phone_instruction_3" = "You cannot add a mobile number registered to a Mixin account.";
 "add_phone_instruction_4" = "Once bound, the mobile number cannot be removed.";
+"add_position" = "Add";
+"add_position_add_size" = "Add Size";
+"add_position_title" = "Add to %1$@ %2$@";
+"add_position_total_size" = "Total Size";
 "add_recovery_contact_before_instruction_1" = "The recovery contact you want to add has downloaded and logged in to Mixin.";
 "add_recovery_contact_before_instruction_2" = "The recovery contact you want to add should stay online in Mixin or meet you face to face.";
 "add_recovery_contact_before_instruction_3" = "The recovery contact you want to add has added the current account (%@) as a contact; otherwise, they may not receive the verification code.";
@@ -50,6 +54,7 @@
 "added" = "Added";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
+"adding_position" = "Adding";
 "address" = "Address";
 "address_added" = "Address Added";
 "address_added_description" = "The address has been added. You can use it for withdrawals right away.";
@@ -319,7 +324,7 @@
 "cleared" = "Cleared";
 "clock_skew_hint" = "Please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically";
 "close" = "Close";
-"close_position" = "Close Position";
+"close_position" = "Close";
 "close_price" = "Close Price";
 "closed_long" = "Closed Long";
 "closed_short" = "Closed Short";
@@ -1860,6 +1865,7 @@
 "view_invoice" = "View Invoice";
 "view_on_explorer" = "View on Explorer";
 "view_on_marketplace" = "View on Marketplace";
+"view_perps_market" = "View Market";
 "view_plan" = "View Plan";
 "view_wallet" = "View Wallet";
 "voice_call_cancelled" = "Voice call cancelled";

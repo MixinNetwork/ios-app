@@ -154,7 +154,7 @@ final class TradeViewController: UIViewController {
             )
             navigationController?.pushViewController(orders, animated: true)
         case .perpetualFutures:
-            let positions = AllPerpetualPositionsViewController(wallet: wallet, content: .open)
+            let positions = PerpetualPositionsViewController(wallet: wallet)
             navigationController?.pushViewController(positions, animated: true)
         }
     }

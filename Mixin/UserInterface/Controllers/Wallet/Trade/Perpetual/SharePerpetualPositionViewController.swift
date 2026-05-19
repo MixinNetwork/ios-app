@@ -3,24 +3,23 @@ import MixinServices
 
 final class SharePerpetualPositionViewController: ShareViewAsPictureViewController<SharePerpetualPositionView> {
     
-    private let viewModel: PerpetualPositionViewModel
+    private let activityItemTitle: String
     private let link: String
     
     private weak var positionView: SharePerpetualPositionView!
     
     init(
-        viewModel: PerpetualPositionViewModel,
-        latestPrice: Decimal?,
+        dataSource: SharePerpetualPositionDataSource,
         rebatingCode: Referral.RebatingCode?,
     ) {
         let contentView = R.nib.sharePerpetualPositionView(withOwner: nil)!
-        contentView.load(viewModel: viewModel, latestPrice: latestPrice)
+        contentView.load(dataSource: dataSource)
         let link = if let rebatingCode {
             contentView.obiView.load(gradient: false, content: .referral(rebatingCode))
         } else {
             contentView.obiView.load(gradient: false, content: .installMixin)
         }
-        self.viewModel = viewModel
+        self.activityItemTitle = dataSource.title
         self.link = link
         super.init(contentView: contentView, size: CGSize(width: 295, height: 553))
     }
@@ -41,8 +40,7 @@ final class SharePerpetualPositionViewController: ShareViewAsPictureViewControll
             return
         }
         let image = makeImage()
-        let title = viewModel.directionWithSymbol
-        let item = QRCodeActivityItem(image: image, title: title)
+        let item = QRCodeActivityItem(image: image, title: activityItemTitle)
         let activity = UIActivityViewController(
             activityItems: [item],
             applicationActivities: nil

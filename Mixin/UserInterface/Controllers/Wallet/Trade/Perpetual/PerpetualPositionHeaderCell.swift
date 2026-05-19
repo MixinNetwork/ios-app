@@ -27,24 +27,14 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
         iconView.prepareForReuse()
     }
     
-    func load(viewModel: PerpetualPositionViewModel) {
+    func load(viewModel: PerpetualActivityViewModel) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        switch viewModel.type {
-        case .open:
-            titleTopConstraint.constant = 15
-            directionTopConstraint.constant = 16
-            titleLabel.text = viewModel.directionWithSymbol
-            titleLabel.font = .systemFont(ofSize: 24, weight: .medium)
-            symbolLabel.text = nil
-            symbolLabel.isHidden = true
-        case .closed:
-            titleTopConstraint.constant = 7
-            directionTopConstraint.constant = 10
-            titleLabel.text = viewModel.quantity
-            titleLabel.font = .condensed(size: 34)
-            symbolLabel.text = viewModel.tokenSymbol
-            symbolLabel.isHidden = false
-        }
+        titleTopConstraint.constant = 10
+        directionTopConstraint.constant = 13
+        titleLabel.text = viewModel.quantity
+        titleLabel.font = .condensed(size: 34)
+        symbolLabel.text = viewModel.tokenSymbol
+        symbolLabel.isHidden = false
         switch viewModel.side {
         case .long:
             let color = MarketColor.rising.uiColor

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class OpenPerpetualPositionViewController: UIViewController {
+final class OpenPerpetualPositionViewController: PerpsMarginInputViewController {
     
     private enum Multiplier {
         case fixed(Decimal)
@@ -14,20 +14,6 @@ final class OpenPerpetualPositionViewController: UIViewController {
     @IBOutlet weak var tokenIconView: PlainTokenIconView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
-    
-    @IBOutlet weak var marginView: UIView!
-    @IBOutlet weak var marginContentStackView: UIStackView!
-    @IBOutlet weak var marginTitleLabel: UILabel!
-    @IBOutlet weak var marginNetworkLabel: UILabel!
-    @IBOutlet weak var marginTokenSelectorStackView: UIStackView!
-    @IBOutlet weak var marginAmountTextField: UITextField!
-    @IBOutlet weak var marginTokenIconView: BadgeIconView!
-    @IBOutlet weak var marginTokenSymbolLabel: UILabel!
-    @IBOutlet weak var marginTokenFooterStackView: UIStackView!
-    @IBOutlet weak var marginTokenBalanceButton: UIButton!
-    @IBOutlet weak var marginTokenDepositButton: UIButton!
-    @IBOutlet weak var marginTokenNameLabel: UILabel!
-    @IBOutlet weak var marginLoadingView: ActivityIndicatorView!
     
     @IBOutlet weak var leverageView: UIView!
     @IBOutlet weak var leverageTitleLabel: UILabel!
@@ -58,56 +44,6 @@ final class OpenPerpetualPositionViewController: UIViewController {
     private let cellReuseIdentifier = "l"
     
     private weak var contentSizeObserver: NSKeyValueObservation?
-    
-    private var marginAmount: Decimal = 0
-    
-    private var marginTokens: [MixinTokenItem] = []
-    private var marginToken: MixinTokenItem? {
-        didSet {
-            guard let token = marginToken else {
-                marginTokenDepositButton.isHidden = true
-                marginAmountTextField.inputAccessoryView = nil
-                return
-            }
-            marginNetworkLabel.text = token.depositNetworkName
-            marginTokenIconView.setIcon(token: token)
-            marginTokenSymbolLabel.text = token.symbol
-            marginTokenBalanceButton.configuration?.attributedTitle = AttributedString(
-                CurrencyFormatter.localizedString(
-                    from: token.decimalBalance,
-                    format: .precision,
-                    sign: .never
-                ),
-                attributes: {
-                    var attributes = AttributeContainer()
-                    attributes.font = .preferredFont(forTextStyle: .caption1)
-                    return attributes
-                }()
-            )
-            marginTokenDepositButton.isHidden = token.decimalBalance > 0
-            marginTokenNameLabel.text = token.name
-            if marginAmountTextField.inputAccessoryView == nil {
-                let accessoryView = TradeInputAccessoryView(
-                    frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 44)
-                )
-                accessoryView.items = [
-                    .init(title: "25%") { [weak self] in
-                        self?.inputAmount(withBalanceMultipliedBy: 0.25)
-                    },
-                    .init(title: "50%") { [weak self] in
-                        self?.inputAmount(withBalanceMultipliedBy: 0.5)
-                    },
-                    .init(title: R.string.localizable.max()) { [weak self] in
-                        self?.inputAmount(withBalanceMultipliedBy: 1)
-                    },
-                ]
-                accessoryView.onDone = { [weak textField=marginAmountTextField] in
-                    textField?.resignFirstResponder()
-                }
-                marginAmountTextField.inputAccessoryView = accessoryView
-            }
-        }
-    }
     
     private var leverageMultiplier: Decimal
     
@@ -198,8 +134,6 @@ final class OpenPerpetualPositionViewController: UIViewController {
         priceLabel.text = R.string.localizable.current_price(viewModel.price)
         
         let infoLabels: [UILabel] = [
-            marginTitleLabel,
-            marginNetworkLabel,
             leverageTitleLabel,
             takeProfitTitleLabel,
             takeProfitContentLabel,
@@ -213,20 +147,6 @@ final class OpenPerpetualPositionViewController: UIViewController {
         for label in infoLabels {
             label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         }
-        
-        marginView.layer.cornerRadius = 8
-        marginView.layer.masksToBounds = true
-        marginContentStackView.setCustomSpacing(0, after: marginTokenSelectorStackView)
-        marginTitleLabel.text = R.string.localizable.amount()
-        marginTokenFooterStackView.setCustomSpacing(0, after: marginTokenBalanceButton)
-        marginTokenBalanceButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        marginTokenDepositButton.configuration?.attributedTitle = {
-            var attributes = AttributeContainer()
-            attributes.font = UIFont.preferredFont(forTextStyle: .caption1)
-            return AttributedString(R.string.localizable.add(), attributes: attributes)
-        }()
-        marginTokenDepositButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        marginLoadingView.startAnimating()
         
         leverageView.layer.cornerRadius = 8
         leverageView.layer.masksToBounds = true
@@ -280,46 +200,24 @@ final class OpenPerpetualPositionViewController: UIViewController {
             leverageMultiplier: leverageMultiplier,
             underlyingAsset: viewModel
         )
-        reloadMarginTokens()
     }
     
-    @IBAction func editMarginAmount(_ textField: UITextField) {
-        let amount: Decimal = if let text = textField.text {
-            Decimal(string: text, locale: .current) ?? 0
-        } else {
-            0
-        }
-        self.marginAmount = amount
+    override func editMarginAmount(_ textField: UITextField) {
+        super.editMarginAmount(textField)
         updateDescriptions(
-            marginAmount: amount,
+            marginAmount: marginAmount,
             leverageMultiplier: leverageMultiplier,
             underlyingAsset: viewModel
         )
     }
     
-    @IBAction func pickMarginToken(_ sender: Any) {
-        let selector = SimpleTokenSelectorViewController(
-            tokens: marginTokens,
-            selectedAssetID: marginToken?.assetID
+    override func inputAmount(withBalanceMultipliedBy balanceMultiplier: Decimal) {
+        super.inputAmount(withBalanceMultipliedBy: balanceMultiplier)
+        updateDescriptions(
+            marginAmount: marginAmount,
+            leverageMultiplier: leverageMultiplier,
+            underlyingAsset: viewModel
         )
-        selector.onSelected = { token in
-            self.marginToken = token as? MixinTokenItem
-            self.dismiss(animated: true)
-        }
-        present(selector, animated: true, completion: nil)
-    }
-    
-    @IBAction func inputTokenBalance(_ sender: Any) {
-        inputAmount(withBalanceMultipliedBy: 1)
-    }
-    
-    @IBAction func depositMarginToken(_ sender: Any) {
-        guard let marginToken else {
-            return
-        }
-        let selector = AddTokenMethodSelectorViewController(token: marginToken)
-        selector.delegate = self
-        present(selector, animated: true)
     }
     
     @IBAction func editTakeProfit(_ sender: Any) {
@@ -374,7 +272,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
             marketID: viewModel.market.marketID,
             side: side,
             amount: marginAmount.formatted(
-                marginToken.internalTransferFormatStyle
+                MixinToken.transferCanonicalFormatStyle
             ),
             leverage: (leverageMultiplier as NSDecimalNumber).intValue,
             walletID: wallet.tradingWalletID,
@@ -393,6 +291,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
             leverageMultiplier: leverageMultiplier,
             takeProfitPrice: takeProfitPrice,
             stopLossPrice: stopLossPrice,
+            onDismissAfterSuccess: nil,
         )
         sender.isBusy = true
         RouteAPI.openPerpsOrder(orderRequest: request) { [weak self] result in
@@ -429,109 +328,6 @@ final class OpenPerpetualPositionViewController: UIViewController {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
         reporter.report(event: .customerServiceDialog, tags: ["source": "open_perps_position"])
-    }
-    
-    private func reloadMarginTokens() {
-        RouteAPI.acceptedPerpsOrderAssets(queue: .global()) { [weak self] result in
-            switch result {
-            case .success(let assetIDs):
-                let orders = assetIDs.enumerated()
-                    .reduce(into: [:]) { results, enumerated in
-                        results[enumerated.element] = enumerated.offset
-                    }
-                let comparator = MarginTokenComparator(orders: orders)
-                let tokens = TokenDAO.shared.tokenItems(with: assetIDs)
-                    .sorted(using: comparator)
-                DispatchQueue.main.async {
-                    guard let self else {
-                        return
-                    }
-                    self.marginTokens = tokens
-                    self.marginToken = tokens.first
-                    if !tokens.isEmpty {
-                        self.marginTokenSelectorStackView.alpha = 1
-                        self.marginTokenFooterStackView.alpha = 1
-                        self.marginLoadingView.stopAnimating()
-                    }
-                }
-                let missingAssetIDs = Set(assetIDs).subtracting(tokens.map(\.assetID))
-                if !missingAssetIDs.isEmpty {
-                    let chains = ChainDAO.shared.allChains()
-                    self?.requestMissingMarginTokens(
-                        assetIDs: missingAssetIDs,
-                        chains: chains,
-                        existedTokens: tokens,
-                        comparator: comparator,
-                    )
-                }
-            case .failure(let error):
-                Logger.general.debug(category: "OpenPerpsPosition", message: "Margin Tokens: \(error)")
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                    self?.reloadMarginTokens()
-                }
-            }
-        }
-    }
-    
-    private func requestMissingMarginTokens(
-        assetIDs: Set<String>,
-        chains: [String: Chain],
-        existedTokens: [MixinTokenItem],
-        comparator: MarginTokenComparator,
-    ) {
-        SafeAPI.assets(ids: assetIDs, queue: .global()) { [weak self] result in
-            switch result {
-            case .success(let tokens):
-                var items = existedTokens + tokens.map { token in
-                    MixinTokenItem(
-                        token: token,
-                        balance: "0",
-                        isHidden: false,
-                        chain: chains[token.chainID]
-                    )
-                }
-                items.sort(using: comparator)
-                DispatchQueue.main.async {
-                    guard let self else {
-                        return
-                    }
-                    self.marginTokens = items
-                    if self.marginToken == nil {
-                        self.marginToken = items.first
-                    }
-                    self.marginTokenSelectorStackView.alpha = 1
-                    self.marginTokenFooterStackView.alpha = 1
-                    self.marginLoadingView.stopAnimating()
-                }
-            case .failure(let error):
-                Logger.general.debug(category: "OpenPerpsPosition", message: "Missing Tokens: \(error)")
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                    self?.requestMissingMarginTokens(
-                        assetIDs: assetIDs,
-                        chains: chains,
-                        existedTokens: existedTokens,
-                        comparator: comparator
-                    )
-                }
-            }
-        }
-    }
-    
-    private func inputAmount(withBalanceMultipliedBy balanceMultiplier: Decimal) {
-        guard let token = marginToken else {
-            return
-        }
-        marginAmount = token.decimalBalance * balanceMultiplier
-        marginAmountTextField.text = CurrencyFormatter.localizedString(
-            from: marginAmount,
-            format: .precision,
-            sign: .never,
-        )
-        updateDescriptions(
-            marginAmount: marginAmount,
-            leverageMultiplier: leverageMultiplier,
-            underlyingAsset: viewModel
-        )
     }
     
     private func inputCustomeLeverageMultiplier() {
@@ -718,45 +514,6 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
     
 }
 
-extension OpenPerpetualPositionViewController: AddTokenMethodSelectorViewController.Delegate {
-    
-    func addTokenMethodSelectorViewController(
-        _ viewController: AddTokenMethodSelectorViewController,
-        didPickMethod method: AddTokenMethodSelectorViewController.Method
-    ) {
-        guard let token = marginToken, let navigationController else {
-            return
-        }
-        switch method {
-        case .trade:
-            var viewControllers = navigationController.viewControllers
-            let index = viewControllers.firstIndex { viewController in
-                viewController is TradeViewController
-                || viewController is PerpetualMarketViewController
-            }
-            if let index {
-                let count = viewControllers.count - index
-                viewControllers.removeLast(count)
-            }
-            let trade = TradeViewController(
-                wallet: .privacy,
-                trading: .simpleSpot,
-                sendAssetID: nil,
-                receiveAssetID: token.assetID,
-                referral: nil
-            )
-            if let trade {
-                viewControllers.append(trade)
-                navigationController.setViewControllers(viewControllers, animated: true)
-            }
-        case .deposit:
-            let deposit = DepositViewController(token: token, switchingBetweenNetworks: false)
-            navigationController.pushViewController(replacingCurrent: deposit, animated: true)
-        }
-    }
-    
-}
-
 extension OpenPerpetualPositionViewController: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
@@ -824,87 +581,6 @@ extension OpenPerpetualPositionViewController {
                 label.layer.borderColor = R.color.line()!.cgColor
                 label.textColor = R.color.text()
                 label.backgroundColor = .clear
-            }
-        }
-        
-    }
-    
-    private final class AmountValidator {
-        
-        enum Result {
-            case valid
-            case invalid(reason: String)
-        }
-        
-        private let minAmount: Decimal
-        private let maxAmount: Decimal?
-        
-        init(market: PerpetualMarket) {
-            minAmount = Decimal(string: market.minAmount, locale: .enUSPOSIX) ?? 1
-            maxAmount = Decimal(string: market.maxAmount, locale: .enUSPOSIX)
-        }
-        
-        func validate(amount: Decimal, symbol: String) -> Result {
-            if amount < minAmount {
-                let min = CurrencyFormatter.localizedString(from: minAmount, format: .precision, sign: .never)
-                let reason = R.string.localizable.single_transaction_should_be_greater_than(min, symbol)
-                return .invalid(reason: reason)
-            } else if let maxAmount, amount > maxAmount {
-                let max = CurrencyFormatter.localizedString(from: maxAmount, format: .precision, sign: .never)
-                let reason = R.string.localizable.single_transaction_should_be_less_than(max, symbol)
-                return .invalid(reason: reason)
-            } else {
-                return .valid
-            }
-        }
-        
-    }
-    
-    private struct MarginTokenComparator: SortComparator {
-        
-        var order: SortOrder = .forward
-        
-        private let orders: [String: Int]
-        
-        init(orders: [String: Int]) {
-            self.orders = orders
-        }
-        
-        func compare(_ lhs: MixinTokenItem, _ rhs: MixinTokenItem) -> ComparisonResult {
-            let result = withUnsafePointer(to: lhs.decimalBalance) { l in
-                withUnsafePointer(to: rhs.decimalBalance) { r in
-                    NSDecimalCompare(l, r)
-                }
-            }
-            let forwardResult: ComparisonResult
-            switch result {
-            case .orderedAscending:
-                forwardResult = .orderedDescending
-            case .orderedDescending:
-                forwardResult = .orderedAscending
-            case .orderedSame:
-                let l = orders[lhs.assetID] ?? -1
-                let r = orders[rhs.assetID] ?? -1
-                forwardResult = if l > r {
-                    .orderedDescending
-                } else if l == r {
-                    .orderedSame
-                } else {
-                    .orderedAscending
-                }
-            }
-            return switch order {
-            case .forward:
-                 forwardResult
-            case .reverse:
-                switch forwardResult {
-                case .orderedAscending:
-                        .orderedDescending
-                case .orderedDescending:
-                        .orderedAscending
-                case .orderedSame:
-                        .orderedSame
-                }
             }
         }
         

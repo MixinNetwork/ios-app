@@ -2,7 +2,7 @@ import UIKit
 
 final class AuthenticationPreviewSingleButtonTrayView: UIView {
     
-    let button = StateResponsiveButton(type: .system)
+    private(set) weak var button: ConfigurationBasedBusyButton!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -14,18 +14,20 @@ final class AuthenticationPreviewSingleButtonTrayView: UIView {
         loadSubview()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        button.layer.cornerRadius = button.bounds.height / 2
-    }
-    
     private func loadSubview() {
         backgroundColor = R.color.background()
         
-        button.updateWithIsEnabled()
-        button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
-        button.setTitleColor(.white, for: .normal)
-        button.layer.masksToBounds = true
+        var config: UIButton.Configuration = .filled()
+        config.titleTextAttributesTransformer = .init { incoming in
+            var outgoing = incoming
+            outgoing.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 16)
+            )
+            outgoing.foregroundColor = .white
+            return outgoing
+        }
+        config.cornerStyle = .capsule
+        let button = ConfigurationBasedBusyButton(configuration: config)
         addSubview(button)
         button.snp.makeConstraints { make in
             make.width.greaterThanOrEqualTo(128)
@@ -34,6 +36,7 @@ final class AuthenticationPreviewSingleButtonTrayView: UIView {
             make.top.equalToSuperview().offset(20)
             make.bottom.equalTo(safeAreaLayoutGuide).offset(-20)
         }
+        self.button = button
     }
     
 }

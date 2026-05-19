@@ -34,6 +34,10 @@ public final class PerpsMarketDAO: PerpsDAO {
         db.select(with: "SELECT * FROM markets WHERE market_id = ?", arguments: [marketID])
     }
     
+    public func price(marketID: String) -> String? {
+        db.select(with: "SELECT last FROM markets WHERE market_id = ?", arguments: [marketID])
+    }
+    
     public func availableMarkets(
         ordering: Ordering?,
         category: PerpetualMarket.Category?,

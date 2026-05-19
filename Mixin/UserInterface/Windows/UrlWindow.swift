@@ -1026,7 +1026,11 @@ class UrlWindow {
 extension UrlWindow {
 
     private static func checkSafePaymentURL(_ paymentURL: SafePaymentURL, from source: Source) {
-        guard let homeContainer = UIApplication.homeContainerViewController else {
+        var presenter: UIViewController? = UIApplication.homeContainerViewController
+        while let next = presenter?.presentedViewController, !next.isBeingDismissed {
+            presenter = next
+        }
+        guard let presenter else {
             return
         }
         let completion: (String?) -> Void
@@ -1035,7 +1039,7 @@ extension UrlWindow {
             completion = externalCompletion
         default:
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: homeContainer.view)
+            hud.show(style: .busy, text: "", on: presenter.view)
             completion = { (message) in
                 if let message {
                     hud.set(style: .error, text: message)
@@ -1122,7 +1126,7 @@ extension UrlWindow {
                             inputAmount.redirection = paymentURL.redirection
                             UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
                         }
-                        homeContainer.present(selector, animated: true)
+                        presenter.present(selector, animated: true)
                     case (.some, .some):
                         completion(nil)
                         assertionFailure("This case should be `prefilled`")
@@ -1140,7 +1144,7 @@ extension UrlWindow {
                     invoice.checkPreconditions(
                         transferTo: destination,
                         tokens: tokens,
-                        on: homeContainer
+                        on: presenter
                     ) { reason in
                         switch reason {
                         case .userCancelled, .loggedOut:
@@ -1156,7 +1160,7 @@ extension UrlWindow {
                             operation: operation,
                             redirection: redirection
                         )
-                        homeContainer.present(preview, animated: true)
+                        presenter.present(preview, animated: true)
                     }
                 case .insufficient(let requirement):
                     DispatchQueue.main.async {
@@ -1164,7 +1168,7 @@ extension UrlWindow {
                         let insufficientBalance = InsufficientBalanceViewController(
                             intent: .privacyWalletTransfer(requirement)
                         )
-                        homeContainer.present(insufficientBalance, animated: true)
+                        presenter.present(insufficientBalance, animated: true)
                     }
                 case .failure(let error):
                     DispatchQueue.main.async {
@@ -1259,7 +1263,7 @@ extension UrlWindow {
                         let insufficient = InsufficientBalanceViewController(
                             intent: .privacyWalletTransfer(requirement)
                         )
-                        homeContainer.present(insufficient, animated: true)
+                        presenter.present(insufficient, animated: true)
                     }
                     return
                 }
@@ -1283,7 +1287,7 @@ extension UrlWindow {
             payment.checkPreconditions(
                 transferTo: destination,
                 reference: paymentURL.reference,
-                on: homeContainer
+                on: presenter
             ) { reason in
                 switch reason {
                 case .userCancelled, .loggedOut:
@@ -1309,14 +1313,14 @@ extension UrlWindow {
                         receiver: receiver,
                         warnings: issues.map(\.description)
                     )
-                    homeContainer.present(preview, animated: true)
+                    presenter.present(preview, animated: true)
                 case let .perps(context, _):
                     let preview = OpenPerpetualPositionPreviewViewController(
                         context: context,
                         operation: operation,
                         warnings: issues.map(\.description)
                     )
-                    homeContainer.present(preview, animated: true)
+                    presenter.present(preview, animated: true)
                 default:
                     let redirection = source.isExternal ? paymentURL.redirection : nil
                     let preview = TransferPreviewViewController(issues: issues,
@@ -1324,7 +1328,7 @@ extension UrlWindow {
                                                                 amountDisplay: .byToken,
                                                                 redirection: redirection)
                     preview.manipulateNavigationStackOnFinished = false
-                    homeContainer.present(preview, animated: true)
+                    presenter.present(preview, animated: true)
                 }
             }
         }

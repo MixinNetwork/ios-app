@@ -14,9 +14,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
         case price
     }
     
-    @IBOutlet weak var iconView: PlainTokenIconView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var titleView: EditPerpsPositionTitleView!
     
     @IBOutlet weak var inputContentSelectorCollectionView: UICollectionView!
     @IBOutlet weak var inputContentSelectorLayout: UICollectionViewFlowLayout!
@@ -115,11 +113,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
             try? condition.setPrice(price)
         }
         
-        iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        titleLabel.setFont(
-            scaledFor: .systemFont(ofSize: 16, weight: .medium),
-            adjustForContentSize: true
-        )
+        titleView.iconView.setIcon(tokenIconURL: viewModel.iconURL)
         switch orderState {
         case .draft:
             let price = viewModel.price
@@ -136,7 +130,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
                     range: NSRange(range, in: text.string)
                 )
             }
-            subtitleLabel.attributedText = text
+            titleView.subtitleLabel.attributedText = text
         case .open(let entryPrice):
             let currentPrice = viewModel.price
             let text = NSMutableAttributedString(
@@ -161,8 +155,13 @@ final class EditPerpClosingConditionViewController: UIViewController {
                     range: NSRange(range, in: text.string)
                 )
             }
-            subtitleLabel.attributedText = text
+            titleView.subtitleLabel.attributedText = text
         }
+        titleView.closeButton.addTarget(
+            self,
+            action: #selector(close(_:)),
+            for: .touchUpInside
+        )
         
         inputSectionView.layer.cornerRadius = 8
         inputSectionView.layer.masksToBounds = true
@@ -272,17 +271,11 @@ final class EditPerpClosingConditionViewController: UIViewController {
         )
         confirmButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
-        let localizedSide = switch side {
-        case .long:
-            R.string.localizable.long()
-        case .short:
-            R.string.localizable.short()
-        }
         switch condition.behavior {
         case .takeProfit:
-            titleLabel.text = R.string.localizable.edit_auto_closing_title(
+            titleView.titleLabel.text = R.string.localizable.edit_auto_closing_title(
                 R.string.localizable.take_profit(),
-                localizedSide,
+                side.localizedName,
                 viewModel.market.tokenSymbol,
             )
             inputTitleLabel.text = R.string.localizable.take_profit_when()
@@ -295,9 +288,9 @@ final class EditPerpClosingConditionViewController: UIViewController {
                 introImageView.image = R.image.take_profit_intro()
             }
         case .stopLoss:
-            titleLabel.text = R.string.localizable.edit_auto_closing_title(
+            titleView.titleLabel.text = R.string.localizable.edit_auto_closing_title(
                 R.string.localizable.stop_loss(),
-                localizedSide,
+                side.localizedName,
                 viewModel.market.tokenSymbol,
             )
             inputTitleLabel.text = R.string.localizable.stop_loss_when()

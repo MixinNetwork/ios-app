@@ -47,16 +47,7 @@ struct PerpsManualPositionLiquidationPricePageView: View {
                             Text(R.string.localizable.example_direction())
                                 .modifier(ManualText(.caption2))
                             Spacer()
-                            PerpsManualOrderSideControl(
-                                selection: $side
-                            ) { side in
-                                switch side {
-                                case .long:
-                                    R.string.localizable.long()
-                                case .short:
-                                    R.string.localizable.short()
-                                }
-                            }
+                            PerpsManualOrderSideControl(selection: $side, content: \.localizedName)
                         }
                         HStack {
                             Text(R.string.localizable.example_leverage_multiplier())

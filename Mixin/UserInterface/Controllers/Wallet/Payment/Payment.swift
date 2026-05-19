@@ -185,6 +185,7 @@ extension Payment {
         let leverageMultiplier: Decimal
         let takeProfitPrice: Decimal?
         let stopLossPrice: Decimal?
+        let onDismissAfterSuccess: (() -> Void)?
     }
     
     enum InscriptionError: Error, LocalizedError {

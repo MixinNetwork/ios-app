@@ -29,6 +29,10 @@
 "add_phone_instruction_2" = "手机号和助记词登录的是同一个账号。";
 "add_phone_instruction_3" = "无法添加一个已注册为 Mixin 账号的手机号。";
 "add_phone_instruction_4" = "手机号绑定后无法删除。";
+"add_position" = "加仓";
+"add_position_add_size" = "加仓规模";
+"add_position_title" = "%1$@ %2$@ 加仓";
+"add_position_total_size" = "总体规模";
 "add_recovery_contact_before_instruction_1" = "要添加的恢复联系人已下载并登录了 Mixin。";
 "add_recovery_contact_before_instruction_2" = "要添加的恢复联系人保持 Mixin 在线或者正在与您面对面。";
 "add_recovery_contact_before_instruction_3" = "要添加的恢复联系人已添加当前账号（%@）为联系人，否则对方可能无法收到验证码。";
@@ -50,6 +54,7 @@
 "added" = "已添加";
 "adding_address" = "正在添加地址";
 "adding_address_failed" = "添加地址失败";
+"adding_position" = "正在加仓";
 "address" = "地址";
 "address_added" = "地址已添加";
 "address_added_description" = "地址已添加，您可以立刻使用该地址进行提现。";
@@ -1860,6 +1865,7 @@
 "view_invoice" = "查看账单";
 "view_on_explorer" = "在浏览器中查看";
 "view_on_marketplace" = "在市场中查看";
+"view_perps_market" = "查看行情";
 "view_plan" = "查看会员";
 "view_wallet" = "查看钱包";
 "voice_call_cancelled" = "对方已取消语音通话";

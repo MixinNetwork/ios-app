@@ -32,20 +32,28 @@ final class PerpetualInactivePositionCell: UICollectionViewCell {
         titleLabel.text = viewModel.directionWithSymbol
         leverageLabel.text = viewModel.leverage
         valueLabel.text = viewModel.orderValueInToken
-        switch viewModel.type {
-        case .open:
-            leverageLabel.color = .neutral
-            changeLabel.text = R.string.localizable.perp_state_opening()
-            changeLabel.textColor = R.color.text_tertiary()
-        case .closed:
-            switch viewModel.side {
-            case .long:
-                leverageLabel.color = .long
-            case .short:
-                leverageLabel.color = .short
-            }
-            changeLabel.text = viewModel.pnlWithROE
-            changeLabel.marketColor = viewModel.pnlColor
+        leverageLabel.color = .neutral
+        changeLabel.text = R.string.localizable.perp_state_opening()
+        changeLabel.textColor = R.color.text_tertiary()
+    }
+    
+    func load(viewModel: PerpetualActivityViewModel) {
+        iconView.setIcon(tokenIconURL: viewModel.iconURL)
+        titleLabel.text = viewModel.directionWithSymbol
+        valueLabel.text = viewModel.orderValueInToken
+        switch viewModel.side {
+        case .long:
+            leverageLabel.color = .long
+        case .short:
+            leverageLabel.color = .short
+        }
+        leverageLabel.text = viewModel.leverage
+        switch viewModel.state {
+        case .opened:
+            changeLabel.text = nil
+        case let .closed(pnl, _):
+            changeLabel.text = pnl.abbreviated
+            changeLabel.marketColor = pnl.color
         }
     }
     

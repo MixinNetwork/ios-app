@@ -218,6 +218,9 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                         }
                         navigationController.setViewControllers(viewControllers, animated: false)
                     }
+                    if let callback = context.onDismissAfterSuccess {
+                        onDismiss = callback
+                    }
                 }
             } catch {
                 let errorDescription = if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {

@@ -40,8 +40,8 @@ final class PerpetualPositionLoader {
                     let different = PerpsPositionDAO.shared.replace(positions: positions)
                     if different {
                         DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
-                            let history = SyncPerpsPositionHistoryJob(walletID: walletID)
-                            ConcurrentJobQueue.shared.addJob(job: history)
+                            let orders = SyncPerpsOrdersJob(walletID: walletID)
+                            ConcurrentJobQueue.shared.addJob(job: orders)
                         }
                     }
                 case .failure(let error):

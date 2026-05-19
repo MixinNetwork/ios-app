@@ -29,6 +29,10 @@
 "add_phone_instruction_2" = "手機號和助記詞登入的是同一個賬號。";
 "add_phone_instruction_3" = "無法新增一個已註冊為 Mixin 賬號的手機號。";
 "add_phone_instruction_4" = "手機號繫結後無法刪除。";
+"add_position" = "加倉";
+"add_position_add_size" = "加倉規模";
+"add_position_title" = "%1$@ %2$@ 加倉";
+"add_position_total_size" = "總體規模";
 "add_recovery_contact_before_instruction_1" = "要新增的恢復聯絡人已下載並登入了 Mixin。";
 "add_recovery_contact_before_instruction_2" = "要新增的恢復聯絡人保持 Mixin 線上或者正在與您面對面。";
 "add_recovery_contact_before_instruction_3" = "要新增的恢復聯絡人已添加當前賬號（%@）為聯絡人，否則對方可能無法收到驗證碼。";
@@ -50,6 +54,7 @@
 "added" = "已新增";
 "adding_address" = "正在新增地址";
 "adding_address_failed" = "新增地址失敗";
+"adding_position" = "正在加倉";
 "address" = "地址";
 "address_added" = "地址已新增";
 "address_added_description" = "地址已新增，您可以立刻使用該地址進行提現。";
@@ -1860,6 +1865,7 @@
 "view_invoice" = "檢視賬單";
 "view_on_explorer" = "在瀏覽器中檢視";
 "view_on_marketplace" = "在市場中檢視";
+"view_perps_market" = "檢視行情";
 "view_plan" = "檢視會員";
 "view_wallet" = "檢視錢包";
 "voice_call_cancelled" = "對方已取消語音通話";

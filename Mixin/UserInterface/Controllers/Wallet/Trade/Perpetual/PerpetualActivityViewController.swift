@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class PerpetualPositionViewController: UIViewController {
+final class PerpetualActivityViewController: UIViewController {
     
     private enum Section: Int, CaseIterable {
         case header
@@ -17,26 +17,32 @@ final class PerpetualPositionViewController: UIViewController {
     }
     
     private let wallet: Wallet
-    private let viewModel: PerpetualPositionViewModel
+    private let viewModel: PerpetualActivityViewModel
     private let infos: [Info]
     
-    init(wallet: Wallet, viewModel: PerpetualPositionViewModel) {
+    init(wallet: Wallet, viewModel: PerpetualActivityViewModel) {
         var infos: [Info] = []
         if let displaySymbol = viewModel.displaySymbol {
             infos.append(.product(iconURL: viewModel.iconURL, name: displaySymbol))
         }
-        infos.append(contentsOf: [
-            .pnl(value: viewModel.pnlWithROE, color: viewModel.pnlColor),
-            .general(
+        switch viewModel.state {
+        case .opened:
+            infos.append(.general(
                 title: R.string.localizable.entry_price().uppercased(),
                 content: viewModel.entryPrice
-            ),
-        ])
-        if let closePrice = viewModel.closePrice {
-            infos.append(.general(
-                title: R.string.localizable.close_price().uppercased(),
-                content: closePrice
             ))
+        case .closed(let pnl, let closePrice):
+            infos.append(contentsOf: [
+                .pnl(value: pnl.precised, color: pnl.color),
+                .general(
+                    title: R.string.localizable.entry_price().uppercased(),
+                    content: viewModel.entryPrice
+                ),
+                .general(
+                    title: R.string.localizable.close_price().uppercased(),
+                    content: closePrice
+                ),
+            ])
         }
         infos.append(contentsOf: [
             .wallet(.privacy),
@@ -56,10 +62,10 @@ final class PerpetualPositionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = switch (viewModel.type, viewModel.side) {
-        case (.open, .long):
+        title = switch (viewModel.state, viewModel.side) {
+        case (.opened, .long):
             R.string.localizable.opened_long()
-        case (.open, .short):
+        case (.opened, .short):
             R.string.localizable.opened_short()
         case (.closed, .long):
             R.string.localizable.closed_long()
@@ -130,7 +136,7 @@ final class PerpetualPositionViewController: UIViewController {
     
 }
 
-extension PerpetualPositionViewController: HomeNavigationController.NavigationBarStyling {
+extension PerpetualActivityViewController: HomeNavigationController.NavigationBarStyling {
     
     var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
         .secondaryBackground
@@ -138,7 +144,7 @@ extension PerpetualPositionViewController: HomeNavigationController.NavigationBa
     
 }
 
-extension PerpetualPositionViewController: UICollectionViewDataSource {
+extension PerpetualActivityViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         Section.allCases.count
@@ -206,11 +212,11 @@ extension PerpetualPositionViewController: UICollectionViewDataSource {
     
 }
 
-extension PerpetualPositionViewController: PillActionView.Delegate {
+extension PerpetualActivityViewController: PillActionView.Delegate {
     
     func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
         switch viewModel.actions[index] {
-        case .tradeAgain:
+        case .viewMarket, .tradeAgain:
             if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID),
                let viewModel = PerpetualMarketViewModel(market: market),
                let navigationController
@@ -222,25 +228,58 @@ extension PerpetualPositionViewController: PillActionView.Delegate {
                 var viewControllers = navigationController.viewControllers
                 viewControllers.removeAll { controller in
                     controller is PerpetualMarketViewController
-                    || controller is PerpetualPositionViewController
-                    || controller is AllPerpetualPositionsViewController
+                    || controller is PerpetualPositionsViewController
+                    || controller is PerpetualActivitiesViewController
+                    || controller is PerpetualActivityViewController
                 }
                 viewControllers.append(market)
                 navigationController.setViewControllers(viewControllers, animated: true)
             }
-        case .close:
-            let preview = ClosePerpetualPositionPreviewViewController(viewModel: viewModel)
-            present(preview, animated: true)
         case .share:
+            let dataSource: SharePerpetualPositionDataSource
+            switch viewModel.state {
+            case .opened:
+                if let order = PerpsOrderDAO.shared.closeOrderItem(positionID: viewModel.positionID),
+                   let viewModel = PerpetualActivityViewModel(wallet: wallet, order: order)
+                {
+                    switch viewModel.state {
+                    case .opened:
+                        return
+                    case .closed(let pnl, let closePrice):
+                        dataSource = SharePerpetualPositionDataSource(
+                            viewModel: viewModel,
+                            pnl: pnl,
+                            closePrice: closePrice
+                        )
+                    }
+                } else if let position = PerpsPositionDAO.shared.position(marketID: viewModel.marketID) {
+                    let viewModel = PerpetualPositionViewModel(wallet: wallet, position: position)
+                    let latestPrice: Decimal? = {
+                        if let price = PerpsMarketDAO.shared.price(marketID: viewModel.marketID) {
+                            Decimal(string: price, locale: .enUSPOSIX)
+                        } else {
+                            nil
+                        }
+                    }()
+                    dataSource = SharePerpetualPositionDataSource(
+                        viewModel: viewModel,
+                        latestPrice: latestPrice
+                    )
+                } else {
+                    return
+                }
+            case .closed(let pnl, let closePrice):
+                dataSource = SharePerpetualPositionDataSource(
+                    viewModel: viewModel,
+                    pnl: pnl,
+                    closePrice: closePrice
+                )
+            }
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            Referral.loadAvailableCode { [weak self, viewModel] code in
+            Referral.loadAvailableCode { [weak self] code in
                 hud.hide()
-                let share = SharePerpetualPositionViewController(
-                    viewModel: viewModel,
-                    latestPrice: nil,
-                    rebatingCode: code
-                )
+                let share = SharePerpetualPositionViewController(dataSource: dataSource, rebatingCode: code)
                 self?.present(share, animated: true)
             }
         }

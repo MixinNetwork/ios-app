@@ -613,7 +613,7 @@ extension AuthenticationPreviewViewController {
     
     func loadSingleButtonTrayView(title: String, action: Selector) {
         let trayView = AuthenticationPreviewSingleButtonTrayView()
-        trayView.button.setTitle(title, for: .normal)
+        trayView.button.configuration?.title = title
         replaceTrayView(with: trayView, animation: .vertical)
         trayView.button.addTarget(self, action: action, for: .touchUpInside)
     }

@@ -381,7 +381,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             case .markets(let category):
                 view.label.text = switch category {
                 case .all:
-                    R.string.localizable.perps_markets()
+                    R.string.localizable.trending()
                 case .stocks:
                     R.string.localizable.perps_category_stocks()
                 case .commodities:

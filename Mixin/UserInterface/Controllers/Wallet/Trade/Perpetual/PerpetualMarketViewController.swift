@@ -335,6 +335,7 @@ final class PerpetualMarketViewController: UIViewController {
     
     @objc private func reloadPositions() {
         let marketID = viewModel.market.marketID
+        let limit = maxItemCount + 1
         DispatchQueue.global().async { [weak self, wallet] in
             let openPosition = PerpsPositionDAO.shared.position(marketID: marketID)
             let openPositionViewModel: PerpetualPositionViewModel? = if let openPosition {
@@ -342,10 +343,12 @@ final class PerpetualMarketViewController: UIViewController {
             } else {
                 nil
             }
-            let activities = PerpsOrderDAO.shared.orderItems(marketID: marketID)
-                .compactMap { order in
-                    PerpetualActivityViewModel(wallet: wallet, order: order)
-                }
+            let activities = PerpsOrderDAO.shared.orderItems(
+                marketID: marketID,
+                limit: limit
+            ).compactMap { order in
+                PerpetualActivityViewModel(wallet: wallet, order: order)
+            }
             DispatchQueue.main.async {
                 self?.reloadData(
                     openPosition: openPositionViewModel,
@@ -656,8 +659,8 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             1
         case .info:
             2
-        case .activities(let positions):
-            positions.count
+        case .activities(let activities):
+            min(maxItemCount, activities.count)
         case .introduction:
             1
         }

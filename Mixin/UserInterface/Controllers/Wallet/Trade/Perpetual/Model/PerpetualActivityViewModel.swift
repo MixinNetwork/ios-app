@@ -4,15 +4,16 @@ import MixinServices
 struct PerpetualActivityViewModel {
     
     struct PnL {
-        let abbreviated: String
+        let aggregated: String
         let precised: String
         let percentage: String
         let color: MarketColor
     }
     
-    enum State {
-        case opened
-        case closed(pnl: PnL, closePrice: String)
+    enum OrderType {
+        case open
+        case increase
+        case close(pnl: PnL, closePrice: String)
     }
     
     enum Action {
@@ -37,7 +38,8 @@ struct PerpetualActivityViewModel {
     let wallet: Wallet
     let marketID: String
     let positionID: String
-    let state: State
+    let type: OrderType
+    let title: String
     let actions: [Action]
     let side: PerpetualOrderSide
     let iconURL: URL?
@@ -62,20 +64,39 @@ struct PerpetualActivityViewModel {
         self.marketID = order.marketID
         self.positionID = order.positionID
         switch order.orderType.knownCase {
-        case .open, .increasePosition:
-            self.state = .opened
+        case .open:
+            self.type = .open
+            self.title = switch side {
+            case .long:
+                R.string.localizable.opened_long()
+            case .short:
+                R.string.localizable.opened_short()
+            }
+            self.actions = [.viewMarket, .share]
+        case .increasePosition:
+            self.type = .increase
+            self.title = switch side {
+            case .long:
+                R.string.localizable.added_long()
+            case .short:
+                R.string.localizable.added_short()
+            }
             self.actions = [.viewMarket, .share]
         case .close:
             let decimalClosePrice = Decimal(string: order.closePrice, locale: .enUSPOSIX)
             let realizedPnL = Decimal(string: order.realizedPnL, locale: .enUSPOSIX) ?? 0
             let roe = Decimal(string: order.roe, locale: .enUSPOSIX) ?? 0
             let pnl = PnL(
-                abbreviated: CurrencyFormatter.localizedString(
+                aggregated: CurrencyFormatter.localizedString(
                     from: realizedPnL * Currency.current.decimalRate,
                     format: .fiatMoneyPretty,
                     sign: .always,
                     symbol: .currencySymbol
-                ),
+                ) + "(" + PercentageFormatter.string(
+                    from: roe,
+                    format: .pretty,
+                    sign: .always
+                ) + ")",
                 precised: CurrencyFormatter.localizedString(
                     from: realizedPnL * Currency.current.decimalRate,
                     format: .fiatMoneyPrecision,
@@ -91,10 +112,16 @@ struct PerpetualActivityViewModel {
                 color: realizedPnL >= 0 ? .rising : .falling
             )
             let localizedClosePrice = decimalClosePrice?.formatted(order.priceFormatStyle)
-            self.state = .closed(
+            self.type = .close(
                 pnl: pnl,
                 closePrice: localizedClosePrice ?? order.closePrice,
             )
+            self.title = switch side {
+            case .long:
+                R.string.localizable.closed_long()
+            case .short:
+                R.string.localizable.closed_short()
+            }
             self.actions = [.tradeAgain, .share]
         default:
             assertionFailure("Unknown order type")

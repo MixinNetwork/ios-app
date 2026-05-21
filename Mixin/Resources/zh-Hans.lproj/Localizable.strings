@@ -52,6 +52,8 @@
 "add_watch_address" = "添加观察地址";
 "add_watch_address_description" = "追踪公开钱包地址";
 "added" = "已添加";
+"added_long" = "加仓做多";
+"added_short" = "加仓做空";
 "adding_address" = "正在添加地址";
 "adding_address_failed" = "添加地址失败";
 "adding_position" = "正在加仓";

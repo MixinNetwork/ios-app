@@ -52,6 +52,8 @@
 "add_watch_address" = "新增觀察地址";
 "add_watch_address_description" = "追蹤公開錢包地址";
 "added" = "已新增";
+"added_long" = "加倉做多";
+"added_short" = "加倉做空";
 "adding_address" = "正在新增地址";
 "adding_address_failed" = "新增地址失敗";
 "adding_position" = "正在加倉";

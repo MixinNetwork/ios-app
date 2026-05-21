@@ -39,16 +39,7 @@ final class PerpetualActivityCell: UICollectionViewCell {
     
     func load(viewModel: PerpetualActivityViewModel) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        titleLabel.text = switch (viewModel.state, viewModel.side) {
-        case (.opened, .long):
-            R.string.localizable.opened_long()
-        case (.opened, .short):
-            R.string.localizable.opened_short()
-        case (.closed, .long):
-            R.string.localizable.closed_long()
-        case (.closed, .short):
-            R.string.localizable.closed_short()
-        }
+        titleLabel.text = viewModel.title
         valueLabel.text = viewModel.orderValueInToken
         switch viewModel.side {
         case .long:
@@ -57,11 +48,11 @@ final class PerpetualActivityCell: UICollectionViewCell {
             leverageLabel.color = .short
         }
         leverageLabel.text = viewModel.leverage
-        switch viewModel.state {
-        case .opened:
+        switch viewModel.type {
+        case .open, .increase:
             changeLabel.text = nil
-        case let .closed(pnl, _):
-            changeLabel.text = pnl.abbreviated
+        case let .close(pnl, _):
+            changeLabel.text = pnl.aggregated
             changeLabel.marketColor = pnl.color
         }
     }

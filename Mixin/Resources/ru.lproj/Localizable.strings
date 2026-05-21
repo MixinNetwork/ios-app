@@ -52,6 +52,8 @@
 "add_watch_address" = "Add Watch Address";
 "add_watch_address_description" = "Track any public wallet address";
 "added" = "Добавлен";
+"added_long" = "Added Long";
+"added_short" = "Added Short";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
 "adding_position" = "Adding";

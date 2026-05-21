@@ -26,10 +26,10 @@ public final class PerpsOrderDAO: PerpsDAO {
         )
     }
     
-    public func orderItems(marketID: String) -> [PerpetualOrderItem] {
+    public func orderItems(marketID: String, limit: Int) -> [PerpetualOrderItem] {
         db.select(
-            with: Self.itemSQL + "AND po.market_id = ? ORDER BY updated_at DESC",
-            arguments: [marketID]
+            with: Self.itemSQL + "AND po.market_id = ? ORDER BY created_at DESC LIMIT ?",
+            arguments: [marketID, limit]
         )
     }
     
@@ -41,7 +41,7 @@ public final class PerpsOrderDAO: PerpsDAO {
         if let offsetUpdatedAt {
             query.append(literal: "AND updated_at < \(offsetUpdatedAt)\n")
         }
-        query.append(literal: "ORDER BY updated_at DESC\n")
+        query.append(literal: "ORDER BY created_at DESC\n")
         if let limit {
             query.append(sql: "LIMIT \(limit)")
         }
@@ -60,6 +60,10 @@ public final class PerpsOrderDAO: PerpsDAO {
                 userInfo: nil
             )
         }
+    }
+    
+    public func deleteAll() {
+        db.execute(sql: "DELETE FROM perps_orders")
     }
     
 }

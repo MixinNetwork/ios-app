@@ -25,13 +25,13 @@ final class PerpetualActivityViewController: UIViewController {
         if let displaySymbol = viewModel.displaySymbol {
             infos.append(.product(iconURL: viewModel.iconURL, name: displaySymbol))
         }
-        switch viewModel.state {
-        case .opened:
+        switch viewModel.type {
+        case .open, .increase:
             infos.append(.general(
                 title: R.string.localizable.entry_price().uppercased(),
                 content: viewModel.entryPrice
             ))
-        case .closed(let pnl, let closePrice):
+        case .close(let pnl, let closePrice):
             infos.append(contentsOf: [
                 .pnl(value: pnl.precised, color: pnl.color),
                 .general(
@@ -62,16 +62,7 @@ final class PerpetualActivityViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = switch (viewModel.state, viewModel.side) {
-        case (.opened, .long):
-            R.string.localizable.opened_long()
-        case (.opened, .short):
-            R.string.localizable.opened_short()
-        case (.closed, .long):
-            R.string.localizable.closed_long()
-        case (.closed, .short):
-            R.string.localizable.closed_short()
-        }
+        title = viewModel.title
         navigationItem.rightBarButtonItem = .customerService(
             target: self,
             action: #selector(presentCustomerService(_:))
@@ -237,15 +228,15 @@ extension PerpetualActivityViewController: PillActionView.Delegate {
             }
         case .share:
             let dataSource: SharePerpetualPositionDataSource
-            switch viewModel.state {
-            case .opened:
+            switch viewModel.type {
+            case .open, .increase:
                 if let order = PerpsOrderDAO.shared.closeOrderItem(positionID: viewModel.positionID),
                    let viewModel = PerpetualActivityViewModel(wallet: wallet, order: order)
                 {
-                    switch viewModel.state {
-                    case .opened:
+                    switch viewModel.type {
+                    case .open, .increase:
                         return
-                    case .closed(let pnl, let closePrice):
+                    case .close(let pnl, let closePrice):
                         dataSource = SharePerpetualPositionDataSource(
                             viewModel: viewModel,
                             pnl: pnl,
@@ -268,7 +259,7 @@ extension PerpetualActivityViewController: PillActionView.Delegate {
                 } else {
                     return
                 }
-            case .closed(let pnl, let closePrice):
+            case .close(let pnl, let closePrice):
                 dataSource = SharePerpetualPositionDataSource(
                     viewModel: viewModel,
                     pnl: pnl,

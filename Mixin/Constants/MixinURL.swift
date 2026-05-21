@@ -22,6 +22,7 @@ enum MixinURL {
         static let snapshots = "snapshots"
         static let conversations = "conversations"
         static let deviceTransfer = "device-transfer"
+        static let buy = "buy"
         static let walletConnect = "wc"
     }
     
@@ -38,6 +39,7 @@ enum MixinURL {
     case address
     case upgradeDesktop
     case deviceTransfer(DeviceTransferCommand)
+    case buy
     
     // Dapps may redirects to some undocumented URIs, in that case the value will be nil
     case walletConnect(WalletConnectURI?)
@@ -91,6 +93,8 @@ enum MixinURL {
                 } catch {
                     self = .walletConnect(nil)
                 }
+            } else if url.host == Host.buy {
+                self = .buy
             } else {
                 self = .unknown(url)
             }
@@ -121,6 +125,8 @@ enum MixinURL {
                 } else {
                     self = .walletConnect(nil)
                 }
+            } else if url.pathComponents.count > 1 && url.pathComponents[1] == Path.buy {
+                self = .buy
             } else {
                 self = .unknown(url)
             }

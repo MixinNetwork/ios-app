@@ -157,7 +157,7 @@ final class TradePerpetualViewController: UIViewController {
         collectionView.register(R.nib.perpetualPositionValueCell)
         collectionView.register(R.nib.perpetualPlaceholderCell)
         collectionView.register(R.nib.perpetualMarketCell)
-        collectionView.register(R.nib.perpetualInactivePositionCell)
+        collectionView.register(R.nib.perpetualActivityCell)
         collectionView.register(R.nib.perpetualIntroductionCell)
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -310,7 +310,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             let position = openPositions[indexPath.item]
             switch position.state {
             case .opening:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_activity, for: indexPath)!
                 cell.load(viewModel: position)
                 return cell
             default:
@@ -342,7 +342,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             }
         case .activity:
             if let activities, !activities.isEmpty {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_activity, for: indexPath)!
                 let viewModel = activities[indexPath.item]
                 cell.load(viewModel: viewModel)
                 return cell

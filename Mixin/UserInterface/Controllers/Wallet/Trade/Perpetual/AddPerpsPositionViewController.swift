@@ -161,6 +161,16 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
         updateDescriptions(marginAmount: marginAmount)
     }
     
+    @IBAction func introduceSize(_ sender: Any) {
+        let manual = PerpsManual.viewController(initialPage: .size)
+        present(manual, animated: true)
+    }
+    
+    @IBAction func introduceLiquidationPrice(_ sender: Any) {
+        let manual = PerpsManual.viewController(initialPage: .liquidation)
+        present(manual, animated: true)
+    }
+    
     @IBAction func cancel(_ sender: Any) {
         presentingViewController?.dismiss(animated: true)
     }
@@ -177,6 +187,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
         let context = Payment.PerpsContext(
             wallet: wallet,
             viewModel: viewModel,
+            operation: .increase,
             side: side,
             leverageMultiplier: leverageMultiplier,
             takeProfitPrice: nil,

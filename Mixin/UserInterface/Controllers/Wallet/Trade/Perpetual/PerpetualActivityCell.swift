@@ -1,6 +1,6 @@
 import UIKit
 
-final class PerpetualInactivePositionCell: UICollectionViewCell {
+final class PerpetualActivityCell: UICollectionViewCell {
     
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -39,7 +39,16 @@ final class PerpetualInactivePositionCell: UICollectionViewCell {
     
     func load(viewModel: PerpetualActivityViewModel) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        titleLabel.text = viewModel.directionWithSymbol
+        titleLabel.text = switch (viewModel.state, viewModel.side) {
+        case (.opened, .long):
+            R.string.localizable.opened_long()
+        case (.opened, .short):
+            R.string.localizable.opened_short()
+        case (.closed, .long):
+            R.string.localizable.closed_long()
+        case (.closed, .short):
+            R.string.localizable.closed_short()
+        }
         valueLabel.text = viewModel.orderValueInToken
         switch viewModel.side {
         case .long:

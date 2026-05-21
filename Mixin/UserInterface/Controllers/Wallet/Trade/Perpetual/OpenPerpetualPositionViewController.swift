@@ -287,6 +287,7 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
         let context = Payment.PerpsContext(
             wallet: wallet,
             viewModel: viewModel,
+            operation: .open,
             side: request.side,
             leverageMultiplier: leverageMultiplier,
             takeProfitPrice: takeProfitPrice,

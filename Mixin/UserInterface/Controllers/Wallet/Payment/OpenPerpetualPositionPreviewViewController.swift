@@ -24,7 +24,12 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         super.viewDidLoad()
         
         tableHeaderView.setTokenIcon(url: context.viewModel.iconURL)
-        tableHeaderView.titleLabel.text = R.string.localizable.confirm_opening_position()
+        tableHeaderView.titleLabel.text = switch context.operation {
+        case .open:
+            R.string.localizable.confirm_opening_position()
+        case .increase:
+            R.string.localizable.confirm_adding_position()
+        }
         tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixin)
         
         let multiplier = PerpetualLeverage.stringRepresentation(

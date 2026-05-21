@@ -77,6 +77,7 @@ final class TradeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = R.string.localizable.trade()
         let showOrdersItem = BadgeBarButtonItem(
             image: R.image.ic_title_transaction()!,
             target: self,

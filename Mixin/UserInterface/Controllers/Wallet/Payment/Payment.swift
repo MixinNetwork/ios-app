@@ -179,13 +179,21 @@ extension Payment {
     }
     
     struct PerpsContext {
+        
+        enum Operation {
+            case open
+            case increase
+        }
+        
         let wallet: Wallet
         let viewModel: PerpetualMarketViewModel
+        let operation: Operation
         let side: PerpetualOrderSide
         let leverageMultiplier: Decimal
         let takeProfitPrice: Decimal?
         let stopLossPrice: Decimal?
         let onDismissAfterSuccess: (() -> Void)?
+        
     }
     
     enum InscriptionError: Error, LocalizedError {

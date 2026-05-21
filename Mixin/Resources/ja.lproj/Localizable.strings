@@ -355,6 +355,7 @@
 "compressed" = "圧縮しました";
 "confirm" = "確認する";
 "confirm_adding_address" = "Confirm Address";
+"confirm_adding_position" = "Confirm Adding";
 "confirm_closing_position" = "Confirm Closing";
 "confirm_deleting_address" = "Delete Address";
 "confirm_editing_address" = "Confirm Editing Address";

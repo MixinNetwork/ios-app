@@ -91,6 +91,7 @@ final class PerpetualMarketViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = viewModel.market.displaySymbol
         navigationItem.titleView = NavigationTitleView(
             title: viewModel.market.displaySymbol,
             subtitle: R.string.localizable.perpetual()
@@ -217,7 +218,7 @@ final class PerpetualMarketViewController: UIViewController {
         collectionView.register(R.nib.perpetualIntroductionCell)
         collectionView.register(R.nib.perpsAutoClosingIntroCell)
         collectionView.register(R.nib.perpetualMarketOpenPositionCell)
-        collectionView.register(R.nib.perpetualInactivePositionCell)
+        collectionView.register(R.nib.perpetualActivityCell)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
@@ -701,7 +702,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             }
             return cell
         case .activities(let viewModels):
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_activity, for: indexPath)!
             let viewModel = viewModels[indexPath.item]
             cell.load(viewModel: viewModel)
             return cell

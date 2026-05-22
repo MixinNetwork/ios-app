@@ -19,12 +19,10 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     @IBOutlet weak var addButton: UIButton!
     
     private let wallet: Wallet
-    private let viewModel: PerpetualMarketViewModel
-    private let positionID: String
-    private let side: PerpetualOrderSide
-    private let leverageMultiplier: Decimal
+    private let marketViewModel: PerpetualMarketViewModel
+    private let positionViewModel: PerpetualPositionViewModel
     private let openedMargin: Decimal
-    private let entryPrice: String
+    private let leverageMultiplier: Decimal
     private let amountValidator: AmountValidator
     
     private var isAdding = false {
@@ -45,21 +43,16 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     
     init(
         wallet: Wallet,
-        viewModel: PerpetualMarketViewModel,
-        positionID: String,
-        side: PerpetualOrderSide,
-        leverageMultiplier: Decimal,
+        marketViewModel: PerpetualMarketViewModel,
+        positionViewModel: PerpetualPositionViewModel,
         openedMargin: Decimal,
-        entryPrice: String,
     ) {
         self.wallet = wallet
-        self.viewModel = viewModel
-        self.positionID = positionID
-        self.side = side
-        self.leverageMultiplier = leverageMultiplier
+        self.marketViewModel = marketViewModel
+        self.positionViewModel = positionViewModel
         self.openedMargin = openedMargin
-        self.entryPrice = entryPrice
-        self.amountValidator = AmountValidator(market: viewModel.market)
+        self.leverageMultiplier = Decimal(positionViewModel.leverageMultiplier)
+        self.amountValidator = AmountValidator(market: marketViewModel.market)
         let nib = R.nib.addPerpsPositionView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -72,16 +65,16 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
         super.viewDidLoad()
         presentationController?.delegate = self
         
-        titleView.iconView.setIcon(tokenIconURL: viewModel.iconURL)
+        titleView.iconView.setIcon(tokenIconURL: marketViewModel.iconURL)
         titleView.titleLabel.text = R.string.localizable.add_position_title(
-            side.localizedName,
-            viewModel.market.tokenSymbol
+            positionViewModel.side.localizedName,
+            marketViewModel.market.tokenSymbol
         )
         titleView.subtitleLabel.attributedText = {
-            let currentPrice = viewModel.price
+            let currentPrice = marketViewModel.price
             let text = NSMutableAttributedString(
                 string: R.string.localizable.auto_close_subtitle_after_open(
-                    entryPrice,
+                    positionViewModel.entryPrice,
                     currentPrice
                 ),
                 attributes: [
@@ -89,7 +82,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
                     .foregroundColor: R.color.text_quaternary()!,
                 ]
             )
-            if let range = text.string.range(of: entryPrice) {
+            if let range = text.string.range(of: positionViewModel.entryPrice) {
                 text.setAttributes(
                     [.foregroundColor: R.color.text_tertiary()!],
                     range: NSRange(range, in: text.string)
@@ -187,9 +180,9 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
         )
         let context = Payment.PerpsContext(
             wallet: wallet,
-            viewModel: viewModel,
+            viewModel: marketViewModel,
             operation: .increase,
-            side: side,
+            side: positionViewModel.side,
             leverageMultiplier: leverageMultiplier,
             takeProfitPrice: nil,
             stopLossPrice: nil,
@@ -198,7 +191,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
             },
         )
         RouteAPI.increasePerpsPosition(
-            positionID: positionID,
+            positionID: positionViewModel.positionID,
             assetID: assetID,
             amount: amount,
             destination: nil
@@ -233,43 +226,38 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     }
     
     private func updateDescriptions(marginAmount: Decimal) {
-        addSizeContentLabel.text = {
-            let exposure = marginAmount * leverageMultiplier
-            return CurrencyFormatter.localizedString(
-                from: exposure / viewModel.decimalPrice,
-                format: .precision,
-                sign: .never,
-                symbol: .custom(viewModel.market.tokenSymbol)
-            ) + " (" + CurrencyFormatter.localizedString(
-                from: exposure * Currency.current.decimalRate,
-                format: .fiatMoneyPretty,
-                sign: .never,
-                symbol: .currencySymbol
-            ) + ")"
-        }()
-        totalSizeContentLabel.text = {
-            let exposure = (openedMargin + marginAmount) * leverageMultiplier
-            return CurrencyFormatter.localizedString(
-                from: exposure / viewModel.decimalPrice,
-                format: .precision,
-                sign: .never,
-                symbol: .custom(viewModel.market.tokenSymbol)
-            ) + " (" + CurrencyFormatter.localizedString(
-                from: exposure * Currency.current.decimalRate,
-                format: .fiatMoneyPretty,
-                sign: .never,
-                symbol: .currencySymbol
-            ) + ")"
-        }()
+        let addingExposure = marginAmount * leverageMultiplier
+        addSizeContentLabel.text = CurrencyFormatter.localizedString(
+            from: addingExposure / marketViewModel.decimalPrice,
+            format: .precision,
+            sign: .never,
+            symbol: .custom(marketViewModel.market.tokenSymbol)
+        ) + " (" + CurrencyFormatter.localizedString(
+            from: addingExposure * Currency.current.decimalRate,
+            format: .fiatMoneyPretty,
+            sign: .never,
+            symbol: .currencySymbol
+        ) + ")"
+        totalSizeContentLabel.text = CurrencyFormatter.localizedString(
+            from: positionViewModel.decimalQuantity + addingExposure / marketViewModel.decimalPrice,
+            format: .precision,
+            sign: .never,
+            symbol: .custom(marketViewModel.market.tokenSymbol)
+        ) + " (" + CurrencyFormatter.localizedString(
+            from: (openedMargin + marginAmount) * leverageMultiplier * Currency.current.decimalRate,
+            format: .fiatMoneyPretty,
+            sign: .never,
+            symbol: .currencySymbol
+        ) + ")"
         if marginAmount > 0 {
-            let liquidationPrice = switch side {
+            let liquidationPrice = switch positionViewModel.side {
             case .long:
-                viewModel.decimalPrice * (1 - 1 / leverageMultiplier)
+                marketViewModel.decimalPrice * (1 - 1 / leverageMultiplier)
             case .short:
-                viewModel.decimalPrice * (1 + 1 / leverageMultiplier)
+                marketViewModel.decimalPrice * (1 + 1 / leverageMultiplier)
             }
             liquidationPriceContentLabel.text = liquidationPrice.formatted(
-                viewModel.userDisplayPriceFormatStyle
+                marketViewModel.userDisplayPriceFormatStyle
             )
         } else {
             liquidationPriceContentLabel.text = "-"

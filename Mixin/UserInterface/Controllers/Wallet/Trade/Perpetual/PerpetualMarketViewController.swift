@@ -296,12 +296,9 @@ final class PerpetualMarketViewController: UIViewController {
         }
         let addPosition = AddPerpsPositionViewController(
             wallet: wallet,
-            viewModel: viewModel,
-            positionID: positionViewModel.positionID,
-            side: positionViewModel.side,
-            leverageMultiplier: Decimal(positionViewModel.leverageMultiplier),
+            marketViewModel: viewModel,
+            positionViewModel: positionViewModel,
             openedMargin: margin,
-            entryPrice: positionViewModel.entryPrice,
         )
         present(addPosition, animated: true)
     }

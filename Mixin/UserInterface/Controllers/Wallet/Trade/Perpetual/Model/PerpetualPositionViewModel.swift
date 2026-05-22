@@ -23,6 +23,7 @@ struct PerpetualPositionViewModel {
     let roeWithoutSign: String?
     let pnlWithROE: String
     let displaySymbol: String?
+    let decimalQuantity: Decimal
     let quantity: String
     let tokenSymbol: String?
     let orderValueInToken: String
@@ -41,7 +42,7 @@ struct PerpetualPositionViewModel {
     init(wallet: Wallet, position: PerpetualPositionItem) {
         let pnl = Decimal(string: position.unrealizedPnL, locale: .enUSPOSIX) ?? 0
         let entryPrice = Decimal(string: position.entryPrice, locale: .enUSPOSIX)
-        let quantity = abs(Decimal(string: position.quantity, locale: .enUSPOSIX) ?? 0)
+        let decimalQuantity = abs(Decimal(string: position.quantity, locale: .enUSPOSIX) ?? 0)
         let leverage = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
         let side = PerpetualOrderSide(rawValue: position.side) ?? .short
         let margin = Decimal(string: position.margin, locale: .enUSPOSIX)
@@ -98,14 +99,15 @@ struct PerpetualPositionViewModel {
             self.orderValueInFiatMoney = nil
         }
         self.displaySymbol = position.displaySymbol
+        self.decimalQuantity = decimalQuantity
         self.quantity = CurrencyFormatter.localizedString(
-            from: quantity,
+            from: decimalQuantity,
             format: .precision,
             sign: .never,
         )
         self.tokenSymbol = position.tokenSymbol
         self.orderValueInToken = CurrencyFormatter.localizedString(
-            from: quantity,
+            from: decimalQuantity,
             format: .precision,
             sign: .never,
             symbol: .custom(position.tokenSymbol)

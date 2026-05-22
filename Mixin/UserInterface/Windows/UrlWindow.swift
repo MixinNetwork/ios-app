@@ -189,6 +189,10 @@ class UrlWindow {
                     // Reject undocumented URIs. See `MixinURL.walletConnect` for details
                     return false
                 }
+            case .buy:
+                let buy = BuyTokenInputAmountViewController(wallet: .privacy)
+                UIApplication.homeNavigationController?.pushViewController(buy, animated: true)
+                return true
             case .unknown:
                 if source.isExternal && url.scheme == MixinURL.scheme {
                     UnknownURLWindow.instance().render(url: url).presentPopupControllerAnimated()

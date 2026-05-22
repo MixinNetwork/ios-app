@@ -9,12 +9,24 @@ final class PerpetualMarketViewController: UIViewController {
         case disabled
     }
     
+    private enum EditingLock {
+        case takeProfit
+        case stopLoss
+    }
+    
+    private enum ActionViewState {
+        case available
+        case opening
+        case opened
+        case adding
+    }
+    
     private enum Section {
         case price
         case autoClosingIntroduction(PerpsAutoClosingCondition.Behavior)
         case openPosition(PerpetualPositionViewModel)
         case info
-        case closedPositions([PerpetualPositionViewModel])
+        case activities([PerpetualActivityViewModel])
         case introduction
     }
     
@@ -39,8 +51,7 @@ final class PerpetualMarketViewController: UIViewController {
     private weak var openPositionCell: PerpetualMarketOpenPositionCell?
     
     private var autoClosingIntroDisplay: AutoClosingIntroDisplay?
-    private var isEditingTakeProfitPrice = false
-    private var isEditingStopLossPrice = false
+    private var editingLock: EditingLock?
     
     private var openPositionViewModel: PerpetualPositionViewModel? {
         for section in sections {
@@ -80,6 +91,7 @@ final class PerpetualMarketViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = viewModel.market.displaySymbol
         navigationItem.titleView = NavigationTitleView(
             title: viewModel.market.displaySymbol,
             subtitle: R.string.localizable.perpetual()
@@ -135,7 +147,7 @@ final class PerpetualMarketViewController: UIViewController {
                     background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     section.decorationItems = [background]
                     return section
-                case .closedPositions(let positions):
+                case .activities(let positions):
                     let section = multipleCells(estimatedHeight: 50)
                     let footerHeight: CGFloat = positions.count <= maxItemCount ? 20 : 56
                     section.boundarySupplementaryItems = [
@@ -206,7 +218,7 @@ final class PerpetualMarketViewController: UIViewController {
         collectionView.register(R.nib.perpetualIntroductionCell)
         collectionView.register(R.nib.perpsAutoClosingIntroCell)
         collectionView.register(R.nib.perpetualMarketOpenPositionCell)
-        collectionView.register(R.nib.perpetualInactivePositionCell)
+        collectionView.register(R.nib.perpetualActivityCell)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
@@ -226,7 +238,7 @@ final class PerpetualMarketViewController: UIViewController {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadPositions),
-            name: PerpsPositionHistoryDAO.perpsPositionHistoryDidSaveNotification,
+            name: PerpsOrderDAO.perpsOrdersDidSaveNotification,
             object: nil
         )
         reloadPositions()
@@ -257,25 +269,38 @@ final class PerpetualMarketViewController: UIViewController {
         reporter.report(event: .customerServiceDialog, tags: ["source": "perps_market"])
     }
     
-    @objc private func openPosition(_ sender: UIButton) {
-        guard let actionView = actionView as? OpenPerpetualActionView else {
-            return
-        }
-        let side: PerpetualOrderSide
-        switch sender {
-        case actionView.longButton:
-            side = .long
-        case actionView.shortButton:
-            side = .short
-        default:
-            return
-        }
+    @objc private func openLongPosition(_ sender: UIButton) {
         let open = OpenPerpetualPositionViewController(
             wallet: wallet,
-            side: side,
+            side: .long,
             viewModel: viewModel
         )
         navigationController?.pushViewController(open, animated: true)
+    }
+    
+    @objc private func openShortPosition(_ sender: UIButton) {
+        let open = OpenPerpetualPositionViewController(
+            wallet: wallet,
+            side: .short,
+            viewModel: viewModel
+        )
+        navigationController?.pushViewController(open, animated: true)
+    }
+    
+    @objc private func addPosition(_ sender: UIButton) {
+        guard
+            let positionViewModel = openPositionViewModel,
+            let margin = positionViewModel.decimalMargin
+        else {
+            return
+        }
+        let addPosition = AddPerpsPositionViewController(
+            wallet: wallet,
+            marketViewModel: viewModel,
+            positionViewModel: positionViewModel,
+            openedMargin: margin,
+        )
+        present(addPosition, animated: true)
     }
     
     @objc private func closePosition(_ sender: UIButton) {
@@ -307,6 +332,7 @@ final class PerpetualMarketViewController: UIViewController {
     
     @objc private func reloadPositions() {
         let marketID = viewModel.market.marketID
+        let limit = maxItemCount + 1
         DispatchQueue.global().async { [weak self, wallet] in
             let openPosition = PerpsPositionDAO.shared.position(marketID: marketID)
             let openPositionViewModel: PerpetualPositionViewModel? = if let openPosition {
@@ -314,21 +340,25 @@ final class PerpetualMarketViewController: UIViewController {
             } else {
                 nil
             }
-            let closedPositions = PerpsPositionHistoryDAO.shared.historyItems(marketID: marketID)
-                .map { history in
-                    PerpetualPositionViewModel(wallet: wallet, history: history)
-                }
+            let activities = PerpsOrderDAO.shared.orderItems(
+                marketID: marketID,
+                limit: limit
+            ).compactMap { order in
+                PerpetualActivityViewModel(wallet: wallet, order: order)
+            }
             DispatchQueue.main.async {
-                self?.reloadData(openPosition: openPositionViewModel, closedPositions: closedPositions)
+                self?.reloadData(
+                    openPosition: openPositionViewModel,
+                    activities: activities
+                )
             }
         }
     }
     
     private func reloadData(
         openPosition: PerpetualPositionViewModel?,
-        closedPositions: [PerpetualPositionViewModel]
+        activities: [PerpetualActivityViewModel]
     ) {
-        let actionViewToAdd: UIView?
         if let openPosition, openPosition.state != .opening {
             sections = [.price]
             switch autoClosingIntroDisplay {
@@ -364,71 +394,32 @@ final class PerpetualMarketViewController: UIViewController {
                 .openPosition(openPosition),
                 .info,
             ])
-            if !closedPositions.isEmpty {
-                sections.append(.closedPositions(closedPositions))
+            if !activities.isEmpty {
+                sections.append(.activities(activities))
             }
             sections.append(.introduction)
-            let actionView: AuthenticationPreviewSingleButtonTrayView
-            if let view = self.actionView as? AuthenticationPreviewSingleButtonTrayView {
-                actionView = view
-                actionViewToAdd = nil
-                actionView.button.removeTarget(self, action: nil, for: .touchUpInside)
-            } else {
-                actionView = AuthenticationPreviewSingleButtonTrayView()
-                actionViewToAdd = actionView
-                actionView.backgroundColor = R.color.background_secondary()
-                actionView.button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 37, bottom: 12, right: 37)
-            }
-            actionView.button.setTitle(R.string.localizable.close_position(), for: .normal)
-            actionView.button.addTarget(self, action: #selector(closePosition(_:)), for: .touchUpInside)
-            actionView.button.isEnabled = true
+            loadActionView(state: .opened)
         } else {
             sections = [
                 .price,
                 .introduction,
                 .info,
             ]
-            if !closedPositions.isEmpty {
-                sections.append(.closedPositions(closedPositions))
+            if !activities.isEmpty {
+                sections.append(.activities(activities))
             }
             if openPosition == nil {
-                if !(self.actionView is OpenPerpetualActionView) {
-                    let view = R.nib.openPerpetualActionView(withOwner: nil)!
-                    view.longButton.addTarget(self, action: #selector(openPosition(_:)), for: .touchUpInside)
-                    view.shortButton.addTarget(self, action: #selector(openPosition(_:)), for: .touchUpInside)
-                    view.isEnabled = true
-                    actionViewToAdd = view
-                } else {
-                    actionViewToAdd = nil
-                }
+                loadActionView(state: .available)
             } else {
-                let actionView: AuthenticationPreviewSingleButtonTrayView
-                if let view = self.actionView as? AuthenticationPreviewSingleButtonTrayView {
-                    actionView = view
-                    actionViewToAdd = nil
-                    actionView.button.removeTarget(self, action: nil, for: .touchUpInside)
-                } else {
-                    actionView = AuthenticationPreviewSingleButtonTrayView()
-                    actionViewToAdd = actionView
-                    actionView.backgroundColor = R.color.background_secondary()
-                    actionView.button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 37, bottom: 12, right: 37)
-                }
-                actionView.button.setTitle(R.string.localizable.perp_state_opening(), for: .normal)
-                actionView.button.isEnabled = false
+                loadActionView(state: .opening)
             }
-        }
-        if let actionView = actionViewToAdd {
-            self.actionView?.removeFromSuperview()
-            actionWrapperView.addSubview(actionView)
-            actionView.snp.makeEdgesEqualToSuperview()
-            self.actionView = actionView
         }
         collectionView.reloadData()
     }
     
-    private func viewClosedPositions() {
-        let positions = AllPerpetualPositionsViewController(wallet: wallet, content: .closed)
-        navigationController?.pushViewController(positions, animated: true)
+    private func viewActivities() {
+        let activities = PerpetualActivitiesViewController(wallet: wallet)
+        navigationController?.pushViewController(activities, animated: true)
     }
     
     private func handleTPSLUpdate(result: MixinAPI.Result<PerpetualPosition>) {
@@ -469,7 +460,7 @@ final class PerpetualMarketViewController: UIViewController {
             }
         }
         autoClosingIntroCell?.performSuggestionButton.isEnabled = true
-        if !isEditingTakeProfitPrice && !isEditingStopLossPrice {
+        if editingLock == nil {
             positionsLoader.start()
         }
     }
@@ -479,7 +470,7 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     private func setupTakeProfit(positionViewModel: PerpetualPositionViewModel) {
-        guard let margin = positionViewModel.decimalMargin else {
+        guard let margin = positionViewModel.decimalMargin, editingLock == nil else {
             return
         }
         let editor = EditPerpClosingConditionViewController(
@@ -495,7 +486,7 @@ final class PerpetualMarketViewController: UIViewController {
         editor.onSet = { [weak self] price in
             if let self {
                 positionsLoader.stop()
-                isEditingTakeProfitPrice = true
+                editingLock = .takeProfit
                 autoClosingIntroCell?.performSuggestionButton.isEnabled = false
                 openPositionCell?.updateTakeProfit(busy: true)
             }
@@ -512,7 +503,7 @@ final class PerpetualMarketViewController: UIViewController {
                 guard let self else {
                     return
                 }
-                self.isEditingTakeProfitPrice = false
+                self.editingLock = nil
                 self.handleTPSLUpdate(result: result)
             }
         }
@@ -520,7 +511,7 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     private func setupStopLoss(positionViewModel: PerpetualPositionViewModel) {
-        guard let margin = positionViewModel.decimalMargin else {
+        guard let margin = positionViewModel.decimalMargin, editingLock == nil else {
             return
         }
         let editor = EditPerpClosingConditionViewController(
@@ -536,7 +527,7 @@ final class PerpetualMarketViewController: UIViewController {
         editor.onSet = { [weak self] price in
             if let self {
                 positionsLoader.stop()
-                isEditingStopLossPrice = true
+                editingLock = .stopLoss
                 autoClosingIntroCell?.performSuggestionButton.isEnabled = false
                 openPositionCell?.updateStopLoss(busy: true)
             }
@@ -553,11 +544,90 @@ final class PerpetualMarketViewController: UIViewController {
                 guard let self else {
                     return
                 }
-                self.isEditingStopLossPrice = false
+                self.editingLock = nil
                 self.handleTPSLUpdate(result: result)
             }
         }
         present(editor, animated: true)
+    }
+    
+    private func loadActionView(state: ActionViewState) {
+        var singleButtonView: AuthenticationPreviewSingleButtonTrayView?
+        var doubleButtonView: OpenPerpetualActionView?
+        switch state {
+        case .available, .opened:
+            singleButtonView = nil
+            if let view = self.actionView as? OpenPerpetualActionView {
+                doubleButtonView = view
+            } else {
+                let view = R.nib.openPerpetualActionView(withOwner: nil)!
+                view.backgroundColor = R.color.background_secondary()
+                doubleButtonView = view
+            }
+        case .opening, .adding:
+            if let view = self.actionView as? AuthenticationPreviewSingleButtonTrayView {
+                singleButtonView = view
+            } else {
+                let view = AuthenticationPreviewSingleButtonTrayView()
+                view.backgroundColor = R.color.background_secondary()
+                view.button.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 37, bottom: 12, trailing: 37)
+                singleButtonView = view
+            }
+            doubleButtonView = nil
+        }
+        switch state {
+        case .available:
+            if let actionView = doubleButtonView {
+                actionView.loadLongShortConfiguration()
+                actionView.leftButton.removeTarget(self, action: nil, for: .touchUpInside)
+                actionView.leftButton.addTarget(self, action: #selector(openLongPosition(_:)), for: .touchUpInside)
+                actionView.rightButton.removeTarget(self, action: nil, for: .touchUpInside)
+                actionView.rightButton.addTarget(self, action: #selector(openShortPosition(_:)), for: .touchUpInside)
+                actionView.buttonsAvailability = .allEnabled
+            }
+        case .opening:
+            if let actionView = singleButtonView {
+                actionView.button.configuration?.title = R.string.localizable.perp_state_opening()
+                actionView.button.isEnabled = false
+            }
+        case .opened:
+            if let actionView = doubleButtonView {
+                if var config = actionView.leftButton.configuration {
+                    config.baseBackgroundColor = MarketColor.rising.uiColor
+                    config.baseForegroundColor = .white
+                    config.attributedTitle = AttributedString(
+                        R.string.localizable.add_position(),
+                        attributes: actionView.mediumFontAttributes
+                    )
+                    actionView.leftButton.configuration = config
+                }
+                actionView.leftButton.removeTarget(self, action: nil, for: .touchUpInside)
+                actionView.leftButton.addTarget(self, action: #selector(addPosition(_:)), for: .touchUpInside)
+                if var config = actionView.rightButton.configuration {
+                    config.baseBackgroundColor = R.color.theme()!
+                    config.baseForegroundColor = .white
+                    config.attributedTitle = AttributedString(
+                        R.string.localizable.close_position(),
+                        attributes: actionView.mediumFontAttributes
+                    )
+                    actionView.rightButton.configuration = config
+                }
+                actionView.rightButton.removeTarget(self, action: nil, for: .touchUpInside)
+                actionView.rightButton.addTarget(self, action: #selector(closePosition(_:)), for: .touchUpInside)
+                actionView.buttonsAvailability = .allEnabled
+            }
+        case .adding:
+            if let actionView = singleButtonView {
+                actionView.button.configuration?.title = R.string.localizable.adding_address()
+                actionView.button.isEnabled = false
+            }
+        }
+        if let actionView = singleButtonView ?? doubleButtonView, self.actionView != actionView {
+            self.actionView?.removeFromSuperview()
+            actionWrapperView.addSubview(actionView)
+            actionView.snp.makeEdgesEqualToSuperview()
+            self.actionView = actionView
+        }
     }
     
 }
@@ -586,8 +656,8 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             1
         case .info:
             2
-        case .closedPositions(let positions):
-            positions.count
+        case .activities(let activities):
+            min(maxItemCount, activities.count)
         case .introduction:
             1
         }
@@ -615,8 +685,8 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
         case .openPosition(let viewModel):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_open_position, for: indexPath)!
             cell.load(viewModel: viewModel)
-            cell.updateTakeProfit(busy: isEditingTakeProfitPrice)
-            cell.updateStopLoss(busy: isEditingStopLossPrice)
+            cell.updateTakeProfit(busy: editingLock == .takeProfit)
+            cell.updateStopLoss(busy: editingLock == .stopLoss)
             cell.delegate = self
             openPositionCell = cell
             return cell
@@ -631,8 +701,8 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
                 cell.contentLabel.text = viewModel.fundingRate
             }
             return cell
-        case .closedPositions(let viewModels):
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
+        case .activities(let viewModels):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_activity, for: indexPath)!
             let viewModel = viewModels[indexPath.item]
             cell.load(viewModel: viewModel)
             return cell
@@ -646,10 +716,10 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
         case UICollectionView.elementKindSectionHeader:
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
             switch sections[indexPath.section] {
-            case .closedPositions:
+            case .activities:
                 view.label.text = R.string.localizable.perps_activity()
                 view.onShowAll = { [weak self] (sender) in
-                    self?.viewClosedPositions()
+                    self?.viewActivities()
                 }
             default:
                 break
@@ -658,10 +728,10 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
         default:
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TradeViewAllFooterView.reuseIdentifier, for: indexPath) as! TradeViewAllFooterView
             switch sections[indexPath.section] {
-            case .closedPositions(let positions):
+            case .activities(let positions):
                 view.viewAllButton.isHidden = positions.count <= maxItemCount
                 view.onViewAll = { [weak self] (sender) in
-                    self?.viewClosedPositions()
+                    self?.viewActivities()
                 }
             default:
                 break
@@ -678,7 +748,7 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
         switch sections[indexPath.section] {
         case .price, .autoClosingIntroduction, .openPosition, .info:
             false
-        case .closedPositions, .introduction:
+        case .activities, .introduction:
             true
         }
     }
@@ -687,10 +757,10 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
         switch sections[indexPath.section] {
         case .price, .autoClosingIntroduction, .openPosition, .info:
             break
-        case .closedPositions(let viewModels):
+        case .activities(let viewModels):
             let viewModel = viewModels[indexPath.item]
-            let position = PerpetualPositionViewController(wallet: wallet, viewModel: viewModel)
-            navigationController?.pushViewController(position, animated: true)
+            let activity = PerpetualActivityViewController(wallet: wallet, viewModel: viewModel)
+            navigationController?.pushViewController(activity, animated: true)
         case .introduction:
             let manual = PerpsManual.viewController()
             present(manual, animated: true)
@@ -723,14 +793,16 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
         guard let positionViewModel = openPositionViewModel else {
             return
         }
-        let latestPrice = viewModel.decimalPrice
+        let dataSource = SharePerpetualPositionDataSource(
+            viewModel: positionViewModel,
+            latestPrice: viewModel.decimalPrice,
+        )
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         Referral.loadAvailableCode { [weak self] code in
             hud.hide()
             let share = SharePerpetualPositionViewController(
-                viewModel: positionViewModel,
-                latestPrice: latestPrice,
+                dataSource: dataSource,
                 rebatingCode: code
             )
             self?.present(share, animated: true)
@@ -738,14 +810,14 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
     }
     
     func perpetualMarketOpenPositionCellRequestTakeProfit(_ cell: PerpetualMarketOpenPositionCell) {
-        guard let positionViewModel = openPositionViewModel else {
+        guard let positionViewModel = openPositionViewModel, editingLock == nil else {
             return
         }
         if positionViewModel.takeProfitPrice == nil {
             setupTakeProfit(positionViewModel: positionViewModel)
         } else {
             positionsLoader.stop()
-            isEditingTakeProfitPrice = true
+            editingLock = .takeProfit
             autoClosingIntroCell?.performSuggestionButton.isEnabled = false
             cell.updateTakeProfit(busy: true)
             RouteAPI.updatePerpsTPSL(
@@ -756,21 +828,21 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
                 guard let self else {
                     return
                 }
-                self.isEditingTakeProfitPrice = false
+                self.editingLock = nil
                 self.handleTPSLUpdate(result: result)
             }
         }
     }
     
     func perpetualMarketOpenPositionCellRequestStopLoss(_ cell: PerpetualMarketOpenPositionCell) {
-        guard let positionViewModel = openPositionViewModel else {
+        guard let positionViewModel = openPositionViewModel, editingLock == nil else {
             return
         }
         if positionViewModel.stopLossPrice == nil {
             setupStopLoss(positionViewModel: positionViewModel)
         } else {
             positionsLoader.stop()
-            isEditingStopLossPrice = true
+            editingLock = .stopLoss
             autoClosingIntroCell?.performSuggestionButton.isEnabled = false
             cell.updateStopLoss(busy: true)
             RouteAPI.updatePerpsTPSL(
@@ -781,7 +853,7 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
                 guard let self else {
                     return
                 }
-                self.isEditingStopLossPrice = false
+                self.editingLock = nil
                 self.handleTPSLUpdate(result: result)
             }
         }

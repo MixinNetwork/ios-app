@@ -1,6 +1,6 @@
 import UIKit
 
-public final class PerpetualPositionHistoryItem: PerpetualPositionHistory {
+public final class PerpetualOrderItem: PerpetualOrder {
     
     enum JoinedQueryCodingKeys: String, CodingKey {
         case tokenSymbol = "token_symbol"

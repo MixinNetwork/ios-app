@@ -246,6 +246,28 @@ extension RouteAPI {
         )
     }
     
+    static func increasePerpsPosition(
+        positionID: String,
+        assetID: String,
+        amount: String,
+        destination: String?,
+        completion: @escaping (MixinAPI.Result<OpenPerpetualOrderResponse>) -> Void
+    ) {
+        var params = [
+            "asset_id": assetID,
+            "amount": amount,
+        ]
+        if let destination {
+            params["destination"] = destination
+        }
+        request(
+            method: .post,
+            path: "/perps/positions/\(positionID)/increase",
+            with: params,
+            completion: completion,
+        )
+    }
+    
     static func closePerpsOrder(
         positionID: String,
     ) async throws -> ClosePerpetualOrderResponse {
@@ -269,12 +291,12 @@ extension RouteAPI {
         )
     }
     
-    static func positionsHistory(
+    static func perpsOrders(
         walletID: String,
         offset: String?,
         limit: Int = 100,
-    ) async throws -> [PerpetualPositionHistory] {
-        var path = "/perps/positions/history?wallet_id=\(walletID)&limit=\(limit)"
+    ) async throws -> [PerpetualOrder] {
+        var path = "/perps/orders?wallet_id=\(walletID)&limit=\(limit)"
         if let offset {
             path += "&offset=\(offset)"
         }

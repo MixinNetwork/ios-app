@@ -3,25 +3,6 @@ import MixinServices
 
 struct PerpetualPositionViewModel {
     
-    enum Action {
-        
-        case tradeAgain
-        case close
-        case share
-        
-        func asPillAction() -> PillActionView.Action {
-            switch self {
-            case .tradeAgain:
-                    .init(title: R.string.localizable.trade_again())
-            case .close:
-                    .init(title: R.string.localizable.close_position(), style: .vibrant)
-            case .share:
-                    .init(title: R.string.localizable.share())
-            }
-        }
-        
-    }
-    
     struct EstimatedReceiving {
         let assetID: String
         let receivingAmount: Decimal
@@ -31,7 +12,6 @@ struct PerpetualPositionViewModel {
     let wallet: Wallet
     let marketID: String
     let positionID: String
-    let type: PerpetualPositionType
     let side: PerpetualOrderSide
     let iconURL: URL?
     let directionWithSymbol: String
@@ -42,16 +22,14 @@ struct PerpetualPositionViewModel {
     let roeWithSign: String?
     let roeWithoutSign: String?
     let pnlWithROE: String
-    let actions: [Action]
     let displaySymbol: String?
+    let decimalQuantity: Decimal
     let quantity: String
     let tokenSymbol: String?
     let orderValueInToken: String
     let entryPrice: String
     let date: String
     let priceFormatStyle: Decimal.FormatStyle.Currency
-    
-    // Only available for open positions
     let state: PerpetualPosition.State?
     let decimalMargin: Decimal?
     let margin: String?
@@ -61,14 +39,10 @@ struct PerpetualPositionViewModel {
     let stopLossPrice: Decimal?
     let orderValueInFiatMoney: String?
     
-    // Only available for closed positions
-    let closePrice: String?
-    let closedAt: String?
-    
     init(wallet: Wallet, position: PerpetualPositionItem) {
         let pnl = Decimal(string: position.unrealizedPnL, locale: .enUSPOSIX) ?? 0
         let entryPrice = Decimal(string: position.entryPrice, locale: .enUSPOSIX)
-        let quantity = abs(Decimal(string: position.quantity, locale: .enUSPOSIX) ?? 0)
+        let decimalQuantity = abs(Decimal(string: position.quantity, locale: .enUSPOSIX) ?? 0)
         let leverage = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
         let side = PerpetualOrderSide(rawValue: position.side) ?? .short
         let margin = Decimal(string: position.margin, locale: .enUSPOSIX)
@@ -83,7 +57,6 @@ struct PerpetualPositionViewModel {
         self.wallet = wallet
         self.marketID = position.marketID
         self.positionID = position.positionID
-        self.type = .open
         self.side = side
         self.iconURL = position.iconURL
         switch side {
@@ -125,16 +98,16 @@ struct PerpetualPositionViewModel {
             self.pnlWithROE = localizedPnL
             self.orderValueInFiatMoney = nil
         }
-        self.actions = [.close, .share]
         self.displaySymbol = position.displaySymbol
+        self.decimalQuantity = decimalQuantity
         self.quantity = CurrencyFormatter.localizedString(
-            from: quantity,
+            from: decimalQuantity,
             format: .precision,
             sign: .never,
         )
         self.tokenSymbol = position.tokenSymbol
         self.orderValueInToken = CurrencyFormatter.localizedString(
-            from: quantity,
+            from: decimalQuantity,
             format: .precision,
             sign: .never,
             symbol: .custom(position.tokenSymbol)
@@ -190,109 +163,6 @@ struct PerpetualPositionViewModel {
         } else {
             nil
         }
-        self.closePrice = nil
-        self.closedAt = nil
-    }
-    
-    init(wallet: Wallet, history: PerpetualPositionHistoryItem) {
-        let side = PerpetualOrderSide(rawValue: history.side) ?? .short
-        let quantity = abs(Decimal(string: history.quantity, locale: .enUSPOSIX) ?? 0)
-        let entryPrice = Decimal(string: history.entryPrice, locale: .enUSPOSIX)
-        let closePrice = Decimal(string: history.closePrice, locale: .enUSPOSIX)
-        let pnl = Decimal(string: history.realizedPnL, locale: .enUSPOSIX) ?? 0
-        let leverage = PerpetualLeverage.stringRepresentation(multiplier: history.leverage)
-        let localizedPnL = CurrencyFormatter.localizedString(
-            from: pnl * Currency.current.decimalRate,
-            format: .fiatMoneyPretty,
-            sign: .always,
-            symbol: .currencySymbol
-        )
-        
-        self.wallet = wallet
-        self.marketID = history.marketID
-        self.positionID = history.positionID
-        self.type = .closed
-        self.side = side
-        self.iconURL = history.iconURL
-        switch PerpetualOrderSide(rawValue: history.side) {
-        case .long:
-            self.directionWithSymbol = R.string.localizable.long_asset(history.tokenSymbol)
-        case .short:
-            self.directionWithSymbol = R.string.localizable.short_asset(history.tokenSymbol)
-        default:
-            self.directionWithSymbol = "\(history.side) \(history.tokenSymbol)"
-        }
-        self.leverageMultiplier = history.leverage
-        self.leverage = leverage
-        self.pnl = localizedPnL
-        self.pnlColor = pnl >= 0 ? .rising : .falling
-        if let entryPrice, let closePrice {
-            var roe = (closePrice / entryPrice - 1) * Decimal(history.leverage)
-            roe = abs(roe)
-            if pnl < 0 {
-                roe = -roe
-            }
-            roe = max(-1, roe)
-            let roeWithSign = PercentageFormatter.string(
-                from: roe,
-                format: .pretty,
-                sign: .always,
-                options: .keepOneFractionDigitForZero
-            )
-            let roeWithoutSign = PercentageFormatter.string(
-                from: roe,
-                format: .pretty,
-                sign: .never,
-                options: .keepOneFractionDigitForZero
-            )
-            self.roeWithSign = roeWithSign
-            self.roeWithoutSign = roeWithoutSign
-            self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
-        } else {
-            self.roeWithSign = nil
-            self.roeWithoutSign = nil
-            self.pnlWithROE = localizedPnL
-        }
-        self.actions = [.tradeAgain, .share]
-        self.displaySymbol = history.displaySymbol
-        self.quantity = CurrencyFormatter.localizedString(
-            from: quantity,
-            format: .precision,
-            sign: .never,
-        )
-        self.tokenSymbol = history.tokenSymbol
-        self.orderValueInToken = CurrencyFormatter.localizedString(
-            from: quantity,
-            format: .precision,
-            sign: .never,
-            symbol: .custom(history.tokenSymbol)
-        )
-        self.entryPrice = if let entryPrice {
-            entryPrice.formatted(history.priceFormatStyle)
-        } else {
-            history.entryPrice
-        }
-        self.date = if let date = DateFormatter.iso8601Full.date(from: history.closedAt) {
-            DateFormatter.dateFull.string(from: date)
-        } else {
-            history.closedAt
-        }
-        self.priceFormatStyle = history.priceFormatStyle
-        
-        self.state = nil
-        self.decimalMargin = nil
-        self.margin = nil
-        self.estimatedReceiving = nil
-        self.liquidationPrice = nil
-        self.takeProfitPrice = nil
-        self.stopLossPrice = nil
-        self.orderValueInFiatMoney = nil
-        self.closePrice = if let closePrice {
-            closePrice.formatted(history.priceFormatStyle)
-        } else {
-            history.closePrice
-        }
-        self.closedAt = history.closedAt
     }
     
 }

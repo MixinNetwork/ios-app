@@ -46,43 +46,43 @@ final class SharePerpetualPositionView: UIView {
         obiView.contentView.darkColors = nil
     }
     
-    func load(viewModel: PerpetualPositionViewModel, latestPrice: Decimal?) {
-        iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        changeLabel.text = viewModel.roeWithSign
-        let layer = layer as! CAGradientLayer
-        switch (AppGroupUserDefaults.User.marketColorAppearance, viewModel.pnlColor) {
-        case (.greenUpRedDown, .rising), (.redUpGreenDown, .falling):
-            layer.colors = [
-                UIColor(displayP3RgbValue: 0x65DB8B, alpha: 1).cgColor,
-                UIColor(displayP3RgbValue: 0x4ba669, alpha: 1).cgColor,
-            ]
-            obiView.backgroundColor = UIColor(displayP3RgbValue: 0x479e68, alpha: 1)
-        case (.redUpGreenDown, .rising), (.greenUpRedDown, .falling):
-            layer.colors = [
-                UIColor(displayP3RgbValue: 0xFF546E, alpha: 1).cgColor,
-                UIColor(displayP3RgbValue: 0xdd3e43, alpha: 1).cgColor,
-            ]
-            obiView.backgroundColor = UIColor(displayP3RgbValue: 0xc83b42, alpha: 1)
+    func load(dataSource: SharePerpetualPositionDataSource) {
+        iconView.setIcon(tokenIconURL: dataSource.iconURL)
+        changeLabel.text = dataSource.change
+        if let layer = layer as? CAGradientLayer {
+            switch (AppGroupUserDefaults.User.marketColorAppearance, dataSource.pnlColor) {
+            case (.greenUpRedDown, .rising), (.redUpGreenDown, .falling):
+                layer.colors = [
+                    UIColor(displayP3RgbValue: 0x65DB8B, alpha: 1).cgColor,
+                    UIColor(displayP3RgbValue: 0x4ba669, alpha: 1).cgColor,
+                ]
+                obiView.backgroundColor = UIColor(displayP3RgbValue: 0x479e68, alpha: 1)
+            case (.redUpGreenDown, .rising), (.greenUpRedDown, .falling):
+                layer.colors = [
+                    UIColor(displayP3RgbValue: 0xFF546E, alpha: 1).cgColor,
+                    UIColor(displayP3RgbValue: 0xdd3e43, alpha: 1).cgColor,
+                ]
+                obiView.backgroundColor = UIColor(displayP3RgbValue: 0xc83b42, alpha: 1)
+            }
         }
-        mascotImageView.image = switch viewModel.pnlColor {
+        mascotImageView.image = switch dataSource.pnlColor {
         case .rising:
             R.image.mascot_gain()
         case .falling:
             R.image.mascot_loss()
         }
-        operationLabel.text = viewModel.directionWithSymbol
-        leverageLabel.text = viewModel.leverage
+        operationLabel.text = dataSource.operation
+        leverageLabel.text = dataSource.leverage
         entryPriceTitleLabel.text = R.string.localizable.entry_price()
-        entryPriceContentLabel.text = viewModel.entryPrice
-        if let closePrice = viewModel.closePrice {
+        entryPriceContentLabel.text = dataSource.entryPrice
+        switch dataSource.trailingPrice {
+        case .closePrice(let price):
             priceTitleLabel.text = R.string.localizable.close_price()
-            priceContentLabel.text = closePrice
-        } else if let latestPrice {
+            priceContentLabel.text = price
+        case .currentPrice(let price):
             priceTitleLabel.text = R.string.localizable.perps_current_price()
-            priceContentLabel.text = latestPrice.formatted(
-                viewModel.priceFormatStyle
-            )
-        } else {
+            priceContentLabel.text = price
+        case .none:
             priceTitleLabel.text = ""
             priceContentLabel.text = ""
         }

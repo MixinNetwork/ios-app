@@ -55,8 +55,11 @@ public final class PerpsPositionDAO: PerpsDAO {
     // Returns if there's difference between old and new ones
     public func replace(positions: [PerpetualPosition]) -> Bool {
         try! db.writeAndReturnError { (db) -> Bool in
-            let positionIDsBefore = try String.fetchSet(db, sql: "SELECT position_id FROM positions")
-            let positionIDsAfter = Set(positions.map(\.positionID))
+            let positionsBefore = try PerpetualPositionUniqueIdentifier.fetchSet(
+                db,
+                sql: "SELECT position_id, open_pay_amount FROM positions"
+            )
+            let positionsAfter = Set(positions.map(PerpetualPositionUniqueIdentifier.init(position:)))
             try PerpetualPosition.deleteAll(db)
             try positions.save(db)
             db.afterNextTransaction { _ in
@@ -66,7 +69,7 @@ public final class PerpsPositionDAO: PerpsDAO {
                     userInfo: [Self.newPositionItemsUserInfoKey: []]
                 )
             }
-            return positionIDsBefore != positionIDsAfter
+            return positionsBefore != positionsAfter
         }
     }
     

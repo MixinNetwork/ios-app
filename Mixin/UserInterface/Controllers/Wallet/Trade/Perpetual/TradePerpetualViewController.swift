@@ -22,7 +22,7 @@ final class TradePerpetualViewController: UIViewController {
     private var stocks: [PerpetualMarketViewModel]?
     private var commodities: [PerpetualMarketViewModel]?
     private var hasHistoryLoadedFromRemote = false
-    private var closedPositions: [PerpetualPositionViewModel]?
+    private var activities: [PerpetualActivityViewModel]?
     
     init(
         wallet: Wallet,
@@ -113,7 +113,7 @@ final class TradePerpetualViewController: UIViewController {
                 case .markets(let category):
                     multipleCells(itemCount: self?.marketItems(category: category)?.count)
                 case .activity:
-                    multipleCells(itemCount: self?.closedPositions?.count)
+                    multipleCells(itemCount: self?.activities?.count)
                 case .introduction:
                     oneCell(estimatedHeight: 90)
                 }
@@ -139,9 +139,10 @@ final class TradePerpetualViewController: UIViewController {
             make.top.equalTo(collectionView.snp.bottom)
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
-        actionView.longButton.addTarget(self, action: #selector(openPosition(_:)), for: .touchUpInside)
-        actionView.shortButton.addTarget(self, action: #selector(openPosition(_:)), for: .touchUpInside)
-        actionView.isEnabled = false
+        actionView.loadLongShortConfiguration()
+        actionView.leftButton.addTarget(self, action: #selector(openPosition(_:)), for: .touchUpInside)
+        actionView.rightButton.addTarget(self, action: #selector(openPosition(_:)), for: .touchUpInside)
+        actionView.buttonsAvailability = .allDisabled
         self.actionView = actionView
         
         collectionView.register(
@@ -156,7 +157,7 @@ final class TradePerpetualViewController: UIViewController {
         collectionView.register(R.nib.perpetualPositionValueCell)
         collectionView.register(R.nib.perpetualPlaceholderCell)
         collectionView.register(R.nib.perpetualMarketCell)
-        collectionView.register(R.nib.perpetualInactivePositionCell)
+        collectionView.register(R.nib.perpetualActivityCell)
         collectionView.register(R.nib.perpetualIntroductionCell)
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -176,8 +177,8 @@ final class TradePerpetualViewController: UIViewController {
         )
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(reloadClosedPositions(_:)),
-            name: PerpsPositionHistoryDAO.perpsPositionHistoryDidSaveNotification,
+            selector: #selector(reloadOrders(_:)),
+            name: PerpsOrderDAO.perpsOrdersDidSaveNotification,
             object: nil
         )
         
@@ -189,11 +190,11 @@ final class TradePerpetualViewController: UIViewController {
                     PerpetualPositionViewModel(wallet: wallet, position: item)
                 }
             let markets = AggregatedMarkets.fetch(limit: limit)
-            let closedPositions = PerpsPositionHistoryDAO.shared.historyItems(
-                offsetClosedAt: nil,
+            let activities = PerpsOrderDAO.shared.orderItems(
+                offsetUpdatedAt: nil,
                 limit: limit
-            ).map { history in
-                PerpetualPositionViewModel(wallet: wallet, history: history)
+            ).compactMap { order in
+                PerpetualActivityViewModel(wallet: wallet, order: order)
             }
             DispatchQueue.main.async {
                 guard let self else {
@@ -205,9 +206,9 @@ final class TradePerpetualViewController: UIViewController {
                     self.markets = markets.all
                     self.stocks = markets.stocks
                     self.commodities = markets.commodities
-                    self.actionView.isEnabled = true
+                    actionView.buttonsAvailability = .allEnabled
                 }
-                self.closedPositions = closedPositions
+                self.activities = activities
                 self.sections = Section.sections(openPositionCount: openPositions.count)
                 UIView.performWithoutAnimation(self.collectionView.reloadData)
                 self.positionsLoader.start()
@@ -235,9 +236,9 @@ final class TradePerpetualViewController: UIViewController {
     @objc private func openPosition(_ sender: UIButton) {
         let side: PerpetualOrderSide
         switch sender {
-        case actionView.longButton:
+        case actionView.leftButton:
             side = .long
-        case actionView.shortButton:
+        case actionView.rightButton:
             side = .short
         default:
             return
@@ -291,7 +292,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 1
             }
         case .activity:
-            if let count = closedPositions?.count, count != 0 {
+            if let count = activities?.count, count != 0 {
                 min(maxItemCount, count)
             } else {
                 1
@@ -309,7 +310,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             let position = openPositions[indexPath.item]
             switch position.state {
             case .opening:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_activity, for: indexPath)!
                 cell.load(viewModel: position)
                 return cell
             default:
@@ -340,14 +341,14 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 return cell
             }
         case .activity:
-            if let closedPositions, !closedPositions.isEmpty {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
-                let viewModel = closedPositions[indexPath.item]
+            if let activities, !activities.isEmpty {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_activity, for: indexPath)!
+                let viewModel = activities[indexPath.item]
                 cell.load(viewModel: viewModel)
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_placeholder, for: indexPath)!
-                if closedPositions == nil {
+                if activities == nil {
                     cell.activityIndicatorView.startAnimating()
                     cell.emptyIndicatorStackView.isHidden = true
                 } else {
@@ -380,7 +381,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             case .markets(let category):
                 view.label.text = switch category {
                 case .all:
-                    R.string.localizable.perps_markets()
+                    R.string.localizable.trending()
                 case .stocks:
                     R.string.localizable.perps_category_stocks()
                 case .commodities:
@@ -392,7 +393,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             case .activity:
                 view.label.text = R.string.localizable.perps_activity()
                 view.onShowAll = { [weak self] (sender) in
-                    self?.viewClosedPositions()
+                    self?.viewActivities()
                 }
             }
             return view
@@ -412,9 +413,9 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     self?.viewAllMarkets(category: category)
                 }
             case .activity:
-                view.viewAllButton.isHidden = (closedPositions?.count ?? 0) <= maxItemCount
+                view.viewAllButton.isHidden = (activities?.count ?? 0) <= maxItemCount
                 view.onViewAll = { [weak self] (sender) in
-                    self?.viewClosedPositions()
+                    self?.viewActivities()
                 }
             }
             return view
@@ -453,12 +454,12 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
             )
             navigationController?.pushViewController(market, animated: true)
         case .activity:
-            guard let closedPositions, !closedPositions.isEmpty else {
+            guard let activities, !activities.isEmpty else {
                 return
             }
-            let viewModel = closedPositions[indexPath.item]
-            let position = PerpetualPositionViewController(wallet: wallet, viewModel: viewModel)
-            navigationController?.pushViewController(position, animated: true)
+            let viewModel = activities[indexPath.item]
+            let activity = PerpetualActivityViewController(wallet: wallet, viewModel: viewModel)
+            navigationController?.pushViewController(activity, animated: true)
         case .introduction:
             presentPerpsManual()
         }
@@ -546,7 +547,7 @@ extension TradePerpetualViewController {
     }
     
     private func viewOpenPositions() {
-        let positions = AllPerpetualPositionsViewController(wallet: wallet, content: .open)
+        let positions = PerpetualPositionsViewController(wallet: wallet)
         navigationController?.pushViewController(positions, animated: true)
     }
     
@@ -574,9 +575,9 @@ extension TradePerpetualViewController {
         present(selector, animated: true)
     }
     
-    private func viewClosedPositions() {
-        let positions = AllPerpetualPositionsViewController(wallet: wallet, content: .closed)
-        navigationController?.pushViewController(positions, animated: true)
+    private func viewActivities() {
+        let activities = PerpetualActivitiesViewController(wallet: wallet)
+        navigationController?.pushViewController(activities, animated: true)
     }
     
     private func presentPerpsManual() {
@@ -647,32 +648,32 @@ extension TradePerpetualViewController {
                     self.collectionView.reloadSections(sections)
                 }
                 
-                self.actionView.isEnabled = !markets.all.isEmpty
+                self.actionView.buttonsAvailability = markets.all.isEmpty ? .allDisabled : .allEnabled
                 if !self.hasHistoryLoadedFromRemote {
                     // Load history only once, but after the markets
                     // are loaded, to avoid missing symbols in history
                     self.hasHistoryLoadedFromRemote = true
-                    let history = SyncPerpsPositionHistoryJob(walletID: walletID)
-                    ConcurrentJobQueue.shared.addJob(job: history)
+                    let orders = SyncPerpsOrdersJob(walletID: walletID)
+                    ConcurrentJobQueue.shared.addJob(job: orders)
                 }
             }
         }
     }
     
-    @objc private func reloadClosedPositions(_ notification: Notification) {
+    @objc private func reloadOrders(_ notification: Notification) {
         let limit = maxItemCount + 1
         DispatchQueue.global().async { [weak self, wallet] in
-            let closedPositions = PerpsPositionHistoryDAO.shared.historyItems(
-                offsetClosedAt: nil,
+            let activities = PerpsOrderDAO.shared.orderItems(
+                offsetUpdatedAt: nil,
                 limit: limit
-            ).map { history in
-                PerpetualPositionViewModel(wallet: wallet, history: history)
+            ).compactMap { history in
+                PerpetualActivityViewModel(wallet: wallet, order: history)
             }
             DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
-                self.closedPositions = closedPositions
+                self.activities = activities
                 if let section = self.sections.firstIndex(of: .activity) {
                     UIView.performWithoutAnimation {
                         let activity = IndexSet(integer: section)

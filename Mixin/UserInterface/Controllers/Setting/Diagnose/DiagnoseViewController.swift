@@ -40,6 +40,9 @@ final class DiagnoseViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: "Inspect WebView", accessory: .switch(isOn: DiagnoseSwitches.isWebViewInspectable)),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Reset Perps Orders"),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -147,8 +150,12 @@ extension DiagnoseViewController: UITableViewDelegate {
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
         case (11, 0):
             // Inspect WebView
-#if DEBUG
+            break
         case (12, 0):
+            PerpsOrderDAO.shared.deleteAll()
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
+#if DEBUG
+        case (13, 0):
             navigationController?.pushViewController(TIPDiagnosticViewController(), animated: true)
 #endif
         default:

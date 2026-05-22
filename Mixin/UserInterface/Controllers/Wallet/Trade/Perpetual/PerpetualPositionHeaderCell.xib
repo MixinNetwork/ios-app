@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -27,70 +27,74 @@
                         </constraints>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="bottom" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="maQ-zn-Po1">
-                        <rect key="frame" x="103.33333333333333" y="107.00000000000001" width="128.66666666666669" height="54.666666666666671"/>
+                        <rect key="frame" x="103.33333333333333" y="110.00000000000001" width="128.66666666666669" height="48.666666666666671"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+3.1342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eHD-fO-wfw">
-                                <rect key="frame" x="0.0" y="20.666666666666671" width="90" height="34"/>
+                                <rect key="frame" x="0.0" y="14.666666666666671" width="90" height="34"/>
                                 <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="34"/>
                                 <color key="textColor" name="text"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="USDT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zi5-RD-cMd" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="96.000000000000014" y="40.333333333333343" width="32.666666666666671" height="14.333333333333336"/>
+                                <rect key="frame" x="96.000000000000014" y="34.333333333333343" width="32.666666666666671" height="14.333333333333336"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" name="text"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                     </stackView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="41.333333333333336" placeholderIntrinsicHeight="20.333333333333329" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MOU-kD-Rqn" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="147" y="171.66666666666666" width="41.333333333333343" height="20.333333333333343"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Spv-tC-Pb2" customClass="PillActionView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="16" y="207" width="303" height="44"/>
-                        <color key="backgroundColor" name="background_input"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="0oX-4c-71S">
+                        <rect key="frame" x="16" y="171.66666666666666" width="303" height="79.333333333333343"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="41.333333333333336" placeholderIntrinsicHeight="20.333333333333329" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MOU-kD-Rqn" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="131" y="0.0" width="41.333333333333343" height="20.333333333333332"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Spv-tC-Pb2" customClass="PillActionView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="35.333333333333343" width="303" height="44"/>
+                                <color key="backgroundColor" name="background_input"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="F7E-xe-5up"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="12"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
                         <constraints>
-                            <constraint firstAttribute="height" constant="44" id="F7E-xe-5up"/>
+                            <constraint firstItem="Spv-tC-Pb2" firstAttribute="width" secondItem="0oX-4c-71S" secondAttribute="width" id="o2Y-7f-QaR"/>
                         </constraints>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                <integer key="value" value="12"/>
-                            </userDefinedRuntimeAttribute>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                        </userDefinedRuntimeAttributes>
-                    </view>
+                    </stackView>
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
-                    <constraint firstItem="MOU-kD-Rqn" firstAttribute="top" secondItem="maQ-zn-Po1" secondAttribute="bottom" constant="10" id="Cn4-Y3-6VD"/>
+                    <constraint firstItem="0oX-4c-71S" firstAttribute="top" secondItem="maQ-zn-Po1" secondAttribute="bottom" constant="13" id="3EI-Vw-Xyx"/>
+                    <constraint firstAttribute="bottom" secondItem="0oX-4c-71S" secondAttribute="bottom" constant="24" id="A3r-xW-4Bm"/>
+                    <constraint firstAttribute="trailing" secondItem="0oX-4c-71S" secondAttribute="trailing" constant="16" id="KMv-NT-lnl"/>
                     <constraint firstItem="fZf-91-i3N" firstAttribute="top" secondItem="u9K-YF-Swi" secondAttribute="top" constant="30" id="N5g-pK-ph6"/>
-                    <constraint firstAttribute="trailing" secondItem="Spv-tC-Pb2" secondAttribute="trailing" constant="16" id="NF6-dL-PgY"/>
-                    <constraint firstItem="Spv-tC-Pb2" firstAttribute="top" secondItem="MOU-kD-Rqn" secondAttribute="bottom" constant="15" id="UsL-mX-old"/>
-                    <constraint firstItem="maQ-zn-Po1" firstAttribute="top" secondItem="fZf-91-i3N" secondAttribute="bottom" constant="7" id="cpC-Xt-zqy"/>
+                    <constraint firstItem="maQ-zn-Po1" firstAttribute="top" secondItem="fZf-91-i3N" secondAttribute="bottom" constant="10" id="cpC-Xt-zqy"/>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="maQ-zn-Po1" secondAttribute="trailing" id="foI-Xb-brY"/>
-                    <constraint firstItem="Spv-tC-Pb2" firstAttribute="leading" secondItem="u9K-YF-Swi" secondAttribute="leading" constant="16" id="jLc-Lo-vkG"/>
-                    <constraint firstItem="MOU-kD-Rqn" firstAttribute="centerX" secondItem="u9K-YF-Swi" secondAttribute="centerX" id="nPH-iF-tQh"/>
+                    <constraint firstItem="0oX-4c-71S" firstAttribute="leading" secondItem="u9K-YF-Swi" secondAttribute="leading" constant="16" id="iME-h3-MEW"/>
                     <constraint firstItem="fZf-91-i3N" firstAttribute="centerX" secondItem="u9K-YF-Swi" secondAttribute="centerX" id="sTZ-Lu-CLU"/>
                     <constraint firstItem="maQ-zn-Po1" firstAttribute="centerX" secondItem="u9K-YF-Swi" secondAttribute="centerX" id="toR-uy-F6j"/>
                     <constraint firstItem="maQ-zn-Po1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="u9K-YF-Swi" secondAttribute="leading" id="v4j-yK-6lP"/>
-                    <constraint firstAttribute="bottom" secondItem="Spv-tC-Pb2" secondAttribute="bottom" constant="24" id="xQa-LX-TsW"/>
                 </constraints>
             </collectionViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="actionView" destination="Spv-tC-Pb2" id="oo3-hl-hZU"/>
                 <outlet property="directionLabel" destination="MOU-kD-Rqn" id="hij-OT-CLs"/>
-                <outlet property="directionTopConstraint" destination="Cn4-Y3-6VD" id="vpR-yI-dYV"/>
                 <outlet property="iconView" destination="fZf-91-i3N" id="eob-eK-Sxb"/>
                 <outlet property="symbolLabel" destination="Zi5-RD-cMd" id="lRl-xv-7sc"/>
                 <outlet property="titleLabel" destination="eHD-fO-wfw" id="V60-wl-KHt"/>
                 <outlet property="titleStackView" destination="maQ-zn-Po1" id="fHi-AU-d0H"/>
-                <outlet property="titleTopConstraint" destination="cpC-Xt-zqy" id="v72-DD-7gc"/>
             </connections>
-            <point key="canvasLocation" x="-699.23664122137404" y="153.52112676056339"/>
+            <point key="canvasLocation" x="-700" y="153.16901408450704"/>
         </collectionViewCell>
     </objects>
     <resources>
@@ -98,7 +102,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

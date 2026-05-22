@@ -29,6 +29,10 @@
 "add_phone_instruction_2" = "手机号和助记词登录的是同一个账号。";
 "add_phone_instruction_3" = "无法添加一个已注册为 Mixin 账号的手机号。";
 "add_phone_instruction_4" = "手机号绑定后无法删除。";
+"add_position" = "加仓";
+"add_position_add_size" = "加仓规模";
+"add_position_title" = "%1$@ %2$@ 加仓";
+"add_position_total_size" = "总体规模";
 "add_recovery_contact_before_instruction_1" = "要添加的恢复联系人已下载并登录了 Mixin。";
 "add_recovery_contact_before_instruction_2" = "要添加的恢复联系人保持 Mixin 在线或者正在与您面对面。";
 "add_recovery_contact_before_instruction_3" = "要添加的恢复联系人已添加当前账号（%@）为联系人，否则对方可能无法收到验证码。";
@@ -48,8 +52,13 @@
 "add_watch_address" = "添加观察地址";
 "add_watch_address_description" = "追踪公开钱包地址";
 "added" = "已添加";
+"added_long" = "加仓做多";
+"added_long_failed" = "加仓做多失败";
+"added_short" = "加仓做空";
+"added_short_failed" = "加仓做空失败";
 "adding_address" = "正在添加地址";
 "adding_address_failed" = "添加地址失败";
+"adding_position" = "正在加仓";
 "address" = "地址";
 "address_added" = "地址已添加";
 "address_added_description" = "地址已添加，您可以立刻使用该地址进行提现。";
@@ -321,8 +330,10 @@
 "close" = "关闭";
 "close_position" = "平仓";
 "close_price" = "平仓价格";
-"closed_long" = "历史多单";
-"closed_short" = "历史空单";
+"closed_long" = "平仓做多";
+"closed_long_failed" = "平仓做多失败";
+"closed_short" = "平仓做空";
+"closed_short_failed" = "平仓做空失败";
 "closing_balance" = "期末余额";
 "closing_position" = "正在平仓";
 "collectible" = "藏品";
@@ -350,6 +361,7 @@
 "compressed" = "已压缩";
 "confirm" = "确认";
 "confirm_adding_address" = "添加地址确认";
+"confirm_adding_position" = "确认加仓";
 "confirm_closing_position" = "确认平仓";
 "confirm_deleting_address" = "删除地址确认";
 "confirm_editing_address" = "修改地址确认";
@@ -1090,8 +1102,10 @@
 "open_position" = "开仓";
 "open_source" = "版权所有 Mixin\n根据 GPL-3.0 授权许可";
 "open_url" = "打开链接";
-"opened_long" = "持有多单";
-"opened_short" = "持有空单";
+"opened_long" = "开仓做多";
+"opened_long_failed" = "开仓做多失败";
+"opened_short" = "开仓做空";
+"opened_short_failed" = "开仓做空失败";
 "opening_balance" = "期初余额";
 "operation_failed" = "操作失败，请稍后重试";
 "opponents" = "收发人";
@@ -1860,6 +1874,7 @@
 "view_invoice" = "查看账单";
 "view_on_explorer" = "在浏览器中查看";
 "view_on_marketplace" = "在市场中查看";
+"view_perps_market" = "查看合约";
 "view_plan" = "查看会员";
 "view_wallet" = "查看钱包";
 "voice_call_cancelled" = "对方已取消语音通话";

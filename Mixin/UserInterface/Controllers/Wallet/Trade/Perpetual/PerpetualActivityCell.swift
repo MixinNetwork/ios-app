@@ -1,6 +1,6 @@
 import UIKit
 
-final class PerpetualInactivePositionCell: UICollectionViewCell {
+final class PerpetualActivityCell: UICollectionViewCell {
     
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -32,20 +32,33 @@ final class PerpetualInactivePositionCell: UICollectionViewCell {
         titleLabel.text = viewModel.directionWithSymbol
         leverageLabel.text = viewModel.leverage
         valueLabel.text = viewModel.orderValueInToken
-        switch viewModel.type {
-        case .open:
-            leverageLabel.color = .neutral
-            changeLabel.text = R.string.localizable.perp_state_opening()
-            changeLabel.textColor = R.color.text_tertiary()
-        case .closed:
+        leverageLabel.color = .neutral
+        changeLabel.text = R.string.localizable.perp_state_opening()
+        changeLabel.textColor = R.color.text_tertiary()
+    }
+    
+    func load(viewModel: PerpetualActivityViewModel) {
+        iconView.setIcon(tokenIconURL: viewModel.iconURL)
+        titleLabel.text = viewModel.title
+        valueLabel.text = viewModel.orderValueInToken
+        switch viewModel.status {
+        case .normal:
             switch viewModel.side {
             case .long:
                 leverageLabel.color = .long
             case .short:
                 leverageLabel.color = .short
             }
-            changeLabel.text = viewModel.pnlWithROE
-            changeLabel.marketColor = viewModel.pnlColor
+        case .rejected:
+            leverageLabel.color = .neutral
+        }
+        leverageLabel.text = viewModel.leverage
+        switch viewModel.type {
+        case .open, .increase:
+            changeLabel.text = nil
+        case let .close(pnl, _):
+            changeLabel.text = pnl.abbreviated
+            changeLabel.marketColor = pnl.color
         }
     }
     

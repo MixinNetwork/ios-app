@@ -29,6 +29,10 @@
 "add_phone_instruction_2" = "手機號和助記詞登入的是同一個賬號。";
 "add_phone_instruction_3" = "無法新增一個已註冊為 Mixin 賬號的手機號。";
 "add_phone_instruction_4" = "手機號繫結後無法刪除。";
+"add_position" = "加倉";
+"add_position_add_size" = "加倉規模";
+"add_position_title" = "%1$@ %2$@ 加倉";
+"add_position_total_size" = "總體規模";
 "add_recovery_contact_before_instruction_1" = "要新增的恢復聯絡人已下載並登入了 Mixin。";
 "add_recovery_contact_before_instruction_2" = "要新增的恢復聯絡人保持 Mixin 線上或者正在與您面對面。";
 "add_recovery_contact_before_instruction_3" = "要新增的恢復聯絡人已添加當前賬號（%@）為聯絡人，否則對方可能無法收到驗證碼。";
@@ -48,8 +52,13 @@
 "add_watch_address" = "新增觀察地址";
 "add_watch_address_description" = "追蹤公開錢包地址";
 "added" = "已新增";
+"added_long" = "加倉做多";
+"added_long_failed" = "加倉做多失敗";
+"added_short" = "加倉做空";
+"added_short_failed" = "加倉做空失敗";
 "adding_address" = "正在新增地址";
 "adding_address_failed" = "新增地址失敗";
+"adding_position" = "正在加倉";
 "address" = "地址";
 "address_added" = "地址已新增";
 "address_added_description" = "地址已新增，您可以立刻使用該地址進行提現。";
@@ -321,8 +330,10 @@
 "close" = "關閉";
 "close_position" = "平倉";
 "close_price" = "平倉價格";
-"closed_long" = "歷史多單";
-"closed_short" = "歷史空單";
+"closed_long" = "平倉做多";
+"closed_long_failed" = "平倉做多失敗";
+"closed_short" = "平倉做空";
+"closed_short_failed" = "平倉做空失敗";
 "closing_balance" = "期末餘額";
 "closing_position" = "正在平倉";
 "collectible" = "藏品";
@@ -350,6 +361,7 @@
 "compressed" = "已壓縮";
 "confirm" = "確認";
 "confirm_adding_address" = "新增地址確認";
+"confirm_adding_position" = "確認加倉";
 "confirm_closing_position" = "確認平倉";
 "confirm_deleting_address" = "刪除地址確認";
 "confirm_editing_address" = "修改地址確認";
@@ -1090,8 +1102,10 @@
 "open_position" = "開倉";
 "open_source" = "版權所有 Mixin\n根據 GPL-3.0 授權許可";
 "open_url" = "開啟連結";
-"opened_long" = "持有多單";
-"opened_short" = "持有空單";
+"opened_long" = "開倉做多";
+"opened_long_failed" = "開倉做多失敗";
+"opened_short" = "開倉做空";
+"opened_short_failed" = "開倉做空失敗";
 "opening_balance" = "期初餘額";
 "operation_failed" = "操作失敗，請稍後重試";
 "opponents" = "收發人";
@@ -1860,6 +1874,7 @@
 "view_invoice" = "檢視賬單";
 "view_on_explorer" = "在瀏覽器中檢視";
 "view_on_marketplace" = "在市場中檢視";
+"view_perps_market" = "檢視合約";
 "view_plan" = "檢視會員";
 "view_wallet" = "檢視錢包";
 "voice_call_cancelled" = "對方已取消語音通話";

@@ -29,6 +29,10 @@
 "add_phone_instruction_2" = "The mobile number and mnemonic phrase log into the same account.";
 "add_phone_instruction_3" = "You cannot add a mobile number registered to a Mixin account.";
 "add_phone_instruction_4" = "Once bound, the mobile number cannot be removed.";
+"add_position" = "Add";
+"add_position_add_size" = "Add Size";
+"add_position_title" = "Add to %1$@ %2$@";
+"add_position_total_size" = "Total Size";
 "add_recovery_contact_before_instruction_1" = "The recovery contact you want to add has downloaded and logged in to Mixin.";
 "add_recovery_contact_before_instruction_2" = "The recovery contact you want to add should stay online in Mixin or meet you face to face.";
 "add_recovery_contact_before_instruction_3" = "The recovery contact you want to add has added the current account (%@) as a contact; otherwise, they may not receive the verification code.";
@@ -48,8 +52,13 @@
 "add_watch_address" = "Add Watch Address";
 "add_watch_address_description" = "Track any public wallet address";
 "added" = "Añadido";
+"added_long" = "Added Long";
+"added_long_failed" = "Added Long Failed";
+"added_short" = "Added Short";
+"added_short_failed" = "Added Short Failed";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
+"adding_position" = "Adding";
 "address" = "Dirección";
 "address_added" = "Address Added";
 "address_added_description" = "The address has been added. You can use it for withdrawals right away.";
@@ -319,10 +328,12 @@
 "cleared" = "Borrado";
 "clock_skew_hint" = "Continúa usándolo nuevamente después de la corrección. Configuración > General > Fecha y hora > Activar Establecer automáticamente";
 "close" = "Cerrar";
-"close_position" = "Close Position";
+"close_position" = "Close";
 "close_price" = "Close Price";
 "closed_long" = "Closed Long";
+"closed_long_failed" = "Closed Long Failed";
 "closed_short" = "Closed Short";
+"closed_short_failed" = "Closed Short Failed";
 "closing_balance" = "Closing Balance";
 "closing_position" = "Closing Position";
 "collectible" = "Collectible";
@@ -350,6 +361,7 @@
 "compressed" = "Comprimido";
 "confirm" = "Confirmar";
 "confirm_adding_address" = "Confirm Address";
+"confirm_adding_position" = "Confirm Adding";
 "confirm_closing_position" = "Confirm Closing";
 "confirm_deleting_address" = "Delete Address";
 "confirm_editing_address" = "Confirm Editing Address";
@@ -1091,7 +1103,9 @@
 "open_source" = "Copyright Mixin\nLicensed under the GPLv3";
 "open_url" = "Abrir URL";
 "opened_long" = "Opened Long";
+"opened_long_failed" = "Opened Long Failed";
 "opened_short" = "Opened Short";
+"opened_short_failed" = "Opened Short Failed";
 "opening_balance" = "Opening Balance";
 "operation_failed" = "La operación ha fallado, intenta nuevamente más tarde";
 "opponents" = "Opponents";
@@ -1860,6 +1874,7 @@
 "view_invoice" = "View Invoice";
 "view_on_explorer" = "View on Explorer";
 "view_on_marketplace" = "View on Marketplace";
+"view_perps_market" = "View Market";
 "view_plan" = "View Plan";
 "view_wallet" = "Ver Cartera";
 "voice_call_cancelled" = "llamada de voz cancelada";

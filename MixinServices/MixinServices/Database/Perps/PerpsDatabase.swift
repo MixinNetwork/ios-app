@@ -70,23 +70,6 @@ public final class PerpsDatabase: Database {
                     PRIMARY KEY(`position_id`)
                 )
                 """,
-                """
-                CREATE TABLE IF NOT EXISTS `position_histories` (
-                    `history_id`    TEXT NOT NULL,
-                    `position_id`   TEXT NOT NULL,
-                    `market_id`     TEXT NOT NULL,
-                    `side`          TEXT NOT NULL,
-                    `quantity`      TEXT NOT NULL,
-                    `entry_price`   TEXT NOT NULL,
-                    `close_price`   TEXT NOT NULL,
-                    `realized_pnl`  TEXT NOT NULL,
-                    `leverage`      INTEGER NOT NULL,
-                    `margin_method` TEXT NOT NULL,
-                    `open_at`       TEXT NOT NULL,
-                    `closed_at`     TEXT NOT NULL,
-                    PRIMARY KEY(`history_id`)
-                )
-                """,
             ]
             for sql in sqls {
                 try db.execute(sql: sql)
@@ -124,6 +107,30 @@ public final class PerpsDatabase: Database {
             if !columnNames.contains("price_scale") {
                 try db.execute(sql: "ALTER TABLE markets ADD COLUMN price_scale INTEGER DEFAULT 2")
             }
+        }
+        
+        migrator.registerMigration("add_position") { db in
+            try db.execute(sql: "DROP TABLE IF EXISTS position_histories")
+            try db.execute(sql: """
+            CREATE TABLE IF NOT EXISTS perps_orders (
+                order_id TEXT NOT NULL PRIMARY KEY,
+                position_id TEXT NOT NULL,
+                market_id TEXT NOT NULL,
+                side TEXT NOT NULL,
+                order_type TEXT NOT NULL,
+                status TEXT NOT NULL,
+                leverage INTEGER NOT NULL,
+                quantity TEXT NOT NULL,
+                entry_price TEXT NOT NULL,
+                close_price TEXT NOT NULL,
+                realized_pnl TEXT NOT NULL,
+                roe TEXT NOT NULL,
+                close_reason TEXT,
+                trigger_price TEXT,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+            """)
         }
         
         return migrator

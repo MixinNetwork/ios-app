@@ -91,7 +91,7 @@ extension MixinToken {
         !(collectionHash?.isEmpty ?? true)
     }
     
-    public var internalTransferFormatStyle: Decimal.FormatStyle {
+    public static var transferCanonicalFormatStyle: Decimal.FormatStyle {
         Decimal.FormatStyle.number
             .locale(.enUSPOSIX)
             .grouping(.never)

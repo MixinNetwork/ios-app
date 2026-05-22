@@ -25,24 +25,29 @@ final class PerpetualActivityViewController: UIViewController {
         if let displaySymbol = viewModel.displaySymbol {
             infos.append(.product(iconURL: viewModel.iconURL, name: displaySymbol))
         }
-        switch viewModel.type {
-        case .open, .increase:
-            infos.append(.general(
-                title: R.string.localizable.entry_price().uppercased(),
-                content: viewModel.entryPrice
-            ))
-        case .close(let pnl, let closePrice):
-            infos.append(contentsOf: [
-                .pnl(value: pnl.precised, color: pnl.color),
-                .general(
+        switch viewModel.status {
+        case .normal:
+            switch viewModel.type {
+            case .open, .increase:
+                infos.append(.general(
                     title: R.string.localizable.entry_price().uppercased(),
                     content: viewModel.entryPrice
-                ),
-                .general(
-                    title: R.string.localizable.close_price().uppercased(),
-                    content: closePrice
-                ),
-            ])
+                ))
+            case .close(let pnl, let closePrice):
+                infos.append(contentsOf: [
+                    .pnl(value: pnl.precised, color: pnl.color),
+                    .general(
+                        title: R.string.localizable.entry_price().uppercased(),
+                        content: viewModel.entryPrice
+                    ),
+                    .general(
+                        title: R.string.localizable.close_price().uppercased(),
+                        content: closePrice
+                    ),
+                ])
+            }
+        case .rejected:
+            break
         }
         infos.append(contentsOf: [
             .wallet(.privacy),

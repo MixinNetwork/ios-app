@@ -224,7 +224,7 @@
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info" translatesAutoresizingMaskIntoConstraints="NO" id="awv-6Y-Xpt">
                                                     <rect key="frame" x="61" y="0.66666666666668561" width="16" height="16"/>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g6b-fm-1it">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="g6b-fm-1it">
                                                     <rect key="frame" x="81" y="0.0" width="240" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="text_tertiary"/>
@@ -244,7 +244,7 @@
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info" translatesAutoresizingMaskIntoConstraints="NO" id="aDS-Xh-aUx">
                                                     <rect key="frame" x="66.333333333333329" y="0.66666666666668561" width="16" height="16"/>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s0q-uw-BYN">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="s0q-uw-BYN">
                                                     <rect key="frame" x="86.333333333333329" y="0.0" width="234.66666666666669" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="text_tertiary"/>
@@ -334,12 +334,19 @@
                         <constraint firstItem="Vet-Pn-N7H" firstAttribute="trailing" secondItem="vRX-Lv-o5m" secondAttribute="trailing" id="1YR-Ds-dui"/>
                         <constraint firstItem="Vet-Pn-N7H" firstAttribute="leading" secondItem="vRX-Lv-o5m" secondAttribute="leading" id="BtB-Gh-cx3"/>
                         <constraint firstItem="Vet-Pn-N7H" firstAttribute="bottom" secondItem="vRX-Lv-o5m" secondAttribute="bottom" id="HK7-Mj-sfp"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="999" constant="218" id="nRx-Uc-EQH"/>
                         <constraint firstItem="Vet-Pn-N7H" firstAttribute="top" secondItem="vRX-Lv-o5m" secondAttribute="top" id="zTR-ah-Gsp"/>
                         <constraint firstItem="Vet-Pn-N7H" firstAttribute="width" secondItem="RVu-6Y-J9S" secondAttribute="width" id="zea-jg-9lR"/>
                     </constraints>
                     <viewLayoutGuide key="contentLayoutGuide" id="vRX-Lv-o5m"/>
                     <viewLayoutGuide key="frameLayoutGuide" id="RVu-6Y-J9S"/>
                 </scrollView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zzr-fx-od5">
+                    <rect key="frame" x="8" y="702" width="377" height="0.0"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" name="market_red"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3b9-nb-UKz">
                     <rect key="frame" x="0.0" y="702" width="393" height="82"/>
                     <subviews>
@@ -395,12 +402,6 @@
                         <constraint firstItem="1xt-ne-Zpi" firstAttribute="centerX" secondItem="3b9-nb-UKz" secondAttribute="centerX" id="yby-fl-k65"/>
                     </constraints>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zzr-fx-od5">
-                    <rect key="frame" x="8" y="702" width="377" height="0.0"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <color key="textColor" name="market_red"/>
-                    <nil key="highlightedColor"/>
-                </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" name="background_secondary"/>
@@ -417,7 +418,7 @@
                 <constraint firstItem="bsX-ca-gz4" firstAttribute="top" secondItem="ztB-1h-zOB" secondAttribute="bottom" id="iKG-DN-4aJ"/>
                 <constraint firstItem="3b9-nb-UKz" firstAttribute="top" secondItem="Zzr-fx-od5" secondAttribute="bottom" id="jaY-mj-uS6"/>
                 <constraint firstItem="ztB-1h-zOB" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="lPg-pM-bLd"/>
-                <constraint firstItem="Zzr-fx-od5" firstAttribute="top" secondItem="bsX-ca-gz4" secondAttribute="bottom" id="pRI-hI-yIs"/>
+                <constraint firstItem="Zzr-fx-od5" firstAttribute="top" secondItem="bsX-ca-gz4" secondAttribute="bottom" priority="998" id="pRI-hI-yIs"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="bsX-ca-gz4" secondAttribute="trailing" id="xJt-tK-lmK"/>
             </constraints>
             <point key="canvasLocation" x="-8.3969465648854964" y="153.52112676056339"/>
@@ -452,7 +453,7 @@
             <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -233,19 +233,34 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     }
     
     private func updateDescriptions(marginAmount: Decimal) {
-        addSizeContentLabel.text = CurrencyFormatter.localizedString(
-            from: marginAmount * leverageMultiplier / viewModel.decimalPrice,
-            format: .precision,
-            sign: .never,
-            symbol: .custom(viewModel.market.tokenSymbol)
-        )
-        let totalValue = (openedMargin + marginAmount) * leverageMultiplier
-        totalSizeContentLabel.text = CurrencyFormatter.localizedString(
-            from: totalValue / viewModel.decimalPrice,
-            format: .precision,
-            sign: .never,
-            symbol: .custom(viewModel.market.tokenSymbol)
-        )
+        addSizeContentLabel.text = {
+            let exposure = marginAmount * leverageMultiplier
+            return CurrencyFormatter.localizedString(
+                from: exposure / viewModel.decimalPrice,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(viewModel.market.tokenSymbol)
+            ) + " (" + CurrencyFormatter.localizedString(
+                from: exposure * Currency.current.decimalRate,
+                format: .fiatMoneyPretty,
+                sign: .never,
+                symbol: .currencySymbol
+            ) + ")"
+        }()
+        totalSizeContentLabel.text = {
+            let exposure = (openedMargin + marginAmount) * leverageMultiplier
+            return CurrencyFormatter.localizedString(
+                from: exposure / viewModel.decimalPrice,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(viewModel.market.tokenSymbol)
+            ) + " (" + CurrencyFormatter.localizedString(
+                from: exposure * Currency.current.decimalRate,
+                format: .fiatMoneyPretty,
+                sign: .never,
+                symbol: .currencySymbol
+            ) + ")"
+        }()
         if marginAmount > 0 {
             let liquidationPrice = switch side {
             case .long:

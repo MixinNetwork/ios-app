@@ -77,10 +77,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
                     positionViewModel.entryPrice,
                     currentPrice
                 ),
-                attributes: [
-                    .font: UIFont.preferredFont(forTextStyle: .caption1),
-                    .foregroundColor: R.color.text_quaternary()!,
-                ]
+                attributes: [.foregroundColor: R.color.text_quaternary()!]
             )
             if let range = text.string.range(of: positionViewModel.entryPrice) {
                 text.setAttributes(

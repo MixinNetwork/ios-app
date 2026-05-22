@@ -41,18 +41,23 @@ final class PerpetualActivityCell: UICollectionViewCell {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
         titleLabel.text = viewModel.title
         valueLabel.text = viewModel.orderValueInToken
-        switch viewModel.side {
-        case .long:
-            leverageLabel.color = .long
-        case .short:
-            leverageLabel.color = .short
+        switch viewModel.status {
+        case .normal:
+            switch viewModel.side {
+            case .long:
+                leverageLabel.color = .long
+            case .short:
+                leverageLabel.color = .short
+            }
+        case .rejected:
+            leverageLabel.color = .neutral
         }
         leverageLabel.text = viewModel.leverage
         switch viewModel.type {
         case .open, .increase:
             changeLabel.text = nil
         case let .close(pnl, _):
-            changeLabel.text = pnl.aggregated
+            changeLabel.text = pnl.abbreviated
             changeLabel.marketColor = pnl.color
         }
     }

@@ -53,7 +53,9 @@
 "add_watch_address_description" = "追踪公开钱包地址";
 "added" = "已添加";
 "added_long" = "加仓做多";
+"added_long_failed" = "加仓做多失败";
 "added_short" = "加仓做空";
+"added_short_failed" = "加仓做空失败";
 "adding_address" = "正在添加地址";
 "adding_address_failed" = "添加地址失败";
 "adding_position" = "正在加仓";
@@ -329,7 +331,9 @@
 "close_position" = "平仓";
 "close_price" = "平仓价格";
 "closed_long" = "平仓做多";
+"closed_long_failed" = "平仓做多失败";
 "closed_short" = "平仓做空";
+"closed_short_failed" = "平仓做空失败";
 "closing_balance" = "期末余额";
 "closing_position" = "正在平仓";
 "collectible" = "藏品";
@@ -1099,7 +1103,9 @@
 "open_source" = "版权所有 Mixin\n根据 GPL-3.0 授权许可";
 "open_url" = "打开链接";
 "opened_long" = "开仓做多";
+"opened_long_failed" = "开仓做多失败";
 "opened_short" = "开仓做空";
+"opened_short_failed" = "开仓做空失败";
 "opening_balance" = "期初余额";
 "operation_failed" = "操作失败，请稍后重试";
 "opponents" = "收发人";

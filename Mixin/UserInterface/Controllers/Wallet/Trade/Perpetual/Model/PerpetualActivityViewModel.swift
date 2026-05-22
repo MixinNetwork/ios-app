@@ -4,7 +4,7 @@ import MixinServices
 struct PerpetualActivityViewModel {
     
     struct PnL {
-        let aggregated: String
+        let abbreviated: String
         let precised: String
         let percentage: String
         let color: MarketColor
@@ -14,6 +14,11 @@ struct PerpetualActivityViewModel {
         case open
         case increase
         case close(pnl: PnL, closePrice: String)
+    }
+    
+    enum Status {
+        case normal
+        case rejected
     }
     
     enum Action {
@@ -39,6 +44,7 @@ struct PerpetualActivityViewModel {
     let marketID: String
     let positionID: String
     let type: OrderType
+    let status: Status
     let title: String
     let actions: [Action]
     let side: PerpetualOrderSide
@@ -68,41 +74,60 @@ struct PerpetualActivityViewModel {
             self.type = .open
             self.title = switch side {
             case .long:
-                R.string.localizable.opened_long()
+                switch order.status.knownCase {
+                case .rejected:
+                    R.string.localizable.opened_long_failed()
+                default:
+                    R.string.localizable.opened_long()
+                }
             case .short:
-                R.string.localizable.opened_short()
+                switch order.status.knownCase {
+                case .rejected:
+                    R.string.localizable.opened_short_failed()
+                default:
+                    R.string.localizable.opened_short()
+                }
             }
-            self.actions = [.viewMarket, .share]
         case .increasePosition:
             self.type = .increase
             self.title = switch side {
             case .long:
-                R.string.localizable.added_long()
+                switch order.status.knownCase {
+                case .rejected:
+                    R.string.localizable.added_long_failed()
+                default:
+                    R.string.localizable.added_long()
+                }
             case .short:
-                R.string.localizable.added_short()
+                switch order.status.knownCase {
+                case .rejected:
+                    R.string.localizable.added_short_failed()
+                default:
+                    R.string.localizable.added_short()
+                }
             }
-            self.actions = [.viewMarket, .share]
         case .close:
             let decimalClosePrice = Decimal(string: order.closePrice, locale: .enUSPOSIX)
             let realizedPnL = Decimal(string: order.realizedPnL, locale: .enUSPOSIX) ?? 0
             let roe = Decimal(string: order.roe, locale: .enUSPOSIX) ?? 0
+            let roeRepresentation = " (" + PercentageFormatter.string(
+                from: roe,
+                format: .pretty,
+                sign: .never
+            ) + ")"
             let pnl = PnL(
-                aggregated: CurrencyFormatter.localizedString(
+                abbreviated: CurrencyFormatter.localizedString(
                     from: realizedPnL * Currency.current.decimalRate,
                     format: .fiatMoneyPretty,
                     sign: .always,
                     symbol: .currencySymbol
-                ) + "(" + PercentageFormatter.string(
-                    from: roe,
-                    format: .pretty,
-                    sign: .always
-                ) + ")",
+                ) + roeRepresentation,
                 precised: CurrencyFormatter.localizedString(
                     from: realizedPnL * Currency.current.decimalRate,
                     format: .fiatMoneyPrecision,
                     sign: .always,
                     symbol: .currencySymbol
-                ),
+                ) + roeRepresentation,
                 percentage: PercentageFormatter.string(
                     from: roe,
                     format: .pretty,
@@ -118,14 +143,38 @@ struct PerpetualActivityViewModel {
             )
             self.title = switch side {
             case .long:
-                R.string.localizable.closed_long()
+                switch order.status.knownCase {
+                case .rejected:
+                    R.string.localizable.closed_long_failed()
+                default:
+                    R.string.localizable.closed_long()
+                }
             case .short:
-                R.string.localizable.closed_short()
+                switch order.status.knownCase {
+                case .rejected:
+                    R.string.localizable.closed_short_failed()
+                default:
+                    R.string.localizable.closed_short()
+                }
             }
-            self.actions = [.tradeAgain, .share]
         default:
             assertionFailure("Unknown order type")
             return nil
+        }
+        switch order.status.knownCase {
+        case .rejected:
+            self.status = .rejected
+            self.actions = []
+        default:
+            self.status = .normal
+            switch order.orderType.knownCase {
+            case .open, .increasePosition:
+                self.actions = [.viewMarket, .share]
+            case .close:
+                self.actions = [.tradeAgain, .share]
+            case .none:
+                self.actions = []
+            }
         }
         self.side = side
         self.iconURL = order.iconURL

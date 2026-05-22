@@ -139,6 +139,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
         }
         cancelButton.titleLabel?.adjustsFontForContentSizeCategory = true
         if var config = addButton.configuration {
+            config.baseBackgroundColor = MarketColor.rising.uiColor
             config.titleTextAttributesTransformer = .init { incoming in
                 var outgoing = incoming
                 outgoing.font = UIFont.preferredFont(forTextStyle: .callout)

@@ -21,14 +21,14 @@ public final class PerpsOrderDAO: PerpsDAO {
     
     public func closeOrderItem(positionID: String) -> PerpetualOrderItem? {
         db.select(
-            with: Self.itemSQL + "AND po.position_id = ? AND order_type = ?",
+            with: Self.itemSQL + "AND po.position_id = ? AND po.order_type = ?",
             arguments: [positionID, PerpetualOrder.OrderType.close.rawValue]
         )
     }
     
     public func orderItems(marketID: String, limit: Int) -> [PerpetualOrderItem] {
         db.select(
-            with: Self.itemSQL + "AND po.market_id = ? ORDER BY created_at DESC LIMIT ?",
+            with: Self.itemSQL + "AND po.market_id = ? ORDER BY po.created_at DESC LIMIT ?",
             arguments: [marketID, limit]
         )
     }
@@ -39,9 +39,9 @@ public final class PerpsOrderDAO: PerpsDAO {
     ) -> [PerpetualOrderItem] {
         var query = GRDB.SQL(sql: Self.itemSQL)
         if let offsetUpdatedAt {
-            query.append(literal: "AND updated_at < \(offsetUpdatedAt)\n")
+            query.append(literal: "AND po.updated_at < \(offsetUpdatedAt)\n")
         }
-        query.append(literal: "ORDER BY created_at DESC\n")
+        query.append(literal: "ORDER BY po.created_at DESC\n")
         if let limit {
             query.append(sql: "LIMIT \(limit)")
         }

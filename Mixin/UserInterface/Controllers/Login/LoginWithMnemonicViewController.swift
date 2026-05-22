@@ -110,8 +110,7 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
                             Logger.login.info(category: "MnemonicLogin", message: "Sign up with random mnemonics")
                         }
                     }
-                    let context = try SessionVerificationContext(mnemonics: mnemonics)
-                    self?.verifySession(context: context, captchaToken: nil)
+                    self?.verifySession(mnemonics: mnemonics, captchaToken: nil)
                 } catch {
                     Logger.login.error(category: "MnemonicLogin", message: "\(error)")
                     DispatchQueue.main.async {
@@ -184,8 +183,18 @@ extension LoginWithMnemonicViewController {
         let sessionKey = Ed25519PrivateKey()
     }
     
-    private func verifySession(context: SessionVerificationContext, captchaToken: CaptchaToken?) {
+    private func verifySession(mnemonics: MixinMnemonics, captchaToken: CaptchaToken?) {
         Logger.login.info(category: "MnemonicLogin", message: "Verificate")
+        let context: SessionVerificationContext
+        do {
+            context = try SessionVerificationContext(mnemonics: mnemonics)
+        } catch {
+            Logger.login.error(category: "MnemonicLogin", message: "\(error)")
+            DispatchQueue.main.async { [weak self] in
+                self?.showError(error.localizedDescription)
+            }
+            return
+        }
         AccountAPI.anonymousSessionVerifications(
             publicKey: context.publicKey,
             message: context.message,
@@ -220,7 +229,7 @@ extension LoginWithMnemonicViewController {
                 self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
                     switch result {
                     case .success(let token):
-                        self?.verifySession(context: context, captchaToken: token)
+                        self?.verifySession(mnemonics: mnemonics, captchaToken: token)
                     case .cancel, .timedOut:
                         self?.navigationController?.popViewController(animated: true)
                     }

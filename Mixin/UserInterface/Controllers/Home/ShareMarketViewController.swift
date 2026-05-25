@@ -45,14 +45,15 @@ final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMar
         contentView.volumeContentLabel.text = statistics.fiatMoneyVolume24H
         contentView.highContentLabel.text = statistics.high24H
         contentView.lowContentLabel.text = statistics.low24H
-        let link = if let rebatingCode {
-            contentView.obiView.load(gradient: true, content: .referral(rebatingCode))
+        let content: ShareObiView.Content = if let rebatingCode {
+            .referral(rebatingCode)
         } else {
-            contentView.obiView.load(gradient: true, content: .installMixin)
+            .installMixin
         }
+        contentView.obiView.load(gradient: true, content: content)
         
         self.market = market
-        self.link = link
+        self.link = content.url
         super.init(contentView: contentView, size: CGSize(width: 295, height: 690))
     }
     

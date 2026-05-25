@@ -7,6 +7,7 @@ struct PerpetualActivityViewModel {
         let abbreviated: String
         let precised: String
         let percentage: String
+        let receivingAmount: String
         let color: MarketColor
     }
     
@@ -50,6 +51,7 @@ struct PerpetualActivityViewModel {
     let side: PerpetualOrderSide
     let iconURL: URL?
     let directionWithSymbol: String
+    let leverageMultiplier: Int
     let leverage: String
     let displaySymbol: String?
     let quantity: String
@@ -112,18 +114,19 @@ struct PerpetualActivityViewModel {
             let decimalClosePrice = Decimal(string: order.closePrice, locale: .enUSPOSIX)
             let realizedPnL = Decimal(string: order.realizedPnL, locale: .enUSPOSIX) ?? 0
             let roe = Decimal(string: order.roe, locale: .enUSPOSIX) ?? 0
+            let prettyPnL = CurrencyFormatter.localizedString(
+                from: realizedPnL * Currency.current.decimalRate,
+                format: .fiatMoneyPretty,
+                sign: .always,
+                symbol: .currencySymbol
+            )
             let roeRepresentation = " (" + PercentageFormatter.string(
                 from: roe,
                 format: .pretty,
                 sign: .never
             ) + ")"
             let pnl = PnL(
-                abbreviated: CurrencyFormatter.localizedString(
-                    from: realizedPnL * Currency.current.decimalRate,
-                    format: .fiatMoneyPretty,
-                    sign: .always,
-                    symbol: .currencySymbol
-                ) + roeRepresentation,
+                abbreviated: prettyPnL + roeRepresentation,
                 precised: CurrencyFormatter.localizedString(
                     from: realizedPnL * Currency.current.decimalRate,
                     format: .fiatMoneyPrecision,
@@ -136,6 +139,7 @@ struct PerpetualActivityViewModel {
                     sign: .always,
                     options: .keepOneFractionDigitForZero
                 ),
+                receivingAmount: prettyPnL,
                 color: realizedPnL >= 0 ? .rising : .falling
             )
             let localizedClosePrice = decimalClosePrice?.formatted(order.priceFormatStyle)
@@ -188,6 +192,7 @@ struct PerpetualActivityViewModel {
         default:
             self.directionWithSymbol = "\(order.side) \(order.tokenSymbol)"
         }
+        self.leverageMultiplier = order.leverage
         self.leverage = leverage
         self.displaySymbol = order.displaySymbol
         self.quantity = CurrencyFormatter.localizedString(

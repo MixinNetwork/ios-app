@@ -46,6 +46,11 @@ struct ExternalSharingContext {
     let destination: Destination?
     var content: Content
     
+    init(content: Content) {
+        self.destination = nil
+        self.content = content
+    }
+    
     init?(url: URL) {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             return nil

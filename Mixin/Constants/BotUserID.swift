@@ -11,5 +11,6 @@ enum BotUserID {
     static let mixinCommunity = "6be8092e-2241-4d18-a891-7a5d93209edc"
     static let mixinCard = "5715d4e6-9a54-4c3d-a659-4b3879ed9734"
     static let mixinCash = "41d16c28-0c3a-493d-a2b4-b57875371abf"
+    static let mixinFutures = "af82d6d4-aec8-419a-8f7d-edfecf7a7725"
     
 }

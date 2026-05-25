@@ -4,8 +4,19 @@ import MixinServices
 final class ShareObiView: UIView, XibDesignable {
     
     enum Content {
+        
         case installMixin
         case referral(Referral.RebatingCode)
+        
+        var url: String {
+            switch self {
+            case .installMixin:
+                URL.shortMixinMessenger.absoluteString
+            case .referral(let rebating):
+                URL.bindReferral(code: rebating.code)
+            }
+        }
+        
     }
     
     @IBOutlet weak var contentView: GradientView!
@@ -24,8 +35,7 @@ final class ShareObiView: UIView, XibDesignable {
         loadSubviews()
     }
     
-    // Returns content displayed in QR Code view
-    func load(gradient: Bool, content: Content) -> String {
+    func load(gradient: Bool, content: Content) {
         if gradient {
             contentView.lightColors = [
                 UIColor(displayP3RgbValue: 0x4B7CDD),
@@ -39,13 +49,11 @@ final class ShareObiView: UIView, XibDesignable {
             contentView.lightColors = nil
             contentView.darkColors = nil
         }
-        let qrCodeContent: String
         switch content {
         case .installMixin:
             textStackView.spacing = 4
             titleLabel.text = .mixin
             descriptionLabel.text = R.string.localizable.install_messenger_desc()
-            qrCodeContent = URL.shortMixinMessenger.absoluteString
         case let .referral(rebating):
             textStackView.spacing = 10
             titleLabel.attributedText = NSAttributedString(
@@ -59,14 +67,12 @@ final class ShareObiView: UIView, XibDesignable {
                 ],
             )
             descriptionLabel.attributedText = rebateDescription(rebate: rebating.rebate)
-            qrCodeContent = URL.bindReferral(code: rebating.code)
         }
         qrCodeView.setContent(
-            qrCodeContent,
+            content.url,
             size: qrCodeView.bounds.size,
             activityIndicator: false
         )
-        return qrCodeContent
     }
     
     private func rebateDescription(rebate: Decimal) -> NSAttributedString {

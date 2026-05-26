@@ -30,7 +30,7 @@ final class SharePerpsPositionPreviewCell: UICollectionViewCell {
             weight: .accessiblityBoldTextCounterWeight(.regular)
         )
         entryPriceContentLabel.font = .systemFont(
-            ofSize: 13,
+            ofSize: 14,
             weight: .accessiblityBoldTextCounterWeight(.semibold)
         )
         priceTitleLabel.font = .systemFont(
@@ -38,7 +38,7 @@ final class SharePerpsPositionPreviewCell: UICollectionViewCell {
             weight: .accessiblityBoldTextCounterWeight(.regular)
         )
         priceContentLabel.font = .systemFont(
-            ofSize: 13,
+            ofSize: 14,
             weight: .accessiblityBoldTextCounterWeight(.semibold)
         )
         operationLabel.contentInset = UIEdgeInsets(top: 3, left: 6, bottom: 3, right: 6)

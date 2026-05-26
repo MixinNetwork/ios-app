@@ -3,18 +3,7 @@ import UIKit
 final class SharePerpsPositionCarouselLayout: UICollectionViewFlowLayout {
     
     private let scale: CGFloat = 0.874
-    
-    override func prepare() {
-        super.prepare()
-        guard let collectionView else { return }
-        let horizontalInset = (collectionView.bounds.width - itemSize.width) / 2
-        sectionInset = UIEdgeInsets(
-            top: 0,
-            left: horizontalInset,
-            bottom: 0,
-            right: horizontalInset
-        )
-    }
+    private let margin: CGFloat = 28
     
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         true
@@ -22,20 +11,45 @@ final class SharePerpsPositionCarouselLayout: UICollectionViewFlowLayout {
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let superAttributes = super.layoutAttributesForElements(in: rect)
-        guard
-            let collectionView = collectionView,
-            let attributes = superAttributes?.map({ $0.copy() }) as? [UICollectionViewLayoutAttributes]
-        else {
+        guard let collectionView = collectionView, let superAttributes else {
             return superAttributes
         }
-        let visibleCenterX = collectionView.contentOffset.x + collectionView.bounds.width / 2
-        for attribute in attributes {
-            let distance = abs(attribute.center.x - visibleCenterX)
-            let maxDistance = itemSize.width + minimumLineSpacing
-            let normalizedDistance = min(distance / maxDistance, 1)
-            let scale = 1 - ((1 - scale) * normalizedDistance)
-            attribute.transform = CGAffineTransform(scaleX: scale, y: scale)
+        let attributes = superAttributes.compactMap {
+            $0.copy() as? UICollectionViewLayoutAttributes
         }
+        let visibleRect = CGRect(origin: collectionView.contentOffset, size: collectionView.bounds.size)
+        let visibleCenterX = visibleRect.midX
+        let itemWidth = itemSize.width
+        let distance = itemWidth + minimumLineSpacing
+        let focusWidth = max(0, collectionView.bounds.width - margin * 2)
+        let normWidth = focusWidth * scale
+        let focusScale = focusWidth / itemWidth
+        let normScale = normWidth / itemWidth
+        let delta1 = (focusWidth + normWidth) / 2 - itemWidth
+        let deltaNorm = normWidth - itemWidth
+        
+        for attribute in attributes {
+            let x = attribute.center.x - visibleCenterX
+            let sign: CGFloat = x < 0 ? -1 : 1
+            let absX = abs(x)
+            let t = absX / distance
+            
+            var scale: CGFloat = 1
+            var shift: CGFloat = 0
+            if t <= 1 {
+                scale = normScale + (focusScale - normScale) * (1 - t)
+                shift = t * delta1
+            } else {
+                scale = normScale
+                shift = delta1 + (t - 1) * deltaNorm
+            }
+            attribute.center.x += sign * shift
+            attribute.transform = CGAffineTransform(scaleX: scale, y: scale)
+            
+            // Ensure the center-most item is always drawn on top
+            attribute.zIndex = Int(scale * 1000)
+        }
+        
         return attributes
     }
     
@@ -43,24 +57,35 @@ final class SharePerpsPositionCarouselLayout: UICollectionViewFlowLayout {
         forProposedContentOffset proposedContentOffset: CGPoint,
         withScrollingVelocity velocity: CGPoint
     ) -> CGPoint {
-        guard
-            let collectionView = collectionView,
-            let attributes = layoutAttributesForElements(in: CGRect(origin: proposedContentOffset, size: collectionView.frame.size))
-        else {
-            return .zero
+        guard let collectionView = collectionView else {
+            return proposedContentOffset
         }
-        var targetPoint = proposedContentOffset
-        var moveDistance = CGFloat.greatestFiniteMagnitude
-        let centerX = proposedContentOffset.x + collectionView.bounds.width / 2
-        attributes.forEach { (attr) in
-            if abs(attr.center.x - centerX) < abs(moveDistance) {
-                moveDistance = attr.center.x - centerX
+        let proposedRect = CGRect(
+            x: proposedContentOffset.x,
+            y: 0,
+            width: collectionView.bounds.width,
+            height: collectionView.bounds.height
+        )
+        let proposedCenterX = proposedRect.midX
+        guard let attributes = super.layoutAttributesForElements(in: proposedRect) else {
+            return proposedContentOffset
+        }
+        var closestAttribute: UICollectionViewLayoutAttributes?
+        var minDistance = CGFloat.greatestFiniteMagnitude
+        for attribute in attributes {
+            let distance = abs(attribute.center.x - proposedCenterX)
+            if distance < minDistance {
+                minDistance = distance
+                closestAttribute = attribute
             }
         }
-        if targetPoint.x > 0 && targetPoint.x < collectionViewContentSize.width - collectionView.bounds.width {
-            targetPoint.x += moveDistance
+        guard let closest = closestAttribute else {
+            return proposedContentOffset
         }
-        return targetPoint
+        return CGPoint(
+            x: closest.center.x - collectionView.bounds.width / 2,
+            y: proposedContentOffset.y
+        )
     }
     
 }

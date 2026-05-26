@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ModernShareViewController" customModule="Mixin" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PopupShareViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="actionBottomConstraint" destination="BDt-de-bYp" id="rX3-gy-ycy"/>
                 <outlet property="actionHeightConstraint" destination="BDd-45-glJ" id="Dwx-Ph-Dr8"/>
@@ -114,9 +114,21 @@
             <constraints>
                 <constraint firstItem="XXn-Ya-f9U" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="0Z7-Oy-Fa2"/>
                 <constraint firstItem="XXn-Ya-f9U" firstAttribute="top" relation="greaterThanOrEqual" secondItem="fnl-2z-Ty3" secondAttribute="top" id="5kc-WF-FQl"/>
-                <constraint firstItem="XNQ-fg-mo9" firstAttribute="top" secondItem="VbF-BE-8Zf" secondAttribute="bottom" constant="20" id="6yc-Mx-lyg"/>
+                <constraint firstItem="XNQ-fg-mo9" firstAttribute="top" secondItem="VbF-BE-8Zf" secondAttribute="bottom" constant="20" id="6yc-Mx-lyg" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
                 <constraint firstItem="95n-Fm-bWz" firstAttribute="top" secondItem="XXn-Ya-f9U" secondAttribute="bottom" id="94e-KL-dkt"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="XNQ-fg-mo9" secondAttribute="bottom" constant="20" id="BDt-de-bYp"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="XNQ-fg-mo9" secondAttribute="bottom" constant="20" id="BDt-de-bYp" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
                 <constraint firstAttribute="trailing" secondItem="95n-Fm-bWz" secondAttribute="trailing" id="IqL-8f-4SP"/>
                 <constraint firstItem="0Vl-GI-Cp0" firstAttribute="top" secondItem="XXn-Ya-f9U" secondAttribute="bottom" id="K1K-WE-51k"/>
                 <constraint firstAttribute="bottom" secondItem="0Vl-GI-Cp0" secondAttribute="bottom" id="NqK-i9-sKR"/>
@@ -125,7 +137,13 @@
                 <constraint firstAttribute="trailing" secondItem="XXn-Ya-f9U" secondAttribute="trailing" id="Xmp-PV-Upa"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="VbF-BE-8Zf" secondAttribute="trailing" constant="28" id="cvz-lS-ASl"/>
                 <constraint firstItem="XNQ-fg-mo9" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="dOJ-Kr-Gs2"/>
-                <constraint firstItem="VbF-BE-8Zf" firstAttribute="top" secondItem="95n-Fm-bWz" secondAttribute="bottom" constant="20" id="lAz-DQ-20O"/>
+                <constraint firstItem="VbF-BE-8Zf" firstAttribute="top" secondItem="95n-Fm-bWz" secondAttribute="bottom" constant="20" id="lAz-DQ-20O" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
                 <constraint firstItem="VbF-BE-8Zf" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="28" id="o3a-2D-442"/>
                 <constraint firstAttribute="trailing" secondItem="0Vl-GI-Cp0" secondAttribute="trailing" id="tLJ-CH-vdo"/>
                 <constraint firstItem="95n-Fm-bWz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="uHK-Nq-i1u"/>

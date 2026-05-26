@@ -8,7 +8,7 @@ protocol ModernShareContentViewController: UIViewController {
     func shareToMixinContact()
 }
 
-final class ModernShareViewController: UIViewController {
+final class PopupShareViewController: UIViewController {
     
     @IBOutlet weak var titleView: PopupTitleView!
     @IBOutlet weak var contentWrapperView: UIView!
@@ -35,7 +35,7 @@ final class ModernShareViewController: UIViewController {
         } else {
             nil
         }
-        let nib = R.nib.modernShareView
+        let nib = R.nib.popupShareView
         super.init(nibName: nib.name, bundle: nib.bundle)
         modalPresentationStyle = .custom
         transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
@@ -48,10 +48,9 @@ final class ModernShareViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.layer.cornerRadius = 13
-        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        view.layer.masksToBounds = true
-        
+        titleView.layer.cornerRadius = 13
+        titleView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        titleView.layer.masksToBounds = true
         titleView.titleLabel.text = R.string.localizable.share()
         titleView.closeButton.addTarget(
             self,

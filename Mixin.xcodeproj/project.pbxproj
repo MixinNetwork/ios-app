@@ -1349,8 +1349,8 @@
 		94B7643525EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */; };
 		94B7B6DC26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */; };
 		94B7B6DE26B43581000B0AC5 /* SilentNotificationMessagePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */; };
-		94B7FF252FC2E13D00FAE569 /* ModernShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7FF232FC2E13D00FAE569 /* ModernShareViewController.swift */; };
-		94B7FF262FC2E13D00FAE569 /* ModernShareView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B7FF242FC2E13D00FAE569 /* ModernShareView.xib */; };
+		94B7FF252FC2E13D00FAE569 /* PopupShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7FF232FC2E13D00FAE569 /* PopupShareViewController.swift */; };
+		94B7FF262FC2E13D00FAE569 /* PopupShareView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B7FF242FC2E13D00FAE569 /* PopupShareView.xib */; };
 		94B7FF392FC359ED00FAE569 /* SharePerpsPositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7FF372FC359ED00FAE569 /* SharePerpsPositionViewController.swift */; };
 		94B7FF3A2FC359ED00FAE569 /* SharePerpsPositionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B7FF382FC359ED00FAE569 /* SharePerpsPositionView.xib */; };
 		94B7FF4C2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7FF4A2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.swift */; };
@@ -3262,8 +3262,8 @@
 		94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileDescription.swift; sourceTree = "<group>"; };
 		94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SilentNotificationMessagePreviewView.xib; sourceTree = "<group>"; };
 		94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentNotificationMessagePreviewViewController.swift; sourceTree = "<group>"; };
-		94B7FF232FC2E13D00FAE569 /* ModernShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModernShareViewController.swift; sourceTree = "<group>"; };
-		94B7FF242FC2E13D00FAE569 /* ModernShareView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ModernShareView.xib; sourceTree = "<group>"; };
+		94B7FF232FC2E13D00FAE569 /* PopupShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupShareViewController.swift; sourceTree = "<group>"; };
+		94B7FF242FC2E13D00FAE569 /* PopupShareView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupShareView.xib; sourceTree = "<group>"; };
 		94B7FF372FC359ED00FAE569 /* SharePerpsPositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePerpsPositionViewController.swift; sourceTree = "<group>"; };
 		94B7FF382FC359ED00FAE569 /* SharePerpsPositionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SharePerpsPositionView.xib; sourceTree = "<group>"; };
 		94B7FF4A2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePerpsPositionPreviewCell.swift; sourceTree = "<group>"; };
@@ -4386,8 +4386,8 @@
 				943B5F552F5C02C60043078A /* ManualPageContentView.xib */,
 				943B5F542F5C02C60043078A /* ManualPageContentViewController.swift */,
 				94C67F402F63C25500CB11DC /* ManualScrollView.swift */,
-				94B7FF242FC2E13D00FAE569 /* ModernShareView.xib */,
-				94B7FF232FC2E13D00FAE569 /* ModernShareViewController.swift */,
+				94B7FF242FC2E13D00FAE569 /* PopupShareView.xib */,
+				94B7FF232FC2E13D00FAE569 /* PopupShareViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -7005,7 +7005,7 @@
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
 				7BAB3058247E8248005D6C3F /* call.caf in Resources */,
-				94B7FF262FC2E13D00FAE569 /* ModernShareView.xib in Resources */,
+				94B7FF262FC2E13D00FAE569 /* PopupShareView.xib in Resources */,
 				942FD9332D3A70DB004DCC4C /* TradeOrderHeaderCell.xib in Resources */,
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
 				94FB2E092F504D9200F85AB4 /* PerpetualPlaceholderCell.xib in Resources */,
@@ -8514,7 +8514,7 @@
 				7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */,
 				94C56D342C53AFBE009F3AB8 /* SwapQuoteRequester.swift in Sources */,
 				94D0FF382BEB1CA200E3947F /* InscriptionHashView.swift in Sources */,
-				94B7FF252FC2E13D00FAE569 /* ModernShareViewController.swift in Sources */,
+				94B7FF252FC2E13D00FAE569 /* PopupShareViewController.swift in Sources */,
 				7B88655B20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift in Sources */,
 				7BF42E4122DDF0D9005066E6 /* GalleryAnimatable.swift in Sources */,
 				943FEB3E2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift in Sources */,

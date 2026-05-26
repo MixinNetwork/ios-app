@@ -57,7 +57,13 @@
                 <constraint firstItem="R3p-dO-C9Y" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="OVO-bx-R0g"/>
                 <constraint firstItem="rSP-do-rYK" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="fqy-M4-r4T"/>
                 <constraint firstItem="rSP-do-rYK" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="hzI-W5-8zm"/>
-                <constraint firstItem="R3p-dO-C9Y" firstAttribute="top" secondItem="rSP-do-rYK" secondAttribute="bottom" constant="16" id="lzm-06-YRR"/>
+                <constraint firstItem="R3p-dO-C9Y" firstAttribute="top" secondItem="rSP-do-rYK" secondAttribute="bottom" constant="16" id="lzm-06-YRR" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
                 <constraint firstAttribute="trailing" secondItem="R3p-dO-C9Y" secondAttribute="trailing" id="wfD-e8-2cA"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

@@ -281,7 +281,7 @@ extension PerpetualActivityViewController: PillActionView.Delegate {
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             Referral.loadAvailableCode { [weak self] code in
                 hud.hide()
-                let share = ModernShareViewController(
+                let share = PopupShareViewController(
                     contentViewController: SharePerpsPositionViewController(
                         dataSource: dataSource,
                         rebatingCode: code

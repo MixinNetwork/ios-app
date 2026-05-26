@@ -197,7 +197,7 @@ final class MarketViewController: UIViewController {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         Referral.loadAvailableCode { [weak self] code in
             hud.hide()
-            let share = ModernShareViewController(
+            let share = PopupShareViewController(
                 contentViewController: ShareMarketContentViewController(
                     market: market,
                     points: chartPoints,

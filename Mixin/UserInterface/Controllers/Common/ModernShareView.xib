@@ -15,6 +15,7 @@
                 <outlet property="actionHeightConstraint" destination="BDd-45-glJ" id="Dwx-Ph-Dr8"/>
                 <outlet property="actionStackView" destination="XNQ-fg-mo9" id="kUY-Dl-WIw"/>
                 <outlet property="actionTopConstraint" destination="6yc-Mx-lyg" id="mE9-AL-gPw"/>
+                <outlet property="contentWrapperBottomConstraint" destination="lAz-DQ-20O" id="Oiz-hd-JHV"/>
                 <outlet property="contentWrapperView" destination="95n-Fm-bWz" id="ISm-xO-sUJ"/>
                 <outlet property="sendToContactBackgroundView" destination="VbF-BE-8Zf" id="FIr-RD-EVp"/>
                 <outlet property="sendToContactContentLabel" destination="eB1-5O-lK2" id="OfC-Cd-1i6"/>
@@ -29,18 +30,18 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XXn-Ya-f9U" customClass="PopupTitleView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="218.66666666666666" width="393" height="69.999999999999972"/>
+                    <rect key="frame" x="0.0" y="198.66666666666666" width="393" height="69.999999999999972"/>
                     <color key="backgroundColor" name="background_quaternary"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="70" id="ubW-Fr-M5d"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Vl-GI-Cp0">
-                    <rect key="frame" x="0.0" y="288.66666666666669" width="393" height="563.33333333333326"/>
+                    <rect key="frame" x="0.0" y="268.66666666666669" width="393" height="583.33333333333326"/>
                     <color key="backgroundColor" name="background_quaternary"/>
                 </view>
-                <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="319" translatesAutoresizingMaskIntoConstraints="NO" id="95n-Fm-bWz">
-                    <rect key="frame" x="0.0" y="288.66666666666669" width="393" height="319.00000000000006"/>
+                <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="319" translatesAutoresizingMaskIntoConstraints="NO" id="95n-Fm-bWz">
+                    <rect key="frame" x="0.0" y="268.66666666666669" width="393" height="319.00000000000006"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VbF-BE-8Zf">
@@ -124,7 +125,7 @@
                 <constraint firstAttribute="trailing" secondItem="XXn-Ya-f9U" secondAttribute="trailing" id="Xmp-PV-Upa"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="VbF-BE-8Zf" secondAttribute="trailing" constant="28" id="cvz-lS-ASl"/>
                 <constraint firstItem="XNQ-fg-mo9" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="dOJ-Kr-Gs2"/>
-                <constraint firstItem="VbF-BE-8Zf" firstAttribute="top" secondItem="95n-Fm-bWz" secondAttribute="bottom" id="lAz-DQ-20O"/>
+                <constraint firstItem="VbF-BE-8Zf" firstAttribute="top" secondItem="95n-Fm-bWz" secondAttribute="bottom" constant="20" id="lAz-DQ-20O"/>
                 <constraint firstItem="VbF-BE-8Zf" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="28" id="o3a-2D-442"/>
                 <constraint firstAttribute="trailing" secondItem="0Vl-GI-Cp0" secondAttribute="trailing" id="tLJ-CH-vdo"/>
                 <constraint firstItem="95n-Fm-bWz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="uHK-Nq-i1u"/>

@@ -910,6 +910,12 @@
 "margin_isolated" = "Margin (Isolated)";
 "market" = "Market";
 "market_cap" = "Market Cap";
+"market_share_card_asset" = "🔥 %1$@ (%2$@)";
+"market_share_card_market_button" = "Market";
+"market_share_card_market_cap" = "📈 Market Cap: %@";
+"market_share_card_price" = "🏷️ Price: %@";
+"market_share_card_price_change" = "💰 24h Price Change: %@";
+"market_share_card_title" = "Trade %@";
 "markets" = "Markets";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";

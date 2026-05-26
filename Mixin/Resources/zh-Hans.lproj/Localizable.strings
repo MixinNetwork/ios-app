@@ -910,6 +910,12 @@
 "margin_isolated" = "保证金（逐仓）";
 "market" = "行情";
 "market_cap" = "市值";
+"market_share_card_asset" = "🔥 %1$@（%2$@）";
+"market_share_card_market_button" = "行情";
+"market_share_card_market_cap" = "📈 市值：%@";
+"market_share_card_price" = "🏷️ 价格：%@";
+"market_share_card_price_change" = "💰 24小时价格变化：%@";
+"market_share_card_title" = "交易 %@";
 "markets" = "行情";
 "max" = "最大值";
 "max_favorite_bots_description" = "最多可以添加 5 个喜欢的机器人，注意其他人可以在你的个人信息弹窗里查看这些你喜欢的机器人。";

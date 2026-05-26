@@ -806,7 +806,6 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
                     dataSource: dataSource,
                     rebatingCode: code
                 ),
-                size: CGSize(width: 375, height: 477),
                 rebatingCode: code,
             )
             self?.present(share, animated: true)

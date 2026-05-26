@@ -17,21 +17,19 @@ final class ModernShareViewController: UIViewController {
     @IBOutlet weak var sendToContactContentLabel: UILabel!
     @IBOutlet weak var actionStackView: UIStackView!
     
+    @IBOutlet weak var contentWrapperBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var actionTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var actionHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var actionBottomConstraint: NSLayoutConstraint!
     
     private let contentViewController: any ModernShareContentViewController
-    private let contentSize: CGSize
     private let rebating: String?
     
     init<ContentViewController: ModernShareContentViewController>(
         contentViewController: ContentViewController,
-        size: CGSize,
         rebatingCode: Referral.RebatingCode?,
     ) {
         self.contentViewController = contentViewController
-        self.contentSize = size
         self.rebating = if let rebate = rebatingCode?.rebate {
             PercentageFormatter.string(from: rebate, format: .precision, sign: .never)
         } else {
@@ -137,10 +135,14 @@ final class ModernShareViewController: UIViewController {
     }
     
     private func updatePreferredContentSizeHeight() {
-        view.layoutIfNeeded()
+        let fittingSize = CGSize(
+            width: view.bounds.width,
+            height: UIView.layoutFittingExpandedSize.height
+        )
         preferredContentSize.height = titleView.frame.height
-        + contentWrapperView.frame.height
-        + sendToContactBackgroundView.frame.height
+        + contentWrapperView.systemLayoutSizeFitting(fittingSize).height
+        + contentWrapperBottomConstraint.constant
+        + sendToContactBackgroundView.systemLayoutSizeFitting(fittingSize).height
         + actionTopConstraint.constant
         + actionHeightConstraint.constant
         + actionBottomConstraint.constant

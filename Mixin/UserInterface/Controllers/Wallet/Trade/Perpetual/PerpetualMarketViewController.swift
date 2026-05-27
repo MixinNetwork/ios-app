@@ -684,9 +684,9 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             return cell
         case .openPosition(let viewModel):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_open_position, for: indexPath)!
-            cell.load(viewModel: viewModel)
             cell.updateTakeProfit(busy: editingLock == .takeProfit)
             cell.updateStopLoss(busy: editingLock == .stopLoss)
+            cell.load(viewModel: viewModel)
             cell.delegate = self
             openPositionCell = cell
             return cell
@@ -812,53 +812,59 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
         }
     }
     
-    func perpetualMarketOpenPositionCellRequestTakeProfit(_ cell: PerpetualMarketOpenPositionCell) {
+    func perpetualMarketOpenPositionCellRequestAddTakeProfit(_ cell: PerpetualMarketOpenPositionCell) {
         guard let positionViewModel = openPositionViewModel, editingLock == nil else {
             return
         }
-        if positionViewModel.takeProfitPrice == nil {
-            setupTakeProfit(positionViewModel: positionViewModel)
-        } else {
-            positionsLoader.stop()
-            editingLock = .takeProfit
-            autoClosingIntroCell?.performSuggestionButton.isEnabled = false
-            cell.updateTakeProfit(busy: true)
-            RouteAPI.updatePerpsTPSL(
-                positionID: positionViewModel.positionID,
-                takeProfitPrice: .delete,
-                stopLossPrice: nil
-            ) { [weak self] result in
-                guard let self else {
-                    return
-                }
-                self.editingLock = nil
-                self.handleTPSLUpdate(result: result)
+        setupTakeProfit(positionViewModel: positionViewModel)
+    }
+    
+    func perpetualMarketOpenPositionCellRequestDeleteTakeProfit(_ cell: PerpetualMarketOpenPositionCell) {
+        guard let positionViewModel = openPositionViewModel, editingLock == nil else {
+            return
+        }
+        positionsLoader.stop()
+        editingLock = .takeProfit
+        autoClosingIntroCell?.performSuggestionButton.isEnabled = false
+        cell.updateTakeProfit(busy: true)
+        RouteAPI.updatePerpsTPSL(
+            positionID: positionViewModel.positionID,
+            takeProfitPrice: .delete,
+            stopLossPrice: nil
+        ) { [weak self] result in
+            guard let self else {
+                return
             }
+            self.editingLock = nil
+            self.handleTPSLUpdate(result: result)
         }
     }
     
-    func perpetualMarketOpenPositionCellRequestStopLoss(_ cell: PerpetualMarketOpenPositionCell) {
+    func perpetualMarketOpenPositionCellRequestAddStopLoss(_ cell: PerpetualMarketOpenPositionCell) {
         guard let positionViewModel = openPositionViewModel, editingLock == nil else {
             return
         }
-        if positionViewModel.stopLossPrice == nil {
-            setupStopLoss(positionViewModel: positionViewModel)
-        } else {
-            positionsLoader.stop()
-            editingLock = .stopLoss
-            autoClosingIntroCell?.performSuggestionButton.isEnabled = false
-            cell.updateStopLoss(busy: true)
-            RouteAPI.updatePerpsTPSL(
-                positionID: positionViewModel.positionID,
-                takeProfitPrice: nil,
-                stopLossPrice: .delete
-            ) { [weak self] result in
-                guard let self else {
-                    return
-                }
-                self.editingLock = nil
-                self.handleTPSLUpdate(result: result)
+        setupStopLoss(positionViewModel: positionViewModel)
+    }
+    
+    func perpetualMarketOpenPositionCellRequestDeleteStopLoss(_ cell: PerpetualMarketOpenPositionCell) {
+        guard let positionViewModel = openPositionViewModel, editingLock == nil else {
+            return
+        }
+        positionsLoader.stop()
+        editingLock = .stopLoss
+        autoClosingIntroCell?.performSuggestionButton.isEnabled = false
+        cell.updateStopLoss(busy: true)
+        RouteAPI.updatePerpsTPSL(
+            positionID: positionViewModel.positionID,
+            takeProfitPrice: nil,
+            stopLossPrice: .delete
+        ) { [weak self] result in
+            guard let self else {
+                return
             }
+            self.editingLock = nil
+            self.handleTPSLUpdate(result: result)
         }
     }
     

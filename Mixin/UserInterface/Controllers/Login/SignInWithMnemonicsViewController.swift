@@ -188,6 +188,11 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
             return
         }
         input(phrases: phrases)
+        let bottomOffset = CGPoint(
+            x: scrollView.contentOffset.x,
+            y: max(0, scrollView.contentSize.height - scrollView.frame.height)
+        )
+        scrollView.setContentOffset(bottomOffset, animated: true)
     }
     
     @objc private func emptyPhrases(_ sender: Any) {

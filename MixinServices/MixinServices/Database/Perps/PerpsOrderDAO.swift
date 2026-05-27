@@ -19,13 +19,6 @@ public final class PerpsOrderDAO: PerpsDAO {
     
     """
     
-    public func closeOrderItem(positionID: String) -> PerpetualOrderItem? {
-        db.select(
-            with: Self.itemSQL + "AND po.position_id = ? AND po.order_type = ?",
-            arguments: [positionID, PerpetualOrder.OrderType.close.rawValue]
-        )
-    }
-    
     public func orderItems(marketID: String, limit: Int) -> [PerpetualOrderItem] {
         db.select(
             with: Self.itemSQL + "AND po.market_id = ? ORDER BY po.created_at DESC LIMIT ?",

@@ -175,7 +175,7 @@ struct PerpetualActivityViewModel {
             self.status = .normal
             switch order.orderType.knownCase {
             case .open, .increasePosition:
-                self.actions = [.viewMarket, .share]
+                self.actions = [.viewMarket]
             case .close:
                 self.actions = [.tradeAgain, .share]
             case .none:

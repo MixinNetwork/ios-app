@@ -5,8 +5,10 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     protocol Delegate: AnyObject {
         func perpetualMarketOpenPositionCell(_ cell: PerpetualMarketOpenPositionCell, requestManual page: PerpsManual.Page)
         func perpetualMarketOpenPositionCellAskToShare(_ cell: PerpetualMarketOpenPositionCell)
-        func perpetualMarketOpenPositionCellRequestTakeProfit(_ cell: PerpetualMarketOpenPositionCell)
-        func perpetualMarketOpenPositionCellRequestStopLoss(_ cell: PerpetualMarketOpenPositionCell)
+        func perpetualMarketOpenPositionCellRequestAddTakeProfit(_ cell: PerpetualMarketOpenPositionCell)
+        func perpetualMarketOpenPositionCellRequestDeleteTakeProfit(_ cell: PerpetualMarketOpenPositionCell)
+        func perpetualMarketOpenPositionCellRequestAddStopLoss(_ cell: PerpetualMarketOpenPositionCell)
+        func perpetualMarketOpenPositionCellRequestDeleteStopLoss(_ cell: PerpetualMarketOpenPositionCell)
     }
     
     @IBOutlet weak var titleLabel: UILabel!
@@ -34,14 +36,18 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     
     @IBOutlet weak var takeProfitTitleLabel: InsetLabel!
     @IBOutlet weak var takeProfitContentStackView: UIStackView!
-    @IBOutlet weak var takeProfitContentLabel: InsetLabel!
-    @IBOutlet weak var takeProfitButton: UIButton!
+    @IBOutlet weak var takeProfitEnabledStackView: UIStackView!
+    @IBOutlet weak var takeProfitPriceLabel: InsetLabel!
+    @IBOutlet weak var deleteTakeProfitButton: UIButton!
+    @IBOutlet weak var addTakeProfitButton: UIButton!
     @IBOutlet weak var takeProfitActivityIndicator: ActivityIndicatorView!
     
     @IBOutlet weak var stopLossTitleLabel: InsetLabel!
     @IBOutlet weak var stopLossContentStackView: UIStackView!
-    @IBOutlet weak var stopLossContentLabel: InsetLabel!
-    @IBOutlet weak var stopLossButton: UIButton!
+    @IBOutlet weak var stopLossEnabledStackView: UIStackView!
+    @IBOutlet weak var stopLossPriceLabel: InsetLabel!
+    @IBOutlet weak var deleteStopLossButton: UIButton!
+    @IBOutlet weak var addStopLossButton: UIButton!
     @IBOutlet weak var stopLossActivityIndicator: ActivityIndicatorView!
     
     weak var delegate: Delegate?
@@ -80,10 +86,18 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             )
         }
         takeProfitTitleLabel.contentInset.left = 10
-        takeProfitContentLabel.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 0)
-        takeProfitButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        stopLossContentLabel.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
-        stopLossButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        takeProfitPriceLabel.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 0)
+        addTakeProfitButton.configuration?.attributedTitle = AttributedString(
+            R.string.localizable.add(),
+            attributes: addAutoClosingAttributes
+        )
+        addTakeProfitButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        stopLossPriceLabel.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        addStopLossButton.configuration?.attributedTitle = AttributedString(
+            R.string.localizable.add(),
+            attributes: addAutoClosingAttributes
+        )
+        addStopLossButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
         titleLabel.text = R.string.localizable.position()
         pnlTitleLabel.text = R.string.localizable.pnl().uppercased()
@@ -115,12 +129,20 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         delegate?.perpetualMarketOpenPositionCell(self, requestManual: .autoClosing)
     }
     
-    @IBAction func takeProfit(_ sender: Any) {
-        delegate?.perpetualMarketOpenPositionCellRequestTakeProfit(self)
+    @IBAction func addTakeProfit(_ sender: Any) {
+        delegate?.perpetualMarketOpenPositionCellRequestAddTakeProfit(self)
     }
     
-    @IBAction func stopLoss(_ sender: Any) {
-        delegate?.perpetualMarketOpenPositionCellRequestStopLoss(self)
+    @IBAction func deleteTakeProfit(_ sender: Any) {
+        delegate?.perpetualMarketOpenPositionCellRequestDeleteTakeProfit(self)
+    }
+    
+    @IBAction func addStopLoss(_ sender: Any) {
+        delegate?.perpetualMarketOpenPositionCellRequestAddStopLoss(self)
+    }
+    
+    @IBAction func deleteStopLoss(_ sender: Any) {
+        delegate?.perpetualMarketOpenPositionCellRequestDeleteStopLoss(self)
     }
     
     func load(viewModel: PerpetualPositionViewModel) {
@@ -146,78 +168,57 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         entryPriceContentLabel.text = viewModel.entryPrice
         liquidationPriceContentLabel.text = viewModel.liquidationPrice
         if let takeProfitPrice = viewModel.takeProfitPrice {
-            takeProfitContentLabel.text = takeProfitPrice.formatted(viewModel.priceFormatStyle)
-            takeProfitContentLabel.isHidden = false
-            if var config = takeProfitButton.configuration {
-                config.image = R.image.delete_perps_auto_closing()
-                config.imagePadding = 0
-                config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 4, bottom: 10, trailing: 10)
-                config.attributedTitle = nil
-                takeProfitButton.configuration = config
-            }
+            takeProfitEnabledStackView.isHidden = false
+            takeProfitPriceLabel.text = takeProfitPrice.formatted(viewModel.priceFormatStyle)
+            deleteTakeProfitButton.isHidden = false
+            addTakeProfitButton.isHidden = true
         } else {
-            takeProfitContentLabel.isHidden = true
-            if var config = takeProfitButton.configuration {
-                config.image = R.image.ic_accessory_disclosure()
-                config.imagePadding = 10
-                config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
-                config.attributedTitle = AttributedString(
-                    R.string.localizable.add(),
-                    attributes: addAutoClosingAttributes
-                )
-                takeProfitButton.configuration = config
-            }
+            takeProfitEnabledStackView.isHidden = true
+            deleteTakeProfitButton.isHidden = true
+            addTakeProfitButton.isHidden = false
+            
+            // Otherwise the button sizes title label to width of 1
+            // Verified on iOS 18.7
+            addTakeProfitButton.invalidateIntrinsicContentSize()
         }
         if let stopLossPrice = viewModel.stopLossPrice {
-            stopLossContentLabel.text = stopLossPrice.formatted(viewModel.priceFormatStyle)
-            stopLossContentLabel.isHidden = false
-            if var config = stopLossButton.configuration {
-                config.image = R.image.delete_perps_auto_closing()
-                config.imagePadding = 0
-                config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 4, bottom: 10, trailing: 10)
-                config.attributedTitle = nil
-                stopLossButton.configuration = config
-            }
+            stopLossEnabledStackView.isHidden = false
+            stopLossPriceLabel.text = stopLossPrice.formatted(viewModel.priceFormatStyle)
+            deleteStopLossButton.isHidden = false
+            addStopLossButton.isHidden = true
         } else {
-            stopLossContentLabel.isHidden = true
-            if var config = stopLossButton.configuration {
-                config.image = R.image.ic_accessory_disclosure()
-                config.imagePadding = 10
-                config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
-                config.attributedTitle = AttributedString(
-                    R.string.localizable.add(),
-                    attributes: addAutoClosingAttributes
-                )
-                stopLossButton.configuration = config
-            }
-        }
-        UIView.performWithoutAnimation {
-            takeProfitButton.sizeToFit()
-            stopLossButton.sizeToFit()
-            autoClosingStackView.layoutIfNeeded()
+            stopLossEnabledStackView.isHidden = true
+            deleteStopLossButton.isHidden = true
+            addStopLossButton.isHidden = false
+            
+            // Otherwise the button sizes title label to width of 1
+            // Verified on iOS 18.7
+            addStopLossButton.invalidateIntrinsicContentSize()
         }
     }
     
     func updateTakeProfit(busy: Bool) {
         if busy {
             takeProfitActivityIndicator.startAnimating()
-            takeProfitButton.isHidden = true
+            takeProfitEnabledStackView.isHidden = true
+            deleteTakeProfitButton.isHidden = true
+            addTakeProfitButton.isHidden = true
         } else {
             takeProfitActivityIndicator.stopAnimating()
-            takeProfitButton.isHidden = false
         }
-        UIView.performWithoutAnimation(autoClosingStackView.layoutIfNeeded)
+        UIView.performWithoutAnimation(takeProfitContentStackView.layoutIfNeeded)
     }
     
     func updateStopLoss(busy: Bool) {
         if busy {
             stopLossActivityIndicator.startAnimating()
-            stopLossButton.isHidden = true
+            stopLossEnabledStackView.isHidden = true
+            deleteStopLossButton.isHidden = true
+            addStopLossButton.isHidden = true
         } else {
             stopLossActivityIndicator.stopAnimating()
-            stopLossButton.isHidden = false
         }
-        UIView.performWithoutAnimation(autoClosingStackView.layoutIfNeeded)
+        UIView.performWithoutAnimation(stopLossContentStackView.layoutIfNeeded)
     }
     
 }

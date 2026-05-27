@@ -22,13 +22,13 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="share_branding_monochrome" translatesAutoresizingMaskIntoConstraints="NO" id="mT7-fp-oiO">
-                        <rect key="frame" x="20" y="16" width="65" height="14"/>
+                        <rect key="frame" x="20" y="16" width="85.333333333333329" height="20"/>
                     </imageView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="295" placeholderIntrinsicHeight="172" translatesAutoresizingMaskIntoConstraints="NO" id="A7a-cj-aVp">
                         <rect key="frame" x="24" y="55" width="295" height="172"/>
                     </imageView>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="YjI-Ug-7hP">
-                        <rect key="frame" x="20" y="50" width="136" height="66"/>
+                        <rect key="frame" x="20" y="52" width="136" height="66"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" placeholderIntrinsicWidth="136" placeholderIntrinsicHeight="38" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8nm-jG-fUu">
                                 <rect key="frame" x="0.0" y="0.0" width="136" height="38"/>
@@ -62,11 +62,14 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="P02-SF-NYC" firstAttribute="height" secondItem="Z1E-QU-Lbq" secondAttribute="height" id="vf0-ph-qnm"/>
+                                </constraints>
                             </stackView>
                         </subviews>
                     </stackView>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ph8-XC-2Iw">
-                        <rect key="frame" x="20" y="136" width="70" height="76"/>
+                        <rect key="frame" x="20" y="138" width="70" height="76"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Qge-BR-XgY">
                                 <rect key="frame" x="0.0" y="0.0" width="70" height="33"/>
@@ -120,7 +123,7 @@
                     <constraint firstAttribute="trailing" secondItem="A7a-cj-aVp" secondAttribute="trailing" id="SIm-DQ-2F9"/>
                     <constraint firstAttribute="bottom" secondItem="zRl-Iz-3WS" secondAttribute="bottom" id="Se5-VX-bYc"/>
                     <constraint firstItem="mT7-fp-oiO" firstAttribute="top" secondItem="o3Q-Rz-f6z" secondAttribute="top" constant="16" id="W4E-Oa-m32"/>
-                    <constraint firstItem="YjI-Ug-7hP" firstAttribute="top" secondItem="mT7-fp-oiO" secondAttribute="bottom" constant="20" id="X8T-Xx-PQb"/>
+                    <constraint firstItem="YjI-Ug-7hP" firstAttribute="top" secondItem="mT7-fp-oiO" secondAttribute="bottom" constant="16" id="X8T-Xx-PQb"/>
                     <constraint firstItem="ph8-XC-2Iw" firstAttribute="top" secondItem="YjI-Ug-7hP" secondAttribute="bottom" constant="20" id="adR-im-Lgg"/>
                     <constraint firstItem="Z0e-Yu-jCS" firstAttribute="top" secondItem="o3Q-Rz-f6z" secondAttribute="top" id="cmR-Kz-E6A"/>
                     <constraint firstItem="zRl-Iz-3WS" firstAttribute="top" secondItem="A7a-cj-aVp" secondAttribute="bottom" id="di5-qC-RC3"/>
@@ -150,6 +153,6 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="share_branding_monochrome" width="65" height="14"/>
+        <image name="share_branding_monochrome" width="85.333335876464844" height="20"/>
     </resources>
 </document>

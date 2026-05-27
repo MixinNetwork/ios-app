@@ -28,12 +28,18 @@ final class PerpetualActivityViewController: UIViewController {
         switch viewModel.status {
         case .normal:
             switch viewModel.type {
-            case .open, .increase:
-                infos.append(.general(
-                    title: R.string.localizable.entry_price().uppercased(),
-                    content: viewModel.entryPrice
-                ))
-            case .close(let pnl, let closePrice):
+            case let .open(payAmount), let .increase(payAmount):
+                infos.append(contentsOf: [
+                    .general(
+                        title: R.string.localizable.entry_price().uppercased(),
+                        content: viewModel.entryPrice
+                    ),
+                    .general(
+                        title: R.string.localizable.amount().uppercased(),
+                        content: payAmount
+                    ),
+                ])
+            case let .close(pnl, closePrice):
                 infos.append(contentsOf: [
                     .pnl(value: pnl.precised, color: pnl.color),
                     .general(

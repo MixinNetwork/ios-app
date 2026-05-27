@@ -133,6 +133,11 @@ public final class PerpsDatabase: Database {
             """)
         }
         
+        migrator.registerMigration("activity_pay_amount") { db in
+            try db.execute(sql: "DELETE FROM perps_orders")
+            try db.execute(sql: "ALTER TABLE perps_orders ADD COLUMN pay_amount TEXT NOT NULL")
+        }
+        
         return migrator
     }
     

@@ -11,8 +11,8 @@ struct PerpetualActivityViewModel {
     }
     
     enum OrderType {
-        case open
-        case increase
+        case open(payAmount: String)
+        case increase(payAmount: String)
         case close(pnl: PnL, closePrice: String)
     }
     
@@ -61,6 +61,8 @@ struct PerpetualActivityViewModel {
     let offset: String
     
     init?(wallet: Wallet, order: PerpetualOrderItem) {
+        let decimalPayAmount = Decimal(string: order.payAmount, locale: .enUSPOSIX)
+        let payAmount = decimalPayAmount?.formatted(order.priceFormatStyle)
         let side = PerpetualOrderSide(rawValue: order.side) ?? .short
         let quantity = abs(Decimal(string: order.quantity, locale: .enUSPOSIX) ?? 0)
         let entryPrice = Decimal(string: order.entryPrice, locale: .enUSPOSIX)
@@ -71,7 +73,7 @@ struct PerpetualActivityViewModel {
         self.positionID = order.positionID
         switch order.orderType.knownCase {
         case .open:
-            self.type = .open
+            self.type = .open(payAmount: payAmount ?? "")
             self.title = switch side {
             case .long:
                 switch order.status.knownCase {
@@ -89,7 +91,7 @@ struct PerpetualActivityViewModel {
                 }
             }
         case .increasePosition:
-            self.type = .increase
+            self.type = .increase(payAmount: payAmount ?? "")
             self.title = switch side {
             case .long:
                 switch order.status.knownCase {

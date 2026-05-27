@@ -9,6 +9,7 @@ public class PerpetualOrder: Codable, DatabaseColumnConvertible, MixinFetchableR
         case marketID = "market_id"
         case side = "side"
         case orderType = "order_type"
+        case payAmount = "pay_amount"
         case status = "status"
         case leverage = "leverage"
         case quantity = "quantity"
@@ -40,6 +41,7 @@ public class PerpetualOrder: Codable, DatabaseColumnConvertible, MixinFetchableR
     public let marketID: String
     public let side: String
     public let orderType: UnknownableEnum<OrderType>
+    public let payAmount: String
     public let status: UnknownableEnum<Status>
     public let leverage: Int
     public let quantity: String

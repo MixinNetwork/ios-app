@@ -54,11 +54,12 @@ final class PerpetualActivityCell: UICollectionViewCell {
         }
         leverageLabel.text = viewModel.leverage
         switch viewModel.type {
-        case .open, .increase:
-            changeLabel.text = nil
+        case let .open(payAmount), let .increase(payAmount):
+            changeLabel.textColor = R.color.text()
+            changeLabel.text = payAmount
         case let .close(pnl, _):
-            changeLabel.text = pnl.abbreviated
             changeLabel.marketColor = pnl.color
+            changeLabel.text = pnl.abbreviated
         }
     }
     

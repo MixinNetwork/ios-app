@@ -241,35 +241,7 @@ extension PerpetualActivityViewController: PillActionView.Delegate {
             let dataSource: SharePerpetualPositionDataSource
             switch viewModel.type {
             case .open, .increase:
-                if let order = PerpsOrderDAO.shared.closeOrderItem(positionID: viewModel.positionID),
-                   let viewModel = PerpetualActivityViewModel(wallet: wallet, order: order)
-                {
-                    switch viewModel.type {
-                    case .open, .increase:
-                        return
-                    case .close(let pnl, let closePrice):
-                        dataSource = SharePerpetualPositionDataSource(
-                            viewModel: viewModel,
-                            pnl: pnl,
-                            closePrice: closePrice
-                        )
-                    }
-                } else if let position = PerpsPositionDAO.shared.position(marketID: viewModel.marketID) {
-                    let viewModel = PerpetualPositionViewModel(wallet: wallet, position: position)
-                    let latestPrice: Decimal? = {
-                        if let price = PerpsMarketDAO.shared.price(marketID: viewModel.marketID) {
-                            Decimal(string: price, locale: .enUSPOSIX)
-                        } else {
-                            nil
-                        }
-                    }()
-                    dataSource = SharePerpetualPositionDataSource(
-                        viewModel: viewModel,
-                        latestPrice: latestPrice
-                    )
-                } else {
-                    return
-                }
+                return
             case .close(let pnl, let closePrice):
                 dataSource = SharePerpetualPositionDataSource(
                     viewModel: viewModel,

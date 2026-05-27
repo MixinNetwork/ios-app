@@ -5,14 +5,20 @@ final class SharePerpsPositionPreviewCell: UICollectionViewCell {
     
     @IBOutlet weak var positionInfoBackgroundView: GradientView!
     @IBOutlet weak var mascotImageView: UIImageView!
+    
     @IBOutlet weak var changeLabel: UILabel!
+    
+    @IBOutlet weak var subtitleStackView: UIStackView!
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var operationLabel: InsetLabel!
     @IBOutlet weak var leverageLabel: InsetLabel!
+    
     @IBOutlet weak var entryPriceTitleLabel: UILabel!
     @IBOutlet weak var entryPriceContentLabel: UILabel!
+    
     @IBOutlet weak var priceTitleLabel: UILabel!
     @IBOutlet weak var priceContentLabel: UILabel!
+    
     @IBOutlet weak var obiView: ShareObiView!
     
     override func awakeFromNib() {
@@ -25,6 +31,14 @@ final class SharePerpsPositionPreviewCell: UICollectionViewCell {
             ofSize: 32,
             weight: .accessiblityBoldTextCounterWeight(.bold)
         )
+        subtitleStackView.setCustomSpacing(8, after: iconView)
+        operationLabel.contentInset = UIEdgeInsets(top: 3, left: 6, bottom: 3, right: 6)
+        leverageLabel.contentInset = UIEdgeInsets(top: 4, left: 6, bottom: 3, right: 6)
+        leverageLabel.font = .condensed(size: 12)
+        for label: UILabel in [operationLabel, leverageLabel] {
+            label.layer.cornerRadius = 4
+            label.layer.masksToBounds = true
+        }
         entryPriceTitleLabel.font = .systemFont(
             ofSize: 12,
             weight: .accessiblityBoldTextCounterWeight(.regular)
@@ -41,13 +55,6 @@ final class SharePerpsPositionPreviewCell: UICollectionViewCell {
             ofSize: 14,
             weight: .accessiblityBoldTextCounterWeight(.semibold)
         )
-        operationLabel.contentInset = UIEdgeInsets(top: 3, left: 6, bottom: 3, right: 6)
-        leverageLabel.contentInset = UIEdgeInsets(top: 4, left: 6, bottom: 3, right: 6)
-        leverageLabel.font = .condensed(size: 12)
-        for label: UILabel in [operationLabel, leverageLabel] {
-            label.layer.cornerRadius = 4
-            label.layer.masksToBounds = true
-        }
         obiView.contentView.lightColors = nil
         obiView.contentView.darkColors = nil
     }

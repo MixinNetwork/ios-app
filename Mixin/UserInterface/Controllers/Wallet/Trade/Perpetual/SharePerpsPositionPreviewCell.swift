@@ -63,6 +63,7 @@ final class SharePerpsPositionPreviewCell: UICollectionViewCell {
         dataSource: SharePerpetualPositionDataSource,
         obiContent: ShareObiView.Content,
         style: SharePerpsPositionStyle,
+        mascotIndex: Int,
     ) {
         switch (AppGroupUserDefaults.User.marketColorAppearance, dataSource.color) {
         case (.greenUpRedDown, .rising), (.redUpGreenDown, .falling):
@@ -80,15 +81,19 @@ final class SharePerpsPositionPreviewCell: UICollectionViewCell {
             positionInfoBackgroundView.darkColors = positionInfoBackgroundView.lightColors
             obiView.backgroundColor = UIColor(displayP3RgbValue: 0xc83b42, alpha: 1)
         }
-        mascotImageView.image = switch (dataSource.color, style) {
-        case (.rising, .pnl):
-            R.image.mascot_perps_gain_pnl()
-        case (.rising, .roe):
-            R.image.mascot_perps_gain_roe()!
-        case (.falling, .pnl):
-            R.image.mascot_perps_loss_pnl()!
-        case (.falling, .roe):
-            R.image.mascot_perps_loss_roe()!
+        mascotImageView.image = switch dataSource.color {
+        case .rising:
+            if mascotIndex == 0 {
+                R.image.mascot_perps_gain_0()
+            } else {
+                R.image.mascot_perps_gain_1()
+            }
+        case .falling:
+            if mascotIndex == 0 {
+                R.image.mascot_perps_loss_0()
+            } else {
+                R.image.mascot_perps_loss_1()
+            }
         }
         changeLabel.text = switch style {
         case .pnl:

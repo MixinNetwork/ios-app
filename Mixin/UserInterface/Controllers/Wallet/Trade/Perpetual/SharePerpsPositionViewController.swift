@@ -91,23 +91,6 @@ final class SharePerpsPositionViewController: UIViewController {
         layoutContentPreviewWidth = width
     }
     
-    private func updateStyleSelection() {
-        let visibleRect = CGRect(
-            origin: contentPreviewCollectionView.contentOffset,
-            size: contentPreviewCollectionView.frame.size
-        )
-        let focusCell = contentPreviewCollectionView.visibleCells.max { (one, another) -> Bool in
-            let intersectionA = one.frame.intersection(visibleRect).size.width
-            let intersectionB = another.frame.intersection(visibleRect).size.width
-            return intersectionA < intersectionB
-        }
-        guard let focusCell, let indexPath = contentPreviewCollectionView.indexPath(for: focusCell) else {
-            return
-        }
-        style = SharePerpsPositionStyle(rawValue: indexPath.item)!
-        styleSelectorCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-    }
-    
     private func makeImage() -> UIImage? {
         let indexPath = IndexPath(item: style.rawValue, section: 0)
         guard let cell = contentPreviewCollectionView.cellForItem(at: indexPath) else {
@@ -133,10 +116,10 @@ extension SharePerpsPositionViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let style = SharePerpsPositionStyle(rawValue: indexPath.item)!
         switch collectionView {
         case styleSelectorCollectionView:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
+            let style = SharePerpsPositionStyle(rawValue: indexPath.item)!
             cell.label.text = switch style {
             case .pnl:
                 R.string.localizable.perps_share_pnl()
@@ -146,29 +129,11 @@ extension SharePerpsPositionViewController: UICollectionViewDataSource {
             return cell
         case contentPreviewCollectionView:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.share_perps_position_preview, for: indexPath)!
-            cell.load(dataSource: dataSource, obiContent: obiContent, style: style)
+            cell.load(dataSource: dataSource, obiContent: obiContent, style: style, mascotIndex: indexPath.item)
             return cell
         default:
             return UICollectionViewCell()
         }
-    }
-    
-}
-
-extension SharePerpsPositionViewController: UIScrollViewDelegate {
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        guard scrollView == contentPreviewCollectionView else {
-            return
-        }
-        updateStyleSelection()
-    }
-    
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        guard scrollView == contentPreviewCollectionView else {
-            return
-        }
-        updateStyleSelection()
     }
     
 }
@@ -183,11 +148,7 @@ extension SharePerpsPositionViewController: UICollectionViewDelegate {
         switch collectionView {
         case styleSelectorCollectionView:
             style = SharePerpsPositionStyle(rawValue: indexPath.item)!
-            contentPreviewCollectionView.scrollToItem(
-                at: indexPath,
-                at: .centeredHorizontally,
-                animated: true
-            )
+            contentPreviewCollectionView.reloadData()
         case contentPreviewCollectionView:
             break
         default:

@@ -212,7 +212,7 @@ extension SharePerpsPositionViewController: ModernShareContentViewController {
             description: description,
             actions: [
                 .init(
-                    action: "https://mixin.one/trade?type=perpetual&market=\(dataSource.marketID)",
+                    action: "https://mixin.one/trade?type=perps&market=\(dataSource.marketID)",
                     color: "#50BD5C",
                     label: R.string.localizable.perps_share_card_trade_now()
                 ),

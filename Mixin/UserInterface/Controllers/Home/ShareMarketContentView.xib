@@ -115,7 +115,6 @@
             <constraints>
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="centerX" secondItem="kVY-h5-WTs" secondAttribute="centerX" id="3Ng-Bt-Ve1"/>
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="centerY" secondItem="kVY-h5-WTs" secondAttribute="centerY" id="qJc-V5-7Um"/>
-                <constraint firstItem="i5M-Pr-FkT" firstAttribute="height" secondItem="kVY-h5-WTs" secondAttribute="height" priority="250" id="snT-ZT-jYi"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="88" y="-337"/>

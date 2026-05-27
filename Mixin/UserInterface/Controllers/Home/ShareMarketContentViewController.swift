@@ -19,6 +19,7 @@ final class ShareMarketContentViewController: UIViewController {
     private let market: Market
     private let points: [ChartView.Point]
     private let obiContent: ShareObiView.Content
+    private let contentMargin: CGFloat = 28
     
     private weak var unavailableView: UIView?
     
@@ -44,6 +45,17 @@ final class ShareMarketContentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let heightGuide = UILayoutGuide()
+        view.addLayoutGuide(heightGuide)
+        heightGuide.snp.makeConstraints { make in
+            make.width.height.centerX.centerY.equalToSuperview().priority(.low)
+            make.width.equalTo(heightGuide.snp.height)
+                .multipliedBy(
+                    contentWidthConstraint.constant / contentHeightConstraint.constant
+                )
+                .offset(2 * contentMargin)
+        }
         
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
@@ -102,7 +114,7 @@ final class ShareMarketContentViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let scaleX = view.bounds.width / contentWidthConstraint.constant
+        let scaleX = (view.bounds.width - 2 * contentMargin) / contentWidthConstraint.constant
         let scaleY = view.bounds.height / contentHeightConstraint.constant
         let scale = min(scaleX, scaleY)
         contentView.transform = CGAffineTransform(scaleX: scale, y: scale)

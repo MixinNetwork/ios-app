@@ -711,9 +711,6 @@
 		940EB0AC2EB0A3D1009B3DAA /* TradeAmountInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EB0AA2EB0A3D1009B3DAA /* TradeAmountInputCell.xib */; };
 		940EE2982C9DDD24001A52FA /* MarketAlertItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EE2972C9DDD24001A52FA /* MarketAlertItemView.xib */; };
 		940EE2992C9DDD24001A52FA /* MarketAlertItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EE2962C9DDD24001A52FA /* MarketAlertItemView.swift */; };
-		940EF8B12C8AE573000AD1C6 /* ShareMarketContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EF8B02C8AE573000AD1C6 /* ShareMarketContentView.xib */; };
-		940EF8B32C8AE67C000AD1C6 /* ShareMarketContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EF8B22C8AE67C000AD1C6 /* ShareMarketContentView.swift */; };
-		940EF8B52C8AE74D000AD1C6 /* ShareMarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EF8B42C8AE74D000AD1C6 /* ShareMarketViewController.swift */; };
 		940F93D82F291E6500C631F9 /* UnlockBitcoinNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940F93D72F291E6400C631F9 /* UnlockBitcoinNavigationController.swift */; };
 		940FC4B12F500A8B000C4260 /* PerpetualMarketSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC4B02F500A8B000C4260 /* PerpetualMarketSelectorViewController.swift */; };
 		940FC4BD2F500BEC000C4260 /* PerpetualMarketCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940FC4BC2F500BEC000C4260 /* PerpetualMarketCell.xib */; };
@@ -806,6 +803,10 @@
 		9424C64B259246B600FFDAE0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C64A259246B600FFDAE0 /* main.swift */; };
 		9425EACF2DC2218400BB018C /* MembershipPlansView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9425EACE2DC2218400BB018C /* MembershipPlansView.xib */; };
 		9425EAD02DC2218400BB018C /* MembershipPlansViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9425EACD2DC2218400BB018C /* MembershipPlansViewController.swift */; };
+		9426DDFF2FC4302D009B924E /* SharePerpsPositionCarouselLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9426DDFE2FC43028009B924E /* SharePerpsPositionCarouselLayout.swift */; };
+		9426DE5B2FC4772B009B924E /* ExternalSharingConfirmationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9426DE5A2FC4772B009B924E /* ExternalSharingConfirmationView.xib */; };
+		9426DE9A2FC48A95009B924E /* ShareMarketContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9426DE992FC48A95009B924E /* ShareMarketContentView.xib */; };
+		9426DE9B2FC48A95009B924E /* ShareMarketContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9426DE982FC48A95009B924E /* ShareMarketContentViewController.swift */; };
 		9427D51525E0D31100B1EF0E /* MusicInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9427D51425E0D31100B1EF0E /* MusicInfoView.xib */; };
 		9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */; };
 		9427D52225E0E8DE00B1EF0E /* PlaylistItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D52125E0E8DE00B1EF0E /* PlaylistItemCell.swift */; };
@@ -977,9 +978,6 @@
 		944C61FF2B6C033500C7DF06 /* EditAddressPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C61FE2B6C033500C7DF06 /* EditAddressPreviewViewController.swift */; };
 		944C62042B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C62032B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift */; };
 		944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */; };
-		944D172F2F6168E5008BBA92 /* SharePerpetualPositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D172E2F6168E5008BBA92 /* SharePerpetualPositionViewController.swift */; };
-		944D173A2F61695F008BBA92 /* SharePerpetualPositionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944D17392F61695F008BBA92 /* SharePerpetualPositionView.xib */; };
-		944D17452F616A6F008BBA92 /* SharePerpetualPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D17442F616A6F008BBA92 /* SharePerpetualPositionView.swift */; };
 		944D17932F6199C3008BBA92 /* ClosePerpsReceiveCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D17912F6199C3008BBA92 /* ClosePerpsReceiveCell.swift */; };
 		944D17942F6199C3008BBA92 /* ClosePerpsReceiveCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944D17922F6199C3008BBA92 /* ClosePerpsReceiveCell.xib */; };
 		944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */; };
@@ -1351,6 +1349,13 @@
 		94B7643525EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */; };
 		94B7B6DC26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */; };
 		94B7B6DE26B43581000B0AC5 /* SilentNotificationMessagePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */; };
+		94B7FF252FC2E13D00FAE569 /* PopupShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7FF232FC2E13D00FAE569 /* PopupShareViewController.swift */; };
+		94B7FF262FC2E13D00FAE569 /* PopupShareView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B7FF242FC2E13D00FAE569 /* PopupShareView.xib */; };
+		94B7FF392FC359ED00FAE569 /* SharePerpsPositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7FF372FC359ED00FAE569 /* SharePerpsPositionViewController.swift */; };
+		94B7FF3A2FC359ED00FAE569 /* SharePerpsPositionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B7FF382FC359ED00FAE569 /* SharePerpsPositionView.xib */; };
+		94B7FF4C2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7FF4A2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.swift */; };
+		94B7FF4D2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B7FF4B2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.xib */; };
+		94B7FF552FC360C600FAE569 /* SharePerpsPositionStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7FF542FC360C400FAE569 /* SharePerpsPositionStyle.swift */; };
 		94B81FFE2DFFD96F00D580C9 /* BalanceRequirement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B81FFD2DFFD96400D580C9 /* BalanceRequirement.swift */; };
 		94B820602E00601700D580C9 /* AddTokenMethodSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8205F2E00601700D580C9 /* AddTokenMethodSelectorViewController.swift */; };
 		94B820692E00613100D580C9 /* AddTokenMethodCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B820672E00613100D580C9 /* AddTokenMethodCell.swift */; };
@@ -2606,9 +2611,6 @@
 		940EB0AA2EB0A3D1009B3DAA /* TradeAmountInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TradeAmountInputCell.xib; sourceTree = "<group>"; };
 		940EE2962C9DDD24001A52FA /* MarketAlertItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertItemView.swift; sourceTree = "<group>"; };
 		940EE2972C9DDD24001A52FA /* MarketAlertItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketAlertItemView.xib; sourceTree = "<group>"; };
-		940EF8B02C8AE573000AD1C6 /* ShareMarketContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareMarketContentView.xib; sourceTree = "<group>"; };
-		940EF8B22C8AE67C000AD1C6 /* ShareMarketContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMarketContentView.swift; sourceTree = "<group>"; };
-		940EF8B42C8AE74D000AD1C6 /* ShareMarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMarketViewController.swift; sourceTree = "<group>"; };
 		940F93D72F291E6400C631F9 /* UnlockBitcoinNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockBitcoinNavigationController.swift; sourceTree = "<group>"; };
 		940FC4B02F500A8B000C4260 /* PerpetualMarketSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualMarketSelectorViewController.swift; sourceTree = "<group>"; };
 		940FC4BB2F500BEC000C4260 /* PerpetualMarketCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualMarketCell.swift; sourceTree = "<group>"; };
@@ -2700,6 +2702,10 @@
 		9424C64A259246B600FFDAE0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		9425EACD2DC2218400BB018C /* MembershipPlansViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipPlansViewController.swift; sourceTree = "<group>"; };
 		9425EACE2DC2218400BB018C /* MembershipPlansView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipPlansView.xib; sourceTree = "<group>"; };
+		9426DDFE2FC43028009B924E /* SharePerpsPositionCarouselLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePerpsPositionCarouselLayout.swift; sourceTree = "<group>"; };
+		9426DE5A2FC4772B009B924E /* ExternalSharingConfirmationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExternalSharingConfirmationView.xib; sourceTree = "<group>"; };
+		9426DE982FC48A95009B924E /* ShareMarketContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMarketContentViewController.swift; sourceTree = "<group>"; };
+		9426DE992FC48A95009B924E /* ShareMarketContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareMarketContentView.xib; sourceTree = "<group>"; };
 		9427D51425E0D31100B1EF0E /* MusicInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MusicInfoView.xib; sourceTree = "<group>"; };
 		9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicInfoView.swift; sourceTree = "<group>"; };
 		9427D52125E0E8DE00B1EF0E /* PlaylistItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItemCell.swift; sourceTree = "<group>"; };
@@ -2872,9 +2878,6 @@
 		944C61FE2B6C033500C7DF06 /* EditAddressPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAddressPreviewViewController.swift; sourceTree = "<group>"; };
 		944C62032B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPreviewDoubleButtonTrayView.swift; sourceTree = "<group>"; };
 		944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusWriter.swift; sourceTree = "<group>"; };
-		944D172E2F6168E5008BBA92 /* SharePerpetualPositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePerpetualPositionViewController.swift; sourceTree = "<group>"; };
-		944D17392F61695F008BBA92 /* SharePerpetualPositionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SharePerpetualPositionView.xib; sourceTree = "<group>"; };
-		944D17442F616A6F008BBA92 /* SharePerpetualPositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePerpetualPositionView.swift; sourceTree = "<group>"; };
 		944D17912F6199C3008BBA92 /* ClosePerpsReceiveCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosePerpsReceiveCell.swift; sourceTree = "<group>"; };
 		944D17922F6199C3008BBA92 /* ClosePerpsReceiveCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClosePerpsReceiveCell.xib; sourceTree = "<group>"; };
 		944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebLoadingFailureView.xib; sourceTree = "<group>"; };
@@ -3259,6 +3262,13 @@
 		94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileDescription.swift; sourceTree = "<group>"; };
 		94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SilentNotificationMessagePreviewView.xib; sourceTree = "<group>"; };
 		94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentNotificationMessagePreviewViewController.swift; sourceTree = "<group>"; };
+		94B7FF232FC2E13D00FAE569 /* PopupShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupShareViewController.swift; sourceTree = "<group>"; };
+		94B7FF242FC2E13D00FAE569 /* PopupShareView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupShareView.xib; sourceTree = "<group>"; };
+		94B7FF372FC359ED00FAE569 /* SharePerpsPositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePerpsPositionViewController.swift; sourceTree = "<group>"; };
+		94B7FF382FC359ED00FAE569 /* SharePerpsPositionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SharePerpsPositionView.xib; sourceTree = "<group>"; };
+		94B7FF4A2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePerpsPositionPreviewCell.swift; sourceTree = "<group>"; };
+		94B7FF4B2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SharePerpsPositionPreviewCell.xib; sourceTree = "<group>"; };
+		94B7FF542FC360C400FAE569 /* SharePerpsPositionStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePerpsPositionStyle.swift; sourceTree = "<group>"; };
 		94B81FFD2DFFD96400D580C9 /* BalanceRequirement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceRequirement.swift; sourceTree = "<group>"; };
 		94B8205F2E00601700D580C9 /* AddTokenMethodSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTokenMethodSelectorViewController.swift; sourceTree = "<group>"; };
 		94B820672E00613100D580C9 /* AddTokenMethodCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTokenMethodCell.swift; sourceTree = "<group>"; };
@@ -4376,6 +4386,8 @@
 				943B5F552F5C02C60043078A /* ManualPageContentView.xib */,
 				943B5F542F5C02C60043078A /* ManualPageContentViewController.swift */,
 				94C67F402F63C25500CB11DC /* ManualScrollView.swift */,
+				94B7FF242FC2E13D00FAE569 /* PopupShareView.xib */,
+				94B7FF232FC2E13D00FAE569 /* PopupShareViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -4702,9 +4714,12 @@
 				94D9DDAE2F59DC0200B3B990 /* PerpetualPositionCompactInfoCell.swift */,
 				94D9DE002F5AA79700B3B990 /* ClosePerpetualPositionPreviewViewController.swift */,
 				9456877D2FBEDADF00D06A64 /* SharePerpetualPositionDataSource.swift */,
-				944D17392F61695F008BBA92 /* SharePerpetualPositionView.xib */,
-				944D17442F616A6F008BBA92 /* SharePerpetualPositionView.swift */,
-				944D172E2F6168E5008BBA92 /* SharePerpetualPositionViewController.swift */,
+				94B7FF542FC360C400FAE569 /* SharePerpsPositionStyle.swift */,
+				94B7FF4B2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.xib */,
+				94B7FF4A2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.swift */,
+				9426DDFE2FC43028009B924E /* SharePerpsPositionCarouselLayout.swift */,
+				94B7FF382FC359ED00FAE569 /* SharePerpsPositionView.xib */,
+				94B7FF372FC359ED00FAE569 /* SharePerpsPositionViewController.swift */,
 			);
 			path = Perpetual;
 			sourceTree = "<group>";
@@ -5544,6 +5559,7 @@
 				7BB5250224160F3D0060DAE1 /* LocationPreviewViewController.swift */,
 				7BF5EE4E2497A55700DDD9CC /* GroupCallMemberPickerViewController.swift */,
 				7BC3EBF62497507900E81FD8 /* GroupCallMemberPickerContentViewController.swift */,
+				9426DE5A2FC4772B009B924E /* ExternalSharingConfirmationView.xib */,
 				7B1D61122512773F00BD6B15 /* ExternalSharingConfirmationViewController.swift */,
 				94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */,
 				7C14CFBF26CA35CF0094AF4A /* StaticMessagesViewController.swift */,
@@ -5991,9 +6007,8 @@
 				944BC2D72C7DAFEA008700A8 /* MarketDashboardViewController.swift */,
 				9447316F2E71A2AD00ACC49B /* SearchMarketView.xib */,
 				944731672E71A17200ACC49B /* SearchMarketViewController.swift */,
-				940EF8B02C8AE573000AD1C6 /* ShareMarketContentView.xib */,
-				940EF8B22C8AE67C000AD1C6 /* ShareMarketContentView.swift */,
-				940EF8B42C8AE74D000AD1C6 /* ShareMarketViewController.swift */,
+				9426DE992FC48A95009B924E /* ShareMarketContentView.xib */,
+				9426DE982FC48A95009B924E /* ShareMarketContentViewController.swift */,
 				94386ADA2F7E598800FF1FB9 /* PopupTipRecoveryKitOptionsView.swift */,
 				94E66CC12D11542100578F19 /* PopupTipView.xib */,
 				94E66CBF2D11518400578F19 /* PopupTipViewController.swift */,
@@ -6875,7 +6890,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				944D173A2F61695F008BBA92 /* SharePerpetualPositionView.xib in Resources */,
 				94E0BB802EB11B7B0096797E /* SwapPriceCell.xib in Resources */,
 				7B833E9C22C4AED20063929D /* ic_app_loading@2x.webp in Resources */,
 				7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */,
@@ -6977,6 +6991,7 @@
 				7C7579E029DC61890002DA0B /* TransferToPhoneQRCodeView.xib in Resources */,
 				940A3CF12EB79244001A458F /* TradeExpirySelectorCell.xib in Resources */,
 				94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */,
+				94B7FF4D2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.xib in Resources */,
 				7BD3880024DC66F900A3035C /* Localizable.strings in Resources */,
 				94B7B6DC26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib in Resources */,
 				947E3AB72B10A8AB008B2007 /* ConsolidateOutputsView.xib in Resources */,
@@ -6990,6 +7005,7 @@
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
 				7BAB3058247E8248005D6C3F /* call.caf in Resources */,
+				94B7FF262FC2E13D00FAE569 /* PopupShareView.xib in Resources */,
 				942FD9332D3A70DB004DCC4C /* TradeOrderHeaderCell.xib in Resources */,
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
 				94FB2E092F504D9200F85AB4 /* PerpetualPlaceholderCell.xib in Resources */,
@@ -7002,6 +7018,7 @@
 				94A72CA52C2EBFF9001E8782 /* InscriptionTraitCell.xib in Resources */,
 				9464B2762C81DFBB00588EE6 /* WatchlistEmptyCell.xib in Resources */,
 				7B70D8532457F4F800E01239 /* AnnouncementBadgeContentView.xib in Resources */,
+				9426DE5B2FC4772B009B924E /* ExternalSharingConfirmationView.xib in Resources */,
 				9455EA082AFE598E00C3FD3C /* WithdrawFeeView.xib in Resources */,
 				94C5BDD62D685FCD0012F840 /* WalletCell.xib in Resources */,
 				7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */,
@@ -7026,7 +7043,6 @@
 				7B595359226749A100D59DB4 /* PeerCell.xib in Resources */,
 				945A72E12E59EE38006A11E9 /* TIPQuizAnswerView.xib in Resources */,
 				948723392C9DF6380034BCB0 /* AddMarketAlertView.xib in Resources */,
-				940EF8B12C8AE573000AD1C6 /* ShareMarketContentView.xib in Resources */,
 				94DC24392D08051C006501B3 /* DesktopSessionValidationView.xib in Resources */,
 				7C53049F28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib in Resources */,
 				94FE11F62DA7AC830026AB9A /* Web3TransactionCell.xib in Resources */,
@@ -7052,6 +7068,7 @@
 				94B13FC32B5ED5F9001333BE /* Web3BrowserView.xib in Resources */,
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
 				E0BEB85D236C1C49001FE534 /* ProfileMenuItemView.xib in Resources */,
+				9426DE9A2FC48A95009B924E /* ShareMarketContentView.xib in Resources */,
 				7BACA8D523602BF8007E3381 /* RecorderLongPressHintView.xib in Resources */,
 				9445C2552B6161F1001C4AAC /* FavoriteAppCell.xib in Resources */,
 				941994FB2CCE690600F5425C /* ImageTextTableHeaderView.xib in Resources */,
@@ -7218,6 +7235,7 @@
 				7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */,
 				94E978D12D09B7D600FFCC12 /* LegacyPINView.xib in Resources */,
 				7B8A6A752456E0EC00ADC9EB /* SharedMediaPostCell.xib in Resources */,
+				94B7FF3A2FC359ED00FAE569 /* SharePerpsPositionView.xib in Resources */,
 				7B8BB58E234F34FE00991ACB /* SharedMediaAudioCell.xib in Resources */,
 				7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */,
 				9447315A2E71867200ACC49B /* HomeNavigationTitleView.xib in Resources */,
@@ -8080,6 +8098,7 @@
 				7B710DFC243637A5008F0D73 /* CirclesTableFooterView.swift in Sources */,
 				94E979252D0B40B000FFCC12 /* LoginPINStatusCheckingViewController.swift in Sources */,
 				9491E7252E335B3D00A869F1 /* AddWalletErrorViewController.swift in Sources */,
+				9426DE9B2FC48A95009B924E /* ShareMarketContentViewController.swift in Sources */,
 				9497AEA92C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift in Sources */,
 				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				7C7579DF29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift in Sources */,
@@ -8262,10 +8281,12 @@
 				944C60FC2B6A896400C7DF06 /* AuthenticationPreviewHeaderView.swift in Sources */,
 				277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */,
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
+				94B7FF4C2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.swift in Sources */,
 				94DF7E0E28DC1697006E415B /* AcknowledgementViewController.swift in Sources */,
 				94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */,
 				9419C23C2E6741D900BEAB42 /* ExplainLightningAddressViewController.swift in Sources */,
 				7C0FAAC727E079F1008D4021 /* ExpiredMessageTimePickerWindow.swift in Sources */,
+				94B7FF392FC359ED00FAE569 /* SharePerpsPositionViewController.swift in Sources */,
 				DF43304522648B32006D971D /* AssetInfoWindow.swift in Sources */,
 				94350E3C2BCFE8C5007283B7 /* InputAmountViewController.swift in Sources */,
 				7B492F982252159B00C05A45 /* ActivityIndicatorView.swift in Sources */,
@@ -8277,7 +8298,6 @@
 				94ADE11F2CD80AC70040A426 /* ChangeMobileNumberViewController.swift in Sources */,
 				94A8095C2FB1C1B200755E1A /* PerpsAutoClosingCondition.swift in Sources */,
 				9440019E2FA1E57A00105253 /* ShareObiSurroundedView.swift in Sources */,
-				944D17452F616A6F008BBA92 /* SharePerpetualPositionView.swift in Sources */,
 				52A056582BE362FF00CEC8A3 /* InscriptionViewController.swift in Sources */,
 				DFCF3BF020CF6EE10030AD4A /* StickerAddViewController.swift in Sources */,
 				7B9916D421945A6800C11401 /* AssetCell.swift in Sources */,
@@ -8418,7 +8438,6 @@
 				944D17932F6199C3008BBA92 /* ClosePerpsReceiveCell.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
 				944731682E71A17A00ACC49B /* SearchMarketViewController.swift in Sources */,
-				940EF8B32C8AE67C000AD1C6 /* ShareMarketContentView.swift in Sources */,
 				94425FE72DD498FB003F46DF /* MaliciousTokenWarningCell.swift in Sources */,
 				7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */,
 				942FB8972C8AE09000C8025C /* ShareInscriptionViewController.swift in Sources */,
@@ -8495,6 +8514,7 @@
 				7B5BC7B720AA1BB300DA5296 /* AttachmentLoadingMessageCell.swift in Sources */,
 				94C56D342C53AFBE009F3AB8 /* SwapQuoteRequester.swift in Sources */,
 				94D0FF382BEB1CA200E3947F /* InscriptionHashView.swift in Sources */,
+				94B7FF252FC2E13D00FAE569 /* PopupShareViewController.swift in Sources */,
 				7B88655B20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift in Sources */,
 				7BF42E4122DDF0D9005066E6 /* GalleryAnimatable.swift in Sources */,
 				943FEB3E2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift in Sources */,
@@ -8638,7 +8658,6 @@
 				947BE3EF2DBA95B100A98677 /* ReviewPendingWeb3TransactionJob.swift in Sources */,
 				E08F4DDC2395345500C0D021 /* SharedAppCell.swift in Sources */,
 				945A72792E59BC48006A11E9 /* TIPQuizViewController.swift in Sources */,
-				944D172F2F6168E5008BBA92 /* SharePerpetualPositionViewController.swift in Sources */,
 				7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */,
 				94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */,
 				947084C52D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift in Sources */,
@@ -8679,6 +8698,7 @@
 				940A3CF22EB79244001A458F /* TradeExpirySelectorCell.swift in Sources */,
 				94B820602E00601700D580C9 /* AddTokenMethodSelectorViewController.swift in Sources */,
 				949967012F6BD2A400D3F42E /* PerpetualCandleLoader.swift in Sources */,
+				94B7FF552FC360C600FAE569 /* SharePerpsPositionStyle.swift in Sources */,
 				7B075CD11FC0B268005315A2 /* MessageCell.swift in Sources */,
 				9419950C2CCEBF5800F5425C /* RecoveryContactIntroduction2ViewController.swift in Sources */,
 				94525B342C4E3B91008BA7A8 /* RouteTokenSource.swift in Sources */,
@@ -8701,6 +8721,7 @@
 				9458A0942CC9450C00A51154 /* MnemonicsViewController.swift in Sources */,
 				94386B3A2F7E9FC500FF1FB9 /* AccountRecoveryOption.swift in Sources */,
 				944535CE2EFBDD7300E056D1 /* UnlockBitcoinViewController.swift in Sources */,
+				9426DDFF2FC4302D009B924E /* SharePerpsPositionCarouselLayout.swift in Sources */,
 				7CB17B642771602A00CF4C94 /* DeleteAccountConfirmWindow.swift in Sources */,
 				942FD9362D3A72DE004DCC4C /* SwapIconView.swift in Sources */,
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
@@ -8736,7 +8757,6 @@
 				94658CA02B347E4100F5EB21 /* UTXODiagnosticViewController.swift in Sources */,
 				9421205E2F3244F100768DC3 /* OnboardingBannerCell.swift in Sources */,
 				DFAD89A1241B6D6400836EDD /* JobService.swift in Sources */,
-				940EF8B52C8AE74D000AD1C6 /* ShareMarketViewController.swift in Sources */,
 				945138B92C6622F600839CBB /* TokenMarketCell.swift in Sources */,
 				94E1D44129E906AB00511267 /* DeviceTransferHeader.swift in Sources */,
 				94668E3F2CB68C1E00558755 /* PushNotificationDiagnostic.swift in Sources */,

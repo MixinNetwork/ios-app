@@ -10,18 +10,26 @@ struct SharePerpetualPositionDataSource {
     
     let title: String
     let iconURL: URL?
-    let change: String
-    let pnlColor: MarketColor
+    let pnl: String
+    let roe: String
+    let color: MarketColor
     let operation: String
     let leverage: String
     let entryPrice: String
     let trailingPrice: TrailingPrice?
     
+    let marketID: String
+    let tokenSymbol: String?
+    let displaySymbol: String?
+    let side: String
+    let leverageMultiplier: Int
+    
     init(viewModel: PerpetualPositionViewModel, latestPrice: Decimal?) {
         self.title = viewModel.directionWithSymbol
         self.iconURL = viewModel.iconURL
-        self.change = viewModel.roeWithSign ?? ""
-        self.pnlColor = viewModel.pnlColor
+        self.pnl = viewModel.roeWithSign ?? ""
+        self.roe = viewModel.pnl
+        self.color = viewModel.pnlColor
         self.operation = viewModel.directionWithSymbol
         self.leverage = viewModel.leverage
         self.entryPrice = viewModel.entryPrice
@@ -30,6 +38,11 @@ struct SharePerpetualPositionDataSource {
         } else {
             .none
         }
+        self.marketID = viewModel.marketID
+        self.tokenSymbol = viewModel.tokenSymbol
+        self.displaySymbol = viewModel.displaySymbol
+        self.side = viewModel.side.localizedName
+        self.leverageMultiplier = viewModel.leverageMultiplier
     }
     
     init(
@@ -39,13 +52,18 @@ struct SharePerpetualPositionDataSource {
     ) {
         self.title = viewModel.directionWithSymbol
         self.iconURL = viewModel.iconURL
-        self.change = pnl.percentage
-        self.pnlColor = pnl.color
+        self.pnl = pnl.percentage
+        self.roe = pnl.receivingAmount
+        self.color = pnl.color
         self.operation = viewModel.directionWithSymbol
         self.leverage = viewModel.leverage
         self.entryPrice = viewModel.entryPrice
         self.trailingPrice = .closePrice(closePrice)
+        self.marketID = viewModel.marketID
+        self.tokenSymbol = viewModel.tokenSymbol
+        self.displaySymbol = viewModel.displaySymbol
+        self.side = viewModel.side.localizedName
+        self.leverageMultiplier = viewModel.leverageMultiplier
     }
-    
     
 }

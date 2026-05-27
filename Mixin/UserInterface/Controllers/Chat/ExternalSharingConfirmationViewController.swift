@@ -3,7 +3,7 @@ import WebKit
 import SDWebImage
 import MixinServices
 
-class ExternalSharingConfirmationViewController: UIViewController {
+final class ExternalSharingConfirmationViewController: UIViewController {
     
     enum Action {
         case send(conversation: ConversationItem, ownerUser: UserItem)
@@ -18,48 +18,35 @@ class ExternalSharingConfirmationViewController: UIViewController {
     private lazy var imageView = SDAnimatedImageView()
     private lazy var label = UILabel()
     
-    private var sharingContext: ExternalSharingContext!
-    private var message: Message!
-    private var action: Action!
+    private let sharingContext: ExternalSharingContext
+    private var message: Message
+    private let webContext: MixinWebContext?
+    private let action: Action
+    
+    init(
+        sharingContext: ExternalSharingContext,
+        message: Message,
+        webContext: MixinWebContext?,
+        action: Action,
+    ) {
+        self.sharingContext = sharingContext
+        self.message = message
+        self.webContext = webContext
+        self.action = action
+        let nib = R.nib.externalSharingConfirmationView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+        modalPresentationStyle = .custom
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         backgroundView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         backgroundView.layer.cornerRadius = 10
-    }
-    
-    @IBAction func close(_ sender: Any) {
-        if let context = sharingContext, case let .image(photoUrl) = context.content {
-            try? FileManager.default.removeItem(at: photoUrl)
-        }
-        dismiss(animated: true, completion: nil)
-    }
-    
-    @IBAction func performAction(_ sender: Any) {
-        guard var message = message else {
-            return
-        }
-        switch action {
-        case let .send(conversation, ownerUser):
-            message.createdAt = Date().toUTCString()
-            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: conversation.isGroup())
-            showAutoHiddenHud(style: .notification, text: R.string.localizable.message_sent())
-            dismiss(animated: true, completion: nil)
-        case .forward:
-            dismiss(animated: true) {
-                let vc = MessageReceiverViewController.instance(content: .message(message))
-                UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
-            }
-        case .none:
-            break
-        }
-    }
-    
-    func load(sharingContext: ExternalSharingContext, message: Message, webContext: MixinWebContext?, action: Action) {
-        self.sharingContext = sharingContext
-        self.message = message
-        self.action = action
-        
         switch sharingContext.content {
         case .text(let text):
             loadPreview(forTextMessageWith: text)
@@ -99,6 +86,28 @@ class ExternalSharingConfirmationViewController: UIViewController {
             sendButton.setTitle(R.string.localizable.forward(), for: .normal)
         case .send:
             sendButton.setTitle(R.string.localizable.send(), for: .normal)
+        }
+    }
+    
+    @IBAction func close(_ sender: Any) {
+        if case let .image(photoUrl) = sharingContext.content {
+            try? FileManager.default.removeItem(at: photoUrl)
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func performAction(_ sender: Any) {
+        switch action {
+        case let .send(conversation, ownerUser):
+            message.createdAt = Date().toUTCString()
+            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, isGroupMessage: conversation.isGroup())
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.message_sent())
+            dismiss(animated: true, completion: nil)
+        case .forward:
+            dismiss(animated: true) { [message] in
+                let vc = MessageReceiverViewController.instance(content: .message(message))
+                UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+            }
         }
     }
     
@@ -408,7 +417,7 @@ extension ExternalSharingConfirmationViewController {
     }
     
     @objc private func presentPostPreview() {
-        guard let message = message, message.category.hasSuffix("_POST") else {
+        guard message.category.hasSuffix("_POST") else {
             return
         }
         PostWebViewController.presentInstance(message: message, asChildOf: self)

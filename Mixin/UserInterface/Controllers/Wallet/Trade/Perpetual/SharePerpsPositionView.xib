@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SharePerpsPositionViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="contentPreviewCollectionView" destination="R3p-dO-C9Y" id="aKF-ER-jHK"/>
+                <outlet property="contentPreviewLayout" destination="3zv-iO-ass" id="Muu-Kl-Q6N"/>
+                <outlet property="styleSelectorCollectionView" destination="rSP-do-rYK" id="2aS-I8-9KD"/>
+                <outlet property="styleSelectorHeightConstraint" destination="ZxX-4t-Apa" id="LTR-qL-gzP"/>
+                <outlet property="styleSelectorLayout" destination="m7T-2W-9Zs" id="jlc-1g-8nZ"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="391"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="rSP-do-rYK">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="38"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="38" id="ZxX-4t-Apa"/>
+                    </constraints>
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="m7T-2W-9Zs">
+                        <size key="itemSize" width="128" height="128"/>
+                        <size key="estimatedItemSize" width="62" height="38"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="R3p-dO-C9Y">
+                    <rect key="frame" x="0.0" y="54" width="393" height="337"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" secondItem="R3p-dO-C9Y" secondAttribute="width" constant="-56" id="Qqq-mC-0FL"/>
+                    </constraints>
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="12" minimumInteritemSpacing="12" id="3zv-iO-ass" customClass="SharePerpsPositionCarouselLayout" customModule="Mixin" customModuleProvider="target">
+                        <size key="itemSize" width="319" height="319"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="rSP-do-rYK" secondAttribute="trailing" id="3w3-te-Jwa"/>
+                <constraint firstAttribute="bottom" secondItem="R3p-dO-C9Y" secondAttribute="bottom" id="H5G-FJ-8u2"/>
+                <constraint firstItem="R3p-dO-C9Y" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="OVO-bx-R0g"/>
+                <constraint firstItem="rSP-do-rYK" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="fqy-M4-r4T"/>
+                <constraint firstItem="rSP-do-rYK" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="hzI-W5-8zm"/>
+                <constraint firstItem="R3p-dO-C9Y" firstAttribute="top" secondItem="rSP-do-rYK" secondAttribute="bottom" constant="16" id="lzm-06-YRR" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstAttribute="trailing" secondItem="R3p-dO-C9Y" secondAttribute="trailing" id="wfD-e8-2cA"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-457.25190839694653" y="183.09859154929578"/>
+        </view>
+    </objects>
+</document>

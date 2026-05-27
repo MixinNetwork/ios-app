@@ -801,9 +801,12 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         Referral.loadAvailableCode { [weak self] code in
             hud.hide()
-            let share = SharePerpetualPositionViewController(
-                dataSource: dataSource,
-                rebatingCode: code
+            let share = PopupShareViewController(
+                contentViewController: SharePerpsPositionViewController(
+                    dataSource: dataSource,
+                    rebatingCode: code
+                ),
+                rebatingCode: code,
             )
             self?.present(share, animated: true)
         }

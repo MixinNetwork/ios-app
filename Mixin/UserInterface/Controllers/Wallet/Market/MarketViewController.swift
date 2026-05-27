@@ -190,18 +190,19 @@ final class MarketViewController: UIViewController {
     }
     
     @objc private func shareMarket(_ sender: Any) {
-        guard let market, let chartPoints, let stats = viewModel.stats else {
+        guard let market, let chartPoints else {
             return
         }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        Referral.loadAvailableCode { [weak self, chartPeriod] code in
+        Referral.loadAvailableCode { [weak self] code in
             hud.hide()
-            let share = ShareMarketViewController(
-                market: market,
-                period: chartPeriod,
-                points: chartPoints,
-                statistics: stats,
+            let share = PopupShareViewController(
+                contentViewController: ShareMarketContentViewController(
+                    market: market,
+                    points: chartPoints,
+                    rebatingCode: code
+                ),
                 rebatingCode: code,
             )
             self?.present(share, animated: true)

@@ -65,6 +65,10 @@ final class PopupShareViewController: UIViewController {
         
         sendToContactBackgroundView.layer.cornerRadius = 13
         sendToContactBackgroundView.layer.masksToBounds = true
+        sendToContactTitleLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
         sendToContactTitleLabel.text = R.string.localizable.perps_share_to_mixin_contact()
         if let rebating {
             let content = NSMutableAttributedString(
@@ -154,9 +158,6 @@ final class PopupShareViewController: UIViewController {
         config additionalConfig: (UIButton) -> Void
     ) {
         var configuration: UIButton.Configuration = .plain()
-        configuration.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0)
-        configuration.background.imageContentMode = .top
-        configuration.background.image = R.image.explore.action_tray()
         configuration.baseForegroundColor = R.color.text()
         configuration.attributedTitle = {
             var attributes = AttributeContainer()
@@ -170,6 +171,18 @@ final class PopupShareViewController: UIViewController {
         button.titleLabel?.adjustsFontForContentSizeCategory = true
         additionalConfig(button)
         actionStackView.addArrangedSubview(button)
+        
+        if let imageView = button.imageView {
+            let trayView = UIView()
+            trayView.backgroundColor = R.color.background()
+            trayView.layer.cornerRadius = 24
+            trayView.layer.masksToBounds = true
+            view.insertSubview(trayView, belowSubview: actionStackView)
+            trayView.snp.makeConstraints { make in
+                make.center.equalTo(imageView)
+                make.width.height.equalTo(48)
+            }
+        }
     }
     
 }

@@ -153,7 +153,16 @@ extension SignInWithMobileNumberViewController {
                         fallthrough
                     }
                 default:
-                    reporter.report(event: .errorSessionVerifications, tags: ["source": "sign_up"])
+                    var tags = ["type": "phone"]
+                    if error.isServerErrorResponse {
+                        tags["error_type"] = "server_error"
+                    } else if error.isClientErrorResponse {
+                        tags["error_type"] = "client_error"
+                    }
+                    if let statusCode = self.request?.response?.statusCode {
+                        tags["error_code"] = "\(statusCode)"
+                    }
+                    reporter.report(event: .errorSessionVerifications, tags: tags)
                     var userInfo: [String: String] = [:]
                     userInfo["error"] = "\(error)"
                     if let requestId = self.request?.response?.value(forHTTPHeaderField: "x-request-id")  {

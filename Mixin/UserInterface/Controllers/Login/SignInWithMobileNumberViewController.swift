@@ -80,7 +80,7 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
     }
     
     @objc private func signup(_ sender: Any) {
-        let intro = CreateAccountIntroductionViewController()
+        let intro = CreateAccountIntroductionViewController(analyticSource: "login_start")
         present(intro, animated: true)
     }
     

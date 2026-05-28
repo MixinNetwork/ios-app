@@ -78,7 +78,9 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
     
     override func confirm(_ sender: Any) {
         if phrasesCount == nil {
-            let intro = CreateAccountIntroductionViewController()
+            let intro = CreateAccountIntroductionViewController(
+                analyticSource: "login_mnemonic_phrase"
+            )
             present(intro, animated: true)
         } else {
             do {

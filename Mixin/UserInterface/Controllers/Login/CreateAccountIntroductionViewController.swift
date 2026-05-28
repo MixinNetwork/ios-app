@@ -8,6 +8,18 @@ final class CreateAccountIntroductionViewController: UIViewController {
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var footerTextView: IntroTextView!
     
+    private let analyticSource: String
+    
+    init(analyticSource: String) {
+        self.analyticSource = analyticSource
+        let nib = R.nib.createAccountIntroductionView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = R.string.localizable.create_your_account()
@@ -56,7 +68,7 @@ final class CreateAccountIntroductionViewController: UIViewController {
         guard let navigationController else {
             return
         }
-        presentingViewController.dismiss(animated: true) {
+        presentingViewController.dismiss(animated: true) { [analyticSource] in
             let mnemonics: MixinMnemonics? = if let entropy = AppGroupKeychain.mnemonics {
                 try? MixinMnemonics(entropy: entropy)
             } else {
@@ -69,7 +81,7 @@ final class CreateAccountIntroductionViewController: UIViewController {
             viewControllers.append(next)
             navigationController.setViewControllers(viewControllers, animated: true)
             Logger.login.info(category: "CreateAccountIntro", message: "Sign up start")
-            reporter.report(event: .signUpStart)
+            reporter.report(event: .signUpStart, tags: ["source": analyticSource])
         }
     }
     

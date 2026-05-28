@@ -92,8 +92,16 @@ final class SharePerpsPositionViewController: UIViewController {
     }
     
     private func makeImage() -> UIImage? {
-        let indexPath = IndexPath(item: style.rawValue, section: 0)
-        guard let cell = contentPreviewCollectionView.cellForItem(at: indexPath) else {
+        let visibleRect = CGRect(
+            origin: contentPreviewCollectionView.contentOffset,
+            size: contentPreviewCollectionView.frame.size
+        )
+        let focusCell = contentPreviewCollectionView.visibleCells.max { (one, another) -> Bool in
+            let intersectionA = one.frame.intersection(visibleRect).size.width
+            let intersectionB = another.frame.intersection(visibleRect).size.width
+            return intersectionA < intersectionB
+        }
+        guard let cell = focusCell else {
             return nil
         }
         let canvas = cell.contentView.bounds

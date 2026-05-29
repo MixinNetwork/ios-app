@@ -3,8 +3,8 @@ import Foundation
 struct TradeURL {
     
     enum TradingType {
-        case perps(market: String)
-        case spot(trading: TradeViewController.Trading?, input: String?, output: String?)
+        case perpsMarket(id: String)
+        case trade(trading: TradeViewController.Trading?, input: String?, output: String?)
     }
     
     let type: TradingType
@@ -32,17 +32,17 @@ struct TradeURL {
         }
         switch type {
         case "swap":
-            self.type = .spot(trading: .simpleSpot, input: input, output: output)
+            self.type = .trade(trading: .simpleSpot, input: input, output: output)
         case "limit":
-            self.type = .spot(trading: .advancedSpot, input: input, output: output)
+            self.type = .trade(trading: .advancedSpot, input: input, output: output)
         case "perps":
             if let market {
-                self.type = .perps(market: market)
+                self.type = .perpsMarket(id: market)
             } else {
-                return nil
+                self.type = .trade(trading: .perpetualFutures, input: input, output: output)
             }
         default:
-            self.type = .spot(trading: nil, input: input, output: output)
+            self.type = .trade(trading: nil, input: input, output: output)
         }
         self.referral = referral
     }

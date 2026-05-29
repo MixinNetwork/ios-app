@@ -41,7 +41,7 @@ final class PerpetualActivityViewController: UIViewController {
                 ])
             case let .close(pnl, closePrice):
                 infos.append(contentsOf: [
-                    .pnl(value: pnl.precised, color: pnl.color),
+                    .pnl(value: pnl.aggregated, color: pnl.color),
                     .general(
                         title: R.string.localizable.entry_price().uppercased(),
                         content: viewModel.entryPrice

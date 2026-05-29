@@ -4,10 +4,9 @@ import MixinServices
 struct PerpetualActivityViewModel {
     
     struct PnL {
-        let abbreviated: String
-        let precised: String
-        let percentage: String
         let receivingAmount: String
+        let percentage: String
+        let aggregated: String
         let color: MarketColor
     }
     
@@ -120,26 +119,19 @@ struct PerpetualActivityViewModel {
                 sign: .always,
                 symbol: .dollarSign
             )
-            let roeRepresentation = " (" + PercentageFormatter.string(
-                from: roe,
-                format: .pretty,
-                sign: .never
-            ) + ")"
             let pnl = PnL(
-                abbreviated: prettyPnL + roeRepresentation,
-                precised: CurrencyFormatter.localizedString(
-                    from: realizedPnL,
-                    format: .fiatMoneyPrecision,
-                    sign: .always,
-                    symbol: .dollarSign
-                ) + roeRepresentation,
+                receivingAmount: prettyPnL,
                 percentage: PercentageFormatter.string(
                     from: roe,
                     format: .pretty,
                     sign: .always,
                     options: .keepOneFractionDigitForZero
                 ),
-                receivingAmount: prettyPnL,
+                aggregated: prettyPnL + " (" + PercentageFormatter.string(
+                    from: roe,
+                    format: .pretty,
+                    sign: .never
+                ) + ")",
                 color: realizedPnL >= 0 ? .rising : .falling
             )
             let localizedClosePrice = decimalClosePrice?.formatted(order.priceFormatStyle)

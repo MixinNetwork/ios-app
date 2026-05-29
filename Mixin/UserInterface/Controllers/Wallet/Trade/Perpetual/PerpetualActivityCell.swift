@@ -64,7 +64,7 @@ final class PerpetualActivityCell: UICollectionViewCell {
             }
         case let .close(pnl, _):
             changeLabel.marketColor = pnl.color
-            changeLabel.text = pnl.abbreviated
+            changeLabel.text = pnl.aggregated
         }
     }
     

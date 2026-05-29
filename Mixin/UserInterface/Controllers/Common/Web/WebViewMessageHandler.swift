@@ -18,6 +18,7 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
         case getAssets = "getAssets"
         case web3Bridge = "_mw_"
         case signBotSignature = "signBotSignature"
+        case openInBrowser = "openInBrowser"
     }
     
     enum Message {
@@ -28,6 +29,7 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
         case getAssets(assetIDs: [String], callback: String)
         case web3Bridge([String: Any])
         case signBotSignature(callback: String)
+        case openInBrowser(URL)
     }
     
     private enum AppSigningError: Error {
@@ -157,7 +159,40 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
                     }
                 }
             }
+        case .openInBrowser:
+            guard let urlString = message.body as? String,
+                  let url = Self.openInBrowserURL(from: urlString)
+            else {
+                return
+            }
+            delegate?.webViewMessageHander(self, didReceiveMessage: .openInBrowser(url))
         }
     }
-    
+
+}
+
+extension WebViewMessageHandler {
+
+    static func openInBrowserURL(from value: String) -> URL? {
+        let urlString = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !urlString.isEmpty,
+              !["undefined", "null"].contains(urlString.lowercased())
+        else {
+            return nil
+        }
+
+        let normalizedURLString: String
+        if URL(string: urlString)?.scheme == nil {
+            normalizedURLString = "http://\(urlString)"
+        } else {
+            normalizedURLString = urlString
+        }
+        guard let url = URL(string: normalizedURLString),
+              ["http", "https"].contains(url.scheme?.lowercased() ?? "")
+        else {
+            return nil
+        }
+        return url
+    }
+
 }

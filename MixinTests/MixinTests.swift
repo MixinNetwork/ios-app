@@ -14,6 +14,15 @@ import CryptoKit
 
 struct MixinTests {
     
+    @Test func testWebBridgeOpenInBrowserURLValidation() {
+        #expect(WebViewMessageHandler.openInBrowserURL(from: " https://mixin.one/pay ")?.absoluteString == "https://mixin.one/pay")
+        #expect(WebViewMessageHandler.openInBrowserURL(from: "mixin.one/pay")?.absoluteString == "http://mixin.one/pay")
+        #expect(WebViewMessageHandler.openInBrowserURL(from: "") == nil)
+        #expect(WebViewMessageHandler.openInBrowserURL(from: "undefined") == nil)
+        #expect(WebViewMessageHandler.openInBrowserURL(from: "javascript:alert(1)") == nil)
+        #expect(WebViewMessageHandler.openInBrowserURL(from: "mixin://codes/test") == nil)
+    }
+
     @Test func testP2PKHDerivation() {
         let seed = Data(hexEncodedString: "67f93560761e20617de26e0cb84f7234aaf373ed2e66295c3d7397e6d7ebe882ea396d5d293808b0defd7edd2babd4c091ad942e6a9351e6d075a29d4df872af")!
         let key = ExtendedKey(seed: seed, curve: .secp256k1)

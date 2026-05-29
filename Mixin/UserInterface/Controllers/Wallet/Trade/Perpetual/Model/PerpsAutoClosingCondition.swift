@@ -147,10 +147,10 @@ extension PerpsAutoClosingCondition {
             marginChange = max(-margin, marginChange)
         }
         var localizedChange = CurrencyFormatter.localizedString(
-            from: marginChange * Currency.current.decimalRate,
+            from: marginChange,
             format: .fiatMoneyPretty,
             sign: .always,
-            symbol: .currencySymbol
+            symbol: .dollarSign
         )
         switch behavior {
         case .takeProfit:
@@ -170,10 +170,10 @@ extension PerpsAutoClosingCondition {
     func maxChange(margin: Decimal) -> String {
         assert(margin != 0, "Only results 0")
         var maxChange = CurrencyFormatter.localizedString(
-            from: margin * percentage * Currency.current.decimalRate,
+            from: margin * percentage,
             format: .fiatMoneyPretty,
             sign: .always,
-            symbol: .currencySymbol
+            symbol: .dollarSign
         )
         switch behavior {
         case .takeProfit:

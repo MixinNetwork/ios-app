@@ -35,20 +35,20 @@ public struct PerpetualPositionValue {
         let decimalPnL = Decimal(string: pnl, locale: .enUSPOSIX) ?? 0
         
         let value = CurrencyFormatter.localizedString(
-            from: decimalMargin * Currency.current.decimalRate,
+            from: decimalMargin,
             format: .fiatMoneyPretty,
             sign: .never,
-            symbol: .currencySymbol
+            symbol: .dollarSign
         )
         
         let changeInFiatMoney = if decimalPnL == 0 {
             Currency.current.symbol + zeroWith2Fractions
         } else {
             CurrencyFormatter.localizedString(
-                from: decimalPnL * Currency.current.decimalRate,
+                from: decimalPnL,
                 format: .fiatMoneyPretty,
                 sign: .always,
-                symbol: .currencySymbol
+                symbol: .dollarSign
             )
         }
         

@@ -230,10 +230,10 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
             sign: .never,
             symbol: .custom(marketViewModel.market.tokenSymbol)
         ) + " (" + CurrencyFormatter.localizedString(
-            from: addingExposure * Currency.current.decimalRate,
+            from: addingExposure,
             format: .fiatMoneyPretty,
             sign: .never,
-            symbol: .currencySymbol
+            symbol: .dollarSign
         ) + ")"
         totalSizeContentLabel.text = CurrencyFormatter.localizedString(
             from: positionViewModel.decimalQuantity + addingExposure / marketViewModel.decimalPrice,
@@ -241,10 +241,10 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
             sign: .never,
             symbol: .custom(marketViewModel.market.tokenSymbol)
         ) + " (" + CurrencyFormatter.localizedString(
-            from: (openedMargin + marginAmount) * leverageMultiplier * Currency.current.decimalRate,
+            from: (openedMargin + marginAmount) * leverageMultiplier,
             format: .fiatMoneyPretty,
             sign: .never,
-            symbol: .currencySymbol
+            symbol: .dollarSign
         ) + ")"
         if marginAmount > 0 {
             let liquidationPrice = switch positionViewModel.side {

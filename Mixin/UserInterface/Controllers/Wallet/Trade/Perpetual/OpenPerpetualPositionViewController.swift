@@ -418,10 +418,10 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
             sign: .never,
             symbol: .custom(underlyingAsset.market.tokenSymbol)
         ) + " (" + CurrencyFormatter.localizedString(
-            from: orderValue * Currency.current.decimalRate,
+            from: orderValue,
             format: .fiatMoneyPretty,
             sign: .never,
-            symbol: .currencySymbol,
+            symbol: .dollarSign,
         ) + ")"
         if marginAmount > 0 {
             let liquidationPrice = switch side {

@@ -48,10 +48,10 @@ struct PerpetualPositionViewModel {
         let margin = Decimal(string: position.margin, locale: .enUSPOSIX)
         let roe = Decimal(string: position.roe, locale: .enUSPOSIX)
         let localizedPnL = CurrencyFormatter.localizedString(
-            from: pnl * Currency.current.decimalRate,
+            from: pnl,
             format: .fiatMoneyPretty,
             sign: .always,
-            symbol: .currencySymbol
+            symbol: .dollarSign
         )
         
         self.wallet = wallet
@@ -87,10 +87,10 @@ struct PerpetualPositionViewModel {
             self.roeWithoutSign = roeWithoutSign
             self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
             self.orderValueInFiatMoney = CurrencyFormatter.localizedString(
-                from: margin * Decimal(position.leverage) * Currency.current.decimalRate,
+                from: margin * Decimal(position.leverage),
                 format: .fiatMoneyPretty,
                 sign: .never,
-                symbol: .currencySymbol,
+                symbol: .dollarSign,
             )
         } else {
             self.roeWithSign = nil
@@ -128,10 +128,10 @@ struct PerpetualPositionViewModel {
         self.decimalMargin = margin
         self.margin = if let margin {
             CurrencyFormatter.localizedString(
-                from: margin * Currency.current.decimalRate,
+                from: margin,
                 format: .fiatMoneyPretty,
                 sign: .never,
-                symbol: .currencySymbol
+                symbol: .dollarSign
             )
         } else {
             nil

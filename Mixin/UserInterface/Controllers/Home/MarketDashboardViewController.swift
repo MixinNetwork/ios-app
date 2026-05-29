@@ -479,7 +479,7 @@ extension MarketDashboardViewController {
                     caption: R.string.localizable.global_market_cap(),
                     primary: NamedLargeNumberFormatter.string(
                         number: market.marketCap * Currency.current.decimalRate,
-                        currencyPrefix: true
+                        currencyPrefix: .current
                     ),
                     secondary: NumberFormatter.percentage.string(
                         decimal: market.marketCapChangePercentage / 100
@@ -490,7 +490,7 @@ extension MarketDashboardViewController {
                     caption: R.string.localizable.volume_24h(),
                     primary: NamedLargeNumberFormatter.string(
                         number: market.volume * Currency.current.decimalRate,
-                        currencyPrefix: true
+                        currencyPrefix: .current
                     ),
                     secondary: NumberFormatter.percentage.string(
                         decimal: market.volumeChangePercentage / 100

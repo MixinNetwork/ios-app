@@ -4,6 +4,11 @@ public enum NamedLargeNumberFormatter {
     
     // https://en.wikipedia.org/wiki/Names_of_large_numbers
     
+    public enum CurrencyPrefix {
+        case current
+        case usd
+    }
+    
     private static let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -23,7 +28,7 @@ public enum NamedLargeNumberFormatter {
     private static let billion      = Decimal(sign: .plus, exponent: 9, significand: 1)
     private static let million      = Decimal(sign: .plus, exponent: 6, significand: 1)
     
-    public static func string(number: Decimal, currencyPrefix: Bool) -> String? {
+    public static func string(number: Decimal, currencyPrefix: CurrencyPrefix?) -> String? {
         let suffix: String
         let significand: Decimal
         switch number {
@@ -52,9 +57,12 @@ public enum NamedLargeNumberFormatter {
         guard let string = formatter.string(decimal: significand) else {
             return nil
         }
-        if currencyPrefix {
+        switch currencyPrefix {
+        case .current:
             return Currency.current.symbol + string + suffix
-        } else {
+        case .usd:
+            return "$" + string + suffix
+        case nil:
             return string + suffix
         }
     }

@@ -115,10 +115,10 @@ struct PerpetualActivityViewModel {
             let realizedPnL = Decimal(string: order.realizedPnL, locale: .enUSPOSIX) ?? 0
             let roe = Decimal(string: order.roe, locale: .enUSPOSIX) ?? 0
             let prettyPnL = CurrencyFormatter.localizedString(
-                from: realizedPnL * Currency.current.decimalRate,
+                from: realizedPnL,
                 format: .fiatMoneyPretty,
                 sign: .always,
-                symbol: .currencySymbol
+                symbol: .dollarSign
             )
             let roeRepresentation = " (" + PercentageFormatter.string(
                 from: roe,
@@ -128,10 +128,10 @@ struct PerpetualActivityViewModel {
             let pnl = PnL(
                 abbreviated: prettyPnL + roeRepresentation,
                 precised: CurrencyFormatter.localizedString(
-                    from: realizedPnL * Currency.current.decimalRate,
+                    from: realizedPnL,
                     format: .fiatMoneyPrecision,
                     sign: .always,
-                    symbol: .currencySymbol
+                    symbol: .dollarSign
                 ) + roeRepresentation,
                 percentage: PercentageFormatter.string(
                     from: roe,

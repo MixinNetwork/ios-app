@@ -784,7 +784,7 @@ extension MarketViewController {
                         infos.append(Info.contentNotApplicable(title: title))
                     default:
                         let value = marketCap * Currency.current.decimalRate
-                        if let content = NamedLargeNumberFormatter.string(number: value, currencyPrefix: true) {
+                        if let content = NamedLargeNumberFormatter.string(number: value, currencyPrefix: .current) {
                             infos.append(Info(title: title, primaryContent: content))
                         }
                     }
@@ -795,7 +795,7 @@ extension MarketViewController {
                     case 0:
                         infos.append(Info.contentNotApplicable(title: title))
                     default:
-                        if let content = NamedLargeNumberFormatter.string(number: circulatingSupply, currencyPrefix: false) {
+                        if let content = NamedLargeNumberFormatter.string(number: circulatingSupply, currencyPrefix: nil) {
                             infos.append(Info(title: title, primaryContent: content + " " + market.symbol))
                         }
                     }
@@ -806,7 +806,7 @@ extension MarketViewController {
                     case 0:
                         infos.append(Info.contentNotApplicable(title: title))
                     default:
-                        if let content = NamedLargeNumberFormatter.string(number: totalSupply, currencyPrefix: false) {
+                        if let content = NamedLargeNumberFormatter.string(number: totalSupply, currencyPrefix: nil) {
                             infos.append(Info(title: title, primaryContent: content + " " + market.symbol))
                         }
                     }

@@ -101,7 +101,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         changeLabel.text = viewModel.change
         changeLabel.marketColor = viewModel.changeColor
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        chartView.currentPrice = viewModel.decimalPrice * Currency.current.decimalRate
+        chartView.currentPrice = viewModel.decimalPrice
     }
     
     func load(chart: Chart, priceFormatStyle: Decimal.FormatStyle.Currency) {

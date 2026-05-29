@@ -202,9 +202,7 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
         )
         
         var tags = ["direction": side.rawValue]
-        if let source = UserOperationAnalytics.tradeSource {
-            tags["source"] = source.rawValue
-        }
+        tags["source"] = UserOperationAnalytics.tradeSource?.rawValue
         reporter.report(event: .tradePerpsOpenPositionStart, tags: tags)
     }
     

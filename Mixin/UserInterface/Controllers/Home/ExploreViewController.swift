@@ -138,7 +138,6 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
             }
             withAccountRecoveryChecked { [weak self] in
                 self?.navigationController?.pushViewController(trade, animated: true)
-                reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "explore"])
             }
         case .membership:
             if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {

@@ -271,10 +271,6 @@ extension TradeOrderViewController: PillActionView.Delegate {
                     UserOperationAnalytics.tradeSource = .tradeDetail
                     viewControllers.append(trade)
                     navigationController.setViewControllers(viewControllers, animated: true)
-                    reporter.report(
-                        event: .tradeStart,
-                        tags: ["wallet": "main", "source": "trade_detail"]
-                    )
                 }
             }
         case .cancelOrder:

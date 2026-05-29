@@ -672,10 +672,6 @@ extension MarketViewController: PillActionView.Delegate {
                     )
                     if let trade {
                         self.navigationController?.pushViewController(trade, animated: true)
-                        reporter.report(
-                            event: .tradeStart,
-                            tags: ["wallet": "main", "source": "market_detail"]
-                        )
                     }
                 }
             }

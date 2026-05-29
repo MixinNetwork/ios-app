@@ -86,10 +86,6 @@ class UrlWindow {
                                     viewModel: viewModel,
                                 )
                                 navigationController.pushViewController(market, animated: true)
-                                reporter.report(
-                                    event: .tradeStart,
-                                    tags: ["wallet": "main", "source": "schema"]
-                                )
                             }
                         case .failure(let error):
                             hud.set(style: .error, text: error.localizedDescription)
@@ -114,10 +110,6 @@ class UrlWindow {
                     )
                     if let navigationController = UIApplication.homeNavigationController, let trade {
                         navigationController.pushViewController(trade, animated: true)
-                        reporter.report(
-                            event: .tradeStart,
-                            tags: ["wallet": "main", "source": "schema"]
-                        )
                     }
                 }
                 return true

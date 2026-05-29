@@ -18,8 +18,14 @@ public struct ExternalTransfer {
     ]
     
     private static let chainIDs = [
-        "1"   : ChainID.ethereum,
-        "137" : ChainID.polygon,
+        "1"     : ChainID.ethereum,
+        "137"   : ChainID.polygon,
+        "56"    : ChainID.bnbSmartChain,
+        "8453"  : ChainID.base,
+        "42161" : ChainID.arbitrumOne,
+        "10"    : ChainID.opMainnet,
+        "43114" : ChainID.avalancheCChain,
+        "999"   : ChainID.hyperEVM,
     ]
     
     public let chainID: String

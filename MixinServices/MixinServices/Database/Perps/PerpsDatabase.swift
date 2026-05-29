@@ -134,8 +134,12 @@ public final class PerpsDatabase: Database {
         }
         
         migrator.registerMigration("activity_pay_amount") { db in
-            try db.execute(sql: "DELETE FROM perps_orders")
-            try db.execute(sql: "ALTER TABLE perps_orders ADD COLUMN pay_amount TEXT NOT NULL")
+            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(perps_orders)")
+            let columnNames = infos.map(\.name)
+            if !columnNames.contains("pay_amount") {
+                try db.execute(sql: "DELETE FROM perps_orders")
+                try db.execute(sql: "ALTER TABLE perps_orders ADD COLUMN pay_amount TEXT NOT NULL")
+            }
         }
         
         return migrator

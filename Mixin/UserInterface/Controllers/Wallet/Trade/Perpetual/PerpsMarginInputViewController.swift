@@ -247,6 +247,7 @@ extension PerpsMarginInputViewController: AddTokenMethodSelectorViewController.D
                 let count = viewControllers.count - index
                 viewControllers.removeLast(count)
             }
+            UserOperationAnalytics.tradeSource = .perpsMarginInput
             let trade = TradeViewController(
                 wallet: .privacy,
                 trading: .simpleSpot,
@@ -255,7 +256,6 @@ extension PerpsMarginInputViewController: AddTokenMethodSelectorViewController.D
                 referral: nil
             )
             if let trade {
-                UserOperationAnalytics.tradeSource = .perpsMarginInput
                 viewControllers.append(trade)
                 navigationController.setViewControllers(viewControllers, animated: true)
             }

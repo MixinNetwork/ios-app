@@ -87,15 +87,17 @@ extension RecoveryKitViewController: UITableViewDelegate {
         let next: UIViewController
         switch indexPath.row {
         case 0:
-            next = if let number = account.phone, !account.isAnonymous {
-                ChangeMobileNumberViewController(phoneNumber: number)
+            if let number = account.phone, !account.isAnonymous {
+                next = ChangeMobileNumberViewController(phoneNumber: number)
             } else {
-                AddMobileNumberViewController()
+                UserOperationAnalytics.addMobileNumberSource = .recoveryKitGuide
+                next = AddMobileNumberViewController()
             }
         case 1:
             next = ExportMnemonicPhrasesViewController()
         default:
             if account.isAnonymous {
+                UserOperationAnalytics.addMobileNumberSource = .recoveryKitGuide
                 let tip = PopupTipViewController(tip: .addMobileNumber(.setRecoveryContact))
                 present(tip, animated: true)
                 return

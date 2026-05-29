@@ -18,6 +18,7 @@ extension Account {
         onVerificationNeeded: (PopupTipViewController) -> Void,
     ) {
         if isAnonymous {
+            UserOperationAnalytics.addMobileNumberSource = .buyGuide
             let tip = PopupTipViewController(tip: .addMobileNumber(.buyToken))
             onVerificationNeeded(tip)
         } else if isPhoneVerificationValid {

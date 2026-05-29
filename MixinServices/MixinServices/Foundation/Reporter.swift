@@ -22,6 +22,9 @@ open class Reporter {
         case loginVerifyPIN         = "login_pin_verify"
         case loginEnd               = "login_end"
         
+        case addPhoneStart  = "add_phone_start"
+        case addPhoneEnd    = "add_phone_end"
+        
         case tradeSpotStart     = "trade_spot_start"
         case tradeSpotEnd       = "trade_spot_end"
         case tradeTokenSelect   = "trade_token_select"

@@ -2,7 +2,7 @@ import Foundation
 
 enum UserOperationAnalytics {
     
-    enum Source: String {
+    enum TradeSource: String {
         case walletHome         = "wallet_home"
         case moreExplore        = "more_explore"
         case appCard            = "app_card"
@@ -15,6 +15,18 @@ enum UserOperationAnalytics {
         case scheme             = "scheme"
     }
     
-    static var tradeSource: Source?
+    static var tradeSource: TradeSource?
+    
+}
+
+extension UserOperationAnalytics {
+    
+    enum AddMobileNumberSource: String {
+        case recoveryKitGuide   = "recovery_kit_guide"
+        case buyGuide           = "buy_guide"
+        case settings           = "settings"
+    }
+    
+    static var addMobileNumberSource: AddMobileNumberSource?
     
 }

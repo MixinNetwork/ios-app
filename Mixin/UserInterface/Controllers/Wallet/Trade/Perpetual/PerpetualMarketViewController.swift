@@ -253,6 +253,7 @@ final class PerpetualMarketViewController: UIViewController {
             BadgeManager.shared.setHasViewed(identifier: .perpsManual)
             let manual = PerpsManual.viewController()
             present(manual, animated: true)
+            reporter.report(event: .tradePerpsGuide, tags: ["source": "first_guide"])
         }
     }
     
@@ -309,6 +310,7 @@ final class PerpetualMarketViewController: UIViewController {
         }
         let preview = ClosePerpetualPositionPreviewViewController(viewModel: viewModel)
         present(preview, animated: true)
+        reporter.report(event: .tradePerpsClosePositionStart)
     }
     
     @objc private func reloadMarket(_ notification: Notification) {
@@ -420,6 +422,10 @@ final class PerpetualMarketViewController: UIViewController {
     private func viewActivities() {
         let activities = PerpetualActivitiesViewController(wallet: wallet)
         navigationController?.pushViewController(activities, animated: true)
+        reporter.report(
+            event: .tradePerpsActivity,
+            tags: ["source": "perps_market"]
+        )
     }
     
     private func handleTPSLUpdate(result: MixinAPI.Result<PerpetualPosition>) {
@@ -761,9 +767,11 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
             let viewModel = viewModels[indexPath.item]
             let activity = PerpetualActivityViewController(wallet: wallet, viewModel: viewModel)
             navigationController?.pushViewController(activity, animated: true)
+            reporter.report(event: .tradePerpsActivityDetail, tags: ["source": "perps_market"])
         case .introduction:
             let manual = PerpsManual.viewController()
             present(manual, animated: true)
+            reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_detail_card"])
         }
     }
     
@@ -787,6 +795,7 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
     func perpetualMarketOpenPositionCell(_ cell: PerpetualMarketOpenPositionCell, requestManual page: PerpsManual.Page) {
         let manual = PerpsManual.viewController(initialPage: page)
         present(manual, animated: true)
+        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_detail_card"])
     }
     
     func perpetualMarketOpenPositionCellAskToShare(_ cell: PerpetualMarketOpenPositionCell) {

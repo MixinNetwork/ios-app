@@ -662,6 +662,7 @@ extension MarketViewController: PillActionView.Delegate {
                 alert(R.string.localizable.swap_not_supported(market.symbol))
             } else {
                 pickSingleToken { token in
+                    UserOperationAnalytics.tradeSource = .marketDetail
                     let trade = TradeViewController(
                         wallet: .privacy,
                         trading: nil,

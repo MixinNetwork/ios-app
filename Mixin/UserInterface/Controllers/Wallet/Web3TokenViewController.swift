@@ -235,6 +235,7 @@ extension Web3TokenViewController: TokenActionView.Delegate {
                 self?.send()
             }
         case .trade:
+            UserOperationAnalytics.tradeSource = .assetDetail
             let trade = TradeViewController(
                 wallet: .common(wallet),
                 trading: nil,

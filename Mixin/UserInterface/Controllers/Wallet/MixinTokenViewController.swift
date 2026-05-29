@@ -192,6 +192,7 @@ extension MixinTokenViewController: TokenActionView.Delegate {
                 self?.send()
             }
         case .trade:
+            UserOperationAnalytics.tradeSource = .assetDetail
             let trade = TradeViewController(
                 wallet: .privacy,
                 trading: nil,

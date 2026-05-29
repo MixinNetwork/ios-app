@@ -125,6 +125,7 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
             reporter.report(event: .buyStart, tags: ["wallet": "main", "source": "explore"])
         case .trade:
             BadgeManager.shared.setHasViewed(identifier: .trade)
+            UserOperationAnalytics.tradeSource = .moreExplore
             let trade = TradeViewController(
                 wallet: .privacy,
                 trading: nil,

@@ -177,6 +177,7 @@ extension PerpetualActivitiesViewController: UICollectionViewDataSource {
             cell.onHelp = { [weak self] in
                 let manual = PerpsManual.viewController()
                 self?.present(manual, animated: true)
+                reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_activities"])
             }
             return cell
         }
@@ -202,6 +203,7 @@ extension PerpetualActivitiesViewController: UICollectionViewDelegate {
         let viewModel = viewModels[indexPath.item]
         let activity = PerpetualActivityViewController(wallet: wallet, viewModel: viewModel)
         navigationController?.pushViewController(activity, animated: true)
+        reporter.report(event: .tradePerpsActivityDetail, tags: ["source": "perps_activity_list"])
     }
     
 }

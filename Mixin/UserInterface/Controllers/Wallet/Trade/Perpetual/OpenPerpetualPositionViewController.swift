@@ -200,6 +200,12 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
             leverageMultiplier: leverageMultiplier,
             underlyingAsset: viewModel
         )
+        
+        var tags = ["direction": side.rawValue]
+        if let source = UserOperationAnalytics.tradeSource {
+            tags["source"] = source.rawValue
+        }
+        reporter.report(event: .tradePerpsOpenPositionStart, tags: tags)
     }
     
     override func editMarginAmount(_ textField: UITextField) {
@@ -255,17 +261,20 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
     @IBAction func presentAutoClosingManual(_ sender: Any) {
         let manual = PerpsManual.viewController(initialPage: .autoClosing)
         present(manual, animated: true)
+        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_open_position_auto_closing"])
     }
     
     @IBAction func presentOrderValueManual(_ sender: Any) {
         let manual = PerpsManual.viewController(initialPage: .size)
         present(manual, animated: true)
+        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_open_position_size"])
     }
     
     @IBAction func review(_ sender: ConfigurationBasedBusyButton) {
         guard let marginToken else {
             return
         }
+        reporter.report(event: .tradePerpsPreview)
         marginAmountTextField.resignFirstResponder()
         let request = OpenPerpetualOrderRequest(
             assetID: marginToken.assetID,
@@ -328,10 +337,10 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "open_perps_position"])
+        reporter.report(event: .customerServiceDialog, tags: ["source": "perps_open_position"])
     }
     
-    private func inputCustomeLeverageMultiplier() {
+    private func inputCustomLeverageMultiplier() {
         marginAmountTextField.resignFirstResponder()
         let input = LeverageMultiplierInputViewController(
             side: side,
@@ -484,7 +493,8 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         switch multipliers[indexPath.item] {
         case .custom:
-            inputCustomeLeverageMultiplier()
+            reporter.report(event: .tradePerpsLeverageSelect, tags: ["leverage": "custom_tab"])
+            inputCustomLeverageMultiplier()
             return false
         default:
             return true
@@ -494,7 +504,8 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         switch multipliers[indexPath.item] {
         case .custom:
-            inputCustomeLeverageMultiplier()
+            reporter.report(event: .tradePerpsLeverageSelect, tags: ["leverage": "custom_tab"])
+            inputCustomLeverageMultiplier()
         default:
             break
         }
@@ -505,8 +516,10 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
         marginAmountTextField.resignFirstResponder()
         switch multipliers[indexPath.item] {
         case .fixed(let leverage):
+            reporter.report(event: .tradePerpsLeverageSelect, tags: ["leverage": "\(leverage)x"])
             inputLeverageMultiplier(value: leverage)
         case .max:
+            reporter.report(event: .tradePerpsLeverageSelect, tags: ["leverage": "max"])
             inputLeverageMultiplier(value: viewModel.maxLeverageMultiplier)
         case .custom:
             break
@@ -518,7 +531,8 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
 extension OpenPerpetualPositionViewController: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        inputCustomeLeverageMultiplier()
+        reporter.report(event: .tradePerpsLeverageSelect, tags: ["leverage": "custom_input"])
+        inputCustomLeverageMultiplier()
         return false
     }
     

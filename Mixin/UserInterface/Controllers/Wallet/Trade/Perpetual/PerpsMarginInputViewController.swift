@@ -51,12 +51,15 @@ class PerpsMarginInputViewController: UIViewController {
                 accessoryView.items = [
                     .init(title: "25%") { [weak self] in
                         self?.inputAmount(withBalanceMultipliedBy: 0.25)
+                        reporter.report(event: .tradePerpsAmountInputPercent, tags: ["percent": "25%"])
                     },
                     .init(title: "50%") { [weak self] in
                         self?.inputAmount(withBalanceMultipliedBy: 0.5)
+                        reporter.report(event: .tradePerpsAmountInputPercent, tags: ["percent": "50%"])
                     },
                     .init(title: R.string.localizable.max()) { [weak self] in
                         self?.inputAmount(withBalanceMultipliedBy: 1)
+                        reporter.report(event: .tradePerpsAmountInputPercent, tags: ["percent": "max"])
                     },
                 ]
                 accessoryView.onDone = { [weak textField=marginAmountTextField] in
@@ -112,6 +115,7 @@ class PerpsMarginInputViewController: UIViewController {
     
     @IBAction func inputTokenBalance(_ sender: Any) {
         inputAmount(withBalanceMultipliedBy: 1)
+        reporter.report(event: .tradePerpsAmountInputBalance)
     }
     
     @IBAction func depositMarginToken(_ sender: Any) {
@@ -251,6 +255,7 @@ extension PerpsMarginInputViewController: AddTokenMethodSelectorViewController.D
                 referral: nil
             )
             if let trade {
+                UserOperationAnalytics.tradeSource = .perpsMarginInput
                 viewControllers.append(trade)
                 navigationController.setViewControllers(viewControllers, animated: true)
             }

@@ -104,6 +104,7 @@ class UrlWindow {
                         let mode = AppGroupUserDefaults.Wallet.tradeMode
                         trading = TradeViewController.Trading(rawValue: mode) ?? .simpleSpot
                     }
+                    UserOperationAnalytics.tradeSource = .scheme
                     let trade = TradeViewController(
                         wallet: .privacy,
                         trading: trading,

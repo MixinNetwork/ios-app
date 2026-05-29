@@ -330,6 +330,7 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
                 self?.present(selector, animated: true, completion: nil)
             }
         case .trade:
+            UserOperationAnalytics.tradeSource = .walletHome
             let trade = TradeViewController(
                 wallet: .privacy,
                 trading: nil,

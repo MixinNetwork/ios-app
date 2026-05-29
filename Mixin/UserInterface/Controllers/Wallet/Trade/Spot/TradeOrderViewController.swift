@@ -268,6 +268,7 @@ extension TradeOrderViewController: PillActionView.Delegate {
                     referral: nil
                 )
                 if let trade {
+                    UserOperationAnalytics.tradeSource = .tradeDetail
                     viewControllers.append(trade)
                     navigationController.setViewControllers(viewControllers, animated: true)
                     reporter.report(

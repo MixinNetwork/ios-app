@@ -121,6 +121,8 @@ extension AssetItem {
             return assetKey.isDigitsOnly ? "TRON (TRC-10)" : "TRON (TRC-20)"
         case ChainID.bitShares:
             return "BitShares"
+        case ChainID.hyperEVM:
+            return "HyperEVM"
         default:
             return chain?.name
         }
@@ -147,6 +149,8 @@ extension AssetItem {
                 return "Polygon"
             case ChainID.lightning:
                 return "Lightning"
+            case ChainID.hyperEVM:
+                return "HyperEVM"
             default:
                 return nil
             }

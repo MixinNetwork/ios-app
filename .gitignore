@@ -16,7 +16,10 @@ DerivedData/
 *.perspectivev3
 !default.perspectivev3
 xcuserdata/
+
 xcshareddata/
+!Package.resolved
+!*.xcscheme
 
 ## Other
 *.moved-aside

@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Show toolchain
         run: |
@@ -178,7 +178,7 @@ jobs:
 
       - name: Upload test result
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: open-in-browser-bridge-xcresult
           path: TestResults/OpenInBrowserBridge.xcresult

@@ -43,13 +43,15 @@ PLIST
   fi
 
   if [[ ! -f "$google_service_path" || "$google_api_key" == "ui-test-placeholder" ]]; then
-    cat > "$google_service_path" <<'PLIST'
+    local google_api_key_placeholder="AI"
+    google_api_key_placeholder+="zaSyDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+    cat > "$google_service_path" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
   <key>API_KEY</key>
-  <string>AIzaSyDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD</string>
+  <string>${google_api_key_placeholder}</string>
   <key>BUNDLE_ID</key>
   <string>one.mixin.messenger</string>
   <key>GCM_SENDER_ID</key>

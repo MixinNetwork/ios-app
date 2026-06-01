@@ -12,6 +12,8 @@
 		277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277FF7021F909A1200DBB2EB /* AppDelegate.swift */; };
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
+		89566E0D7583485F87E9A144 /* OpenInBrowserBridgeUITestHarness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160BCBA0C9564E95AF4312D6 /* OpenInBrowserBridgeUITestHarness.swift */; };
+		8D0819AC43644E8C8E4AA465 /* OpenInBrowserBridgeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E64AB2D20747BFAB9D6EC2 /* OpenInBrowserBridgeUITests.swift */; };
 		52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */; };
 		5260A8542DDF4BAD00ED9714 /* TokenReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5260A8532DDF4BAD00ED9714 /* TokenReceiverViewController.swift */; };
 		5260A85F2DDF556500ED9714 /* Web3AddressValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5260A85E2DDF556500ED9714 /* Web3AddressValidator.swift */; };
@@ -1849,6 +1851,13 @@
 			remoteGlobalIDString = 277FF6FE1F909A1200DBB2EB;
 			remoteInfo = Mixin;
 		};
+		19EE078B45354F6796337ACF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 277FF6F71F909A1200DBB2EB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 277FF6FE1F909A1200DBB2EB;
+			remoteInfo = Mixin;
+		};
 		DFE861C12422673B009B1833 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 277FF6F71F909A1200DBB2EB /* Project object */;
@@ -1900,6 +1909,9 @@
 		277FF70B1F909A1200DBB2EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		277FF70E1F909A1200DBB2EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		277FF7101F909A1200DBB2EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		160BCBA0C9564E95AF4312D6 /* OpenInBrowserBridgeUITestHarness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInBrowserBridgeUITestHarness.swift; sourceTree = "<group>"; };
+		3516BC0DC4464E599CE0332A /* MixinUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MixinUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		60E64AB2D20747BFAB9D6EC2 /* OpenInBrowserBridgeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInBrowserBridgeUITests.swift; sourceTree = "<group>"; };
 		46EBB0CE75C6636B3D8BA6D0 /* Pods-MixinShare.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinShare.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinShare/Pods-MixinShare.release.xcconfig"; sourceTree = "<group>"; };
 		4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
@@ -3811,6 +3823,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B818C68BD99F48A9BA856627 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DFE861B62422673B009B1833 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3852,6 +3871,7 @@
 				DFE861BA2422673B009B1833 /* MixinShare */,
 				94656C182795395D006C3F1D /* MixinDebug */,
 				94ED306A2E269B4E00B99837 /* MixinTests */,
+				A4CE654CA75448E4811BD8D1 /* MixinUITests */,
 				277FF7001F909A1200DBB2EB /* Products */,
 				506A45AFF37DF0AFA7DD4EEE /* Pods */,
 				DBADD0FED15BCB65F6FF70EB /* Frameworks */,
@@ -3866,6 +3886,7 @@
 				DFE861B92422673B009B1833 /* MixinShare.appex */,
 				94656C172795395D006C3F1D /* MixinDebug.app */,
 				94ED305A2E269B2A00B99837 /* MixinTests.xctest */,
+				3516BC0DC4464E599CE0332A /* MixinUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3881,6 +3902,7 @@
 				DF5D9F1C1F9C77620036D5FD /* UserInterface */,
 				DF5D9F341F9C95F20036D5FD /* Resources */,
 				DF5D9F481F9CDBDE0036D5FD /* Supporting Files */,
+				6AECE2F157A24D0C850954C3 /* UITesting */,
 				DF8CECCE1FC2B1C900E40064 /* Mixin-Bridging-Header.h */,
 				9424C64A259246B600FFDAE0 /* main.swift */,
 				94ECCCAA261A029F004E9E2A /* Window.swift */,
@@ -5371,6 +5393,22 @@
 			path = MixinTests;
 			sourceTree = "<group>";
 		};
+		A4CE654CA75448E4811BD8D1 /* MixinUITests */ = {
+			isa = PBXGroup;
+			children = (
+				60E64AB2D20747BFAB9D6EC2 /* OpenInBrowserBridgeUITests.swift */,
+			);
+			path = MixinUITests;
+			sourceTree = "<group>";
+		};
+		6AECE2F157A24D0C850954C3 /* UITesting */ = {
+			isa = PBXGroup;
+			children = (
+				160BCBA0C9564E95AF4312D6 /* OpenInBrowserBridgeUITestHarness.swift */,
+			);
+			path = UITesting;
+			sourceTree = "<group>";
+		};
 		94ED3EF32990DB8D003BC236 /* Web3 */ = {
 			isa = PBXGroup;
 			children = (
@@ -6761,6 +6799,24 @@
 			productReference = 94ED305A2E269B2A00B99837 /* MixinTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		7BE0202F24D7D46D00C3F884 /* MixinUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7D37B6CB312849FC836BDF83 /* Build configuration list for PBXNativeTarget "MixinUITests" */;
+			buildPhases = (
+				894A5E20ED8048FF83B6A562 /* Sources */,
+				B818C68BD99F48A9BA856627 /* Frameworks */,
+				E28475FC3CBE484F89619179 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FC1C3ADFB7C042A39BDF2F3D /* PBXTargetDependency */,
+			);
+			name = MixinUITests;
+			productName = MixinUITests;
+			productReference = 3516BC0DC4464E599CE0332A /* MixinUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		DFE861B82422673B009B1833 /* MixinShare */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DFE861C62422673B009B1833 /* Build configuration list for PBXNativeTarget "MixinShare" */;
@@ -6839,6 +6895,10 @@
 						CreatedOnToolsVersion = 16.4;
 						TestTargetID = 277FF6FE1F909A1200DBB2EB;
 					};
+					7BE0202F24D7D46D00C3F884 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 277FF6FE1F909A1200DBB2EB;
+					};
 					DFE861B82422673B009B1833 = {
 						CreatedOnToolsVersion = 11.3.1;
 						ProvisioningStyle = Automatic;
@@ -6881,6 +6941,7 @@
 				DFE861B82422673B009B1833 /* MixinShare */,
 				94656C162795395D006C3F1D /* MixinDebug */,
 				94ED30592E269B2A00B99837 /* MixinTests */,
+				7BE0202F24D7D46D00C3F884 /* MixinUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -7286,6 +7347,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		94ED30582E269B2A00B99837 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E28475FC3CBE484F89619179 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -8280,6 +8348,7 @@
 				7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */,
 				944C60FC2B6A896400C7DF06 /* AuthenticationPreviewHeaderView.swift in Sources */,
 				277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */,
+				89566E0D7583485F87E9A144 /* OpenInBrowserBridgeUITestHarness.swift in Sources */,
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
 				94B7FF4C2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.swift in Sources */,
 				94DF7E0E28DC1697006E415B /* AcknowledgementViewController.swift in Sources */,
@@ -8906,6 +8975,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		894A5E20ED8048FF83B6A562 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D0819AC43644E8C8E4AA465 /* OpenInBrowserBridgeUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DFE861B52422673B009B1833 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8951,6 +9028,11 @@
 			isa = PBXTargetDependency;
 			target = 277FF6FE1F909A1200DBB2EB /* Mixin */;
 			targetProxy = 94ED305E2E269B2A00B99837 /* PBXContainerItemProxy */;
+		};
+		FC1C3ADFB7C042A39BDF2F3D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 277FF6FE1F909A1200DBB2EB /* Mixin */;
+			targetProxy = 19EE078B45354F6796337ACF /* PBXContainerItemProxy */;
 		};
 		DFE861C22422673B009B1833 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -9459,6 +9541,62 @@
 			};
 			name = Release;
 		};
+		8ED9A5F3FF334E128C8BF6DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.MixinUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Mixin;
+			};
+			name = Debug;
+		};
+		9513EC24D1C946138C662BF8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.MixinUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Mixin;
+			};
+			name = Release;
+		};
 		DFE861C42422673B009B1833 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 60A0F3EECBE8095220D78A70 /* Pods-MixinShare.debug.xcconfig */;
@@ -9592,6 +9730,15 @@
 			buildConfigurations = (
 				94ED30612E269B2A00B99837 /* Debug */,
 				94ED30622E269B2A00B99837 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7D37B6CB312849FC836BDF83 /* Build configuration list for PBXNativeTarget "MixinUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8ED9A5F3FF334E128C8BF6DF /* Debug */,
+				9513EC24D1C946138C662BF8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

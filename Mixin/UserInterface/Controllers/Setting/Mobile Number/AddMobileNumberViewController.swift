@@ -44,6 +44,7 @@ extension AddMobileNumberViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        UserOperationAnalytics.addMobileNumberSource = .settings
         let introduction = MobileNumberIntroductionViewController(action: .add)
         navigationController?.pushViewController(introduction, animated: true)
     }

@@ -4,7 +4,7 @@ import MixinServices
 
 class TradeSpotViewController: UIViewController {
     
-    enum Mode {
+    enum Mode: String {
         case simple
         case advanced
     }

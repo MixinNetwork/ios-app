@@ -38,6 +38,13 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
         fatalError("Storyboard not supported")
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        var tags = ["wallet": "main", "type": mode.rawValue]
+        tags["source"] = UserOperationAnalytics.tradeSource?.rawValue
+        reporter.report(event: .tradeSpotStart, tags: tags)
+    }
+    
     override func changeSendToken(_ sender: Any) {
         let selector = TradeMixinTokenSelectorViewController(
             intent: .send,

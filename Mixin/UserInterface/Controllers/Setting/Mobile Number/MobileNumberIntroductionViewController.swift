@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 final class MobileNumberIntroductionViewController: IntroductionViewController {
     
@@ -44,6 +45,12 @@ final class MobileNumberIntroductionViewController: IntroductionViewController {
         actionButton.setTitle(R.string.localizable.continue(), for: .normal)
         actionButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
         actionButton.addTarget(self, action: #selector(continueToNext(_:)), for: .touchUpInside)
+        
+        if let source = UserOperationAnalytics.tradeSource?.rawValue {
+            reporter.report(event: .addPhoneStart, tags: ["source": source])
+        } else {
+            reporter.report(event: .addPhoneStart)
+        }
     }
     
     @objc private func continueToNext(_ sender: Any) {

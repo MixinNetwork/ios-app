@@ -260,9 +260,11 @@ extension TransferInputAmountViewController: AddTokenMethodSelectorViewControlle
         _ viewController: AddTokenMethodSelectorViewController,
         didPickMethod method: AddTokenMethodSelectorViewController.Method
     ) {
-        let next = switch method {
+        let next: UIViewController?
+        switch method {
         case .trade:
-            TradeViewController(
+            UserOperationAnalytics.tradeSource = .transfer
+            next = TradeViewController(
                 wallet: .privacy,
                 trading: .simpleSpot,
                 sendAssetID: nil,
@@ -270,7 +272,7 @@ extension TransferInputAmountViewController: AddTokenMethodSelectorViewControlle
                 referral: nil
             )
         case .deposit:
-            DepositViewController(token: tokenItem, switchingBetweenNetworks: false)
+            next = DepositViewController(token: tokenItem, switchingBetweenNetworks: false)
         }
         if let next {
             navigationController?.pushViewController(next, animated: true)

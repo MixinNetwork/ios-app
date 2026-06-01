@@ -991,6 +991,7 @@
 		944F547F2E45F9A20064A9A2 /* WatchingAddresses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944F547E2E45F99F0064A9A2 /* WatchingAddresses.swift */; };
 		94509BC12DDDFC5D00DC6A43 /* RefreshWeb3TokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94509BC02DDDFC5800DC6A43 /* RefreshWeb3TokenJob.swift */; };
 		94509D772DE086E100DC6A43 /* IAPTransactionObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94509D762DE086D800DC6A43 /* IAPTransactionObserver.swift */; };
+		9450EB642FC8964E003534FF /* UserOperationAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9450EB632FC89647003534FF /* UserOperationAnalytics.swift */; };
 		94510FBB2C85673C00ACD972 /* ReloadGlobalMarketJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */; };
 		94510FCE2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */; };
 		94510FD42C8743AA00ACD972 /* MarketTokenSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FD22C8743AA00ACD972 /* MarketTokenSelectorCell.swift */; };
@@ -2891,6 +2892,7 @@
 		944F547E2E45F99F0064A9A2 /* WatchingAddresses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchingAddresses.swift; sourceTree = "<group>"; };
 		94509BC02DDDFC5800DC6A43 /* RefreshWeb3TokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshWeb3TokenJob.swift; sourceTree = "<group>"; };
 		94509D762DE086D800DC6A43 /* IAPTransactionObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPTransactionObserver.swift; sourceTree = "<group>"; };
+		9450EB632FC89647003534FF /* UserOperationAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserOperationAnalytics.swift; sourceTree = "<group>"; };
 		94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadGlobalMarketJob.swift; sourceTree = "<group>"; };
 		94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		94510FD22C8743AA00ACD972 /* MarketTokenSelectorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTokenSelectorCell.swift; sourceTree = "<group>"; };
@@ -6636,6 +6638,7 @@
 				948CFAE92F2CB4B200BC34C3 /* QRCodeDetector.swift */,
 				94EC9CD32F2C7CC000B3CD82 /* VideoCaptureDevice.swift */,
 				9404D76F2FB1A72600F5563A /* SignPosition.swift */,
+				9450EB632FC89647003534FF /* UserOperationAnalytics.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -8523,6 +8526,7 @@
 				7B2AFEE220FE022C00C747BB /* MXMFastURLDetector.m in Sources */,
 				DF1F277C21A53585009A74C6 /* BackupViewController.swift in Sources */,
 				942FD9342D3A70DB004DCC4C /* TradeOrderHeaderCell.swift in Sources */,
+				9450EB642FC8964E003534FF /* UserOperationAnalytics.swift in Sources */,
 				945FFC7A2C3818630013DC51 /* RouteAPI.swift in Sources */,
 				ABCB87DD23F18A3D00780E60 /* PermissionsViewController.swift in Sources */,
 				9443A9212CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift in Sources */,

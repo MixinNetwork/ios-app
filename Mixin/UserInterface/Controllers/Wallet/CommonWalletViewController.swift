@@ -465,6 +465,7 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
                 self?.present(selector, animated: true, completion: nil)
             }
         case .trade:
+            UserOperationAnalytics.tradeSource = .walletHome
             let trade = TradeViewController(
                 wallet: .common(wallet),
                 supportedChainIDs: supportedChainIDs,
@@ -477,14 +478,7 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
                 return
             }
             withAccountRecoveryChecked { [weak self] in
-                guard let self else {
-                    return
-                }
-                self.navigationController?.pushViewController(trade, animated: true)
-                reporter.report(
-                    event: .tradeStart,
-                    tags: ["wallet": "web3", "source": "wallet_home"]
-                )
+                self?.navigationController?.pushViewController(trade, animated: true)
             }
         }
     }

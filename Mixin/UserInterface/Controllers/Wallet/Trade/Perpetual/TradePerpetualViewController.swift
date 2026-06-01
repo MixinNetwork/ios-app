@@ -224,6 +224,7 @@ final class TradePerpetualViewController: UIViewController {
             BadgeManager.shared.setHasViewed(identifier: .perpsManual)
             let manual = PerpsManual.viewController()
             present(manual, animated: true)
+            reporter.report(event: .tradePerpsGuide, tags: ["source": "first_guide"])
         }
     }
     
@@ -336,6 +337,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     cell.emptyIndicatorStackView.isHidden = false
                     cell.onHelp = { [weak self] in
                         self?.presentPerpsManual()
+                        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_home_card"])
                     }
                 }
                 return cell
@@ -357,6 +359,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     cell.emptyIndicatorStackView.isHidden = false
                     cell.onHelp = { [weak self] in
                         self?.presentPerpsManual()
+                        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_home_card"])
                     }
                 }
                 return cell
@@ -394,6 +397,10 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.label.text = R.string.localizable.perps_activity()
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewActivities()
+                    reporter.report(
+                        event: .tradePerpsActivity,
+                        tags: ["source": "perps_home_card_arrow"]
+                    )
                 }
             }
             return view
@@ -416,6 +423,10 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.viewAllButton.isHidden = (activities?.count ?? 0) <= maxItemCount
                 view.onViewAll = { [weak self] (sender) in
                     self?.viewActivities()
+                    reporter.report(
+                        event: .tradePerpsActivity,
+                        tags: ["source": "perps_home_card_more"]
+                    )
                 }
             }
             return view
@@ -460,8 +471,10 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
             let viewModel = activities[indexPath.item]
             let activity = PerpetualActivityViewController(wallet: wallet, viewModel: viewModel)
             navigationController?.pushViewController(activity, animated: true)
+            reporter.report(event: .tradePerpsActivityDetail, tags: ["source": "perps_home_list"])
         case .introduction:
             presentPerpsManual()
+            reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_home_card"])
         }
     }
     

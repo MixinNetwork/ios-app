@@ -155,11 +155,13 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     @IBAction func introduceSize(_ sender: Any) {
         let manual = PerpsManual.viewController(initialPage: .size)
         present(manual, animated: true)
+        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_add_position_size"])
     }
     
     @IBAction func introduceLiquidationPrice(_ sender: Any) {
         let manual = PerpsManual.viewController(initialPage: .liquidation)
         present(manual, animated: true)
+        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_add_position_liquidation"])
     }
     
     @IBAction func cancel(_ sender: Any) {

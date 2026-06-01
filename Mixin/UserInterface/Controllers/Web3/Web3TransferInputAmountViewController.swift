@@ -292,9 +292,11 @@ extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewContr
         guard let feeToken = fee?.selected.token else {
             return
         }
-        let next = switch method {
+        let next: UIViewController?
+        switch method {
         case .trade:
-            TradeViewController(
+            UserOperationAnalytics.tradeSource = .transfer
+            next = TradeViewController(
                 wallet: .common(payment.wallet),
                 trading: .simpleSpot,
                 sendAssetID: nil,
@@ -302,7 +304,7 @@ extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewContr
                 referral: nil
             )
         case .deposit:
-            DepositViewController(
+            next = DepositViewController(
                 wallet: payment.wallet,
                 token: feeToken,
                 switchingBetweenNetworks: false

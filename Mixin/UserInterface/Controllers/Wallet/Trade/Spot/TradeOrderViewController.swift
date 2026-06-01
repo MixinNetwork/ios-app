@@ -260,6 +260,7 @@ extension TradeOrderViewController: PillActionView.Delegate {
                 case .swap, .none:
                     trading = .simpleSpot
                 }
+                UserOperationAnalytics.tradeSource = .tradeDetail
                 let trade = TradeViewController(
                     wallet: viewModel.wallet,
                     trading: trading,
@@ -270,10 +271,6 @@ extension TradeOrderViewController: PillActionView.Delegate {
                 if let trade {
                     viewControllers.append(trade)
                     navigationController.setViewControllers(viewControllers, animated: true)
-                    reporter.report(
-                        event: .tradeStart,
-                        tags: ["wallet": "main", "source": "trade_detail"]
-                    )
                 }
             }
         case .cancelOrder:

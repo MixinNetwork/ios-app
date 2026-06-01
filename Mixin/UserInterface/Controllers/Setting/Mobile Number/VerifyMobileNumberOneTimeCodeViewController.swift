@@ -70,21 +70,23 @@ class VerifyMobileNumberOneTimeCodeViewController: VerificationCodeViewControlle
             case .success(let account):
                 LoginManager.shared.setAccount(account)
                 self.verificationCodeField.resignFirstResponder()
-                let alert = switch self.context.intent {
+                let alert: UIAlertController
+                switch self.context.intent {
                 case .periodicVerification:
-                    UIAlertController(
+                    alert = UIAlertController(
                         title: R.string.localizable.verification_successful(),
                         message: R.string.localizable.sms_verified_description(),
                         preferredStyle: .alert
                     )
                 case .addMobileNumber:
-                    UIAlertController(
+                    alert = UIAlertController(
                         title: R.string.localizable.mobile_number_added(),
                         message: R.string.localizable.mobile_number_added_description(),
                         preferredStyle: .alert
                     )
+                    reporter.report(event: .addPhoneEnd)
                 case .changeMobileNumber:
-                    UIAlertController(
+                    alert = UIAlertController(
                         title: R.string.localizable.mobile_number_changed(),
                         message: R.string.localizable.sms_verified_description(),
                         preferredStyle: .alert

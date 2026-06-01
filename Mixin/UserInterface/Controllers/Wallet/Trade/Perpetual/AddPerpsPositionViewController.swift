@@ -27,14 +27,18 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     private let amountValidator: AmountValidator
     private let liquidationPriceRequester: AddPerpsPositionLiquidationPriceRequester
     
+    private var liquidationPrice: Decimal?
+    
     private var isAdding = false {
         didSet {
             if isAdding {
+                marginView.isUserInteractionEnabled = false
                 cancelButton.isEnabled = false
                 addButton.isEnabled = false
                 addButton.configuration?.title = R.string.localizable.adding_position()
                 titleView.closeButton.isEnabled = false
             } else {
+                marginView.isUserInteractionEnabled = true
                 cancelButton.isEnabled = true
                 addButton.isEnabled = true
                 addButton.configuration?.title = R.string.localizable.add_position()
@@ -173,7 +177,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     }
     
     @IBAction func add(_ sender: Any) {
-        guard let assetID = marginToken?.assetID else {
+        guard let assetID = marginToken?.assetID, let liquidationPrice else {
             return
         }
         isAdding = true
@@ -187,6 +191,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
             operation: .increase,
             side: positionViewModel.side,
             leverageMultiplier: leverageMultiplier,
+            liquidationPrice: liquidationPrice,
             takeProfitPrice: nil,
             stopLossPrice: nil,
             onDismissAfterSuccess: { [weak self] in
@@ -259,48 +264,47 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
             )
             switch result {
             case .valid:
+                let isBalanceSufficient = marginAmount <= marginToken.decimalBalance
                 liquidationPriceRequester.request(
                     amount: marginAmount
                 ) { [weak self] price in
-                    self?.show(liquidationPrice: .value(price))
+                    self?.show(liquidationPrice: .valid(price: price, isBalanceSufficient: isBalanceSufficient))
                 }
                 show(liquidationPrice: .busy)
-                if marginAmount > marginToken.decimalBalance {
-                    showError(description: R.string.localizable.insufficient_balance())
-                    addButton.isEnabled = false
-                } else {
-                    showError(description: nil)
-                    addButton.isEnabled = true
-                }
+                showError(description: isBalanceSufficient ? nil : R.string.localizable.insufficient_balance())
             case .invalid(let reason):
                 liquidationPriceRequester.cancelLastRequest()
                 show(liquidationPrice: .invalid)
                 showError(description: reason)
-                addButton.isEnabled = false
             }
         } else {
             liquidationPriceRequester.cancelLastRequest()
             show(liquidationPrice: .invalid)
             showError(description: nil)
-            addButton.isEnabled = false
         }
     }
     
     private func show(liquidationPrice: LiquidationPrice) {
         switch liquidationPrice {
         case .invalid:
+            self.liquidationPrice = nil
             liquidationPriceActivityIndicator.stopAnimating()
             liquidationPriceContentLabel.text = "-"
             liquidationPriceContentLabel.alpha = 1
+            addButton.isEnabled = false
         case .busy:
+            self.liquidationPrice = nil
             liquidationPriceActivityIndicator.startAnimating()
             liquidationPriceContentLabel.alpha = 0
-        case .value(let value):
+            addButton.isEnabled = false
+        case let .valid(price, isBalanceSufficient):
+            self.liquidationPrice = price
             liquidationPriceActivityIndicator.stopAnimating()
-            liquidationPriceContentLabel.text = value.formatted(
+            liquidationPriceContentLabel.text = price.formatted(
                 marketViewModel.userDisplayPriceFormatStyle
             )
             liquidationPriceContentLabel.alpha = 1
+            addButton.isEnabled = isBalanceSufficient
         }
     }
     
@@ -332,7 +336,7 @@ extension AddPerpsPositionViewController {
     private enum LiquidationPrice {
         case invalid
         case busy
-        case value(Decimal)
+        case valid(price: Decimal, isBalanceSufficient: Bool)
     }
     
 }

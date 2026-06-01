@@ -31,6 +31,7 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
     @IBOutlet weak var orderValueContentLabel: UILabel!
     @IBOutlet weak var liquidationPriceTitleLabel: UILabel!
     @IBOutlet weak var liquidationPriceContentLabel: UILabel!
+    @IBOutlet weak var liquidationPriceActivityIndicator: ActivityIndicatorView!
     
     @IBOutlet weak var reviewButtonWrapperView: UIView!
     @IBOutlet weak var errorDescriptionLabel: UILabel!
@@ -41,6 +42,7 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
     private let viewModel: PerpetualMarketViewModel
     private let amountValidator: AmountValidator
     private let multipliers: [Multiplier]
+    private let liquidationPriceRequester: OpenPerpsPositionLiquidationPriceRequester
     private let cellReuseIdentifier = "l"
     
     private weak var contentSizeObserver: NSKeyValueObservation?
@@ -107,6 +109,10 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
             }
         }
         self.leverageMultiplier = leverageMultiplier
+        self.liquidationPriceRequester = OpenPerpsPositionLiquidationPriceRequester(
+            marketID: viewModel.market.marketID,
+            side: side
+        )
         let nib = R.nib.openPerpetualPositionView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -195,6 +201,7 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
         
         leverageMultipliersCollectionView.reloadData()
         inputLeverageMultiplier(value: leverageMultiplier)
+        liquidationPriceActivityIndicator.style = .custom(diameter: 10, lineWidth: 2)
         updateDescriptions(
             marginAmount: 0,
             leverageMultiplier: leverageMultiplier,
@@ -384,24 +391,35 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
         underlyingAsset: PerpetualMarketViewModel
     ) {
         if marginAmount != 0, let marginToken {
-            if marginAmount > marginToken.decimalBalance {
-                showError(description: R.string.localizable.insufficient_balance())
-                reviewButton.isEnabled = false
-            } else {
-                let result = amountValidator.validate(
+            let result = amountValidator.validate(
+                amount: marginAmount,
+                symbol: marginToken.symbol
+            )
+            switch result {
+            case .valid:
+                liquidationPriceRequester.request(
                     amount: marginAmount,
-                    symbol: marginToken.symbol
-                )
-                switch result {
-                case .valid:
+                    leverage: (leverageMultiplier as NSDecimalNumber).intValue
+                ) { [weak self] price in
+                    self?.show(liquidationPrice: .value(price))
+                }
+                show(liquidationPrice: .busy)
+                if marginAmount > marginToken.decimalBalance {
+                    showError(description: R.string.localizable.insufficient_balance())
+                    reviewButton.isEnabled = false
+                } else {
                     showError(description: nil)
                     reviewButton.isEnabled = true
-                case .invalid(let reason):
-                    showError(description: reason)
-                    reviewButton.isEnabled = false
                 }
+            case .invalid(let reason):
+                liquidationPriceRequester.cancelLastRequest()
+                show(liquidationPrice: .invalid)
+                showError(description: reason)
+                reviewButton.isEnabled = false
             }
         } else {
+            liquidationPriceRequester.cancelLastRequest()
+            show(liquidationPrice: .invalid)
             showError(description: nil)
             reviewButton.isEnabled = false
         }
@@ -423,18 +441,23 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
             sign: .never,
             symbol: .dollarSign,
         ) + ")"
-        if marginAmount > 0 {
-            let liquidationPrice = switch side {
-            case .long:
-                underlyingAsset.decimalPrice * (1 - 1 / leverageMultiplier)
-            case .short:
-                underlyingAsset.decimalPrice * (1 + 1 / leverageMultiplier)
-            }
-            liquidationPriceContentLabel.text = liquidationPrice.formatted(
+    }
+    
+    private func show(liquidationPrice: LiquidationPrice) {
+        switch liquidationPrice {
+        case .invalid:
+            liquidationPriceActivityIndicator.stopAnimating()
+            liquidationPriceContentLabel.text = "-"
+            liquidationPriceContentLabel.alpha = 1
+        case .busy:
+            liquidationPriceActivityIndicator.startAnimating()
+            liquidationPriceContentLabel.alpha = 0
+        case .value(let value):
+            liquidationPriceActivityIndicator.stopAnimating()
+            liquidationPriceContentLabel.text = value.formatted(
                 viewModel.userDisplayPriceFormatStyle
             )
-        } else {
-            liquidationPriceContentLabel.text = "-"
+            liquidationPriceContentLabel.alpha = 1
         }
     }
     
@@ -525,6 +548,12 @@ extension OpenPerpetualPositionViewController: UITextFieldDelegate {
 }
 
 extension OpenPerpetualPositionViewController {
+    
+    private enum LiquidationPrice {
+        case invalid
+        case busy
+        case value(Decimal)
+    }
     
     private final class LeverageCell: UICollectionViewCell {
         

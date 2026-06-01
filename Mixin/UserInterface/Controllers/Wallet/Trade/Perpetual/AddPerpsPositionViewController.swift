@@ -11,6 +11,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     @IBOutlet weak var totalSizeContentLabel: UILabel!
     @IBOutlet weak var liquidationPriceTitleLabel: UILabel!
     @IBOutlet weak var liquidationPriceContentLabel: UILabel!
+    @IBOutlet weak var liquidationPriceActivityIndicator: ActivityIndicatorView!
     
     @IBOutlet weak var errorDescriptionLabel: UILabel!
     
@@ -24,6 +25,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     private let openedMargin: Decimal
     private let leverageMultiplier: Decimal
     private let amountValidator: AmountValidator
+    private let liquidationPriceRequester: AddPerpsPositionLiquidationPriceRequester
     
     private var isAdding = false {
         didSet {
@@ -53,6 +55,9 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
         self.openedMargin = openedMargin
         self.leverageMultiplier = Decimal(positionViewModel.leverageMultiplier)
         self.amountValidator = AmountValidator(market: marketViewModel.market)
+        self.liquidationPriceRequester = AddPerpsPositionLiquidationPriceRequester(
+            positionID: positionViewModel.positionID
+        )
         let nib = R.nib.addPerpsPositionView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -113,6 +118,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
         addSizeTitleLabel.text = R.string.localizable.add_position_add_size()
         totalSizeTitleLabel.text = R.string.localizable.add_position_total_size()
         liquidationPriceTitleLabel.text = R.string.localizable.liquidation_price()
+        liquidationPriceActivityIndicator.style = .custom(diameter: 10, lineWidth: 2)
         updateDescriptions(marginAmount: 0)
         
         actionWrapperView.snp.makeConstraints { make in
@@ -246,40 +252,55 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
             sign: .never,
             symbol: .dollarSign
         ) + ")"
-        if marginAmount > 0 {
-            let liquidationPrice = switch positionViewModel.side {
-            case .long:
-                marketViewModel.decimalPrice * (1 - 1 / leverageMultiplier)
-            case .short:
-                marketViewModel.decimalPrice * (1 + 1 / leverageMultiplier)
-            }
-            liquidationPriceContentLabel.text = liquidationPrice.formatted(
-                marketViewModel.userDisplayPriceFormatStyle
-            )
-        } else {
-            liquidationPriceContentLabel.text = "-"
-        }
         if marginAmount != 0, let marginToken {
-            if marginAmount > marginToken.decimalBalance {
-                showError(description: R.string.localizable.insufficient_balance())
-                addButton.isEnabled = false
-            } else {
-                let result = amountValidator.validate(
-                    amount: marginAmount,
-                    symbol: marginToken.symbol
-                )
-                switch result {
-                case .valid:
+            let result = amountValidator.validate(
+                amount: marginAmount,
+                symbol: marginToken.symbol
+            )
+            switch result {
+            case .valid:
+                liquidationPriceRequester.request(
+                    amount: marginAmount
+                ) { [weak self] price in
+                    self?.show(liquidationPrice: .value(price))
+                }
+                show(liquidationPrice: .busy)
+                if marginAmount > marginToken.decimalBalance {
+                    showError(description: R.string.localizable.insufficient_balance())
+                    addButton.isEnabled = false
+                } else {
                     showError(description: nil)
                     addButton.isEnabled = true
-                case .invalid(let reason):
-                    showError(description: reason)
-                    addButton.isEnabled = false
                 }
+            case .invalid(let reason):
+                liquidationPriceRequester.cancelLastRequest()
+                show(liquidationPrice: .invalid)
+                showError(description: reason)
+                addButton.isEnabled = false
             }
         } else {
+            liquidationPriceRequester.cancelLastRequest()
+            show(liquidationPrice: .invalid)
             showError(description: nil)
             addButton.isEnabled = false
+        }
+    }
+    
+    private func show(liquidationPrice: LiquidationPrice) {
+        switch liquidationPrice {
+        case .invalid:
+            liquidationPriceActivityIndicator.stopAnimating()
+            liquidationPriceContentLabel.text = "-"
+            liquidationPriceContentLabel.alpha = 1
+        case .busy:
+            liquidationPriceActivityIndicator.startAnimating()
+            liquidationPriceContentLabel.alpha = 0
+        case .value(let value):
+            liquidationPriceActivityIndicator.stopAnimating()
+            liquidationPriceContentLabel.text = value.formatted(
+                marketViewModel.userDisplayPriceFormatStyle
+            )
+            liquidationPriceContentLabel.alpha = 1
         }
     }
     
@@ -302,6 +323,16 @@ extension AddPerpsPositionViewController: UIAdaptivePresentationControllerDelega
     
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         
+    }
+    
+}
+
+extension AddPerpsPositionViewController {
+    
+    private enum LiquidationPrice {
+        case invalid
+        case busy
+        case value(Decimal)
     }
     
 }

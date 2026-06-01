@@ -24,6 +24,10 @@ target 'Mixin' do
   pod 'SVGKit', :git => 'https://github.com/SVGKit/SVGKit'
   pod 'SDWebImageSVGKitPlugin'
   mixin_services
+
+  target 'MixinTests' do
+    inherit! :search_paths
+  end
 end
 
 target 'MixinNotificationService' do

@@ -16,7 +16,11 @@ struct MixinTests {
     
     @Test func testWebBridgeOpenInBrowserURLValidation() {
         #expect(WebViewMessageHandler.openInBrowserURL(from: " https://mixin.one/pay ")?.absoluteString == "https://mixin.one/pay")
-        #expect(WebViewMessageHandler.openInBrowserURL(from: "mixin.one/pay")?.absoluteString == "http://mixin.one/pay")
+        #expect(WebViewMessageHandler.openInBrowserURL(from: "http://mixin.one/pay")?.absoluteString == "http://mixin.one/pay")
+        #expect(WebViewMessageHandler.openInBrowserURL(from: "mixin.one/pay") == nil)
+        #expect(WebViewMessageHandler.openInBrowserURL(from: "http:foo") == nil)
+        #expect(WebViewMessageHandler.openInBrowserURL(from: "https:mixin.one") == nil)
+        #expect(WebViewMessageHandler.openInBrowserURL(from: "https://") == nil)
         #expect(WebViewMessageHandler.openInBrowserURL(from: "") == nil)
         #expect(WebViewMessageHandler.openInBrowserURL(from: "undefined") == nil)
         #expect(WebViewMessageHandler.openInBrowserURL(from: "javascript:alert(1)") == nil)

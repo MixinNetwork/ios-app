@@ -181,14 +181,9 @@ extension WebViewMessageHandler {
             return nil
         }
 
-        let normalizedURLString: String
-        if URL(string: urlString)?.scheme == nil {
-            normalizedURLString = "http://\(urlString)"
-        } else {
-            normalizedURLString = urlString
-        }
-        guard let url = URL(string: normalizedURLString),
-              ["http", "https"].contains(url.scheme?.lowercased() ?? "")
+        guard let url = URL(string: urlString),
+              ["http", "https"].contains(url.scheme?.lowercased() ?? ""),
+              url.host?.isEmpty == false
         else {
             return nil
         }

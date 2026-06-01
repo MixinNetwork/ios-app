@@ -20,6 +20,7 @@
                 <outlet property="leverageMultipliersCollectionViewLayout" destination="r5P-0b-w7Z" id="jF0-Pn-nfG"/>
                 <outlet property="leverageTitleLabel" destination="wS9-gE-TyJ" id="HWE-Pp-rdK"/>
                 <outlet property="leverageView" destination="u0I-f4-MTw" id="YQy-wj-NIE"/>
+                <outlet property="liquidationPriceActivityIndicator" destination="BIp-E5-kny" id="VuY-ZO-rxV"/>
                 <outlet property="liquidationPriceContentLabel" destination="Eui-rp-lnp" id="66O-bd-vI5"/>
                 <outlet property="liquidationPriceTitleLabel" destination="56Q-Gn-ra7" id="Rlh-bZ-are"/>
                 <outlet property="marginAmountTextField" destination="ahJ-lT-iH8" id="hrY-ZE-iKM"/>
@@ -446,6 +447,15 @@
                                         <action selector="editTakeProfit:" destination="-1" eventType="touchUpInside" id="BHQ-Ec-htZ"/>
                                     </connections>
                                 </button>
+                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BIp-E5-kny" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="341" y="484.33333333333331" width="16" height="16"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="tintColor" name="text_tertiary"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="16" id="I8u-rZ-aEQ"/>
+                                        <constraint firstAttribute="width" constant="16" id="mvJ-e9-5Kc"/>
+                                    </constraints>
+                                </view>
                             </subviews>
                             <color key="backgroundColor" name="background_secondary"/>
                             <constraints>
@@ -461,6 +471,7 @@
                                 <constraint firstAttribute="trailing" secondItem="u0I-f4-MTw" secondAttribute="trailing" constant="20" id="NPQ-wR-BQd"/>
                                 <constraint firstItem="UDa-HP-ZRE" firstAttribute="height" secondItem="hdM-7O-xtM" secondAttribute="height" constant="16" id="QLV-29-eDW"/>
                                 <constraint firstAttribute="trailing" secondItem="v7H-a6-XPT" secondAttribute="trailing" constant="20" id="RXn-ya-L56"/>
+                                <constraint firstItem="BIp-E5-kny" firstAttribute="centerY" secondItem="Eui-rp-lnp" secondAttribute="centerY" id="TCQ-x2-QqW"/>
                                 <constraint firstItem="qWe-AM-mzt" firstAttribute="centerY" secondItem="GlQ-36-kBr" secondAttribute="centerY" id="TLP-zd-CwU"/>
                                 <constraint firstItem="u0I-f4-MTw" firstAttribute="top" secondItem="v7H-a6-XPT" secondAttribute="bottom" constant="2" id="W6C-J6-aN6"/>
                                 <constraint firstItem="bnb-tJ-X0v" firstAttribute="height" secondItem="CEg-1e-0mX" secondAttribute="height" constant="16" id="XYW-Q8-dX1"/>
@@ -473,6 +484,7 @@
                                 <constraint firstItem="Pn8-P6-wWM" firstAttribute="leading" secondItem="H0e-nI-q4n" secondAttribute="leading" constant="36" id="lOD-B2-1t9"/>
                                 <constraint firstAttribute="bottom" secondItem="sVa-iZ-L0Z" secondAttribute="bottom" id="myo-SW-ji9"/>
                                 <constraint firstAttribute="trailing" secondItem="Pn8-P6-wWM" secondAttribute="trailing" constant="36" id="poh-za-m3W"/>
+                                <constraint firstItem="BIp-E5-kny" firstAttribute="trailing" secondItem="Eui-rp-lnp" secondAttribute="trailing" id="r3a-aE-xbJ"/>
                                 <constraint firstItem="bnb-tJ-X0v" firstAttribute="centerY" secondItem="CEg-1e-0mX" secondAttribute="centerY" id="zLf-6p-qi5"/>
                                 <constraint firstItem="u0I-f4-MTw" firstAttribute="leading" secondItem="H0e-nI-q4n" secondAttribute="leading" constant="20" id="zfs-Jg-dBf"/>
                                 <constraint firstItem="6kQ-xQ-VDo" firstAttribute="centerY" secondItem="hyT-Xc-gms" secondAttribute="centerY" id="ztc-Vh-NDr"/>

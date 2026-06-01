@@ -34,6 +34,7 @@ struct PerpetualPositionViewModel {
     let decimalMargin: Decimal?
     let margin: String?
     let estimatedReceiving: EstimatedReceiving?
+    let decimalLiquidationPrice: Decimal?
     let liquidationPrice: String?
     let takeProfitPrice: Decimal?
     let stopLossPrice: Decimal?
@@ -149,8 +150,10 @@ struct PerpetualPositionViewModel {
            !price.isEmpty,
            let decimalPrice = Decimal(string: price, locale: .enUSPOSIX)
         {
+            self.decimalLiquidationPrice = decimalPrice
             self.liquidationPrice = decimalPrice.formatted(position.priceFormatStyle)
         } else {
+            self.decimalLiquidationPrice = nil
             self.liquidationPrice = nil
         }
         self.takeProfitPrice = if let price = position.takeProfitPrice, !price.isEmpty {

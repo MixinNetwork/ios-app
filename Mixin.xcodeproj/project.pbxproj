@@ -848,6 +848,7 @@
 		94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */; };
 		94317D072AFBE57200FDC9C9 /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317D052AFBE57200FDC9C9 /* MemoCell.swift */; };
 		94317D082AFBE57200FDC9C9 /* MemoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94317D062AFBE57200FDC9C9 /* MemoCell.xib */; };
+		9431E2402FCD706D00B20838 /* PerpsLiquidationPriceRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9431E23F2FCD706500B20838 /* PerpsLiquidationPriceRequester.swift */; };
 		943270922E5C51B700DFC486 /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943270902E5C51B700DFC486 /* DepositViewController.swift */; };
 		943270B62E5C6F4F00DFC486 /* DepositViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943270B52E5C6F4D00DFC486 /* DepositViewModel.swift */; };
 		943270E22E5D894500DFC486 /* DepositDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943270E12E5D894400DFC486 /* DepositDataSource.swift */; };
@@ -2748,6 +2749,7 @@
 		94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
 		94317D052AFBE57200FDC9C9 /* MemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoCell.swift; sourceTree = "<group>"; };
 		94317D062AFBE57200FDC9C9 /* MemoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MemoCell.xib; sourceTree = "<group>"; };
+		9431E23F2FCD706500B20838 /* PerpsLiquidationPriceRequester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsLiquidationPriceRequester.swift; sourceTree = "<group>"; };
 		943270902E5C51B700DFC486 /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		943270B52E5C6F4D00DFC486 /* DepositViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewModel.swift; sourceTree = "<group>"; };
 		943270E12E5D894400DFC486 /* DepositDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositDataSource.swift; sourceTree = "<group>"; };
@@ -5496,6 +5498,7 @@
 				94ABAABB2FBDCB8500FC536D /* PerpetualActivityViewModel.swift */,
 				94E066B12F5B15690090F1BA /* PerpetualLeverage.swift */,
 				94A8095B2FB1C1B100755E1A /* PerpsAutoClosingCondition.swift */,
+				9431E23F2FCD706500B20838 /* PerpsLiquidationPriceRequester.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -8757,6 +8760,7 @@
 				94658CA02B347E4100F5EB21 /* UTXODiagnosticViewController.swift in Sources */,
 				9421205E2F3244F100768DC3 /* OnboardingBannerCell.swift in Sources */,
 				DFAD89A1241B6D6400836EDD /* JobService.swift in Sources */,
+				9431E2402FCD706D00B20838 /* PerpsLiquidationPriceRequester.swift in Sources */,
 				945138B92C6622F600839CBB /* TokenMarketCell.swift in Sources */,
 				94E1D44129E906AB00511267 /* DeviceTransferHeader.swift in Sources */,
 				94668E3F2CB68C1E00558755 /* PushNotificationDiagnostic.swift in Sources */,

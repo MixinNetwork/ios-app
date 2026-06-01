@@ -1,0 +1,185 @@
+name: iOS UI Tests
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/ios-ui-tests.yml"
+      - "Mixin/**"
+      - "MixinDebug/**"
+      - "MixinNotificationService/**"
+      - "MixinServices/**"
+      - "MixinShare/**"
+      - "MixinUITests/**"
+      - "Mixin.xcodeproj/**"
+      - "Mixin.xcworkspace/**"
+      - "Podfile"
+      - "Podfile.lock"
+  workflow_dispatch:
+
+jobs:
+  open-in-browser-bridge:
+    name: Open in browser bridge
+    runs-on: macos-26
+    timeout-minutes: 60
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          set -euo pipefail
+          sw_vers
+          xcodebuild -version
+          xcrun simctl list runtimes
+
+      - name: Install CocoaPods dependencies
+        run: |
+          set -euo pipefail
+          sudo gem install cocoapods -v 1.16.2 --no-document
+          pod install
+
+      - name: Prepare local configuration files
+        run: |
+          set -euo pipefail
+          mkdir -p "Mixin/Supporting Files"
+          cat > "Mixin/Supporting Files/Mixin-Keys.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>WalletConnect</key>
+            <string>ui-test-placeholder</string>
+          </dict>
+          </plist>
+          PLIST
+          cat > "Mixin/Supporting Files/GoogleService-Info.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>API_KEY</key>
+            <string>ui-test-placeholder</string>
+            <key>BUNDLE_ID</key>
+            <string>one.mixin.messenger</string>
+            <key>GCM_SENDER_ID</key>
+            <string>000000000000</string>
+            <key>GOOGLE_APP_ID</key>
+            <string>1:000000000000:ios:0000000000000000000000</string>
+            <key>PROJECT_ID</key>
+            <string>ui-test-placeholder</string>
+          </dict>
+          </plist>
+          PLIST
+
+      - name: Prepare iOS simulator
+        id: simulator
+        run: |
+          set -euo pipefail
+
+          select_runtime() {
+            python3 <<'PY'
+          import json
+          import re
+          import subprocess
+
+          output = subprocess.check_output(["xcrun", "simctl", "list", "runtimes", "available", "-j"])
+          runtimes = json.loads(output).get("runtimes", [])
+          ios_runtimes = [
+              runtime for runtime in runtimes
+              if runtime.get("platform") == "iOS" and runtime.get("isAvailable")
+          ]
+
+          def version_key(runtime):
+              return tuple(int(part) for part in re.findall(r"\d+", runtime.get("version", "")))
+
+          if ios_runtimes:
+              print(sorted(ios_runtimes, key=version_key, reverse=True)[0]["identifier"])
+          PY
+          }
+
+          RUNTIME_ID="$(select_runtime)"
+          if [ -z "$RUNTIME_ID" ]; then
+            xcodebuild -downloadPlatform iOS -architectureVariant arm64
+            RUNTIME_ID="$(select_runtime)"
+          fi
+          if [ -z "$RUNTIME_ID" ]; then
+            echo "No available iOS simulator runtime found" >&2
+            exit 1
+          fi
+          export RUNTIME_ID
+
+          DEVICE_ID="$(python3 <<'PY'
+          import json
+          import os
+          import subprocess
+
+          runtime_id = os.environ["RUNTIME_ID"]
+          output = subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"])
+          devices = json.loads(output).get("devices", {}).get(runtime_id, [])
+
+          for preferred in ("iPhone 16e", "iPhone SE (3rd generation)"):
+              for device in devices:
+                  if device.get("isAvailable") and device.get("name") == preferred:
+                      print(device["udid"])
+                      raise SystemExit
+
+          for device in devices:
+              if device.get("isAvailable") and ".iPhone-" in device.get("deviceTypeIdentifier", ""):
+                  print(device["udid"])
+                  raise SystemExit
+          PY
+          )"
+
+          if [ -z "$DEVICE_ID" ]; then
+            DEVICE_TYPE="$(python3 <<'PY'
+          import json
+          import os
+          import subprocess
+
+          runtime_id = os.environ["RUNTIME_ID"]
+          output = subprocess.check_output(["xcrun", "simctl", "list", "runtimes", "available", "-j"])
+          runtime = next(
+              runtime for runtime in json.loads(output).get("runtimes", [])
+              if runtime.get("identifier") == runtime_id
+          )
+          device_types = runtime.get("supportedDeviceTypes", [])
+
+          for preferred in ("iPhone 16e", "iPhone SE (3rd generation)"):
+              for device_type in device_types:
+                  if device_type.get("name") == preferred:
+                      print(device_type["identifier"])
+                      raise SystemExit
+
+          for device_type in device_types:
+              if device_type.get("productFamily") == "iPhone":
+                  print(device_type["identifier"])
+                  raise SystemExit
+          PY
+          )"
+            DEVICE_ID="$(xcrun simctl create "Mixin UI Tests" "$DEVICE_TYPE" "$RUNTIME_ID")"
+          fi
+
+          echo "device-id=$DEVICE_ID" >> "$GITHUB_OUTPUT"
+          xcrun simctl boot "$DEVICE_ID" || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+
+      - name: Run open in browser bridge UI test
+        run: |
+          set -euo pipefail
+          mkdir -p TestResults
+          xcodebuild test \
+            -workspace Mixin.xcworkspace \
+            -scheme MixinUITestsOnly \
+            -destination "id=${{ steps.simulator.outputs.device-id }}" \
+            -only-testing:MixinUITests/OpenInBrowserBridgeUITests/testJavaScriptOpenInBrowserPostsURLToNativeBridge \
+            -skipPackagePluginValidation \
+            -resultBundlePath TestResults/OpenInBrowserBridge.xcresult
+
+      - name: Upload test result
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: open-in-browser-bridge-xcresult
+          path: TestResults/OpenInBrowserBridge.xcresult
+          if-no-files-found: ignore

@@ -46,7 +46,7 @@ final class MobileNumberIntroductionViewController: IntroductionViewController {
         actionButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
         actionButton.addTarget(self, action: #selector(continueToNext(_:)), for: .touchUpInside)
         
-        if let source = UserOperationAnalytics.tradeSource?.rawValue {
+        if let source = UserOperationAnalytics.addMobileNumberSource?.rawValue {
             reporter.report(event: .addPhoneStart, tags: ["source": source])
         } else {
             reporter.report(event: .addPhoneStart)
@@ -56,6 +56,7 @@ final class MobileNumberIntroductionViewController: IntroductionViewController {
     @objc private func continueToNext(_ sender: Any) {
         let next = switch action {
         case .add:
+            reporter.report(event: .addPhoneVerifyPIN)
             VerifyMobileNumberPINValidationViewController(intent: .addMobileNumber)
         case .change:
             VerifyMobileNumberPINValidationViewController(intent: .changeMobileNumber)

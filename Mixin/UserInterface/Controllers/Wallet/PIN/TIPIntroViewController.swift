@@ -156,14 +156,6 @@ final class TIPIntroViewController: UIViewController {
         case .inputNeeded(let context):
             let navigationController = self.tipNavigationController
             let validator = TIPPopupInputViewController(action: .continue(context, { [weak navigationController] in
-                switch context.action {
-                case .create:
-                    reporter.report(event: .signUpEnd)
-                case .change:
-                    break
-                case .migrate:
-                    break
-                }
                 navigationController?.finish()
             }))
             present(validator, animated: true)

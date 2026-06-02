@@ -39,6 +39,7 @@ final class MainAppReporter: Reporter {
              .sendStart,
              .sendEnd:
             AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
+            AppsFlyerLib.shared().start()
         case .signUpAccountCreated:
             AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
             if let appInstanceID = Analytics.appInstanceID() {
@@ -47,8 +48,10 @@ final class MainAppReporter: Reporter {
             AppsFlyerLib.shared().start()
         case .loginEnd:
             AppsFlyerLib.shared().logEvent(AFEventLogin, withValues: tags)
+            AppsFlyerLib.shared().start()
         case .signUpEnd:
             AppsFlyerLib.shared().logEvent(AFEventCompleteRegistration, withValues: tags)
+            AppsFlyerLib.shared().start()
         default:
             break
         }

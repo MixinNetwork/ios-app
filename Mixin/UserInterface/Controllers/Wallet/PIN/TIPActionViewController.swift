@@ -135,7 +135,6 @@ final class TIPActionViewController: UIViewController {
                     try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     await MainActor.run {
-                        reporter.report(event: .signUpEnd)
                         finish()
                     }
                 } catch {

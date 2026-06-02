@@ -75,6 +75,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
         behavior: PerpsAutoClosingCondition.Behavior,
         leverage: Decimal,
         orderState: OrderState,
+        liquidationPrice: Decimal,
         currentAutoClosingPrice: Decimal?,
     ) {
         self.viewModel = viewModel
@@ -86,6 +87,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
             side: side,
             leverage: leverage,
             priceScale: viewModel.market.priceScale,
+            liquidationPrice: liquidationPrice
         )
         self.orderState = orderState
         self.fixedInputs = switch behavior {

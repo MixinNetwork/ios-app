@@ -154,17 +154,14 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
             )
         }
         
-        let liquidationPrice = PerpetualChangeSimulation.liquidationPrice(
-            side: context.side,
-            entryPrice: context.viewModel.decimalPrice,
-            leverageMultiplier: context.leverageMultiplier
-        ).formatted(
+        let liquidationPrice = context.liquidationPrice.formatted(
             context.viewModel.userDisplayPriceFormatStyle
         )
         let liquidation = PerpetualChangeSimulation.liquidation(
             side: context.side,
             margin: operation.amount,
-            leverageMultiplier: context.leverageMultiplier
+            entryPrice: context.viewModel.decimalPrice,
+            liquidationPrice: context.liquidationPrice,
         )
         rows.append(
             .doubleLineInfo(

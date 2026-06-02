@@ -166,6 +166,11 @@ extension RouteAPI {
         
     }
     
+    enum LiquidationPriceRequest {
+        case open(marketID: String, side: PerpetualOrderSide, leverage: Int)
+        case add(positionID: String)
+    }
+    
     static func perpsMarkets(
         queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<[PerpetualMarket]>) -> Void
@@ -301,6 +306,41 @@ extension RouteAPI {
             path += "&offset=\(offset)"
         }
         return try await request(method: .get, path: path)
+    }
+    
+    static func perpsLiquidationPrice(
+        request: LiquidationPriceRequest,
+        amount: Decimal,
+    ) async throws -> Decimal {
+        struct Price: Decodable {
+            
+            enum CodingKeys: String, CodingKey {
+                case liquidationPrice = "liquidation_price"
+            }
+            
+            let liquidationPrice: String
+            
+        }
+        
+        let amount = amount.formatted(MixinToken.transferCanonicalFormatStyle)
+        var path = "/perps/markets/liquidation-price?amount=\(amount)"
+        switch request {
+        case let .open(marketID, side, leverage):
+            path += "&market_id=\(marketID)&side=\(side.rawValue)&leverage=\(leverage)"
+        case let .add(positionID):
+            path += "&position_id=\(positionID)"
+        }
+        let result: Price = try await Self.request(method: .get, path: path)
+        if let liquidationPrice = Decimal(string: result.liquidationPrice, locale: .enUSPOSIX) {
+            return liquidationPrice
+        } else {
+            throw DecodingError.dataCorrupted(
+                .init(
+                    codingPath: [Price.CodingKeys.liquidationPrice],
+                    debugDescription: "Invalid price"
+                )
+            )
+        }
     }
     
 }

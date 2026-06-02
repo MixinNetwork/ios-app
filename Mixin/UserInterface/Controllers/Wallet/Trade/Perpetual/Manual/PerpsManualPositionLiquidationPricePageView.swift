@@ -17,11 +17,12 @@ struct PerpsManualPositionLiquidationPricePageView: View {
     @State private var leverageMultiplier: Decimal = 10
     
     private var liquidationPrice: Decimal {
-        PerpetualChangeSimulation.liquidationPrice(
-            side: side,
-            entryPrice: entryPrice,
-            leverageMultiplier: leverageMultiplier
-        )
+        switch side {
+        case .long:
+            entryPrice * (1 - 1 / leverageMultiplier)
+        case .short:
+            entryPrice * (1 + 1 / leverageMultiplier)
+        }
     }
     
     var body: some View {

@@ -1,5 +1,6 @@
 import UIKit
 import WebKit
+import SafariServices
 import MixinServices
 
 final class BuyTokenWebViewController: PopupTitledWebViewController {
@@ -160,6 +161,8 @@ extension BuyTokenWebViewController: WebViewMessageHandler.Delegate {
             break
         case .signBotSignature(let callback):
             webView.evaluateJavaScript(callback)
+        case .openInBrowser(let url):
+            present(SFSafariViewController(url: url), animated: true)
         }
     }
     

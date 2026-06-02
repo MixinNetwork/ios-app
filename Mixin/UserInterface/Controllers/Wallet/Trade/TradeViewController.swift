@@ -197,8 +197,10 @@ final class TradeViewController: UIViewController {
             let customerService = CustomerServiceViewController()
             self.present(customerService, animated: true)
             switch trading {
-            case .simpleSpot, .advancedSpot:
-                reporter.report(event: .customerServiceDialog, tags: ["source": "trade_home"])
+            case .simpleSpot:
+                reporter.report(event: .customerServiceDialog, tags: ["source": "trade_simple_home_menu"])
+            case .advancedSpot:
+                reporter.report(event: .customerServiceDialog, tags: ["source": "trade_advanced_home_menu"])
             case .perpetualFutures:
                 reporter.report(event: .customerServiceDialog, tags: ["source": "perps_home_menu"])
             }

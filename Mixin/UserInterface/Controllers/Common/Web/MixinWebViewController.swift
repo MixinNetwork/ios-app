@@ -1,5 +1,6 @@
 import UIKit
 import WebKit
+import SafariServices
 import Alamofire
 import MixinServices
 
@@ -385,6 +386,8 @@ extension MixinWebViewController: WebViewMessageHandler.Delegate {
             web3Worker.handleRequest(json: json)
         case .signBotSignature(let callback):
             webView.evaluateJavaScript(callback)
+        case .openInBrowser(let url):
+            present(SFSafariViewController(url: url), animated: true)
         }
     }
     

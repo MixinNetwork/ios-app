@@ -13,6 +13,7 @@ extension AppGroupUserDefaults {
             case hasUnfinishedBackup = "has_unfinished_backup"
             case extensionSession = "extension_session"
             case lastDesktopLoginDate = "last_desktop_login_date"
+            case isAuthBySignUp = "is_auth_by_sign_up"
         }
         
         public static let extensionSessionDidChangeNotification = Notification.Name("one.mixin.services.extensionSessionDidChange")
@@ -49,6 +50,9 @@ extension AppGroupUserDefaults {
             }
             return !sessionId.isEmpty
         }
+        
+        @Default(namespace: .account, key: Key.isAuthBySignUp, defaultValue: false)
+        public static var isAuthBySignUp: Bool
         
         public static func clearAll() {
             Key.allCases

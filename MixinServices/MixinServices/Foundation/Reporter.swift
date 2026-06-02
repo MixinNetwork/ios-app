@@ -4,13 +4,14 @@ import Bugsnag
 open class Reporter {
     
     public enum Event: String {
-        case signUpStart        = "sign_up_start"
-        case signUpCAPTCHA      = "sign_up_captcha"
-        case signUpFullname     = "sign_up_fullname"
-        case signUpSignalInit   = "sign_up_signal_init"
-        case signUpPINSet       = "sign_up_pin_set"
-        case signUpPINQuiz      = "sign_up_pin_quiz"
-        case signUpEnd          = "sign_up_end"
+        case signUpStart            = "sign_up_start"
+        case signUpCAPTCHA          = "sign_up_captcha"
+        case signUpAccountCreated   = "sign_up_account_created"
+        case signUpFullname         = "sign_up_fullname"
+        case signUpSignalInit       = "sign_up_signal_init"
+        case signUpPINSet           = "sign_up_pin_set"
+        case signUpPINQuiz          = "sign_up_pin_quiz"
+        case signUpEnd              = "sign_up_end"
         
         case loginStart             = "login_start"
         case loginSMSSendConfirmed  = "login_sms_send_confirmed"
@@ -132,6 +133,10 @@ open class Reporter {
     }
     
     open func updateUserProperties(_ properties: UserProperty, account: Account? = nil) {
+        
+    }
+    
+    open func updateUserProperty(key: String, value: String) {
         
     }
     

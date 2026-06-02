@@ -9,17 +9,6 @@ final class SignalLoadingViewController: LoginLoadingViewController {
         && AppGroupUserDefaults.User.isCircleSynchronized
     }
     
-    let isUsernameJustInitialized: Bool
-    
-    init(isUsernameJustInitialized: Bool) {
-        self.isUsernameJustInitialized = isUsernameJustInitialized
-        super.init()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     var onFinished: (() -> Void)?
     
     override func viewDidLoad() {
@@ -43,7 +32,7 @@ final class SignalLoadingViewController: LoginLoadingViewController {
             }
         }
         
-        if isUsernameJustInitialized {
+        if AppGroupUserDefaults.Account.isAuthBySignUp {
             reporter.report(event: .signUpSignalInit)
         } else {
             reporter.report(event: .loginSignalInit)

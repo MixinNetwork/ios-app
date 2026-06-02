@@ -41,6 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             assertionFailure("Missing AppsFlyer key")
         }
         AppsFlyerLib.shared().appleAppID = appStoreAppID
+        AppsFlyerLib.shared().delegate = self
         AppGroupUserDefaults.migrateIfNeeded()
         updateImageManagerConfig()
         _ = ReachabilityManger.shared
@@ -430,6 +431,38 @@ extension AppDelegate {
         }
         return .portrait
         
+    }
+    
+}
+
+extension AppDelegate : AppsFlyerLibDelegate {
+
+    // Handle Organic/Non-organic installation
+    func onConversionDataSuccess(_ conversionInfo: [AnyHashable : Any]) {
+        guard let status = conversionInfo["af_status"] as? String else {
+            return
+        }
+        guard UIApplication.shared.isProtectedDataAvailable else {
+            return
+        }
+        guard LoginManager.shared.isLoggedIn else {
+            return
+        }
+        
+        reporter.updateUserProperty(key: "af_source", value: status)
+        if status == "Non-Organic" {
+            if let mediaSource = conversionInfo["media_source"] as? String, !mediaSource.isEmpty {
+                reporter.updateUserProperty(key: "af_media_source", value: mediaSource)
+            }
+            
+            if let campaign = conversionInfo["campaign"] as? String, !campaign.isEmpty {
+                reporter.updateUserProperty(key: "af_campaign", value: campaign)
+            }
+        }
+    }
+ 
+    func onConversionDataFail(_ error: any Error) {
+        Logger.general.error(category: "AppsFlyer", message: "onConversionDataFail: \(error)")
     }
     
 }

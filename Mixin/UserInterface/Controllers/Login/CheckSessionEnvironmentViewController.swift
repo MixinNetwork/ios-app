@@ -28,8 +28,6 @@ final class CheckSessionEnvironmentViewController: UIViewController {
     private var account: Account
     private var isAccountFresh: Bool
     
-    private var isUsernameJustInitialized = false
-    
     private var initialBots: [String] {
         if Locale.preferredLanguages.first?.hasPrefix("zh-Hans") ?? false {
             [
@@ -93,7 +91,6 @@ final class CheckSessionEnvironmentViewController: UIViewController {
             reload(content: clockSkew)
         } else if account.fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             Logger.login.info(category: "CheckSessionEnvironment", message: "Create username")
-            isUsernameJustInitialized = true
             let username = UsernameViewController()
             let navigationController = GeneralAppearanceNavigationController(rootViewController: username)
             reload(content: navigationController)
@@ -109,12 +106,13 @@ final class CheckSessionEnvironmentViewController: UIViewController {
             reload(content: upgrade)
         } else if !SignalLoadingViewController.isLoaded {
             Logger.login.info(category: "CheckSessionEnvironment", message: "Load Signal")
-            let signalLoading = SignalLoadingViewController(isUsernameJustInitialized: isUsernameJustInitialized)
+            let signalLoading = SignalLoadingViewController()
             signalLoading.onFinished = { [weak self] in
                 guard let self else {
                     return
                 }
-                if !self.isUsernameJustInitialized {
+                
+                if !AppGroupUserDefaults.Account.isAuthBySignUp {
                     Logger.login.info(category: "CheckSessionEnvironment", message: "Sync contacts")
                     ContactAPI.syncContacts()
                 }
@@ -156,9 +154,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                 }
             } else {
                 Logger.login.info(category: "CheckSessionEnvironment", message: "Create PIN")
-                let tip = TIPNavigationController(intent: .create)
-                tip.redirectsToWalletTabOnFinished = true
-                root = tip
+                root = TIPNavigationController(intent: .create)
             }
             AppDelegate.current.mainWindow.rootViewController = root
         }

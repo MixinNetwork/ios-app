@@ -81,6 +81,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
     func login() {
         isBusy = true
         SignalProtocol.shared.initSignal()
+        AppGroupUserDefaults.Account.isAuthBySignUp = false
         let code = verificationCodeField.text
         let registrationID = Int(SignalProtocol.shared.getRegistrationId())
         let sessionKey = Ed25519PrivateKey()

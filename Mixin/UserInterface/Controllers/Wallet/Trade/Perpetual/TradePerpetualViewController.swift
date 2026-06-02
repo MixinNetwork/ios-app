@@ -14,10 +14,12 @@ final class TradePerpetualViewController: UIViewController {
     private let positionsLoader: PerpetualPositionLoader
     private let marketLoader = PerpetualMarketLoader(marketID: nil)
     private let maxItemCount = 3
+    private let topMoversCount = 4
     
     private var sections: [Section] = []
     private var value: PerpetualPositionValue?
     private var openPositions: [PerpetualPositionViewModel] = []
+    private var topMovers: [PerpetualMarketViewModel]?
     private var markets: [PerpetualMarketViewModel]?
     private var stocks: [PerpetualMarketViewModel]?
     private var commodities: [PerpetualMarketViewModel]?
@@ -105,17 +107,59 @@ final class TradePerpetualViewController: UIViewController {
                     return section
                 }
                 
-                return switch self?.sections[sectionIndex] {
+                switch self?.sections[sectionIndex] {
                 case .none, .value:
-                    oneCell(estimatedHeight: 97)
+                    return oneCell(estimatedHeight: 97)
                 case .positions:
-                    multipleCells(itemCount: self?.openPositions.count)
+                    return multipleCells(itemCount: self?.openPositions.count)
+                case .topMovers:
+                    let itemSize = NSCollectionLayoutSize(
+                        widthDimension: .estimated(76),
+                        heightDimension: .estimated(86)
+                    )
+                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                    let group: NSCollectionLayoutGroup = .horizontal(
+                        layoutSize: NSCollectionLayoutSize(
+                            widthDimension: .fractionalWidth(1),
+                            heightDimension: .estimated(86)
+                        ),
+                        subitem: item,
+                        count: 4
+                    )
+                    group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 6, bottom: 0, trailing: 6)
+                    let section = NSCollectionLayoutSection(group: group)
+                    section.interGroupSpacing = 16
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                    section.boundarySupplementaryItems = [
+                        NSCollectionLayoutBoundarySupplementaryItem(
+                            layoutSize: NSCollectionLayoutSize(
+                                widthDimension: .fractionalWidth(1),
+                                heightDimension: .absolute(57)
+                            ),
+                            elementKind: UICollectionView.elementKindSectionHeader,
+                            alignment: .top
+                        ),
+                        NSCollectionLayoutBoundarySupplementaryItem(
+                            layoutSize: NSCollectionLayoutSize(
+                                widthDimension: .fractionalWidth(1),
+                                heightDimension: .absolute(20)
+                            ),
+                            elementKind: UICollectionView.elementKindSectionFooter,
+                            alignment: .bottom
+                        ),
+                    ]
+                    let background: NSCollectionLayoutDecorationItem = .background(
+                        elementKind: TradeSectionBackgroundView.elementKind
+                    )
+                    background.contentInsets = section.contentInsets
+                    section.decorationItems = [background]
+                    return section
                 case .markets(let category):
-                    multipleCells(itemCount: self?.marketItems(category: category)?.count)
+                    return multipleCells(itemCount: self?.marketItems(category: category)?.count)
                 case .activity:
-                    multipleCells(itemCount: self?.activities?.count)
+                    return multipleCells(itemCount: self?.activities?.count)
                 case .introduction:
-                    oneCell(estimatedHeight: 90)
+                    return oneCell(estimatedHeight: 90)
                 }
             },
             configuration: config
@@ -159,6 +203,7 @@ final class TradePerpetualViewController: UIViewController {
         collectionView.register(R.nib.perpetualMarketCell)
         collectionView.register(R.nib.perpetualActivityCell)
         collectionView.register(R.nib.perpetualIntroductionCell)
+        collectionView.register(R.nib.perpetualTopMoverCell)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
@@ -182,17 +227,20 @@ final class TradePerpetualViewController: UIViewController {
             object: nil
         )
         
-        let limit = maxItemCount + 1
-        DispatchQueue.global().async { [weak self, wallet] in
+        let generalItemCount = maxItemCount + 1
+        DispatchQueue.global().async { [weak self, wallet, topMoversCount] in
             let value = PerpsPositionDAO.shared.positionValue()
             let openPositions = PerpsPositionDAO.shared.positionItems()
                 .map { item in
                     PerpetualPositionViewModel(wallet: wallet, position: item)
                 }
-            let markets = AggregatedMarkets.fetch(limit: limit)
+            let markets = AggregatedMarkets.fetch(
+                topMoversCount: topMoversCount,
+                otherItemCount: generalItemCount,
+            )
             let activities = PerpsOrderDAO.shared.orderItems(
                 offsetUpdatedAt: nil,
-                limit: limit
+                limit: generalItemCount
             ).compactMap { order in
                 PerpetualActivityViewModel(wallet: wallet, order: order)
             }
@@ -203,6 +251,7 @@ final class TradePerpetualViewController: UIViewController {
                 self.value = value
                 self.openPositions = openPositions
                 if !markets.all.isEmpty {
+                    self.topMovers = markets.topMovers
                     self.markets = markets.all
                     self.stocks = markets.stocks
                     self.commodities = markets.commodities
@@ -244,7 +293,10 @@ final class TradePerpetualViewController: UIViewController {
         default:
             return
         }
-        let selector = PerpetualMarketSelectorViewController(selectedCategory: .all)
+        let selector = PerpetualMarketSelectorViewController(
+            selectedCategory: .all,
+            ordering: nil,
+        )
         selector.onSelected = { [wallet, weak self] (viewModel) in
             guard let self else {
                 return
@@ -286,6 +338,12 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             1
         case .positions:
             min(maxItemCount, openPositions.count)
+        case .topMovers:
+            if let count = topMovers?.count, count == topMoversCount * 2 {
+                count
+            } else {
+                1
+            }
         case .markets(let category):
             if let count = marketItems(category: category)?.count, count != 0 {
                 min(maxItemCount, count)
@@ -319,6 +377,25 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 cell.load(viewModel: position)
                 return cell
             }
+        case .topMovers:
+            if let topMovers, topMovers.count == topMoversCount * 2 {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_top_mover, for: indexPath)!
+                let viewModel = topMovers[indexPath.item]
+                cell.load(viewModel: viewModel)
+                return cell
+            } else {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_placeholder, for: indexPath)!
+                if topMovers == nil {
+                    cell.activityIndicatorView.startAnimating()
+                    cell.emptyIndicatorStackView.isHidden = true
+                } else {
+                    cell.activityIndicatorView.stopAnimating()
+                    cell.titleLabel.text = R.string.localizable.no_results().uppercased()
+                    cell.emptyIndicatorStackView.isHidden = false
+                    cell.helpButton.isHidden = true
+                }
+                return cell
+            }
         case .markets(let category):
             let items = marketItems(category: category)
             if let items, !items.isEmpty {
@@ -335,6 +412,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     cell.activityIndicatorView.stopAnimating()
                     cell.titleLabel.text = R.string.localizable.no_results().uppercased()
                     cell.emptyIndicatorStackView.isHidden = false
+                    cell.helpButton.isHidden = false
                     cell.onHelp = { [weak self] in
                         self?.presentPerpsManual()
                         reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_home_card"])
@@ -357,6 +435,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     cell.activityIndicatorView.stopAnimating()
                     cell.titleLabel.text = R.string.localizable.no_activity().uppercased()
                     cell.emptyIndicatorStackView.isHidden = false
+                    cell.helpButton.isHidden = false
                     cell.onHelp = { [weak self] in
                         self?.presentPerpsManual()
                         reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_home_card"])
@@ -381,6 +460,14 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewOpenPositions()
                 }
+            case .topMovers:
+                view.label.text = R.string.localizable.perps_top_movers()
+                view.onShowAll = { [weak self] (sender) in
+                    self?.viewAllMarkets(
+                        category: .all,
+                        ordering: .init(field: .change, direction: .descending)
+                    )
+                }
             case .markets(let category):
                 view.label.text = switch category {
                 case .all:
@@ -391,7 +478,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     R.string.localizable.perps_category_commodities()
                 }
                 view.onShowAll = { [weak self] (sender) in
-                    self?.viewAllMarkets(category: category)
+                    self?.viewAllMarkets(category: category, ordering: nil)
                 }
             case .activity:
                 view.label.text = R.string.localizable.perps_activity()
@@ -414,10 +501,12 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.onViewAll = { [weak self] (sender) in
                     self?.viewOpenPositions()
                 }
+            case .topMovers:
+                break
             case .markets(let category):
                 view.viewAllButton.isHidden = false
                 view.onViewAll = { [weak self] (sender) in
-                    self?.viewAllMarkets(category: category)
+                    self?.viewAllMarkets(category: category, ordering: nil)
                 }
             case .activity:
                 view.viewAllButton.isHidden = (activities?.count ?? 0) <= maxItemCount
@@ -453,6 +542,16 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
                 )
                 navigationController?.pushViewController(market, animated: true)
             }
+        case .topMovers:
+            guard let topMovers, !topMovers.isEmpty else {
+                return
+            }
+            let viewModel = topMovers[indexPath.item]
+            let market = PerpetualMarketViewController(
+                wallet: wallet,
+                viewModel: viewModel,
+            )
+            navigationController?.pushViewController(market, animated: true)
         case .markets(let category):
             let items = marketItems(category: category)
             guard let items, !items.isEmpty else {
@@ -492,12 +591,14 @@ extension TradePerpetualViewController {
         
         case value
         case positions
+        case topMovers
         case markets(MarketCategory)
         case activity
         case introduction
         
         static func sections(openPositionCount: Int) -> [Section] {
             var sections: [Section] = [
+                .topMovers,
                 .markets(.all),
                 .markets(.stocks),
                 .markets(.commodities),
@@ -516,30 +617,37 @@ extension TradePerpetualViewController {
     
     private struct AggregatedMarkets {
         
+        let topMovers: [PerpetualMarketViewModel]
         let all: [PerpetualMarketViewModel]
         let stocks: [PerpetualMarketViewModel]
         let commodities: [PerpetualMarketViewModel]
         
-        static func fetch(limit: Int) -> AggregatedMarkets {
+        static func fetch(
+            topMoversCount: Int,
+            otherItemCount: Int
+        ) -> AggregatedMarkets {
+            let topMovers = PerpsMarketDAO.shared.availableTopMovers(count: topMoversCount)
+            let topMoverViewModels = topMovers.compactMap(PerpetualMarketViewModel.init(market:))
             let all = PerpsMarketDAO.shared.availableMarkets(
                 ordering: nil,
                 category: nil,
-                limit: limit
+                limit: otherItemCount
             )
             let allViewModels = all.compactMap(PerpetualMarketViewModel.init(market:))
             let stocks = PerpsMarketDAO.shared.availableMarkets(
                 ordering: nil,
                 category: .stocks,
-                limit: limit
+                limit: otherItemCount
             )
             let stockViewModels = stocks.compactMap(PerpetualMarketViewModel.init(market:))
             let commodities = PerpsMarketDAO.shared.availableMarkets(
                 ordering: nil,
                 category: .commodities,
-                limit: limit
+                limit: otherItemCount
             )
             let commoditiesViewModels = commodities.compactMap(PerpetualMarketViewModel.init(market:))
             return AggregatedMarkets(
+                topMovers: topMoverViewModels,
                 all: allViewModels,
                 stocks: stockViewModels,
                 commodities: commoditiesViewModels
@@ -564,14 +672,17 @@ extension TradePerpetualViewController {
         navigationController?.pushViewController(positions, animated: true)
     }
     
-    private func viewAllMarkets(category: MarketCategory) {
+    private func viewAllMarkets(
+        category: MarketCategory,
+        ordering: PerpsMarketDAO.Ordering?
+    ) {
         let selector = switch category {
         case .all:
-            PerpetualMarketSelectorViewController(selectedCategory: .all)
+            PerpetualMarketSelectorViewController(selectedCategory: .all, ordering: ordering)
         case .stocks:
-            PerpetualMarketSelectorViewController(selectedCategory: .stocks)
+            PerpetualMarketSelectorViewController(selectedCategory: .stocks, ordering: ordering)
         case .commodities:
-            PerpetualMarketSelectorViewController(selectedCategory: .commodities)
+            PerpetualMarketSelectorViewController(selectedCategory: .commodities, ordering: ordering)
         }
         selector.onSelected = { [wallet, weak self] (viewModel) in
             guard let self else {
@@ -635,19 +746,26 @@ extension TradePerpetualViewController {
     }
     
     @objc private func reloadMarkets(_ notification: Notification) {
-        let limit = maxItemCount + 1
+        let otherItemCount = maxItemCount + 1
         let walletID = wallet.tradingWalletID
-        DispatchQueue.global().async { [weak self] in
-            let markets = AggregatedMarkets.fetch(limit: limit)
+        DispatchQueue.global().async { [weak self, topMoversCount] in
+            let markets = AggregatedMarkets.fetch(
+                topMoversCount: topMoversCount,
+                otherItemCount: otherItemCount,
+            )
             DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
+                self.topMovers = markets.topMovers
                 self.markets = markets.all
                 self.stocks = markets.stocks
                 self.commodities = markets.commodities
                 
                 var sections = IndexSet()
+                if let section = self.sections.firstIndex(of: .topMovers) {
+                    sections.insert(section)
+                }
                 if let section = self.sections.firstIndex(of: .markets(.all)) {
                     sections.insert(section)
                 }

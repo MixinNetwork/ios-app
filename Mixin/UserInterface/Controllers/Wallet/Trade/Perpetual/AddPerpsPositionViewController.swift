@@ -25,9 +25,10 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     private let openedMargin: Decimal
     private let leverageMultiplier: Decimal
     private let amountValidator: AmountValidator
+    private let liquidationPriceBeforeAdding: String
     private let liquidationPriceRequester: AddPerpsPositionLiquidationPriceRequester
     
-    private var liquidationPrice: Decimal?
+    private var liquidationPriceAfterAdding: Decimal?
     
     private var isAdding = false {
         didSet {
@@ -59,6 +60,9 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
         self.openedMargin = openedMargin
         self.leverageMultiplier = Decimal(positionViewModel.leverageMultiplier)
         self.amountValidator = AmountValidator(market: marketViewModel.market)
+        self.liquidationPriceBeforeAdding = positionViewModel.decimalLiquidationPrice?.formatted(
+            marketViewModel.userDisplayPriceFormatStyle
+        ) ?? "-"
         self.liquidationPriceRequester = AddPerpsPositionLiquidationPriceRequester(
             positionID: positionViewModel.positionID
         )
@@ -177,7 +181,10 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     }
     
     @IBAction func add(_ sender: Any) {
-        guard let assetID = marginToken?.assetID, let liquidationPrice else {
+        guard
+            let assetID = marginToken?.assetID,
+            let liquidationPrice = liquidationPriceAfterAdding
+        else {
             return
         }
         isAdding = true
@@ -287,18 +294,18 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     private func show(liquidationPrice: LiquidationPrice) {
         switch liquidationPrice {
         case .invalid:
-            self.liquidationPrice = nil
+            self.liquidationPriceAfterAdding = nil
             liquidationPriceActivityIndicator.stopAnimating()
-            liquidationPriceContentLabel.text = "-"
+            liquidationPriceContentLabel.text = liquidationPriceBeforeAdding
             liquidationPriceContentLabel.alpha = 1
             addButton.isEnabled = false
         case .busy:
-            self.liquidationPrice = nil
+            self.liquidationPriceAfterAdding = nil
             liquidationPriceActivityIndicator.startAnimating()
             liquidationPriceContentLabel.alpha = 0
             addButton.isEnabled = false
         case let .valid(price, isBalanceSufficient):
-            self.liquidationPrice = price
+            self.liquidationPriceAfterAdding = price
             liquidationPriceActivityIndicator.stopAnimating()
             liquidationPriceContentLabel.text = price.formatted(
                 marketViewModel.userDisplayPriceFormatStyle

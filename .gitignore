@@ -17,10 +17,6 @@ DerivedData/
 !default.perspectivev3
 xcuserdata/
 
-xcshareddata/
-!Package.resolved
-!*.xcscheme
-
 ## Other
 *.moved-aside
 *.xccheckout
@@ -70,6 +66,7 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
+TestResults/
 
 GoogleService-Info.plist
 Mixin-Keys.plist

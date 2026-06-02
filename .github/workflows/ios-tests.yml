@@ -1,0 +1,52 @@
+name: iOS Tests
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/ios-tests.yml"
+      - "scripts/**"
+      - "Mixin/**"
+      - "MixinDebug/**"
+      - "MixinNotificationService/**"
+      - "MixinServices/**"
+      - "MixinShare/**"
+      - "MixinTests/**"
+      - "MixinUITests/**"
+      - "Mixin.xcodeproj/**"
+      - "Mixin.xcworkspace/**"
+      - "Podfile"
+      - "Podfile.lock"
+  workflow_dispatch:
+
+jobs:
+  ios-tests:
+    name: All tests
+    runs-on: macos-26
+    timeout-minutes: 90
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v6
+
+      - name: Show toolchain
+        run: |
+          set -euo pipefail
+          sw_vers
+          xcodebuild -version
+          xcrun simctl list runtimes
+
+      - name: Install CocoaPods
+        run: |
+          set -euo pipefail
+          sudo gem install cocoapods -v 1.16.2 --no-document
+
+      - name: Run all tests
+        run: scripts/test_ios_all.sh
+
+      - name: Upload test result
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ios-test-results
+          path: TestResults/*.xcresult
+          if-no-files-found: ignore

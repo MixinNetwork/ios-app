@@ -30,7 +30,7 @@ final class TIPNavigationController: GeneralAppearanceNavigationController {
     
     func finish() {
         if AppDelegate.current.mainWindow.rootViewController == self {
-            if AppGroupUserDefaults.Account.isAuthBySignUp {
+            if AppGroupUserDefaults.isSigningUp {
                 reporter.report(event: .signUpEnd)
             } else {
                 reporter.report(event: .loginEnd)

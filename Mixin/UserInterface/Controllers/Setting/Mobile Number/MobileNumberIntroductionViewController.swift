@@ -54,12 +54,13 @@ final class MobileNumberIntroductionViewController: IntroductionViewController {
     }
     
     @objc private func continueToNext(_ sender: Any) {
-        let next = switch action {
+        let next: UIViewController
+        switch action {
         case .add:
             reporter.report(event: .addPhoneVerifyPIN)
-            VerifyMobileNumberPINValidationViewController(intent: .addMobileNumber)
+            next = VerifyMobileNumberPINValidationViewController(intent: .addMobileNumber)
         case .change:
-            VerifyMobileNumberPINValidationViewController(intent: .changeMobileNumber)
+            next = VerifyMobileNumberPINValidationViewController(intent: .changeMobileNumber)
         }
         navigationController?.pushViewController(replacingCurrent: next, animated: true)
     }

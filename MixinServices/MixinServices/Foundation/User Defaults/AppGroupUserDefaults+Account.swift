@@ -51,9 +51,6 @@ extension AppGroupUserDefaults {
             return !sessionId.isEmpty
         }
         
-        @Default(namespace: .account, key: Key.isAuthBySignUp, defaultValue: false)
-        public static var isAuthBySignUp: Bool
-        
         public static func clearAll() {
             Key.allCases
                 .map({ Default<Never>.wrappedKey(forNamespace: .account, key: $0.rawValue) })

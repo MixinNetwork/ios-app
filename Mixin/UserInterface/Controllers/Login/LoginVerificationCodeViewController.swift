@@ -81,7 +81,6 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
     func login() {
         isBusy = true
         SignalProtocol.shared.initSignal()
-        AppGroupUserDefaults.Account.isAuthBySignUp = false
         let code = verificationCodeField.text
         let registrationID = Int(SignalProtocol.shared.getRegistrationId())
         let sessionKey = Ed25519PrivateKey()
@@ -102,7 +101,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
             }
             switch result {
             case let .success(account):
-                if let error = self.login(account: account, sessionKey: sessionKey) {
+                if let error = self.login(account: account, signingUp: false, sessionKey: sessionKey) {
                     self.handleVerificationCodeError(error)
                 }
             case let .failure(error):

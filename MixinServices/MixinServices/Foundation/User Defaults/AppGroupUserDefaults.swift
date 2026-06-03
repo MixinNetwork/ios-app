@@ -143,6 +143,9 @@ extension AppGroupUserDefaults {
     @Default(namespace: nil, key: "app_public_key", defaultValue: [:])
     public static var appPublicKey: [String: Data]
     
+    @Default(namespace: nil, key: "signing_up", defaultValue: false)
+    public static var isSigningUp: Bool
+    
 }
 
 extension AppGroupUserDefaults {

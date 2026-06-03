@@ -55,7 +55,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 
                 AppGroupUserDefaults.User.loginPINValidated = true
                 await MainActor.run {
-                    if AppGroupUserDefaults.Account.isAuthBySignUp {
+                    if AppGroupUserDefaults.isSigningUp {
                         reporter.report(event: .signUpEnd)
                     } else {
                         reporter.report(event: .loginEnd)

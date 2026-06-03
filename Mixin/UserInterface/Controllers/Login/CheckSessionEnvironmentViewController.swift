@@ -112,7 +112,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                     return
                 }
                 
-                if !AppGroupUserDefaults.Account.isAuthBySignUp {
+                if !AppGroupUserDefaults.isSigningUp {
                     Logger.login.info(category: "CheckSessionEnvironment", message: "Sync contacts")
                     ContactAPI.syncContacts()
                 }

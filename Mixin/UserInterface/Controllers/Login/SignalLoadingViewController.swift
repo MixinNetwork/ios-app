@@ -32,7 +32,7 @@ final class SignalLoadingViewController: LoginLoadingViewController {
             }
         }
         
-        if AppGroupUserDefaults.Account.isAuthBySignUp {
+        if AppGroupUserDefaults.isSigningUp {
             reporter.report(event: .signUpSignalInit)
         } else {
             reporter.report(event: .loginSignalInit)

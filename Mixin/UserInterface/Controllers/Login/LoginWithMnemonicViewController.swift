@@ -254,7 +254,6 @@ extension LoginWithMnemonicViewController {
                 throw LoginError.loadVerificationID
             }
             SignalProtocol.shared.initSignal()
-            AppGroupUserDefaults.Account.isAuthBySignUp = false
             let masterSignature = try context.masterKey.signature(for: idData)
             let registrationID = Int(SignalProtocol.shared.getRegistrationId())
             let sessionSecret = context.sessionKey.publicKey.rawRepresentation
@@ -269,19 +268,25 @@ extension LoginWithMnemonicViewController {
                 }
                 switch result {
                 case let .success(account):
+                    let isSigningUp: Bool
                     switch self.action {
                     case .signIn(let mnemonics):
+                        isSigningUp = false
                         if account.isAnonymous {
                             AppGroupKeychain.mnemonics = mnemonics.entropy
                             Logger.login.info(category: "MnemonicLogin", message: "Mnemonics saved to Keychain")
                         }
                     case .signUp:
-                        AppGroupUserDefaults.Account.isAuthBySignUp = true
+                        isSigningUp = true
                         reporter.registerUserInformation(account: account)
                         reporter.report(event: .signUpAccountCreated)
-                        break
                     }
-                    if let error = self.login(account: account, sessionKey: context.sessionKey) {
+                    let error = self.login(
+                        account: account,
+                        signingUp: isSigningUp,
+                        sessionKey: context.sessionKey
+                    )
+                    if let error {
                         Logger.login.error(category: "MnemonicLogin", message: "\(error)")
                         self.showError(error.localizedDescription)
                     }

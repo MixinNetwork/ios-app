@@ -78,7 +78,9 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
     
     override func confirm(_ sender: Any) {
         if phrasesCount == nil {
-            let intro = CreateAccountIntroductionViewController()
+            let intro = CreateAccountIntroductionViewController(
+                analyticSource: "login_mnemonic_phrase"
+            )
             present(intro, animated: true)
         } else {
             do {
@@ -188,6 +190,11 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
             return
         }
         input(phrases: phrases)
+        let bottomOffset = CGPoint(
+            x: scrollView.contentOffset.x,
+            y: max(0, scrollView.contentSize.height - scrollView.frame.height)
+        )
+        scrollView.setContentOffset(bottomOffset, animated: true)
     }
     
     @objc private func emptyPhrases(_ sender: Any) {

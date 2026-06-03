@@ -268,16 +268,25 @@ extension LoginWithMnemonicViewController {
                 }
                 switch result {
                 case let .success(account):
+                    let isSigningUp: Bool
                     switch self.action {
                     case .signIn(let mnemonics):
+                        isSigningUp = false
                         if account.isAnonymous {
                             AppGroupKeychain.mnemonics = mnemonics.entropy
                             Logger.login.info(category: "MnemonicLogin", message: "Mnemonics saved to Keychain")
                         }
                     case .signUp:
-                        break
+                        isSigningUp = true
+                        reporter.registerUserInformation(account: account)
+                        reporter.report(event: .signUpAccountCreated)
                     }
-                    if let error = self.login(account: account, sessionKey: context.sessionKey) {
+                    let error = self.login(
+                        account: account,
+                        signingUp: isSigningUp,
+                        sessionKey: context.sessionKey
+                    )
+                    if let error {
                         Logger.login.error(category: "MnemonicLogin", message: "\(error)")
                         self.showError(error.localizedDescription)
                     }

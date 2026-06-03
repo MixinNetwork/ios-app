@@ -188,6 +188,7 @@ extension PerpetualPositionsViewController: UICollectionViewDataSource {
                 cell.onHelp = { [weak self] in
                     let manual = PerpsManual.viewController()
                     self?.present(manual, animated: true)
+                    reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_all_positions"])
                 }
                 return cell
             }

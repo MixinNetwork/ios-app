@@ -3,8 +3,6 @@ import MixinServices
 
 final class TIPNavigationController: GeneralAppearanceNavigationController {
     
-    var redirectsToWalletTabOnFinished = false
-    
     convenience init(intent: TIP.Action) {
         Logger.tip.info(category: "TIPNavigation", message: "Init with intent: \(intent)")
         let intro = TIPIntroViewController(intent: intent)
@@ -32,12 +30,16 @@ final class TIPNavigationController: GeneralAppearanceNavigationController {
     
     func finish() {
         if AppDelegate.current.mainWindow.rootViewController == self {
+            if AppGroupUserDefaults.isSigningUp {
+                reporter.report(event: .signUpEnd)
+            } else {
+                reporter.report(event: .loginEnd)
+            }
             Logger.tip.info(category: "TIPNavigation", message: "Finished")
             Logger.redirectLogsToLogin = false
             AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(
-                initialTab: redirectsToWalletTabOnFinished ? .wallet : .chat
+                initialTab: .wallet
             )
-            reporter.report(event: .loginEnd)
         } else {
             presentingViewController?.dismiss(animated: true)
         }

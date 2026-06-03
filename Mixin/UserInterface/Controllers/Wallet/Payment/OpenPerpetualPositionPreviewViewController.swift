@@ -185,6 +185,16 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         reloadData(with: rows)
     }
     
+    override func confirm(_ sender: Any) {
+        super.confirm(sender)
+        reporter.report(event: .tradePerpsPreviewConfirm)
+    }
+    
+    override func close(_ sender: Any) {
+        super.close(sender)
+        reporter.report(event: .tradePerpsPreviewCancel)
+    }
+    
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
@@ -223,6 +233,13 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     if let callback = context.onDismissAfterSuccess {
                         onDismiss = callback
                     }
+                    reporter.report(
+                        event: .tradePerpsOpenPositionEnd,
+                        tags: [
+                            "leverage": "\(context.leverageMultiplier)",
+                            "trade_asset_level": operation.amount.reportingAssetLevel,
+                        ]
+                    )
                 }
             } catch {
                 let errorDescription = if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {

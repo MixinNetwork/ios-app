@@ -198,19 +198,19 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
             subtitle: R.string.localizable.signature_request_from(.mixin)
         )
         replaceTrayView(with: nil, animation: .vertical)
-        let reportType = switch mode {
-        case .simple:
-            "swap"
-        case .advanced:
-            "limit"
-        }
         let assetIDs = [sendToken.assetID, receiveToken.assetID]
         Task {
             do {
                 switch operation {
                 case .mixin(let operation):
                     try await operation.start(pin: pin)
-                    reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": reportType, "trade_asset_level": sendAmount.reportingAssetLevel])
+                    reporter.report(
+                        event: .tradeSpotEnd,
+                        tags: [
+                            "wallet": "main",
+                            "trade_asset_level": sendAmount.reportingAssetLevel
+                        ]
+                    )
                     let inexistAssetIDs = TokenDAO.shared.inexistAssetIDs(in: assetIDs)
                     for assetID in inexistAssetIDs {
                         let job = RefreshTokenJob(assetID: assetID)
@@ -218,7 +218,13 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                     }
                 case .web3(let operation):
                     try await operation.start(pin: pin)
-                    reporter.report(event: .tradeEnd, tags: ["wallet": "web3", "type": reportType, "trade_asset_level": sendAmount.reportingAssetLevel])
+                    reporter.report(
+                        event: .tradeSpotEnd,
+                        tags: [
+                            "wallet": "web3",
+                            "trade_asset_level": sendAmount.reportingAssetLevel
+                        ]
+                    )
                     let walletID = operation.wallet.walletID
                     let inexistAssetIDs = Web3TokenDAO.shared.inexistAssetIDs(walletID: walletID, in: assetIDs)
                     for assetID in inexistAssetIDs {

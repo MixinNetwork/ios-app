@@ -330,6 +330,7 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
                 self?.present(selector, animated: true, completion: nil)
             }
         case .trade:
+            UserOperationAnalytics.tradeSource = .walletHome
             let trade = TradeViewController(
                 wallet: .privacy,
                 trading: nil,
@@ -347,10 +348,6 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
                 self.navigationController?.pushViewController(trade, animated: true)
                 self.tableHeaderView.actionView.badgeActions.remove(.trade)
                 BadgeManager.shared.setHasViewed(identifier: .trade)
-                reporter.report(
-                    event: .tradeStart,
-                    tags: ["wallet": "main", "source": "wallet_home"]
-                )
             }
         }
     }

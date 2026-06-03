@@ -44,6 +44,13 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
         fatalError("Storyboard not supported")
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        var tags = ["wallet": "web3", "type": mode.rawValue]
+        tags["source"] = UserOperationAnalytics.tradeSource?.rawValue
+        reporter.report(event: .tradeSpotStart, tags: tags)
+    }
+    
     override func changeSendToken(_ sender: Any) {
         let selector = TradeWeb3TokenSelectorViewController(
             wallet: wallet,

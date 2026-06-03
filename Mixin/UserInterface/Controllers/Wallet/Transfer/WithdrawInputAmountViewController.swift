@@ -288,9 +288,11 @@ extension WithdrawInputAmountViewController: AddTokenMethodSelectorViewControlle
         guard let feeToken = selectedFeeItem?.token else {
             return
         }
-        let next = switch method {
+        let next: UIViewController?
+        switch method {
         case .trade:
-            TradeViewController(
+            UserOperationAnalytics.tradeSource = .withdraw
+            next = TradeViewController(
                 wallet: .privacy,
                 trading: .simpleSpot,
                 sendAssetID: nil,
@@ -298,7 +300,7 @@ extension WithdrawInputAmountViewController: AddTokenMethodSelectorViewControlle
                 referral: nil
             )
         case .deposit:
-            DepositViewController(token: feeToken, switchingBetweenNetworks: false)
+            next = DepositViewController(token: feeToken, switchingBetweenNetworks: false)
         }
         if let next {
             navigationController?.pushViewController(next, animated: true)

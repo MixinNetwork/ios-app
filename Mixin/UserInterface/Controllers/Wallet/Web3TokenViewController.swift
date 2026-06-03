@@ -235,6 +235,7 @@ extension Web3TokenViewController: TokenActionView.Delegate {
                 self?.send()
             }
         case .trade:
+            UserOperationAnalytics.tradeSource = .assetDetail
             let trade = TradeViewController(
                 wallet: .common(wallet),
                 trading: nil,
@@ -246,14 +247,7 @@ extension Web3TokenViewController: TokenActionView.Delegate {
                 return
             }
             withAccountRecoveryChecked { [weak self] in
-                guard let self else {
-                    return
-                }
-                self.navigationController?.pushViewController(trade, animated: true)
-                reporter.report(
-                    event: .tradeStart,
-                    tags: ["wallet": "web3", "source": "asset_detail"]
-                )
+                self?.navigationController?.pushViewController(trade, animated: true)
             }
         case .buy:
             break

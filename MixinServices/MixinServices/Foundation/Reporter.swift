@@ -4,13 +4,14 @@ import Bugsnag
 open class Reporter {
     
     public enum Event: String {
-        case signUpStart        = "sign_up_start"
-        case signUpCAPTCHA      = "sign_up_captcha"
-        case signUpFullname     = "sign_up_fullname"
-        case signUpSignalInit   = "sign_up_signal_init"
-        case signUpPINSet       = "sign_up_pin_set"
-        case signUpPINQuiz      = "sign_up_pin_quiz"
-        case signUpEnd          = "sign_up_end"
+        case signUpStart            = "sign_up_start"
+        case signUpCAPTCHA          = "sign_up_captcha"
+        case signUpAccountCreated   = "sign_up_account_created"
+        case signUpFullname         = "sign_up_fullname"
+        case signUpSignalInit       = "sign_up_signal_init"
+        case signUpPINSet           = "sign_up_pin_set"
+        case signUpPINQuiz          = "sign_up_pin_quiz"
+        case signUpEnd              = "sign_up_end"
         
         case loginStart             = "login_start"
         case loginSMSSendConfirmed  = "login_sms_send_confirmed"
@@ -22,13 +23,33 @@ open class Reporter {
         case loginVerifyPIN         = "login_pin_verify"
         case loginEnd               = "login_end"
         
-        case tradeStart         = "trade_start"
+        case addPhoneStart      = "add_phone_start"
+        case addPhoneVerifyPIN  = "add_phone_verify_pin"
+        case addPhoneEnd        = "add_phone_end"
+        
+        case tradeSpotStart     = "trade_spot_start"
+        case tradeSpotEnd       = "trade_spot_end"
         case tradeTokenSelect   = "trade_token_select"
         case tradeQuote         = "trade_quote"
         case tradePreview       = "trade_preview"
-        case tradeEnd           = "trade_end"
         case tradeTransactions  = "trade_transactions"
         case tradeDetail        = "trade_detail"
+        case tradePerpsOpenPositionStart    = "trade_perps_open_position_start"
+        case tradePerpsMarginTokenSelect    = "trade_perps_margin_token_select"
+        case tradePerpsAmountInputPercent   = "trade_perps_amount_input_percent"
+        case tradePerpsAmountInputBalance   = "trade_perps_amount_input_balance"
+        case tradePerpsLeverageSelect       = "trade_perps_leverage_select"
+        case tradePerpsPreview              = "trade_perps_preview"
+        case tradePerpsPreviewConfirm       = "trade_perps_preview_confirm"
+        case tradePerpsPreviewCancel        = "trade_perps_preview_cancel"
+        case tradePerpsOpenPositionEnd      = "trade_perps_open_position_end"
+        case tradePerpsClosePositionStart   = "trade_perps_close_position_start"
+        case tradePerpsClosePositionPreviewConfirm  = "trade_perps_close_position_preview_confirm"
+        case tradePerpsClosePositionPreviewCancel   = "trade_perps_close_position_preview_cancel"
+        case tradePerpsClosePositionEnd     = "trade_perps_close_position_end"
+        case tradePerpsActivity             = "trade_perps_activity"
+        case tradePerpsActivityDetail       = "trade_perps_activity_detail"
+        case tradePerpsGuide                = "trade_perps_guide"
         
         case buyStart           = "buy_start"
         case buyTokenSelect     = "buy_token_select"
@@ -113,6 +134,10 @@ open class Reporter {
     }
     
     open func updateUserProperties(_ properties: UserProperty, account: Account? = nil) {
+        
+    }
+    
+    open func updateUserProperty(key: String, value: String) {
         
     }
     

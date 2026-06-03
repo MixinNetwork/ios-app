@@ -132,7 +132,7 @@ final class OnboardingViewController: UIViewController {
     }
     
     @IBAction func signUp(_ sender: Any) {
-        let intro = CreateAccountIntroductionViewController()
+        let intro = CreateAccountIntroductionViewController(analyticSource: "landing")
         present(intro, animated: true)
     }
     

@@ -2,6 +2,7 @@ import UIKit
 import FirebaseCore
 import FirebaseAnalytics
 import FirebaseCrashlytics
+import AppsFlyerLib
 import MixinServices
 
 final class MainAppReporter: Reporter {
@@ -14,6 +15,7 @@ final class MainAppReporter: Reporter {
             "IdentityNumber": account.identityNumber
         ])
         Analytics.setUserID(account.userID)
+        AppsFlyerLib.shared().customerUserID = account.userID
     }
     
     override func report(error: Error) {
@@ -24,6 +26,35 @@ final class MainAppReporter: Reporter {
     override func report(event: Event, tags: [String: String]? = nil) {
         super.report(event: event, tags: tags)
         Analytics.logEvent(event.rawValue, parameters: tags)
+        
+        switch event {
+        case .signUpStart,
+             .buyStart,
+             .tradeSpotStart,
+             .tradeSpotEnd,
+             .tradePerpsOpenPositionStart,
+             .tradePerpsOpenPositionEnd,
+             .receiveStart,
+             .receiveEnd,
+             .sendStart,
+             .sendEnd:
+            AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
+            AppsFlyerLib.shared().start()
+        case .signUpAccountCreated:
+            AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
+            if let appInstanceID = Analytics.appInstanceID() {
+                AppsFlyerLib.shared().customData = ["app_instance_id": appInstanceID]
+            }
+            AppsFlyerLib.shared().start()
+        case .loginEnd:
+            AppsFlyerLib.shared().logEvent(AFEventLogin, withValues: tags)
+            AppsFlyerLib.shared().start()
+        case .signUpEnd:
+            AppsFlyerLib.shared().logEvent(AFEventCompleteRegistration, withValues: tags)
+            AppsFlyerLib.shared().start()
+        default:
+            break
+        }
     }
     
     override func updateUserProperties(_ properties: UserProperty, account: Account? = nil) {
@@ -61,6 +92,11 @@ final class MainAppReporter: Reporter {
                 Analytics.setUserProperty(sum.reportingAssetLevel, forName: "asset_level")
             }
         }
+    }
+    
+    override func updateUserProperty(key: String, value: String) {
+        super.updateUserProperty(key: key, value: value)
+        Analytics.setUserProperty(value, forName: key)
     }
     
 }

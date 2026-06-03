@@ -70,6 +70,8 @@ class PerpsMarginInputViewController: UIViewController {
         }
     }
     
+    private let marginAmountPrecisionValidator = MarginAmountPrecisionValidator()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -79,6 +81,7 @@ class PerpsMarginInputViewController: UIViewController {
         marginTitleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         marginTitleLabel.text = R.string.localizable.amount()
         marginNetworkLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        marginAmountTextField.delegate = marginAmountPrecisionValidator
         marginTokenFooterStackView.setCustomSpacing(0, after: marginTokenBalanceButton)
         marginTokenBalanceButton.titleLabel?.adjustsFontForContentSizeCategory = true
         marginTokenDepositButton.configuration?.attributedTitle = {
@@ -295,6 +298,24 @@ extension PerpsMarginInputViewController {
                 return .invalid(reason: reason)
             } else {
                 return .valid
+            }
+        }
+        
+    }
+    
+    private final class MarginAmountPrecisionValidator: NSObject, UITextFieldDelegate {
+        
+        var precision = MixinToken.internalPrecision
+        
+        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            let oldText = textField.text ?? ""
+            let newText = (oldText as NSString).replacingCharacters(in: range, with: string)
+            if newText.isEmpty || newText.count < oldText.count {
+                return true
+            } else if let value = Decimal(string: newText, locale: .current) {
+                return value.numberOfSignificantFractionalDigits <= precision
+            } else {
+                return false
             }
         }
         

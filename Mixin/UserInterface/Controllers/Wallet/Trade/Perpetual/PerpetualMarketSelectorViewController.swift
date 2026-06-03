@@ -40,8 +40,9 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         markets[selectedCategory] ?? []
     }
     
-    init(selectedCategory: DisplayCategory) {
+    init(selectedCategory: DisplayCategory, ordering: PerpsMarketDAO.Ordering?) {
         self.selectedCategory = selectedCategory
+        self.ordering = ordering
         let nib = R.nib.perpetualMarketSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -115,6 +116,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
             attributes: orderingAttributes
         )
         changeOrderingButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        updateOrderingButtonsImage(ordering: ordering)
         
         marketsCollectionView.register(R.nib.perpetualMarketCell)
         marketsCollectionView.collectionViewLayout = UICollectionViewCompositionalLayout { (_, _) in
@@ -236,17 +238,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         searchBoxView.isBusy = false
     }
     
-    private func updateOrdering(field: PerpsMarketDAO.Ordering.Field) {
-        ordering = if let ordering, ordering.field == field {
-            switch ordering.direction {
-            case .ascending:
-                    .none
-            case .descending:
-                    .init(field: field, direction: .ascending)
-            }
-        } else {
-            .init(field: field, direction: .descending)
-        }
+    private func updateOrderingButtonsImage(ordering: PerpsMarketDAO.Ordering?) {
         if let ordering {
             switch ordering.field {
             case .volume:
@@ -282,6 +274,20 @@ final class PerpetualMarketSelectorViewController: UIViewController {
             priceOrderingButton.configuration?.image = R.image.order_none()
             changeOrderingButton.configuration?.image = R.image.order_none()
         }
+    }
+    
+    private func updateOrdering(field: PerpsMarketDAO.Ordering.Field) {
+        ordering = if let ordering, ordering.field == field {
+            switch ordering.direction {
+            case .ascending:
+                    .none
+            case .descending:
+                    .init(field: field, direction: .ascending)
+            }
+        } else {
+            .init(field: field, direction: .descending)
+        }
+        updateOrderingButtonsImage(ordering: ordering)
         reloadData()
     }
     

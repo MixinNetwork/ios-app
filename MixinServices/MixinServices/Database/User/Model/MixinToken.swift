@@ -97,6 +97,7 @@ extension MixinToken {
             .grouping(.never)
             .sign(strategy: .never)
             .precision(.fractionLength(0...Int(Self.internalPrecision)))
+            .rounded(rule: .towardZero)
     }
     
 }

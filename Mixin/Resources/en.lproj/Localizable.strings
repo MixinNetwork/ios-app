@@ -1201,6 +1201,7 @@
 "perps_share_roe" = "ROE";
 "perps_share_to_mixin_contact" = "Send to Mixin Contact";
 "perps_short_overview" = "You open a short position when you expect the price to fall. If the price falls, you profit; if the price rises, you incur a loss.";
+"perps_top_movers" = "Top Movers";
 "perps_tpsl_overview" = "Take-profit and stop-loss are conditional orders that execute automatically when the trigger price is reached.";
 "phone_as_key_shard" = "Your mobile number will be associated with a key shard of the MPC wallet managed by you";
 "phone_call" = "Phone call";

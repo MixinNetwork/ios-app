@@ -38,6 +38,24 @@ public final class PerpsMarketDAO: PerpsDAO {
         db.select(with: "SELECT last FROM markets WHERE market_id = ?", arguments: [marketID])
     }
     
+    public func availableTopMovers(
+        count: Int
+    ) -> [PerpetualMarket] {
+        let risings: [PerpetualMarket] = db.select(with: """
+        SELECT * FROM markets
+        WHERE volume > 0
+        ORDER BY CAST(change AS REAL) DESC
+        LIMIT \(count)
+        """)
+        let fallings:  [PerpetualMarket] = db.select(with: """
+        SELECT * FROM markets
+        WHERE volume > 0
+        ORDER BY CAST(change AS REAL) ASC
+        LIMIT \(count)
+        """)
+        return risings + fallings
+    }
+    
     public func availableMarkets(
         ordering: Ordering?,
         category: PerpetualMarket.Category?,

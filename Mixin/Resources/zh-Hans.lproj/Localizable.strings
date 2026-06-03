@@ -1201,6 +1201,7 @@
 "perps_share_roe" = "收益额";
 "perps_share_to_mixin_contact" = "发送到 Mixin 联系人";
 "perps_short_overview" = "做空是指在预期价格下跌时建立仓位，价格下跌可获得盈利，价格上涨则产生亏损。";
+"perps_top_movers" = "涨跌榜";
 "perps_tpsl_overview" = "止盈和止损是预先设定的自动平仓指令，帮助你在不盯盘的情况下管理风险。";
 "phone_as_key_shard" = "手机号将关联到由您管理的 MPC 钱包的一个密钥分片";
 "phone_call" = "电话呼叫";

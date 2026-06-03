@@ -45,6 +45,8 @@ final class OpenPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceReq
                         completion(price)
                     }
                     return
+                } catch is CancellationError {
+                    // Ignore
                 } catch {
                     Logger.general.error(category: "OpenPerpsPosition", message: "\(error)")
                     try await Task.sleep(nanoseconds: failRetryInterval * NSEC_PER_SEC)
@@ -83,6 +85,8 @@ final class AddPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceRequ
                         completion(price)
                     }
                     return
+                } catch is CancellationError {
+                    // Ignore
                 } catch {
                     Logger.general.error(category: "OpenPerpsPosition", message: "\(error)")
                     try await Task.sleep(nanoseconds: failRetryInterval * NSEC_PER_SEC)

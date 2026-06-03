@@ -39,7 +39,15 @@ final class PerpetualMarketViewController: UIViewController {
     
     private var viewModel: PerpetualMarketViewModel
     private var sections: [Section] = [.price, .info]
-    private var selectedTimeFrame: PerpetualTimeFrame = .oneDay
+    private var selectedTimeFrame: PerpetualTimeFrame = {
+        if let value = AppGroupUserDefaults.Wallet.perpsChartTimeFrame,
+           let frame = PerpetualTimeFrame(rawValue: value)
+        {
+            return frame
+        } else {
+            return .oneDay
+        }
+    }()
     private var charts: [PerpetualTimeFrame: PerpetualMarketPriceCell.Chart] = [:]
     
     private weak var collectionView: UICollectionView!
@@ -796,6 +804,7 @@ extension PerpetualMarketViewController: PerpetualMarketPriceCell.Delegate {
             priceFormatStyle: viewModel.userDisplayPriceFormatStyle
         )
         candleLoader.start(timeFrame: timeFrame)
+        AppGroupUserDefaults.Wallet.perpsChartTimeFrame = timeFrame.rawValue
     }
     
 }

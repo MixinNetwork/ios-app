@@ -15,8 +15,16 @@ final class MarketViewController: UIViewController {
     private var market: FavorableMarket?
     private var tokens: [MixinTokenItem]?
     private var viewModel: MarketViewModel
-    private var chartPeriod: PriceHistoryPeriod = .day
     private var chartPoints: [ChartView.Point]?
+    private var chartPeriod: PriceHistoryPeriod = {
+        if let value = AppGroupUserDefaults.Wallet.marketChartPeriod,
+           let period = PriceHistoryPeriod(rawValue: value)
+        {
+            return period
+        } else {
+            return .day
+        }
+    }()
     private var hasAlert = true
     private var requester: MarketPeriodicRequester!
     
@@ -628,6 +636,7 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
         chartPoints = nil
         self.chartPeriod = period
         reloadPriceChart(period: period)
+        AppGroupUserDefaults.Wallet.marketChartPeriod = period.rawValue
     }
     
     func tokenPriceChartCellWantsToShowAlert(_ cell: TokenPriceChartCell) {

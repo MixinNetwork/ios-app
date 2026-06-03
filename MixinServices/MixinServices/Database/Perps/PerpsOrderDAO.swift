@@ -41,6 +41,16 @@ public final class PerpsOrderDAO: PerpsDAO {
         return db.select(with: query)
     }
     
+    public func activitiesValue() -> PerpetualPositionValue {
+        let sql = "SELECT SUM(realized_pnl) FROM perps_orders WHERE order_type = 'close'"
+        let pnl = try! db.read { (db) -> String in
+            let rows = try Row.fetchCursor(db, sql: sql)
+            let row = try rows.next()
+            return row?[0] ?? "0"
+        }
+        return .closed(pnl: pnl)
+    }
+    
     public func offset() -> String? {
         db.select(with: "SELECT updated_at FROM perps_orders ORDER BY updated_at DESC LIMIT 1")
     }

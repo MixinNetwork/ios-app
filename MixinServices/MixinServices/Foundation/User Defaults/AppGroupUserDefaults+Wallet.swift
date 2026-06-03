@@ -38,6 +38,9 @@ extension AppGroupUserDefaults {
             case perpsClosingConditionInputContent = "perps_closing_condition_input_content"
             case perpsOpenPositionTakeProfitDismissalDate = "perps_open_position_take_profit_dismissal"
             case perpsOpenPositionStopLossDismissalDate = "perps_open_position_stop_loss_dismissal"
+            
+            case marketChartPeriod = "market_chart_period"
+            case perpsChartTimeFrame = "perps_chart_time_frame"
         }
         
         public static let didChangeWalletTipNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeWalletTip")
@@ -120,6 +123,12 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .wallet, key: Key.perpsOpenPositionStopLossDismissalDate, defaultValue: .distantPast)
         public static var perpsOpenPositionStopLossDismissalDate: Date
+        
+        @Default(namespace: .wallet, key: Key.marketChartPeriod, defaultValue: nil)
+        public static var marketChartPeriod: String?
+        
+        @Default(namespace: .wallet, key: Key.perpsChartTimeFrame, defaultValue: nil)
+        public static var perpsChartTimeFrame: String?
         
         internal static func migrate() {
             lastPINVerifiedDate = Date(timeIntervalSince1970: WalletUserDefault.shared.lastInputPinTime)

@@ -34,8 +34,8 @@ struct PerpetualMarketViewModel {
         self.decimalPrice = decimalPrice
         self.price = decimalPrice.formatted(userDisplayPriceFormatStyle)
         self.volume = NamedLargeNumberFormatter.string(
-            number: decimalVolume * Currency.current.decimalRate,
-            currencyPrefix: true
+            number: decimalVolume,
+            currencyPrefix: .usd
         ) ?? m.volume
         self.fundingRate = PercentageFormatter.string(
             from: decimalFundingRate,

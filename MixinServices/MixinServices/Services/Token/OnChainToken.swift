@@ -46,6 +46,8 @@ extension OnChainToken {
             "Optimism"
         case ChainID.arbitrumOne:
             "Arbitrum"
+        case ChainID.hyperEVM:
+            "HyperEVM"
         default:
             chain?.name
         }

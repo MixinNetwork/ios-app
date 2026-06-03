@@ -20,6 +20,7 @@ public struct CurrencyFormatter {
     public enum Symbol {
         case currencyCode
         case currencySymbol
+        case dollarSign
         case custom(String)
     }
     
@@ -83,6 +84,8 @@ public struct CurrencyFormatter {
         var symbolPrefix: String = switch symbol {
         case .currencySymbol:
             Currency.current.symbol
+        case .dollarSign:
+            "$"
         default:
             ""
         }
@@ -150,7 +153,7 @@ public struct CurrencyFormatter {
         switch symbol {
         case .currencyCode:
             str += " " + Currency.current.code
-        case .currencySymbol:
+        case .currencySymbol, .dollarSign:
             // Inserted with `setSignBehavior`
             break
         case .custom(let symbol):

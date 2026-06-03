@@ -28,5 +28,6 @@ public enum ChainID {
     public static let arbitrumOne = "8c590110-1abc-3697-84f2-05214e6516aa"
     public static let opMainnet = "60360611-370c-3b69-9826-b13db93f6aba"
     public static let avalancheCChain = "1f67ac58-87ba-3571-9781-e9413c046f34"
+    public static let hyperEVM = "36d23d9e-bf4e-3ede-a12d-26f1f1f9fd2f"
     
 }

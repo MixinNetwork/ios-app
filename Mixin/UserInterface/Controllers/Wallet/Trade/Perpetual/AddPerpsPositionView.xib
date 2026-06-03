@@ -17,6 +17,7 @@
                 <outlet property="addSizeTitleLabel" destination="XEC-t4-ubt" id="01p-5c-pKH"/>
                 <outlet property="cancelButton" destination="V7i-at-j61" id="Q6z-ii-L3I"/>
                 <outlet property="errorDescriptionLabel" destination="Zzr-fx-od5" id="MIh-xa-3CA"/>
+                <outlet property="liquidationPriceActivityIndicator" destination="KEk-Ed-oel" id="gan-BA-tTg"/>
                 <outlet property="liquidationPriceContentLabel" destination="bgf-1d-1Jh" id="CZg-ut-nN2"/>
                 <outlet property="liquidationPriceTitleLabel" destination="7mc-Eo-nGw" id="pLk-9G-FEh"/>
                 <outlet property="marginAmountTextField" destination="Hup-oV-0nX" id="HyJ-ro-R4h"/>
@@ -310,12 +311,22 @@
                                         <action selector="introduceLiquidationPrice:" destination="-1" eventType="touchUpInside" id="EES-wY-8ph"/>
                                     </connections>
                                 </button>
+                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KEk-Ed-oel" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="341" y="209.66666666666669" width="16" height="16"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="tintColor" name="text_tertiary"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="16" id="gpN-bE-kY7"/>
+                                        <constraint firstAttribute="width" constant="16" id="hQC-YV-bba"/>
+                                    </constraints>
+                                </view>
                             </subviews>
                             <color key="backgroundColor" name="background_secondary"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="RxC-NC-Wys" secondAttribute="trailing" constant="36" id="13N-0E-QoT"/>
                                 <constraint firstAttribute="trailing" secondItem="Hzf-Ue-COC" secondAttribute="trailing" constant="20" id="25z-Ol-wYI"/>
                                 <constraint firstItem="Hzf-Ue-COC" firstAttribute="leading" secondItem="Vet-Pn-N7H" secondAttribute="leading" constant="20" id="BcD-oK-CbM"/>
+                                <constraint firstItem="KEk-Ed-oel" firstAttribute="centerY" secondItem="bgf-1d-1Jh" secondAttribute="centerY" id="DYl-zP-aKf"/>
                                 <constraint firstItem="RxC-NC-Wys" firstAttribute="top" secondItem="Hzf-Ue-COC" secondAttribute="bottom" constant="16" id="HxI-Kl-gMt"/>
                                 <constraint firstItem="UWb-cj-6Ve" firstAttribute="centerX" secondItem="aDS-Xh-aUx" secondAttribute="centerX" id="K2F-m4-Q18"/>
                                 <constraint firstItem="koH-aE-crs" firstAttribute="centerX" secondItem="awv-6Y-Xpt" secondAttribute="centerX" id="Npx-oV-ytC"/>
@@ -326,6 +337,7 @@
                                 <constraint firstAttribute="bottom" secondItem="RxC-NC-Wys" secondAttribute="bottom" id="aDn-Br-Net"/>
                                 <constraint firstItem="koH-aE-crs" firstAttribute="centerY" secondItem="awv-6Y-Xpt" secondAttribute="centerY" id="bh0-Kh-cnd"/>
                                 <constraint firstItem="vYl-s2-2ue" firstAttribute="centerX" secondItem="6AI-DR-YTQ" secondAttribute="centerX" id="rih-K6-37F"/>
+                                <constraint firstItem="KEk-Ed-oel" firstAttribute="trailing" secondItem="bgf-1d-1Jh" secondAttribute="trailing" id="yHH-T9-0hS"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -453,7 +465,7 @@
             <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

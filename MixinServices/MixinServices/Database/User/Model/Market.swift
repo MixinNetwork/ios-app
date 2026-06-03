@@ -69,7 +69,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     
     public private(set) lazy var localizedMarketCap = NamedLargeNumberFormatter.string(
         number: (Decimal(string: marketCap, locale: .enUSPOSIX) ?? 0) * Currency.current.decimalRate,
-        currencyPrefix: true
+        currencyPrefix: .current
     )
     
     public private(set) lazy var numberedRank: String? = {

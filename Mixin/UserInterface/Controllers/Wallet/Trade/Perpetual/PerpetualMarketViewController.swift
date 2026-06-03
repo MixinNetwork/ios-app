@@ -476,7 +476,11 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     private func setupTakeProfit(positionViewModel: PerpetualPositionViewModel) {
-        guard let margin = positionViewModel.decimalMargin, editingLock == nil else {
+        guard
+            editingLock == nil,
+            let margin = positionViewModel.decimalMargin,
+            let liquidationPrice = positionViewModel.decimalLiquidationPrice
+        else {
             return
         }
         let editor = EditPerpClosingConditionViewController(
@@ -485,7 +489,8 @@ final class PerpetualMarketViewController: UIViewController {
             margin: margin,
             behavior: .takeProfit,
             leverage: Decimal(positionViewModel.leverageMultiplier),
-            orderState: .open(entryPrice: positionViewModel.entryPrice),
+            orderState: .open(entryPrice: positionViewModel.entryPrice), 
+            liquidationPrice: liquidationPrice,
             currentAutoClosingPrice: positionViewModel.takeProfitPrice
         )
         let priceFormatStyle = viewModel.market.canonicalPriceFormatStyle
@@ -517,7 +522,11 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     private func setupStopLoss(positionViewModel: PerpetualPositionViewModel) {
-        guard let margin = positionViewModel.decimalMargin, editingLock == nil else {
+        guard
+            editingLock == nil,
+            let margin = positionViewModel.decimalMargin,
+            let liquidationPrice = positionViewModel.decimalLiquidationPrice
+        else {
             return
         }
         let editor = EditPerpClosingConditionViewController(
@@ -527,6 +536,7 @@ final class PerpetualMarketViewController: UIViewController {
             behavior: .stopLoss,
             leverage: Decimal(positionViewModel.leverageMultiplier),
             orderState: .open(entryPrice: positionViewModel.entryPrice),
+            liquidationPrice: liquidationPrice,
             currentAutoClosingPrice: positionViewModel.stopLossPrice,
         )
         let priceFormatStyle = viewModel.market.canonicalPriceFormatStyle

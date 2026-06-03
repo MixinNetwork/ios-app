@@ -23,10 +23,10 @@ enum PerpetualChangeSimulation {
         
         if margin > 0 {
             let profitValue = CurrencyFormatter.localizedString(
-                from: margin * exposure * Currency.current.decimalRate,
+                from: margin * exposure,
                 format: .fiatMoneyPretty,
                 sign: .always,
-                symbol: .currencySymbol
+                symbol: .dollarSign
             )
             return switch side {
             case .long:
@@ -42,21 +42,6 @@ enum PerpetualChangeSimulation {
                 R.string.localizable.price_fall_profit(priceChange, profit)
             }
         }
-    }
-    
-    static func liquidationPrice(
-        side: PerpetualOrderSide,
-        entryPrice: Decimal,
-        leverageMultiplier: Decimal,
-    ) -> Decimal {
-        let liquidationChangePercentage = 1 / leverageMultiplier
-        let price = switch side {
-        case .long:
-            entryPrice * (1 - liquidationChangePercentage)
-        case .short:
-            entryPrice * (1 + liquidationChangePercentage)
-        }
-        return price
     }
     
     static func liquidation(
@@ -78,10 +63,44 @@ enum PerpetualChangeSimulation {
             }
         } else {
             let marginValue = CurrencyFormatter.localizedString(
-                from: -margin * Currency.current.decimalRate,
+                from: -margin,
                 format: .fiatMoneyPretty,
                 sign: .always,
-                symbol: .currencySymbol
+                symbol: .dollarSign
+            )
+            return switch side {
+            case .long:
+                R.string.localizable.price_fall_loss(percentage, marginValue)
+            case .short:
+                R.string.localizable.price_rise_loss(percentage, marginValue)
+            }
+        }
+    }
+    
+    static func liquidation(
+        side: PerpetualOrderSide,
+        margin: Decimal,
+        entryPrice: Decimal,
+        liquidationPrice: Decimal,
+    ) -> String {
+        let percentage = PercentageFormatter.string(
+            from: abs(entryPrice - liquidationPrice) / entryPrice,
+            format: .pretty,
+            sign: .never
+        )
+        if margin == 0 {
+            return switch side {
+            case .long:
+                R.string.localizable.price_fall_loss_all(percentage)
+            case .short:
+                R.string.localizable.price_rise_loss_all(percentage)
+            }
+        } else {
+            let marginValue = CurrencyFormatter.localizedString(
+                from: -margin,
+                format: .fiatMoneyPretty,
+                sign: .always,
+                symbol: .dollarSign
             )
             return switch side {
             case .long:

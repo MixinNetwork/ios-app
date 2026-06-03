@@ -34,6 +34,7 @@ struct PerpetualPositionViewModel {
     let decimalMargin: Decimal?
     let margin: String?
     let estimatedReceiving: EstimatedReceiving?
+    let decimalLiquidationPrice: Decimal?
     let liquidationPrice: String?
     let takeProfitPrice: Decimal?
     let stopLossPrice: Decimal?
@@ -48,10 +49,10 @@ struct PerpetualPositionViewModel {
         let margin = Decimal(string: position.margin, locale: .enUSPOSIX)
         let roe = Decimal(string: position.roe, locale: .enUSPOSIX)
         let localizedPnL = CurrencyFormatter.localizedString(
-            from: pnl * Currency.current.decimalRate,
+            from: pnl,
             format: .fiatMoneyPretty,
             sign: .always,
-            symbol: .currencySymbol
+            symbol: .dollarSign
         )
         
         self.wallet = wallet
@@ -87,10 +88,10 @@ struct PerpetualPositionViewModel {
             self.roeWithoutSign = roeWithoutSign
             self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
             self.orderValueInFiatMoney = CurrencyFormatter.localizedString(
-                from: margin * Decimal(position.leverage) * Currency.current.decimalRate,
+                from: margin * Decimal(position.leverage),
                 format: .fiatMoneyPretty,
                 sign: .never,
-                symbol: .currencySymbol,
+                symbol: .dollarSign,
             )
         } else {
             self.roeWithSign = nil
@@ -128,10 +129,10 @@ struct PerpetualPositionViewModel {
         self.decimalMargin = margin
         self.margin = if let margin {
             CurrencyFormatter.localizedString(
-                from: margin * Currency.current.decimalRate,
+                from: margin,
                 format: .fiatMoneyPretty,
                 sign: .never,
-                symbol: .currencySymbol
+                symbol: .dollarSign
             )
         } else {
             nil
@@ -149,8 +150,10 @@ struct PerpetualPositionViewModel {
            !price.isEmpty,
            let decimalPrice = Decimal(string: price, locale: .enUSPOSIX)
         {
+            self.decimalLiquidationPrice = decimalPrice
             self.liquidationPrice = decimalPrice.formatted(position.priceFormatStyle)
         } else {
+            self.decimalLiquidationPrice = nil
             self.liquidationPrice = nil
         }
         self.takeProfitPrice = if let price = position.takeProfitPrice, !price.isEmpty {

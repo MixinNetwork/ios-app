@@ -89,6 +89,8 @@ extension SwapToken {
             "Optimism"
         case ChainID.arbitrumOne:
             "Arbitrum"
+        case ChainID.hyperEVM:
+            "HyperEVM"
         case ChainID.ton:
             "TON"
         default:

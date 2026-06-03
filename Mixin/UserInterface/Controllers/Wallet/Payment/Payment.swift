@@ -190,6 +190,7 @@ extension Payment {
         let operation: Operation
         let side: PerpetualOrderSide
         let leverageMultiplier: Decimal
+        let liquidationPrice: Decimal
         let takeProfitPrice: Decimal?
         let stopLossPrice: Decimal?
         let onDismissAfterSuccess: (() -> Void)?

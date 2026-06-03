@@ -18,6 +18,7 @@ final class PerpsAutoClosingCondition {
     let side: PerpetualOrderSide
     let leverage: Decimal
     let priceScale: Int
+    let liquidationPrice: Decimal
     
     // 0 for invalid
     private(set) var percentage: Decimal
@@ -31,12 +32,14 @@ final class PerpsAutoClosingCondition {
         side: PerpetualOrderSide,
         leverage: Decimal,
         priceScale: Int,
+        liquidationPrice: Decimal,
     ) {
         self.behavior = behavior
         self.basePrice = basePrice
         self.side = side
         self.leverage = leverage
         self.priceScale = priceScale
+        self.liquidationPrice = liquidationPrice
         self.percentage = 0
         self.price = 0
     }
@@ -86,11 +89,6 @@ final class PerpsAutoClosingCondition {
     }
     
     private func check(price: Decimal) throws(InvalidInputError) {
-        let liquidationPrice = PerpetualChangeSimulation.liquidationPrice(
-            side: side,
-            entryPrice: basePrice,
-            leverageMultiplier: leverage
-        )
         switch (side, behavior) {
         case (.long, .takeProfit):
             guard price > basePrice else {
@@ -147,10 +145,10 @@ extension PerpsAutoClosingCondition {
             marginChange = max(-margin, marginChange)
         }
         var localizedChange = CurrencyFormatter.localizedString(
-            from: marginChange * Currency.current.decimalRate,
+            from: marginChange,
             format: .fiatMoneyPretty,
             sign: .always,
-            symbol: .currencySymbol
+            symbol: .dollarSign
         )
         switch behavior {
         case .takeProfit:
@@ -170,10 +168,10 @@ extension PerpsAutoClosingCondition {
     func maxChange(margin: Decimal) -> String {
         assert(margin != 0, "Only results 0")
         var maxChange = CurrencyFormatter.localizedString(
-            from: margin * percentage * Currency.current.decimalRate,
+            from: margin * percentage,
             format: .fiatMoneyPretty,
             sign: .always,
-            symbol: .currencySymbol
+            symbol: .dollarSign
         )
         switch behavior {
         case .takeProfit:

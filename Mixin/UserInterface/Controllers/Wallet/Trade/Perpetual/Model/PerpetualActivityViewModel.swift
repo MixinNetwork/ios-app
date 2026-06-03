@@ -4,10 +4,9 @@ import MixinServices
 struct PerpetualActivityViewModel {
     
     struct PnL {
-        let abbreviated: String
-        let precised: String
-        let percentage: String
         let receivingAmount: String
+        let percentage: String
+        let aggregated: String
         let color: MarketColor
     }
     
@@ -115,31 +114,24 @@ struct PerpetualActivityViewModel {
             let realizedPnL = Decimal(string: order.realizedPnL, locale: .enUSPOSIX) ?? 0
             let roe = Decimal(string: order.roe, locale: .enUSPOSIX) ?? 0
             let prettyPnL = CurrencyFormatter.localizedString(
-                from: realizedPnL * Currency.current.decimalRate,
+                from: realizedPnL,
                 format: .fiatMoneyPretty,
                 sign: .always,
-                symbol: .currencySymbol
+                symbol: .dollarSign
             )
-            let roeRepresentation = " (" + PercentageFormatter.string(
-                from: roe,
-                format: .pretty,
-                sign: .never
-            ) + ")"
             let pnl = PnL(
-                abbreviated: prettyPnL + roeRepresentation,
-                precised: CurrencyFormatter.localizedString(
-                    from: realizedPnL * Currency.current.decimalRate,
-                    format: .fiatMoneyPrecision,
-                    sign: .always,
-                    symbol: .currencySymbol
-                ) + roeRepresentation,
+                receivingAmount: prettyPnL,
                 percentage: PercentageFormatter.string(
                     from: roe,
                     format: .pretty,
                     sign: .always,
                     options: .keepOneFractionDigitForZero
                 ),
-                receivingAmount: prettyPnL,
+                aggregated: prettyPnL + " (" + PercentageFormatter.string(
+                    from: roe,
+                    format: .pretty,
+                    sign: .never
+                ) + ")",
                 color: realizedPnL >= 0 ? .rising : .falling
             )
             let localizedClosePrice = decimalClosePrice?.formatted(order.priceFormatStyle)

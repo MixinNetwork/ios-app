@@ -115,13 +115,13 @@ final class TradePerpetualViewController: UIViewController {
                 case .topMovers:
                     let itemSize = NSCollectionLayoutSize(
                         widthDimension: .estimated(76),
-                        heightDimension: .estimated(86)
+                        heightDimension: .estimated(85)
                     )
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let group: NSCollectionLayoutGroup = .horizontal(
                         layoutSize: NSCollectionLayoutSize(
                             widthDimension: .fractionalWidth(1),
-                            heightDimension: .estimated(86)
+                            heightDimension: .estimated(85)
                         ),
                         subitem: item,
                         count: 4

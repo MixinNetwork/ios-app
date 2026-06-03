@@ -27,6 +27,7 @@ struct PerpetualPositionViewModel {
     let quantity: String
     let tokenSymbol: String?
     let orderValueInToken: String
+    let decimalEntryPrice: Decimal?
     let entryPrice: String
     let date: String
     let priceFormatStyle: Decimal.FormatStyle.Currency
@@ -42,7 +43,7 @@ struct PerpetualPositionViewModel {
     
     init(wallet: Wallet, position: PerpetualPositionItem) {
         let pnl = Decimal(string: position.unrealizedPnL, locale: .enUSPOSIX) ?? 0
-        let entryPrice = Decimal(string: position.entryPrice, locale: .enUSPOSIX)
+        let decimalEntryPrice = Decimal(string: position.entryPrice, locale: .enUSPOSIX)
         let decimalQuantity = abs(Decimal(string: position.quantity, locale: .enUSPOSIX) ?? 0)
         let leverage = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
         let side = PerpetualOrderSide(rawValue: position.side) ?? .short
@@ -113,8 +114,9 @@ struct PerpetualPositionViewModel {
             sign: .never,
             symbol: .custom(position.tokenSymbol)
         )
-        self.entryPrice = if let entryPrice {
-            entryPrice.formatted(position.priceFormatStyle)
+        self.decimalEntryPrice = decimalEntryPrice
+        self.entryPrice = if let decimalEntryPrice {
+            decimalEntryPrice.formatted(position.priceFormatStyle)
         } else {
             position.entryPrice
         }

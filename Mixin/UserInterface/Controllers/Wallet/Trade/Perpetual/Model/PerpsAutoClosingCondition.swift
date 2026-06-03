@@ -14,11 +14,12 @@ final class PerpsAutoClosingCondition {
     }
     
     let behavior: Behavior
-    let basePrice: Decimal
-    let side: PerpetualOrderSide
-    let leverage: Decimal
-    let priceScale: Int
-    let liquidationPrice: Decimal
+    
+    private let basePrice: Decimal
+    private let side: PerpetualOrderSide
+    private let leverage: Decimal
+    private let priceScale: Int
+    private let liquidationPrice: Decimal
     
     // 0 for invalid
     private(set) var percentage: Decimal

@@ -487,6 +487,7 @@ final class PerpetualMarketViewController: UIViewController {
         guard
             editingLock == nil,
             let margin = positionViewModel.decimalMargin,
+            let entryPrice = positionViewModel.decimalEntryPrice,
             let liquidationPrice = positionViewModel.decimalLiquidationPrice
         else {
             return
@@ -497,7 +498,7 @@ final class PerpetualMarketViewController: UIViewController {
             margin: margin,
             behavior: .takeProfit,
             leverage: Decimal(positionViewModel.leverageMultiplier),
-            orderState: .open(entryPrice: positionViewModel.entryPrice), 
+            orderState: .open(entryPrice: entryPrice), 
             liquidationPrice: liquidationPrice,
             currentAutoClosingPrice: positionViewModel.takeProfitPrice
         )
@@ -533,6 +534,7 @@ final class PerpetualMarketViewController: UIViewController {
         guard
             editingLock == nil,
             let margin = positionViewModel.decimalMargin,
+            let entryPrice = positionViewModel.decimalEntryPrice,
             let liquidationPrice = positionViewModel.decimalLiquidationPrice
         else {
             return
@@ -543,7 +545,7 @@ final class PerpetualMarketViewController: UIViewController {
             margin: margin,
             behavior: .stopLoss,
             leverage: Decimal(positionViewModel.leverageMultiplier),
-            orderState: .open(entryPrice: positionViewModel.entryPrice),
+            orderState: .open(entryPrice: entryPrice),
             liquidationPrice: liquidationPrice,
             currentAutoClosingPrice: positionViewModel.stopLossPrice,
         )

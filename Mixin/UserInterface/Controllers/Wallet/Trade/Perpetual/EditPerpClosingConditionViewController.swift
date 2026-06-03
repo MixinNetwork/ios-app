@@ -6,7 +6,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
     
     enum OrderState {
         case draft
-        case open(entryPrice: String)
+        case open(entryPrice: Decimal)
     }
     
     private enum InputContent: Int, CaseIterable {
@@ -78,12 +78,18 @@ final class EditPerpClosingConditionViewController: UIViewController {
         liquidationPrice: Decimal,
         currentAutoClosingPrice: Decimal?,
     ) {
+        let basePrice = switch orderState {
+        case .draft:
+            viewModel.decimalPrice
+        case .open(let entryPrice):
+            entryPrice
+        }
         self.viewModel = viewModel
         self.side = side
         self.margin = margin
         self.condition = PerpsAutoClosingCondition(
             behavior: behavior,
-            basePrice: viewModel.decimalPrice,
+            basePrice: basePrice,
             side: side,
             leverage: leverage,
             priceScale: viewModel.market.priceScale,
@@ -134,6 +140,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
             }
             titleView.subtitleLabel.attributedText = text
         case .open(let entryPrice):
+            let entryPrice = entryPrice.formatted(viewModel.userDisplayPriceFormatStyle)
             let currentPrice = viewModel.price
             let text = NSMutableAttributedString(
                 string: R.string.localizable.auto_close_subtitle_after_open(

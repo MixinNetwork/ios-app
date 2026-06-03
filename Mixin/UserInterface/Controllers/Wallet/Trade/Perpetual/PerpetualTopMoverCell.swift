@@ -11,7 +11,7 @@ final class PerpetualTopMoverCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        leverageLabel.contentInset = UIEdgeInsets(top: 1, left: 3, bottom: 1, right: 3)
+        leverageLabel.contentInset = UIEdgeInsets(top: 3, left: 3, bottom: 1, right: 3)
         leverageLabel.font = .condensed(size: 12)
         leverageLabel.layer.cornerRadius = 4
         leverageLabel.layer.masksToBounds = true

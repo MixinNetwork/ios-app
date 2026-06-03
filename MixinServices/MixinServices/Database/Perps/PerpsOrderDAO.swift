@@ -42,7 +42,7 @@ public final class PerpsOrderDAO: PerpsDAO {
     }
     
     public func activitiesValue() -> PerpetualPositionValue {
-        let sql = "SELECT SUM(realized_pnl) FROM perps_orders"
+        let sql = "SELECT SUM(realized_pnl) FROM perps_orders WHERE order_type = 'close'"
         let pnl = try! db.read { (db) -> String in
             let rows = try Row.fetchCursor(db, sql: sql)
             let row = try rows.next()

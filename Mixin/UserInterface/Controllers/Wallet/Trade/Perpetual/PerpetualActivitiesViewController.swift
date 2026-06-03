@@ -208,7 +208,7 @@ extension PerpetualActivitiesViewController: UICollectionViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .value:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_positions_value, for: indexPath)!
-            cell.loadOpenPositions(value: value)
+            cell.loadClosedActivities(value: value)
             return cell
         case .activities:
             if let viewModels, !viewModels.isEmpty {

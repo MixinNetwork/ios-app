@@ -116,9 +116,7 @@ final class PopupShareViewController: UIViewController {
     }
     
     @IBAction func sendToMixinContact(_ sender: Any) {
-        presentingViewController?.dismiss(animated: true) {
-            self.contentViewController.shareToMixinContact()
-        }
+        contentViewController.shareToMixinContact()
     }
     
     @objc private func close(_ sender: Any) {

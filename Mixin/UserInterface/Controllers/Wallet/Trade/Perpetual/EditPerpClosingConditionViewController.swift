@@ -78,7 +78,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
         liquidationPrice: Decimal,
         currentAutoClosingPrice: Decimal?,
     ) {
-        let basePrice = switch orderState {
+        let entryPrice: Decimal = switch orderState {
         case .draft:
             viewModel.decimalPrice
         case .open(let entryPrice):
@@ -89,10 +89,11 @@ final class EditPerpClosingConditionViewController: UIViewController {
         self.margin = margin
         self.condition = PerpsAutoClosingCondition(
             behavior: behavior,
-            basePrice: basePrice,
             side: side,
             leverage: leverage,
             priceScale: viewModel.market.priceScale,
+            entryPrice: entryPrice,
+            currentPrice: viewModel.decimalPrice,
             liquidationPrice: liquidationPrice
         )
         self.orderState = orderState

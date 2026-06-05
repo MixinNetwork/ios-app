@@ -33,24 +33,24 @@ final class MarketViewController: UIViewController {
         return tableView.cellForRow(at: indexPath) as? TokenPriceChartCell
     }
     
-    init(token: MixinTokenItem, chartPoints: [ChartView.Point]?) {
+    init(token: MixinTokenItem) {
         self.id = .asset(token.assetID)
         self.isMalicious = token.isMalicious
         self.market = nil
         self.tokens = [token]
         self.viewModel = MarketViewModel(token: token)
-        self.chartPoints = chartPoints
+        self.chartPoints = nil
         super.init(nibName: nil, bundle: nil)
         self.title = token.symbol
     }
     
-    init(token: Web3Token, chartPoints: [ChartView.Point]?) {
+    init(token: Web3Token) {
         self.id = .asset(token.assetID)
         self.isMalicious = token.isMalicious
         self.market = nil
         self.tokens = nil
         self.viewModel = MarketViewModel(token: token)
-        self.chartPoints = chartPoints
+        self.chartPoints = nil
         super.init(nibName: nil, bundle: nil)
         self.title = token.symbol
     }

@@ -4,11 +4,6 @@ import MixinServices
 
 final class EditPerpClosingConditionViewController: UIViewController {
     
-    enum OrderState {
-        case draft
-        case open(entryPrice: Decimal)
-    }
-    
     private enum InputContent: Int, CaseIterable {
         case percentage
         case price
@@ -44,13 +39,14 @@ final class EditPerpClosingConditionViewController: UIViewController {
     
     var onSet: ((Decimal?) -> ())?
     
-    private let viewModel: PerpetualMarketViewModel
     private let side: PerpetualOrderSide
     private let margin: Decimal
-    private let condition: PerpsAutoClosingCondition
-    private let orderState: OrderState
+    private let orderState: PerpsAutoClosingCondition.OrderState
     private let fixedInputs: [Decimal]
     private let previousAutoClosingPrice: Decimal?
+    
+    private var viewModel: PerpetualMarketViewModel
+    private var condition: PerpsAutoClosingCondition
     
     private var inputContent: InputContent {
         didSet {
@@ -74,28 +70,12 @@ final class EditPerpClosingConditionViewController: UIViewController {
         margin: Decimal,
         behavior: PerpsAutoClosingCondition.Behavior,
         leverage: Decimal,
-        orderState: OrderState,
+        orderState: PerpsAutoClosingCondition.OrderState,
         liquidationPrice: Decimal,
         currentAutoClosingPrice: Decimal?,
     ) {
-        let entryPrice: Decimal = switch orderState {
-        case .draft:
-            viewModel.decimalPrice
-        case .open(let entryPrice):
-            entryPrice
-        }
-        self.viewModel = viewModel
         self.side = side
         self.margin = margin
-        self.condition = PerpsAutoClosingCondition(
-            behavior: behavior,
-            side: side,
-            leverage: leverage,
-            priceScale: viewModel.market.priceScale,
-            entryPrice: entryPrice,
-            currentPrice: viewModel.decimalPrice,
-            liquidationPrice: liquidationPrice
-        )
         self.orderState = orderState
         self.fixedInputs = switch behavior {
         case .takeProfit:
@@ -104,6 +84,15 @@ final class EditPerpClosingConditionViewController: UIViewController {
             [-0.05, -0.1, -0.25, -0.5]
         }
         self.previousAutoClosingPrice = currentAutoClosingPrice
+        self.viewModel = viewModel
+        self.condition = PerpsAutoClosingCondition(
+            behavior: behavior,
+            side: side,
+            leverage: leverage,
+            marketViewModel: viewModel,
+            orderState: orderState,
+            liquidationPrice: liquidationPrice
+        )
         self.inputContent = InputContent(
             rawValue: AppGroupUserDefaults.Wallet.perpsClosingConditionInputContent
         ) ?? .percentage
@@ -123,47 +112,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
         }
         
         titleView.iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        switch orderState {
-        case .draft:
-            let price = viewModel.price
-            let text = NSMutableAttributedString(
-                string: R.string.localizable.auto_close_subtitle_before_open(price),
-                attributes: [
-                    .font: UIFont.preferredFont(forTextStyle: .caption1),
-                    .foregroundColor: R.color.text_quaternary()!,
-                ]
-            )
-            if let range = text.string.range(of: price, options: .backwards) {
-                text.setAttributes(
-                    [.foregroundColor: R.color.text_tertiary()!],
-                    range: NSRange(range, in: text.string)
-                )
-            }
-            titleView.subtitleLabel.attributedText = text
-        case .open(let entryPrice):
-            let entryPrice = entryPrice.formatted(viewModel.userDisplayPriceFormatStyle)
-            let currentPrice = viewModel.price
-            let text = NSMutableAttributedString(
-                string: R.string.localizable.auto_close_subtitle_after_open(
-                    entryPrice,
-                    currentPrice
-                ),
-                attributes: [.foregroundColor: R.color.text_quaternary()!]
-            )
-            if let range = text.string.range(of: entryPrice) {
-                text.setAttributes(
-                    [.foregroundColor: R.color.text_tertiary()!],
-                    range: NSRange(range, in: text.string)
-                )
-            }
-            if let range = text.string.range(of: currentPrice, options: .backwards) {
-                text.setAttributes(
-                    [.foregroundColor: R.color.text_tertiary()!],
-                    range: NSRange(range, in: text.string)
-                )
-            }
-            titleView.subtitleLabel.attributedText = text
-        }
+        reloadSubtitle(currentPrice: viewModel.price)
         titleView.closeButton.addTarget(
             self,
             action: #selector(close(_:)),
@@ -310,6 +259,13 @@ final class EditPerpClosingConditionViewController: UIViewController {
                 introImageView.image = R.image.stop_loss_intro()
             }
         }
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadMarkets(_:)),
+            name: PerpsMarketDAO.marketsDidUpdateNotification,
+            object: nil
+        )
     }
     
     @IBAction func close(_ sender: Any) {
@@ -333,13 +289,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
             + (textField.leftView?.intrinsicContentSize.width ?? 0)
             + (textField.rightView?.intrinsicContentSize.width ?? 0)
             inputTextFieldWidthConstraint.constant = ceil(width)
-            let number = Decimal(string: input, locale: .current) ?? 0
-            switch (inputContent, condition.behavior) {
-            case (.percentage, .stopLoss):
-                take(input: -number)
-            default:
-                take(input: number)
-            }
+            take(input: input)
             clearInputButton.isHidden = false
         } else {
             textField.leftViewMode = .never
@@ -379,6 +329,77 @@ final class EditPerpClosingConditionViewController: UIViewController {
             onSet?(condition.price)
         }
         presentingViewController?.dismiss(animated: true)
+    }
+    
+    @objc private func reloadMarkets(_ notification: Notification) {
+        let marketID = viewModel.market.marketID
+        DispatchQueue.global().async { [weak self] in
+            guard
+                let market = PerpsMarketDAO.shared.market(marketID: marketID),
+                let viewModel = PerpetualMarketViewModel(market: market)
+            else {
+                return
+            }
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                let previousCondition = self.condition
+                self.viewModel = viewModel
+                self.condition = PerpsAutoClosingCondition(
+                    behavior: previousCondition.behavior,
+                    side: self.side,
+                    leverage: previousCondition.leverage,
+                    marketViewModel: viewModel,
+                    orderState: self.orderState,
+                    liquidationPrice: previousCondition.liquidationPrice
+                )
+                self.reloadSubtitle(currentPrice: viewModel.price)
+                self.take(input: self.inputTextField.text)
+            }
+        }
+    }
+    
+    private func reloadSubtitle(currentPrice: String) {
+        switch orderState {
+        case .draft:
+            let text = NSMutableAttributedString(
+                string: R.string.localizable.auto_close_subtitle_before_open(currentPrice),
+                attributes: [
+                    .font: UIFont.preferredFont(forTextStyle: .caption1),
+                    .foregroundColor: R.color.text_quaternary()!,
+                ]
+            )
+            if let range = text.string.range(of: currentPrice, options: .backwards) {
+                text.setAttributes(
+                    [.foregroundColor: R.color.text_tertiary()!],
+                    range: NSRange(range, in: text.string)
+                )
+            }
+            titleView.subtitleLabel.attributedText = text
+        case .open(let entryPrice):
+            let entryPrice = entryPrice.formatted(viewModel.userDisplayPriceFormatStyle)
+            let text = NSMutableAttributedString(
+                string: R.string.localizable.auto_close_subtitle_after_open(
+                    entryPrice,
+                    currentPrice
+                ),
+                attributes: [.foregroundColor: R.color.text_quaternary()!]
+            )
+            if let range = text.string.range(of: entryPrice) {
+                text.setAttributes(
+                    [.foregroundColor: R.color.text_tertiary()!],
+                    range: NSRange(range, in: text.string)
+                )
+            }
+            if let range = text.string.range(of: currentPrice, options: .backwards) {
+                text.setAttributes(
+                    [.foregroundColor: R.color.text_tertiary()!],
+                    range: NSRange(range, in: text.string)
+                )
+            }
+            titleView.subtitleLabel.attributedText = text
+        }
     }
     
     private func reloadInputSection(content: InputContent) {
@@ -434,8 +455,8 @@ final class EditPerpClosingConditionViewController: UIViewController {
         inputEditingChanged(inputTextField)
     }
     
-    private func take(input: Decimal?) {
-        guard let input else {
+    private func take(input inputString: String?) {
+        guard let inputString else {
             inputDescriptionLabel.text = R.string.localizable.auto_close_description()
             inputErrorLabel.isHidden = true
             confirmButton.isEnabled = previousAutoClosingPrice != nil
@@ -446,7 +467,8 @@ final class EditPerpClosingConditionViewController: UIViewController {
             }
             return
         }
-        guard input != 0 else {
+        let inputNumber = Decimal(string: inputString, locale: .current) ?? 0
+        guard inputNumber != 0 else {
             inputDescriptionLabel.text = R.string.localizable.auto_close_description()
             inputErrorLabel.isHidden = true
             confirmButton.isEnabled = false
@@ -456,6 +478,12 @@ final class EditPerpClosingConditionViewController: UIViewController {
                 assertionFailure()
             }
             return
+        }
+        let input = switch (inputContent, condition.behavior) {
+        case (.percentage, .stopLoss):
+            -inputNumber
+        default:
+            inputNumber
         }
         do {
             switch inputContent {

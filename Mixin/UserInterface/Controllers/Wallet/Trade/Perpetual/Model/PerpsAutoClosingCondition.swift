@@ -8,19 +8,23 @@ final class PerpsAutoClosingCondition {
         case stopLoss
     }
     
+    enum OrderState {
+        case draft
+        case open(entryPrice: Decimal)
+    }
+    
     enum InvalidInputError: Error {
         case mustHigherThan(Decimal)
         case mustLowerThan(Decimal)
     }
     
     let behavior: Behavior
-    
-    private let side: PerpetualOrderSide
-    private let leverage: Decimal
-    private let priceScale: Int
-    private let entryPrice: Decimal
-    private let currentPrice: Decimal
-    private let liquidationPrice: Decimal
+    let side: PerpetualOrderSide
+    let leverage: Decimal
+    let priceScale: Int
+    let entryPrice: Decimal
+    let currentPrice: Decimal
+    let liquidationPrice: Decimal
     
     // 0 for invalid
     private(set) var percentage: Decimal
@@ -32,17 +36,22 @@ final class PerpsAutoClosingCondition {
         behavior: Behavior,
         side: PerpetualOrderSide,
         leverage: Decimal,
-        priceScale: Int,
-        entryPrice: Decimal,
-        currentPrice: Decimal,
+        marketViewModel: PerpetualMarketViewModel,
+        orderState: OrderState,
         liquidationPrice: Decimal,
     ) {
+        let entryPrice: Decimal = switch orderState {
+        case .draft:
+            marketViewModel.decimalPrice
+        case .open(let entryPrice):
+            entryPrice
+        }
         self.behavior = behavior
         self.side = side
         self.leverage = leverage
-        self.priceScale = priceScale
+        self.priceScale = marketViewModel.market.priceScale
         self.entryPrice = entryPrice
-        self.currentPrice = currentPrice
+        self.currentPrice = marketViewModel.decimalPrice
         self.liquidationPrice = liquidationPrice
         self.percentage = 0
         self.price = 0

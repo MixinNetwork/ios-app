@@ -56,7 +56,7 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
     }
     
     override func viewMarket() {
-        let market = MarketViewController(token: token, chartPoints: chartPoints)
+        let market = MarketViewController(token: token)
         market.pushingViewController = self
         navigationController?.pushViewController(market, animated: true)
     }

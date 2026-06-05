@@ -127,7 +127,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     }
     
     override func viewMarket() {
-        let market = MarketViewController(token: token, chartPoints: chartPoints)
+        let market = MarketViewController(token: token)
         market.pushingViewController = self
         navigationController?.pushViewController(market, animated: true)
     }

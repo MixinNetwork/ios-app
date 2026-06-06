@@ -286,29 +286,15 @@ extension MixinTransactionHistoryViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard let id = dataSource.itemIdentifier(for: indexPath), let item = items[id] else {
+        guard
+            let id = dataSource.itemIdentifier(for: indexPath),
+            let item = items[id],
+            let viewController = SafeSnapshotViewController(snapshot: item)
+        else {
             return
         }
-        DispatchQueue.global().async { [weak self] in
-            guard let token = TokenDAO.shared.tokenItem(assetID: item.assetID) else {
-                return
-            }
-            let inscriptionItem: InscriptionItem? = if let hash = item.inscriptionHash {
-                InscriptionDAO.shared.inscriptionItem(with: hash)
-            } else {
-                nil
-            }
-            DispatchQueue.main.async {
-                let viewController = SafeSnapshotViewController(
-                    token: token,
-                    snapshot: item,
-                    messageID: nil,
-                    inscription: inscriptionItem
-                )
-                self?.navigationController?.pushViewController(viewController, animated: true)
-                reporter.report(event: .transactionDetail, tags: ["source": "all_transactions"])
-            }
-        }
+        navigationController?.pushViewController(viewController, animated: true)
+        reporter.report(event: .transactionDetail, tags: ["source": "all_transactions"])
     }
     
 }

@@ -26,8 +26,8 @@ final class WalletSelectorViewController: UIViewController {
     private enum Section: Int, CaseIterable {
         case walletCategory
         case wallet
-        case tips
-        case tipsPageControl
+        case introductions
+        case introductionsPageControl
     }
     
     private enum ReuseIdentifier {
@@ -40,7 +40,7 @@ final class WalletSelectorViewController: UIViewController {
     
     weak var delegate: Delegate?
     
-    private weak var tipsPageControl: UIPageControl?
+    private weak var introductionsPageControl: UIPageControl?
     
     private let intent: Intent
     private let excludingWallet: Wallet?
@@ -58,10 +58,10 @@ final class WalletSelectorViewController: UIViewController {
     private var searchingKeyword: String?
     private var searchResults: [WalletDigest]?
     
-    private var tips: [WalletTipCell.Content] = []
-    private var tipsCurrentPage: Int = 0 {
+    private var introductions: [WalletIntroductionCell.Content] = []
+    private var introductionsCurrentPage: Int = 0 {
         didSet {
-            tipsPageControl?.currentPage = tipsCurrentPage
+            introductionsPageControl?.currentPage = introductionsCurrentPage
         }
     }
     
@@ -132,9 +132,9 @@ final class WalletSelectorViewController: UIViewController {
         collectionView.allowsMultipleSelection = true
         collectionView.register(R.nib.exploreSegmentCell)
         collectionView.register(R.nib.walletCell)
-        collectionView.register(R.nib.walletTipCell)
+        collectionView.register(R.nib.walletIntroductionCell)
         collectionView.register(
-            WalletTipPageControlCell.self,
+            WalletIntroductionPageControlCell.self,
             forCellWithReuseIdentifier: ReuseIdentifier.pageControl
         )
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, _) in
@@ -156,7 +156,7 @@ final class WalletSelectorViewController: UIViewController {
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20)
                 return section
-            case .tips:
+            case .introductions:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(144))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
@@ -169,11 +169,11 @@ final class WalletSelectorViewController: UIViewController {
                     let width = environment.container.contentSize.width
                     let pageOffset = location.x.truncatingRemainder(dividingBy: width)
                     if pageOffset < width / 5 {
-                        self?.tipsCurrentPage = Int(location.x / width)
+                        self?.introductionsCurrentPage = Int(location.x / width)
                     }
                 }
                 return section
-            case .tipsPageControl, .none:
+            case .introductionsPageControl, .none:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(28))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(28))
@@ -198,7 +198,7 @@ final class WalletSelectorViewController: UIViewController {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadTips),
-            name: AppGroupUserDefaults.Wallet.didChangeWalletTipNotification,
+            name: AppGroupUserDefaults.Wallet.didChangeWalletIntroductionNotification,
             object: nil
         )
         reloadTips()
@@ -322,9 +322,9 @@ final class WalletSelectorViewController: UIViewController {
             }
             
             DispatchQueue.main.async {
-                if !self.tips.isEmpty {
-                    sections.append(.tips)
-                    sections.append(.tipsPageControl)
+                if !self.introductions.isEmpty {
+                    sections.append(.introductions)
+                    sections.append(.introductionsPageControl)
                 }
                 self.sections = sections
                 self.allDigests = digests
@@ -376,34 +376,34 @@ final class WalletSelectorViewController: UIViewController {
     }
     
     @objc private func reloadTips() {
-        let tipsBefore = self.tips
-        let tipsAfter = {
-            var tips: [WalletTipCell.Content] = []
-            if !AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip {
+        let introductionsBefore = self.introductions
+        let introductionsAfter = {
+            var tips: [WalletIntroductionCell.Content] = []
+            if !AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletIntroduction {
                 tips.append(.privacy)
             }
-            if !AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip {
+            if !AppGroupUserDefaults.Wallet.hasViewedClassicWalletIntroduction {
                 tips.append(.classic)
             }
-            if !AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip {
+            if !AppGroupUserDefaults.Wallet.hasViewedSafeWalletIntroduction {
                 tips.append(.safe)
             }
             return tips
         }()
-        guard tipsBefore != tipsAfter else {
+        guard introductionsBefore != introductionsAfter else {
             return
         }
-        self.tips = tipsAfter
-        if tipsBefore.isEmpty && !tipsAfter.isEmpty {
-            sections.append(contentsOf: [.tips, .tipsPageControl])
+        self.introductions = introductionsAfter
+        if introductionsBefore.isEmpty && !introductionsAfter.isEmpty {
+            sections.append(contentsOf: [.introductions, .introductionsPageControl])
             collectionView.reloadData()
             reloadSelections()
-        } else if !tipsBefore.isEmpty && tipsAfter.isEmpty {
+        } else if !introductionsBefore.isEmpty && introductionsAfter.isEmpty {
             var deleteSections = IndexSet()
-            if let index = sections.lastIndex(of: .tipsPageControl) {
+            if let index = sections.lastIndex(of: .introductionsPageControl) {
                 deleteSections.insert(index)
             }
-            if let index = sections.lastIndex(of: .tips) {
+            if let index = sections.lastIndex(of: .introductions) {
                 deleteSections.insert(index)
             }
             for index in deleteSections.sorted(by: >) {
@@ -417,9 +417,9 @@ final class WalletSelectorViewController: UIViewController {
             }
         } else {
             let deletedItem: Int
-            if let index = tipsBefore.firstIndex(of: .privacy), !tipsAfter.contains(.privacy) {
+            if let index = introductionsBefore.firstIndex(of: .privacy), !introductionsAfter.contains(.privacy) {
                 deletedItem = index
-            } else if let index = tipsBefore.firstIndex(of: .classic), !tipsAfter.contains(.classic) {
+            } else if let index = introductionsBefore.firstIndex(of: .classic), !introductionsAfter.contains(.classic) {
                 deletedItem = index
             } else {
                 // Adding items, must be diagnose
@@ -427,12 +427,12 @@ final class WalletSelectorViewController: UIViewController {
                 reloadSelections()
                 return
             }
-            if let section = sections.firstIndex(of: .tips) {
+            if let section = sections.firstIndex(of: .introductions) {
                 let indexPath = IndexPath(item: deletedItem, section: section)
                 collectionView.deleteItems(at: [indexPath])
             }
-            tipsPageControl?.numberOfPages = tips.count
-            tipsCurrentPage = 0
+            introductionsPageControl?.numberOfPages = introductions.count
+            introductionsCurrentPage = 0
         }
     }
     
@@ -456,9 +456,9 @@ final class WalletSelectorViewController: UIViewController {
     
 }
 
-extension WalletSelectorViewController: WalletTipCell.Delegate {
+extension WalletSelectorViewController: WalletIntroductionCell.Delegate {
     
-    func walletTipCell(_ cell: WalletTipCell, requestToLearnMore url: URL) {
+    func walletIntroductionCell(_ cell: WalletIntroductionCell, requestToLearnMore url: URL) {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
@@ -483,9 +483,9 @@ extension WalletSelectorViewController: UICollectionViewDataSource {
                 categorizedDigests.count
             case .wallet:
                 categorizedDigests[selectedCategory]?.count ?? 0
-            case .tips:
-                tips.count
-            case .tipsPageControl:
+            case .introductions:
+                introductions.count
+            case .introductionsPageControl:
                 1
             }
         }
@@ -520,16 +520,16 @@ extension WalletSelectorViewController: UICollectionViewDataSource {
                 cell.load(digest: digest, hasSecret: hasSecret)
             }
             return cell
-        case .tips:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_tip_cell, for: indexPath)!
-            cell.content = tips[indexPath.item]
+        case .introductions:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_introduction_cell, for: indexPath)!
+            cell.content = introductions[indexPath.item]
             cell.delegate = self
             return cell
-        case .tipsPageControl:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.pageControl, for: indexPath) as! WalletTipPageControlCell
-            cell.pageControl.numberOfPages = tips.count
-            cell.pageControl.currentPage = tipsCurrentPage
-            self.tipsPageControl = cell.pageControl
+        case .introductionsPageControl:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.pageControl, for: indexPath) as! WalletIntroductionPageControlCell
+            cell.pageControl.numberOfPages = introductions.count
+            cell.pageControl.currentPage = introductionsCurrentPage
+            self.introductionsPageControl = cell.pageControl
             return cell
         }
     }
@@ -549,7 +549,7 @@ extension WalletSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch section(at: indexPath.section) {
-        case .tips, .tipsPageControl:
+        case .introductions, .introductionsPageControl:
             break
         case .walletCategory:
             collectionView.indexPathsForSelectedItems?.forEach { selectedIndexPath in

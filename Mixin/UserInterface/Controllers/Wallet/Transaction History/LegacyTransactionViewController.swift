@@ -102,7 +102,7 @@ extension LegacyTransactionViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! TransactionCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! LegacyTransactionCell
         cell.titleLabel.text = contents[indexPath.row].title
         cell.subtitleLabel.text = contents[indexPath.row].subtitle
         return cell

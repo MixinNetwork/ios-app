@@ -77,7 +77,7 @@ final class PopupShareViewController: UIViewController {
             )
             let rebatingRange = (content.string as NSString).range(of: rebating)
             content.setAttributes(
-                [.foregroundColor: UIColor(displayP3RgbValue: 0xAA71FA)],
+                [.foregroundColor: R.color.referral_rebating()!],
                 range: rebatingRange
             )
             sendToContactContentLabel.attributedText = content

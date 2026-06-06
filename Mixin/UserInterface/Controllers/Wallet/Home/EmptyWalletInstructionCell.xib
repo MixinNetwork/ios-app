@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="VOa-kz-GHh" customClass="EmptyWalletInstructionCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="335" height="290"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="5u5-O9-hOa">
+                <rect key="frame" x="0.0" y="0.0" width="335" height="290"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wallet_with_asset" translatesAutoresizingMaskIntoConstraints="NO" id="tZh-DL-UiU">
+                        <rect key="frame" x="132.66666666666666" y="20" width="70" height="70"/>
+                    </imageView>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="SgU-aB-kNL">
+                        <rect key="frame" x="16" y="106" width="303" height="44"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Fund your wallet " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sEi-xB-Dyc">
+                                <rect key="frame" x="0.0" y="0.0" width="303" height="19.333333333333332"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" verticalCompressionResistancePriority="500" text="Fund your wallet to start trading and earning " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I5d-nj-tYL">
+                                <rect key="frame" x="0.0" y="27.333333333333343" width="303" height="16.666666666666671"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text_tertiary"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="HSy-BL-cs4">
+                        <rect key="frame" x="16" y="170" width="303" height="100"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UfP-RC-JNi">
+                                <rect key="frame" x="0.0" y="0.0" width="303" height="45"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Buy Crypto" cornerStyle="fixed">
+                                    <backgroundConfiguration key="background" cornerRadius="12"/>
+                                    <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="14"/>
+                                    <directionalEdgeInsets key="contentInsets" top="14" leading="0.0" bottom="14" trailing="0.0"/>
+                                    <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="baseBackgroundColor" name="theme"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="buyCrypto:" destination="VOa-kz-GHh" eventType="touchUpInside" id="1Ff-cq-It0"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LfM-WJ-o5g">
+                                <rect key="frame" x="0.0" y="55" width="303" height="45"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Receive Crypto" cornerStyle="fixed">
+                                    <backgroundConfiguration key="background" cornerRadius="12"/>
+                                    <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="14"/>
+                                    <directionalEdgeInsets key="contentInsets" top="14" leading="0.0" bottom="14" trailing="0.0"/>
+                                    <color key="baseForegroundColor" name="theme"/>
+                                    <color key="baseBackgroundColor" name="background_quaternary"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="receiveCrypto:" destination="VOa-kz-GHh" eventType="touchUpInside" id="WJ8-SW-HJh"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="HSy-BL-cs4" secondAttribute="trailing" constant="16" id="H1B-sI-3sH"/>
+                    <constraint firstAttribute="bottom" secondItem="HSy-BL-cs4" secondAttribute="bottom" constant="20" id="KJY-UZ-ask"/>
+                    <constraint firstItem="tZh-DL-UiU" firstAttribute="top" secondItem="5u5-O9-hOa" secondAttribute="top" constant="20" id="NAe-TL-he5"/>
+                    <constraint firstItem="HSy-BL-cs4" firstAttribute="leading" secondItem="5u5-O9-hOa" secondAttribute="leading" constant="16" id="NjZ-yN-n2e"/>
+                    <constraint firstItem="HSy-BL-cs4" firstAttribute="top" secondItem="SgU-aB-kNL" secondAttribute="bottom" constant="20" id="aTA-Ee-wdE"/>
+                    <constraint firstItem="SgU-aB-kNL" firstAttribute="leading" secondItem="5u5-O9-hOa" secondAttribute="leading" constant="16" id="hdQ-q9-zcb"/>
+                    <constraint firstItem="tZh-DL-UiU" firstAttribute="centerX" secondItem="5u5-O9-hOa" secondAttribute="centerX" id="iN2-EM-sCY"/>
+                    <constraint firstAttribute="trailing" secondItem="SgU-aB-kNL" secondAttribute="trailing" constant="16" id="kZw-e5-AZn"/>
+                    <constraint firstItem="SgU-aB-kNL" firstAttribute="top" secondItem="tZh-DL-UiU" secondAttribute="bottom" constant="16" id="yHt-QC-OQL"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <connections>
+                <outlet property="buyCryptoButton" destination="UfP-RC-JNi" id="H8z-6b-O9p"/>
+                <outlet property="descriptionLabel" destination="I5d-nj-tYL" id="gvr-2Z-LOc"/>
+                <outlet property="receiveCryptoButton" destination="LfM-WJ-o5g" id="dv8-8A-lhf"/>
+                <outlet property="titleLabel" destination="sEi-xB-Dyc" id="lyP-tH-5YA"/>
+            </connections>
+            <point key="canvasLocation" x="-976.33587786259534" y="176.7605633802817"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="wallet_with_asset" width="70" height="70"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_quaternary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

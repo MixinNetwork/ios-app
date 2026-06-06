@@ -456,12 +456,12 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             case .value, .introduction:
                 break
             case .positions:
-                view.label.text = R.string.localizable.positions_count(openPositions.count)
+                view.titleLabel.text = R.string.localizable.positions_count(openPositions.count)
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewOpenPositions()
                 }
             case .topMovers:
-                view.label.text = R.string.localizable.perps_top_movers()
+                view.titleLabel.text = R.string.localizable.perps_top_movers()
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewAllMarkets(
                         category: .all,
@@ -469,7 +469,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     )
                 }
             case .markets(let category):
-                view.label.text = switch category {
+                view.titleLabel.text = switch category {
                 case .all:
                     R.string.localizable.trending()
                 case .stocks:
@@ -481,7 +481,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     self?.viewAllMarkets(category: category, ordering: nil)
                 }
             case .activity:
-                view.label.text = R.string.localizable.perps_activity()
+                view.titleLabel.text = R.string.localizable.perps_activity()
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewActivities()
                     reporter.report(

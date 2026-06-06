@@ -11,7 +11,7 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
         queue.async { [recentAssetIDsKey] in
             let comparator = TokenComparator<BalancedSwapToken>(keyword: nil)
             var tokens = TokenDAO.shared
-                .notHiddenTokens(includesZeroBalanceItems: true)
+                .notHiddenTokens(includesZeroBalanceItems: true, limit: nil)
                 .compactMap(BalancedSwapToken.init(tokenItem:))
             var tokensMap = tokens.reduce(into: [:]) { results, token in
                 results[token.assetID] = token

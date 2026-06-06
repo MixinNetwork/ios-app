@@ -56,32 +56,30 @@ final class TokenActionView: UIView {
         stackView.arrangedSubviews.forEach(stackView.removeArrangedSubview(_:))
         buttons.removeAll()
         for action in actions {
-            let button = UIButton(type: .system)
-            button.configuration = {
-                let textAttributes: [NSAttributedString.Key: Any] = [
-                    .font: UIFontMetrics.default.scaledFont(
-                        for: .systemFont(ofSize: 12, weight: .medium)
-                    ),
-                    .foregroundColor: R.color.text()!,
-                ]
-                let (image, title) = switch action {
-                case .receive:
-                    (R.image.token_action_receive(), R.string.localizable.receive())
-                case .send:
-                    (R.image.token_action_send(), R.string.localizable.caption_send())
-                case .trade:
-                    (R.image.token_action_trade(), R.string.localizable.trade())
-                case .buy:
-                    (R.image.token_action_buy(), R.string.localizable.buy())
-                }
-                var config: UIButton.Configuration = .plain()
-                config.baseBackgroundColor = .clear
-                config.imagePlacement = .top
-                config.imagePadding = 8
-                config.image = image
-                config.attributedTitle = AttributedString(title, attributes: .init(textAttributes))
-                return config
-            }()
+            let (image, title) = switch action {
+            case .receive:
+                (R.image.token_action_receive(), R.string.localizable.receive())
+            case .send:
+                (R.image.token_action_send(), R.string.localizable.caption_send())
+            case .trade:
+                (R.image.token_action_trade(), R.string.localizable.trade())
+            case .buy:
+                (R.image.token_action_buy(), R.string.localizable.buy())
+            }
+            var attributes = AttributeContainer()
+            attributes.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 12, weight: .medium)
+            )
+            var config: UIButton.Configuration = .plain()
+            config.baseBackgroundColor = .clear
+            config.baseForegroundColor = R.color.text()!
+            config.contentInsets = .zero
+            config.imagePlacement = .top
+            config.imagePadding = 8
+            config.image = image
+            config.attributedTitle = AttributedString(title, attributes: attributes)
+            let button = UIButton(configuration: config, primaryAction: nil)
+            button.titleLabel?.adjustsFontForContentSizeCategory = true
             button.tag = action.rawValue
             button.addTarget(self, action: #selector(performAction(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(button)

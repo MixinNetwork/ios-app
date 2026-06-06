@@ -41,6 +41,18 @@ final class SafeSnapshotViewController: TransactionViewController {
         self.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
     }
     
+    convenience init?(snapshot: SafeSnapshotItem) {
+        guard let token = TokenDAO.shared.tokenItem(assetID: snapshot.assetID) else {
+            return nil
+        }
+        let inscriptionItem: InscriptionItem? = if let hash = snapshot.inscriptionHash {
+            InscriptionDAO.shared.inscriptionItem(with: hash)
+        } else {
+            nil
+        }
+        self.init(token: token, snapshot: snapshot, messageID: nil, inscription: inscriptionItem)
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
     }

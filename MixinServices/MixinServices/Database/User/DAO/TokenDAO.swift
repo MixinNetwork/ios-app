@@ -143,12 +143,18 @@ public final class TokenDAO: UserDatabaseDAO {
         db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS TRUE ORDER BY \(SQL.order)")
     }
     
-    public func notHiddenTokens(includesZeroBalanceItems: Bool) -> [MixinTokenItem] {
+    public func notHiddenTokens(
+        includesZeroBalanceItems: Bool,
+        limit: Int?,
+    ) -> [MixinTokenItem] {
         var sql = "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS FALSE"
         if !includesZeroBalanceItems {
             sql += " AND te.balance > 0"
         }
         sql.append(" ORDER BY \(SQL.order)")
+        if let limit {
+            sql.append(" LIMIT \(limit)")
+        }
         return db.select(with: sql)
     }
     
@@ -210,12 +216,15 @@ public final class TokenDAO: UserDatabaseDAO {
         """)
     }
     
-    public func usdBalanceSum() -> Decimal {
-        let sql = """
+    public func usdBalanceSum(includesHiddenTokens: Bool) -> Decimal {
+        var sql = """
         SELECT SUM(ifnull(te.balance,'0') * t.price_usd)
         FROM tokens t
             LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
         """
+        if !includesHiddenTokens {
+            sql += "\nWHERE NOT ifnull(te.hidden,FALSE)"
+        }
         return db.select(with: sql) ?? 0
     }
     

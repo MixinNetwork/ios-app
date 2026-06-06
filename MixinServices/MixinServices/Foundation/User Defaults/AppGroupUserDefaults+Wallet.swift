@@ -28,9 +28,9 @@ extension AppGroupUserDefaults {
             case lastSelectedWallet = "last_selected_wallet"
             case dappConnectionWalletID = "dapp_connection_wallet_id"
             
-            case hasViewedPrivacyWalletTip = "has_viewed_privacy_wallet_tip"
-            case hasViewedClassicWalletTip = "has_viewed_classic_wallet_tip"
-            case hasViewedSafeWalletTip = "has_viewed_safe_wallet_tip"
+            case hasViewedPrivacyWalletIntroduction = "has_viewed_privacy_wallet_tip"
+            case hasViewedClassicWalletIntroduction = "has_viewed_classic_wallet_tip"
+            case hasViewedSafeWalletIntroduction = "has_viewed_safe_wallet_tip"
             
             case lastBuyingAssetID = "last_buy_asset"
             case lastBuyingCurrencyCode = "last_buy_currency"
@@ -43,7 +43,7 @@ extension AppGroupUserDefaults {
             case perpsChartTimeFrame = "perps_chart_time_frame"
         }
         
-        public static let didChangeWalletTipNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeWalletTip")
+        public static let didChangeWalletIntroductionNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeWalletIntro")
         
         @Default(namespace: .wallet, key: Key.lastPINVerifiedDate, defaultValue: nil)
         public static var lastPINVerifiedDate: Date?
@@ -84,24 +84,24 @@ extension AppGroupUserDefaults {
         @Default(namespace: .wallet, key: Key.dappConnectionWalletID, defaultValue: nil)
         public static var dappConnectionWalletID: String?
         
-        @Default(namespace: .wallet, key: Key.hasViewedPrivacyWalletTip, defaultValue: false)
-        public static var hasViewedPrivacyWalletTip: Bool {
+        @Default(namespace: .wallet, key: Key.hasViewedPrivacyWalletIntroduction, defaultValue: false)
+        public static var hasViewedPrivacyWalletIntroduction: Bool {
             didSet {
-                NotificationCenter.default.post(onMainThread: didChangeWalletTipNotification, object: self)
+                NotificationCenter.default.post(onMainThread: didChangeWalletIntroductionNotification, object: self)
             }
         }
         
-        @Default(namespace: .wallet, key: Key.hasViewedClassicWalletTip, defaultValue: false)
-        public static var hasViewedClassicWalletTip: Bool {
+        @Default(namespace: .wallet, key: Key.hasViewedClassicWalletIntroduction, defaultValue: false)
+        public static var hasViewedClassicWalletIntroduction: Bool {
             didSet {
-                NotificationCenter.default.post(onMainThread: didChangeWalletTipNotification, object: self)
+                NotificationCenter.default.post(onMainThread: didChangeWalletIntroductionNotification, object: self)
             }
         }
         
-        @Default(namespace: .wallet, key: Key.hasViewedSafeWalletTip, defaultValue: false)
-        public static var hasViewedSafeWalletTip: Bool {
+        @Default(namespace: .wallet, key: Key.hasViewedSafeWalletIntroduction, defaultValue: false)
+        public static var hasViewedSafeWalletIntroduction: Bool {
             didSet {
-                NotificationCenter.default.post(onMainThread: didChangeWalletTipNotification, object: self)
+                NotificationCenter.default.post(onMainThread: didChangeWalletIntroductionNotification, object: self)
             }
         }
         

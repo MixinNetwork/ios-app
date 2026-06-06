@@ -3,7 +3,9 @@ import UIKit
 final class TradeSectionHeaderView: UICollectionReusableView {
     
     @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var disclosureImageView: UIImageView!
     
     var onShowAll: ((UIView) -> Void)?
     
@@ -12,7 +14,7 @@ final class TradeSectionHeaderView: UICollectionReusableView {
         contentView.layer.cornerRadius = 8
         contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         contentView.layer.masksToBounds = true
-        label.setFont(
+        titleLabel.setFont(
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )

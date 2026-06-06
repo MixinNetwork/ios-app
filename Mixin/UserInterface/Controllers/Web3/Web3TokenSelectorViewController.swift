@@ -52,6 +52,7 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
             let tokens = Web3TokenDAO.shared.notHiddenTokens(
                 walletID: walletID,
                 includesZeroBalanceItems: displayZeroBalanceItems,
+                limit: nil,
             )
             let chainIDs = Set(tokens.compactMap(\.chainID))
             let groups = Group.web3Chains(ids: chainIDs)

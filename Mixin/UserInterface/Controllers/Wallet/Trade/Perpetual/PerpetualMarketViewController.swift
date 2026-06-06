@@ -743,7 +743,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
             switch sections[indexPath.section] {
             case .activities:
-                view.label.text = R.string.localizable.perps_activity()
+                view.titleLabel.text = R.string.localizable.perps_activity()
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewActivities()
                 }

@@ -51,7 +51,8 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
                 .priceChangePercentage24H(assetIDs: recentAssetIDs)
                 .compactMapValues(TokenChange.init(change:))
             let tokens = TokenDAO.shared.notHiddenTokens(
-                includesZeroBalanceItems: displayZeroBalanceItems
+                includesZeroBalanceItems: displayZeroBalanceItems,
+                limit: nil
             )
             let chainIDs = Set(tokens.compactMap(\.chainID))
             let groups = Group.mixinChains(ids: chainIDs)

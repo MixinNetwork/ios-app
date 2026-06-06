@@ -109,6 +109,7 @@ public final class Web3TokenDAO: Web3DAO {
     public func notHiddenTokens(
         walletID: String,
         includesZeroBalanceItems: Bool,
+        limit: Int?,
     ) -> [Web3TokenItem] {
         var sql = """
         \(SQL.selector)
@@ -118,6 +119,9 @@ public final class Web3TokenDAO: Web3DAO {
             sql += " AND t.amount > 0"
         }
         sql += "\n\(SQL.order)"
+        if let limit {
+            sql += "\nLIMIT \(limit)"
+        }
         return db.select(with: sql, arguments: [walletID])
     }
     
@@ -223,6 +227,16 @@ public final class Web3TokenDAO: Web3DAO {
             with: "SELECT level FROM tokens WHERE wallet_id = ? AND asset_id = ?",
             arguments: [walletID, assetID]
         )
+    }
+    
+    public func notHiddenUSDBalanceSum(walletID: String) -> Decimal {
+        let sql = """
+        SELECT SUM(t.amount * t.price_usd)
+        FROM tokens t
+            LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
+        WHERE t.wallet_id = ? AND NOT ifnull(te.hidden,FALSE)        
+        """
+        return db.select(with: sql, arguments: [walletID]) ?? 0
     }
     
     public func save(tokens: [Web3Token], zeroOutOthers: Bool) {

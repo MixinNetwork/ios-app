@@ -481,6 +481,8 @@ final class EditPerpClosingConditionViewController: UIViewController {
         }
         let input = switch (inputContent, condition.behavior) {
         case (.percentage, .stopLoss):
+            // User never inputs negative prefix
+            // The minus sign is always there when it comes to stop loss with percentage
             -inputNumber
         default:
             inputNumber
@@ -615,11 +617,10 @@ extension EditPerpClosingConditionViewController: UICollectionViewDelegate {
                 inputTextField.text = (percentage * 100).formatted(userInputSimulationFormat)
                 inputEditingChanged(inputTextField)
             case .price:
-                inputContent = .percentage
-                inputTextField.text = (percentage * 100).formatted(userInputSimulationFormat)
-                inputEditingChanged(inputTextField)
-                inputContent = .price
-                reloadInputSection(content: inputContent)
+                if let price = condition.roundedPrice(percentage: percentage) {
+                    inputTextField.text = price.formatted(userInputSimulationFormat)
+                    inputEditingChanged(inputTextField)
+                }
             }
         default:
             break

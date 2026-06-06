@@ -80,10 +80,19 @@ final class PerpsAutoClosingCondition {
     }
     
     func setPercentage(_ percentage: Decimal) throws(InvalidInputError) {
-        guard percentage != 0 else {
+        if let roundedPrice = roundedPrice(percentage: percentage) {
+            try check(price: roundedPrice)
+            self.percentage = percentage
+            self.price = roundedPrice
+        } else {
             self.percentage = 0
             self.price = 0
-            return
+        }
+    }
+    
+    func roundedPrice(percentage: Decimal) -> Decimal? {
+        guard percentage != 0 else {
+            return nil
         }
         let price = switch side {
         case .long:
@@ -96,9 +105,7 @@ final class PerpsAutoClosingCondition {
             NSDecimalRound(&result, price, priceScale, .plain)
             return result
         }
-        try check(price: roundedPrice)
-        self.percentage = percentage
-        self.price = roundedPrice
+        return roundedPrice
     }
     
     private func check(price: Decimal) throws(InvalidInputError) {

@@ -169,43 +169,13 @@ extension SharePerpsPositionViewController: UICollectionViewDelegate {
 extension SharePerpsPositionViewController: ModernShareContentViewController {
     
     func shareToMixinContact() {
-        let description = R.string.localizable.perps_share_card_market(dataSource.displaySymbol ?? "")
-        + "\n"
-        + R.string.localizable.perps_share_card_side(dataSource.side, dataSource.leverageMultiplier)
-        let content = AppCardData.V1Content(
-            appID: BotUserID.mixinFutures,
-            cover: .plain("https://dl.mixinpay.com/perps-share-card.png"),
-            title: R.string.localizable.perps_share_card_title(
-                dataSource.tokenSymbol ?? ""
-            ),
-            description: description,
-            actions: [
-                .init(
-                    action: "https://mixin.one/trade?type=perps&market=\(dataSource.marketID)",
-                    color: "#50BD5C",
-                    label: R.string.localizable.perps_share_card_trade_now()
-                ),
-            ],
-            updatedAt: nil,
-            isShareable: true
-        )
-        let cardData: AppCardData = .v1(content)
-        var message = Message.createMessage(
-            messageId: UUID().uuidString.lowercased(),
-            conversationId: "",
-            userId: myUserId,
-            category: MessageCategory.APP_CARD.rawValue,
-            status: MessageStatus.SENDING.rawValue,
-            createdAt: Date().toUTCString()
-        )
-        message.content = try! JSONEncoder.default.encode(cardData).base64EncodedString()
-        let confirmation = ExternalSharingConfirmationViewController(
-            sharingContext: ExternalSharingContext(content: .appCard(cardData)),
-            message: message,
-            webContext: nil,
-            action: .forward
-        )
-        UIApplication.homeContainerViewController?.present(confirmation, animated: true)
+        guard let image = makeImage() else {
+            return
+        }
+        presentingViewController?.dismiss(animated: true) {
+            let receiverSelector = MessageReceiverViewController.instance(content: .photo(image))
+            UIApplication.homeNavigationController?.pushViewController(receiverSelector, animated: true)
+        }
     }
     
     func shareAsActivity() {

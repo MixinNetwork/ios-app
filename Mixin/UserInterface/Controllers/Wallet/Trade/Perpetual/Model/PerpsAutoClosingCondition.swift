@@ -8,16 +8,22 @@ final class PerpsAutoClosingCondition {
         case stopLoss
     }
     
+    enum OrderState {
+        case draft
+        case open(entryPrice: Decimal)
+    }
+    
     enum InvalidInputError: Error {
         case mustHigherThan(Decimal)
         case mustLowerThan(Decimal)
     }
     
     let behavior: Behavior
-    let basePrice: Decimal
     let side: PerpetualOrderSide
     let leverage: Decimal
     let priceScale: Int
+    let entryPrice: Decimal
+    let currentPrice: Decimal
     let liquidationPrice: Decimal
     
     // 0 for invalid
@@ -28,17 +34,24 @@ final class PerpsAutoClosingCondition {
     
     init(
         behavior: Behavior,
-        basePrice: Decimal,
         side: PerpetualOrderSide,
         leverage: Decimal,
-        priceScale: Int,
+        marketViewModel: PerpetualMarketViewModel,
+        orderState: OrderState,
         liquidationPrice: Decimal,
     ) {
+        let entryPrice: Decimal = switch orderState {
+        case .draft:
+            marketViewModel.decimalPrice
+        case .open(let entryPrice):
+            entryPrice
+        }
         self.behavior = behavior
-        self.basePrice = basePrice
         self.side = side
         self.leverage = leverage
-        self.priceScale = priceScale
+        self.priceScale = marketViewModel.market.priceScale
+        self.entryPrice = entryPrice
+        self.currentPrice = marketViewModel.decimalPrice
         self.liquidationPrice = liquidationPrice
         self.percentage = 0
         self.price = 0
@@ -53,9 +66,9 @@ final class PerpsAutoClosingCondition {
         try check(price: price)
         let percentage = switch side {
         case .long:
-            (price - basePrice) * leverage / basePrice
+            (price - entryPrice) * leverage / entryPrice
         case .short:
-            (price - basePrice) * leverage / basePrice * -1
+            (price - entryPrice) * leverage / entryPrice * -1
         }
         let roundedPercentage = withUnsafePointer(to: percentage * 100) { percentage in
             var result: Decimal = 0
@@ -67,56 +80,71 @@ final class PerpsAutoClosingCondition {
     }
     
     func setPercentage(_ percentage: Decimal) throws(InvalidInputError) {
-        guard percentage != 0 else {
+        if let roundedPrice = roundedPrice(percentage: percentage) {
+            try check(price: roundedPrice)
+            self.percentage = percentage
+            self.price = roundedPrice
+        } else {
             self.percentage = 0
             self.price = 0
-            return
+        }
+    }
+    
+    func roundedPrice(percentage: Decimal) -> Decimal? {
+        guard percentage != 0 else {
+            return nil
         }
         let price = switch side {
         case .long:
-            basePrice * (1 + percentage / leverage)
+            entryPrice * (1 + percentage / leverage)
         case .short:
-            basePrice * (1 - percentage / leverage)
+            entryPrice * (1 - percentage / leverage)
         }
         let roundedPrice = withUnsafePointer(to: price) { price in
             var result: Decimal = 0
             NSDecimalRound(&result, price, priceScale, .plain)
             return result
         }
-        try check(price: roundedPrice)
-        self.percentage = percentage
-        self.price = roundedPrice
+        return roundedPrice
     }
     
     private func check(price: Decimal) throws(InvalidInputError) {
         switch (side, behavior) {
         case (.long, .takeProfit):
-            guard price > basePrice else {
-                throw InvalidInputError.mustHigherThan(basePrice)
+            guard price > entryPrice else {
+                // To be a profit
+                throw .mustHigherThan(entryPrice)
+            }
+            guard price > currentPrice else {
+                // Avoid immediate execution
+                throw .mustHigherThan(currentPrice)
             }
         case (.long, .stopLoss):
-            // Available range: (liquidationPrice, basePrice)
-            guard price > liquidationPrice else {
-                throw InvalidInputError.mustHigherThan(liquidationPrice)
+            guard price < currentPrice else {
+                // Product requirements
+                throw .mustLowerThan(currentPrice)
             }
-            guard price < basePrice else {
-                throw InvalidInputError.mustLowerThan(basePrice)
+            guard price > liquidationPrice else {
+                // To reduce loss
+                throw .mustHigherThan(liquidationPrice)
             }
         case (.short, .takeProfit):
-            // Available range: (0, basePrice)
-            guard price > 0 else {
-                throw InvalidInputError.mustHigherThan(0)
+            guard price < entryPrice else {
+                // To be a profit
+                throw .mustLowerThan(entryPrice)
             }
-            guard price < basePrice else {
-                throw InvalidInputError.mustLowerThan(basePrice)
+            guard price < currentPrice else {
+                // Avoid immediate execution
+                throw .mustLowerThan(currentPrice)
             }
         case (.short, .stopLoss):
-            // Available range: (basePrice, liquidationPrice)
-            guard price > basePrice else {
-                throw InvalidInputError.mustHigherThan(basePrice)
+            guard price > currentPrice else {
+                // Product requirements
+                throw .mustHigherThan(currentPrice)
             }
             guard price < liquidationPrice else {
-                throw InvalidInputError.mustLowerThan(liquidationPrice)
+                // To reduce loss
+                throw .mustLowerThan(liquidationPrice)
             }
         }
     }

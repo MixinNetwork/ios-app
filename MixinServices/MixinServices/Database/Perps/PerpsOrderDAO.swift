@@ -57,7 +57,7 @@ public final class PerpsOrderDAO: PerpsDAO {
     
     public func save(orders: [PerpetualOrder]) {
         db.save(orders) { _ in
-            NotificationCenter.default.post(
+            NotificationCenter.default.postAsynchornously(
                 onMainThread: Self.perpsOrdersDidSaveNotification,
                 object: self,
                 userInfo: nil

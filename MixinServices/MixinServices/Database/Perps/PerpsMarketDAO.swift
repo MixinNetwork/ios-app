@@ -91,23 +91,19 @@ public final class PerpsMarketDAO: PerpsDAO {
     
     public func save(market: PerpetualMarket) {
         db.save(market) { _ in
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(
-                    name: Self.marketsDidUpdateNotification,
-                    object: self
-                )
-            }
+            NotificationCenter.default.postAsynchornously(
+                onMainThread: Self.marketsDidUpdateNotification,
+                object: self
+            )
         }
     }
     
     public func save(markets: [PerpetualMarket]) {
         db.save(markets) { _ in
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(
-                    name: Self.marketsDidUpdateNotification,
-                    object: self
-                )
-            }
+            NotificationCenter.default.postAsynchornously(
+                onMainThread: Self.marketsDidUpdateNotification,
+                object: self
+            )
         }
     }
     

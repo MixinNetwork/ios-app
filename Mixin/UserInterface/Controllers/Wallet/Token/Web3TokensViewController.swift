@@ -88,6 +88,29 @@ final class Web3TokensViewController: TokensViewController {
         pendingTransactionObserver?.stop()
     }
     
+    override func hideTokenAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(
+            style: .destructive,
+            title: R.string.localizable.hide()
+        ) { [weak self] (action, _, completionHandler) in
+            guard
+                let self,
+                let token = self.tokens?[indexPath.item]
+            else {
+                return
+            }
+            let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(token.symbol), message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.hide(), style: .default, handler: { (_) in
+                self.hide(token: token)
+            }))
+            self.present(alert, animated: true, completion: nil)
+            completionHandler(true)
+        }
+        action.backgroundColor = R.color.theme()
+        return UISwipeActionsConfiguration(actions: [action])
+    }
+    
     @objc private func reloadTokensFromRemote() {
         let jobs = [
             RefreshWeb3WalletTokenJob(walletID: wallet.walletID),
@@ -212,6 +235,12 @@ final class Web3TokensViewController: TokensViewController {
                 let overview = IndexSet(integer: Section.overview.rawValue)
                 self.collectionView.reloadSections(overview)
             }
+        }
+    }
+    
+    private func hide(token: Web3TokenItem) {
+        DispatchQueue.global().async {
+            Web3TokenExtraDAO.shared.hide(walletID: token.walletID, assetID: token.assetID)
         }
     }
     

@@ -179,6 +179,31 @@ final class CommonWalletViewController: WalletViewController {
         transactionCell.load(transaction: transaction, symbols: transactionTokenSymbols)
     }
     
+    override func hideTokenAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(
+            style: .destructive,
+            title: R.string.localizable.hide()
+        ) { [weak self] (action, _, completionHandler) in
+            guard
+                let self,
+                let item = self.dataSource.itemIdentifier(for: indexPath),
+                case let .token(assetID) = item,
+                let token = self.tokens[assetID]
+            else {
+                return
+            }
+            let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(token.symbol), message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.hide(), style: .default, handler: { (_) in
+                self.hide(token: token)
+            }))
+            self.present(alert, animated: true, completion: nil)
+            completionHandler(true)
+        }
+        action.backgroundColor = R.color.theme()
+        return UISwipeActionsConfiguration(actions: [action])
+    }
+    
     override func viewAllTokens() {
         let tokens = Web3TokensViewController(wallet: wallet)
         navigationController?.pushViewController(tokens, animated: true)
@@ -426,7 +451,7 @@ extension CommonWalletViewController: UICollectionViewDelegate {
             return
         }
         switch item {
-        case .overview, .emptyWalletInstruction, .tip, .perpsPosition, .perpsTopMovers, .referral, .benefit:
+        case .overview, .emptyWalletInstruction, .tip, .perpsPosition, .perpsTopMover, .referral, .benefit:
             break
         case .token(let assetID):
             if let token = tokens[assetID] {
@@ -623,6 +648,12 @@ extension CommonWalletViewController {
         }
         let authentication = AuthenticationViewController(intent: deleteWallet)
         present(authentication, animated: true)
+    }
+    
+    private func hide(token: Web3TokenItem) {
+        DispatchQueue.global().async {
+            Web3TokenExtraDAO.shared.hide(walletID: token.walletID, assetID: token.assetID)
+        }
     }
     
 }

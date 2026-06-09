@@ -70,12 +70,19 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                     return section
                 }
                 
-                func listSection(estimatedHeight: CGFloat) -> NSCollectionLayoutSection {
-                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(estimatedHeight))
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                func listSection(
+                    trailingSwipeActionsConfigurationProvider: UICollectionLayoutListConfiguration.SwipeActionsConfigurationProvider?
+                ) -> NSCollectionLayoutSection {
+                    let contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                    var config = UICollectionLayoutListConfiguration(appearance: .plain)
+                    config.showsSeparators = false
+                    config.backgroundColor = .clear
+                    config.trailingSwipeActionsConfigurationProvider = trailingSwipeActionsConfigurationProvider
+                    config.headerMode = .supplementary
+                    config.footerMode = .supplementary
+                    config.headerTopPadding = 0
+                    let section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: environment)
+                    section.contentInsets = contentInsets
                     section.interGroupSpacing = 20
                     section.boundarySupplementaryItems = [
                         NSCollectionLayoutBoundarySupplementaryItem(
@@ -89,11 +96,14 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                             alignment: .bottom
                         ),
                     ]
+                    for item in section.boundarySupplementaryItems {
+                        item.contentInsets = contentInsets
+                    }
                     section.decorationItems = {
                         let background: NSCollectionLayoutDecorationItem = .background(
                             elementKind: TradeSectionBackgroundView.elementKind
                         )
-                        background.contentInsets = section.contentInsets
+                        background.contentInsets = contentInsets
                         return [background]
                     }()
                     return section
@@ -145,12 +155,14 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                     )
                     section.boundarySupplementaryItems = [footer]
                     return section
-                case .perpPositions:
-                    return listSection(estimatedHeight: 50)
+                case .perpsPositions:
+                    return listSection(trailingSwipeActionsConfigurationProvider: nil)
                 case .tokens:
-                    return listSection(estimatedHeight: 50)
+                    return listSection { [weak self] indexPath in
+                        self?.hideTokenAction(indexPath: indexPath)
+                    }
                 case .transactions:
-                    return listSection(estimatedHeight: 42)
+                    return listSection(trailingSwipeActionsConfigurationProvider: nil)
                 case .perpsTopMovers:
                     let itemSize = NSCollectionLayoutSize(
                         widthDimension: .estimated(76),
@@ -298,7 +310,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.transaction, for: indexPath)!
                 self?.configure(transactionCell: cell, withTransactionOf: id)
                 return cell
-            case let .perpsTopMovers(marketID):
+            case let .perpsTopMover(marketID):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_top_mover, for: indexPath)!
                 if let viewModel = self?.perpsTopMovers[marketID] {
                     cell.load(viewModel: viewModel)
@@ -332,7 +344,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 }
             case .tips:
                 return collectionView.dequeueConfiguredReusableSupplementary(using: tipPageControlRegistration, for: indexPath)
-            case .perpPositions:
+            case .perpsPositions:
                 switch elementKind {
                 case UICollectionView.elementKindSectionHeader:
                     let header = collectionView.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
@@ -585,6 +597,10 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         
     }
     
+    func hideTokenAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        nil
+    }
+    
     func viewAllTokens() {
         
     }
@@ -609,7 +625,7 @@ extension WalletViewController {
         case overview
         case emptyWalletInstruction
         case tips
-        case perpPositions
+        case perpsPositions
         case tokens
         case transactions
         case perpsTopMovers
@@ -625,7 +641,7 @@ extension WalletViewController {
         case perpsPosition(positionID: String)
         case token(assetID: String)
         case transaction(id: String)
-        case perpsTopMovers(marketID: String)
+        case perpsTopMover(marketID: String)
         case referral
         case support(WalletSupport)
         case benefit(WalletBenefit)

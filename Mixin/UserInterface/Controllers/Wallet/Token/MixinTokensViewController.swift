@@ -62,6 +62,29 @@ final class MixinTokensViewController: TokensViewController {
         pendingDepositObserver?.reloadPendingDeposits()
     }
     
+    override func hideTokenAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(
+            style: .destructive,
+            title: R.string.localizable.hide()
+        ) { [weak self] (action, _, completionHandler) in
+            guard
+                let self,
+                let token = self.tokens?[indexPath.item]
+            else {
+                return
+            }
+            let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(token.symbol), message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.hide(), style: .default, handler: { (_) in
+                self.hide(token: token)
+            }))
+            self.present(alert, animated: true, completion: nil)
+            completionHandler(true)
+        }
+        action.backgroundColor = R.color.theme()
+        return UISwipeActionsConfiguration(actions: [action])
+    }
+    
     @objc private func reloadData() {
         DispatchQueue.global().async { [weak self] in
             let overview = {
@@ -85,6 +108,22 @@ final class MixinTokensViewController: TokensViewController {
                 self.overview = overview
                 self.tokens = tokens
                 self.collectionView.reloadData()
+            }
+        }
+    }
+    
+    private func hide(token: MixinTokenItem) {
+        DispatchQueue.global().async { [weak self] in
+            let extra = TokenExtra(
+                assetID: token.assetID,
+                kernelAssetID: token.kernelAssetID,
+                isHidden: true,
+                balance: token.balance,
+                updatedAt: Date().toUTCString()
+            )
+            TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
+            DispatchQueue.main.async {
+                self?.reloadData()
             }
         }
     }

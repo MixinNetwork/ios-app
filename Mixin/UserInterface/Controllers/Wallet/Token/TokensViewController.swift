@@ -36,10 +36,16 @@ class TokensViewController: UIViewController {
                     section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     return section
                 case .tokens:
-                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
-                    let section = NSCollectionLayoutSection(group: group)
+                    var config = UICollectionLayoutListConfiguration(appearance: .plain)
+                    config.showsSeparators = false
+                    config.backgroundColor = .clear
+                    config.trailingSwipeActionsConfigurationProvider = { [weak self] indexPath in
+                        self?.hideTokenAction(indexPath: indexPath)
+                    }
+                    config.headerMode = .none
+                    config.footerMode = .none
+                    config.headerTopPadding = 0
+                    let section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: environment)
                     section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
                     section.interGroupSpacing = 20
                     section.decorationItems = {
@@ -75,6 +81,10 @@ class TokensViewController: UIViewController {
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         updateCollectionViewInsets()
+    }
+    
+    func hideTokenAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        nil
     }
     
     private func updateCollectionViewInsets() {

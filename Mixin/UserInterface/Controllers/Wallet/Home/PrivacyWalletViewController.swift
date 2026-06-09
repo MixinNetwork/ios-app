@@ -68,13 +68,13 @@ final class PrivacyWalletViewController: WalletViewController {
         )
         notificationCenter.addObserver(
             self,
-            selector: #selector(reloadData),
+            selector: #selector(reloadPerpsPositions),
             name: PerpsPositionDAO.perpsPositionDidChangeNotification,
             object: nil
         )
         notificationCenter.addObserver(
             self,
-            selector: #selector(reloadData),
+            selector: #selector(reloadPerpsTopMovers),
             name: PerpsMarketDAO.marketsDidUpdateNotification,
             object: nil
         )
@@ -141,6 +141,31 @@ final class PrivacyWalletViewController: WalletViewController {
             return
         }
         transactionCell.load(snapshot: snapshot)
+    }
+    
+    override func hideTokenAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(
+            style: .destructive,
+            title: R.string.localizable.hide()
+        ) { [weak self] (action, _, completionHandler) in
+            guard
+                let self,
+                let item = self.dataSource.itemIdentifier(for: indexPath),
+                case let .token(assetID) = item,
+                let token = self.tokens[assetID]
+            else {
+                return
+            }
+            let alert = UIAlertController(title: R.string.localizable.wallet_hide_asset_confirmation(token.symbol), message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.hide(), style: .default, handler: { (_) in
+                self.hide(token: token)
+            }))
+            self.present(alert, animated: true, completion: nil)
+            completionHandler(true)
+        }
+        action.backgroundColor = R.color.theme()
+        return UISwipeActionsConfiguration(actions: [action])
     }
     
     override func viewAllTokens() {
@@ -232,10 +257,10 @@ final class PrivacyWalletViewController: WalletViewController {
                 }
             } else {
                 perpsTopMovers = [:]
-                snapshot.appendSections([.perpPositions])
+                snapshot.appendSections([.perpsPositions])
                 snapshot.appendItems(
                     perpsPositions.values.map({ Item.perpsPosition(positionID: $0.positionID) }),
-                    toSection: .perpPositions
+                    toSection: .perpsPositions
                 )
             }
             if !tokens.isEmpty {
@@ -255,7 +280,7 @@ final class PrivacyWalletViewController: WalletViewController {
             if !perpsTopMovers.isEmpty {
                 snapshot.appendSections([.perpsTopMovers])
                 snapshot.appendItems(
-                    perpsTopMovers.values.map({ Item.perpsTopMovers(marketID: $0.market.marketID) }),
+                    perpsTopMovers.values.map({ Item.perpsTopMover(marketID: $0.market.marketID) }),
                     toSection: .perpsTopMovers
                 )
             }
@@ -319,6 +344,82 @@ final class PrivacyWalletViewController: WalletViewController {
         }
     }
     
+    @objc private func reloadPerpsPositions() {
+        let snapshot = dataSource.snapshot()
+        guard snapshot.sectionIdentifiers.contains(.perpsPositions) else {
+            // New position incoming
+            reloadData()
+            return
+        }
+        DispatchQueue.global().async { [weak self] in
+            let perpsPositions = PerpsPositionDAO.shared.positionItems()
+                .reduce(into: OrderedDictionary()) { result, position in
+                    result[position.positionID] = PerpetualPositionViewModel(
+                        wallet: .privacy,
+                        position: position
+                    )
+                }
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                if perpsPositions.isEmpty {
+                    // All positions are closed
+                    self.reloadData()
+                } else {
+                    var snapshot = self.dataSource.snapshot()
+                    if snapshot.sectionIdentifiers.contains(.perpsPositions) {
+                        self.perpsPositions = perpsPositions
+                        snapshot.deleteItems(
+                            snapshot.itemIdentifiers(inSection: .perpsPositions)
+                        )
+                        let newItems = perpsPositions.values.map { position in
+                            Item.perpsPosition(positionID: position.positionID)
+                        }
+                        snapshot.appendItems(newItems, toSection: .perpsPositions)
+                        snapshot.reconfigureItems(newItems)
+                        self.dataSource.apply(snapshot, animatingDifferences: false)
+                    } else {
+                        self.reloadData()
+                    }
+                }
+            }
+        }
+    }
+    
+    @objc private func reloadPerpsTopMovers() {
+        let snapshot = dataSource.snapshot()
+        guard snapshot.sectionIdentifiers.contains(.perpsTopMovers) else {
+            return
+        }
+        DispatchQueue.global().async { [perpsTopMoversCount, weak self] in
+            let perpsTopMovers = PerpsMarketDAO.shared.availableTopMovers(
+                count: perpsTopMoversCount
+            ).reduce(into: OrderedDictionary()) { result, market in
+                result[market.marketID] = PerpetualMarketViewModel(market: market)
+            }
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                var snapshot = self.dataSource.snapshot()
+                guard snapshot.sectionIdentifiers.contains(.perpsTopMovers) else {
+                    return
+                }
+                self.perpsTopMovers = perpsTopMovers
+                snapshot.deleteItems(
+                    snapshot.itemIdentifiers(inSection: .perpsTopMovers)
+                )
+                let newItems = perpsTopMovers.values.map { topMover in
+                    Item.perpsTopMover(marketID: topMover.market.marketID)
+                }
+                snapshot.appendItems(newItems, toSection: .perpsTopMovers)
+                snapshot.reconfigureItems(newItems)
+                self.dataSource.apply(snapshot, animatingDifferences: false)
+            }
+        }
+    }
+    
     private func performAssetMigration(_ sender: Any) {
         let botUserID = "84c9dfb1-bfcf-4cb4-8404-cc5a1354005b"
         let conversationID = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: botUserID)
@@ -335,6 +436,22 @@ final class PrivacyWalletViewController: WalletViewController {
             case .failure:
                 hud.set(style: .error, text: R.string.localizable.network_connection_lost())
                 hud.scheduleAutoHidden()
+            }
+        }
+    }
+    
+    private func hide(token: MixinTokenItem) {
+        DispatchQueue.global().async { [weak self] in
+            let extra = TokenExtra(
+                assetID: token.assetID,
+                kernelAssetID: token.kernelAssetID,
+                isHidden: true,
+                balance: token.balance,
+                updatedAt: Date().toUTCString()
+            )
+            TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
+            DispatchQueue.main.async {
+                self?.reloadData()
             }
         }
     }
@@ -391,7 +508,7 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
                 navigationController?.pushViewController(viewController, animated: true)
                 reporter.report(event: .transactionDetail, tags: ["source": "wallet_home"])
             }
-        case .perpsTopMovers(let marketID):
+        case .perpsTopMover(let marketID):
             if let viewModel = perpsTopMovers[marketID] {
                 let market = PerpetualMarketViewController(
                     wallet: .privacy,

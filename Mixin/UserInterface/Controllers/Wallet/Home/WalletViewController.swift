@@ -136,20 +136,23 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                     if #available(iOS 17.0, *) {
                         section.orthogonalScrollingProperties.bounce = .always
                     }
-                    section.visibleItemsInvalidationHandler = { (items, location, environment) in
-                        let width = environment.container.contentSize.width
-                        let pageOffset = location.x.truncatingRemainder(dividingBy: width)
-                        if pageOffset < width / 5 {
-                            self?.tipsCurrentPage = Int(location.x / width)
+                    let numberOfTips = self?.dataSource.snapshot().numberOfItems(inSection: .tips) ?? 0
+                    if numberOfTips > 1 {
+                        section.visibleItemsInvalidationHandler = { (items, location, environment) in
+                            let width = environment.container.contentSize.width
+                            let pageOffset = location.x.truncatingRemainder(dividingBy: width)
+                            if pageOffset < width / 5 {
+                                self?.tipsCurrentPage = Int(location.x / width)
+                            }
                         }
+                        let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(16))
+                        let footer = NSCollectionLayoutBoundarySupplementaryItem(
+                            layoutSize: footerSize,
+                            elementKind: UICollectionView.elementKindSectionFooter,
+                            alignment: .bottom
+                        )
+                        section.boundarySupplementaryItems = [footer]
                     }
-                    let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(16))
-                    let footer = NSCollectionLayoutBoundarySupplementaryItem(
-                        layoutSize: footerSize,
-                        elementKind: UICollectionView.elementKindSectionFooter,
-                        alignment: .bottom
-                    )
-                    section.boundarySupplementaryItems = [footer]
                     return section
                 case .perpsPositions:
                     return listSection(trailingSwipeActionsConfigurationProvider: nil)
@@ -604,12 +607,9 @@ extension WalletViewController {
         if !BadgeManager.shared.hasViewed(identifier: .addWalletTip) {
             tips.append(.addWallet)
         }
-        if !tips.isEmpty {
-            snapshot.insertSections([.tips], afterSection: .overview)
-            snapshot.appendItems(
-                tips.map({ Item.tip($0) }),
-                toSection: .tips
-            )
+        if !tips.isEmpty, let firstSection = snapshot.sectionIdentifiers.first {
+            snapshot.insertSections([.tips], afterSection: firstSection)
+            snapshot.appendItems(tips.map({ Item.tip($0) }), toSection: .tips)
         }
         if !BadgeManager.shared.hasViewed(identifier: .walletHomeReferral) {
             snapshot.insertSections([.referral], beforeSection: .support)

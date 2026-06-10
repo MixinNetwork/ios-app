@@ -81,11 +81,11 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
             make.centerX.equalToSuperview()
         }
         let constraint = view.centerYAnchor.constraint(
-            equalTo: view.centerYAnchor,
+            equalTo: parent.view.centerYAnchor,
             constant: -appearingAnimationDistance
         )
         constraint.isActive = true
-        didMove(toParent: self)
+        didMove(toParent: parent)
         parent.view.layoutIfNeeded()
         UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             self.view.alpha = 1

@@ -232,12 +232,17 @@ extension MixinTokensViewController: UICollectionViewDataSource {
 extension MixinTokensViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let token = tokens?[indexPath.item] else {
-            return
+        switch sections[indexPath.section] {
+        case .overview, .emptyIndicator:
+            break
+        case .tokens:
+            guard let token = tokens?[indexPath.item] else {
+                return
+            }
+            let viewController = MixinTokenViewController(token: token)
+            navigationController?.pushViewController(viewController, animated: true)
+            reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "token_list"])
         }
-        let viewController = MixinTokenViewController(token: token)
-        navigationController?.pushViewController(viewController, animated: true)
-        reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "token_list"])
     }
     
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait" appearance="dark"/>
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
@@ -35,20 +35,20 @@
                         <rect key="frame" x="72" y="6" width="326" height="38"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="2w0-tw-QvV">
-                                <rect key="frame" x="0.0" y="0.0" width="326" height="19"/>
+                                <rect key="frame" x="0.0" y="0.0" width="326" height="19.5"/>
                                 <subviews>
                                     <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="800" verticalHuggingPriority="251" horizontalCompressionResistancePriority="800" image="web3_reputation_bad" translatesAutoresizingMaskIntoConstraints="NO" id="SrW-7i-0oJ">
-                                        <rect key="frame" x="0.0" y="1.5" width="0.0" height="16"/>
+                                        <rect key="frame" x="0.0" y="2" width="0.0" height="16"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="1.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UYd-p5-0iv" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="18" height="19"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="19" height="19.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="19"/>
+                                        <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="20"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ks7-rU-07m" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="19" y="2.5" width="257.5" height="14.5"/>
+                                        <rect key="frame" x="20" y="2.5" width="256.5" height="14.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                         <color key="textColor" name="text"/>
@@ -58,7 +58,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="12.06%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="esD-bh-haj" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="277.5" y="1" width="48.5" height="17"/>
+                                        <rect key="frame" x="277.5" y="1.5" width="48.5" height="17"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>

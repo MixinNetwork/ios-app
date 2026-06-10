@@ -386,8 +386,12 @@ final class PrivacyWalletViewController: WalletViewController {
             reloadData()
             return
         }
+        let displayItemsCount = itemsCount
         DispatchQueue.global().async { [weak self] in
             let perpsPositions = PerpsPositionDAO.shared.positionItems()
+            let hasMorePerpsPositions = perpsPositions.count > displayItemsCount
+            let displayPerpsPositions = perpsPositions
+                .prefix(displayItemsCount)
                 .reduce(into: OrderedDictionary()) { result, position in
                     result[position.positionID] = PerpetualPositionViewModel(
                         wallet: .privacy,
@@ -404,15 +408,17 @@ final class PrivacyWalletViewController: WalletViewController {
                 } else {
                     var snapshot = self.dataSource.snapshot()
                     if snapshot.sectionIdentifiers.contains(.perpsPositions) {
-                        self.perpsPositions = perpsPositions
+                        self.perpsPositions = displayPerpsPositions
+                        self.hasMorePerpsPositions = hasMorePerpsPositions
                         snapshot.deleteItems(
                             snapshot.itemIdentifiers(inSection: .perpsPositions)
                         )
-                        let newItems = perpsPositions.values.map { position in
+                        let newItems = displayPerpsPositions.values.map { position in
                             Item.perpsPosition(positionID: position.positionID)
                         }
                         snapshot.appendItems(newItems, toSection: .perpsPositions)
                         snapshot.reconfigureItems(newItems)
+                        snapshot.reloadSections([.perpsPositions])
                         self.dataSource.apply(snapshot, animatingDifferences: false)
                     } else {
                         self.reloadData()

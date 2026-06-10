@@ -14,6 +14,7 @@ final class CommonWalletViewController: WalletViewController {
     private var transactionTokenSymbols: [String: String] = [:]
     private var legacyRenaming: WalletDigest.LegacyClassicWalletRenaming?
     private var pendingTransactionObserver: CommonWalletPendingTransactionLoader?
+    private var searchTokenHandler: WalletSearchWeb3TokenHandler?
     
     private weak var renamingInputController: UIAlertController?
     
@@ -90,6 +91,22 @@ final class CommonWalletViewController: WalletViewController {
         pendingTransactionObserver?.stop()
     }
     
+    override func searchAction(_ sender: Any) {
+        let modelController = WalletSearchWeb3TokenController(
+            walletID: wallet.walletID,
+            supportedChainIDs: supportedChainIDs
+        )
+        let searchTokenHandler = WalletSearchWeb3TokenHandler(
+            wallet: wallet,
+            availability: availability,
+            navigationController: navigationController
+        )
+        modelController.delegate = searchTokenHandler
+        let search = WalletSearchViewController(modelController: modelController)
+        search.presentAsChild(on: self)
+        self.searchTokenHandler = searchTokenHandler
+    }
+    
     override func moreAction(_ sender: Any) {
         let wallet = self.wallet
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -153,16 +170,6 @@ final class CommonWalletViewController: WalletViewController {
         }
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
-    }
-    
-    override func makeSearchViewController() -> UIViewController {
-        let modelController = WalletSearchWeb3TokenController(
-            walletID: wallet.walletID,
-            supportedChainIDs: supportedChainIDs
-        )
-        modelController.delegate = self
-        let viewController = WalletSearchViewController(modelController: modelController)
-        return viewController
     }
     
     override func configure(tokenCell: TokenCell, withTokenOf assetID: String) {
@@ -469,81 +476,6 @@ extension CommonWalletViewController: UICollectionViewDelegate {
             }
         case .support(let support):
            request(support: support)
-        }
-    }
-    
-}
-
-extension CommonWalletViewController: WalletSearchWeb3TokenController.Delegate {
-    
-    func walletSearchWeb3TokenController(_ controller: WalletSearchWeb3TokenController, didSelectToken token: Web3TokenItem) {
-        let controller = Web3TokenViewController(
-            wallet: wallet,
-            token: token,
-            availability: availability
-        )
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
-    func walletSearchWeb3TokenController(_ controller: WalletSearchWeb3TokenController, didSelectTrendingItem item: AssetItem) {
-        let walletID = wallet.walletID
-        if let item = Web3TokenDAO.shared.token(walletID: walletID, assetID: item.assetId) {
-            walletSearchWeb3TokenController(controller, didSelectToken: item)
-        } else {
-            let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            DispatchQueue.global().async { [weak self] in
-                func report(error: Error) {
-                    DispatchQueue.main.sync {
-                        hud.set(style: .error, text: error.localizedDescription)
-                        hud.scheduleAutoHidden()
-                    }
-                }
-                
-                let chainID = item.chainId
-                let chain: Chain
-                if let localChain = ChainDAO.shared.chain(chainId: chainID) {
-                    chain = localChain
-                } else {
-                    switch NetworkAPI.chain(id: chainID) {
-                    case .success(let remoteChain):
-                        chain = remoteChain
-                        ChainDAO.shared.save([chain])
-                        Web3ChainDAO.shared.save([chain])
-                    case .failure(let error):
-                        report(error: error)
-                        return
-                    }
-                }
-                switch SafeAPI.assets(id: item.assetId) {
-                case .failure(let error):
-                    report(error: error)
-                case .success(let token):
-                    let item = Web3TokenItem(
-                        token: Web3Token(
-                            walletID: walletID,
-                            assetID: token.assetID,
-                            chainID: token.chainID,
-                            assetKey: token.assetKey,
-                            kernelAssetID: token.kernelAssetID,
-                            symbol: token.symbol,
-                            name: token.name,
-                            precision: token.precision,
-                            iconURL: token.iconURL,
-                            amount: "0",
-                            usdPrice: token.usdPrice,
-                            usdChange: token.usdChange,
-                            level: Web3Reputation.Level.verified.rawValue
-                        ),
-                        hidden: false,
-                        chain: chain
-                    )
-                    DispatchQueue.main.sync {
-                        hud.hide()
-                        self?.walletSearchWeb3TokenController(controller, didSelectToken: item)
-                    }
-                }
-            }
         }
     }
     

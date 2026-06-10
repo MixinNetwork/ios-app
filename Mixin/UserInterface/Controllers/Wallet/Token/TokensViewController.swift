@@ -21,6 +21,7 @@ class TokensViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = R.string.localizable.wallet_home_tokens()
         view.backgroundColor = R.color.background_secondary()
         
         let config = UICollectionViewCompositionalLayoutConfiguration()
@@ -93,14 +94,6 @@ class TokensViewController: UIViewController {
         } else {
             collectionView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
         }
-    }
-    
-}
-
-extension TokensViewController: HomeNavigationController.NavigationBarStyling {
-    
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
-        .secondaryBackground
     }
     
 }

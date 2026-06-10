@@ -7,6 +7,8 @@ final class MixinTokensViewController: TokensViewController {
     private var overviewTray: WalletOverview.Tray?
     private var tokens: [MixinTokenItem]?
     
+    private var isDisplayingSearch = false
+    private var searchTokenHandler: WalletSearchMixinTokenHandler?
     private var overviewActionHandler: PrivacyWalletOverviewActionHandler?
     private var pendingDepositObserver: PrivacyWalletPendingDepositObserver?
     
@@ -17,6 +19,20 @@ final class MixinTokensViewController: TokensViewController {
             title: R.string.localizable.wallet_home_tokens(),
             wallet: .privacy
         )
+        navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(
+                image: R.image.ic_title_more(),
+                style: .plain,
+                target: self,
+                action: #selector(presentMoreMenu(_:))
+            ),
+            UIBarButtonItem(
+                image: R.image.ic_title_search(),
+                style: .plain,
+                target: self,
+                action: #selector(presentSearch(_:))
+            ),
+        ]
         collectionView.dataSource = self
         collectionView.delegate = self
         
@@ -112,6 +128,35 @@ final class MixinTokensViewController: TokensViewController {
         }
     }
     
+    @objc private func presentSearch(_ sender: Any) {
+        let modelController = WalletSearchMixinTokenController()
+        let searchTokenHandler = WalletSearchMixinTokenHandler(
+            navigationController: navigationController
+        )
+        modelController.delegate = searchTokenHandler
+        let search = WalletSearchViewController(modelController: modelController)
+        self.searchTokenHandler = searchTokenHandler
+        self.isDisplayingSearch = true
+        search.onWillDismiss = { [weak self] in
+            self?.isDisplayingSearch = false
+        }
+        search.presentAsChild(on: self)
+    }
+    
+    @objc private func presentMoreMenu(_ sender: Any) {
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
+            let history = MixinTransactionHistoryViewController(type: nil)
+            self.navigationController?.pushViewController(history, animated: true)
+            reporter.report(event: .allTransactions, tags: ["source": "token_list"])
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
+            self.navigationController?.pushViewController(HiddenMixinTokensViewController(), animated: true)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true, completion: nil)
+    }
+    
     private func hide(token: MixinTokenItem) {
         DispatchQueue.global().async { [weak self] in
             let extra = TokenExtra(
@@ -126,6 +171,14 @@ final class MixinTokensViewController: TokensViewController {
                 self?.reloadData()
             }
         }
+    }
+    
+}
+
+extension MixinTokensViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        isDisplayingSearch ? .hide : .secondaryBackground
     }
     
 }

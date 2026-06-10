@@ -9,8 +9,13 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
     
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
+    var onWillDismiss: (() -> Void)?
+    
     private let recommendation: WalletSearchRecommendationViewController<ModelController>
     private let searchResults: WalletSearchResultsViewController<ModelController>
+    private let appearingAnimationDistance: CGFloat = 20
+    
+    private weak var viewCenterYConstraint: NSLayoutConstraint?
     
     init(modelController: ModelController) {
         self.recommendation = WalletSearchRecommendationViewController(modelController: modelController)
@@ -37,7 +42,18 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
             }
             child.didMove(toParent: self)
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(_:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillChangeFrame(_:)),
+            name: UIResponder.keyboardWillChangeFrameNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(dismissAsChild),
+            name: dismissSearchNotification,
+            object: nil
+        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -51,11 +67,56 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
     }
     
     @IBAction func cancelAction(_ sender: Any) {
-        guard let parent = parent as? WalletViewController else {
-            return
-        }
         searchBoxView.textField.resignFirstResponder()
-        DispatchQueue.main.async(execute: parent.dismissSearch)
+        dismissAsChild()
+    }
+    
+    func presentAsChild(on parent: UIViewController) {
+        parent.navigationController?.setNavigationBarHidden(true, animated: true)
+        view.alpha = 0
+        parent.addChild(self)
+        parent.view.addSubview(view)
+        view.snp.makeConstraints { (make) in
+            make.size.equalTo(parent.view.snp.size)
+            make.centerX.equalToSuperview()
+        }
+        let constraint = view.centerYAnchor.constraint(
+            equalTo: view.centerYAnchor,
+            constant: -appearingAnimationDistance
+        )
+        constraint.isActive = true
+        didMove(toParent: self)
+        parent.view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
+            self.view.alpha = 1
+            constraint.constant = 0
+            parent.view.layoutIfNeeded()
+        }
+        self.viewCenterYConstraint = constraint
+    }
+    
+    @objc func dismissAsChild() {
+        onWillDismiss?()
+        let showNavigationBar: Bool
+        if let parent = parent as? HomeNavigationController.NavigationBarStyling,
+           parent.navigationBarStyle == .hide
+        {
+            showNavigationBar = false
+        } else {
+            showNavigationBar = true
+        }
+        if showNavigationBar {
+            parent?.navigationController?.setNavigationBarHidden(false, animated: true)
+        }
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
+            self.view.alpha = 0
+            self.viewCenterYConstraint?.constant = -self.appearingAnimationDistance
+            self.parent?.view.layoutIfNeeded()
+        } completion: { _ in
+            self.willMove(toParent: nil)
+            self.view.removeFromSuperview()
+            self.removeFromParent()
+        }
     }
     
     @objc private func textFieldDidChange(_ textField: UITextField) {

@@ -11,6 +11,7 @@ final class PrivacyWalletViewController: WalletViewController {
     private var pendingDepositObserver: PrivacyWalletPendingDepositObserver?
     private var perpsPositionLoader: PerpetualPositionLoader?
     private var perpsTopMoverLoader: PerpetualMarketLoader?
+    private var searchTokenHandler: WalletSearchMixinTokenHandler?
     
     private weak var walletSwitchBadgeView: BadgeDotView?
     
@@ -105,6 +106,17 @@ final class PrivacyWalletViewController: WalletViewController {
         super.switchFromWallets(sender)
     }
     
+    override func searchAction(_ sender: Any) {
+        let modelController = WalletSearchMixinTokenController()
+        let searchTokenHandler = WalletSearchMixinTokenHandler(
+            navigationController: navigationController
+        )
+        modelController.delegate = searchTokenHandler
+        let search = WalletSearchViewController(modelController: modelController)
+        search.presentAsChild(on: self)
+        self.searchTokenHandler = searchTokenHandler
+    }
+    
     override func moreAction(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
@@ -120,13 +132,6 @@ final class PrivacyWalletViewController: WalletViewController {
         }
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
-    }
-    
-    override func makeSearchViewController() -> UIViewController {
-        let modelController = WalletSearchMixinTokenController()
-        modelController.delegate = self
-        let viewController = WalletSearchViewController(modelController: modelController)
-        return viewController
     }
     
     override func configure(tokenCell: TokenCell, withTokenOf assetID: String) {
@@ -532,62 +537,6 @@ extension PrivacyWalletViewController: PrivacyWalletPendingDepositObserver.Deleg
     ) {
         overviewTray = .pendingDeposits(tokens: tokens, snapshots: snapshots)
         reconfigureIfExists(item: .overview)
-    }
-    
-}
-
-extension PrivacyWalletViewController: WalletSearchMixinTokenController.Delegate {
-    
-    func walletSearchMixinTokenController(_ controller: WalletSearchMixinTokenController, didSelectToken token: MixinTokenItem) {
-        let controller = MixinTokenViewController(token: token)
-        navigationController?.pushViewController(controller, animated: true)
-        DispatchQueue.global().async {
-            TokenDAO.shared.save(assets: [token])
-        }
-        reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "wallet_search"])
-    }
-    
-    func walletSearchMixinTokenController(_ controller: WalletSearchMixinTokenController, didSelectTrendingItem item: AssetItem) {
-        if let token = TokenDAO.shared.tokenItem(assetID: item.assetId) {
-            walletSearchMixinTokenController(controller, didSelectToken: token)
-        } else {
-            let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            DispatchQueue.global().async { [weak self] in
-                func report(error: Error) {
-                    DispatchQueue.main.sync {
-                        hud.set(style: .error, text: error.localizedDescription)
-                        hud.scheduleAutoHidden()
-                    }
-                }
-                
-                let chainID = item.chainId
-                let chain: Chain
-                if let localChain = ChainDAO.shared.chain(chainId: chainID) {
-                    chain = localChain
-                } else {
-                    switch NetworkAPI.chain(id: chainID) {
-                    case .success(let remoteChain):
-                        chain = remoteChain
-                        ChainDAO.shared.save([chain])
-                        Web3ChainDAO.shared.save([chain])
-                    case .failure(let error):
-                        report(error: error)
-                        return
-                    }
-                }
-                switch SafeAPI.assets(id: item.assetId) {
-                case .success(let token):
-                    let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
-                    DispatchQueue.main.sync {
-                        hud.hide()
-                        self?.walletSearchMixinTokenController(controller, didSelectToken: item)
-                    }
-                case .failure(let error):
-                    report(error: error)
-                }
-            }
-        }
     }
     
 }

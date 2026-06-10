@@ -13,6 +13,8 @@ final class Web3TokensViewController: TokensViewController {
     private var watchingAddresses: WatchingAddresses?
     private var tokens: [Web3TokenItem]?
     
+    private var isDisplayingSearch = false
+    private var searchTokenHandler: WalletSearchWeb3TokenHandler?
     private var overviewActionHandler: CommonWalletOverviewActionHandler?
     private var pendingTransactionObserver: CommonWalletPendingTransactionLoader?
     
@@ -36,6 +38,20 @@ final class Web3TokensViewController: TokensViewController {
             title: R.string.localizable.wallet_home_tokens(),
             wallet: .common(wallet)
         )
+        navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(
+                image: R.image.ic_title_more(),
+                style: .plain,
+                target: self,
+                action: #selector(presentMoreMenu(_:))
+            ),
+            UIBarButtonItem(
+                image: R.image.ic_title_search(),
+                style: .plain,
+                target: self,
+                action: #selector(presentSearch(_:))
+            ),
+        ]
         collectionView.dataSource = self
         collectionView.delegate = self
         
@@ -238,10 +254,53 @@ final class Web3TokensViewController: TokensViewController {
         }
     }
     
+    @objc private func presentSearch(_ sender: Any) {
+        let modelController = WalletSearchWeb3TokenController(
+            walletID: wallet.walletID,
+            supportedChainIDs: supportedChainIDs
+        )
+        let searchTokenHandler = WalletSearchWeb3TokenHandler(
+            wallet: wallet,
+            availability: availability,
+            navigationController: navigationController
+        )
+        modelController.delegate = searchTokenHandler
+        let search = WalletSearchViewController(modelController: modelController)
+        self.searchTokenHandler = searchTokenHandler
+        self.isDisplayingSearch = true
+        search.onWillDismiss = { [weak self] in
+            self?.isDisplayingSearch = false
+        }
+        search.presentAsChild(on: self)
+    }
+    
+    @objc private func presentMoreMenu(_ sender: Any) {
+        let wallet = self.wallet
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
+            let history = Web3TransactionHistoryViewController(wallet: wallet, type: nil)
+            self.navigationController?.pushViewController(history, animated: true)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
+            let hidden = HiddenWeb3TokensViewController(wallet: wallet, availability: self.availability)
+            self.navigationController?.pushViewController(hidden, animated: true)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true, completion: nil)
+    }
+    
     private func hide(token: Web3TokenItem) {
         DispatchQueue.global().async {
             Web3TokenExtraDAO.shared.hide(walletID: token.walletID, assetID: token.assetID)
         }
+    }
+    
+}
+
+extension Web3TokensViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        isDisplayingSearch ? .hide : .secondaryBackground
     }
     
 }

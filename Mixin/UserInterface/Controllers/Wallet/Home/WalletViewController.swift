@@ -28,11 +28,6 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     
     private weak var tipsPageControl: UIPageControl?
     
-    private let searchAppearingAnimationDistance: CGFloat = 20
-    
-    private var searchCenterYConstraint: NSLayoutConstraint?
-    private var searchViewController: UIViewController?
-    
     private var tipsCurrentPage: Int = 0 {
         didSet {
             tipsPageControl?.currentPage = tipsCurrentPage
@@ -479,13 +474,6 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         collectionView.dataSource = dataSource
         self.collectionView = collectionView
         self.dataSource = dataSource
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(dismissSearch),
-            name: dismissSearchNotification,
-            object: nil
-        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -506,28 +494,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     }
     
     @IBAction func searchAction(_ sender: Any) {
-        let controller = makeSearchViewController()
-        controller.view.alpha = 0
-        addChild(controller)
-        view.addSubview(controller.view)
-        controller.view.snp.makeConstraints { (make) in
-            make.size.equalTo(view.snp.size)
-            make.centerX.equalToSuperview()
-        }
-        let constraint = controller.view.centerYAnchor.constraint(
-            equalTo: view.centerYAnchor,
-            constant: -searchAppearingAnimationDistance
-        )
-        constraint.isActive = true
-        controller.didMove(toParent: self)
-        view.layoutIfNeeded()
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
-            controller.view.alpha = 1
-            constraint.constant = 0
-            self.view.layoutIfNeeded()
-        }
-        self.searchViewController = controller
-        self.searchCenterYConstraint = constraint
+        
     }
     
     @IBAction func scanQRCode() {
@@ -536,25 +503,6 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     
     @IBAction func moreAction(_ sender: Any) {
         
-    }
-    
-    @objc func dismissSearch() {
-        guard let searchViewController = searchViewController, searchViewController.parent != nil else {
-            return
-        }
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
-            searchViewController.view.alpha = 0
-            self.searchCenterYConstraint?.constant = -self.searchAppearingAnimationDistance
-            self.view.layoutIfNeeded()
-        } completion: { _ in
-            searchViewController.willMove(toParent: nil)
-            searchViewController.view.removeFromSuperview()
-            searchViewController.removeFromParent()
-        }
-    }
-    
-    func makeSearchViewController() -> UIViewController {
-        fatalError("Must override")
     }
     
     func addIconIntoTitleView(image: UIImage?) {
@@ -678,6 +626,14 @@ extension WalletViewController: EmptyWalletInstructionCell.Delegate {
     
     func emptyWalletInstructionCellRequestToReceive(_ cell: EmptyWalletInstructionCell) {
         walletActionHandler?.receive()
+    }
+    
+}
+
+extension WalletViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .hide
     }
     
 }

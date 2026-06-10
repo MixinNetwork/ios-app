@@ -242,7 +242,9 @@ final class CommonWalletViewController: WalletViewController {
     }
     
     @objc private func reloadData() {
-        DispatchQueue.global().async { [weak self, wallet, itemsCount] in
+        let displayItemsCount = itemsCount
+        let hasMoreDeterminatingItemsCount = itemsCount + 1
+        DispatchQueue.global().async { [weak self, wallet] in
             let walletID = wallet.walletID
             let addresses = Web3AddressDAO.shared.addresses(walletID: walletID)
             let chainIDs = Set(addresses.map(\.chainID))
@@ -300,30 +302,39 @@ final class CommonWalletViewController: WalletViewController {
             let tokens = Web3TokenDAO.shared.notHiddenTokens(
                 walletID: walletID,
                 includesZeroBalanceItems: true,
-                limit: itemsCount,
-            ).reduce(into: OrderedDictionary()) { result, item in
-                result[item.assetID] = item
-            }
-            let hasPositiveBalanceToken = tokens.values.contains { item in
+                limit: hasMoreDeterminatingItemsCount,
+            )
+            let hasMoreToken = tokens.count > displayItemsCount
+            let hasPositiveBalanceToken = tokens.contains { item in
                 item.decimalBalance > 0
             }
+            let displayTokens = tokens
+                .prefix(displayItemsCount)
+                .reduce(into: OrderedDictionary()) { result, item in
+                    result[item.assetID] = item
+                }
+            
             let transactions = Web3TransactionDAO.shared.transactions(
                 walletID: walletID,
                 filter: .init(),
                 order: .newest,
-                limit: itemsCount,
-            ).reduce(into: OrderedDictionary()) { result, item in
-                result[item.transactionHash] = item
-            }
+                limit: hasMoreDeterminatingItemsCount,
+            )
+            let hasTransaction = !transactions.isEmpty
+            let hasMoreTransactions = transactions.count > displayItemsCount
+            let displayTransactions = transactions
+                .prefix(displayItemsCount)
+                .reduce(into: OrderedDictionary()) { result, item in
+                    result[item.transactionHash] = item
+                }
             var assetIDs: Set<String> = []
-            for transaction in transactions.values {
-                assetIDs.formUnion(transaction.allAssetIDs)
+            for tx in displayTransactions.values {
+                assetIDs.formUnion(tx.allAssetIDs)
             }
             let tokenSymbols = Web3TokenDAO.shared.tokenSymbols(ids: assetIDs)
                 .mapValues { symbol in
                     TextTruncation.truncateTail(string: symbol, prefixCount: 8)
                 }
-            let hasTransaction = !transactions.isEmpty
             
             let tokensValue = Web3TokenDAO.shared.notHiddenUSDBalanceSum(walletID: walletID)
             let formattedTokensValue = CurrencyFormatter.localizedString(
@@ -352,14 +363,14 @@ final class CommonWalletViewController: WalletViewController {
             if !tokens.isEmpty {
                 snapshot.appendSections([.tokens])
                 snapshot.appendItems(
-                    tokens.values.map({ Item.token(assetID: $0.assetID) }),
+                    displayTokens.values.map({ Item.token(assetID: $0.assetID) }),
                     toSection: .tokens
                 )
             }
             if !transactions.isEmpty {
                 snapshot.appendSections([.transactions])
                 snapshot.appendItems(
-                    transactions.values.map({ Item.transaction(id: $0.transactionHash) }),
+                    displayTransactions.values.map({ Item.transaction(id: $0.transactionHash) }),
                     toSection: .transactions
                 )
             }
@@ -386,12 +397,18 @@ final class CommonWalletViewController: WalletViewController {
                 self.overview = overview
                 self.overviewAction = action
                 self.overviewTray = tray
-                self.tokensValue = formattedTokensValue
+                
                 self.secret = secret
                 self.supportedChainIDs = chainIDs
-                self.tokens = tokens
-                self.transactions = transactions
+                
+                self.tokens = displayTokens
+                self.tokensValue = formattedTokensValue
+                self.hasMoreTokens = hasMoreToken
+                
+                self.transactions = displayTransactions
                 self.transactionTokenSymbols = tokenSymbols
+                self.hasMoreTransactions = hasMoreTransactions
+                
                 self.legacyRenaming = renaming
                 switch renaming {
                 case .required:

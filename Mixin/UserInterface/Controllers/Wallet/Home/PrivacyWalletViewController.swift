@@ -207,7 +207,9 @@ final class PrivacyWalletViewController: WalletViewController {
     }
     
     @objc private func reloadData() {
-        DispatchQueue.global().async { [weak self, itemsCount, perpsTopMoversCount] in
+        let displayItemsCount = itemsCount
+        let hasMoreDeterminatingItemsCount = itemsCount + 1
+        DispatchQueue.global().async { [weak self, perpsTopMoversCount] in
             var snapshot = DataSourceSnapshot()
             
             let tokensValue = TokenDAO.shared.usdBalanceSum(includesHiddenTokens: false)
@@ -231,22 +233,35 @@ final class PrivacyWalletViewController: WalletViewController {
             
             let tokens = TokenDAO.shared.notHiddenTokens(
                 includesZeroBalanceItems: true,
-                limit: itemsCount
-            ).reduce(into: OrderedDictionary()) { result, item in
-                result[item.assetID] = item
-            }
-            let hasPositiveBalanceToken = tokens.values.contains { item in
+                limit: hasMoreDeterminatingItemsCount,
+            )
+            let hasMoreToken = tokens.count > displayItemsCount
+            let hasPositiveBalanceToken = tokens.contains { item in
                 item.decimalBalance > 0
             }
+            let displayTokens = tokens
+                .prefix(displayItemsCount)
+                .reduce(into: OrderedDictionary()) { result, item in
+                    result[item.assetID] = item
+                }
+            
             let transactions = SafeSnapshotDAO.shared.snapshots(
                 filter: .init(),
                 order: .newest,
-                limit: itemsCount
-            ).reduce(into: OrderedDictionary()) { result, item in
-                result[item.id] = item
-            }
+                limit: hasMoreDeterminatingItemsCount
+            )
+            let displayTransactions = transactions
+                .prefix(displayItemsCount)
+                .reduce(into: OrderedDictionary()) { result, item in
+                    result[item.id] = item
+                }
             let hasTransaction = !transactions.isEmpty
+            let hasMoreTransactions = transactions.count > displayItemsCount
+            
             let perpsPositions = PerpsPositionDAO.shared.positionItems()
+            let hasMorePerpsPositions = perpsPositions.count > displayItemsCount
+            let displayPerpsPositions = perpsPositions
+                .prefix(displayItemsCount)
                 .reduce(into: OrderedDictionary()) { result, position in
                     result[position.positionID] = PerpetualPositionViewModel(
                         wallet: .privacy,
@@ -271,21 +286,21 @@ final class PrivacyWalletViewController: WalletViewController {
                 perpsTopMovers = [:]
                 snapshot.appendSections([.perpsPositions])
                 snapshot.appendItems(
-                    perpsPositions.values.map({ Item.perpsPosition(positionID: $0.positionID) }),
+                    displayPerpsPositions.values.map({ Item.perpsPosition(positionID: $0.positionID) }),
                     toSection: .perpsPositions
                 )
             }
             if !tokens.isEmpty {
                 snapshot.appendSections([.tokens])
                 snapshot.appendItems(
-                    tokens.values.map({ Item.token(assetID: $0.assetID) }),
+                    displayTokens.values.map({ Item.token(assetID: $0.assetID) }),
                     toSection: .tokens
                 )
             }
             if hasTransaction {
                 snapshot.appendSections([.transactions])
                 snapshot.appendItems(
-                    transactions.values.map({ Item.transaction(id: $0.id) }),
+                    displayTransactions.values.map({ Item.transaction(id: $0.id) }),
                     toSection: .transactions
                 )
             }
@@ -312,12 +327,19 @@ final class PrivacyWalletViewController: WalletViewController {
                     return
                 }
                 self.overview = overview
+                
+                self.tokens = displayTokens
                 self.tokensValue = formattedTokensValue
-                self.tokens = tokens
-                self.transactions = transactions
+                self.hasMoreTokens = hasMoreToken
+                
+                self.transactions = displayTransactions
+                self.hasMoreTransactions = hasMoreTransactions
+                
                 self.perpsValue = perpsValue
-                self.perpsPositions = perpsPositions
+                self.perpsPositions = displayPerpsPositions
+                self.hasMorePerpsPositions = hasMorePerpsPositions
                 self.perpsTopMovers = perpsTopMovers
+                
                 self.insertTipsReferralSection(into: &snapshot)
                 self.dataSource.applySnapshotUsingReloadData(snapshot)
                 

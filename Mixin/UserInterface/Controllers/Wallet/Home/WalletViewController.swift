@@ -16,10 +16,18 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     var overview: WalletOverview?
     var overviewAction: WalletOverview.Action?
     var overviewTray: WalletOverview.Tray?
+    
     var tokensValue: String?
+    var hasMoreTokens = false
+    
     var perpsValue: PerpetualPositionValue?
     var perpsPositions: OrderedDictionary<String, PerpetualPositionViewModel> = [:]
+    var hasMorePerpsPositions = false
+    
+    var hasMoreTransactions = false
+    
     var perpsTopMovers: OrderedDictionary<String, PerpetualMarketViewModel> = [:]
+    
     var walletActionHandler: (any WalletActionHandler)?
     
     private(set) weak var collectionView: UICollectionView!
@@ -67,34 +75,49 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 }
                 
                 func listSection(
+                    showFooter: Bool,
                     trailingSwipeActionsConfigurationProvider: UICollectionLayoutListConfiguration.SwipeActionsConfigurationProvider?
                 ) -> NSCollectionLayoutSection {
                     let contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                    
                     var config = UICollectionLayoutListConfiguration(appearance: .plain)
                     config.showsSeparators = false
                     config.backgroundColor = .clear
                     config.trailingSwipeActionsConfigurationProvider = trailingSwipeActionsConfigurationProvider
                     config.headerMode = .supplementary
-                    config.footerMode = .supplementary
                     config.headerTopPadding = 0
+                    
                     let section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: environment)
-                    section.contentInsets = contentInsets
                     section.interGroupSpacing = 20
-                    section.boundarySupplementaryItems = [
-                        NSCollectionLayoutBoundarySupplementaryItem(
-                            layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(57)),
-                            elementKind: UICollectionView.elementKindSectionHeader,
-                            alignment: .top
-                        ),
-                        NSCollectionLayoutBoundarySupplementaryItem(
+                    
+                    let header = NSCollectionLayoutBoundarySupplementaryItem(
+                        layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(57)),
+                        elementKind: UICollectionView.elementKindSectionHeader,
+                        alignment: .top
+                    )
+                    header.contentInsets = contentInsets
+                    section.boundarySupplementaryItems = [header]
+                    
+                    if showFooter {
+                        config.footerMode = .supplementary
+                        let footer = NSCollectionLayoutBoundarySupplementaryItem(
                             layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(56)),
                             elementKind: UICollectionView.elementKindSectionFooter,
                             alignment: .bottom
-                        ),
-                    ]
-                    for item in section.boundarySupplementaryItems {
-                        item.contentInsets = contentInsets
+                        )
+                        footer.contentInsets = contentInsets
+                        section.boundarySupplementaryItems.append(footer)
+                        section.contentInsets = contentInsets
+                    } else {
+                        config.footerMode = .none
+                        section.contentInsets = NSDirectionalEdgeInsets(
+                            top: contentInsets.top,
+                            leading: contentInsets.leading,
+                            bottom: contentInsets.bottom + 20,
+                            trailing: contentInsets.trailing
+                        )
                     }
+                    
                     section.decorationItems = {
                         let background: NSCollectionLayoutDecorationItem = .background(
                             elementKind: TradeSectionBackgroundView.elementKind
@@ -155,13 +178,21 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                     }
                     return section
                 case .perpsPositions:
-                    return listSection(trailingSwipeActionsConfigurationProvider: nil)
+                    return listSection(
+                        showFooter: self?.hasMorePerpsPositions ?? false,
+                        trailingSwipeActionsConfigurationProvider: nil
+                    )
                 case .tokens:
-                    return listSection { [weak self] indexPath in
+                    return listSection(
+                        showFooter: self?.hasMoreTokens ?? false
+                    ) { [weak self] indexPath in
                         self?.hideTokenAction(indexPath: indexPath)
                     }
                 case .transactions:
-                    return listSection(trailingSwipeActionsConfigurationProvider: nil)
+                    return listSection(
+                        showFooter: self?.hasMoreTransactions ?? false,
+                        trailingSwipeActionsConfigurationProvider: nil
+                    )
                 case .perpsTopMovers:
                     let itemSize = NSCollectionLayoutSize(
                         widthDimension: .estimated(76),

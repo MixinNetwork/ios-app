@@ -11,8 +11,10 @@ final class WalletOverviewCell: UICollectionViewCell {
         func walletOverviewCellDidSelectWatchingAddresses(_ cell: WalletOverviewCell)
     }
     
+    @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var valueLabel: UILabel!
+    @IBOutlet weak var valueStackView: UIStackView!
+    @IBOutlet weak var valueLabel: InsetLabel!
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var btcValueLabel: UILabel!
     @IBOutlet weak var actionStackView: UIStackView!
@@ -28,8 +30,10 @@ final class WalletOverviewCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
+        titleStackView.setCustomSpacing(0, after: valueStackView)
         titleLabel.text = R.string.localizable.total_balance()
         valueLabel.font = .condensed(size: 30)
+        valueLabel.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 5, right: 0)
         symbolLabel.text = Currency.current.code
     }
     

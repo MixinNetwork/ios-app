@@ -16,6 +16,8 @@ final class EmptyWalletInstructionCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        contentView.layer.cornerRadius = 8
+        contentView.layer.masksToBounds = true
         titleLabel.setFont(
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true

@@ -24,13 +24,13 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jZe-kM-y6Z">
                                 <rect key="frame" x="0.0" y="0.0" width="81" height="15.666666666666666"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
-                                <color key="textColor" name="text_quaternary"/>
+                                <color key="textColor" name="text_secondary"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="fqL-Oa-6UC">
                                 <rect key="frame" x="0.0" y="23.666666666666664" width="94.333333333333329" height="30"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8,666.9" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oKI-N5-Z01">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8,666.9" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oKI-N5-Z01" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="67" height="30"/>
                                         <fontDescription key="fontDescription" name="DINCondensed-Bold" family="DIN Condensed" pointSize="30"/>
                                         <nil key="textColor"/>
@@ -72,7 +72,9 @@
                 <outlet property="btcValueLabel" destination="2sB-o2-zzs" id="OQA-Vx-BjQ"/>
                 <outlet property="symbolLabel" destination="w6C-n7-TKS" id="1oY-O6-Bno"/>
                 <outlet property="titleLabel" destination="jZe-kM-y6Z" id="rhy-9T-0ek"/>
+                <outlet property="titleStackView" destination="E0F-Eq-kMr" id="Iy0-Wo-btC"/>
                 <outlet property="valueLabel" destination="oKI-N5-Z01" id="59h-RL-Ffl"/>
+                <outlet property="valueStackView" destination="fqL-Oa-6UC" id="3Wc-zF-4Co"/>
             </connections>
             <point key="canvasLocation" x="-1055.7251908396945" y="147.88732394366198"/>
         </collectionViewCell>
@@ -84,8 +86,8 @@
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="text_quaternary">
-            <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="text_secondary">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
             <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

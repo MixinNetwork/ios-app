@@ -388,6 +388,7 @@ final class PrivacyWalletViewController: WalletViewController {
         }
         let displayItemsCount = itemsCount
         DispatchQueue.global().async { [weak self] in
+            let perpsValue = PerpsPositionDAO.shared.positionValue()
             let perpsPositions = PerpsPositionDAO.shared.positionItems()
             let hasMorePerpsPositions = perpsPositions.count > displayItemsCount
             let displayPerpsPositions = perpsPositions
@@ -408,6 +409,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 } else {
                     var snapshot = self.dataSource.snapshot()
                     if snapshot.sectionIdentifiers.contains(.perpsPositions) {
+                        self.perpsValue = perpsValue
                         self.perpsPositions = displayPerpsPositions
                         self.hasMorePerpsPositions = hasMorePerpsPositions
                         snapshot.deleteItems(

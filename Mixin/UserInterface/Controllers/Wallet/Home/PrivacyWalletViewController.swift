@@ -210,9 +210,16 @@ final class PrivacyWalletViewController: WalletViewController {
         DispatchQueue.global().async { [weak self, itemsCount, perpsTopMoversCount] in
             var snapshot = DataSourceSnapshot()
             
+            let tokensValue = TokenDAO.shared.usdBalanceSum(includesHiddenTokens: false)
+            let formattedTokensValue = CurrencyFormatter.localizedString(
+                from: tokensValue * Currency.current.decimalRate,
+                format: .fiatMoneyPrecision,
+                sign: .never,
+                symbol: .currencySymbol
+            )
             let perpsValue = PerpsPositionDAO.shared.positionValue()
             let overview = {
-                let usdValue = TokenDAO.shared.usdBalanceSum(includesHiddenTokens: false) + perpsValue.decimalValue
+                let usdValue = tokensValue + perpsValue.decimalValue
                 let btcPrice: Decimal?
                 if let price = TokenDAO.shared.usdPrice(assetID: AssetID.btc) {
                     btcPrice = Decimal(string: price, locale: .enUSPOSIX)
@@ -305,6 +312,7 @@ final class PrivacyWalletViewController: WalletViewController {
                     return
                 }
                 self.overview = overview
+                self.tokensValue = formattedTokensValue
                 self.tokens = tokens
                 self.transactions = transactions
                 self.perpsValue = perpsValue

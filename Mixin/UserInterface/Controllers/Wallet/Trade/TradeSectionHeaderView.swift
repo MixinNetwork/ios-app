@@ -18,6 +18,10 @@ final class TradeSectionHeaderView: UICollectionReusableView {
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )
+        subtitleLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
     }
     
     @IBAction func showAll(_ sender: UIButton) {

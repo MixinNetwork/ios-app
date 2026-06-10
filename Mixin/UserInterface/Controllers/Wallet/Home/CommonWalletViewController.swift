@@ -325,15 +325,21 @@ final class CommonWalletViewController: WalletViewController {
                 }
             let hasTransaction = !transactions.isEmpty
             
+            let tokensValue = Web3TokenDAO.shared.notHiddenUSDBalanceSum(walletID: walletID)
+            let formattedTokensValue = CurrencyFormatter.localizedString(
+                from: tokensValue * Currency.current.decimalRate,
+                format: .fiatMoneyPrecision,
+                sign: .never,
+                symbol: .currencySymbol
+            )
             let overview: WalletOverview = {
-                let usdValue = Web3TokenDAO.shared.notHiddenUSDBalanceSum(walletID: walletID)
                 let btcPrice: Decimal?
                 if let price = TokenDAO.shared.usdPrice(assetID: AssetID.btc) {
                     btcPrice = Decimal(string: price, locale: .enUSPOSIX)
                 } else {
                     btcPrice = nil
                 }
-                return WalletOverview(usdValue: usdValue, btcPrice: btcPrice)
+                return WalletOverview(usdValue: tokensValue, btcPrice: btcPrice)
             }()
             if hasPositiveBalanceToken || hasTransaction {
                 snapshot.appendSections([.overview])
@@ -380,6 +386,7 @@ final class CommonWalletViewController: WalletViewController {
                 self.overview = overview
                 self.overviewAction = action
                 self.overviewTray = tray
+                self.tokensValue = formattedTokensValue
                 self.secret = secret
                 self.supportedChainIDs = chainIDs
                 self.tokens = tokens

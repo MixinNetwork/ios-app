@@ -16,6 +16,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     var overview: WalletOverview?
     var overviewAction: WalletOverview.Action?
     var overviewTray: WalletOverview.Tray?
+    var tokensValue: String?
     var perpsValue: PerpetualPositionValue?
     var perpsPositions: OrderedDictionary<String, PerpetualPositionViewModel> = [:]
     var perpsTopMovers: OrderedDictionary<String, PerpetualMarketViewModel> = [:]
@@ -349,7 +350,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                             return nil
                         }
                         let font = UIFontMetrics.default.scaledFont(
-                            for: .systemFont(ofSize: 14, weight: .medium)
+                            for: .systemFont(ofSize: 14)
                         )
                         let text = NSMutableAttributedString(
                             string: value.value,
@@ -397,7 +398,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 case UICollectionView.elementKindSectionHeader:
                     let header = collectionView.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
                     header.titleLabel.text = R.string.localizable.wallet_home_tokens()
-                    header.subtitleLabel.text = nil
+                    header.subtitleLabel.text = self?.tokensValue
                     header.disclosureImageView.isHidden = false
                     header.onShowAll = { _ in
                         self?.viewAllTokens()

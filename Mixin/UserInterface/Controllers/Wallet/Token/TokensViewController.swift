@@ -6,7 +6,10 @@ class TokensViewController: UIViewController {
     enum Section: Int, CaseIterable {
         case overview
         case tokens
+        case emptyIndicator
     }
+    
+    var sections: [Section] = []
     
     private(set) weak var collectionView: UICollectionView!
     
@@ -27,8 +30,8 @@ class TokensViewController: UIViewController {
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.interSectionSpacing = 10
         let layout = UICollectionViewCompositionalLayout(
-            sectionProvider: { sectionIndex, environment in
-                switch Section(rawValue: sectionIndex)! {
+            sectionProvider: { [weak self] sectionIndex, environment in
+                switch self?.sections[sectionIndex] {
                 case .overview:
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(216))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -57,6 +60,15 @@ class TokensViewController: UIViewController {
                         return [background]
                     }()
                     return section
+                case .emptyIndicator:
+                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(environment.container.effectiveContentSize.height / 3))
+                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                    let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
+                    let section = NSCollectionLayoutSection(group: group)
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                    return section
+                case .none:
+                    return nil
                 }
             },
             configuration: config
@@ -69,6 +81,7 @@ class TokensViewController: UIViewController {
         collectionView.backgroundColor = R.color.background_secondary()
         collectionView.register(R.nib.walletOverviewCell)
         collectionView.register(R.nib.tokenCell)
+        collectionView.register(R.nib.noTokenIndicatorCell)
         view.addSubview(collectionView)
         collectionView.snp.makeEdgesEqualToSuperview()
         self.collectionView = collectionView

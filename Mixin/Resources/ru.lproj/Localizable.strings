@@ -1049,6 +1049,7 @@
 "no_results" = "НЕТ РЕЗУЛЬТАТОВ";
 "no_stickers" = "НЕТ НАКЛЕЕК";
 "no_tag" = "Нет тега";
+"no_tokens" = "No Tokens";
 "no_transactions" = "Нет транзакций";
 "nobody" = "Никто";
 "none" = "Никто";
@@ -1931,7 +1932,7 @@
 "wallet_home_privacy_wallet_reason_title" = "Why do I need a Privacy Wallet?";
 "wallet_home_receive_crypto" = "Receive Crypto";
 "wallet_home_referral_banner_desc" = "Invite and get up to %@ trading fee and exclusive revenue sharing.";
-"wallet_home_referral_banner_title" = "Referral Rewards";
+"wallet_home_referral_banner_title" = "Referral";
 "wallet_home_support" = "Support";
 "wallet_home_tokens" = "Tokens";
 "wallet_imported" = "Imported";

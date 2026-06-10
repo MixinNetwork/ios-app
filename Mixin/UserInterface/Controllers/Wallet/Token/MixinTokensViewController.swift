@@ -117,10 +117,17 @@ final class MixinTokensViewController: TokensViewController {
                 includesZeroBalanceItems: true,
                 limit: nil
             )
+            var sections: [Section] = [.overview]
+            if tokens.isEmpty {
+                sections.append(.emptyIndicator)
+            } else {
+                sections.append(.tokens)
+            }
             DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
+                self.sections = sections
                 self.overview = overview
                 self.tokens = tokens
                 self.collectionView.reloadData()
@@ -186,20 +193,22 @@ extension MixinTokensViewController: HomeNavigationController.NavigationBarStyli
 extension MixinTokensViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        Section.allCases.count
+        sections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
+        switch sections[section] {
         case .overview:
             1
         case .tokens:
             tokens?.count ?? 0
+        case .emptyIndicator:
+            1
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch Section(rawValue: indexPath.section)! {
+        switch sections[indexPath.section] {
         case .overview:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_overview, for: indexPath)!
             cell.load(overview: overview)
@@ -213,6 +222,8 @@ extension MixinTokensViewController: UICollectionViewDataSource {
                 cell.load(token: token)
             }
             return cell
+        case .emptyIndicator:
+            return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.no_token_indicator, for: indexPath)!
         }
     }
     

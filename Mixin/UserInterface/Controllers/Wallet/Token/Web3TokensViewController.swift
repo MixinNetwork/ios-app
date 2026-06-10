@@ -216,10 +216,17 @@ final class Web3TokensViewController: TokensViewController {
                 includesZeroBalanceItems: true,
                 limit: nil,
             )
+            var sections: [Section] = [.overview]
+            if tokens.isEmpty {
+                sections.append(.emptyIndicator)
+            } else {
+                sections.append(.tokens)
+            }
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
                 }
+                self.sections = sections
                 self.overview = overview
                 self.overviewAction = action
                 self.overviewTray = tray
@@ -248,8 +255,10 @@ final class Web3TokensViewController: TokensViewController {
                     return
                 }
                 self.overviewTray = .pendingTransactions(transactions)
-                let overview = IndexSet(integer: Section.overview.rawValue)
-                self.collectionView.reloadSections(overview)
+                if let sectionIndex = self.sections.firstIndex(of: .overview) {
+                    let overview = IndexSet(integer: sectionIndex)
+                    self.collectionView.reloadSections(overview)
+                }
             }
         }
     }
@@ -308,20 +317,22 @@ extension Web3TokensViewController: HomeNavigationController.NavigationBarStylin
 extension Web3TokensViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        Section.allCases.count
+        sections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
+        switch sections[section] {
         case .overview:
             1
         case .tokens:
             tokens?.count ?? 0
+        case .emptyIndicator:
+            1
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch Section(rawValue: indexPath.section)! {
+        switch sections[indexPath.section] {
         case .overview:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_overview, for: indexPath)!
             cell.load(overview: overview)
@@ -335,6 +346,8 @@ extension Web3TokensViewController: UICollectionViewDataSource {
                 cell.load(web3Token: token)
             }
             return cell
+        case .emptyIndicator:
+            return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.no_token_indicator, for: indexPath)!
         }
     }
     

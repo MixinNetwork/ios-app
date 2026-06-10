@@ -1198,6 +1198,8 @@
 		947402BA2DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947402B92DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib */; };
 		947402BF2DA69B890085C183 /* ComplexWeb3TransactionTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947402BE2DA69B860085C183 /* ComplexWeb3TransactionTableHeaderView.swift */; };
 		947584412FD948C100256E22 /* WalletSearchWeb3TokenHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947584402FD948BD00256E22 /* WalletSearchWeb3TokenHandler.swift */; };
+		947584532FD94D2900256E22 /* NoTokenIndicatorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947584522FD94D2900256E22 /* NoTokenIndicatorCell.xib */; };
+		947584542FD94D2900256E22 /* NoTokenIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947584512FD94D2900256E22 /* NoTokenIndicatorCell.swift */; };
 		94787E182A7C071E00BB0124 /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = 94787E172A7C071E00BB0124 /* QRCode */; };
 		94793ACF2C3A56A40078ED51 /* QuoteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94793ACE2C3A56A40078ED51 /* QuoteRequest.swift */; };
 		94793AD12C3A57230078ED51 /* QuoteResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94793AD02C3A57230078ED51 /* QuoteResponse.swift */; };
@@ -3152,6 +3154,8 @@
 		947402B92DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComplexWeb3TransactionTableHeaderView.xib; sourceTree = "<group>"; };
 		947402BE2DA69B860085C183 /* ComplexWeb3TransactionTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplexWeb3TransactionTableHeaderView.swift; sourceTree = "<group>"; };
 		947584402FD948BD00256E22 /* WalletSearchWeb3TokenHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSearchWeb3TokenHandler.swift; sourceTree = "<group>"; };
+		947584512FD94D2900256E22 /* NoTokenIndicatorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoTokenIndicatorCell.swift; sourceTree = "<group>"; };
+		947584522FD94D2900256E22 /* NoTokenIndicatorCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoTokenIndicatorCell.xib; sourceTree = "<group>"; };
 		94793ACE2C3A56A40078ED51 /* QuoteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteRequest.swift; sourceTree = "<group>"; };
 		94793AD02C3A57230078ED51 /* QuoteResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteResponse.swift; sourceTree = "<group>"; };
 		947B36A825DEB72A00146111 /* PlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
@@ -5633,6 +5637,8 @@
 		94FCC97E2FD6FCAE00AA6AA7 /* Token */ = {
 			isa = PBXGroup;
 			children = (
+				947584522FD94D2900256E22 /* NoTokenIndicatorCell.xib */,
+				947584512FD94D2900256E22 /* NoTokenIndicatorCell.swift */,
 				94FCC9082FD67A4D00AA6AA7 /* TokensViewController.swift */,
 				94FCC9172FD6889900AA6AA7 /* MixinTokensViewController.swift */,
 				94FCC9882FD6FE5F00AA6AA7 /* Web3TokensViewController.swift */,
@@ -7122,6 +7128,7 @@
 				947E3AB72B10A8AB008B2007 /* ConsolidateOutputsView.xib in Resources */,
 				9465E6122E6CE172005974C6 /* DepositLinkView.xib in Resources */,
 				7C5DFE32284F3071008733FC /* UserCenterTableHeaderView.xib in Resources */,
+				947584532FD94D2900256E22 /* NoTokenIndicatorCell.xib in Resources */,
 				944A5A772C2605720021460C /* CollectibleCollectionHeaderView.xib in Resources */,
 				7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */,
 				94F2F9802DEF50590013B820 /* CancelPendingMembershipOrderView.xib in Resources */,
@@ -8262,6 +8269,7 @@
 				94C93C8D2C94880600A31591 /* ExtendedKey.swift in Sources */,
 				DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */,
 				7BB78724245132570057B4ED /* SettingsHeaderView.swift in Sources */,
+				947584542FD94D2900256E22 /* NoTokenIndicatorCell.swift in Sources */,
 				9495BB052F4F29D700ABA294 /* DiagnoseSwitches.swift in Sources */,
 				7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */,
 				94145A922CD4FCE900600AD4 /* AddMobileNumberViewController.swift in Sources */,

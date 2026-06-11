@@ -67,6 +67,7 @@ final class MixinTransactionHistoryViewController: TransactionHistoryViewControl
             if let self {
                 let snapshot = self.items[snapshotID]!
                 cell.render(snapshot: snapshot)
+                cell.delegate = self
             }
             return cell
         }
@@ -342,6 +343,24 @@ extension MixinTransactionHistoryViewController: TransactionHistoryDatePickerVie
                                 y: filtersScrollView.contentOffset.y)
         filtersScrollView.setContentOffset(rightMost, animated: false)
         reloadData()
+    }
+    
+}
+
+extension MixinTransactionHistoryViewController: SnapshotCellDelegate {
+    
+    func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell) {
+        guard
+            let indexPath = tableView.indexPath(for: cell),
+            let snapshotID = dataSource.itemIdentifier(for: indexPath),
+            let snapshot = items[snapshotID],
+            let userID = snapshot.opponentUserID,
+            let user = UserDAO.shared.getUser(userId: userID)
+        else {
+            return
+        }
+        let profile = UserProfileViewController(user: user)
+        present(profile, animated: true, completion: nil)
     }
     
 }

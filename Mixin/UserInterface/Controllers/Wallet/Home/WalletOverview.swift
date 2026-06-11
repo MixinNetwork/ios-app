@@ -1,12 +1,18 @@
 import Foundation
 import MixinServices
 
-struct WalletOverview {
+final class WalletOverview {
     
-    let value: String
-    let btcValue: String?
+    private(set) var value: String
+    private(set) var btcValue: String?
     
-    init(usdValue: Decimal, btcPrice: Decimal?) {
+    private let tokensValue: Decimal
+    private let btcPrice: Decimal?
+    
+    private var perpsValue: Decimal
+    
+    init(tokensValue: Decimal, perpsValue: Decimal, btcPrice: Decimal?) {
+        let usdValue = tokensValue + perpsValue
         self.value = CurrencyFormatter.localizedString(
             from: usdValue * Currency.current.decimalRate,
             format: .fiatMoneyPrecision,
@@ -22,6 +28,29 @@ struct WalletOverview {
         } else {
             nil
         }
+        self.tokensValue = tokensValue
+        self.btcPrice = btcPrice
+        self.perpsValue = perpsValue
+    }
+    
+    func update(perpsValue: Decimal) {
+        let usdValue = tokensValue + perpsValue
+        self.value = CurrencyFormatter.localizedString(
+            from: usdValue * Currency.current.decimalRate,
+            format: .fiatMoneyPrecision,
+            sign: .never,
+        )
+        self.btcValue = if let btcPrice {
+            CurrencyFormatter.localizedString(
+                from: usdValue / btcPrice,
+                format: .precision,
+                sign: .never,
+                symbol: .custom("BTC")
+            )
+        } else {
+            nil
+        }
+        self.perpsValue = perpsValue
     }
     
 }

@@ -103,16 +103,13 @@ final class MixinTokensViewController: TokensViewController {
     
     @objc private func reloadData() {
         DispatchQueue.global().async { [weak self] in
-            let overview = {
-                let usdValue = TokenDAO.shared.usdBalanceSum(includesHiddenTokens: false)
-                let btcPrice: Decimal?
-                if let price = TokenDAO.shared.usdPrice(assetID: AssetID.btc) {
-                    btcPrice = Decimal(string: price, locale: .enUSPOSIX)
-                } else {
-                    btcPrice = nil
-                }
-                return WalletOverview(usdValue: usdValue, btcPrice: btcPrice)
-            }()
+            let tokensValue = TokenDAO.shared.usdBalanceSum(includesHiddenTokens: false)
+            let btcPrice = TokenDAO.shared.usdPrice(assetID: AssetID.btc)
+            let overview = WalletOverview(
+                tokensValue: tokensValue,
+                perpsValue: 0,
+                btcPrice: btcPrice
+            )
             let tokens = TokenDAO.shared.notHiddenTokens(
                 includesZeroBalanceItems: true,
                 limit: nil

@@ -348,15 +348,13 @@ final class CommonWalletViewController: WalletViewController {
                 sign: .never,
                 symbol: .currencySymbol
             )
-            let overview: WalletOverview = {
-                let btcPrice: Decimal?
-                if let price = TokenDAO.shared.usdPrice(assetID: AssetID.btc) {
-                    btcPrice = Decimal(string: price, locale: .enUSPOSIX)
-                } else {
-                    btcPrice = nil
-                }
-                return WalletOverview(usdValue: tokensValue, btcPrice: btcPrice)
-            }()
+            let btcPrice = TokenDAO.shared.usdPrice(assetID: AssetID.btc)
+            let overview = WalletOverview(
+                tokensValue: tokensValue,
+                perpsValue: 0,
+                btcPrice: btcPrice
+            )
+            
             if secret == nil || hasPositiveBalanceToken || hasTransaction {
                 snapshot.appendSections([.overview])
                 snapshot.appendItems([.overview], toSection: .overview)

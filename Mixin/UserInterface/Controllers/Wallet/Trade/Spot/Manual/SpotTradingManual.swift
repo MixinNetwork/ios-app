@@ -11,13 +11,7 @@ struct SpotTradingManual {
         
         init() {
             self.progress = 0
-            if let price = TokenDAO.shared.usdPrice(assetID: AssetID.btc),
-               let decimalPrice = Decimal(string: price, locale: .enUSPOSIX)
-            {
-                self.price = decimalPrice
-            } else {
-                self.price = 71000
-            }
+            self.price = TokenDAO.shared.usdPrice(assetID: AssetID.btc) ?? 62000
         }
         
     }

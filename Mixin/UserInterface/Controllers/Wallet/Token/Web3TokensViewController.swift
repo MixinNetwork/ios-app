@@ -205,16 +205,13 @@ final class Web3TokensViewController: TokensViewController {
                 tray = nil
             }
             
-            let overview: WalletOverview = {
-                let usdValue = Web3TokenDAO.shared.notHiddenUSDBalanceSum(walletID: walletID)
-                let btcPrice: Decimal?
-                if let price = TokenDAO.shared.usdPrice(assetID: AssetID.btc) {
-                    btcPrice = Decimal(string: price, locale: .enUSPOSIX)
-                } else {
-                    btcPrice = nil
-                }
-                return WalletOverview(usdValue: usdValue, btcPrice: btcPrice)
-            }()
+            let tokensValue = Web3TokenDAO.shared.notHiddenUSDBalanceSum(walletID: walletID)
+            let btcPrice = TokenDAO.shared.usdPrice(assetID: AssetID.btc)
+            let overview = WalletOverview(
+                tokensValue: tokensValue,
+                perpsValue: 0,
+                btcPrice: btcPrice
+            )
             let tokens = Web3TokenDAO.shared.notHiddenTokens(
                 walletID: walletID,
                 includesZeroBalanceItems: true,

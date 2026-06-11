@@ -220,16 +220,12 @@ final class PrivacyWalletViewController: WalletViewController {
                 symbol: .currencySymbol
             )
             let perpsValue = PerpsPositionDAO.shared.positionValue()
-            let overview = {
-                let usdValue = tokensValue + perpsValue.decimalValue
-                let btcPrice: Decimal?
-                if let price = TokenDAO.shared.usdPrice(assetID: AssetID.btc) {
-                    btcPrice = Decimal(string: price, locale: .enUSPOSIX)
-                } else {
-                    btcPrice = nil
-                }
-                return WalletOverview(usdValue: usdValue, btcPrice: btcPrice)
-            }()
+            let btcPrice = TokenDAO.shared.usdPrice(assetID: AssetID.btc)
+            let overview = WalletOverview(
+                tokensValue: tokensValue,
+                perpsValue: perpsValue.decimalValue,
+                btcPrice: btcPrice
+            )
             
             let tokens = TokenDAO.shared.notHiddenTokens(
                 includesZeroBalanceItems: true,
@@ -388,8 +384,14 @@ final class PrivacyWalletViewController: WalletViewController {
         }
         let displayItemsCount = itemsCount
         DispatchQueue.global().async { [weak self] in
-            let perpsValue = PerpsPositionDAO.shared.positionValue()
             let perpsPositions = PerpsPositionDAO.shared.positionItems()
+            guard !perpsPositions.isEmpty else {
+                DispatchQueue.main.async {
+                    self?.reloadData()
+                }
+                return
+            }
+            let perpsValue = PerpsPositionDAO.shared.positionValue()            
             let hasMorePerpsPositions = perpsPositions.count > displayItemsCount
             let displayPerpsPositions = perpsPositions
                 .prefix(displayItemsCount)
@@ -403,28 +405,27 @@ final class PrivacyWalletViewController: WalletViewController {
                 guard let self else {
                     return
                 }
-                if perpsPositions.isEmpty {
-                    // All positions are closed
-                    self.reloadData()
-                } else {
-                    var snapshot = self.dataSource.snapshot()
-                    if snapshot.sectionIdentifiers.contains(.perpsPositions) {
-                        self.perpsValue = perpsValue
-                        self.perpsPositions = displayPerpsPositions
-                        self.hasMorePerpsPositions = hasMorePerpsPositions
-                        snapshot.deleteItems(
-                            snapshot.itemIdentifiers(inSection: .perpsPositions)
-                        )
-                        let newItems = displayPerpsPositions.values.map { position in
-                            Item.perpsPosition(positionID: position.positionID)
-                        }
-                        snapshot.appendItems(newItems, toSection: .perpsPositions)
-                        snapshot.reloadItems(newItems)
-                        snapshot.reloadSections([.perpsPositions])
-                        self.dataSource.apply(snapshot, animatingDifferences: false)
-                    } else {
-                        self.reloadData()
+                var snapshot = self.dataSource.snapshot()
+                if snapshot.sectionIdentifiers.contains(.perpsPositions) {
+                    self.overview?.update(perpsValue: perpsValue.decimalValue)
+                    self.perpsValue = perpsValue
+                    self.perpsPositions = displayPerpsPositions
+                    self.hasMorePerpsPositions = hasMorePerpsPositions
+                    if snapshot.sectionIdentifiers.contains(.overview) {
+                        snapshot.reconfigureItems([.overview])
                     }
+                    snapshot.deleteItems(
+                        snapshot.itemIdentifiers(inSection: .perpsPositions)
+                    )
+                    let newItems = displayPerpsPositions.values.map { position in
+                        Item.perpsPosition(positionID: position.positionID)
+                    }
+                    snapshot.appendItems(newItems, toSection: .perpsPositions)
+                    snapshot.reloadItems(newItems)
+                    snapshot.reloadSections([.perpsPositions])
+                    self.dataSource.apply(snapshot, animatingDifferences: false)
+                } else {
+                    self.reloadData()
                 }
             }
         }

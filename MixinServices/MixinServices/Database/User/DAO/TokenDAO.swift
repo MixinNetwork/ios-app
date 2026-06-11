@@ -246,7 +246,7 @@ public final class TokenDAO: UserDatabaseDAO {
         )
     }
     
-    public func usdPrice(assetID: String) -> String? {
+    public func usdPrice(assetID: String) -> Decimal? {
         db.select(
             with: "SELECT price_usd FROM tokens WHERE asset_id = ?",
             arguments: [assetID]

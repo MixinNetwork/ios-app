@@ -327,11 +327,21 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
             case let .tip(tip):
                 return collectionView.dequeueConfiguredReusableCell(using: tipRegistration, for: indexPath, item: tip)
             case let .perpsPosition(positionID):
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
                 if let viewModel = self?.perpsPositions[positionID] {
-                    cell.load(viewModel: viewModel)
+                    switch viewModel.state {
+                    case .opening:
+                        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_activity, for: indexPath)!
+                        cell.load(viewModel: viewModel)
+                        return cell
+                    default:
+                        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
+                        cell.load(viewModel: viewModel)
+                        return cell
+                    }
+                } else {
+                    assertionFailure()
+                    return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
                 }
-                return cell
             case let .token(assetID):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.token, for: indexPath)!
                 self?.configure(tokenCell: cell, withTokenOf: assetID)
@@ -379,40 +389,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 case UICollectionView.elementKindSectionHeader:
                     let header = collectionView.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
                     header.titleLabel.text = R.string.localizable.positions_count(self?.perpsPositions.count ?? 0)
-                    header.subtitleLabel.attributedText = {
-                        guard let value = self?.perpsValue else {
-                            return nil
-                        }
-                        let font = UIFontMetrics.default.scaledFont(
-                            for: .systemFont(ofSize: 14)
-                        )
-                        let text = NSMutableAttributedString(
-                            string: value.value,
-                            attributes: [
-                                .font: font,
-                                .foregroundColor: R.color.text_secondary()!,
-                            ]
-                        )
-                        if let change = value.changeValue {
-                            let color = switch value.state {
-                            case .gain:
-                                MarketColor.rising.uiColor
-                            case .loss:
-                                MarketColor.falling.uiColor
-                            case .neutral:
-                                MarketColor.rising.uiColor
-                            }
-                            let attributedChange = NSAttributedString(
-                                string: " (\(change))",
-                                attributes: [
-                                    .font: font,
-                                    .foregroundColor: color,
-                                ]
-                            )
-                            text.append(attributedChange)
-                        }
-                        return text
-                    }()
+                    header.subtitleLabel.text = self?.perpsValue?.value
                     header.disclosureImageView.isHidden = false
                     header.onShowAll = { _ in
                         self?.viewPerpsPositions()
@@ -488,6 +465,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
             }
         }
         collectionView.register(R.nib.walletOverviewCell)
+        collectionView.register(R.nib.perpetualActivityCell)
         collectionView.register(R.nib.perpetualMarketCell)
         collectionView.register(R.nib.tokenCell)
         collectionView.register(R.nib.transactionCell)

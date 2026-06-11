@@ -419,7 +419,7 @@ final class PrivacyWalletViewController: WalletViewController {
                             Item.perpsPosition(positionID: position.positionID)
                         }
                         snapshot.appendItems(newItems, toSection: .perpsPositions)
-                        snapshot.reconfigureItems(newItems)
+                        snapshot.reloadItems(newItems)
                         snapshot.reloadSections([.perpsPositions])
                         self.dataSource.apply(snapshot, animatingDifferences: false)
                     } else {

@@ -393,13 +393,13 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                     header.subtitleLabel.text = self?.perpsValue?.value
                     header.disclosureImageView.isHidden = false
                     header.onShowAll = { _ in
-                        self?.viewPerpsPositions()
+                        self?.viewPerps()
                     }
                     return header
                 case UICollectionView.elementKindSectionFooter:
                     let footer = collectionView.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: TradeViewAllFooterView.reuseIdentifier, for: indexPath) as! TradeViewAllFooterView
                     footer.onViewAll = { _ in
-                        self?.viewPerpsPositions()
+                        self?.viewPerps()
                     }
                     return footer
                 default:
@@ -559,10 +559,6 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     }
     
     func viewAllTransactions() {
-        
-    }
-    
-    func viewPerpsPositions() {
         
     }
     

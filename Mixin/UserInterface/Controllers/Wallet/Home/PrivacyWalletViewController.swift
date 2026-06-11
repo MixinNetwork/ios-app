@@ -184,11 +184,6 @@ final class PrivacyWalletViewController: WalletViewController {
         reporter.report(event: .allTransactions, tags: ["source": "wallet_home"])
     }
     
-    override func viewPerpsPositions() {
-        let positions = PerpetualPositionsViewController(wallet: .privacy)
-        navigationController?.pushViewController(positions, animated: true)
-    }
-    
     override func viewPerps() {
         UserOperationAnalytics.tradeSource = .walletHome
         let trade = TradeViewController(

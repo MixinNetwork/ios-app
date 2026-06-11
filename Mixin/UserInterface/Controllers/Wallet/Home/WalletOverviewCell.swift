@@ -74,7 +74,6 @@ final class WalletOverviewCell: UICollectionViewCell {
             config.attributedTitle = AttributedString(title, attributes: attributes)
             config.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 0, bottom: 14, trailing: 0)
             config.background.cornerRadius = 12
-            config.background.backgroundInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
             
             let button: UIButton
             if let b = importSecretButton, b.superview != nil {
@@ -85,7 +84,7 @@ final class WalletOverviewCell: UICollectionViewCell {
                 button = UIButton(configuration: config)
                 actionStackView.insertArrangedSubview(button, at: 0)
                 button.snp.makeConstraints { make in
-                    make.width.equalToSuperview()
+                    make.width.equalToSuperview().offset(-32)
                 }
                 importSecretButton = button
             }
@@ -105,6 +104,9 @@ final class WalletOverviewCell: UICollectionViewCell {
                 actionView.actions = [.buy, .receive, .send, .trade]
                 actionView.delegate = self
                 actionStackView.insertArrangedSubview(actionView, at: 0)
+                actionView.snp.makeConstraints { make in
+                    make.width.equalToSuperview()
+                }
                 self.tokenActionView = actionView
             }
             actionView.badgeActions = {

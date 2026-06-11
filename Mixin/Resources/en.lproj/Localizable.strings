@@ -211,6 +211,7 @@
 "balance_max" = "MAX";
 "batch_transfer_confirmation" = "Batch Transfer Confirmation";
 "before_you_proceed" = "Before you proceed";
+"bitcoin_private_key_hint" = "Enter WIF or 32-byte HEX private key. Example: Kx45...9Ab or 0x1a2b...cdef";
 "block" = "Block";
 "block_confirmations" = "Block Confirmations";
 "block_hint" = "Blocked contacts will no longer be able to call you or send you messages";
@@ -654,6 +655,7 @@
 "estimated_liquidation_price" = "Estimated Liquidation Price";
 "estimated_price" = "Estimated Price";
 "estimated_receive" = "Estimated Receive";
+"ethereum_private_key_hint" = "Enter HEX private key. Example: 0x1a2b...cdef";
 "everybody" = "Everybody";
 "example" = "Example";
 "example_amount" = "Amount";
@@ -1602,6 +1604,7 @@
 "sms_verified_description" = "Periodic SMS verification helps improve account security";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Snapshot not found.";
+"solana_private_key_hint" = "Enter Base58 or 64-byte HEX private key. Example: 3fZb...9Qp or 0x1a2b...cdef";
 "sort_by" = "Sort by";
 "sort_by_amount" = "Sort by Amount";
 "sort_by_oldest" = "Sort by Oldest";

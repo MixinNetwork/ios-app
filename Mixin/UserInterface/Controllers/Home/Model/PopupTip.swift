@@ -26,7 +26,7 @@ enum PopupTip {
     case notification
     case verifyMobileNumber
     case appRating
-    case importPrivateKey(Web3Wallet)
+    case importPrivateKey(Web3Wallet, Web3Chain.Kind)
     case importMnemonics(Web3Wallet)
     case addMobileNumber(AddMobileNumberIntent)
     

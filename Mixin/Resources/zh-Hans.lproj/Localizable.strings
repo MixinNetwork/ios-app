@@ -211,6 +211,7 @@
 "balance_max" = "最大";
 "batch_transfer_confirmation" = "批量转账确认";
 "before_you_proceed" = "请在继续之前";
+"bitcoin_private_key_hint" = "输入 WIF 或 32 字节 HEX 格式私钥，例如 Kx45...9Ab 或 0x1a2b...cdef";
 "block" = "屏蔽用户";
 "block_confirmations" = "到账确认区块数";
 "block_hint" = "屏蔽后对方无法向您拨打电话或发送消息";
@@ -654,6 +655,7 @@
 "estimated_liquidation_price" = "预估强平价格";
 "estimated_price" = "预计价格";
 "estimated_receive" = "预计收到";
+"ethereum_private_key_hint" = "输入 HEX 格式私钥，例如 0x1a2b...cdef";
 "everybody" = "任何人";
 "example" = "举例说明";
 "example_amount" = "金额";
@@ -1602,6 +1604,7 @@
 "sms_verified_description" = "定期进行短信验证有助于提升账号安全";
 "snapshot_hash" = "快照哈希";
 "snapshot_not_found" = "找不到该转账记录。";
+"solana_private_key_hint" = "输入 Base58 或 64 字节 HEX 格式私钥，例如 3fZb...9Qp 或 0x1a2b...cdef";
 "sort_by" = "顺序";
 "sort_by_amount" = "按金额排序";
 "sort_by_oldest" = "按最早排序";

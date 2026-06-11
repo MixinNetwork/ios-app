@@ -211,6 +211,7 @@
 "balance_max" = "最大";
 "batch_transfer_confirmation" = "批次轉賬確認";
 "before_you_proceed" = "請在繼續之前";
+"bitcoin_private_key_hint" = "輸入 WIF 或 32 位元組 HEX 格式私鑰，例如 Kx45...9Ab 或 0x1a2b...cdef";
 "block" = "封鎖使用者";
 "block_confirmations" = "到賬確認區塊數";
 "block_hint" = "封鎖後對方無法向您撥打電話或傳送訊息";
@@ -654,6 +655,7 @@
 "estimated_liquidation_price" = "預估強平價格";
 "estimated_price" = "預計價格";
 "estimated_receive" = "預計收到";
+"ethereum_private_key_hint" = "輸入 HEX 格式私鑰，例如 0x1a2b...cdef";
 "everybody" = "任何人";
 "example" = "舉例說明";
 "example_amount" = "金額";
@@ -1602,6 +1604,7 @@
 "sms_verified_description" = "定期進行簡訊驗證有助於提升賬號安全";
 "snapshot_hash" = "快照雜湊";
 "snapshot_not_found" = "找不到該轉賬記錄。";
+"solana_private_key_hint" = "輸入 Base58 或 64 位元組 HEX 格式私鑰，例如 3fZb...9Qp 或 0x1a2b...cdef";
 "sort_by" = "順序";
 "sort_by_amount" = "按金額排序";
 "sort_by_oldest" = "按最早排序";

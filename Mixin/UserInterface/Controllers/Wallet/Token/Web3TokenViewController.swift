@@ -216,8 +216,8 @@ extension Web3TokenViewController: TokenActionView.Delegate {
             let tip = PopupTipViewController(tip: .importMnemonics(wallet))
             present(tip, animated: true)
             return
-        case .afterImportingPrivateKey:
-            let tip = PopupTipViewController(tip: .importPrivateKey(wallet))
+        case let .afterImportingPrivateKey(kind):
+            let tip = PopupTipViewController(tip: .importPrivateKey(wallet, kind))
             present(tip, animated: true)
             return
         }

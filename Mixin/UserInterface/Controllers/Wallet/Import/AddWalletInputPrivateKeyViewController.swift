@@ -38,7 +38,6 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.import_private_key()
-        inputPlaceholderLabel.text = R.string.localizable.type_your_private_key()
         let descriptionLabel = InsetLabel()
         descriptionLabel.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         descriptionLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
@@ -63,6 +62,18 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
             importingWallet: .byPrivateKey(key: wallet.privateKey, request: request)
         )
         navigationController?.pushViewController(importing, animated: true)
+    }
+    
+    override func reloadViews(chain: Web3Chain) {
+        super.reloadViews(chain: chain)
+        inputPlaceholderLabel.text = switch selectedChain.kind {
+        case .bitcoin:
+            R.string.localizable.bitcoin_private_key_hint()
+        case .evm:
+            R.string.localizable.ethereum_private_key_hint()
+        case .solana:
+            R.string.localizable.solana_private_key_hint()
+        }
     }
     
     override func detectInput() {

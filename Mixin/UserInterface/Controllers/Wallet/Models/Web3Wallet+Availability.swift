@@ -8,9 +8,13 @@ extension Web3Wallet {
         case always
         case never
         case afterImportingMnemonics
-        case afterImportingPrivateKey
+        case afterImportingPrivateKey(Web3Chain.Kind)
         
-        init(wallet: Web3Wallet, secret: CommonWalletSecret?) {
+        init(
+            wallet: Web3Wallet,
+            secret: CommonWalletSecret?,
+            supportedChainIDs: Set<String>,
+        ) {
             self = switch wallet.category.knownCase {
             case .classic:
                     .always
@@ -22,7 +26,11 @@ extension Web3Wallet {
                 }
             case .importedPrivateKey:
                 if secret == nil {
-                    .afterImportingPrivateKey
+                    if let kind = Web3Chain.Kind.singleKindWallet(chainIDs: supportedChainIDs) {
+                        .afterImportingPrivateKey(kind)
+                    } else {
+                        .never
+                    }
                 } else {
                     .always
                 }

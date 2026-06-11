@@ -19,7 +19,11 @@ final class CommonWalletViewController: WalletViewController {
     private weak var renamingInputController: UIAlertController?
     
     private var availability: Web3Wallet.Availability {
-        Web3Wallet.Availability(wallet: wallet, secret: secret)
+        Web3Wallet.Availability(
+            wallet: wallet,
+            secret: secret,
+            supportedChainIDs: supportedChainIDs
+        )
     }
     
     init(wallet: Web3Wallet) {

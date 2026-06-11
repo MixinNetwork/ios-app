@@ -19,7 +19,11 @@ final class Web3TokensViewController: TokensViewController {
     private var pendingTransactionObserver: CommonWalletPendingTransactionLoader?
     
     private var availability: Web3Wallet.Availability {
-        Web3Wallet.Availability(wallet: wallet, secret: secret)
+        Web3Wallet.Availability(
+            wallet: wallet,
+            secret: secret,
+            supportedChainIDs: supportedChainIDs
+        )
     }
     
     init(wallet: Web3Wallet) {

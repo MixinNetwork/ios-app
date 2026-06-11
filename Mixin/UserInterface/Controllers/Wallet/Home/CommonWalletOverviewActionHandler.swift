@@ -117,8 +117,12 @@ extension CommonWalletOverviewActionHandler: WalletOverviewCell.Delegate {
     func walletOverviewCell(_ cell: WalletOverviewCell, didSelectImportAction action: WalletOverview.ImportSecretAction) {
         switch action {
         case .importPrivateKey:
-            let validation = AddWalletPINValidationViewController(action: .reimportPrivateKey(wallet))
-            responder?.navigationController?.pushViewController(validation, animated: true)
+            if let kind = Web3Chain.Kind.singleKindWallet(chainIDs: supportedChainIDs) {
+                let validation = AddWalletPINValidationViewController(
+                    action: .reimportPrivateKey(wallet, kind)
+                )
+                responder?.navigationController?.pushViewController(validation, animated: true)
+            }
         case .importMnemonics:
             let validation = AddWalletPINValidationViewController(action: .reimportMnemonics(wallet))
             responder?.navigationController?.pushViewController(validation, animated: true)

@@ -589,3 +589,21 @@ extension PrivacyWalletViewController: PrivacyWalletPendingDepositObserver.Deleg
     }
     
 }
+
+extension PrivacyWalletViewController: TransactionCell.Delegate {
+    
+    func transactionCellDidSelectIcon(_ cell: TransactionCell) {
+        guard
+            let indexPath = collectionView.indexPath(for: cell),
+            let item = dataSource.itemIdentifier(for: indexPath),
+            case let .transaction(id) = item,
+            let userID = transactions[id]?.opponentUserID,
+            let user = UserDAO.shared.getUser(userId: userID)
+        else {
+            return
+        }
+        let profile = UserProfileViewController(user: user)
+        present(profile, animated: true, completion: nil)
+    }
+    
+}

@@ -34,6 +34,15 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1bu-d5-ce0">
+                        <rect key="frame" x="16" y="0.0" width="42" height="42"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain"/>
+                        <connections>
+                            <action selector="reportIconSelection:" destination="BYB-IA-4QH" eventType="touchUpInside" id="LQO-Ue-Yjz"/>
+                        </connections>
+                    </button>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cdf-i5-kny">
                         <rect key="frame" x="45" y="1" width="14" height="14"/>
                         <subviews>
@@ -76,7 +85,11 @@
                     <constraint firstItem="xJu-Ne-cqv" firstAttribute="top" relation="greaterThanOrEqual" secondItem="5y2-Vg-ziK" secondAttribute="top" id="B3N-iF-x2k"/>
                     <constraint firstItem="xJu-Ne-cqv" firstAttribute="centerY" secondItem="5y2-Vg-ziK" secondAttribute="centerY" id="Ekn-4d-zOp"/>
                     <constraint firstItem="Cdf-i5-kny" firstAttribute="trailing" secondItem="C4g-z9-phY" secondAttribute="trailing" constant="1" id="PRf-Vl-hlY"/>
+                    <constraint firstItem="1bu-d5-ce0" firstAttribute="bottom" secondItem="C4g-z9-phY" secondAttribute="bottom" id="Rfm-7M-56z"/>
                     <constraint firstItem="xJu-Ne-cqv" firstAttribute="leading" secondItem="C4g-z9-phY" secondAttribute="trailing" constant="14" id="VP1-EQ-m2l"/>
+                    <constraint firstItem="1bu-d5-ce0" firstAttribute="top" secondItem="C4g-z9-phY" secondAttribute="top" id="dMe-y8-ewA"/>
+                    <constraint firstItem="1bu-d5-ce0" firstAttribute="trailing" secondItem="C4g-z9-phY" secondAttribute="trailing" id="f64-6s-UVP"/>
+                    <constraint firstItem="1bu-d5-ce0" firstAttribute="leading" secondItem="C4g-z9-phY" secondAttribute="leading" id="g5n-pd-U8a"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="xJu-Ne-cqv" secondAttribute="bottom" id="gb5-65-Ma3"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="C4g-z9-phY" secondAttribute="bottom" id="h8Y-GZ-709"/>
                     <constraint firstItem="Cdf-i5-kny" firstAttribute="top" secondItem="C4g-z9-phY" secondAttribute="top" constant="1" id="iOk-9m-Qtp"/>
@@ -86,6 +99,7 @@
             <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="assetChangeStackView" destination="3sA-V7-Kkx" id="O7C-fE-CKm"/>
+                <outlet property="iconButton" destination="1bu-d5-ce0" id="is9-rD-sBn"/>
                 <outlet property="iconView" destination="C4g-z9-phY" id="swe-mu-9DN"/>
                 <outlet property="statusImageView" destination="xAk-bA-jXL" id="GQX-av-mXL"/>
                 <outlet property="statusWrapperView" destination="Cdf-i5-kny" id="PKk-eH-bC0"/>

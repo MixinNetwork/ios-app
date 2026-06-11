@@ -349,6 +349,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
             case let .transaction(id):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.transaction, for: indexPath)!
                 self?.configure(transactionCell: cell, withTransactionOf: id)
+                cell.delegate = self as? TransactionCell.Delegate
                 return cell
             case let .perpsTopMover(marketID):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_top_mover, for: indexPath)!

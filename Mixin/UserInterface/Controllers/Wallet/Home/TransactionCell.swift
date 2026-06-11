@@ -3,12 +3,19 @@ import MixinServices
 
 final class TransactionCell: UICollectionViewCell {
     
+    protocol Delegate: AnyObject {
+        func transactionCellDidSelectIcon(_ cell: TransactionCell)
+    }
+    
     @IBOutlet weak var iconView: AvatarImageView!
+    @IBOutlet weak var iconButton: UIButton!
     @IBOutlet weak var statusWrapperView: UIView!
     @IBOutlet weak var statusImageView: UIImageView!
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var assetChangeStackView: UIStackView!
+    
+    weak var delegate: Delegate?
     
     private weak var badReputationImageView: UIImageView?
     private weak var inscriptionIconView: InscriptionIconView?
@@ -37,6 +44,10 @@ final class TransactionCell: UICollectionViewCell {
         layoutProgressLayer()
     }
     
+    @IBAction func reportIconSelection(_ sender: Any) {
+        delegate?.transactionCellDidSelectIcon(self)
+    }
+    
     func load(transaction: Web3Transaction, symbols: [String: String]) {
         switch transaction.transactionType.knownCase {
         case .transferIn:
@@ -50,6 +61,7 @@ final class TransactionCell: UICollectionViewCell {
         case .unknown, .none:
             iconView.image = R.image.transaction_type_unknown()
         }
+        iconButton.isUserInteractionEnabled = false
         switch transaction.status {
         case .pending:
             statusImageView.image = R.image.transaction_badge_pending()
@@ -167,6 +179,7 @@ final class TransactionCell: UICollectionViewCell {
         case .pending:
             iconView.imageView.contentMode = .center
             iconView.image = R.image.wallet.snapshot_deposit()
+            iconButton.isUserInteractionEnabled = false
             if var finished = snapshot.confirmations, let total = snapshot.tokenConfirmations {
                 finished = min(total, finished)
                 progress = CGFloat(finished) / CGFloat(total)
@@ -199,18 +212,22 @@ final class TransactionCell: UICollectionViewCell {
             if let deposit = snapshot.deposit {
                 iconView.imageView.contentMode = .center
                 iconView.image = R.image.wallet.snapshot_deposit()
+                iconButton.isUserInteractionEnabled = false
                 setTitle(deposit.compactSender)
             } else if let withdrawal = snapshot.withdrawal {
                 iconView.imageView.contentMode = .center
                 iconView.image = R.image.wallet.snapshot_withdrawal()
+                iconButton.isUserInteractionEnabled = false
                 setTitle(withdrawal.compactReceiver)
             } else if let userID = snapshot.opponentUserID, let name = snapshot.opponentFullname, let url = snapshot.opponentAvatarURL {
                 iconView.imageView.contentMode = .scaleAspectFill
                 iconView.setImage(with: url, userId: userID, name: name)
+                iconButton.isUserInteractionEnabled = true
                 setTitle(snapshot.opponentFullname)
             } else {
                 iconView.imageView.contentMode = .center
                 iconView.image = R.image.wallet.snapshot_anonymous()
+                iconButton.isUserInteractionEnabled = false
                 setTitle(nil)
             }
             if let withdrawal = snapshot.withdrawal, withdrawal.hash.isEmpty {

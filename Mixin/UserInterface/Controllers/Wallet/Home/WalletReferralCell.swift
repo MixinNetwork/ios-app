@@ -22,6 +22,7 @@ final class WalletReferralCell: UICollectionViewCell {
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true
         )
+        titleLabel.text = R.string.localizable.wallet_home_referral_banner_title()
         descriptionLabel.attributedText = {
             let rate = PercentageFormatter.string(
                 from: 0.6,

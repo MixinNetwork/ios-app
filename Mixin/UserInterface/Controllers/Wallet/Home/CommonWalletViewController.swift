@@ -357,7 +357,7 @@ final class CommonWalletViewController: WalletViewController {
                 }
                 return WalletOverview(usdValue: tokensValue, btcPrice: btcPrice)
             }()
-            if hasPositiveBalanceToken || hasTransaction {
+            if secret == nil || hasPositiveBalanceToken || hasTransaction {
                 snapshot.appendSections([.overview])
                 snapshot.appendItems([.overview], toSection: .overview)
             } else {

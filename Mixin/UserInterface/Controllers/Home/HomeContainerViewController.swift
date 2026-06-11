@@ -79,15 +79,57 @@ final class HomeContainerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        Logger.general.info(category: "HomeContainer", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
         addChild(homeNavigationController)
         view.addSubview(homeNavigationController.view)
         homeNavigationController.view.snp.makeEdgesEqualToSuperview()
         homeNavigationController.didMove(toParent: self)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(applicationWillEnterForeground(_:)),
-                                               name: UIApplication.willEnterForegroundNotification,
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationWillEnterForeground(_:)),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationDidBecomeActive(_:)),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
         sessionReporter.reportIfOutdated()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
+            CallService.shared.registerForPushKitNotificationsIfAvailable()
+        }
+        if UIApplication.shared.applicationState != .background {
+            if AppGroupUserDefaults.User.hasRecoverMedia {
+                ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
+            }
+            initializeFTSIfNeeded()
+            refreshExternalSchemesIfNeeded()
+            if SpotlightManager.isAvailable {
+                SpotlightManager.shared.indexIfNeeded()
+            }
+            let job = SyncOutputsJob()
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
+        clipSwitcher.loadClipsFromPreviousSession()
+        WalletConnectService.shared.reloadSessions()
+        Web3Chain.synchronize()
+        DispatchQueue.global().async {
+            let walletIDs = Web3WalletDAO.shared.walletIDs()
+            for id in walletIDs {
+                let jobs = [
+                    SyncWeb3AddressJob(walletID: id),
+                    RefreshWeb3WalletTokenJob(walletID: id),
+                    SyncWeb3TransactionJob(walletID: id),
+                ]
+                for job in jobs {
+                    ConcurrentJobQueue.shared.addJob(job: job)
+                }
+            }
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -185,6 +227,11 @@ final class HomeContainerViewController: UIViewController {
         }
     }
     
+    @objc private func applicationDidBecomeActive(_ sender: Notification) {
+        initializeFTSIfNeeded()
+        refreshExternalSchemesIfNeeded()
+    }
+    
 }
 
 extension HomeContainerViewController: GalleryViewControllerDelegate {
@@ -234,6 +281,23 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, didCancelDismissalFor item: GalleryItem) {
         chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, didCancelDismissalFor: item)
+    }
+    
+}
+
+extension HomeContainerViewController {
+    
+    private func initializeFTSIfNeeded() {
+        guard !AppGroupUserDefaults.Database.isFTSInitialized else {
+            return
+        }
+        ConcurrentJobQueue.shared.addJob(job: InitializeFTSJob())
+    }
+    
+    private func refreshExternalSchemesIfNeeded() {
+        if -AppGroupUserDefaults.User.externalSchemesRefreshDate.timeIntervalSinceNow > .day {
+            ConcurrentJobQueue.shared.addJob(job: RefreshExternalSchemeJob())
+        }
     }
     
 }

@@ -86,40 +86,6 @@ final class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(groupConversationParticipantDidChange(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(cancelSearchingSilently(_:)), name: dismissSearchNotification, object: nil)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
-            CallService.shared.registerForPushKitNotificationsIfAvailable()
-        }
-        Logger.general.info(category: "HomeViewController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
-        if UIApplication.shared.applicationState != .background {
-            if AppGroupUserDefaults.User.hasRecoverMedia {
-                ConcurrentJobQueue.shared.addJob(job: RecoverMediaJob())
-            }
-            initializeFTSIfNeeded()
-            refreshExternalSchemesIfNeeded()
-            if SpotlightManager.isAvailable {
-                SpotlightManager.shared.indexIfNeeded()
-            }
-            let job = SyncOutputsJob()
-            ConcurrentJobQueue.shared.addJob(job: job)
-        }
-        UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
-        WalletConnectService.shared.reloadSessions()
-        Web3Chain.synchronize()
-        DispatchQueue.global().async {
-            let walletIDs = Web3WalletDAO.shared.walletIDs()
-            for id in walletIDs {
-                let jobs = [
-                    SyncWeb3AddressJob(walletID: id),
-                    RefreshWeb3WalletTokenJob(walletID: id),
-                    SyncWeb3TransactionJob(walletID: id),
-                ]
-                for job in jobs {
-                    ConcurrentJobQueue.shared.addJob(job: job)
-                }
-            }
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -215,8 +181,6 @@ final class HomeViewController: UIViewController {
     @objc private func applicationDidBecomeActive(_ sender: Notification) {
         presentPopupTipIfNeeded()
         fetchConversations()
-        initializeFTSIfNeeded()
-        refreshExternalSchemesIfNeeded()
     }
     
     @objc private func dataDidChange() {
@@ -477,19 +441,6 @@ extension HomeViewController {
     
     enum AnalyticError: Error {
         case missingGASessionID
-    }
-    
-    private func refreshExternalSchemesIfNeeded() {
-        if -AppGroupUserDefaults.User.externalSchemesRefreshDate.timeIntervalSinceNow > .day {
-            ConcurrentJobQueue.shared.addJob(job: RefreshExternalSchemeJob())
-        }
-    }
-    
-    private func initializeFTSIfNeeded() {
-        guard !AppGroupUserDefaults.Database.isFTSInitialized else {
-            return
-        }
-        ConcurrentJobQueue.shared.addJob(job: InitializeFTSJob())
     }
     
     private func checkServerStatus() {

@@ -23,13 +23,6 @@ final class WalletTipCell: UICollectionViewCell {
                     R.string.localizable.add_wallet(),
                     attributes: actionAttributes
                 )
-            case .buyToken:
-                imageView.image = R.image.wallet_tip_cashback()
-                titleLabel.text = R.string.localizable.wallet_home_cashback_banner_title()
-                actionButton.configuration?.attributedTitle = AttributedString(
-                    R.string.localizable.wallet_home_cashback_banner_cta(),
-                    attributes: actionAttributes
-                )
             case nil:
                 imageView.image = nil
             }

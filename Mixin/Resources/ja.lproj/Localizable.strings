@@ -1916,8 +1916,6 @@
 "wallet_hide_asset_confirmation" = "%@を非表示にしますか?";
 "wallet_home_add_wallet_banner_title" = "Add Wallets via Private Key, Phrase, or Watch Address";
 "wallet_home_buy_crypto" = "Buy Crypto";
-"wallet_home_cashback_banner_cta" = "Claim Now";
-"wallet_home_cashback_banner_title" = "Buy crypto with 100%% fee cashback";
 "wallet_home_common_wallet_reason_1" = "Connect to any app, enjoy DeFi & SocialFi.";
 "wallet_home_common_wallet_reason_2" = "Support Solana, Ethereum, and cross-chain trading.";
 "wallet_home_common_wallet_reason_3" = "Import other wallets, manage all assets in one place.";

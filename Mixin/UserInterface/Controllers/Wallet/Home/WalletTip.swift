@@ -3,5 +3,4 @@ import MixinServices
 
 enum WalletTip: Hashable {
     case addWallet
-    case buyToken
 }

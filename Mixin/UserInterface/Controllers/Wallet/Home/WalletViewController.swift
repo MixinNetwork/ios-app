@@ -648,8 +648,6 @@ extension WalletViewController: WalletTipCell.Delegate {
                 self?.navigationController?.pushViewController(introduction, animated: true)
             }
             present(selector, animated: true)
-        case .buyToken:
-            break
         }
     }
     
@@ -668,8 +666,6 @@ extension WalletViewController: WalletTipCell.Delegate {
                 }
             }
             dataSource.apply(snapshot, animatingDifferences: true)
-        case .buyToken:
-            break
         }
     }
     

@@ -1916,8 +1916,6 @@
 "wallet_hide_asset_confirmation" = "您确定要隐藏%@吗？";
 "wallet_home_add_wallet_banner_title" = "通过私钥、助记词或观察地址添加钱包";
 "wallet_home_buy_crypto" = "快捷买币";
-"wallet_home_cashback_banner_cta" = "立即领取";
-"wallet_home_cashback_banner_title" = "购买加密货币，获得 100%% 手续费返现";
 "wallet_home_common_wallet_reason_1" = "连接任意应用，畅玩 DeFi 与 SocialFi";
 "wallet_home_common_wallet_reason_2" = "支持 Solana、以太坊等多链跨链交易";
 "wallet_home_common_wallet_reason_3" = "可导入其他钱包，一站管理链上资产";

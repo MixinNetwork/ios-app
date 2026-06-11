@@ -33,6 +33,7 @@ final class CommonWalletViewController: WalletViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         titleLabel.text = ""
         switch wallet.category.knownCase {
         case .classic, .importedMnemonic, .importedPrivateKey, .none:
@@ -40,6 +41,7 @@ final class CommonWalletViewController: WalletViewController {
         case .watchAddress:
             addIconIntoTitleView(image: R.image.watching_wallet())
         }
+        
         let notificationCenter: NotificationCenter = .default
         notificationCenter.addObserver(
             self,
@@ -61,19 +63,18 @@ final class CommonWalletViewController: WalletViewController {
         )
         notificationCenter.addObserver(
             self,
-            selector: #selector(reloadPendingTransactions),
+            selector: #selector(reloadData),
             name: Web3TransactionDAO.transactionDidUpdateNotification,
             object: nil
         )
-        
-        collectionView.delegate = self
-        reloadData()
         
         let pendingTransactionLoader = CommonWalletPendingTransactionLoader(
             walletID: wallet.walletID
         )
         self.pendingTransactionObserver = pendingTransactionLoader
-        reloadPendingTransactions()
+        
+        collectionView.delegate = self
+        reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -287,12 +288,16 @@ final class CommonWalletViewController: WalletViewController {
                 action = nil
                 watchingAddresses = WatchingAddresses(addresses: addresses)
             }
+            
             let tray: WalletOverview.Tray?
+            let pendingTransactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
             if let watchingAddresses {
                 let description = R.string.localizable.you_are_watching_address(
                     watchingAddresses.prettyFormatted
                 )
                 tray = .watching(description: description)
+            } else if !pendingTransactions.isEmpty {
+                tray = .pendingTransactions(pendingTransactions)
             } else {
                 tray = nil
             }
@@ -427,20 +432,6 @@ final class CommonWalletViewController: WalletViewController {
                 self.insertTipsReferralSection(into: &snapshot)
                 self.dataSource.applySnapshotUsingReloadData(snapshot)
                 self.updateDappConnectionWalletIfNeeded()
-            }
-        }
-    }
-    
-    @objc private func reloadPendingTransactions() {
-        let walletID = wallet.walletID
-        DispatchQueue.global().async { [weak self] in
-            let transactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
-            DispatchQueue.main.async {
-                guard let self else {
-                    return
-                }
-                self.overviewTray = .pendingTransactions(transactions)
-                self.reconfigureIfExists(item: .overview)
             }
         }
     }

@@ -134,43 +134,37 @@ final class WalletOverviewCell: UICollectionViewCell {
                 watchingIndicatorView = view
             }
         case let .pendingDeposits(tokens, snapshots):
-            if tokens.isEmpty || snapshots.isEmpty {
-                pendingDepositView?.removeFromSuperview()
+            assert(!snapshots.isEmpty)
+            let view: WalletPendingDepositView
+            if let pendingDepositView {
+                view = pendingDepositView
             } else {
-                let view: WalletPendingDepositView
-                if let pendingDepositView {
-                    view = pendingDepositView
-                } else {
-                    view = R.nib.walletPendingDepositView(withOwner: nil)!
-                    view.button.removeTarget(self, action: nil, for: .touchUpInside)
-                    view.button.addTarget(self, action: #selector(revealPendingDeposits(_:)), for: .touchUpInside)
-                    actionStackView.addArrangedSubview(view)
-                    view.snp.makeConstraints { make in
-                        make.width.equalToSuperview()
-                    }
-                    pendingDepositView = view
+                view = R.nib.walletPendingDepositView(withOwner: nil)!
+                view.button.removeTarget(self, action: nil, for: .touchUpInside)
+                view.button.addTarget(self, action: #selector(revealPendingDeposits(_:)), for: .touchUpInside)
+                actionStackView.addArrangedSubview(view)
+                view.snp.makeConstraints { make in
+                    make.width.equalToSuperview()
                 }
-                view.reload(tokens: tokens, snapshots: snapshots)
+                pendingDepositView = view
             }
+            view.reload(tokens: tokens, snapshots: snapshots)
         case let .pendingTransactions(transactions):
-            if transactions.isEmpty {
-                pendingDepositView?.removeFromSuperview()
+            assert(!transactions.isEmpty)
+            let view: WalletPendingDepositView
+            if let pendingDepositView {
+                view = pendingDepositView
             } else {
-                let view: WalletPendingDepositView
-                if let pendingDepositView {
-                    view = pendingDepositView
-                } else {
-                    view = R.nib.walletPendingDepositView(withOwner: nil)!
-                    view.button.removeTarget(self, action: nil, for: .touchUpInside)
-                    view.button.addTarget(self, action: #selector(revealPendingTransactions(_:)), for: .touchUpInside)
-                    actionStackView.addArrangedSubview(view)
-                    view.snp.makeConstraints { make in
-                        make.width.equalToSuperview()
-                    }
-                    pendingDepositView = view
+                view = R.nib.walletPendingDepositView(withOwner: nil)!
+                view.button.removeTarget(self, action: nil, for: .touchUpInside)
+                view.button.addTarget(self, action: #selector(revealPendingTransactions(_:)), for: .touchUpInside)
+                actionStackView.addArrangedSubview(view)
+                view.snp.makeConstraints { make in
+                    make.width.equalToSuperview()
                 }
-                view.reload(pendingTransactions: transactions)
+                pendingDepositView = view
             }
+            view.reload(pendingTransactions: transactions)
         case nil:
             watchingIndicatorView?.removeFromSuperview()
             pendingDepositView?.removeFromSuperview()

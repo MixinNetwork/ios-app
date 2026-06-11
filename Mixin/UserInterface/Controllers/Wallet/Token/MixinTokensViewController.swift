@@ -254,10 +254,16 @@ extension MixinTokensViewController: PrivacyWalletPendingDepositObserver.Delegat
         didUpdateWith tokens: [MixinToken],
         snapshots: [SafeSnapshot]
     ) {
-        overviewTray = .pendingDeposits(tokens: tokens, snapshots: snapshots)
-        let overviewIndexPath = IndexPath(item: 0, section: Section.overview.rawValue)
-        if let cell = collectionView.cellForItem(at: overviewIndexPath) as? WalletOverviewCell {
-            cell.load(tray: overviewTray)
+        if snapshots.isEmpty {
+            overviewTray = nil
+        } else {
+            overviewTray = .pendingDeposits(tokens: tokens, snapshots: snapshots)
+        }
+        if let sectionIndex = sections.firstIndex(of: .overview) {
+            collectionView.performBatchUpdates {
+                let sections = IndexSet(integer: sectionIndex)
+                collectionView.reloadSections(sections)
+            }
         }
     }
     

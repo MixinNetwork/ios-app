@@ -551,15 +551,6 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         }
     }
     
-    func reconfigureIfExists(item: Item) {
-        var snapshot = dataSource.snapshot()
-        guard snapshot.itemIdentifiers.contains(item) else {
-            return
-        }
-        snapshot.reconfigureItems([item])
-        dataSource.apply(snapshot, animatingDifferences: false)
-    }
-    
     func request(support: WalletSupport) {
         switch support {
         case .contactUs:

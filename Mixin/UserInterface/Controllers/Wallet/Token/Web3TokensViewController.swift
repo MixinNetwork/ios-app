@@ -76,17 +76,17 @@ final class Web3TokensViewController: TokensViewController {
         )
         notificationCenter.addObserver(
             self,
-            selector: #selector(reloadPendingTransactions),
+            selector: #selector(reloadData),
             name: Web3TransactionDAO.transactionDidUpdateNotification,
             object: nil
         )
-        reloadData()
         
         let pendingTransactionLoader = CommonWalletPendingTransactionLoader(
             walletID: wallet.walletID
         )
         self.pendingTransactionObserver = pendingTransactionLoader
-        reloadPendingTransactions()
+        
+        reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -191,12 +191,16 @@ final class Web3TokensViewController: TokensViewController {
                 action = nil
                 watchingAddresses = WatchingAddresses(addresses: addresses)
             }
+            
             let tray: WalletOverview.Tray?
+            let pendingTransactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
             if let watchingAddresses {
                 let description = R.string.localizable.you_are_watching_address(
                     watchingAddresses.prettyFormatted
                 )
                 tray = .watching(description: description)
+            } else if !pendingTransactions.isEmpty {
+                tray = .pendingTransactions(pendingTransactions)
             } else {
                 tray = nil
             }
@@ -242,23 +246,6 @@ final class Web3TokensViewController: TokensViewController {
                     responder: self
                 )
                 self.collectionView.reloadData()
-            }
-        }
-    }
-    
-    @objc private func reloadPendingTransactions() {
-        let walletID = wallet.walletID
-        DispatchQueue.global().async { [weak self] in
-            let transactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
-            DispatchQueue.main.async {
-                guard let self else {
-                    return
-                }
-                self.overviewTray = .pendingTransactions(transactions)
-                if let sectionIndex = self.sections.firstIndex(of: .overview) {
-                    let overview = IndexSet(integer: sectionIndex)
-                    self.collectionView.reloadSections(overview)
-                }
             }
         }
     }
@@ -365,22 +352,6 @@ extension Web3TokensViewController: UICollectionViewDelegate {
             availability: availability
         )
         navigationController?.pushViewController(viewController, animated: true)
-    }
-    
-}
-
-extension Web3TokensViewController: PrivacyWalletPendingDepositObserver.Delegate {
-    
-    func privacyWalletPendingDepositObserver(
-        _ observer: PrivacyWalletPendingDepositObserver,
-        didUpdateWith tokens: [MixinToken],
-        snapshots: [SafeSnapshot]
-    ) {
-        overviewTray = .pendingDeposits(tokens: tokens, snapshots: snapshots)
-        let overviewIndexPath = IndexPath(item: 0, section: Section.overview.rawValue)
-        if let cell = collectionView.cellForItem(at: overviewIndexPath) as? WalletOverviewCell {
-            cell.load(tray: overviewTray)
-        }
     }
     
 }

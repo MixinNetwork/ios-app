@@ -573,8 +573,18 @@ extension PrivacyWalletViewController: PrivacyWalletPendingDepositObserver.Deleg
         didUpdateWith tokens: [MixinToken],
         snapshots: [SafeSnapshot]
     ) {
-        overviewTray = .pendingDeposits(tokens: tokens, snapshots: snapshots)
-        reconfigureIfExists(item: .overview)
+        if snapshots.isEmpty {
+            overviewTray = nil
+        } else {
+            overviewTray = .pendingDeposits(tokens: tokens, snapshots: snapshots)
+        }
+        var snapshot = dataSource.snapshot()
+        if snapshot.itemIdentifiers.contains(.overview) {
+            snapshot.reconfigureItems([.overview])
+            dataSource.apply(snapshot, animatingDifferences: false)
+        } else {
+            reloadData()
+        }
     }
     
 }

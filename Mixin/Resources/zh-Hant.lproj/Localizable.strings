@@ -506,7 +506,7 @@
 "deposit_invoice" = "票據";
 "deposit_memo_address_notice" = "地址和 Memo（備註）同時使用才能充值 %@ 到你的賬號。";
 "deposit_memo_notice" = "充值時務必填寫 Memo（備註），否則可能導致資產丟失。";
-"deposit_pending_confirmation" = "%@ 充值確認中";
+"deposit_pending_confirmation" = "%@ 確認中";
 "deposit_supporting_single_token" = "該充值地址僅支援 %@。";
 "deposit_supporting_token_of_network" = "支援所有基於 %@ 發行的代幣。";
 "deposit_suspended" = "%1$@ 充值已暫停，可能的原因包括：\n• 節點故障\n• 網路硬分叉\n• 網路擁堵\n• 使用率較低\n注意已轉入的 %1$@ 資產可以繼續轉賬。";
@@ -518,7 +518,7 @@
 "deposit_token" = "充值 %@";
 "deposit_token_description" = "從其他交易所或錢包轉入";
 "deposit_token_to_mixin" = "充值 %@ 到 Mixin";
-"deposits_pending_confirmation" = "有 %d 筆充值確認中";
+"deposits_pending_confirmation" = "%d 筆充值確認中";
 "depost_address_updated" = "%@ 充值地址已更新";
 "depost_address_updated_description" = "您的 %@ 充值地址已更新，充值地址將隨著系統或網路升級而自動更新，舊的地址仍可充值並會自動入賬，但是不推薦使用。";
 "deselect_all" = "取消所有選擇";
@@ -1151,8 +1151,8 @@
 "pending_confirmation" = "%1$d/%2$d 確認";
 "pending_confirmation_count" = "%1$d/%2$d 確認";
 "pending_confirmations" = "%d/%d 區塊確認數";
-"pending_transaction_one" = "有 1 筆交易處理中";
-"pending_transactions_count" = "有 %d 筆交易處理中";
+"pending_transaction_one" = "1 筆交易確認中";
+"pending_transactions_count" = "%d 筆交易確認中";
 "periodic_sms_verification_benefits" = "定期進行簡訊驗證有助於提升賬號安全，如果當前手機號已失效請儘快更換手機號。";
 "permission_denied_camera" = "授權使用相機";
 "permission_denied_camera_hint" = "Mixin 需要相機許可權，請點選'設定'並調整授權。";

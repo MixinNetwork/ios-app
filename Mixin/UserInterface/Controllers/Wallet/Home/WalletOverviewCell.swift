@@ -13,9 +13,7 @@ final class WalletOverviewCell: UICollectionViewCell {
     
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var valueStackView: UIStackView!
-    @IBOutlet weak var valueLabel: InsetLabel!
-    @IBOutlet weak var symbolLabel: UILabel!
+    @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var btcValueLabel: UILabel!
     @IBOutlet weak var actionStackView: UIStackView!
     
@@ -30,16 +28,24 @@ final class WalletOverviewCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
-        titleStackView.setCustomSpacing(0, after: valueStackView)
+        titleStackView.setCustomSpacing(10, after: titleLabel)
+        titleLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
         titleLabel.text = R.string.localizable.total_balance()
-        valueLabel.font = .condensed(size: 30)
-        valueLabel.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 5, right: 0)
-        symbolLabel.text = Currency.current.code
+        btcValueLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
     }
     
     func load(overview: WalletOverview?) {
         if let overview {
-            valueLabel.text = overview.value
+            valueLabel.attributedText = AttributedAmount.attributedString(
+                amount: overview.value,
+                symbol: Currency.current.code
+            )
             btcValueLabel.text = overview.btcValue
         } else {
             valueLabel.text = "-"

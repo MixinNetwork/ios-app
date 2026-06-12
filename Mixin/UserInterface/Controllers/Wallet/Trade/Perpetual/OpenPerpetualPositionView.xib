@@ -384,8 +384,11 @@
                                                     <color key="textColor" name="text_tertiary"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info" translatesAutoresizingMaskIntoConstraints="NO" id="8do-9E-u30">
+                                                    <rect key="frame" x="112" y="0.0" width="16" height="17"/>
+                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eui-rp-lnp">
-                                                    <rect key="frame" x="112" y="0.0" width="209" height="17"/>
+                                                    <rect key="frame" x="132" y="0.0" width="189" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="text_tertiary"/>
                                                     <nil key="highlightedColor"/>
@@ -428,6 +431,18 @@
                                     <buttonConfiguration key="configuration" style="plain"/>
                                     <connections>
                                         <action selector="presentOrderValueManual:" destination="-1" eventType="touchUpInside" id="yqE-WM-6N8"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cUS-Qe-0ui">
+                                    <rect key="frame" x="138" y="474.33333333333331" width="36" height="36"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="cUS-Qe-0ui" secondAttribute="height" id="aBP-U3-AuK"/>
+                                        <constraint firstAttribute="width" constant="36" id="wsi-hn-qtQ"/>
+                                    </constraints>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="plain"/>
+                                    <connections>
+                                        <action selector="presentLiquidationPriceManual:" destination="-1" eventType="touchUpInside" id="uOU-sP-nAz"/>
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="100" verticalHuggingPriority="100" horizontalCompressionResistancePriority="100" verticalCompressionResistancePriority="100" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bnb-tJ-X0v">
@@ -473,8 +488,10 @@
                                 <constraint firstAttribute="trailing" secondItem="v7H-a6-XPT" secondAttribute="trailing" constant="20" id="RXn-ya-L56"/>
                                 <constraint firstItem="BIp-E5-kny" firstAttribute="centerY" secondItem="Eui-rp-lnp" secondAttribute="centerY" id="TCQ-x2-QqW"/>
                                 <constraint firstItem="qWe-AM-mzt" firstAttribute="centerY" secondItem="GlQ-36-kBr" secondAttribute="centerY" id="TLP-zd-CwU"/>
+                                <constraint firstItem="cUS-Qe-0ui" firstAttribute="centerY" secondItem="8do-9E-u30" secondAttribute="centerY" id="ToU-0w-KxX"/>
                                 <constraint firstItem="u0I-f4-MTw" firstAttribute="top" secondItem="v7H-a6-XPT" secondAttribute="bottom" constant="2" id="W6C-J6-aN6"/>
                                 <constraint firstItem="bnb-tJ-X0v" firstAttribute="height" secondItem="CEg-1e-0mX" secondAttribute="height" constant="16" id="XYW-Q8-dX1"/>
+                                <constraint firstItem="cUS-Qe-0ui" firstAttribute="centerX" secondItem="8do-9E-u30" secondAttribute="centerX" id="bk6-7H-yiY"/>
                                 <constraint firstItem="5sk-Es-ff1" firstAttribute="centerY" secondItem="KP0-HD-nqW" secondAttribute="centerY" id="f8H-rE-hzX"/>
                                 <constraint firstItem="UDa-HP-ZRE" firstAttribute="trailing" secondItem="lWX-wp-qY6" secondAttribute="trailing" constant="16" id="gTb-wM-cXh"/>
                                 <constraint firstItem="UDa-HP-ZRE" firstAttribute="centerY" secondItem="hdM-7O-xtM" secondAttribute="centerY" id="hm9-zT-AaO"/>

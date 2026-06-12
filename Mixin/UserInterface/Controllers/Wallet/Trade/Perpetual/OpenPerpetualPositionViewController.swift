@@ -284,6 +284,12 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
         reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_open_position_size"])
     }
     
+    @IBAction func presentLiquidationPriceManual(_ sender: Any) {
+        let manual = PerpsManual.viewController(initialPage: .liquidation)
+        present(manual, animated: true)
+        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_open_liquidation_price"])
+    }
+    
     @IBAction func review(_ sender: ConfigurationBasedBusyButton) {
         guard let marginToken, let liquidationPrice else {
             return

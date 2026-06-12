@@ -721,10 +721,14 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             switch indexPath.item {
             case 0:
                 cell.titleLabel.text = R.string.localizable.volume_24h().uppercased()
+                cell.titleInfoImageView.isHidden = true
                 cell.contentLabel.text = viewModel.volume
+                cell.delegate = nil
             default:
                 cell.titleLabel.text = R.string.localizable.funding_rate().uppercased()
+                cell.titleInfoImageView.isHidden = false
                 cell.contentLabel.text = viewModel.fundingRate
+                cell.delegate = self
             }
             return cell
         case .activities(let viewModels):
@@ -896,6 +900,16 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
             self.editingLock = nil
             self.handleTPSLUpdate(result: result)
         }
+    }
+    
+}
+
+extension PerpetualMarketViewController: PerpetualMarketInfoCell.Delegate {
+    
+    func perpetualMarketInfoCellDidRequestInfo(_ cell: PerpetualMarketInfoCell) {
+        let manual = PerpsManual.viewController(initialPage: .fundingRate)
+        present(manual, animated: true)
+        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_market_info"])
     }
     
 }

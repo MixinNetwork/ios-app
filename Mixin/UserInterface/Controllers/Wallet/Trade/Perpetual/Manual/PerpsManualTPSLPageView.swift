@@ -1,7 +1,7 @@
 import SwiftUI
 import MixinServices
 
-struct PerpsManualPositionTPSLPageView: View {
+struct PerpsManualTPSLPageView: View {
     
     private let margin: Decimal = 1000
     private let marginSymbol = "USDT"

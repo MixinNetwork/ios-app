@@ -7,6 +7,7 @@ struct SpotTradingSegmentControl<Segment: Hashable>: View {
     @Binding var selection: Segment
     
     let content: (Segment) -> String
+    let selectionBackgroundColor: (Segment) -> UIColor
     
     @Namespace private var animation
     
@@ -24,7 +25,7 @@ struct SpotTradingSegmentControl<Segment: Hashable>: View {
                     .background {
                         if isSelected {
                             RoundedRectangle(cornerRadius: 6)
-                                .fill(Color(R.color.theme))
+                                .fill(Color(selectionBackgroundColor(option)))
                                 .matchedGeometryEffect(id: "SelectedPill", in: animation)
                         }
                     }

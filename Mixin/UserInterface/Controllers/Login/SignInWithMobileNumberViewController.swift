@@ -131,13 +131,18 @@ extension SignInWithMobileNumberViewController {
                 self.navigationController?.pushViewController(verify, animated: true)
                 self.updateViews(isBusy: false)
             case let .failure(.response(error)) where .requiresCaptcha ~= error:
-                self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
-                    switch result {
-                    case .success(let token):
-                        self?.requestVerificationCode(captchaToken: token)
-                    default:
-                        self?.updateViews(isBusy: false)
+                if token == nil {
+                    self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
+                        switch result {
+                        case .success(let token):
+                            self?.requestVerificationCode(captchaToken: token)
+                        default:
+                            self?.updateViews(isBusy: false)
+                        }
                     }
+                } else {
+                    self.alert(R.string.localizable.error_captcha_is_invalid())
+                    self.updateViews(isBusy: false)
                 }
             case let .failure(error):
                 Logger.login.error(category: "SignUpWithMobileNumber", message: "Failed: \(error)")

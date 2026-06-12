@@ -128,13 +128,18 @@ final class VerifyMobileNumberInputNumberViewController: MobileNumberViewControl
                 self.navigationController?.pushViewController(oneTimeCode, animated: true)
                 self.continueButton.isBusy = false
             case let .failure(.response(error)) where .requiresCaptcha ~= error:
-                self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
-                    switch result {
-                    case .success(let token):
-                        self?.requestVerificationCode(base64Salt: base64Salt, captchaToken: token)
-                    default:
-                        self?.continueButton.isBusy = false
+                if token == nil {
+                    self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
+                        switch result {
+                        case .success(let token):
+                            self?.requestVerificationCode(base64Salt: base64Salt, captchaToken: token)
+                        default:
+                            self?.continueButton.isBusy = false
+                        }
                     }
+                } else {
+                    self.alert(R.string.localizable.error_captcha_is_invalid())
+                    self.continueButton.isBusy = false
                 }
             case let .failure(error):
                 self.alert(error.localizedDescription)

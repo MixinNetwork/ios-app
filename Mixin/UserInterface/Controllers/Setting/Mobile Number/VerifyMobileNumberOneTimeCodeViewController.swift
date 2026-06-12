@@ -120,13 +120,18 @@ class VerifyMobileNumberOneTimeCodeViewController: VerificationCodeViewControlle
                 self.resendButton.isBusy = false
                 self.resendButton.beginCountDown(self.resendInterval)
             case let .failure(.response(error)) where .requiresCaptcha ~= error:
-                self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
-                    switch result {
-                    case .success(let token):
-                        self?.requestVerificationCode(captchaToken: token)
-                    default:
-                        self?.resendButton.isBusy = false
+                if token == nil {
+                    self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
+                        switch result {
+                        case .success(let token):
+                            self?.requestVerificationCode(captchaToken: token)
+                        default:
+                            self?.resendButton.isBusy = false
+                        }
                     }
+                } else {
+                    self.alert(R.string.localizable.error_captcha_is_invalid())
+                    self.resendButton.isBusy = false
                 }
             case let.failure(error):
                 self.alert(error.localizedDescription)

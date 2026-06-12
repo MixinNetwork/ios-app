@@ -173,13 +173,17 @@ extension DeleteAccountSettingViewController {
                 let vc = DeleteAccountVerifyCodeViewController(context: context)
                 self.navigationController?.pushViewController(vc, animated: true)
             case let .failure(.response(error)) where .requiresCaptcha ~= error:
-                self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
-                    switch result {
-                    case .success(let token):
-                        self?.requestVerificationCode(for: phone, captchaToken: token, displayingHUD: hud)
-                    case .cancel, .timedOut:
-                        hud.hide()
+                if token == nil {
+                    self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
+                        switch result {
+                        case .success(let token):
+                            self?.requestVerificationCode(for: phone, captchaToken: token, displayingHUD: hud)
+                        case .cancel, .timedOut:
+                            hud.hide()
+                        }
                     }
+                } else {
+                    hud.set(style: .error, text: R.string.localizable.error_captcha_is_invalid())
                 }
             case let .failure(error):
                 hud.hide()
@@ -189,4 +193,3 @@ extension DeleteAccountSettingViewController {
     }
     
 }
-

@@ -14,6 +14,7 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
     }
     
     private let wallet: Web3Wallet
+    private let kind: Web3Chain.Kind
     private let encryptionKey: Data
     
     private var addresses: [Web3Address]?
@@ -24,8 +25,9 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
         }
     }
     
-    init(wallet: Web3Wallet, encryptionKey: Data) {
+    init(wallet: Web3Wallet, kind: Web3Chain.Kind, encryptionKey: Data) {
         self.wallet = wallet
+        self.kind = kind
         self.encryptionKey = encryptionKey
         super.init()
     }
@@ -37,7 +39,16 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.import_private_key()
-        inputPlaceholderLabel.text = R.string.localizable.type_your_private_key()
+        switch kind {
+        case .bitcoin:
+            selectedChain = .bitcoin
+        case .evm:
+            selectedChain = .ethereum
+        case .solana:
+            selectedChain = .solana
+        }
+        selectNetworkDisclosureImageView.isHidden = true
+        selectNetworkButton.isEnabled = false
         let descriptionLabel = InsetLabel()
         descriptionLabel.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         descriptionLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
@@ -64,6 +75,18 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
         }
         AppGroupKeychain.setImportedPrivateKey(encryptedPrivateKey, forWalletID: wallet.walletID)
         navigationController?.popViewController(animated: true)
+    }
+    
+    override func reloadViews(chain: Web3Chain) {
+        super.reloadViews(chain: chain)
+        inputPlaceholderLabel.text = switch kind {
+        case .bitcoin:
+            R.string.localizable.bitcoin_private_key_hint()
+        case .evm:
+            R.string.localizable.ethereum_private_key_hint()
+        case .solana:
+            R.string.localizable.solana_private_key_hint()
+        }
     }
     
     override func detectInput() {

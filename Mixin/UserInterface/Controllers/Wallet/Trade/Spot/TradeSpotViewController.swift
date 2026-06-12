@@ -629,7 +629,7 @@ extension TradeSpotViewController: UICollectionViewDataSource {
         case UICollectionView.elementKindSectionHeader:
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
             let count = allOpenOrdersCount ?? openOrders.count
-            view.label.text = R.string.localizable.open_orders_count(count)
+            view.titleLabel.text = R.string.localizable.open_orders_count(count)
             view.onShowAll = { [weak tradeViewController] (sender) in
                 tradeViewController?.showOrders(sender)
             }

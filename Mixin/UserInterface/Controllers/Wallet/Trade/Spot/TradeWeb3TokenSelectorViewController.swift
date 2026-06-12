@@ -58,7 +58,11 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
             // No need to filter with `supportedChainIDs`, the `walletID` will do
             // Unsupported tokens will not exist with the `walletID`
             var tokens = Web3TokenDAO.shared
-                .notHiddenTokens(walletID: walletID, includesZeroBalanceItems: true)
+                .notHiddenTokens(
+                    walletID: walletID,
+                    includesZeroBalanceItems: true,
+                    limit: nil
+                )
                 .compactMap(BalancedSwapToken.init(tokenItem:))
             var tokensMap = tokens.reduce(into: [:]) { results, token in
                 results[token.assetID] = token

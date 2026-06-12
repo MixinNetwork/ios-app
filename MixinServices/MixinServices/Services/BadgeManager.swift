@@ -5,7 +5,7 @@ public final class BadgeManager {
     public enum Identifier: String, CaseIterable {
         case moreTab = "more_tab"
         case walletSwitch = "wallet_switch"
-        case addWallet = "add_wallet"
+        case addWalletAction = "add_wallet"
         case buy = "buying"
         case trade = "swap"
         case tradeOrder = "swap_order"
@@ -19,6 +19,8 @@ public final class BadgeManager {
         case freeTransfer = "free_transfer"
         case perpsTakeProfit = "perps_take_profit"
         case perpsStopLoss = "perps_stop_loss"
+        case addWalletTip = "add_wallet_tip"
+        case walletHomeReferral = "wallet_home_referral"
     }
     
     public static let shared = BadgeManager()

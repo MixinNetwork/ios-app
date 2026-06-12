@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="UFZ-Nx-jwV" customClass="WalletSupportCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="335" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="r3h-Gx-QhC">
+                <rect key="frame" x="0.0" y="0.0" width="335" height="50"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" placeholderIntrinsicWidth="42" placeholderIntrinsicHeight="42" translatesAutoresizingMaskIntoConstraints="NO" id="ZQ2-NJ-BqU">
+                        <rect key="frame" x="16" y="4" width="42" height="42"/>
+                    </imageView>
+                    <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="gyl-2J-giv">
+                        <rect key="frame" x="72" y="6" width="231" height="42"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="19.333333333333332" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3sy-rb-ie4">
+                                <rect key="frame" x="0.0" y="0.0" width="231" height="19.333333333333332"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="16.999999999999996" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jci-n7-z8W">
+                                <rect key="frame" x="0.0" y="23.333333333333329" width="231" height="18.666666666666671"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text_tertiary"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lGe-BX-c24">
+                        <rect key="frame" x="303" y="17" width="16" height="16"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="16" id="KZw-3Z-nZ0"/>
+                            <constraint firstAttribute="height" constant="16" id="XrF-OP-PiY"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstItem="gyl-2J-giv" firstAttribute="top" secondItem="r3h-Gx-QhC" secondAttribute="top" constant="6" id="0o6-el-557"/>
+                    <constraint firstItem="ZQ2-NJ-BqU" firstAttribute="top" relation="greaterThanOrEqual" secondItem="r3h-Gx-QhC" secondAttribute="top" constant="4" id="4Jz-sI-kJG"/>
+                    <constraint firstItem="ZQ2-NJ-BqU" firstAttribute="leading" secondItem="r3h-Gx-QhC" secondAttribute="leading" constant="16" id="5XT-xo-kEy"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ZQ2-NJ-BqU" secondAttribute="bottom" constant="4" id="63l-gK-G8b"/>
+                    <constraint firstItem="ZQ2-NJ-BqU" firstAttribute="centerY" secondItem="r3h-Gx-QhC" secondAttribute="centerY" id="Bjo-pL-zxz"/>
+                    <constraint firstItem="gyl-2J-giv" firstAttribute="leading" secondItem="ZQ2-NJ-BqU" secondAttribute="trailing" constant="14" id="LfY-Ib-0HT"/>
+                    <constraint firstAttribute="bottom" secondItem="gyl-2J-giv" secondAttribute="bottom" constant="2" id="N7y-Sp-Xdv"/>
+                    <constraint firstItem="lGe-BX-c24" firstAttribute="centerY" secondItem="r3h-Gx-QhC" secondAttribute="centerY" id="QGK-22-FCk"/>
+                    <constraint firstAttribute="trailing" secondItem="lGe-BX-c24" secondAttribute="trailing" constant="16" id="oqH-fc-Leu"/>
+                    <constraint firstItem="lGe-BX-c24" firstAttribute="leading" secondItem="gyl-2J-giv" secondAttribute="trailing" id="wF0-MD-VdS"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <connections>
+                <outlet property="accessoryImageView" destination="lGe-BX-c24" id="29f-xq-Ynb"/>
+                <outlet property="iconImageView" destination="ZQ2-NJ-BqU" id="51j-Wf-clU"/>
+                <outlet property="subtitleLabel" destination="Jci-n7-z8W" id="Xhq-xP-EPV"/>
+                <outlet property="titleLabel" destination="3sy-rb-ie4" id="r9G-Ae-CqV"/>
+            </connections>
+            <point key="canvasLocation" x="139" y="154"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

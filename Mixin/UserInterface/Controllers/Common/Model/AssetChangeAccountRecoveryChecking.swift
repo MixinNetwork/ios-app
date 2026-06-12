@@ -2,13 +2,24 @@ import UIKit
 import MixinServices
 
 protocol AssetChangeAccountRecoveryChecking {
-    
+    var accountRecoverCheckingResponder: UIViewController? { get }
 }
 
 extension AssetChangeAccountRecoveryChecking where Self: UIViewController {
     
+    var accountRecoverCheckingResponder: UIViewController? {
+        self
+    }
+    
+}
+
+extension AssetChangeAccountRecoveryChecking {
+    
     func withAccountRecoveryChecked(onNext: @escaping () -> Void) {
-        guard let account = LoginManager.shared.account else {
+        guard
+            let account = LoginManager.shared.account,
+            let accountRecoverCheckingResponder
+        else {
             return
         }
         let enabledOptions = AccountRecoveryOption.enabledOptions(account: account)
@@ -18,7 +29,7 @@ extension AssetChangeAccountRecoveryChecking where Self: UIViewController {
                 enabledOptions: enabledOptions
             )
             let popup = PopupTipViewController(tip: .recovery(context))
-            present(popup, animated: true)
+            accountRecoverCheckingResponder.present(popup, animated: true)
         } else {
             onNext()
         }

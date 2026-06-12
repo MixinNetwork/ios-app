@@ -4,6 +4,7 @@ enum UserOperationAnalytics {
     
     enum TradeSource: String {
         case walletHome         = "wallet_home"
+        case tokenList          = "token_list"
         case moreExplore        = "more_explore"
         case appCard            = "app_card"
         case marketDetail       = "market_detail"

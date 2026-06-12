@@ -211,6 +211,7 @@
 "balance_max" = "MAX";
 "batch_transfer_confirmation" = "Batch Transfer Confirmation";
 "before_you_proceed" = "Before you proceed";
+"bitcoin_private_key_hint" = "Enter WIF or 32-byte HEX private key. Example: Kx45...9Ab or 0x1a2b...cdef";
 "block" = "Блокировать";
 "block_confirmations" = "Block Confirmations";
 "block_hint" = "Заблокированные контакты больше не смогут звонить вам или отправлять вам сообщения";
@@ -506,7 +507,7 @@
 "deposit_invoice" = "Invoice";
 "deposit_memo_address_notice" = "Both Memo and Address are required to deposit %@ to your account.";
 "deposit_memo_notice" = "Памятка требуется, или вы потеряете свои монеты.";
-"deposit_pending_confirmation" = "%@ Pending Confirmation";
+"deposit_pending_confirmation" = "%@ Confirming";
 "deposit_supporting_single_token" = "This address only supports %@.";
 "deposit_supporting_token_of_network" = "This address supports all tokens based on %@ network.";
 "deposit_suspended" = "%1$@ deposits have been suspended. Possible reasons:\n• Node failure\n• Network hard fork\n• Network congestion\n• Low usage\nNote: %1$@ assets already deposited can still be transferred.";
@@ -518,7 +519,7 @@
 "deposit_token" = "Deposit %@";
 "deposit_token_description" = "Deposit from other exchanges or wallets";
 "deposit_token_to_mixin" = "Deposit %@ to Mixin";
-"deposits_pending_confirmation" = "%d Deposits Pending Confirmation";
+"deposits_pending_confirmation" = "%d Deposits Confirming";
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
 "deselect_all" = "Deselect All";
@@ -654,6 +655,7 @@
 "estimated_liquidation_price" = "Estimated Liquidation Price";
 "estimated_price" = "Estimated Price";
 "estimated_receive" = "Estimated Receive";
+"ethereum_private_key_hint" = "Enter HEX private key. Example: 0x1a2b...cdef";
 "everybody" = "Все";
 "example" = "Example";
 "example_amount" = "Amount";
@@ -1049,6 +1051,7 @@
 "no_results" = "НЕТ РЕЗУЛЬТАТОВ";
 "no_stickers" = "НЕТ НАКЛЕЕК";
 "no_tag" = "Нет тега";
+"no_tokens" = "No Tokens";
 "no_transactions" = "Нет транзакций";
 "nobody" = "Никто";
 "none" = "Никто";
@@ -1150,8 +1153,8 @@
 "pending_confirmation" = "%1$d/%2$d подтверждение";
 "pending_confirmation_count" = "%1$d/%2$d подтверждения";
 "pending_confirmations" = "%d/%d Подтверждения";
-"pending_transaction_one" = "1 Pending Transaction";
-"pending_transactions_count" = "%d Pending Transactions";
+"pending_transaction_one" = "1 Transaction Confirming";
+"pending_transactions_count" = "%d Transactions Confirming";
 "periodic_sms_verification_benefits" = "Periodic SMS verification helps improve account security. If your current mobile number is no longer valid, please update it as soon as possible.";
 "permission_denied_camera" = "Camera Access Denied";
 "permission_denied_camera_hint" = "Mixin doesn't have permission to use your camera. Tap Settings to authorize.";
@@ -1601,6 +1604,7 @@
 "sms_verified_description" = "Periodic SMS verification helps improve account security";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Снимок не найден.";
+"solana_private_key_hint" = "Enter Base58 or 64-byte HEX private key. Example: 3fZb...9Qp or 0x1a2b...cdef";
 "sort_by" = "Сортировать по";
 "sort_by_amount" = "Sort by Amount";
 "sort_by_oldest" = "Sort by Oldest";
@@ -1913,6 +1917,25 @@
 "wallet_category_watching" = "Watching";
 "wallet_enable_biometric_pay" = "После включения, %@ можно использовать для быстрой передачи.";
 "wallet_hide_asset_confirmation" = "Вы уверены, что хотите скрыть %@?";
+"wallet_home_add_wallet_banner_title" = "Add Wallets via Private Key, Phrase, or Watch Address";
+"wallet_home_buy_crypto" = "Buy Crypto";
+"wallet_home_common_wallet_reason_1" = "Connect to any app, enjoy DeFi & SocialFi.";
+"wallet_home_common_wallet_reason_2" = "Support Solana, Ethereum, and cross-chain trading.";
+"wallet_home_common_wallet_reason_3" = "Import other wallets, manage all assets in one place.";
+"wallet_home_common_wallet_reason_title" = "Why do I need a Common Wallet?";
+"wallet_home_contact_us" = "Contact Us";
+"wallet_home_empty_desc" = "Fund your wallet to start trading and earning";
+"wallet_home_empty_title" = "Fund your wallet";
+"wallet_home_help_center_desc" = "Guides, docs & FAQs";
+"wallet_home_privacy_wallet_reason_1" = "Keep balances and transactions private from public explorers.";
+"wallet_home_privacy_wallet_reason_2" = "Avoid transfer errors caused by complex wallet addresses.";
+"wallet_home_privacy_wallet_reason_3" = "Block malicious apps from gaining unsafe permissions.";
+"wallet_home_privacy_wallet_reason_title" = "Why do I need a Privacy Wallet?";
+"wallet_home_receive_crypto" = "Receive Crypto";
+"wallet_home_referral_banner_desc" = "Invite and get up to %@ trading fee and exclusive revenue sharing.";
+"wallet_home_referral_banner_title" = "Referral";
+"wallet_home_support" = "Support";
+"wallet_home_tokens" = "Tokens";
 "wallet_imported" = "Imported";
 "wallet_password_not_equal" = "PIN-код не повторяется дважды, попробуйте еще раз.";
 "wallet_password_unsafe" = "PIN-код слишком прост и ненадежен.";

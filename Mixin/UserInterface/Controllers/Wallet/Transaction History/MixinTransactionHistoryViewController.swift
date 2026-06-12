@@ -67,6 +67,7 @@ final class MixinTransactionHistoryViewController: TransactionHistoryViewControl
             if let self {
                 let snapshot = self.items[snapshotID]!
                 cell.render(snapshot: snapshot)
+                cell.delegate = self
             }
             return cell
         }
@@ -286,29 +287,15 @@ extension MixinTransactionHistoryViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard let id = dataSource.itemIdentifier(for: indexPath), let item = items[id] else {
+        guard
+            let id = dataSource.itemIdentifier(for: indexPath),
+            let item = items[id],
+            let viewController = SafeSnapshotViewController(snapshot: item)
+        else {
             return
         }
-        DispatchQueue.global().async { [weak self] in
-            guard let token = TokenDAO.shared.tokenItem(assetID: item.assetID) else {
-                return
-            }
-            let inscriptionItem: InscriptionItem? = if let hash = item.inscriptionHash {
-                InscriptionDAO.shared.inscriptionItem(with: hash)
-            } else {
-                nil
-            }
-            DispatchQueue.main.async {
-                let viewController = SafeSnapshotViewController(
-                    token: token,
-                    snapshot: item,
-                    messageID: nil,
-                    inscription: inscriptionItem
-                )
-                self?.navigationController?.pushViewController(viewController, animated: true)
-                reporter.report(event: .transactionDetail, tags: ["source": "all_transactions"])
-            }
-        }
+        navigationController?.pushViewController(viewController, animated: true)
+        reporter.report(event: .transactionDetail, tags: ["source": "all_transactions"])
     }
     
 }
@@ -356,6 +343,24 @@ extension MixinTransactionHistoryViewController: TransactionHistoryDatePickerVie
                                 y: filtersScrollView.contentOffset.y)
         filtersScrollView.setContentOffset(rightMost, animated: false)
         reloadData()
+    }
+    
+}
+
+extension MixinTransactionHistoryViewController: SnapshotCellDelegate {
+    
+    func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell) {
+        guard
+            let indexPath = tableView.indexPath(for: cell),
+            let snapshotID = dataSource.itemIdentifier(for: indexPath),
+            let snapshot = items[snapshotID],
+            let userID = snapshot.opponentUserID,
+            let user = UserDAO.shared.getUser(userId: userID)
+        else {
+            return
+        }
+        let profile = UserProfileViewController(user: user)
+        present(profile, animated: true, completion: nil)
     }
     
 }

@@ -277,6 +277,14 @@ final class ConversationViewController: UIViewController {
         return vc
     }
     
+    class func teamMixin() -> ConversationViewController? {
+        if let teamMixin = UserDAO.shared.getUser(userId: BotUserID.teamMixin) {
+            return instance(ownerUser: teamMixin)
+        } else {
+            return nil
+        }
+    }
+    
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()

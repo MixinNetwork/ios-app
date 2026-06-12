@@ -226,12 +226,12 @@ final class PopupTipViewController: UIViewController {
             }
         case .appRating:
             break
-        case .importPrivateKey(let wallet):
+        case let .importPrivateKey(wallet, kind):
             presentingViewController?.dismiss(animated: true) {
-                let validation = AddWalletPINValidationViewController(action: .reimportPrivateKey(wallet))
+                let validation = AddWalletPINValidationViewController(action: .reimportPrivateKey(wallet, kind))
                 UIApplication.homeNavigationController?.pushViewController(validation, animated: true)
             }
-        case .importMnemonics(let wallet):
+        case let .importMnemonics(wallet):
             presentingViewController?.dismiss(animated: true) {
                 let validation = AddWalletPINValidationViewController(action: .reimportMnemonics(wallet))
                 UIApplication.homeNavigationController?.pushViewController(validation, animated: true)

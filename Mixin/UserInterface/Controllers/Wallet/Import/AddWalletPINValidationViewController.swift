@@ -6,7 +6,7 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
     enum Action {
         case addWallet(AddWalletMethod)
         case reimportMnemonics(Web3Wallet)
-        case reimportPrivateKey(Web3Wallet)
+        case reimportPrivateKey(Web3Wallet, Web3Chain.Kind)
     }
     
     private let action: Action
@@ -80,10 +80,14 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
                         let input = ReimportMnemonicsViewController(wallet: wallet, encryptionKey: key)
                         self.navigationController?.pushViewController(replacingCurrent: input, animated: true)
                     }
-                case let .reimportPrivateKey(wallet):
+                case let .reimportPrivateKey(wallet, kind):
                     let key = try await TIP.importedWalletEncryptionKey(pin: pin)
                     await MainActor.run {
-                        let input = ReimportPrivateKeyViewController(wallet: wallet, encryptionKey: key)
+                        let input = ReimportPrivateKeyViewController(
+                            wallet: wallet,
+                            kind: kind,
+                            encryptionKey: key
+                        )
                         self.navigationController?.pushViewController(replacingCurrent: input, animated: true)
                     }
                 }

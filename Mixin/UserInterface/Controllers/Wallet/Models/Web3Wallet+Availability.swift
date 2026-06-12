@@ -4,10 +4,41 @@ import MixinServices
 extension Web3Wallet {
     
     enum Availability {
+        
         case always
         case never
         case afterImportingMnemonics
-        case afterImportingPrivateKey
+        case afterImportingPrivateKey(Web3Chain.Kind)
+        
+        init(
+            wallet: Web3Wallet,
+            secret: CommonWalletSecret?,
+            supportedChainIDs: Set<String>,
+        ) {
+            self = switch wallet.category.knownCase {
+            case .classic:
+                    .always
+            case .importedMnemonic:
+                if secret == nil {
+                    .afterImportingMnemonics
+                } else {
+                    .always
+                }
+            case .importedPrivateKey:
+                if secret == nil {
+                    if let kind = Web3Chain.Kind.singleKindWallet(chainIDs: supportedChainIDs) {
+                        .afterImportingPrivateKey(kind)
+                    } else {
+                        .never
+                    }
+                } else {
+                    .always
+                }
+            case .watchAddress, .none:
+                    .never
+            }
+        }
+        
     }
     
     func hasSecret() -> Bool {

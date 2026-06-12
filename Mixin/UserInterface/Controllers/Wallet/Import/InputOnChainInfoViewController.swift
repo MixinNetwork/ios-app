@@ -9,6 +9,7 @@ class InputOnChainInfoViewController: UIViewController {
     @IBOutlet weak var networkSelectorBackgroundView: UIView!
     @IBOutlet weak var networkTitleLabel: UILabel!
     @IBOutlet weak var networkNameLabel: UILabel!
+    @IBOutlet weak var selectNetworkDisclosureImageView: UIImageView!
     @IBOutlet weak var selectNetworkButton: MenuTriggerButton!
     @IBOutlet weak var inputBackgroundView: UIView!
     @IBOutlet weak var inputTextView: UITextView!
@@ -19,14 +20,14 @@ class InputOnChainInfoViewController: UIViewController {
     @IBOutlet weak var errorDescriptionLabel: UILabel!
     @IBOutlet weak var continueButton: ConfigurationBasedBusyButton!
     
-    private weak var contentHeightConstraint: NSLayoutConstraint!
-    
-    private(set) var selectedChain: Web3Chain = .ethereum {
+    var selectedChain: Web3Chain = .ethereum {
         didSet {
             reloadViews(chain: selectedChain)
             detectInput()
         }
     }
+    
+    private weak var contentHeightConstraint: NSLayoutConstraint!
     
     private var inputChangeObserver: AnyCancellable?
     
@@ -124,6 +125,17 @@ class InputOnChainInfoViewController: UIViewController {
         
     }
     
+    func reloadViews(chain: Web3Chain) {
+        networkNameLabel.text = chain.name
+        selectNetworkButton.menu = UIMenu(children: Web3Chain.all.map { chain in
+            UIAction(
+                title: chain.name,
+                state: chain == selectedChain ? .on : .off,
+                handler: { [weak self] _ in self?.selectedChain = chain }
+            )
+        })
+    }
+    
     func detectInput() {
         inputPlaceholderLabel.isHidden = !inputTextView.text.isEmpty
     }
@@ -161,17 +173,6 @@ class InputOnChainInfoViewController: UIViewController {
             options: .overdampedCurve,
             animations: view.layoutIfNeeded
         )
-    }
-    
-    private func reloadViews(chain: Web3Chain) {
-        networkNameLabel.text = chain.name
-        selectNetworkButton.menu = UIMenu(children: Web3Chain.all.map { chain in
-            UIAction(
-                title: chain.name,
-                state: chain == selectedChain ? .on : .off,
-                handler: { [weak self] _ in self?.selectedChain = chain }
-            )
-        })
     }
     
 }

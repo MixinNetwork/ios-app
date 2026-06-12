@@ -211,6 +211,7 @@
 "balance_max" = "最大";
 "batch_transfer_confirmation" = "批量转账确认";
 "before_you_proceed" = "请在继续之前";
+"bitcoin_private_key_hint" = "输入 WIF 或 32 字节 HEX 格式私钥，例如 Kx45...9Ab 或 0x1a2b...cdef";
 "block" = "屏蔽用户";
 "block_confirmations" = "到账确认区块数";
 "block_hint" = "屏蔽后对方无法向您拨打电话或发送消息";
@@ -506,7 +507,7 @@
 "deposit_invoice" = "票据";
 "deposit_memo_address_notice" = "地址和 Memo（备注）同时使用才能充值 %@ 到你的账号。";
 "deposit_memo_notice" = "充值时务必填写 Memo（备注），否则可能导致资产丢失。";
-"deposit_pending_confirmation" = "%@ 充值确认中";
+"deposit_pending_confirmation" = "%@ 确认中";
 "deposit_supporting_single_token" = "该充值地址仅支持 %@。";
 "deposit_supporting_token_of_network" = "支持所有基于 %@ 发行的代币。";
 "deposit_suspended" = "%1$@ 充值已暂停，可能的原因包括：\n• 节点故障\n• 网络硬分叉\n• 网络拥堵\n• 使用率较低\n注意已转入的 %1$@ 资产可以继续转账。";
@@ -518,7 +519,7 @@
 "deposit_token" = "充值 %@";
 "deposit_token_description" = "从其他交易所或钱包转入";
 "deposit_token_to_mixin" = "充值 %@ 到 Mixin";
-"deposits_pending_confirmation" = "有 %d 笔充值确认中";
+"deposits_pending_confirmation" = "%d 笔充值确认中";
 "depost_address_updated" = "%@ 充值地址已更新";
 "depost_address_updated_description" = "您的 %@ 充值地址已更新，充值地址将随着系统或网络升级而自动更新，旧的地址仍可充值并会自动入账，但是不推荐使用。";
 "deselect_all" = "取消所有选择";
@@ -654,6 +655,7 @@
 "estimated_liquidation_price" = "预估强平价格";
 "estimated_price" = "预计价格";
 "estimated_receive" = "预计收到";
+"ethereum_private_key_hint" = "输入 HEX 格式私钥，例如 0x1a2b...cdef";
 "everybody" = "任何人";
 "example" = "举例说明";
 "example_amount" = "金额";
@@ -1049,6 +1051,7 @@
 "no_results" = "未找到相关结果";
 "no_stickers" = "还未添加任何表情";
 "no_tag" = "点击不使用 Tag（标签）";
+"no_tokens" = "没有代币";
 "no_transactions" = "暂无转账记录";
 "nobody" = "没有人";
 "none" = "无";
@@ -1150,8 +1153,8 @@
 "pending_confirmation" = "%1$d/%2$d 确认";
 "pending_confirmation_count" = "%1$d/%2$d 确认";
 "pending_confirmations" = "%d/%d 区块确认数";
-"pending_transaction_one" = "有 1 笔交易处理中";
-"pending_transactions_count" = "有 %d 笔交易处理中";
+"pending_transaction_one" = "1 笔交易确认中";
+"pending_transactions_count" = "%d 笔交易确认中";
 "periodic_sms_verification_benefits" = "定期进行短信验证有助于提升账号安全，如果当前手机号已失效请尽快更换手机号。";
 "permission_denied_camera" = "授权使用相机";
 "permission_denied_camera_hint" = "Mixin 需要相机权限，请点击'设置'并调整授权。";
@@ -1601,6 +1604,7 @@
 "sms_verified_description" = "定期进行短信验证有助于提升账号安全";
 "snapshot_hash" = "快照哈希";
 "snapshot_not_found" = "找不到该转账记录。";
+"solana_private_key_hint" = "输入 Base58 或 64 字节 HEX 格式私钥，例如 3fZb...9Qp 或 0x1a2b...cdef";
 "sort_by" = "顺序";
 "sort_by_amount" = "按金额排序";
 "sort_by_oldest" = "按最早排序";
@@ -1913,6 +1917,25 @@
 "wallet_category_watching" = "观察钱包";
 "wallet_enable_biometric_pay" = "开启后，转账时可验证%@快速完成付款。";
 "wallet_hide_asset_confirmation" = "您确定要隐藏%@吗？";
+"wallet_home_add_wallet_banner_title" = "通过私钥、助记词或观察地址添加钱包";
+"wallet_home_buy_crypto" = "快捷买币";
+"wallet_home_common_wallet_reason_1" = "连接任意应用，畅玩 DeFi 与 SocialFi";
+"wallet_home_common_wallet_reason_2" = "支持 Solana、以太坊等多链跨链交易";
+"wallet_home_common_wallet_reason_3" = "可导入其他钱包，一站管理链上资产";
+"wallet_home_common_wallet_reason_title" = "什么需要普通钱包？";
+"wallet_home_contact_us" = "联系我们";
+"wallet_home_empty_desc" = "立即充值，开始交易并赚取收益";
+"wallet_home_empty_title" = "添加资金";
+"wallet_home_help_center_desc" = "指南、文档和常见问题";
+"wallet_home_privacy_wallet_reason_1" = "隐藏余额与交易记录，链上完全匿名";
+"wallet_home_privacy_wallet_reason_2" = "不必输入复杂地址，彻底告别转账错误";
+"wallet_home_privacy_wallet_reason_3" = "拦截恶意授权，杜绝应用偷转资产";
+"wallet_home_privacy_wallet_reason_title" = "为什么需要隐私钱包？";
+"wallet_home_receive_crypto" = "链上充值";
+"wallet_home_referral_banner_desc" = "邀请好友可获得高达 %@ 的交易返利和会员佣金。";
+"wallet_home_referral_banner_title" = "邀请返佣";
+"wallet_home_support" = "支持";
+"wallet_home_tokens" = "代币";
 "wallet_imported" = "导入";
 "wallet_password_not_equal" = "PIN 不一致, 请重新输入";
 "wallet_password_unsafe" = "PIN 过于简单不安全";

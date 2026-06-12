@@ -88,7 +88,7 @@ final class MainAppReporter: Reporter {
         }
         if properties.contains(.assetLevel) {
             DispatchQueue.global().async {
-                let sum = TokenDAO.shared.usdBalanceSum()
+                let sum = TokenDAO.shared.usdBalanceSum(includesHiddenTokens: true)
                 Analytics.setUserProperty(sum.reportingAssetLevel, forName: "asset_level")
             }
         }

@@ -36,7 +36,7 @@ final class AddWalletMethodSelectorViewController: UIViewController {
         collectionView.isScrollEnabled = true
         collectionView.alwaysBounceVertical = true
         collectionView.register(R.nib.addWalletMethodCell)
-        collectionView.register(R.nib.walletTipCell)
+        collectionView.register(R.nib.walletIntroductionCell)
         collectionView.register(R.nib.addWalletFooterCell)
         NotificationCenter.default.addObserver(
             self,
@@ -136,7 +136,7 @@ extension AddWalletMethodSelectorViewController: UICollectionViewDataSource {
             }
             return cell
         case .freeTransfer:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_tip_cell, for: indexPath)!
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_introduction_cell, for: indexPath)!
             cell.delegate = self
             cell.content = .importedWalletSafety
             return cell
@@ -163,9 +163,9 @@ extension AddWalletMethodSelectorViewController: UICollectionViewDelegate {
     
 }
 
-extension AddWalletMethodSelectorViewController: WalletTipCell.Delegate {
+extension AddWalletMethodSelectorViewController: WalletIntroductionCell.Delegate {
     
-    func walletTipCell(_ cell: WalletTipCell, requestToLearnMore url: URL) {
+    func walletIntroductionCell(_ cell: WalletIntroductionCell, requestToLearnMore url: URL) {
         let safari = SFSafariViewController(url: url)
         present(safari, animated: true)
     }

@@ -135,9 +135,9 @@ extension DiagnoseViewController: UITableViewDelegate {
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
         case (9, 0):
             BadgeManager.shared.resetAll()
-            AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip = false
-            AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = false
-            AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = false
+            AppGroupUserDefaults.Wallet.hasViewedSafeWalletIntroduction = false
+            AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletIntroduction = false
+            AppGroupUserDefaults.Wallet.hasViewedClassicWalletIntroduction = false
             AppGroupUserDefaults.Wallet.perpsOpenPositionTakeProfitDismissalDate = .distantPast
             AppGroupUserDefaults.Wallet.perpsOpenPositionStopLossDismissalDate = .distantPast
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())

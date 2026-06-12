@@ -316,6 +316,13 @@ extension ShareRecipientViewController {
                                 } else {
                                     (image, imageData) = ImageUploadSanitizer.sanitizedImage(from: rawImage)
                                 }
+                            } else if let data = item as? Data, let rawImage = UIImage(data: data) {
+                                if let type, type.conforms(to: .gif) || (type.conforms(to: .jpeg) && imageWithRatioMaybeAnArticle(rawImage.size)) {
+                                    image = rawImage
+                                    imageData = data
+                                } else {
+                                    (image, imageData) = ImageUploadSanitizer.sanitizedImage(from: rawImage)
+                                }
                             } else if let item = item as? UIImage {
                                 (image, imageData) = ImageUploadSanitizer.sanitizedImage(from: item)
                             }

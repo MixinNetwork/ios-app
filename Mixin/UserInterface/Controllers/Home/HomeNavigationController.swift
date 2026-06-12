@@ -102,8 +102,8 @@ extension HomeNavigationController: UINavigationControllerDelegate {
             let webViewControllers = container.children.compactMap { child in
                 child as? MixinWebViewController
             }
-            for webViewController in webViewControllers {
-                webViewController.minimizeWithAnimation()
+            for web in webViewControllers where web.isMinimizable {
+                web.minimizeWithAnimation()
             }
         }
     }

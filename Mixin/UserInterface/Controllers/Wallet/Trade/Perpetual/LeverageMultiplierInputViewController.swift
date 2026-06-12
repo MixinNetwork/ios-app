@@ -4,6 +4,8 @@ final class LeverageMultiplierInputViewController: UIViewController {
     
     @IBOutlet weak var titleView: PopupTitleView!
     @IBOutlet weak var multiplierInputView: UIView!
+    @IBOutlet weak var decreaseMultiplierButton: UIButton!
+    @IBOutlet weak var increaseMultiplierButton: UIButton!
     @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var markingStackView: UIStackView!
@@ -51,7 +53,6 @@ final class LeverageMultiplierInputViewController: UIViewController {
         multiplierInputView.layer.masksToBounds = true
         
         valueLabel.font = .monospacedDigitSystemFont(ofSize: 48, weight: .semibold)
-        valueLabel.text = PerpetualLeverage.stringRepresentation(multiplier: multiplier)
         let maxMultiplierNumber = maxMultiplier as NSDecimalNumber
         slider.minimumValue = 1
         slider.maximumValue = maxMultiplierNumber.floatValue
@@ -69,7 +70,7 @@ final class LeverageMultiplierInputViewController: UIViewController {
                 for: .monospacedDigitSystemFont(ofSize: 12, weight: .regular)
             )
         }
-        updateSimulations(multiplier: multiplier)
+        updateViews(multiplier: multiplier)
         
         let actionView = R.nib.authenticationPreviewDoubleButtonTrayView(withOwner: nil)!
         actionView.backgroundColor = R.color.background_secondary()
@@ -94,10 +95,43 @@ final class LeverageMultiplierInputViewController: UIViewController {
         updatePreferredContentSizeHeight()
     }
     
+    @IBAction func decreaseMultiplierBy1(_ sender: Any) {
+        multiplier -= 1
+        slider.value = NSDecimalNumber(decimal: multiplier).floatValue
+        updateViews(multiplier: multiplier)
+    }
+    
+    @IBAction func decreaseMultiplierBy5(_ sender: UILongPressGestureRecognizer) {
+        switch sender.state {
+        case .began:
+            multiplier = max(0, multiplier - 5)
+            slider.value = NSDecimalNumber(decimal: multiplier).floatValue
+            updateViews(multiplier: multiplier)
+        default:
+            break
+        }
+    }
+    
+    @IBAction func increaseMultiplierBy1(_ sender: Any) {
+        multiplier += 1
+        slider.value = NSDecimalNumber(decimal: multiplier).floatValue
+        updateViews(multiplier: multiplier)
+    }
+    
+    @IBAction func increaseMultiplierBy5(_ sender: UILongPressGestureRecognizer) {
+        switch sender.state {
+        case .began:
+            multiplier = min(maxMultiplier, multiplier + 5)
+            slider.value = NSDecimalNumber(decimal: multiplier).floatValue
+            updateViews(multiplier: multiplier)
+        default:
+            break
+        }
+    }
+    
     @IBAction func sliderValueChanged(_ sender: UISlider) {
         multiplier = Decimal(round(Double(sender.value)))
-        valueLabel.text = PerpetualLeverage.stringRepresentation(multiplier: multiplier)
-        updateSimulations(multiplier: multiplier)
+        updateViews(multiplier: multiplier)
     }
     
     @objc private func cancelInput(_ sender: Any) {
@@ -118,7 +152,10 @@ final class LeverageMultiplierInputViewController: UIViewController {
         preferredContentSize.height = view.systemLayoutSizeFitting(fittingSize).height
     }
     
-    private func updateSimulations(multiplier: Decimal) {
+    private func updateViews(multiplier: Decimal) {
+        decreaseMultiplierButton.isEnabled = multiplier > 1
+        increaseMultiplierButton.isEnabled = multiplier < maxMultiplier
+        valueLabel.text = PerpetualLeverage.stringRepresentation(multiplier: multiplier)
         profitSimulationLabel.text = PerpetualChangeSimulation.profit(
             side: side,
             margin: marginAmount,

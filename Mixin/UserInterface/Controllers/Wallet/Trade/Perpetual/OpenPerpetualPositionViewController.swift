@@ -96,7 +96,6 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
         self.viewModel = viewModel
         self.amountValidator = AmountValidator(market: viewModel.market)
         self.multipliers = [
-            .fixed(2),
             .fixed(5),
             .fixed(10),
             .fixed(20),

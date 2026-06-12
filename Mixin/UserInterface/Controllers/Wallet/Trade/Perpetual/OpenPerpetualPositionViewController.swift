@@ -96,7 +96,6 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
         self.viewModel = viewModel
         self.amountValidator = AmountValidator(market: viewModel.market)
         self.multipliers = [
-            .fixed(2),
             .fixed(5),
             .fixed(10),
             .fixed(20),
@@ -283,6 +282,12 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
         let manual = PerpsManual.viewController(initialPage: .size)
         present(manual, animated: true)
         reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_open_position_size"])
+    }
+    
+    @IBAction func presentLiquidationPriceManual(_ sender: Any) {
+        let manual = PerpsManual.viewController(initialPage: .liquidation)
+        present(manual, animated: true)
+        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_open_liquidation_price"])
     }
     
     @IBAction func review(_ sender: ConfigurationBasedBusyButton) {

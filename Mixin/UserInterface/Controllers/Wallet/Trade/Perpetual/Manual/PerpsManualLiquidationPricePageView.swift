@@ -1,7 +1,7 @@
 import SwiftUI
 import MixinServices
 
-struct PerpsManualPositionLiquidationPricePageView: View {
+struct PerpsManualLiquidationPricePageView: View {
     
     private let marginSymbol = "USDT"
     private let assetSymbol = "SOL"

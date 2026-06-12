@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,6 +11,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LeverageMultiplierInputViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="decreaseMultiplierButton" destination="nwm-iV-y6C" id="2vm-oy-BFT"/>
+                <outlet property="increaseMultiplierButton" destination="P70-rC-iEd" id="dNA-3E-r4F"/>
                 <outlet property="liquidationSimulationLabel" destination="IPo-mA-6lC" id="bjW-HS-EpZ"/>
                 <outlet property="markingStackView" destination="pC6-jx-HxP" id="19w-Pr-KQN"/>
                 <outlet property="multiplierInputView" destination="hS7-wT-Jr6" id="p5u-Bv-KlN"/>
@@ -84,17 +86,49 @@
                                 </label>
                             </subviews>
                         </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nwm-iV-y6C">
+                            <rect key="frame" x="60" y="46.666666666666671" width="44" height="44"/>
+                            <gestureRecognizers/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="Ffu-2e-d8y"/>
+                                <constraint firstAttribute="width" constant="44" id="lHw-QY-YqS"/>
+                            </constraints>
+                            <state key="normal" image="stepper_decrease"/>
+                            <connections>
+                                <action selector="decreaseMultiplierBy1:" destination="-1" eventType="touchUpInside" id="pVM-oN-X6o"/>
+                                <outletCollection property="gestureRecognizers" destination="Npz-Tg-Rss" appends="YES" id="wAj-Kp-WFL"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P70-rC-iEd">
+                            <rect key="frame" x="231" y="46.666666666666671" width="44" height="44"/>
+                            <gestureRecognizers/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="44" id="Hcb-he-P5c"/>
+                                <constraint firstAttribute="height" constant="44" id="srW-fB-W0t"/>
+                            </constraints>
+                            <state key="normal" image="stepper_increase"/>
+                            <connections>
+                                <action selector="increaseMultiplierBy1:" destination="-1" eventType="touchUpInside" id="8ct-ZF-YAs"/>
+                                <outletCollection property="gestureRecognizers" destination="I3q-Qf-KEq" appends="YES" id="ieb-Dp-kvd"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstItem="Iml-Mv-mdd" firstAttribute="centerX" secondItem="hS7-wT-Jr6" secondAttribute="centerX" id="0r4-dL-ZKp"/>
                         <constraint firstItem="pC6-jx-HxP" firstAttribute="leading" secondItem="hS7-wT-Jr6" secondAttribute="leading" constant="17" id="3Bk-p9-PAM"/>
+                        <constraint firstItem="nwm-iV-y6C" firstAttribute="leading" secondItem="hS7-wT-Jr6" secondAttribute="leading" priority="750" constant="60" id="7vE-gI-y3b"/>
                         <constraint firstAttribute="bottom" secondItem="pC6-jx-HxP" secondAttribute="bottom" constant="20" id="B9m-5f-8sE"/>
+                        <constraint firstItem="Iml-Mv-mdd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="nwm-iV-y6C" secondAttribute="trailing" id="Kzs-Qk-YUj"/>
                         <constraint firstItem="xua-ar-gf3" firstAttribute="leading" secondItem="hS7-wT-Jr6" secondAttribute="leading" constant="16" id="Lae-go-lN4"/>
                         <constraint firstItem="Iml-Mv-mdd" firstAttribute="top" secondItem="hS7-wT-Jr6" secondAttribute="top" constant="40" id="Mua-Rd-GZo"/>
                         <constraint firstItem="pC6-jx-HxP" firstAttribute="top" secondItem="xua-ar-gf3" secondAttribute="bottom" constant="8" id="TLI-Eu-POC"/>
                         <constraint firstAttribute="trailing" secondItem="pC6-jx-HxP" secondAttribute="trailing" constant="16" id="Uci-U3-j99"/>
+                        <constraint firstItem="nwm-iV-y6C" firstAttribute="centerY" secondItem="Iml-Mv-mdd" secondAttribute="centerY" id="UfS-hI-ICq"/>
                         <constraint firstAttribute="trailing" secondItem="xua-ar-gf3" secondAttribute="trailing" constant="16" id="W9p-5c-VPK"/>
+                        <constraint firstItem="P70-rC-iEd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Iml-Mv-mdd" secondAttribute="trailing" id="hEj-1d-0jk"/>
+                        <constraint firstItem="P70-rC-iEd" firstAttribute="centerY" secondItem="Iml-Mv-mdd" secondAttribute="centerY" id="hIM-3E-Iqr"/>
+                        <constraint firstAttribute="trailing" secondItem="P70-rC-iEd" secondAttribute="trailing" priority="750" constant="60" id="j1D-tL-2i9"/>
                         <constraint firstItem="xua-ar-gf3" firstAttribute="top" secondItem="Iml-Mv-mdd" secondAttribute="bottom" constant="32" id="tkG-Dv-qBj"/>
                     </constraints>
                 </view>
@@ -132,8 +166,20 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="138.1679389312977" y="153.52112676056339"/>
         </view>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Npz-Tg-Rss">
+            <connections>
+                <action selector="decreaseMultiplierBy5:" destination="-1" id="Oa0-ul-eYa"/>
+            </connections>
+        </pongPressGestureRecognizer>
+        <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="I3q-Qf-KEq">
+            <connections>
+                <action selector="increaseMultiplierBy5:" destination="-1" id="d0A-0z-xh1"/>
+            </connections>
+        </pongPressGestureRecognizer>
     </objects>
     <resources>
+        <image name="stepper_decrease" width="16" height="16"/>
+        <image name="stepper_increase" width="16" height="16"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

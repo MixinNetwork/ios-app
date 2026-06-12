@@ -11,6 +11,7 @@ enum PerpsManual {
         case size
         case autoClosing
         case liquidation
+        case fundingRate
     }
     
     static let cardInsets = EdgeInsets(top: 20, leading: 16, bottom: 20, trailing: 16)
@@ -39,11 +40,16 @@ enum PerpsManual {
             ),
             ManualViewController.Page(
                 title: R.string.localizable.take_profit_stop_loss_label(),
-                view: PerpsManualPositionTPSLPageView()
+                view: PerpsManualTPSLPageView()
             ),
             ManualViewController.Page(
                 title: R.string.localizable.liquidation_price(),
-                view: PerpsManualPositionLiquidationPricePageView()
+                shortTitle: R.string.localizable.perps_liquidation_price_short(),
+                view: PerpsManualLiquidationPricePageView()
+            ),
+            ManualViewController.Page(
+                title: R.string.localizable.funding_rate(),
+                view: PerpsManualFundingRatePageView()
             ),
         ]
         let manual = ManualViewController(

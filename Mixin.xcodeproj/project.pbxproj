@@ -1145,6 +1145,7 @@
 		9468E0562E30E10400EB79C0 /* CreateWalletRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E0552E30E10000EB79C0 /* CreateWalletRequest.swift */; };
 		9468E06D2E30E16A00EB79C0 /* CreateWalletResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E0602E30E13800EB79C0 /* CreateWalletResponse.swift */; };
 		9468E08D2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E08C2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift */; };
+		946AFC102FDBED8100E97E34 /* PerpsManualFundingRatePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946AFC0F2FDBED8100E97E34 /* PerpsManualFundingRatePageView.swift */; };
 		946B6F2425E974B500A95C40 /* CacheableAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B6F2325E974B500A95C40 /* CacheableAsset.swift */; };
 		946B9FBB2B0493E800DB4DC1 /* WalletHintViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B9FB92B0493E800DB4DC1 /* WalletHintViewController.swift */; };
 		946B9FBC2B0493E800DB4DC1 /* WalletHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946B9FBA2B0493E800DB4DC1 /* WalletHintView.xib */; };
@@ -1186,7 +1187,7 @@
 		947088D12FD14B760087503E /* WalletOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947088CE2FD14B760087503E /* WalletOverviewCell.swift */; };
 		9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */; };
 		9471007D2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9471007C2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift */; };
-		94728C7E2FB6E6C3004F087F /* PerpsManualPositionLiquidationPricePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94728C7D2FB6E6B9004F087F /* PerpsManualPositionLiquidationPricePageView.swift */; };
+		94728C7E2FB6E6C3004F087F /* PerpsManualLiquidationPricePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94728C7D2FB6E6B9004F087F /* PerpsManualLiquidationPricePageView.swift */; };
 		94728C8C2FB6E839004F087F /* PerpsManualOrderSideControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94728C882FB6E828004F087F /* PerpsManualOrderSideControl.swift */; };
 		94735E182E28E8D30001C179 /* ExportPrivateKeyNetworkSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94735E172E28E8D30001C179 /* ExportPrivateKeyNetworkSelectorViewController.swift */; };
 		94735E272E28EBF80001C179 /* ImportedWalletNetworkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94735E262E28EBF80001C179 /* ImportedWalletNetworkCell.xib */; };
@@ -1267,7 +1268,7 @@
 		948ACAA52AF3950C0057D76B /* SnapshotMessageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */; };
 		948AF9AB2EB9CB140035C9BF /* TradeTokenSelectorStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AF9AA2EB9CB0F0035C9BF /* TradeTokenSelectorStyle.swift */; };
 		948AF9D42EB9EDB10035C9BF /* TradePricingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AF9D32EB9EDB00035C9BF /* TradePricingModel.swift */; };
-		948B81632FB6142D00D1D167 /* PerpsManualPositionTPSLPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948B81622FB6142800D1D167 /* PerpsManualPositionTPSLPageView.swift */; };
+		948B81632FB6142D00D1D167 /* PerpsManualTPSLPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948B81622FB6142800D1D167 /* PerpsManualTPSLPageView.swift */; };
 		948C1CC32FAF3F22005C8653 /* FixedInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948C1CC12FAF3F22005C8653 /* FixedInputCell.swift */; };
 		948C1CC42FAF3F22005C8653 /* FixedInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948C1CC22FAF3F22005C8653 /* FixedInputCell.xib */; };
 		948CFAED2F2CB4C000BC34C3 /* QRCodeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CFAE92F2CB4B200BC34C3 /* QRCodeDetector.swift */; };
@@ -3102,6 +3103,7 @@
 		9468E0552E30E10000EB79C0 /* CreateWalletRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateWalletRequest.swift; sourceTree = "<group>"; };
 		9468E0602E30E13800EB79C0 /* CreateWalletResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateWalletResponse.swift; sourceTree = "<group>"; };
 		9468E08C2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationBasedBusyButton.swift; sourceTree = "<group>"; };
+		946AFC0F2FDBED8100E97E34 /* PerpsManualFundingRatePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualFundingRatePageView.swift; sourceTree = "<group>"; };
 		946B6F2325E974B500A95C40 /* CacheableAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAsset.swift; sourceTree = "<group>"; };
 		946B9FB92B0493E800DB4DC1 /* WalletHintViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHintViewController.swift; sourceTree = "<group>"; };
 		946B9FBA2B0493E800DB4DC1 /* WalletHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletHintView.xib; sourceTree = "<group>"; };
@@ -3143,7 +3145,7 @@
 		947088CF2FD14B760087503E /* WalletOverviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletOverviewCell.xib; sourceTree = "<group>"; };
 		9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+General.swift"; sourceTree = "<group>"; };
 		9471007C2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyReferralCodeViewController.swift; sourceTree = "<group>"; };
-		94728C7D2FB6E6B9004F087F /* PerpsManualPositionLiquidationPricePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualPositionLiquidationPricePageView.swift; sourceTree = "<group>"; };
+		94728C7D2FB6E6B9004F087F /* PerpsManualLiquidationPricePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualLiquidationPricePageView.swift; sourceTree = "<group>"; };
 		94728C882FB6E828004F087F /* PerpsManualOrderSideControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualOrderSideControl.swift; sourceTree = "<group>"; };
 		94735E172E28E8D30001C179 /* ExportPrivateKeyNetworkSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPrivateKeyNetworkSelectorViewController.swift; sourceTree = "<group>"; };
 		94735E252E28EBF80001C179 /* ImportedWalletNetworkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedWalletNetworkCell.swift; sourceTree = "<group>"; };
@@ -3220,7 +3222,7 @@
 		948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMessageContentView.swift; sourceTree = "<group>"; };
 		948AF9AA2EB9CB0F0035C9BF /* TradeTokenSelectorStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeTokenSelectorStyle.swift; sourceTree = "<group>"; };
 		948AF9D32EB9EDB00035C9BF /* TradePricingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradePricingModel.swift; sourceTree = "<group>"; };
-		948B81622FB6142800D1D167 /* PerpsManualPositionTPSLPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualPositionTPSLPageView.swift; sourceTree = "<group>"; };
+		948B81622FB6142800D1D167 /* PerpsManualTPSLPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualTPSLPageView.swift; sourceTree = "<group>"; };
 		948C1CC12FAF3F22005C8653 /* FixedInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedInputCell.swift; sourceTree = "<group>"; };
 		948C1CC22FAF3F22005C8653 /* FixedInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FixedInputCell.xib; sourceTree = "<group>"; };
 		948CFAE92F2CB4B200BC34C3 /* QRCodeDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeDetector.swift; sourceTree = "<group>"; };
@@ -5023,8 +5025,9 @@
 				94BC7AFF2F5D876D009D8970 /* PerpsManualShortPageView.swift */,
 				9404AD4F2F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift */,
 				9404AD862F5DB4EF007FC231 /* PerpsManualPositionSizePageView.swift */,
-				948B81622FB6142800D1D167 /* PerpsManualPositionTPSLPageView.swift */,
-				94728C7D2FB6E6B9004F087F /* PerpsManualPositionLiquidationPricePageView.swift */,
+				948B81622FB6142800D1D167 /* PerpsManualTPSLPageView.swift */,
+				94728C7D2FB6E6B9004F087F /* PerpsManualLiquidationPricePageView.swift */,
+				946AFC0F2FDBED8100E97E34 /* PerpsManualFundingRatePageView.swift */,
 			);
 			path = Manual;
 			sourceTree = "<group>";
@@ -8293,7 +8296,7 @@
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
 				947C5E5B29B0FE9B00838458 /* WalletConnectSession.swift in Sources */,
 				7BD00F1E2559711A004D8814 /* WalletSearchResultsViewController.swift in Sources */,
-				94728C7E2FB6E6C3004F087F /* PerpsManualPositionLiquidationPricePageView.swift in Sources */,
+				94728C7E2FB6E6C3004F087F /* PerpsManualLiquidationPricePageView.swift in Sources */,
 				7B8BB592234F37D100991ACB /* SharedMediaAudioCell.swift in Sources */,
 				948922A12D54FC5F00D9BCCB /* IBANAddress.swift in Sources */,
 				7B0BE46021A5630500B91A1E /* CompactAssetCell.swift in Sources */,
@@ -8305,7 +8308,7 @@
 				94C359F628B506D40010F53C /* TIPFullscreenInputViewController.swift in Sources */,
 				E0B53A6923B0C2C9008DA9F1 /* AssetItem+Description.swift in Sources */,
 				941994D22CCAEB9100F5425C /* SignInWithMnemonicsViewController.swift in Sources */,
-				948B81632FB6142D00D1D167 /* PerpsManualPositionTPSLPageView.swift in Sources */,
+				948B81632FB6142D00D1D167 /* PerpsManualTPSLPageView.swift in Sources */,
 				7C9DEA5729F15FA200959D77 /* DeviceTransferApp.swift in Sources */,
 				94D9DD7D2F59D79400B3B990 /* PerpetualPositionProductCell.swift in Sources */,
 				94B0B7462BECD4DE00346AF4 /* CollectibleCell.swift in Sources */,
@@ -8992,6 +8995,7 @@
 				7B9F8110222EA40F0012BFDD /* BackgroundDismissablePopupPresentationController.swift in Sources */,
 				7B36920C233B36D4007321A7 /* MediaTypeOverlayView.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
+				946AFC102FDBED8100E97E34 /* PerpsManualFundingRatePageView.swift in Sources */,
 				945A72C02E59C8BF006A11E9 /* TIPQuizAnswer.swift in Sources */,
 				94D9DF6125F89D6E00FC2F28 /* PopupTip.swift in Sources */,
 				9404D7702FB1A72B00F5563A /* SignPosition.swift in Sources */,

@@ -6,10 +6,16 @@ class ManualViewController: UIViewController {
     struct Page {
         
         let title: String
+        let shortTitle: String
         let view: AnyView
         
-        init<Content: View>(title: String, view: Content) {
+        init<Content: View>(
+            title: String,
+            shortTitle: String? = nil,
+            view: Content
+        ) {
             self.title = title
+            self.shortTitle = shortTitle ?? title
             self.view = AnyView(view)
         }
         
@@ -133,12 +139,12 @@ class ManualViewController: UIViewController {
         }
         let page = pages[index]
         let previousTitle: String? = if index > 0 {
-            pages[index - 1].title
+            pages[index - 1].shortTitle
         } else {
             nil
         }
         let nextTitle: String? = if index < pages.count - 1 {
-            pages[index + 1].title
+            pages[index + 1].shortTitle
         } else {
             R.string.localizable.start()
         }

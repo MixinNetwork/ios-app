@@ -38,6 +38,8 @@ struct SpotTradingManualAdvancedModePageView: View {
                                 case .selling:
                                     R.string.localizable.spot_trade_guide_limit_strategy_sell_high()
                                 }
+                            } selectionBackgroundColor: { _ in
+                                R.color.theme()!
                             }
                             .onChange(of: strategy) { newValue in
                                 tradingModel = .defaultModel(strategy: newValue, price: quote.price)

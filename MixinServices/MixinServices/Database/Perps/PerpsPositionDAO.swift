@@ -63,7 +63,7 @@ public final class PerpsPositionDAO: PerpsDAO {
             try PerpetualPosition.deleteAll(db)
             try positions.save(db)
             db.afterNextTransaction { _ in
-                NotificationCenter.default.post(
+                NotificationCenter.default.postAsynchornously(
                     onMainThread: Self.perpsPositionDidChangeNotification,
                     object: self,
                     userInfo: [Self.newPositionItemsUserInfoKey: []]

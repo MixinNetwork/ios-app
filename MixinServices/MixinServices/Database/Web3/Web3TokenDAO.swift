@@ -233,7 +233,7 @@ public final class Web3TokenDAO: Web3DAO {
         let sql = """
         SELECT SUM(t.amount * t.price_usd)
         FROM tokens t
-            LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
+            LEFT JOIN tokens_extra te ON t.wallet_id = te.wallet_id AND t.asset_id = te.asset_id
         WHERE t.wallet_id = ? AND NOT ifnull(te.hidden,FALSE)        
         """
         return db.select(with: sql, arguments: [walletID]) ?? 0

@@ -328,6 +328,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 
                 self.perpsValue = perpsValue
                 self.perpsPositions = displayPerpsPositions
+                self.perpsPositionsCount = perpsPositions.count
                 self.hasMorePerpsPositions = hasMorePerpsPositions
                 self.perpsTopMovers = perpsTopMovers
                 
@@ -405,6 +406,7 @@ final class PrivacyWalletViewController: WalletViewController {
                     self.overview?.update(perpsValue: perpsValue.decimalValue)
                     self.perpsValue = perpsValue
                     self.perpsPositions = displayPerpsPositions
+                    self.perpsPositionsCount = perpsPositions.count
                     self.hasMorePerpsPositions = hasMorePerpsPositions
                     if snapshot.sectionIdentifiers.contains(.overview) {
                         snapshot.reconfigureItems([.overview])

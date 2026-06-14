@@ -22,6 +22,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     
     var perpsValue: PerpetualPositionValue?
     var perpsPositions: OrderedDictionary<String, PerpetualPositionViewModel> = [:]
+    var perpsPositionsCount = 0
     var hasMorePerpsPositions = false
     
     var hasMoreTransactions = false
@@ -389,7 +390,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 switch elementKind {
                 case UICollectionView.elementKindSectionHeader:
                     let header = collectionView.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
-                    header.titleLabel.text = R.string.localizable.positions_count(self?.perpsPositions.count ?? 0)
+                    header.titleLabel.text = R.string.localizable.positions_count(self?.perpsPositionsCount ?? 0)
                     header.subtitleLabel.text = self?.perpsValue?.value
                     header.disclosureImageView.isHidden = false
                     header.onShowAll = { _ in

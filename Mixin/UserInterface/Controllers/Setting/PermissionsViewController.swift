@@ -80,7 +80,7 @@ final class PermissionsViewController: UIViewController {
             return
         }
         DispatchQueue.global().async { [weak self] in
-            guard let user = UserDAO.shared.getUsers(ofAppIds: [app.appId]).first else {
+            guard let user = UserDAO.shared.appUsers(appIDs: [app.appId]).first else {
                 return
             }
             DispatchQueue.main.async {

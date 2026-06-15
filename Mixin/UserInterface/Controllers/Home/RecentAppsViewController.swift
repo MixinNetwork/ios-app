@@ -81,7 +81,7 @@ class RecentAppsViewController: UIViewController {
                 return
             }
             let ids = AppGroupUserDefaults.User.recentlyUsedAppIds.prefix(maxIdCount)
-            let users = UserDAO.shared.getUsers(ofAppIds: Array(ids))
+            let users = UserDAO.shared.appUsers(appIDs: ids)
             DispatchQueue.main.sync {
                 guard let weakSelf = self, !op.isCancelled else {
                     return

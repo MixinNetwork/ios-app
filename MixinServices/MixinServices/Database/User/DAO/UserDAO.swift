@@ -144,18 +144,24 @@ public final class UserDAO: UserDatabaseDAO {
         return ids.compactMap { map[$0] }
     }
     
-    public func getUsers(ofAppIds ids: [String]) -> [UserItem] {
+    public func appUsers(appIDs ids: Collection<String>) -> [UserItem] {
         guard ids.count > 0 else {
             return []
         }
-        let keys = ids.map { _ in "?" }.joined(separator: ",")
-        let sql = "\(UserDAO.sqlQueryColumns) WHERE u.app_id in (\(keys))"
-        let users: [UserItem] = db.select(with: sql, arguments: StatementArguments(ids))
-        var userMap = [String: UserItem]()
-        users.forEach { (user) in
-            userMap[user.userId] = user
+        let query: GRDB.SQL = """
+        SELECT u.user_id, u.full_name, u.biography, u.identity_number, u.avatar_url,
+            u.phone, u.is_verified, u.mute_until, u.app_id, u.relationship,
+            u.created_at, u.is_scam, u.is_deactivated, u.membership, '' AS role,
+            a.creator_id as appCreatorId
+        FROM apps a
+        INNER JOIN users u ON u.user_id = a.app_id
+        WHERE a.app_id IN \(ids)
+        """
+        let users: [UserItem] = db.select(with: query)
+        let usersMap = users.reduce(into: [:]) { results, user in
+            results[user.userId] = user
         }
-        return ids.compactMap { userMap[$0] }
+        return ids.compactMap { usersMap[$0] }
     }
     
     public func getFriendUsers(withAppIds ids: [String]) -> [User] {

@@ -1,6 +1,6 @@
 import UIKit
 
-class StickerPreviewItemCell: UICollectionViewCell {
+final class StickerPreviewItemCell: UICollectionViewCell {
     
     let stickerView = AnimatedStickerView()
     

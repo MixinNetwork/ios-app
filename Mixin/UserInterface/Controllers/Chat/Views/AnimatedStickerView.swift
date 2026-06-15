@@ -67,7 +67,16 @@ extension AnimatedStickerView {
         let context = stickerLoadContext(persistent: message.isStickerAdded)
         imageView.sd_setImage(with: url,
                               placeholderImage: nil,
-                              context: context)
+                              context: context,
+                              progress: nil) { (_, error, _, _) in
+            guard let error, let stickerId = message.stickerId, !stickerId.isEmpty else {
+                return
+            }
+            let err = error as NSError
+            if err.domain == SDWebImageErrorDomain || err.domain == NSURLErrorDomain {
+                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(stickerId: stickerId, messageId: message.messageId))
+            }
+        }
     }
     
     func load(url: String?, persistent: Bool) {

@@ -917,7 +917,7 @@ public class ReceiveMessageService: MixinService {
                 if StickerDAO.shared.isExist(stickerId: stickerId) {
                     continue
                 }
-                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(stickerId: stickerId))
+                ConcurrentJobQueue.shared.addJob(job: RefreshStickerJob(stickerId: stickerId, messageId: nil))
             } else if child.category.hasSuffix("_CONTACT") {
                 if let userId = child.sharedUserId, !UserDAO.shared.isExist(userId: userId) {
                     absentUserIds.insert(userId)

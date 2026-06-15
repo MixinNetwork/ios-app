@@ -458,7 +458,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             case .positions:
                 view.titleLabel.text = R.string.localizable.positions_count(openPositions.count)
                 view.onShowAll = { [weak self] (sender) in
-                    self?.viewOpenPositions()
+                    self?.viewOpenPositions(analyticSource: "perps_home_card_arrow")
                 }
             case .topMovers:
                 view.titleLabel.text = R.string.localizable.perps_top_movers()
@@ -499,7 +499,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             case .positions:
                 view.viewAllButton.isHidden = openPositions.count <= maxItemCount
                 view.onViewAll = { [weak self] (sender) in
-                    self?.viewOpenPositions()
+                    self?.viewOpenPositions(analyticSource: "perps_home_card_more")
                 }
             case .topMovers:
                 break
@@ -667,7 +667,8 @@ extension TradePerpetualViewController {
         }
     }
     
-    private func viewOpenPositions() {
+    private func viewOpenPositions(analyticSource: String) {
+        reporter.report(event: .tradePerpsAllPositions, tags: ["source": analyticSource])
         let positions = PerpetualPositionsViewController(wallet: wallet)
         navigationController?.pushViewController(positions, animated: true)
     }

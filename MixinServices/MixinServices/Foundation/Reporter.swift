@@ -34,6 +34,7 @@ open class Reporter {
         case tradeSpotPreview       = "trade_spot_preview"
         case tradeSpotOrders        = "trade_spot_orders"
         case tradeSpotOrderDetail   = "trade_spot_order_detail"
+        
         case tradePerpsOpenPositionStart    = "trade_perps_open_position_start"
         case tradePerpsMarginTokenSelect    = "trade_perps_margin_token_select"
         case tradePerpsAmountInputPercent   = "trade_perps_amount_input_percent"
@@ -50,6 +51,7 @@ open class Reporter {
         case tradePerpsActivity             = "trade_perps_activity"
         case tradePerpsActivityDetail       = "trade_perps_activity_detail"
         case tradePerpsGuide                = "trade_perps_guide"
+        case tradePerpsAllPositions         = "trade_perps_all_positions"
         
         case buyStart           = "buy_start"
         case buyTokenSelect     = "buy_token_select"

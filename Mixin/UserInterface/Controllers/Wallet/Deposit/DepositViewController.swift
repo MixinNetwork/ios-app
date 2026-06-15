@@ -46,6 +46,10 @@ final class DepositViewController: UIViewController {
         fatalError("Storyboard not supported")
     }
     
+    deinit {
+        reporter.report(event: .receiveEnd)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

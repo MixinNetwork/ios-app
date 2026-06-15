@@ -43,12 +43,14 @@ extension CommonWalletOverviewActionHandler: WalletActionHandler {
     }
     
     func receive() {
+        reporter.report(event: .receiveStart, tags: ["wallet": "web3", "source": tradeSource.rawValue])
         let selector = Web3TokenSelectorViewController(
             wallet: wallet,
             supportedChainIDs: supportedChainIDs,
             intent: .receive,
         )
         selector.onSelected = { [wallet, weak responder] token in
+            reporter.report(event: .receiveTokenSelect)
             let selector = Web3TokenSenderSelectorViewController(
                 receivingWallet: wallet,
                 receivingToken: token

@@ -17,11 +17,11 @@ final class HomeTabBarController: UIViewController {
         var debugDescription: String {
             switch self {
             case .chat:
-                "chat"
+                "chats"
             case .wallet:
-                "wallet"
+                "wallets"
             case .market:
-                "market"
+                "markets"
             case .more:
                 "more"
             }

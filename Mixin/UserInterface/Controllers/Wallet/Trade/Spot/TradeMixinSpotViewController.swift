@@ -227,7 +227,7 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
                 reviewButton.isBusy = false
             }
         }
-        reporter.report(event: .tradePreview)
+        reporter.report(event: .tradeSpotPreview)
     }
     
     private func reviewAdvancedOrder(reviewButton: RoundedButton) {
@@ -275,7 +275,7 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
                 reviewButton.isBusy = false
             }
         }
-        reporter.report(event: .tradePreview)
+        reporter.report(event: .tradeSpotPreview)
     }
     
 }

@@ -106,6 +106,7 @@ final class TradeOrdersViewController: UIViewController {
             object: nil
         )
         syncOrders(wallets: filter.wallets)
+        reporter.report(event: .tradeSpotOrders)
     }
     
     override func viewIsAppearing(_ animated: Bool) {

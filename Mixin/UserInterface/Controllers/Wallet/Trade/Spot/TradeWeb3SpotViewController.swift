@@ -266,7 +266,7 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
                 reviewButton.isBusy = false
             }
         }
-        reporter.report(event: .tradePreview)
+        reporter.report(event: .tradeSpotPreview)
     }
     
     private func reviewAdvancedOrder() {
@@ -325,7 +325,7 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
                 self?.reviewButton.isBusy = false
             }
         }
-        reporter.report(event: .tradePreview)
+        reporter.report(event: .tradeSpotPreview)
     }
     
     private func presentPreview(

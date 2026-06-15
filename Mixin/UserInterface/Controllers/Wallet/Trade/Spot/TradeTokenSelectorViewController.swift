@@ -105,7 +105,7 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
         super.pickUp(token: token, from: location)
         presentingViewController?.dismiss(animated: true)
         onSelected?(token)
-        reporter.report(event: .tradeTokenSelect, tags: ["method": location.asEventMethod])
+        reporter.report(event: .tradeSpotTokenSelect, tags: ["method": location.asEventMethod])
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

@@ -73,6 +73,9 @@ open class Reporter {
         case sendPreview        = "asset_send_preview"
         case sendEnd            = "asset_send_end"
         
+        case hideAsset          = "hide_asset"
+        case showAsset          = "show_asset"
+        
         case addAddressStart    = "address_book_add_start"
         case addAddressMemo     = "address_book_add_memo"
         case addAddressLabel    = "address_book_add_label"

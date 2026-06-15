@@ -288,6 +288,7 @@ final class Web3TokensViewController: TokensViewController {
     
     private func hide(token: Web3TokenItem) {
         DispatchQueue.global().async {
+            reporter.report(event: .hideAsset, tags: ["wallet": "web3", "source": "wallet_home"])
             Web3TokenExtraDAO.shared.hide(walletID: token.walletID, assetID: token.assetID)
         }
     }

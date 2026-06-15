@@ -163,6 +163,7 @@ final class MixinTokensViewController: TokensViewController {
     
     private func hide(token: MixinTokenItem) {
         DispatchQueue.global().async { [weak self] in
+            reporter.report(event: .hideAsset, tags: ["wallet": "main", "source": "wallet_home"])
             let extra = TokenExtra(
                 assetID: token.assetID,
                 kernelAssetID: token.kernelAssetID,

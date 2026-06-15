@@ -64,6 +64,7 @@ open class Reporter {
         case receiveTokenSelect = "asset_receive_token_select"
         case receiveChainSelect = "asset_receive_chain_select"
         case receiveEnd         = "asset_receive_end"
+        case receiveSuccess     = "asset_receive_success"
         
         case sendStart          = "asset_send_start"
         case sendTokenSelect    = "asset_send_token_select"

@@ -11,7 +11,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
     private let mode: Payment.TradeContext.Mode
     private let operation: Operation
     
-    private let sendToken: any Token
+    private let sendToken: any ValuableToken
     private let sendAmount: Decimal
     
     private let receiveToken: any Token
@@ -22,7 +22,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
     init(
         wallet: Wallet, mode: Payment.TradeContext.Mode,
         operation: Operation,
-        sendToken: any Token, sendAmount: Decimal,
+        sendToken: any ValuableToken, sendAmount: Decimal,
         receiveToken: any Token, receiveAmount: Decimal,
         receiver: UserItem, warnings: [String]
     ) {
@@ -208,7 +208,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                         event: .tradeSpotEnd,
                         tags: [
                             "wallet": "main",
-                            "trade_asset_level": sendAmount.reportingAssetLevel
+                            "trade_asset_level": (sendToken.decimalUSDPrice * sendAmount).reportingAssetLevel
                         ]
                     )
                     let inexistAssetIDs = TokenDAO.shared.inexistAssetIDs(in: assetIDs)
@@ -222,7 +222,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                         event: .tradeSpotEnd,
                         tags: [
                             "wallet": "web3",
-                            "trade_asset_level": sendAmount.reportingAssetLevel
+                            "trade_asset_level": (sendToken.decimalUSDPrice * sendAmount).reportingAssetLevel
                         ]
                     )
                     let walletID = operation.wallet.walletID

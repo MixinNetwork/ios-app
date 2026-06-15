@@ -76,6 +76,10 @@ open class Reporter {
         case hideAsset          = "hide_asset"
         case showAsset          = "show_asset"
         
+        case marketDetail       = "market_detail"
+        case marketFavoriteAdd  = "market_favorite_add"
+        case shareMarket        = "share_market"
+        
         case addAddressStart    = "address_book_add_start"
         case addAddressMemo     = "address_book_add_memo"
         case addAddressLabel    = "address_book_add_label"

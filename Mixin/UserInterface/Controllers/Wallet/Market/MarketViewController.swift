@@ -134,6 +134,8 @@ final class MarketViewController: UIViewController {
             self.tableView.reloadData()
             self.updateFavoriteButtonImage()
         })
+        
+        reporter.report(event: .marketDetail)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -178,6 +180,7 @@ final class MarketViewController: UIViewController {
                 }
             }
         } else {
+            reporter.report(event: .marketFavoriteAdd, tags: ["source": "market_detail"])
             market.isFavorite = true
             updateFavoriteButtonImage()
             RouteAPI.favoriteMarket(coinID: market.coinID) { [weak self] result in

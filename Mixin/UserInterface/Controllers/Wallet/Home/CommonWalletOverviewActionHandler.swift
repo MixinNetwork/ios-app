@@ -39,7 +39,7 @@ extension CommonWalletOverviewActionHandler: WalletActionHandler {
     func buy() {
         let buy = BuyTokenInputAmountViewController(wallet: .common(wallet))
         responder?.navigationController?.pushViewController(buy, animated: true)
-        reporter.report(event: .buyStart, tags: ["wallet": "web3", "source": "wallet_home"])
+        reporter.report(event: .buyStart, tags: ["wallet": "web3", "source": tradeSource.rawValue])
     }
     
     func receive() {

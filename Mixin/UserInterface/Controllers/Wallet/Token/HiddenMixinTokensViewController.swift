@@ -75,6 +75,7 @@ extension HiddenMixinTokensViewController: UITableViewDelegate {
             let token = self.tokens.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .fade)
             DispatchQueue.global().async {
+                reporter.report(event: .showAsset, tags: ["wallet": "main", "source": "hidden_token_list"])
                 let extra = TokenExtra(
                     assetID: token.assetID,
                     kernelAssetID: token.kernelAssetID,

@@ -95,6 +95,7 @@ extension HiddenWeb3TokensViewController: UITableViewDelegate {
             let token = self.tokens.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .fade)
             DispatchQueue.global().async {
+                reporter.report(event: .showAsset, tags: ["wallet": "web3", "source": "hidden_token_list"])
                 Web3TokenExtraDAO.shared.unhide(walletID: walletID, assetID: token.assetID)
             }
             completion(true)

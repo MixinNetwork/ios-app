@@ -39,16 +39,18 @@ extension CommonWalletOverviewActionHandler: WalletActionHandler {
     func buy() {
         let buy = BuyTokenInputAmountViewController(wallet: .common(wallet))
         responder?.navigationController?.pushViewController(buy, animated: true)
-        reporter.report(event: .buyStart, tags: ["wallet": "web3", "source": "wallet_home"])
+        reporter.report(event: .buyStart, tags: ["wallet": "web3", "source": tradeSource.rawValue])
     }
     
     func receive() {
+        reporter.report(event: .receiveStart, tags: ["wallet": "web3", "source": tradeSource.rawValue])
         let selector = Web3TokenSelectorViewController(
             wallet: wallet,
             supportedChainIDs: supportedChainIDs,
             intent: .receive,
         )
         selector.onSelected = { [wallet, weak responder] token in
+            reporter.report(event: .receiveTokenSelect)
             let selector = Web3TokenSenderSelectorViewController(
                 receivingWallet: wallet,
                 receivingToken: token

@@ -101,8 +101,10 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         DispatchQueue.global().async { [token] in
             let dao: Web3TokenExtraDAO = .shared
             if hidden {
+                reporter.report(event: .hideAsset, tags: ["wallet": "web3", "source": "asset_detail"])
                 dao.hide(walletID: token.walletID, assetID: token.assetID)
             } else {
+                reporter.report(event: .showAsset, tags: ["wallet": "web3"])
                 dao.unhide(walletID: token.walletID, assetID: token.assetID)
             }
         }

@@ -768,7 +768,7 @@ extension TradeSpotViewController: SwapQuotePeriodicRequesterDelegate {
             swapPriceCell?.footerInfoProgressView.setProgress(1, animationDuration: nil)
             reviewButton.isEnabled = quote.sendAmount > 0
             && quote.sendAmount <= quote.sendToken.decimalBalance
-            reporter.report(event: .tradeQuote, tags: ["type": "swap", "result": "success"])
+            reporter.report(event: .tradeSpotQuote, tags: ["type": "swap", "result": "success"])
         case .failure(let error):
             let description: String
             let amountRange: SwapQuotePeriodicRequester.AmountRange?
@@ -830,7 +830,7 @@ extension TradeSpotViewController: SwapQuotePeriodicRequesterDelegate {
             Logger.general.debug(category: "Trade", message: description)
             swapPriceContent = .error(description: description, advancedTradingHint: advancedTradingHint)
             self.amountRange = amountRange
-            reporter.report(event: .tradeQuote, tags: ["type": "swap", "result": "failure", "reason": reason])
+            reporter.report(event: .tradeSpotQuote, tags: ["type": "swap", "result": "failure", "reason": reason])
         }
     }
     

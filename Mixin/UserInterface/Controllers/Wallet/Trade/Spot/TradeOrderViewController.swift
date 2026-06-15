@@ -56,7 +56,7 @@ final class TradeOrderViewController: UITableViewController {
             break
         }
         
-        reporter.report(event: .tradeDetail)
+        reporter.report(event: .tradeSpotOrderDetail)
     }
     
     override func viewDidAppear(_ animated: Bool) {

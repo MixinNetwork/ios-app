@@ -155,6 +155,7 @@ final class TradeViewController: UIViewController {
             )
             navigationController?.pushViewController(orders, animated: true)
         case .perpetualFutures:
+            reporter.report(event: .tradePerpsAllPositions, tags: ["source": "perps_home_menu"])
             let positions = PerpetualPositionsViewController(wallet: wallet)
             navigationController?.pushViewController(positions, animated: true)
         }

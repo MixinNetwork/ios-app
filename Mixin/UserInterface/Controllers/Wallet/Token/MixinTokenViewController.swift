@@ -38,6 +38,11 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
             updatedAt: Date().toUTCString()
         )
         DispatchQueue.global().async {
+            if hidden {
+                reporter.report(event: .hideAsset, tags: ["wallet": "main", "source": "asset_detail"])
+            } else {
+                reporter.report(event: .showAsset, tags: ["wallet": "main"])
+            }
             TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
         }
     }

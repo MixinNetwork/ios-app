@@ -64,7 +64,7 @@ final class MainAppReporter: Reporter {
         }
         if properties.contains(.emergencyContact) {
             let value = "\(account.hasEmergencyContact)"
-            Analytics.setUserProperty(value, forName: "has_emergency_contact")
+            Analytics.setUserProperty(value, forName: "has_recovery_contact")
         }
         if properties.contains(.membership) {
             let value = account.membership?.unexpiredPlan?.rawValue ?? "none"

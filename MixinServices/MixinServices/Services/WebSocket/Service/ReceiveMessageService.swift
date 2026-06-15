@@ -1239,12 +1239,16 @@ extension ReceiveMessageService {
         }
         checkUser(userId: snapshot.opponentID, tryAgain: true)
         let chainId: String?
+        let mixinToken: MixinToken?
         if let token = TokenDAO.shared.tokenItem(assetID: snapshot.assetID) {
+            mixinToken = token
             chainId = token.chainID
         } else if case let .success(token) = SafeAPI.assets(id: snapshot.assetID) {
+            mixinToken = token
             TokenDAO.shared.save(assets: [token])
             chainId = token.chainID
         } else {
+            mixinToken = nil
             chainId = nil
         }
         if let chainId, !ChainDAO.shared.chainExists(chainId: chainId), case let .success(chain) = NetworkAPI.chain(id: chainId) {
@@ -1291,6 +1295,12 @@ extension ReceiveMessageService {
             }
         } else {
             insert(message: message)
+            var tags: [String: String] = [:]
+            if let token = mixinToken {
+                tags["receive_asset_symbol"] = token.symbol
+                tags["receive_asset_level"] = (token.decimalUSDPrice * snapshot.decimalAmount).reportingAssetLevel
+            }
+            reporter.report(event: .receiveSuccess, tags: tags)
         }
         
         let job = SyncOutputsJob()

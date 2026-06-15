@@ -159,6 +159,7 @@ extension ShareMarketContentViewController: ModernShareContentViewController {
         guard let presentingViewController else {
             return
         }
+        reporter.report(event: .shareMarket, tags: ["type": "share_image"])
         let image = makeImage()
         let item = ActivityItem(
             title: market.symbol + " " + R.string.localizable.market(),
@@ -171,12 +172,14 @@ extension ShareMarketContentViewController: ModernShareContentViewController {
     }
     
     func copyLink() {
+        reporter.report(event: .shareMarket, tags: ["type": "copy_link"])
         UIPasteboard.general.string = obiContent.url
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         presentingViewController?.dismiss(animated: true)
     }
     
     func savePhoto() {
+        reporter.report(event: .shareMarket, tags: ["type": "save_to_album"])
         let image = makeImage()
         PhotoLibrary.saveImage(source: .image(image)) { alert in
             self.present(alert, animated: true)
@@ -184,6 +187,7 @@ extension ShareMarketContentViewController: ModernShareContentViewController {
     }
     
     func shareToMixinContact() {
+        reporter.report(event: .shareMarket, tags: ["type": "mixin_contact"])
         var description = R.string.localizable.market_share_card_asset(market.name, market.symbol) + "\n"
         if let marketCap = market.localizedMarketCap {
             description += R.string.localizable.market_share_card_market_cap(marketCap) + "\n"

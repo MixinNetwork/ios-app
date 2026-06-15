@@ -27,13 +27,14 @@ open class Reporter {
         case addPhoneVerifyPIN  = "add_phone_verify_pin"
         case addPhoneEnd        = "add_phone_end"
         
-        case tradeSpotStart     = "trade_spot_start"
-        case tradeSpotEnd       = "trade_spot_end"
-        case tradeTokenSelect   = "trade_token_select"
-        case tradeQuote         = "trade_quote"
-        case tradePreview       = "trade_preview"
-        case tradeTransactions  = "trade_transactions"
-        case tradeDetail        = "trade_detail"
+        case tradeSpotStart         = "trade_spot_start"
+        case tradeSpotEnd           = "trade_spot_end"
+        case tradeSpotTokenSelect   = "trade_spot_token_select"
+        case tradeSpotQuote         = "trade_spot_quote"
+        case tradeSpotPreview       = "trade_spot_preview"
+        case tradeSpotOrders        = "trade_spot_orders"
+        case tradeSpotOrderDetail   = "trade_spot_order_detail"
+        
         case tradePerpsOpenPositionStart    = "trade_perps_open_position_start"
         case tradePerpsMarginTokenSelect    = "trade_perps_margin_token_select"
         case tradePerpsAmountInputPercent   = "trade_perps_amount_input_percent"
@@ -50,6 +51,7 @@ open class Reporter {
         case tradePerpsActivity             = "trade_perps_activity"
         case tradePerpsActivityDetail       = "trade_perps_activity_detail"
         case tradePerpsGuide                = "trade_perps_guide"
+        case tradePerpsAllPositions         = "trade_perps_all_positions"
         
         case buyStart           = "buy_start"
         case buyTokenSelect     = "buy_token_select"
@@ -64,6 +66,7 @@ open class Reporter {
         case receiveTokenSelect = "asset_receive_token_select"
         case receiveChainSelect = "asset_receive_chain_select"
         case receiveEnd         = "asset_receive_end"
+        case receiveSuccess     = "asset_receive_success"
         
         case sendStart          = "asset_send_start"
         case sendTokenSelect    = "asset_send_token_select"
@@ -71,6 +74,13 @@ open class Reporter {
         case sendAmount         = "asset_send_amount"
         case sendPreview        = "asset_send_preview"
         case sendEnd            = "asset_send_end"
+        
+        case hideAsset          = "hide_asset"
+        case showAsset          = "show_asset"
+        
+        case marketDetail       = "market_detail"
+        case marketFavoriteAdd  = "market_favorite_add"
+        case shareMarket        = "share_market"
         
         case addAddressStart    = "address_book_add_start"
         case addAddressMemo     = "address_book_add_memo"

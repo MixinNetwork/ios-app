@@ -634,6 +634,8 @@
 		7CFC1C8A29E78DBE00A290D5 /* RestoreFromCloudViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFC1C8929E78DBE00A290D5 /* RestoreFromCloudViewController.swift */; };
 		811C8154F03C8CBB72DBA1F4 /* Pods_MixinShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */; };
 		842347EE2695BA6400009A39 /* InitializeBotJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842347ED2695BA6400009A39 /* InitializeBotJob.swift */; };
+		89566E0D7583485F87E9A144 /* OpenInBrowserBridgeUITestHarness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160BCBA0C9564E95AF4312D6 /* OpenInBrowserBridgeUITestHarness.swift */; };
+		8D0819AC43644E8C8E4AA465 /* OpenInBrowserBridgeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E64AB2D20747BFAB9D6EC2 /* OpenInBrowserBridgeUITests.swift */; };
 		9401A56F2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */; };
 		9401A57C2BD960F600679686 /* Web3Chain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A57B2BD960F600679686 /* Web3Chain.swift */; };
 		9401A5FF2BDA8B5300679686 /* Web3SendingTokenPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A5FE2BDA8B5300679686 /* Web3SendingTokenPayment.swift */; };
@@ -1878,10 +1880,18 @@
 		E0E3301F23962B2100276746 /* EditFavoriteAppsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E3301E23962B2100276746 /* EditFavoriteAppsHeaderView.swift */; };
 		E0FAE8D223CDC4F4008B056A /* MainAppReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FAE8D123CDC4F4008B056A /* MainAppReporter.swift */; };
 		E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */; };
+		EE27F4FE5CEC41EA1B0D5648 /* Pods_MixinTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C311A50616879ABAE83E4CBE /* Pods_MixinTests.framework */; };
 		F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23987C4F141F7C6E533A683D /* Pods_Mixin.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		19EE078B45354F6796337ACF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 277FF6F71F909A1200DBB2EB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 277FF6FE1F909A1200DBB2EB;
+			remoteInfo = Mixin;
+		};
 		94ED305E2E269B2A00B99837 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 277FF6F71F909A1200DBB2EB /* Project object */;
@@ -1932,6 +1942,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0DE9A6C49C488F0723A08DF1 /* Pods-MixinTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinTests/Pods-MixinTests.release.xcconfig"; sourceTree = "<group>"; };
+		160BCBA0C9564E95AF4312D6 /* OpenInBrowserBridgeUITestHarness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInBrowserBridgeUITestHarness.swift; sourceTree = "<group>"; };
 		23987C4F141F7C6E533A683D /* Pods_Mixin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mixin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		273A5E0B1F95EA4500AE802F /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		274264A820011BB0000A8808 /* mixin.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mixin.caf; sourceTree = "<group>"; };
@@ -1940,6 +1952,8 @@
 		277FF70B1F909A1200DBB2EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		277FF70E1F909A1200DBB2EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		277FF7101F909A1200DBB2EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3516BC0DC4464E599CE0332A /* MixinUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MixinUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B7FCCFB2B34A62341633EA4 /* Pods-MixinTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinTests/Pods-MixinTests.debug.xcconfig"; sourceTree = "<group>"; };
 		46EBB0CE75C6636B3D8BA6D0 /* Pods-MixinShare.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinShare.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinShare/Pods-MixinShare.release.xcconfig"; sourceTree = "<group>"; };
 		4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1963,6 +1977,7 @@
 		6001E88A2B0B713F006A053A /* DeviceTransferToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTransferToken.swift; sourceTree = "<group>"; };
 		6001E88B2B0B7140006A053A /* DeviceTransferSafeSnapshot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTransferSafeSnapshot.swift; sourceTree = "<group>"; };
 		60A0F3EECBE8095220D78A70 /* Pods-MixinShare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinShare.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinShare/Pods-MixinShare.debug.xcconfig"; sourceTree = "<group>"; };
+		60E64AB2D20747BFAB9D6EC2 /* OpenInBrowserBridgeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInBrowserBridgeUITests.swift; sourceTree = "<group>"; };
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
 		679B81508A1C57B537AAF496 /* Pods-MixinDebug.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinDebug.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinDebug/Pods-MixinDebug.release.xcconfig"; sourceTree = "<group>"; };
 		67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinShare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3657,6 +3672,7 @@
 		ABE865C023F260FE00C0167D /* PermissionsActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsActionCell.swift; sourceTree = "<group>"; };
 		BD555D0ADB2F0ED629DB90DA /* Pods-MixinDebug.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinDebug.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinDebug/Pods-MixinDebug.debug.xcconfig"; sourceTree = "<group>"; };
 		C148F70BB9EAB88D7B754DBA /* Pods-MixinNotificationService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.release.xcconfig"; sourceTree = "<group>"; };
+		C311A50616879ABAE83E4CBE /* Pods_MixinTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinNotificationService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInviteCell.swift; sourceTree = "<group>"; };
 		DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshGroupIconJob.swift; sourceTree = "<group>"; };
@@ -3888,6 +3904,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE27F4FE5CEC41EA1B0D5648 /* Pods_MixinTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B818C68BD99F48A9BA856627 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3932,6 +3956,7 @@
 				DFE861BA2422673B009B1833 /* MixinShare */,
 				94656C182795395D006C3F1D /* MixinDebug */,
 				94ED306A2E269B4E00B99837 /* MixinTests */,
+				A4CE654CA75448E4811BD8D1 /* MixinUITests */,
 				277FF7001F909A1200DBB2EB /* Products */,
 				506A45AFF37DF0AFA7DD4EEE /* Pods */,
 				DBADD0FED15BCB65F6FF70EB /* Frameworks */,
@@ -3946,6 +3971,7 @@
 				DFE861B92422673B009B1833 /* MixinShare.appex */,
 				94656C172795395D006C3F1D /* MixinDebug.app */,
 				94ED305A2E269B2A00B99837 /* MixinTests.xctest */,
+				3516BC0DC4464E599CE0332A /* MixinUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3961,6 +3987,7 @@
 				DF5D9F1C1F9C77620036D5FD /* UserInterface */,
 				DF5D9F341F9C95F20036D5FD /* Resources */,
 				DF5D9F481F9CDBDE0036D5FD /* Supporting Files */,
+				6AECE2F157A24D0C850954C3 /* UITesting */,
 				DF8CECCE1FC2B1C900E40064 /* Mixin-Bridging-Header.h */,
 				9424C64A259246B600FFDAE0 /* main.swift */,
 				94ECCCAA261A029F004E9E2A /* Window.swift */,
@@ -3984,6 +4011,8 @@
 				46EBB0CE75C6636B3D8BA6D0 /* Pods-MixinShare.release.xcconfig */,
 				BD555D0ADB2F0ED629DB90DA /* Pods-MixinDebug.debug.xcconfig */,
 				679B81508A1C57B537AAF496 /* Pods-MixinDebug.release.xcconfig */,
+				3B7FCCFB2B34A62341633EA4 /* Pods-MixinTests.debug.xcconfig */,
+				0DE9A6C49C488F0723A08DF1 /* Pods-MixinTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -3997,6 +4026,14 @@
 				7CA5EE57280EA06B00BF3CD0 /* ScreenLockTimeFormatter.swift */,
 			);
 			path = ScreenLock;
+			sourceTree = "<group>";
+		};
+		6AECE2F157A24D0C850954C3 /* UITesting */ = {
+			isa = PBXGroup;
+			children = (
+				160BCBA0C9564E95AF4312D6 /* OpenInBrowserBridgeUITestHarness.swift */,
+			);
+			path = UITesting;
 			sourceTree = "<group>";
 		};
 		7B04FAB6226832B1004F8F04 /* Search Result */ = {
@@ -5718,6 +5755,14 @@
 			path = Chat;
 			sourceTree = "<group>";
 		};
+		A4CE654CA75448E4811BD8D1 /* MixinUITests */ = {
+			isa = PBXGroup;
+			children = (
+				60E64AB2D20747BFAB9D6EC2 /* OpenInBrowserBridgeUITests.swift */,
+			);
+			path = MixinUITests;
+			sourceTree = "<group>";
+		};
 		ABE865BC23F2453D00C0167D /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -5749,6 +5794,7 @@
 				DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */,
 				67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */,
 				E49F74E7017E780C23E3311F /* Pods_MixinDebug.framework */,
+				C311A50616879ABAE83E4CBE /* Pods_MixinTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -6860,6 +6906,24 @@
 			productReference = 277FF6FF1F909A1200DBB2EB /* Mixin.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7BE0202F24D7D46D00C3F884 /* MixinUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7D37B6CB312849FC836BDF83 /* Build configuration list for PBXNativeTarget "MixinUITests" */;
+			buildPhases = (
+				894A5E20ED8048FF83B6A562 /* Sources */,
+				B818C68BD99F48A9BA856627 /* Frameworks */,
+				E28475FC3CBE484F89619179 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FC1C3ADFB7C042A39BDF2F3D /* PBXTargetDependency */,
+			);
+			name = MixinUITests;
+			productName = MixinUITests;
+			productReference = 3516BC0DC4464E599CE0332A /* MixinUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		94656C162795395D006C3F1D /* MixinDebug */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 94656C222795395E006C3F1D /* Build configuration list for PBXNativeTarget "MixinDebug" */;
@@ -6883,6 +6947,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 94ED30602E269B2A00B99837 /* Build configuration list for PBXNativeTarget "MixinTests" */;
 			buildPhases = (
+				65461B94360352689B8CE355 /* [CP] Check Pods Manifest.lock */,
 				94ED30562E269B2A00B99837 /* Sources */,
 				94ED30572E269B2A00B99837 /* Frameworks */,
 				94ED30582E269B2A00B99837 /* Resources */,
@@ -6968,6 +7033,10 @@
 							};
 						};
 					};
+					7BE0202F24D7D46D00C3F884 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 277FF6FE1F909A1200DBB2EB;
+					};
 					94656C162795395D006C3F1D = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
@@ -7002,9 +7071,9 @@
 				9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
 				94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */,
-				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */,
+				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */,
 				94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
-				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */,
+				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */,
 				94ED93882E37592700A3E337 /* XCRemoteSwiftPackageReference "reown-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -7017,6 +7086,7 @@
 				DFE861B82422673B009B1833 /* MixinShare */,
 				94656C162795395D006C3F1D /* MixinDebug */,
 				94ED30592E269B2A00B99837 /* MixinTests */,
+				7BE0202F24D7D46D00C3F884 /* MixinUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -7459,6 +7529,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E28475FC3CBE484F89619179 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -7470,17 +7547,35 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MixinDebug/Pods-MixinDebug-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MixinDebug/Pods-MixinDebug-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
-			outputPaths = (
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MixinDebug/Pods-MixinDebug-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		65461B94360352689B8CE355 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MixinTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A4B665A98EE2333D67BFCC9D /* [CP] Check Pods Manifest.lock */ = {
@@ -7574,13 +7669,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -7595,13 +7686,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -8442,6 +8529,7 @@
 				7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */,
 				944C60FC2B6A896400C7DF06 /* AuthenticationPreviewHeaderView.swift in Sources */,
 				277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */,
+				89566E0D7583485F87E9A144 /* OpenInBrowserBridgeUITestHarness.swift in Sources */,
 				7B2E3E4D1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift in Sources */,
 				94B7FF4C2FC35C9400FAE569 /* SharePerpsPositionPreviewCell.swift in Sources */,
 				94DF7E0E28DC1697006E415B /* AcknowledgementViewController.swift in Sources */,
@@ -9044,6 +9132,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		894A5E20ED8048FF83B6A562 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D0819AC43644E8C8E4AA465 /* OpenInBrowserBridgeUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		94656C132795395D006C3F1D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -9113,15 +9209,15 @@
 /* Begin PBXTargetDependency section */
 		94881FAE2AD0361100CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */;
+			productRef = 94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */;
 		};
 		94881FB02AD0361700CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */;
+			productRef = 94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */;
 		};
 		94C957E52ACFECDE00C1412F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */;
+			productRef = 94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */;
 		};
 		94ED305F2E269B2A00B99837 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -9137,6 +9233,11 @@
 			isa = PBXTargetDependency;
 			target = E090B9F623B3957E0088355B /* MixinNotificationService */;
 			targetProxy = E090B9FC23B3957E0088355B /* PBXContainerItemProxy */;
+		};
+		FC1C3ADFB7C042A39BDF2F3D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 277FF6FE1F909A1200DBB2EB /* Mixin */;
+			targetProxy = 19EE078B45354F6796337ACF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -9498,6 +9599,35 @@
 			};
 			name = Release;
 		};
+		8ED9A5F3FF334E128C8BF6DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.MixinUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Mixin;
+			};
+			name = Debug;
+		};
 		94656C232795395E006C3F1D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BD555D0ADB2F0ED629DB90DA /* Pods-MixinDebug.debug.xcconfig */;
@@ -9573,6 +9703,7 @@
 		};
 		94ED30612E269B2A00B99837 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3B7FCCFB2B34A62341633EA4 /* Pods-MixinTests.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -9584,7 +9715,10 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/**";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/**",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -9606,6 +9740,7 @@
 		};
 		94ED30622E269B2A00B99837 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0DE9A6C49C488F0723A08DF1 /* Pods-MixinTests.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -9617,7 +9752,10 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/**";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/**",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
@@ -9632,6 +9770,33 @@
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mixin.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mixin";
 				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Release;
+		};
+		9513EC24D1C946138C662BF8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.MixinUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Mixin;
 			};
 			name = Release;
 		};
@@ -9754,6 +9919,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		7D37B6CB312849FC836BDF83 /* Build configuration list for PBXNativeTarget "MixinUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8ED9A5F3FF334E128C8BF6DF /* Debug */,
+				9513EC24D1C946138C662BF8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		94656C222795395E006C3F1D /* Build configuration list for PBXNativeTarget "MixinDebug" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -9809,7 +9983,7 @@
 				version = 14.3.1;
 			};
 		};
-		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */ = {
+		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MixinNetwork/web3.swift";
 			requirement = {
@@ -9825,7 +9999,7 @@
 				version = 3.1.2;
 			};
 		};
-		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */ = {
+		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mac-cain13/R.swift";
 			requirement = {
@@ -9864,7 +10038,7 @@
 		};
 		9479B7842BBBE589002A2C4F /* web3.swift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */;
+			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */;
 			productName = web3.swift;
 		};
 		9481C03B2A49A9AA0009DAF8 /* Starscream */ = {
@@ -9874,28 +10048,28 @@
 		};
 		94881FA72AD035C300CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = RswiftLibrary;
 		};
 		94881FA92AD035CC00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = RswiftLibrary;
 		};
 		94881FAB2AD035ED00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = RswiftLibrary;
 		};
-		94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */ = {
+		94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */ = {
+		94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */ = {
+		94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};

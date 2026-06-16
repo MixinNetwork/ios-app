@@ -101,6 +101,7 @@ final class MarketViewController: UIViewController {
         tableView.register(R.nib.tokenStatsCell)
         tableView.register(R.nib.tokenMyBalanceCell)
         tableView.register(R.nib.tokenInfoCell)
+        tableView.register(R.nib.marketDescriptionCell)
         tableView.register(UITableViewCell.self,
                            forCellReuseIdentifier: ReuseIdentifier.emptyCell)
         tableView.register(UITableViewHeaderFooterView.self,
@@ -472,10 +473,12 @@ extension MarketViewController: UITableViewDataSource {
             1
         case .stats:
             viewModel.stats == nil ? 0 : StatsRow.allCases.count
-        case .myBalance:
-            viewModel.balance == nil ? 0 : MyBalanceRow.allCases.count
         case .infos:
             viewModel.infos.count + 2 // 2 for separators
+        case .myBalance:
+            viewModel.balance == nil ? 0 : MyBalanceRow.allCases.count
+        case .description:
+            viewModel.description == nil ? 0 : 1
         }
     }
     
@@ -538,6 +541,27 @@ extension MarketViewController: UITableViewDataSource {
                 cell.contentConfiguration = nil
                 return cell
             }
+        case .infos:
+            let index = indexPath.row - 1
+            if index >= 0 && index < viewModel.infos.count {
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_info, for: indexPath)!
+                let row = viewModel.infos[index]
+                cell.titleLabel.text = row.title
+                cell.primaryContentLabel.text = row.primaryContent
+                cell.primaryContentLabel.textColor = row.primaryContentColor
+                if let content = row.secondaryContent {
+                    (cell.secondaryContentLabel.text, cell.secondaryContentLabel.textColor) = content
+                    cell.secondaryContentLabel.isHidden = false
+                } else {
+                    cell.secondaryContentLabel.isHidden = true
+                }
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)
+                cell.backgroundConfiguration = .groupedCell
+                cell.contentConfiguration = nil
+                return cell
+            }
         case .myBalance:
             switch MyBalanceRow(rawValue: indexPath.row)! {
             case .title:
@@ -561,27 +585,11 @@ extension MarketViewController: UITableViewDataSource {
                 }
                 return cell
             }
-        case .infos:
-            let index = indexPath.row - 1
-            if index >= 0 && index < viewModel.infos.count {
-                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_info, for: indexPath)!
-                let row = viewModel.infos[index]
-                cell.titleLabel.text = row.title
-                cell.primaryContentLabel.text = row.primaryContent
-                cell.primaryContentLabel.textColor = row.primaryContentColor
-                if let content = row.secondaryContent {
-                    (cell.secondaryContentLabel.text, cell.secondaryContentLabel.textColor) = content
-                    cell.secondaryContentLabel.isHidden = false
-                } else {
-                    cell.secondaryContentLabel.isHidden = true
-                }
-                return cell
-            } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)
-                cell.backgroundConfiguration = .groupedCell
-                cell.contentConfiguration = nil
-                return cell
-            }
+        case .description:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.market_description, for: indexPath)!
+            cell.contentLabel.text = viewModel.description
+            cell.delegate = self
+            return cell
         }
     }
     
@@ -600,8 +608,6 @@ extension MarketViewController: UITableViewDelegate {
             case .bottomSeparator:
                 10
             }
-        case .myBalance:
-            return UITableView.automaticDimension
         case .infos:
             let index = indexPath.row - 1
             return if index >= 0 && index < viewModel.infos.count {
@@ -609,6 +615,8 @@ extension MarketViewController: UITableViewDelegate {
             } else {
                 10
             }
+        case .myBalance, .description:
+            return UITableView.automaticDimension
         }
     }
     
@@ -620,10 +628,12 @@ extension MarketViewController: UITableViewDelegate {
             10
         case .stats:
             viewModel.stats == nil ? .leastNormalMagnitude : 10
-        case .myBalance:
-            viewModel.balance == nil ? .leastNormalMagnitude : 10
         case .infos:
             10
+        case .myBalance:
+            viewModel.balance == nil ? .leastNormalMagnitude : 10
+        case .description:
+            viewModel.description == nil ? .leastNormalMagnitude : 10
         }
     }
     
@@ -715,6 +725,19 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
     
 }
 
+extension MarketViewController: MarketDescriptionCell.Delegate {
+    
+    func marketDescriptionCellDidSelectMore(_ cell: MarketDescriptionCell) {
+        tableView.beginUpdates()
+        cell.isExpanded = true
+        tableView.endUpdates()
+        if let indexPath = tableView.indexPath(for: cell) {
+            tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+        }
+    }
+    
+}
+
 extension MarketViewController {
     
     private enum Identifier {
@@ -744,6 +767,7 @@ extension MarketViewController {
         case stats
         case infos
         case myBalance
+        case description
     }
     
     private enum MyBalanceRow: Int, CaseIterable {
@@ -758,7 +782,7 @@ extension MarketViewController {
         case bottomSeparator
     }
     
-    private class MarketViewModel {
+    private final class MarketViewModel {
         
         struct Info {
             
@@ -904,6 +928,7 @@ extension MarketViewController {
         private(set) var stats: MarketStatistics?
         private(set) var balance: Balance?
         private(set) var infos: [Info]
+        private(set) var description: String?
         
         private var basicInfos: [Info]
         private var marketInfos: [Info]
@@ -923,6 +948,7 @@ extension MarketViewController {
             
             self.basicInfos = basicInfos
             self.marketInfos = marketInfos
+            self.description = market.localizedDescription
         }
         
         init(token: any ValuableToken) {
@@ -946,6 +972,7 @@ extension MarketViewController {
             
             self.basicInfos = basicInfos
             self.marketInfos = marketInfos
+            self.description = nil
         }
         
         func updateWithMarketNotFound() {
@@ -1019,6 +1046,7 @@ extension MarketViewController {
             
             self.marketInfos = Info.marketInfos(market: market)
             self.infos = basicInfos + marketInfos
+            self.description = market.localizedDescription
         }
         
     }

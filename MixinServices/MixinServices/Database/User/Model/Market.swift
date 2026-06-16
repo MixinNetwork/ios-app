@@ -34,6 +34,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
         case sparklineIn7D = "sparkline_in_7d"
         case sparklineIn24H = "sparkline_in_24h"
         case updatedAt = "updated_at"
+        case descriptions = "descriptions"
     }
     
     public let coinID: String
@@ -66,6 +67,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     public let sparklineIn7D: String
     public let sparklineIn24H: String
     public let updatedAt: String
+    public let descriptions: [String: String]?
     
     public private(set) lazy var localizedMarketCap = NamedLargeNumberFormatter.string(
         number: (Decimal(string: marketCap, locale: .enUSPOSIX) ?? 0) * Currency.current.decimalRate,
@@ -104,6 +106,16 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     public private(set) lazy var localizedPriceChangePercentage24H = NumberFormatter.percentage.string(decimal: decimalPriceChangePercentage24H / 100)
     public private(set) lazy var sparklineIn24HURL = URL(string: sparklineIn24H)
     
+    public private(set) lazy var localizedDescription: String? = {
+        if let description = descriptions?[Self.languageIdentifier],
+           !description.isEmpty
+        {
+            return description
+        } else {
+            return nil
+        }
+    }()
+    
     init(
         coinID: String, name: String, symbol: String, iconURL: String, currentPrice: String,
         marketCap: String, marketCapRank: String, totalVolume: String, high24H: String,
@@ -113,7 +125,8 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
         marketCapChangePercentage24H: String, circulatingSupply: String, 
         totalSupply: String, maxSupply: String, ath: String, athChangePercentage: String,
         athDate: String, atl: String, atlChangePercentage: String, atlDate: String,
-        assetIDs: [String]?, sparklineIn7D: String, sparklineIn24H: String, updatedAt: String
+        assetIDs: [String]?, sparklineIn7D: String, sparklineIn24H: String, updatedAt: String,
+        descriptions: [String: String]?,
     ) {
         self.coinID = coinID
         self.name = name
@@ -145,6 +158,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
         self.sparklineIn7D = sparklineIn7D
         self.sparklineIn24H = sparklineIn24H
         self.updatedAt = updatedAt
+        self.descriptions = descriptions
     }
     
     public func replacingMarketCapRank(with rank: String) -> Market {
@@ -178,7 +192,8 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
             assetIDs: assetIDs,
             sparklineIn7D: sparklineIn7D,
             sparklineIn24H: sparklineIn24H,
-            updatedAt: updatedAt
+            updatedAt: updatedAt,
+            descriptions: descriptions,
         )
     }
     
@@ -187,6 +202,16 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
 extension Market: TableRecord, PersistableRecord {
     
     public static let databaseTableName = "markets"
+    
+}
+
+extension Market {
+    
+    static let languageIdentifier = if #available(iOS 16, *) {
+        Locale.current.language.languageCode?.identifier ?? "en"
+    } else {
+        Locale.current.languageCode ?? "en"
+    }
     
 }
 

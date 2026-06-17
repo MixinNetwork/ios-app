@@ -971,6 +971,13 @@ public final class UserDatabase: Database {
             try db.execute(sql: "DROP TABLE IF EXISTS `swap_orders`")
         }
         
+        migrator.registerMigration("market_about") { db in
+            let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(markets)").map(\.name)
+            if !columns.contains("descriptions") {
+                try db.execute(sql: "ALTER TABLE `markets` ADD COLUMN `descriptions` TEXT")
+            }
+        }
+        
         return migrator
     }
     

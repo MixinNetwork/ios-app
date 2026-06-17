@@ -6,6 +6,7 @@ final class MarketViewController: UIViewController {
     weak var pushingViewController: UIViewController?
     
     private weak var tableView: UITableView!
+    private weak var actionView: MarketActionView!
     private weak var favoriteBarButtonItem: UIBarButtonItem!
     
     private let id: Identifier
@@ -25,7 +26,6 @@ final class MarketViewController: UIViewController {
             return .day
         }
     }()
-    private var hasAlert = true
     private var requester: MarketPeriodicRequester!
     
     private var tokenPriceChartCell: TokenPriceChartCell? {
@@ -84,6 +84,8 @@ final class MarketViewController: UIViewController {
         ]
         self.favoriteBarButtonItem = favoriteBarButtonItem
         
+        view.backgroundColor = R.color.background_secondary()
+        
         let tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.backgroundColor = R.color.background_secondary()
         tableView.alwaysBounceVertical = true
@@ -99,15 +101,44 @@ final class MarketViewController: UIViewController {
         tableView.register(R.nib.tokenStatsCell)
         tableView.register(R.nib.tokenMyBalanceCell)
         tableView.register(R.nib.tokenInfoCell)
+        tableView.register(R.nib.marketDescriptionCell)
         tableView.register(UITableViewCell.self,
                            forCellReuseIdentifier: ReuseIdentifier.emptyCell)
         tableView.register(UITableViewHeaderFooterView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseIdentifier.header)
         view.addSubview(tableView)
-        tableView.snp.makeEdgesEqualToSuperview()
+        tableView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
         self.tableView = tableView
         tableView.dataSource = self
         tableView.delegate = self
+        
+        let actionView = R.nib.marketActionView(withOwner: nil)!
+        view.addSubview(actionView)
+        actionView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(tableView.snp.bottom)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.height.equalTo(82)
+        }
+        self.actionView = actionView
+        actionView.alertButton.addTarget(
+            self,
+            action: #selector(alert(_:)),
+            for: .touchUpInside
+        )
+        actionView.tradeButton.addTarget(
+            self,
+            action: #selector(trade(_:)),
+            for: .touchUpInside
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadAlert),
+            name: MarketAlertDAO.didChangeNotification,
+            object: nil
+        )
         
         if chartPoints == nil {
             reloadPriceChart(period: chartPeriod)
@@ -220,6 +251,45 @@ final class MarketViewController: UIViewController {
         }
     }
     
+    @objc private func alert(_ sender: Any) {
+        guard let market else {
+            return
+        }
+        NotificationManager.shared.getAuthorized { isAuthorized in
+            if isAuthorized {
+                if self.actionView.hasAlert {
+                    let coin = MarketAlertCoin(market: market)
+                    let alert = CoinMarketAlertsViewController(coin: coin)
+                    self.navigationController?.pushViewController(alert, animated: true)
+                } else {
+                    let coin = MarketAlertCoin(market: market)
+                    let addAlert = AddMarketAlertViewController(coin: coin)
+                    self.navigationController?.pushViewController(addAlert, animated: true)
+                }
+            } else {
+                self.requestEnableNotifications()
+            }
+        }
+    }
+    
+    @objc private func trade(_ sender: Any) {
+        if let token = tokens?.first {
+            UserOperationAnalytics.tradeSource = .marketDetail
+            let trade = TradeViewController(
+                wallet: .privacy,
+                trading: .simpleSpot,
+                sendAssetID: AssetID.erc20USDT,
+                receiveAssetID: token.assetID,
+                referral: nil
+            )
+            if let trade {
+                self.navigationController?.pushViewController(trade, animated: true)
+            }
+        } else if let market {
+            alert(R.string.localizable.swap_not_supported(market.symbol))
+        }
+    }
+    
     @objc private func reloadFromLocal() {
         DispatchQueue.global().async { [weak self, id] in
             let market = switch id {
@@ -237,11 +307,23 @@ final class MarketViewController: UIViewController {
                     return
                 }
                 self.market = market
-                self.hasAlert = hasAlert
                 self.viewModel.update(market: market, tokens: [])
                 self.tableView.reloadData()
                 self.reloadTokens(market: market)
                 self.updateFavoriteButtonImage()
+                self.actionView.hasAlert = hasAlert
+            }
+        }
+    }
+    
+    @objc private func reloadAlert() {
+        guard let market else {
+            return
+        }
+        DispatchQueue.global().async { [weak self] in
+            let hasAlert = MarketAlertDAO.shared.alertExists(coinID: market.coinID)
+            DispatchQueue.main.sync {
+                self?.actionView.hasAlert = hasAlert
             }
         }
     }
@@ -391,10 +473,12 @@ extension MarketViewController: UITableViewDataSource {
             1
         case .stats:
             viewModel.stats == nil ? 0 : StatsRow.allCases.count
-        case .myBalance:
-            viewModel.balance == nil ? 0 : MyBalanceRow.allCases.count
         case .infos:
             viewModel.infos.count + 2 // 2 for separators
+        case .myBalance:
+            viewModel.balance == nil ? 0 : MyBalanceRow.allCases.count
+        case .description:
+            viewModel.description == nil ? 0 : 1
         }
     }
     
@@ -421,18 +505,8 @@ extension MarketViewController: UITableViewDataSource {
             cell.rankLabel.isHidden = cell.rankLabel.text == nil
             cell.setPeriodSelection(period: chartPeriod)
             cell.updateChart(points: chartPoints)
-            if market == nil {
-                cell.actions = []
-            } else {
-                if hasAlert {
-                    cell.actions = [.trade, .alert]
-                } else {
-                    cell.actions = [.trade, .addAlert]
-                }
-            }
             cell.delegate = self
             cell.chartView.delegate = self
-            cell.tokenActionView.delegate = self
             return cell
         case .stats:
             switch StatsRow(rawValue: indexPath.row)! {
@@ -467,6 +541,27 @@ extension MarketViewController: UITableViewDataSource {
                 cell.contentConfiguration = nil
                 return cell
             }
+        case .infos:
+            let index = indexPath.row - 1
+            if index >= 0 && index < viewModel.infos.count {
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_info, for: indexPath)!
+                let row = viewModel.infos[index]
+                cell.titleLabel.text = row.title
+                cell.primaryContentLabel.text = row.primaryContent
+                cell.primaryContentLabel.textColor = row.primaryContentColor
+                if let content = row.secondaryContent {
+                    (cell.secondaryContentLabel.text, cell.secondaryContentLabel.textColor) = content
+                    cell.secondaryContentLabel.isHidden = false
+                } else {
+                    cell.secondaryContentLabel.isHidden = true
+                }
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)
+                cell.backgroundConfiguration = .groupedCell
+                cell.contentConfiguration = nil
+                return cell
+            }
         case .myBalance:
             switch MyBalanceRow(rawValue: indexPath.row)! {
             case .title:
@@ -490,27 +585,11 @@ extension MarketViewController: UITableViewDataSource {
                 }
                 return cell
             }
-        case .infos:
-            let index = indexPath.row - 1
-            if index >= 0 && index < viewModel.infos.count {
-                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_info, for: indexPath)!
-                let row = viewModel.infos[index]
-                cell.titleLabel.text = row.title
-                cell.primaryContentLabel.text = row.primaryContent
-                cell.primaryContentLabel.textColor = row.primaryContentColor
-                if let content = row.secondaryContent {
-                    (cell.secondaryContentLabel.text, cell.secondaryContentLabel.textColor) = content
-                    cell.secondaryContentLabel.isHidden = false
-                } else {
-                    cell.secondaryContentLabel.isHidden = true
-                }
-                return cell
-            } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)
-                cell.backgroundConfiguration = .groupedCell
-                cell.contentConfiguration = nil
-                return cell
-            }
+        case .description:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.market_description, for: indexPath)!
+            cell.contentLabel.text = viewModel.description
+            cell.delegate = self
+            return cell
         }
     }
     
@@ -529,8 +608,6 @@ extension MarketViewController: UITableViewDelegate {
             case .bottomSeparator:
                 10
             }
-        case .myBalance:
-            return UITableView.automaticDimension
         case .infos:
             let index = indexPath.row - 1
             return if index >= 0 && index < viewModel.infos.count {
@@ -538,6 +615,8 @@ extension MarketViewController: UITableViewDelegate {
             } else {
                 10
             }
+        case .myBalance, .description:
+            return UITableView.automaticDimension
         }
     }
     
@@ -549,10 +628,12 @@ extension MarketViewController: UITableViewDelegate {
             10
         case .stats:
             viewModel.stats == nil ? .leastNormalMagnitude : 10
-        case .myBalance:
-            viewModel.balance == nil ? .leastNormalMagnitude : 10
         case .infos:
             10
+        case .myBalance:
+            viewModel.balance == nil ? .leastNormalMagnitude : 10
+        case .description:
+            viewModel.description == nil ? .leastNormalMagnitude : 10
         }
     }
     
@@ -642,69 +723,16 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
         AppGroupUserDefaults.Wallet.marketChartPeriod = period.rawValue
     }
     
-    func tokenPriceChartCellWantsToShowAlert(_ cell: TokenPriceChartCell) {
-        guard let market else {
-            return
-        }
-        let coin = MarketAlertCoin(market: market)
-        let alert = CoinMarketAlertsViewController(coin: coin)
-        navigationController?.pushViewController(alert, animated: true)
-    }
-    
-    func tokenPriceChartCellWantsToAddAlert(_ cell: TokenPriceChartCell) {
-        guard let market else {
-            return
-        }
-        let coin = MarketAlertCoin(market: market)
-        let addAlert = AddMarketAlertViewController(coin: coin)
-        navigationController?.pushViewController(addAlert, animated: true)
-    }
-    
 }
 
-extension MarketViewController: PillActionView.Delegate {
+extension MarketViewController: MarketDescriptionCell.Delegate {
     
-    func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
-        guard let market, let actions = tokenPriceChartCell?.actions else {
-            return
-        }
-        switch actions[index] {
-        case .trade:
-            if tokens == nil {
-                alert(R.string.localizable.swap_not_supported(market.symbol))
-            } else if let token = tokens?.first {
-                UserOperationAnalytics.tradeSource = .marketDetail
-                let trade = TradeViewController(
-                    wallet: .privacy,
-                    trading: .simpleSpot,
-                    sendAssetID: AssetID.erc20USDT,
-                    receiveAssetID: token.assetID,
-                    referral: nil
-                )
-                if let trade {
-                    self.navigationController?.pushViewController(trade, animated: true)
-                }
-            }
-        case .alert:
-            NotificationManager.shared.getAuthorized { isAuthorized in
-                if isAuthorized {
-                    let coin = MarketAlertCoin(market: market)
-                    let alert = CoinMarketAlertsViewController(coin: coin)
-                    self.navigationController?.pushViewController(alert, animated: true)
-                } else {
-                    self.requestEnableNotifications()
-                }
-            }
-        case .addAlert:
-            NotificationManager.shared.getAuthorized { isAuthorized in
-                if isAuthorized {
-                    let coin = MarketAlertCoin(market: market)
-                    let addAlert = AddMarketAlertViewController(coin: coin)
-                    self.navigationController?.pushViewController(addAlert, animated: true)
-                } else {
-                    self.requestEnableNotifications()
-                }
-            }
+    func marketDescriptionCellDidSelectMore(_ cell: MarketDescriptionCell) {
+        tableView.beginUpdates()
+        cell.isExpanded = true
+        tableView.endUpdates()
+        if let indexPath = tableView.indexPath(for: cell) {
+            tableView.scrollToRow(at: indexPath, at: .top, animated: true)
         }
     }
     
@@ -737,8 +765,9 @@ extension MarketViewController {
         case warning
         case chart
         case stats
-        case myBalance
         case infos
+        case myBalance
+        case description
     }
     
     private enum MyBalanceRow: Int, CaseIterable {
@@ -753,7 +782,7 @@ extension MarketViewController {
         case bottomSeparator
     }
     
-    private class MarketViewModel {
+    private final class MarketViewModel {
         
         struct Info {
             
@@ -899,6 +928,7 @@ extension MarketViewController {
         private(set) var stats: MarketStatistics?
         private(set) var balance: Balance?
         private(set) var infos: [Info]
+        private(set) var description: String?
         
         private var basicInfos: [Info]
         private var marketInfos: [Info]
@@ -918,6 +948,7 @@ extension MarketViewController {
             
             self.basicInfos = basicInfos
             self.marketInfos = marketInfos
+            self.description = market.localizedDescription
         }
         
         init(token: any ValuableToken) {
@@ -941,6 +972,7 @@ extension MarketViewController {
             
             self.basicInfos = basicInfos
             self.marketInfos = marketInfos
+            self.description = nil
         }
         
         func updateWithMarketNotFound() {
@@ -1014,6 +1046,7 @@ extension MarketViewController {
             
             self.marketInfos = Info.marketInfos(market: market)
             self.infos = basicInfos + marketInfos
+            self.description = market.localizedDescription
         }
         
     }

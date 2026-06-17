@@ -21,9 +21,11 @@ public final class MarketAlertDAO: UserDatabaseDAO {
     
     public func save(alert: MarketAlert) {
         db.save(alert) { _ in
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
-            }
+            NotificationCenter.default.postAsynchornously(
+                onMainThread: Self.didChangeNotification,
+                object: self,
+                userInfo: nil
+            )
         }
     }
     
@@ -33,9 +35,11 @@ public final class MarketAlertDAO: UserDatabaseDAO {
             assignments: [MarketAlert.column(of: .status).set(to: status.rawValue)],
             where: MarketAlert.column(of: .alertID) == alertID
         ) { _ in
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
-            }
+            NotificationCenter.default.postAsynchornously(
+                onMainThread: Self.didChangeNotification,
+                object: self,
+                userInfo: nil
+            )
         }
     }
     
@@ -44,18 +48,25 @@ public final class MarketAlertDAO: UserDatabaseDAO {
             try db.execute(sql: "DELETE FROM market_alerts")
             try alerts.save(db)
             db.afterNextTransaction { _ in
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
-                }
+                NotificationCenter.default.postAsynchornously(
+                    onMainThread: Self.didChangeNotification,
+                    object: self,
+                    userInfo: nil
+                )
             }
         }
     }
     
     public func deleteAlert(id: String) {
-        db.delete(MarketAlert.self, where: MarketAlert.column(of: .alertID) == id) { _ in
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
-            }
+        db.delete(
+            MarketAlert.self,
+            where: MarketAlert.column(of: .alertID) == id
+        ) { _ in
+            NotificationCenter.default.postAsynchornously(
+                onMainThread: Self.didChangeNotification,
+                object: self,
+                userInfo: nil
+            )
         }
     }
     

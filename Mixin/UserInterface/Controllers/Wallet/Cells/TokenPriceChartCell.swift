@@ -7,23 +7,6 @@ final class TokenPriceChartCell: UITableViewCell {
         func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistoryPeriod)
     }
     
-    enum MarketAction: Int, CaseIterable {
-        
-        case trade
-        case alert
-        case addAlert
-        
-        var title: String {
-            switch self {
-            case .trade:
-                R.string.localizable.trade()
-            case .alert, .addAlert:
-                R.string.localizable.alert()
-            }
-        }
-        
-    }
-    
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var rankLabel: InsetLabel!
@@ -33,30 +16,11 @@ final class TokenPriceChartCell: UITableViewCell {
     @IBOutlet weak var chartView: ChartView!
     @IBOutlet weak var loadingIndicatorView: ActivityIndicatorView!
     @IBOutlet weak var periodSelectorStackView: UIStackView!
-    @IBOutlet weak var tokenActionView: PillActionView!
     
     @IBOutlet weak var periodSelectorHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var periodSelectorScrollViewBottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var tokenActionViewBottomConstraint: NSLayoutConstraint!
     
     weak var delegate: Delegate?
-    
-    var actions: [MarketAction] = [] {
-        didSet {
-            if actions.isEmpty {
-                tokenActionView.isHidden = true
-                periodSelectorScrollViewBottomConstraint.priority = .defaultHigh
-                tokenActionViewBottomConstraint.priority = .defaultLow
-            } else {
-                tokenActionView.isHidden = false
-                tokenActionView.actions = actions.map { action in
-                        .init(title: action.title)
-                }
-                periodSelectorScrollViewBottomConstraint.priority = .defaultLow
-                tokenActionViewBottomConstraint.priority = .defaultHigh
-            }
-        }
-    }
     
     private weak var unavailableView: UIView?
     

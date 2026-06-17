@@ -894,6 +894,10 @@
 		94396F2829EB475500A57833 /* NWParameters+DeviceTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */; };
 		94396F2A29EBE52400A57833 /* DeviceTransferClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2929EBE52400A57833 /* DeviceTransferClient.swift */; };
 		94396F3029ED005200A57833 /* DeviceTransferFileStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2F29ED005200A57833 /* DeviceTransferFileStream.swift */; };
+		943A13F82FE11D2B00D01354 /* MarketActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A13F72FE11D2B00D01354 /* MarketActionView.swift */; };
+		943A14012FE11D3500D01354 /* MarketActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943A14002FE11D3500D01354 /* MarketActionView.xib */; };
+		943A146B2FE18EE400D01354 /* MarketDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943A146A2FE18EE400D01354 /* MarketDescriptionCell.xib */; };
+		943A146C2FE18EE400D01354 /* MarketDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A14692FE18EE400D01354 /* MarketDescriptionCell.swift */; };
 		943A28082B878FCE0050929A /* TIPNodeResponseError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A28072B878FCE0050929A /* TIPNodeResponseError+Localization.swift */; };
 		943A63E328BDEC27008E0F78 /* TIPPopupInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */; };
 		943B5EAB2B600D77001C1F6E /* AppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943B5EAA2B600D77001C1F6E /* AppCell.swift */; };
@@ -2834,6 +2838,10 @@
 		94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NWParameters+DeviceTransfer.swift"; sourceTree = "<group>"; };
 		94396F2929EBE52400A57833 /* DeviceTransferClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferClient.swift; sourceTree = "<group>"; };
 		94396F2F29ED005200A57833 /* DeviceTransferFileStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferFileStream.swift; sourceTree = "<group>"; };
+		943A13F72FE11D2B00D01354 /* MarketActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketActionView.swift; sourceTree = "<group>"; };
+		943A14002FE11D3500D01354 /* MarketActionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketActionView.xib; sourceTree = "<group>"; };
+		943A14692FE18EE400D01354 /* MarketDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketDescriptionCell.swift; sourceTree = "<group>"; };
+		943A146A2FE18EE400D01354 /* MarketDescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketDescriptionCell.xib; sourceTree = "<group>"; };
 		943A28072B878FCE0050929A /* TIPNodeResponseError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TIPNodeResponseError+Localization.swift"; sourceTree = "<group>"; };
 		943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPPopupInputViewController.swift; sourceTree = "<group>"; };
 		943B5EAA2B600D77001C1F6E /* AppCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCell.swift; sourceTree = "<group>"; };
@@ -4936,6 +4944,10 @@
 			isa = PBXGroup;
 			children = (
 				9438EDB42FAB8C980030C00E /* MarketStatistics.swift */,
+				943A146A2FE18EE400D01354 /* MarketDescriptionCell.xib */,
+				943A14692FE18EE400D01354 /* MarketDescriptionCell.swift */,
+				943A14002FE11D3500D01354 /* MarketActionView.xib */,
+				943A13F72FE11D2B00D01354 /* MarketActionView.swift */,
 				942BA99A2C689FA10096CCC3 /* MarketViewController.swift */,
 				94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */,
 				9443A9202CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift */,
@@ -7320,6 +7332,7 @@
 				94227D6F2BEF242200430CAE /* SearchCollectibleView.xib in Resources */,
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
 				9421205D2F3244F100768DC3 /* OnboardingBannerCell.xib in Resources */,
+				943A146B2FE18EE400D01354 /* MarketDescriptionCell.xib in Resources */,
 				94FE0C502B3083CA006DEFC5 /* SendingDestinationCell.xib in Resources */,
 				940389CD2E1D546900A7782D /* NewGroupView.xib in Resources */,
 				7B9A08FD25481A7600E8568D /* MinimizedClipIconView.xib in Resources */,
@@ -7380,6 +7393,7 @@
 				7B8A6A752456E0EC00ADC9EB /* SharedMediaPostCell.xib in Resources */,
 				94B7FF3A2FC359ED00FAE569 /* SharePerpsPositionView.xib in Resources */,
 				7B8BB58E234F34FE00991ACB /* SharedMediaAudioCell.xib in Resources */,
+				943A14012FE11D3500D01354 /* MarketActionView.xib in Resources */,
 				7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */,
 				9447315A2E71867200ACC49B /* HomeNavigationTitleView.xib in Resources */,
 				944731702E71A2AD00ACC49B /* SearchMarketView.xib in Resources */,
@@ -7935,6 +7949,7 @@
 				7B54F95222B22EA600908A9D /* VerifyMobileNumberPINValidationViewController.swift in Sources */,
 				945AA6582567B18200B39415 /* Country.swift in Sources */,
 				949B5E0C2EBCFB9500D33C97 /* SyncWeb3OrdersJob.swift in Sources */,
+				943A146C2FE18EE400D01354 /* MarketDescriptionCell.swift in Sources */,
 				7BD00F222559716C004D8814 /* WalletSearchRecommendationViewController.swift in Sources */,
 				946D1B362EF29FA600E572F2 /* SyncWeb3AddressJob.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
@@ -8009,6 +8024,7 @@
 				94E0BB812EB11B7B0096797E /* SwapPriceCell.swift in Sources */,
 				94D806992EA76990008D6B62 /* TokenSelectorIntent.swift in Sources */,
 				94F952672AE66A700025B995 /* AmountIntent.swift in Sources */,
+				943A13F82FE11D2B00D01354 /* MarketActionView.swift in Sources */,
 				7BBC913424333DCA00FC3F3A /* CircleCell.swift in Sources */,
 				7B015F49241F60BC0004A563 /* LocationTableView.swift in Sources */,
 				9495E7332CF4420100124CC7 /* RecoveryKitFooterView.swift in Sources */,

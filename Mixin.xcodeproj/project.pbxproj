@@ -1689,7 +1689,7 @@
 		94FCC9652FD6F39000AA6AA7 /* PrivacyWalletPendingDepositObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCC9612FD6F37C00AA6AA7 /* PrivacyWalletPendingDepositObserver.swift */; };
 		94FCC9892FD6FE6300AA6AA7 /* Web3TokensViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCC9882FD6FE5F00AA6AA7 /* Web3TokensViewController.swift */; };
 		94FCC9912FD7003400AA6AA7 /* CommonWalletPendingTransactionLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCC9902FD7002C00AA6AA7 /* CommonWalletPendingTransactionLoader.swift */; };
-		94FCC9A82FD7053E00AA6AA7 /* CommonWalletSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCC9A72FD7053A00AA6AA7 /* CommonWalletSecret.swift */; };
+		94FCC9A82FD7053E00AA6AA7 /* CommonWalletImportedSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCC9A72FD7053A00AA6AA7 /* CommonWalletImportedSecret.swift */; };
 		94FCC9F22FD7C03900AA6AA7 /* WalletOverviewFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCC9F12FD7C03300AA6AA7 /* WalletOverviewFooterView.swift */; };
 		94FD6B5B2F9F356F00DFCDCA /* PerpetualMarketSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FD6B5A2F9F356F00DFCDCA /* PerpetualMarketSelectorView.xib */; };
 		94FE0C4F2B3083CA006DEFC5 /* SendingDestinationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */; };
@@ -3645,7 +3645,7 @@
 		94FCC9612FD6F37C00AA6AA7 /* PrivacyWalletPendingDepositObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyWalletPendingDepositObserver.swift; sourceTree = "<group>"; };
 		94FCC9882FD6FE5F00AA6AA7 /* Web3TokensViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokensViewController.swift; sourceTree = "<group>"; };
 		94FCC9902FD7002C00AA6AA7 /* CommonWalletPendingTransactionLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonWalletPendingTransactionLoader.swift; sourceTree = "<group>"; };
-		94FCC9A72FD7053A00AA6AA7 /* CommonWalletSecret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonWalletSecret.swift; sourceTree = "<group>"; };
+		94FCC9A72FD7053A00AA6AA7 /* CommonWalletImportedSecret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonWalletImportedSecret.swift; sourceTree = "<group>"; };
 		94FCC9F12FD7C03300AA6AA7 /* WalletOverviewFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletOverviewFooterView.swift; sourceTree = "<group>"; };
 		94FD6B5A2F9F356F00DFCDCA /* PerpetualMarketSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpetualMarketSelectorView.xib; sourceTree = "<group>"; };
 		94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingDestinationCell.swift; sourceTree = "<group>"; };
@@ -5250,7 +5250,7 @@
 				9408C5292FD7E41400A46150 /* PrivacyWalletOverviewActionHandler.swift */,
 				9451E86D2D6DFF0A00A6C4FD /* PrivacyWalletViewController.swift */,
 				94FCC9902FD7002C00AA6AA7 /* CommonWalletPendingTransactionLoader.swift */,
-				94FCC9A72FD7053A00AA6AA7 /* CommonWalletSecret.swift */,
+				94FCC9A72FD7053A00AA6AA7 /* CommonWalletImportedSecret.swift */,
 				9408C5492FD7EFDB00A46150 /* CommonWalletOverviewActionHandler.swift */,
 				948FBC872D6EF5CE000795E4 /* CommonWalletViewController.swift */,
 			);
@@ -8711,7 +8711,7 @@
 				944506602C1C5D9700F9C583 /* TIPURL.swift in Sources */,
 				942F829825DD56E3004F913B /* opusenc_set_bitrate.c in Sources */,
 				9493708C2A1B64CC00C0A21E /* LocalNetworkAuthorization.swift in Sources */,
-				94FCC9A82FD7053E00AA6AA7 /* CommonWalletSecret.swift in Sources */,
+				94FCC9A82FD7053E00AA6AA7 /* CommonWalletImportedSecret.swift in Sources */,
 				7BA41940209AFBCD00DFCD39 /* AppCardV0MessageViewModel.swift in Sources */,
 				7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */,
 				9468E0182E30C80600EB79C0 /* AddWalletInputPrivateKeyViewController.swift in Sources */,

@@ -12,20 +12,20 @@ extension Web3Wallet {
         
         init(
             wallet: Web3Wallet,
-            secret: CommonWalletSecret?,
+            importedSecret: CommonWalletImportedSecret?,
             supportedChainIDs: Set<String>,
         ) {
             self = switch wallet.category.knownCase {
             case .classic:
                     .always
             case .importedMnemonic:
-                if secret == nil {
+                if importedSecret == nil {
                     .afterImportingMnemonics
                 } else {
                     .always
                 }
             case .importedPrivateKey:
-                if secret == nil {
+                if importedSecret == nil {
                     if let kind = Web3Chain.Kind.singleKindWallet(chainIDs: supportedChainIDs) {
                         .afterImportingPrivateKey(kind)
                     } else {

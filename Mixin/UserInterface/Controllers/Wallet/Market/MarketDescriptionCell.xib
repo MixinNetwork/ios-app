@@ -28,18 +28,18 @@
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalCompressionResistancePriority="250" text="" textAlignment="natural" lineBreakMode="clip" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H4V-4r-ilM">
                                 <rect key="frame" x="0.0" y="27" width="288" height="33"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                 <color key="textColor" name="text_tertiary"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                     </stackView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zf7-sf-mcB">
-                        <rect key="frame" x="261" y="38" width="53" height="45"/>
+                        <rect key="frame" x="263" y="39.333333333333343" width="51" height="43.666666666666657"/>
                         <state key="normal" title="Button"/>
                         <buttonConfiguration key="configuration" style="filled" title="more" cornerStyle="fixed">
                             <backgroundConfiguration key="background" cornerRadius="0.0"/>
-                            <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                            <fontDescription key="titleFontDescription" style="UICTFontTextStyleFootnote"/>
                             <directionalEdgeInsets key="contentInsets" top="14" leading="10" bottom="14" trailing="10"/>
                             <color key="baseForegroundColor" name="theme"/>
                             <color key="baseBackgroundColor" name="background_secondary"/>

@@ -45,9 +45,7 @@ final class MarketDescriptionCell: UITableViewCell {
                 trailing: config.contentInsets.trailing
             )
             var attributes = AttributeContainer()
-            attributes.font = UIFontMetrics.default.scaledFont(
-                for: .systemFont(ofSize: 14)
-            )
+            attributes.font = UIFont.preferredFont(forTextStyle: .footnote)
             config.attributedTitle = AttributedString(
                 R.string.localizable.more(),
                 attributes: attributes

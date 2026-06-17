@@ -33,20 +33,29 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
         }
         
         mnemonicLoginButton.setTitle(R.string.localizable.sign_in_with_mnemonic_phrase(), for: .normal)
-        mnemonicLoginButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
+        if let label = mnemonicLoginButton.titleLabel {
+            label.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
+            label.adjustsFontSizeToFitWidth = true
+            label.minimumScaleFactor = 0.5
+        }
         mnemonicLoginButton.style = .outline
         mnemonicLoginButton.applyDefaultContentInsets()
         actionStackView.addArrangedSubview(mnemonicLoginButton)
         mnemonicLoginButton.addTarget(self, action: #selector(mnemonicLogin(_:)), for: .touchUpInside)
         
         signupButton.setTitle(R.string.localizable.sign_in_no_account(), for: .normal)
-        signupButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
+        if let label = signupButton.titleLabel {
+            label.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
+            label.adjustsFontSizeToFitWidth = true
+            label.minimumScaleFactor = 0.5
+        }
         signupButton.style = .tinted
         contentView.addSubview(signupButton)
         signupButton.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(36)
             make.trailing.equalToSuperview().offset(-36)
             make.bottom.equalTo(contentView.snp.bottom).offset(-30)
+            make.top.greaterThanOrEqualTo(actionStackView.snp.bottom).offset(10)
         }
         signupButton.applyDefaultContentInsets()
         signupButton.addTarget(self, action: #selector(signup(_:)), for: .touchUpInside)

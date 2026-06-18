@@ -97,6 +97,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     )
     
     public private(set) lazy var decimalPrice = Decimal(string: currentPrice, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var shortPrice = ShortPriceFormatter.string(usdPrice: decimalPrice)
     
     public private(set) lazy var decimalPriceChangePercentage7D = Decimal(string: priceChangePercentage7D, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var localizedPriceChangePercentage7D = NumberFormatter.percentage.string(decimal: decimalPriceChangePercentage7D / 100)
@@ -271,9 +272,18 @@ extension Market {
         
     }
     
-    public enum Category: String {
+    public enum DashboardCategory: String {
         case all
         case favorite
+    }
+    
+    public enum RequestCategory: String {
+        case all
+        case favorite
+        case trending
+        case stocks
+        case topGainers = "top_gainers"
+        case topLosers = "top_losers"
     }
     
     public enum ChangePeriod: Int, CaseIterable {
@@ -307,6 +317,47 @@ extension Market {
             marketCapRank: marketCapRank,
             updatedAt: updatedAt
         )
+    }
+    
+}
+
+extension Market {
+    
+    private enum ShortPriceFormatter {
+        
+        static func string(usdPrice: Decimal) -> String {
+            let price = usdPrice * Currency.current.decimalRate
+            return if price >= 1000 {
+                (price / 1000).formatted(
+                    .currency(code: Currency.current.code)
+                    .presentation(.narrow)
+                    .precision(.fractionLength(0...2))
+                    .rounded(rule: .towardZero)
+                ) + "K"
+            } else if price >= 1 {
+                price.formatted(
+                    .currency(code: Currency.current.code)
+                    .presentation(.narrow)
+                    .precision(.fractionLength(0...2))
+                    .rounded(rule: .towardZero)
+                )
+            } else if price >= 0.0001 {
+                price.formatted(
+                    .currency(code: Currency.current.code)
+                    .presentation(.narrow)
+                    .precision(.fractionLength(0...4))
+                    .rounded(rule: .towardZero)
+                )
+            } else {
+                "<" + Decimal(0.00001).formatted(
+                    .currency(code: Currency.current.code)
+                    .presentation(.narrow)
+                    .precision(.fractionLength(0...4))
+                    .rounded(rule: .towardZero)
+                )
+            }
+        }
+        
     }
     
 }

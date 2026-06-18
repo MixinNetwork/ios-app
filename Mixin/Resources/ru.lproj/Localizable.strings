@@ -1727,6 +1727,8 @@
 "today" = "Сегодня";
 "token" = "Token";
 "top_count" = "Top %d";
+"top_gainers" = "Top Gainers";
+"top_losers" = "Top Losers";
 "total" = "Total";
 "total_amount" = "Total Amount";
 "total_balance" = "Total Balance";

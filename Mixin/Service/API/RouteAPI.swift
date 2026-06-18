@@ -355,13 +355,15 @@ extension RouteAPI {
         request(method: .get, path: "/markets/globals", queue: queue, completion: completion)
     }
     
+    @discardableResult
     static func markets(
-        category: Market.Category,
-        queue: DispatchQueue,
+        category: Market.RequestCategory,
+        queue: DispatchQueue = .main,
+        limit: Int,
         completion: @escaping (MixinAPI.Result<[Market]>) -> Void
-    ) {
-        let path = "/markets?category=\(category.rawValue)&limit=500"
-        request(method: .get, path: path, queue: queue, completion: completion)
+    ) -> Request {
+        let path = "/markets?category=\(category.rawValue)&limit=\(limit)"
+        return request(method: .get, path: path, queue: queue, completion: completion)
     }
     
     static func markets(

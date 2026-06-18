@@ -13,7 +13,7 @@ final class MarketDashboardViewController: UIViewController {
     
     private var globalMarketViewModels: [GlobalMarketViewModel] = []
     
-    private var category: Market.Category = AppGroupUserDefaults.User.marketCategory {
+    private var category: Market.DashboardCategory = AppGroupUserDefaults.User.marketCategory {
         didSet {
             AppGroupUserDefaults.User.marketCategory = category
         }
@@ -124,8 +124,8 @@ final class MarketDashboardViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(favoriteChanged(_:)), name: MarketDAO.unfavoriteNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadMarketsWithCurrentSettings), name: MarketDAO.didUpdateNotification, object: nil)
         
-        marketsRequester = MarketPeriodicRequester(category: .all)
-        favoritesRequester = MarketPeriodicRequester(category: .favorite)
+        marketsRequester = MarketPeriodicRequester(category: .all, limit: 500)
+        favoritesRequester = MarketPeriodicRequester(category: .favorite, limit: 500)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -236,7 +236,7 @@ final class MarketDashboardViewController: UIViewController {
     }
     
     private func reloadMarkets(
-        category: Market.Category,
+        category: Market.DashboardCategory,
         order: Market.OrderingExpression,
         limit: Market.Limit?
     ) {
@@ -369,7 +369,7 @@ extension MarketDashboardViewController: ExploreMarketHeaderView.Delegate {
     
     func exploreMarketHeaderView(
         _ view: ExploreMarketHeaderView,
-        didSwitchToCategory category: Market.Category,
+        didSwitchToCategory category: Market.DashboardCategory,
         limit: Market.Limit?
     ) {
         reloadMarkets(category: category, order: order, limit: limit)
@@ -506,94 +506,6 @@ extension MarketDashboardViewController {
                     secondaryColor: .arbitrary(R.color.text_secondary()!)
                 ),
             ]
-        }
-        
-    }
-    
-    private final class MarketPeriodicRequester {
-        
-        private let category: Market.Category
-        private let modelName: String
-        private let refreshInterval: TimeInterval = 30
-        
-        private var isRunning = false
-        private var lastReloadingDate: Date = .distantPast
-        
-        private weak var timer: Timer?
-        
-        init(category: Market.Category) {
-            self.category = category
-            self.modelName = switch category {
-            case .all:
-                "markets"
-            case .favorite:
-                "favorites"
-            }
-        }
-        
-        func start() {
-            assert(Thread.isMainThread)
-            guard !isRunning else {
-                return
-            }
-            isRunning = true
-            let delay = lastReloadingDate.addingTimeInterval(refreshInterval).timeIntervalSinceNow
-            if delay <= 0 {
-                Logger.general.debug(category: "ExploreMarketRequester", message: "Load \(modelName) now")
-                requestData()
-            } else {
-                Logger.general.debug(category: "ExploreMarketRequester", message: "Load \(modelName) after \(delay)s")
-                scheduleNextRequestIfRunning(timeInterval: delay)
-            }
-        }
-        
-        func pause() {
-            assert(Thread.isMainThread)
-            Logger.general.debug(category: "ExploreMarketRequester", message: "Pause loading \(modelName)")
-            isRunning = false
-            timer?.invalidate()
-        }
-        
-        private func requestData() {
-            assert(Thread.isMainThread)
-            timer?.invalidate()
-            Logger.general.debug(category: "ExploreMarketRequester", message: "Request \(modelName)")
-            guard LoginManager.shared.isLoggedIn else {
-                return
-            }
-            RouteAPI.markets(category: category, queue: .global()) { [weak self, refreshInterval, category, modelName] result in
-                switch result {
-                case let .success(markets):
-                    switch category {
-                    case .all:
-                        MarketDAO.shared.saveMarketsAndReplaceRanks(markets: markets)
-                    case .favorite:
-                        MarketDAO.shared.replaceFavoriteMarkets(markets: markets)
-                    }
-                    Logger.general.debug(category: "ExploreMarketRequester", message: "Saved \(markets.count) \(modelName)")
-                    DispatchQueue.main.async {
-                        Logger.general.debug(category: "ExploreMarketRequester", message: "Reload \(modelName) after \(refreshInterval)s")
-                        if let self {
-                            self.lastReloadingDate = Date()
-                            self.scheduleNextRequestIfRunning(timeInterval: refreshInterval)
-                        }
-                    }
-                case let .failure(error):
-                    Logger.general.debug(category: "ExploreMarketRequester", message: "Load \(modelName): \(error)")
-                    DispatchQueue.main.async {
-                        self?.scheduleNextRequestIfRunning(timeInterval: 3)
-                    }
-                }
-            }
-        }
-        
-        private func scheduleNextRequestIfRunning(timeInterval: TimeInterval) {
-            guard isRunning else {
-                return
-            }
-            timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { [weak self] _ in
-                self?.requestData()
-            }
         }
         
     }

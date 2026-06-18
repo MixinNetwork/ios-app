@@ -1727,6 +1727,8 @@
 "today" = "今天";
 "token" = "代幣";
 "top_count" = "前 %d";
+"top_gainers" = "漲幅榜";
+"top_losers" = "跌幅榜";
 "total" = "共計";
 "total_amount" = "總金額";
 "total_balance" = "資產合計";

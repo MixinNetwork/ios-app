@@ -734,7 +734,7 @@
 		9412AF4D2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9412AF4C2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib */; };
 		9412AF4E2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9412AF4B2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift */; };
 		94130E292BAB35150098BE48 /* Web3DiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94130E282BAB35150098BE48 /* Web3DiagnosticViewController.swift */; };
-		9413A4002C367D8D00B655AC /* SpotTradeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9413A3FF2C367D8D00B655AC /* SpotTradeView.xib */; };
+		9413A4002C367D8D00B655AC /* TradeSpotView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9413A3FF2C367D8D00B655AC /* TradeSpotView.xib */; };
 		9413A4012C367D8D00B655AC /* TradeSpotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9413A3FE2C367D8D00B655AC /* TradeSpotViewController.swift */; };
 		94145A922CD4FCE900600AD4 /* AddMobileNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94145A912CD4FCDF00600AD4 /* AddMobileNumberViewController.swift */; };
 		94145BAE2CD5099D00600AD4 /* AddRecoveryContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94145BAD2CD5099A00600AD4 /* AddRecoveryContactViewController.swift */; };
@@ -896,6 +896,8 @@
 		94396F3029ED005200A57833 /* DeviceTransferFileStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2F29ED005200A57833 /* DeviceTransferFileStream.swift */; };
 		943A13F82FE11D2B00D01354 /* MarketActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A13F72FE11D2B00D01354 /* MarketActionView.swift */; };
 		943A14012FE11D3500D01354 /* MarketActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943A14002FE11D3500D01354 /* MarketActionView.xib */; };
+		943A14372FE13D6800D01354 /* TradeSpotMarketCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943A14362FE13D6800D01354 /* TradeSpotMarketCell.xib */; };
+		943A14382FE13D6800D01354 /* TradeSpotMarketCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A14352FE13D6800D01354 /* TradeSpotMarketCell.swift */; };
 		943A146B2FE18EE400D01354 /* MarketDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943A146A2FE18EE400D01354 /* MarketDescriptionCell.xib */; };
 		943A146C2FE18EE400D01354 /* MarketDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A14692FE18EE400D01354 /* MarketDescriptionCell.swift */; };
 		943A28082B878FCE0050929A /* TIPNodeResponseError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943A28072B878FCE0050929A /* TIPNodeResponseError+Localization.swift */; };
@@ -1554,6 +1556,7 @@
 		94E066B22F5B156D0090F1BA /* PerpetualLeverage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E066B12F5B15690090F1BA /* PerpetualLeverage.swift */; };
 		94E0BB802EB11B7B0096797E /* SwapPriceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E0BB7F2EB11B7B0096797E /* SwapPriceCell.xib */; };
 		94E0BB812EB11B7B0096797E /* SwapPriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E0BB7E2EB11B7B0096797E /* SwapPriceCell.swift */; };
+		94E1A5252FE29C72003CE6FE /* MarketPeriodicRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E1A5242FE29C71003CE6FE /* MarketPeriodicRequester.swift */; };
 		94E1D44129E906AB00511267 /* DeviceTransferHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E1D44029E906AB00511267 /* DeviceTransferHeader.swift */; };
 		94E1D44E29E9393C00511267 /* DeviceTransferServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E1D44D29E9393C00511267 /* DeviceTransferServer.swift */; };
 		94E206702AF37F2600CCF6D8 /* SnapshotMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2066F2AF37F2600CCF6D8 /* SnapshotMessageCell.swift */; };
@@ -2679,7 +2682,7 @@
 		9412AF4C2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareViewAsPictureView.xib; sourceTree = "<group>"; };
 		94130E282BAB35150098BE48 /* Web3DiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3DiagnosticViewController.swift; sourceTree = "<group>"; };
 		9413A3FE2C367D8D00B655AC /* TradeSpotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeSpotViewController.swift; sourceTree = "<group>"; };
-		9413A3FF2C367D8D00B655AC /* SpotTradeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SpotTradeView.xib; sourceTree = "<group>"; };
+		9413A3FF2C367D8D00B655AC /* TradeSpotView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TradeSpotView.xib; sourceTree = "<group>"; };
 		94145A912CD4FCDF00600AD4 /* AddMobileNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMobileNumberViewController.swift; sourceTree = "<group>"; };
 		94145BAD2CD5099A00600AD4 /* AddRecoveryContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecoveryContactViewController.swift; sourceTree = "<group>"; };
 		94145BB22CD50B3000600AD4 /* ViewRecoveryContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRecoveryContactViewController.swift; sourceTree = "<group>"; };
@@ -2840,6 +2843,8 @@
 		94396F2F29ED005200A57833 /* DeviceTransferFileStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferFileStream.swift; sourceTree = "<group>"; };
 		943A13F72FE11D2B00D01354 /* MarketActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketActionView.swift; sourceTree = "<group>"; };
 		943A14002FE11D3500D01354 /* MarketActionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketActionView.xib; sourceTree = "<group>"; };
+		943A14352FE13D6800D01354 /* TradeSpotMarketCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeSpotMarketCell.swift; sourceTree = "<group>"; };
+		943A14362FE13D6800D01354 /* TradeSpotMarketCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TradeSpotMarketCell.xib; sourceTree = "<group>"; };
 		943A14692FE18EE400D01354 /* MarketDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketDescriptionCell.swift; sourceTree = "<group>"; };
 		943A146A2FE18EE400D01354 /* MarketDescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketDescriptionCell.xib; sourceTree = "<group>"; };
 		943A28072B878FCE0050929A /* TIPNodeResponseError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TIPNodeResponseError+Localization.swift"; sourceTree = "<group>"; };
@@ -3510,6 +3515,7 @@
 		94E066B12F5B15690090F1BA /* PerpetualLeverage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualLeverage.swift; sourceTree = "<group>"; };
 		94E0BB7E2EB11B7B0096797E /* SwapPriceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapPriceCell.swift; sourceTree = "<group>"; };
 		94E0BB7F2EB11B7B0096797E /* SwapPriceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapPriceCell.xib; sourceTree = "<group>"; };
+		94E1A5242FE29C71003CE6FE /* MarketPeriodicRequester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketPeriodicRequester.swift; sourceTree = "<group>"; };
 		94E1D44029E906AB00511267 /* DeviceTransferHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferHeader.swift; sourceTree = "<group>"; };
 		94E1D44D29E9393C00511267 /* DeviceTransferServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferServer.swift; sourceTree = "<group>"; };
 		94E2066F2AF37F2600CCF6D8 /* SnapshotMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMessageCell.swift; sourceTree = "<group>"; };
@@ -4301,6 +4307,7 @@
 				94D9DF6025F89D6E00FC2F28 /* PopupTip.swift */,
 				94B577862B5EC11500AE576E /* ExploreAction.swift */,
 				943EDC472C833B55007E160B /* Market+Localization.swift */,
+				94E1A5242FE29C71003CE6FE /* MarketPeriodicRequester.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4720,7 +4727,9 @@
 				940A3C732EB61D36001A458F /* TradeOrderCell.swift */,
 				940A3D132EB7BE52001A458F /* NoOpenTradeOrderCell.xib */,
 				940A3D122EB7BE52001A458F /* NoOpenTradeOrderCell.swift */,
-				9413A3FF2C367D8D00B655AC /* SpotTradeView.xib */,
+				943A14362FE13D6800D01354 /* TradeSpotMarketCell.xib */,
+				943A14352FE13D6800D01354 /* TradeSpotMarketCell.swift */,
+				9413A3FF2C367D8D00B655AC /* TradeSpotView.xib */,
 				9413A3FE2C367D8D00B655AC /* TradeSpotViewController.swift */,
 				94F7BCE12D2B9ED700BA27D9 /* TradeInputAccessoryView.swift */,
 				94FB8E0C2D1ACB32002DCA20 /* TradeTokenCell.xib */,
@@ -7180,7 +7189,7 @@
 				941C9CE9298E57BD00CB760E /* AuthenticationView.xib in Resources */,
 				7B5F966B241424CD003A087B /* LocationInformationView.xib in Resources */,
 				94B5776F2B5E555B00AE576E /* ExploreView.xib in Resources */,
-				9413A4002C367D8D00B655AC /* SpotTradeView.xib in Resources */,
+				9413A4002C367D8D00B655AC /* TradeSpotView.xib in Resources */,
 				944F54382E45E7FB0064A9A2 /* WatchWalletAddressCell.xib in Resources */,
 				94ECDEC72FD1DA3100617524 /* TokenCell.xib in Resources */,
 				7C11E349281BF4BC00D3362B /* ic_time_animation@2x.gif in Resources */,
@@ -7386,6 +7395,7 @@
 				943CAA062CC6908F00346677 /* OnboardingView.xib in Resources */,
 				942D90F12B05F8FE00E81358 /* NetworkFeeCell.xib in Resources */,
 				94B8206A2E00613100D580C9 /* AddTokenMethodCell.xib in Resources */,
+				943A14372FE13D6800D01354 /* TradeSpotMarketCell.xib in Resources */,
 				7B7B5DB7230EC16A00D0F463 /* CurrencyCell.xib in Resources */,
 				E0A70A1223825004003C3B96 /* InvitationHintView.xib in Resources */,
 				7BFE47DD228432A600FC4379 /* PeerInfoView.xib in Resources */,
@@ -7666,6 +7676,7 @@
 				7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */,
 				9464EB272D00BE81000D0688 /* CheckSessionEnvironmentViewController.swift in Sources */,
 				94B6EDFE2B707F15001DCC50 /* WithdrawPreviewViewController.swift in Sources */,
+				943A14382FE13D6800D01354 /* TradeSpotMarketCell.swift in Sources */,
 				7BE0E6572475062D00DCC0D3 /* Vibrator.swift in Sources */,
 				94E206702AF37F2600CCF6D8 /* SnapshotMessageCell.swift in Sources */,
 				94FCC9092FD67A4D00AA6AA7 /* TokensViewController.swift in Sources */,
@@ -8493,6 +8504,7 @@
 				9414D4FD2E070AF800F38028 /* TokenSelectorViewController.swift in Sources */,
 				947058D52E687FDB0057FBC4 /* DepositInputAmountViewController.swift in Sources */,
 				7B8BB57E234DD18C00991ACB /* SharedMediaTableHeaderView.swift in Sources */,
+				94E1A5252FE29C72003CE6FE /* MarketPeriodicRequester.swift in Sources */,
 				7B81D91623E93F470031E945 /* QuotedMessageViewModel.swift in Sources */,
 				7B280DEE22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift in Sources */,
 				7BB2831C22D88F07000731E8 /* GalleryTransitionView.swift in Sources */,

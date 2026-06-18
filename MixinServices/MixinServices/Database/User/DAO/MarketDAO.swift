@@ -12,7 +12,7 @@ public final class MarketDAO: UserDatabaseDAO {
     public static let coinIDUserInfoKey = "cid"
     
     public func markets(
-        category: Market.Category,
+        category: Market.DashboardCategory,
         order: Market.OrderingExpression,
         limit: Market.Limit?
     ) -> [FavorableMarket] {
@@ -315,6 +315,15 @@ public final class MarketDAO: UserDatabaseDAO {
     
     public func savePriceHistory(_ history: PriceHistoryStorage) {
         db.save(history)
+    }
+    
+    public func favorableMarket(markets: [Market]) -> [FavorableMarket] {
+        let favoriteCoinIDs: Set<String> = db.selectSet(
+            with: "SELECT coin_id FROM market_favored WHERE is_favored"
+        )
+        return markets.map { market in
+            FavorableMarket(market: market, isFavorite: favoriteCoinIDs.contains(market.coinID))
+        }
     }
     
     public func favorite(coinID: String, sendNotification: Bool) {

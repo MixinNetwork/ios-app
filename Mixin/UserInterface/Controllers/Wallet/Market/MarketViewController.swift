@@ -282,8 +282,15 @@ final class MarketViewController: UIViewController {
                 receiveAssetID: token.assetID,
                 referral: nil
             )
-            if let trade {
-                self.navigationController?.pushViewController(trade, animated: true)
+            if let trade, let navigationController {
+                if pushingViewController is TradeMixinSpotViewController {
+                    var viewControllers = navigationController.viewControllers
+                    viewControllers.removeLast(2)
+                    viewControllers.append(trade)
+                    navigationController.setViewControllers(viewControllers, animated: true)
+                } else {
+                    navigationController.pushViewController(trade, animated: true)
+                }
             }
         } else if let market {
             alert(R.string.localizable.swap_not_supported(market.symbol))

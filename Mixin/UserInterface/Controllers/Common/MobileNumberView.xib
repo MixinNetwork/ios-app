@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -35,7 +35,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zcm-nd-yEP">
                             <rect key="frame" x="0.0" y="0.0" width="393" height="666"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your mobile number" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uv7-x7-KIX">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your mobile number" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uv7-x7-KIX">
                                     <rect key="frame" x="20" y="30" width="353" height="21.666666666666671"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                     <color key="textColor" name="text"/>
@@ -156,7 +156,8 @@
                 <constraint firstAttribute="bottom" secondItem="b6J-82-9e0" secondAttribute="bottom" id="I0y-wW-EYa"/>
                 <constraint firstItem="b6J-82-9e0" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="TgG-SV-v6L"/>
                 <constraint firstItem="b6J-82-9e0" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ZIt-X4-6Lo"/>
-                <constraint firstItem="zcm-nd-yEP" firstAttribute="height" secondItem="fnl-2z-Ty3" secondAttribute="height" id="d8g-ug-mEo"/>
+                <constraint firstItem="zcm-nd-yEP" firstAttribute="height" relation="greaterThanOrEqual" secondItem="fnl-2z-Ty3" secondAttribute="height" id="d8g-ug-mEo"/>
+                <constraint firstItem="zcm-nd-yEP" firstAttribute="height" secondItem="fnl-2z-Ty3" secondAttribute="height" priority="250" id="upn-ER-IDi"/>
                 <constraint firstAttribute="trailing" secondItem="b6J-82-9e0" secondAttribute="trailing" id="zKn-1P-chd"/>
             </constraints>
             <point key="canvasLocation" x="138.1679389312977" y="41.549295774647888"/>

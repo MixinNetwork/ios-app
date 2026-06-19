@@ -105,6 +105,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     
     public private(set) lazy var decimalPriceChangePercentage24H = Decimal(string: priceChangePercentage24H, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var localizedPriceChangePercentage24H = NumberFormatter.percentage.string(decimal: decimalPriceChangePercentage24H / 100)
+    public private(set) lazy var localizedPriceChangePercentage24HAlwaysSign = PercentageFormatter.string(from: decimalPriceChangePercentage24H / 100, format: .pretty, sign: .always)
     public private(set) lazy var sparklineIn24HURL = URL(string: sparklineIn24H)
     
     public private(set) lazy var localizedDescription: String? = {

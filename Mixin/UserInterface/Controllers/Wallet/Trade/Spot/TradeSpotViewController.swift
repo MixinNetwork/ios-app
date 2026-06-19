@@ -242,7 +242,7 @@ class TradeSpotViewController: UIViewController {
                     subitem: item,
                     count: 4
                 )
-                group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 10, trailing: 16)
+                group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 3, bottom: 10, trailing: 3)
                 let section = NSCollectionLayoutSection(group: group)
                 section.interGroupSpacing = 16
                 let header = NSCollectionLayoutBoundarySupplementaryItem(

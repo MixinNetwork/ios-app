@@ -10,7 +10,7 @@ final class TradeSpotMarketCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        changeLabel.contentInset = UIEdgeInsets(top: 3, left: 3, bottom: 1, right: 3)
+        changeLabel.contentInset = UIEdgeInsets(top: 1, left: 3, bottom: 1, right: 3)
         changeLabel.layer.cornerRadius = 4
         changeLabel.layer.masksToBounds = true
         symbolLabel.setFont(
@@ -18,14 +18,14 @@ final class TradeSpotMarketCell: UICollectionViewCell {
             adjustForContentSize: true
         )
         changeLabel.setFont(
-            scaledFor: .monospacedDigitSystemFont(ofSize: 12, weight: .regular),
+            scaledFor: .monospacedDigitSystemFont(ofSize: 10, weight: .medium),
             adjustForContentSize: true
         )
     }
     
     func load(market: Market) {
         iconView.setIcon(market: market)
-        changeLabel.text = market.localizedPriceChangePercentage24H
+        changeLabel.text = market.localizedPriceChangePercentage24HAlwaysSign
         changeLabel.backgroundColor = market.decimalPriceChangePercentage24H >= 0
         ? MarketColor.rising.uiColor
         : MarketColor.falling.uiColor

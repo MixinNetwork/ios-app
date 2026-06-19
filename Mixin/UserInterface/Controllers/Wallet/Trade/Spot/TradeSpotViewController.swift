@@ -75,10 +75,11 @@ class TradeSpotViewController: UIViewController {
     private(set) var quote: SwapQuote?
     
     private let tokenSource: RouteTokenSource
-    private let arbitrarySendAssetID: String?
-    private let arbitraryReceiveAssetID: String?
     private let maxOpenOrderCount = 10
     private let marketCount = 8
+    
+    private var arbitrarySendAssetID: String?
+    private var arbitraryReceiveAssetID: String?
     
     private var showReviewWrapperConstraints: [NSLayoutConstraint] = []
     private var hideReviewWrapperConstraints: [NSLayoutConstraint] = []
@@ -497,6 +498,85 @@ class TradeSpotViewController: UIViewController {
         from swappableTokens: [SwapToken]
     ) -> OrderedDictionary<String, BalancedSwapToken> {
         [:]
+    }
+    
+    func buy(assetID receiveAssetID: String) {
+        let sendAssetID = receiveAssetID == AssetID.erc20USDT
+        ? AssetID.erc20USDC
+        : AssetID.erc20USDT
+        arbitrarySendAssetID = sendAssetID
+        arbitraryReceiveAssetID = receiveAssetID
+        if let receiveToken = swappableTokens[receiveAssetID] {
+            setSendToken(swappableTokens[sendAssetID])
+            setReceiveToken(receiveToken)
+        } else {
+            reloadTokens()
+        }
+        collectionView.setContentOffset(.zero, animated: false)
+    }
+    
+    func reloadSections() {
+        var snapshot = DataSourceSnapshot()
+        
+        switch mode {
+        case .simple:
+            snapshot.appendSections([.amountInput])
+            snapshot.appendItems([.amountInput], toSection: .amountInput)
+            if hasInput {
+                snapshot.appendSections([.simpleModePrice])
+                snapshot.appendItems([.simpleModePrice], toSection: .simpleModePrice)
+            } else {
+                if !trendings.isEmpty {
+                    snapshot.appendSections([.trending])
+                    snapshot.appendItems(
+                        trendings.keys.map { .trending(coinID: $0) },
+                        toSection: .trending
+                    )
+                }
+                if !stocks.isEmpty {
+                    snapshot.appendSections([.stocks])
+                    snapshot.appendItems(
+                        stocks.keys.map { .stock(coinID: $0) },
+                        toSection: .stocks
+                    )
+                }
+                if !topGainers.isEmpty {
+                    snapshot.appendSections([.topGainers])
+                    snapshot.appendItems(
+                        topGainers.keys.map { .topGainer(coinID: $0) },
+                        toSection: .topGainers
+                    )
+                }
+                if !topLosers.isEmpty {
+                    snapshot.appendSections([.topLosers])
+                    snapshot.appendItems(
+                        topLosers.keys.map { .topLoser(coinID: $0) },
+                        toSection: .topLosers
+                    )
+                }
+            }
+        case .advanced:
+            snapshot.appendSections([.amountInput, .priceInput])
+            snapshot.appendItems([.amountInput], toSection: .amountInput)
+            snapshot.appendItems([.priceInput], toSection: .priceInput)
+            if hasInput {
+                snapshot.appendSections([.expiry])
+                snapshot.appendItems([.expiry], toSection: .expiry)
+            } else {
+                snapshot.appendSections([.openOrders])
+                if openOrders.isEmpty {
+                    snapshot.appendItems([.noOpenOrder], toSection: .openOrders)
+                } else {
+                    snapshot.appendItems(
+                        openOrders.keys.map { .openOrder(id: $0) },
+                        toSection: .openOrders
+                    )
+                }
+            }
+        }
+        
+        dataSource.apply(snapshot, animatingDifferences: false)
+        updateReviewButtonVisibility(snapshot: snapshot)
     }
     
     func reload(openOrders: [TradeOrderViewModel]) {
@@ -1178,70 +1258,6 @@ extension TradeSpotViewController {
             self.navigationController?.popViewController(animated: true)
         }))
         self.present(alert, animated: true)
-    }
-    
-    func reloadSections() {
-        var snapshot = DataSourceSnapshot()
-        
-        switch mode {
-        case .simple:
-            snapshot.appendSections([.amountInput])
-            snapshot.appendItems([.amountInput], toSection: .amountInput)
-            if hasInput {
-                snapshot.appendSections([.simpleModePrice])
-                snapshot.appendItems([.simpleModePrice], toSection: .simpleModePrice)
-            } else {
-                if !trendings.isEmpty {
-                    snapshot.appendSections([.trending])
-                    snapshot.appendItems(
-                        trendings.keys.map { .trending(coinID: $0) },
-                        toSection: .trending
-                    )
-                }
-                if !stocks.isEmpty {
-                    snapshot.appendSections([.stocks])
-                    snapshot.appendItems(
-                        stocks.keys.map { .stock(coinID: $0) },
-                        toSection: .stocks
-                    )
-                }
-                if !topGainers.isEmpty {
-                    snapshot.appendSections([.topGainers])
-                    snapshot.appendItems(
-                        topGainers.keys.map { .topGainer(coinID: $0) },
-                        toSection: .topGainers
-                    )
-                }
-                if !topLosers.isEmpty {
-                    snapshot.appendSections([.topLosers])
-                    snapshot.appendItems(
-                        topLosers.keys.map { .topLoser(coinID: $0) },
-                        toSection: .topLosers
-                    )
-                }
-            }
-        case .advanced:
-            snapshot.appendSections([.amountInput, .priceInput])
-            snapshot.appendItems([.amountInput], toSection: .amountInput)
-            snapshot.appendItems([.priceInput], toSection: .priceInput)
-            if hasInput {
-                snapshot.appendSections([.expiry])
-                snapshot.appendItems([.expiry], toSection: .expiry)
-            } else {
-                snapshot.appendSections([.openOrders])
-                if openOrders.isEmpty {
-                    snapshot.appendItems([.noOpenOrder], toSection: .openOrders)
-                } else {
-                    snapshot.appendItems(
-                        openOrders.keys.map { .openOrder(id: $0) },
-                        toSection: .openOrders
-                    )
-                }
-            }
-        }
-        
-        dataSource.apply(snapshot, animatingDifferences: false)
-        updateReviewButtonVisibility(snapshot: snapshot)
     }
     
     private func deleteMarketSection(_ section: Section) {

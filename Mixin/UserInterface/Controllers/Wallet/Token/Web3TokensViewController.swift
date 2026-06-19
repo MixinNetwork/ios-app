@@ -5,7 +5,7 @@ final class Web3TokensViewController: TokensViewController {
     
     private let wallet: Web3Wallet
     
-    private var secret: CommonWalletSecret?
+    private var importedSecret: CommonWalletImportedSecret?
     private var supportedChainIDs: Set<String> = []
     private var overview: WalletOverview?
     private var overviewAction: WalletOverview.Action?
@@ -21,7 +21,7 @@ final class Web3TokensViewController: TokensViewController {
     private var availability: Web3Wallet.Availability {
         Web3Wallet.Availability(
             wallet: wallet,
-            secret: secret,
+            importedSecret: importedSecret,
             supportedChainIDs: supportedChainIDs
         )
     }
@@ -156,42 +156,42 @@ final class Web3TokensViewController: TokensViewController {
             let walletID = wallet.walletID
             let addresses = Web3AddressDAO.shared.addresses(walletID: walletID)
             let chainIDs = Set(addresses.map(\.chainID))
-            let secret: CommonWalletSecret?
+            let importedSecret: CommonWalletImportedSecret?
             let action: WalletOverview.Action?
             let watchingAddresses: WatchingAddresses?
             switch wallet.category.knownCase {
             case .classic:
-                secret = nil
+                importedSecret = nil
                 action = .general
                 watchingAddresses = nil
             case .importedMnemonic:
                 if let mnemonics = AppGroupKeychain.importedMnemonics(walletID: walletID) {
-                    secret = .mnemonics(mnemonics)
+                    importedSecret = .mnemonics(mnemonics)
                 } else {
-                    secret = nil
+                    importedSecret = nil
                 }
-                action = secret == nil ? .importSecret(.importMnemonics) : .general
+                action = importedSecret == nil ? .importSecret(.importMnemonics) : .general
                 watchingAddresses = nil
             case .importedPrivateKey:
                 if let privateKey = AppGroupKeychain.importedPrivateKey(walletID: walletID) {
                     let kind: Web3Chain.Kind? = .singleKindWallet(chainIDs: chainIDs)
                     switch kind {
                     case .bitcoin:
-                        secret = .privateKey(privateKey, .bitcoin)
+                        importedSecret = .privateKey(privateKey, .bitcoin)
                     case .evm:
-                        secret = .privateKey(privateKey, .evm)
+                        importedSecret = .privateKey(privateKey, .evm)
                     case .solana:
-                        secret = .privateKey(privateKey, .solana)
+                        importedSecret = .privateKey(privateKey, .solana)
                     case .none:
-                        secret = nil
+                        importedSecret = nil
                     }
                 } else {
-                    secret = nil
+                    importedSecret = nil
                 }
-                action = secret == nil ? .importSecret(.importPrivateKey) : .general
+                action = importedSecret == nil ? .importSecret(.importPrivateKey) : .general
                 watchingAddresses = nil
             case .watchAddress, .none:
-                secret = nil
+                importedSecret = nil
                 action = nil
                 watchingAddresses = WatchingAddresses(addresses: addresses)
             }
@@ -235,7 +235,7 @@ final class Web3TokensViewController: TokensViewController {
                 self.overview = overview
                 self.overviewAction = action
                 self.overviewTray = tray
-                self.secret = secret
+                self.importedSecret = importedSecret
                 self.supportedChainIDs = chainIDs
                 self.tokens = tokens
                 self.watchingAddresses = watchingAddresses

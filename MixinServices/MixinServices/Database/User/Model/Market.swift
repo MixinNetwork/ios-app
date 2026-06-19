@@ -327,33 +327,35 @@ extension Market {
         
         static func string(usdPrice: Decimal) -> String {
             let price = usdPrice * Currency.current.decimalRate
-            return if price >= 1000 {
-                (price / 1000).formatted(
-                    .currency(code: Currency.current.code)
-                    .presentation(.narrow)
-                    .precision(.fractionLength(0...2))
-                    .rounded(rule: .towardZero)
-                ) + "K"
-            } else if price >= 1 {
-                price.formatted(
-                    .currency(code: Currency.current.code)
-                    .presentation(.narrow)
-                    .precision(.fractionLength(0...2))
-                    .rounded(rule: .towardZero)
-                )
+            let formatStyle = Decimal.FormatStyle.Currency
+                .currency(code: Currency.current.code)
+                .presentation(.narrow)
+                .rounded(rule: .towardZero)
+            return if price >= 1 {
+                if #available(iOS 18, *) {
+                    price.formatted(
+                        formatStyle
+                            .notation(.compactName)
+                            .precision(.fractionLength(0...2))
+                    )
+                } else {
+                    if price >= 1000 {
+                        (price / 1000).formatted(
+                            formatStyle.precision(.fractionLength(0...2))
+                        ) + "K"
+                    } else {
+                        price.formatted(
+                            formatStyle.precision(.fractionLength(0...2))
+                        )
+                    }
+                }
             } else if price >= 0.0001 {
                 price.formatted(
-                    .currency(code: Currency.current.code)
-                    .presentation(.narrow)
-                    .precision(.fractionLength(0...4))
-                    .rounded(rule: .towardZero)
+                    formatStyle.precision(.fractionLength(0...4))
                 )
             } else {
                 "<" + Decimal(0.00001).formatted(
-                    .currency(code: Currency.current.code)
-                    .presentation(.narrow)
-                    .precision(.fractionLength(0...4))
-                    .rounded(rule: .towardZero)
+                    formatStyle.precision(.fractionLength(0...4))
                 )
             }
         }

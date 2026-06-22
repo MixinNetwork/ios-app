@@ -20,7 +20,7 @@ final class SimpleWeb3TransactionTableHeaderView: InfiniteTopView, Web3Transacti
     override func awakeFromNib() {
         super.awakeFromNib()
         contentStackView.setCustomSpacing(10, after: iconView)
-        contentStackView.setCustomSpacing(14, after: statusLabel)
+        contentStackView.setCustomSpacing(10, after: statusLabel)
         contentStackView.setCustomSpacing(2, after: nowValueLabel)
         iconView.badgeIconDiameter = 20
         iconView.badgeOutlineWidth = 1

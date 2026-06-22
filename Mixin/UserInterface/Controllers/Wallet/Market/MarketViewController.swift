@@ -770,8 +770,8 @@ extension MarketViewController {
         case warning
         case chart
         case stats
-        case infos
         case myBalance
+        case infos
         case description
     }
     

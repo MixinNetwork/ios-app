@@ -346,8 +346,33 @@ extension Web3TransactionViewController {
             if let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: transfer.assetID) {
                 simpleHeaderView.iconView.setIcon(web3Token: token)
                 simpleHeaderView.symbolLabel.text = token.symbol
+                simpleHeaderView.nowValueLabel.text = R.string.localizable.value_now(
+                    token.decimalUSDPrice > 0
+                    ? fiatMoneyValue(amount: abs(transfer.directionalAmount), usdPrice: token.decimalUSDPrice)
+                    : R.string.localizable.na()
+                )
+                simpleHeaderView.thenValueLabel.text = " "
+                AssetAPI.ticker(
+                    asset: token.assetID,
+                    offset: transaction.createdAt
+                ) { [weak self] (result) in
+                    guard let self else {
+                        return
+                    }
+                    switch result {
+                    case var .success(ticker):
+                        let thenValue = ticker.decimalUSDPrice > 0
+                            ? self.fiatMoneyValue(amount: abs(transfer.directionalAmount), usdPrice: ticker.decimalUSDPrice)
+                            : R.string.localizable.na()
+                        simpleHeaderView.thenValueLabel.text = R.string.localizable.value_then(thenValue)
+                    case .failure:
+                        break
+                    }
+                }
             } else {
                 simpleHeaderView.symbolLabel.text = nil
+                simpleHeaderView.nowValueLabel.isHidden = true
+                simpleHeaderView.thenValueLabel.isHidden = true
             }
             simpleHeaderView.amountLabel.textColor = switch transaction.status {
             case .success where !transfer.directionalAmount.isZero:

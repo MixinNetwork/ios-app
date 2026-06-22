@@ -9,13 +9,33 @@ class TradeSpotViewController: UIViewController {
         case advanced
     }
     
-    private enum Section: Int, CaseIterable {
+    enum Section: Int, Hashable, CaseIterable {
         case amountInput
         case priceInput
         case simpleModePrice
         case openOrders
         case expiry
+        case trending
+        case stocks
+        case topGainers
+        case topLosers
     }
+    
+    enum Item: Hashable {
+        case amountInput
+        case priceInput
+        case simpleModePrice
+        case noOpenOrder
+        case openOrder(id: String)
+        case expiry
+        case trending(coinID: String)
+        case stock(coinID: String)
+        case topGainer(coinID: String)
+        case topLoser(coinID: String)
+    }
+    
+    private typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, Item>
+    private typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Item>
     
     private enum PriceInputAccessory: Equatable {
         case available(isSellingToken: Bool)
@@ -55,20 +75,28 @@ class TradeSpotViewController: UIViewController {
     private(set) var quote: SwapQuote?
     
     private let tokenSource: RouteTokenSource
-    private let arbitrarySendAssetID: String?
-    private let arbitraryReceiveAssetID: String?
     private let maxOpenOrderCount = 10
+    private let marketCount = 8
+    
+    private var arbitrarySendAssetID: String?
+    private var arbitraryReceiveAssetID: String?
     
     private var showReviewWrapperConstraints: [NSLayoutConstraint] = []
     private var hideReviewWrapperConstraints: [NSLayoutConstraint] = []
     
-    private var sections: [Section] = []
+    private var dataSource: DiffableDataSource!
     private var contentSizeObservation: NSKeyValueObservation?
     private var quoteRequester: SwapQuotePeriodicRequester?
     private var amountRange: SwapQuotePeriodicRequester.AmountRange?
-    private var openOrderRequester: PendingTradeOrderLoader?
-    private var openOrders: [TradeOrderViewModel] = []
+    
+    private var openOrders: OrderedDictionary<String, TradeOrderViewModel> = [:]
     private var allOpenOrdersCount: Int?
+    private var openOrderRequester: PendingTradeOrderLoader?
+    
+    private var trendings: OrderedDictionary<String, FavorableMarket> = [:]
+    private var stocks: OrderedDictionary<String, FavorableMarket> = [:]
+    private var topGainers: OrderedDictionary<String, FavorableMarket> = [:]
+    private var topLosers: OrderedDictionary<String, FavorableMarket> = [:]
     
     // TradeAmountInputCell
     private(set) weak var amountInputCell: TradeAmountInputCell?
@@ -122,6 +150,14 @@ class TradeSpotViewController: UIViewController {
     // TradeExpirySelectorCell
     private(set) var selectedExpiry: TradeOrder.Expiry = .oneYear
     
+    private var hasInput: Bool {
+        if let sendAmount = pricingModel.sendAmount {
+            sendAmount != 0
+        } else {
+            false
+        }
+    }
+    
     init(
         mode: Mode,
         tokenSource: RouteTokenSource,
@@ -137,7 +173,7 @@ class TradeSpotViewController: UIViewController {
         self.tokenSource = tokenSource
         self.arbitrarySendAssetID = sendAssetID
         self.arbitraryReceiveAssetID = receiveAssetID
-        let nib = R.nib.spotTradeView
+        let nib = R.nib.tradeSpotView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
@@ -160,18 +196,13 @@ class TradeSpotViewController: UIViewController {
         ]
         hideReviewWrapperConstraints = [
             collectionView.bottomAnchor.constraint(
-                equalTo: view.keyboardLayoutGuide.topAnchor
+                equalTo: view.bottomAnchor
             ),
             reviewButtonWrapperView.topAnchor.constraint(
                 equalTo: view.bottomAnchor
             ),
         ]
-        switch mode {
-        case .simple:
-            showReviewButtonWrapperView()
-        case .advanced:
-            hideReviewButtonWrapperView()
-        }
+        hideReviewButtonWrapperView()
         NSLayoutConstraint.activate(showReviewWrapperConstraints)
         NSLayoutConstraint.activate(hideReviewWrapperConstraints)
         
@@ -190,8 +221,52 @@ class TradeSpotViewController: UIViewController {
         collectionView.register(R.nib.noOpenTradeOrderCell)
         collectionView.register(R.nib.tradeOrderCell)
         collectionView.register(R.nib.tradeExpirySelectorCell)
-        let layout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, _) in
-            switch self?.sections[sectionIndex] {
+        collectionView.register(R.nib.tradeSpotMarketCell)
+        let layout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, environment) in
+            guard let self, let section = self.dataSource.sectionIdentifier(for: sectionIndex) else {
+                return nil
+            }
+            
+            func marketsGroup() -> NSCollectionLayoutSection {
+                let headerHeight: CGFloat = 57
+                let topMargin: CGFloat = 10
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .estimated(56),
+                    heightDimension: .estimated(88)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let group: NSCollectionLayoutGroup = .horizontal(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .estimated(88)
+                    ),
+                    subitem: item,
+                    count: 4
+                )
+                group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 3, bottom: 10, trailing: 3)
+                let section = NSCollectionLayoutSection(group: group)
+                section.interGroupSpacing = 16
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .absolute(headerHeight)
+                    ),
+                    elementKind: UICollectionView.elementKindSectionHeader,
+                    alignment: .top,
+                    absoluteOffset: CGPoint(x: 0, y: 10)
+                )
+                header.extendsBoundary = false
+                section.boundarySupplementaryItems = [header]
+                let background: NSCollectionLayoutDecorationItem = .background(
+                    elementKind: TradeSectionBackgroundView.elementKind
+                )
+                background.contentInsets = NSDirectionalEdgeInsets(top: topMargin + headerHeight, leading: 20, bottom: 0, trailing: 20)
+                section.decorationItems = [background]
+                section.contentInsets = NSDirectionalEdgeInsets(top: topMargin + headerHeight, leading: 20, bottom: 20, trailing: 20)
+                return section
+            }
+            
+            switch section {
             case .amountInput:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(238))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -216,7 +291,7 @@ class TradeSpotViewController: UIViewController {
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                 return section
             case .openOrders:
-                if let self, !self.openOrders.isEmpty {
+                if !self.openOrders.isEmpty {
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
@@ -259,13 +334,16 @@ class TradeSpotViewController: UIViewController {
                     ]
                     return section
                 }
-            case .expiry, .none:
+            case .expiry:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(49))
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                return section
+            case .trending, .stocks, .topGainers, .topLosers:
+                let section = marketsGroup()
                 return section
             }
         }
@@ -279,9 +357,16 @@ class TradeSpotViewController: UIViewController {
             let contentViewFrame = collectionView.convert(collectionView.bounds, to: self.view)
             collectionView.alwaysBounceVertical = reviewButtonFrame.intersects(contentViewFrame)
         }
-        collectionView.allowsMultipleSelection = true
-        collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.alwaysBounceVertical = true
+        dataSource = DiffableDataSource(
+            collectionView: collectionView
+        ) { [weak self] (collectionView, indexPath, item) -> UICollectionViewCell? in
+            self?.cell(for: collectionView, at: indexPath, item: item)
+        }
+        dataSource.supplementaryViewProvider = { [weak self] (collectionView, kind, indexPath) in
+            self?.supplementaryView(for: collectionView, kind: kind, at: indexPath)
+        }
         reloadSections()
         
         reloadTokens()
@@ -415,14 +500,107 @@ class TradeSpotViewController: UIViewController {
         [:]
     }
     
-    func reload(openOrders: [TradeOrderViewModel]) {
-        self.openOrders = Array(openOrders.prefix(maxOpenOrderCount))
-        self.allOpenOrdersCount = openOrders.count > maxOpenOrderCount ? openOrders.count : nil
-        if let section = sections.firstIndex(of: .openOrders) {
-            UIView.performWithoutAnimation {
-                let sections = IndexSet(integer: section)
-                collectionView.reloadSections(sections)
+    func buy(assetID receiveAssetID: String) {
+        let sendAssetID = receiveAssetID == AssetID.erc20USDT
+        ? AssetID.erc20USDC
+        : AssetID.erc20USDT
+        arbitrarySendAssetID = sendAssetID
+        arbitraryReceiveAssetID = receiveAssetID
+        if let receiveToken = swappableTokens[receiveAssetID] {
+            setSendToken(swappableTokens[sendAssetID])
+            setReceiveToken(receiveToken)
+        } else {
+            reloadTokens()
+        }
+        collectionView.setContentOffset(.zero, animated: false)
+    }
+    
+    func reloadSections() {
+        var snapshot = DataSourceSnapshot()
+        
+        switch mode {
+        case .simple:
+            snapshot.appendSections([.amountInput])
+            snapshot.appendItems([.amountInput], toSection: .amountInput)
+            if hasInput {
+                snapshot.appendSections([.simpleModePrice])
+                snapshot.appendItems([.simpleModePrice], toSection: .simpleModePrice)
+            } else {
+                if !trendings.isEmpty {
+                    snapshot.appendSections([.trending])
+                    snapshot.appendItems(
+                        trendings.keys.map { .trending(coinID: $0) },
+                        toSection: .trending
+                    )
+                }
+                if !stocks.isEmpty {
+                    snapshot.appendSections([.stocks])
+                    snapshot.appendItems(
+                        stocks.keys.map { .stock(coinID: $0) },
+                        toSection: .stocks
+                    )
+                }
+                if !topGainers.isEmpty {
+                    snapshot.appendSections([.topGainers])
+                    snapshot.appendItems(
+                        topGainers.keys.map { .topGainer(coinID: $0) },
+                        toSection: .topGainers
+                    )
+                }
+                if !topLosers.isEmpty {
+                    snapshot.appendSections([.topLosers])
+                    snapshot.appendItems(
+                        topLosers.keys.map { .topLoser(coinID: $0) },
+                        toSection: .topLosers
+                    )
+                }
             }
+        case .advanced:
+            snapshot.appendSections([.amountInput, .priceInput])
+            snapshot.appendItems([.amountInput], toSection: .amountInput)
+            snapshot.appendItems([.priceInput], toSection: .priceInput)
+            if hasInput {
+                snapshot.appendSections([.expiry])
+                snapshot.appendItems([.expiry], toSection: .expiry)
+            } else {
+                snapshot.appendSections([.openOrders])
+                if openOrders.isEmpty {
+                    snapshot.appendItems([.noOpenOrder], toSection: .openOrders)
+                } else {
+                    snapshot.appendItems(
+                        openOrders.keys.map { .openOrder(id: $0) },
+                        toSection: .openOrders
+                    )
+                }
+            }
+        }
+        
+        dataSource.apply(snapshot, animatingDifferences: false)
+        updateReviewButtonVisibility(snapshot: snapshot)
+    }
+    
+    func reload(openOrders: [TradeOrderViewModel]) {
+        let displayOpenOrders = openOrders.prefix(maxOpenOrderCount).reduce(
+            into: OrderedDictionary<String, TradeOrderViewModel>()
+        ) { results, order in
+            results[order.orderID] = order
+        }
+        self.openOrders = displayOpenOrders
+        self.allOpenOrdersCount = openOrders.count > maxOpenOrderCount ? openOrders.count : nil
+        var snapshot = dataSource.snapshot()
+        if snapshot.sectionIdentifiers.contains(.openOrders) {
+            snapshot.deleteItems(
+                snapshot.itemIdentifiers(inSection: .openOrders)
+            )
+            if displayOpenOrders.isEmpty {
+                snapshot.appendItems([.noOpenOrder], toSection: .openOrders)
+            } else {
+                snapshot.appendItems(
+                    displayOpenOrders.keys.map { .openOrder(id: $0) },
+                    toSection: .openOrders
+                )
+            }
+            dataSource.apply(snapshot, animatingDifferences: false)
         }
     }
     
@@ -478,23 +656,14 @@ extension TradeSpotViewController: HomeNavigationController.NavigationBarStyling
     
 }
 
-extension TradeSpotViewController: UICollectionViewDataSource {
+extension TradeSpotViewController {
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        sections.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch sections[section] {
-        case .openOrders:
-            max(1, openOrders.count)
-        default:
-            1
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch sections[indexPath.section] {
+    private func cell(
+        for collectionView: UICollectionView,
+        at indexPath: IndexPath,
+        item: Item
+    ) -> UICollectionViewCell {
+        switch item {
         case .amountInput:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.trade_amount_input, for: indexPath)!
             if amountInputCell != cell {
@@ -605,15 +774,14 @@ extension TradeSpotViewController: UICollectionViewDataSource {
             cell.setContent(swapPriceContent)
             cell.footerInfoProgressView.setProgress(swapPriceProgress, animationDuration: nil)
             return cell
-        case .openOrders:
-            if openOrders.isEmpty {
-                return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.no_open_trade_order, for: indexPath)!
-            } else {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.trade_order, for: indexPath)!
-                let viewModel = openOrders[indexPath.item]
+        case .noOpenOrder:
+            return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.no_open_trade_order, for: indexPath)!
+        case .openOrder(let id):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.trade_order, for: indexPath)!
+            if let viewModel = openOrders[id] {
                 cell.load(viewModel: viewModel)
-                return cell
             }
+            return cell
         case .expiry:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.trade_expiry_selector, for: indexPath)!
             cell.selectedExpiry = selectedExpiry
@@ -621,26 +789,85 @@ extension TradeSpotViewController: UICollectionViewDataSource {
                 self?.selectedExpiry = expiry
             }
             return cell
+        case .trending(let coinID):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.trade_spot_market, for: indexPath)!
+            if let market = trendings[coinID] {
+                cell.load(market: market)
+            }
+            return cell
+        case .stock(let coinID):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.trade_spot_market, for: indexPath)!
+            if let market = stocks[coinID] {
+                cell.load(market: market)
+            }
+            return cell
+        case .topGainer(let coinID):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.trade_spot_market, for: indexPath)!
+            if let market = topGainers[coinID] {
+                cell.load(market: market)
+            }
+            return cell
+        case .topLoser(let coinID):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.trade_spot_market, for: indexPath)!
+            if let market = topLosers[coinID] {
+                cell.load(market: market)
+            }
+            return cell
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        switch kind {
-        case UICollectionView.elementKindSectionHeader:
-            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
-            let count = allOpenOrdersCount ?? openOrders.count
-            view.titleLabel.text = R.string.localizable.open_orders_count(count)
-            view.onShowAll = { [weak tradeViewController] (sender) in
-                tradeViewController?.showOrders(sender)
+    private func supplementaryView(
+        for collectionView: UICollectionView,
+        kind: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView? {
+        guard let section = dataSource.sectionIdentifier(for: indexPath.section) else {
+            return nil
+        }
+        switch section {
+        case .openOrders:
+            switch kind {
+            case UICollectionView.elementKindSectionHeader:
+                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
+                let count = allOpenOrdersCount ?? openOrders.count
+                header.titleLabel.text = R.string.localizable.open_orders_count(count)
+                header.disclosureImageView.isHidden = false
+                header.onShowAll = { [weak tradeViewController] (sender) in
+                    tradeViewController?.showOrders(sender)
+                }
+                return header
+            case UICollectionView.elementKindSectionFooter:
+                let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TradeViewAllFooterView.reuseIdentifier, for: indexPath) as! TradeViewAllFooterView
+                view.viewAllButton.isHidden = allOpenOrdersCount == nil
+                view.onViewAll = { [weak tradeViewController] (sender) in
+                    tradeViewController?.showOrders(sender)
+                }
+                return view
+            default:
+                return nil
             }
-            return view
+        case .trending where kind == UICollectionView.elementKindSectionHeader:
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
+            header.titleLabel.text = R.string.localizable.trending()
+            header.disclosureImageView.isHidden = true
+            return header
+        case .stocks where kind == UICollectionView.elementKindSectionHeader:
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
+            header.titleLabel.text = R.string.localizable.stocks()
+            header.disclosureImageView.isHidden = true
+            return header
+        case .topGainers where kind == UICollectionView.elementKindSectionHeader:
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
+            header.titleLabel.text = R.string.localizable.top_gainers()
+            header.disclosureImageView.isHidden = true
+            return header
+        case .topLosers where kind == UICollectionView.elementKindSectionHeader:
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
+            header.titleLabel.text = R.string.localizable.top_losers()
+            header.disclosureImageView.isHidden = true
+            return header
         default:
-            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TradeViewAllFooterView.reuseIdentifier, for: indexPath) as! TradeViewAllFooterView
-            view.viewAllButton.isHidden = allOpenOrdersCount == nil
-            view.onViewAll = { [weak tradeViewController] (sender) in
-                tradeViewController?.showOrders(sender)
-            }
-            return view
+            return nil
         }
     }
     
@@ -649,7 +876,15 @@ extension TradeSpotViewController: UICollectionViewDataSource {
 extension TradeSpotViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        sections[indexPath.section] == .openOrders
+        guard let item = dataSource.itemIdentifier(for: indexPath) else {
+            return false
+        }
+        switch item {
+        case .openOrder, .trending, .stock, .topGainer, .topLoser:
+            return true
+        default:
+            return false
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
@@ -657,14 +892,35 @@ extension TradeSpotViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch sections[indexPath.section] {
-        case .openOrders:
-            collectionView.deselectItem(at: indexPath, animated: true)
-            if openOrders.isEmpty {
-                // Selecting the empty indicator cell, do nothing
-            } else {
-                let viewModel = openOrders[indexPath.item]
+        collectionView.deselectItem(at: indexPath, animated: true)
+        switch dataSource.itemIdentifier(for: indexPath) {
+        case .openOrder(let id):
+            if let viewModel = openOrders[id] {
                 let viewController = TradeOrderViewController(viewModel: viewModel)
+                navigationController?.pushViewController(viewController, animated: true)
+            }
+        case .trending(let coinID):
+            if let market = trendings[coinID] {
+                let viewController = MarketViewController(market: market)
+                viewController.pushingViewController = self
+                navigationController?.pushViewController(viewController, animated: true)
+            }
+        case .stock(let coinID):
+            if let market = stocks[coinID] {
+                let viewController = MarketViewController(market: market)
+                viewController.pushingViewController = self
+                navigationController?.pushViewController(viewController, animated: true)
+            }
+        case .topGainer(let coinID):
+            if let market = topGainers[coinID] {
+                let viewController = MarketViewController(market: market)
+                viewController.pushingViewController = self
+                navigationController?.pushViewController(viewController, animated: true)
+            }
+        case .topLoser(let coinID):
+            if let market = topLosers[coinID] {
+                let viewController = MarketViewController(market: market)
+                viewController.pushingViewController = self
                 navigationController?.pushViewController(viewController, animated: true)
             }
         default:
@@ -843,6 +1099,84 @@ extension TradeSpotViewController: SwapQuotePeriodicRequesterDelegate {
     
 }
 
+extension TradeSpotViewController: MarketPeriodicRequester.Delegate {
+    
+    func marketPeriodicRequester(
+        _ requester: MarketPeriodicRequester,
+        didLoadMarketsIn category: Market.RequestCategory,
+        markets: [Market]
+    ) {
+        if markets.count == marketCount {
+            switch category {
+            case .all, .favorite:
+                assertionFailure()
+            case .trending:
+                let trendings = MarketDAO.shared.favorableMarket(markets: markets)
+                let viewModels = trendings.reduce(
+                    into: OrderedDictionary<String, FavorableMarket>()
+                ) { results, market in
+                    results[market.coinID] = market
+                }
+                DispatchQueue.main.async {
+                    self.showMarketSection(.trending, markets: viewModels)
+                }
+            case .stocks:
+                let stocks = MarketDAO.shared.favorableMarket(markets: markets)
+                let viewModels = stocks.reduce(
+                    into: OrderedDictionary<String, FavorableMarket>()
+                ) { results, market in
+                    results[market.coinID] = market
+                }
+                DispatchQueue.main.async {
+                    self.showMarketSection(.stocks, markets: viewModels)
+                }
+            case .topGainers:
+                let topGainers = MarketDAO.shared.favorableMarket(markets: markets)
+                let viewModels = topGainers.reduce(
+                    into: OrderedDictionary<String, FavorableMarket>()
+                ) { results, market in
+                    results[market.coinID] = market
+                }
+                DispatchQueue.main.async {
+                    self.showMarketSection(.topGainers, markets: viewModels)
+                }
+            case .topLosers:
+                let topLosers = MarketDAO.shared.favorableMarket(markets: markets)
+                let viewModels = topLosers.reduce(
+                    into: OrderedDictionary<String, FavorableMarket>()
+                ) { results, market in
+                    results[market.coinID] = market
+                }
+                DispatchQueue.main.async {
+                    self.showMarketSection(.topLosers, markets: viewModels)
+                }
+            }
+        } else {
+            switch category {
+            case .all, .favorite:
+                assertionFailure()
+            case .trending:
+                DispatchQueue.main.async {
+                    self.deleteMarketSection(.trending)
+                }
+            case .stocks:
+                DispatchQueue.main.async {
+                    self.deleteMarketSection(.stocks)
+                }
+            case .topGainers:
+                DispatchQueue.main.async {
+                    self.deleteMarketSection(.topGainers)
+                }
+            case .topLosers:
+                DispatchQueue.main.async {
+                    self.deleteMarketSection(.topLosers)
+                }
+            }
+        }
+    }
+    
+}
+
 extension TradeSpotViewController {
     
     struct AssetIDPair {
@@ -903,9 +1237,9 @@ extension TradeSpotViewController {
     @objc private func keyboardDidShow(_ notification: Notification) {
         if let textField = priceInputCell?.textField,
            textField.isFirstResponder,
-           let section = sections.lastIndex(of: .expiry)
+           let sectionIndex = dataSource.snapshot().indexOfSection(.expiry)
         {
-            let indexPath = IndexPath(item: 0, section: section)
+            let indexPath = IndexPath(item: 0, section: sectionIndex)
             collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
         }
     }
@@ -926,30 +1260,93 @@ extension TradeSpotViewController {
         self.present(alert, animated: true)
     }
     
-    func reloadSections() {
-        let sections: [Section] = switch mode {
-        case .simple:
-            [.amountInput, .simpleModePrice]
-        case .advanced:
-            if let sendAmount = pricingModel.sendAmount, sendAmount != 0 {
-                [.amountInput, .priceInput, .expiry]
-            } else {
-                [.amountInput, .priceInput, .openOrders]
-            }
+    private func deleteMarketSection(_ section: Section) {
+        assert(Thread.isMainThread)
+        switch section {
+        case .amountInput, .priceInput, .simpleModePrice, .openOrders, .expiry:
+            assertionFailure()
+            return
+        case .trending:
+            self.trendings = [:]
+        case .stocks:
+            self.stocks = [:]
+        case .topGainers:
+            self.topGainers = [:]
+        case .topLosers:
+            self.topLosers = [:]
         }
-        if sections != self.sections {
-            self.sections = sections
-            UIView.performWithoutAnimation {
-                let sections = IndexSet(integer: sections.count - 1)
-                collectionView.reloadSections(sections)
-            }
-            if sections.contains(.openOrders) {
-                hideReviewButtonWrapperView()
-            } else {
-                showReviewButtonWrapperView()
-            }
-            view.layoutSubviews()
+        var snapshot = dataSource.snapshot()
+        if snapshot.sectionIdentifiers.contains(section) {
+            snapshot.deleteSections([section])
+            dataSource.apply(snapshot, animatingDifferences: false)
+            updateReviewButtonVisibility(snapshot: snapshot)
         }
+    }
+    
+    private func showMarketSection(
+        _ section: Section,
+        markets: OrderedDictionary<String, FavorableMarket>
+    ) {
+        assert(Thread.isMainThread)
+        let newItems: [Item]
+        switch section {
+        case .amountInput, .priceInput, .simpleModePrice, .openOrders, .expiry:
+            assertionFailure()
+            return
+        case .trending:
+            self.trendings = markets
+            newItems = markets.keys.map { .trending(coinID: $0) }
+        case .stocks:
+            self.stocks = markets
+            newItems = markets.keys.map { .stock(coinID: $0) }
+        case .topGainers:
+            self.topGainers = markets
+            newItems = markets.keys.map { .topGainer(coinID: $0) }
+        case .topLosers:
+            self.topLosers = markets
+            newItems = markets.keys.map { .topLoser(coinID: $0) }
+        }
+        guard !hasInput else {
+            return
+        }
+        var snapshot = dataSource.snapshot()
+        let sectionIdentifiers = snapshot.sectionIdentifiers
+        if sectionIdentifiers.contains(section) {
+            snapshot.deleteItems(
+                snapshot.itemIdentifiers(inSection: section)
+            )
+            snapshot.appendItems(newItems, toSection: section)
+        } else {
+            let order: [Section] = [
+                .trending, .stocks, .topGainers, .topLosers
+            ]
+            let successiveSection: Section? = if let index = order.firstIndex(of: section) {
+                order.suffix(from: order.index(after: index))
+                    .first(where: sectionIdentifiers.contains(_:))
+            } else {
+                nil
+            }
+            if let successiveSection {
+                snapshot.insertSections([section], beforeSection: successiveSection)
+            } else {
+                snapshot.appendSections([section])
+            }
+            snapshot.appendItems(newItems, toSection: section)
+        }
+        dataSource.apply(snapshot, animatingDifferences: false)
+        updateReviewButtonVisibility(snapshot: snapshot)
+    }
+    
+    private func updateReviewButtonVisibility(snapshot: DataSourceSnapshot) {
+        let reviewButtonExclusiveSections: Set<Section> = [
+            .openOrders, .trending, .stocks, .topGainers, .topLosers
+        ]
+        if reviewButtonExclusiveSections.intersection(snapshot.sectionIdentifiers).isEmpty {
+            showReviewButtonWrapperView()
+        } else {
+            hideReviewButtonWrapperView()
+        }
+        view.layoutSubviews()
     }
     
     private func reloadTokens() {

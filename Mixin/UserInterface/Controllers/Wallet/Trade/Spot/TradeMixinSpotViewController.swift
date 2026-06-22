@@ -5,10 +5,6 @@ import MixinServices
 
 final class TradeMixinSpotViewController: TradeSpotViewController {
     
-    private let referral: String?
-    
-    private weak var depositTokenRequest: Request?
-    
     override var sendTokenPrecision: Int {
         Int(MixinToken.internalPrecision)
     }
@@ -16,6 +12,15 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
     override var orderWalletID: String {
         myUserId
     }
+    
+    private let referral: String?
+    
+    private weak var depositTokenRequest: Request?
+    
+    private var trendingRequester: MarketPeriodicRequester?
+    private var stocksRequester: MarketPeriodicRequester?
+    private var topGainersRequester: MarketPeriodicRequester?
+    private var topLosersRequester: MarketPeriodicRequester?
     
     init(
         mode: Mode,
@@ -43,6 +48,43 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
         var tags = ["wallet": "main", "type": mode.rawValue]
         tags["source"] = UserOperationAnalytics.tradeSource?.rawValue
         reporter.report(event: .tradeSpotStart, tags: tags)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        switch mode {
+        case .simple:
+            let trendingRequester = MarketPeriodicRequester(category: .trending, limit: 8)
+            self.trendingRequester = trendingRequester
+            trendingRequester.delegate = self
+            trendingRequester.start()
+            
+            let stocksRequester = MarketPeriodicRequester(category: .stocks, limit: 8)
+            self.stocksRequester = stocksRequester
+            stocksRequester.delegate = self
+            stocksRequester.start()
+            
+            let topGainersRequester = MarketPeriodicRequester(category: .topGainers, limit: 8)
+            self.topGainersRequester = topGainersRequester
+            topGainersRequester.delegate = self
+            topGainersRequester.start()
+            
+            let topLosersRequester = MarketPeriodicRequester(category: .topLosers, limit: 8)
+            self.topLosersRequester = topLosersRequester
+            topLosersRequester.delegate = self
+            topLosersRequester.start()
+        case .advanced:
+            break
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        trendingRequester?.pause()
+        stocksRequester?.pause()
+        topGainersRequester?.pause()
+        topLosersRequester?.pause()
     }
     
     override func changeSendToken(_ sender: Any) {

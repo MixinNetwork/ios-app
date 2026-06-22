@@ -7,7 +7,7 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         
         func exploreMarketHeaderView(
             _ view: ExploreMarketHeaderView,
-            didSwitchToCategory category: Market.Category,
+            didSwitchToCategory category: Market.DashboardCategory,
             limit: Market.Limit?
         )
         
@@ -64,7 +64,7 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         }
     }
     
-    var category: Market.Category = .all {
+    var category: Market.DashboardCategory = .all {
         didSet {
             switch category {
             case .all:

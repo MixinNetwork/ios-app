@@ -97,6 +97,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     )
     
     public private(set) lazy var decimalPrice = Decimal(string: currentPrice, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var shortPrice = ShortPriceFormatter.string(usdPrice: decimalPrice)
     
     public private(set) lazy var decimalPriceChangePercentage7D = Decimal(string: priceChangePercentage7D, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var localizedPriceChangePercentage7D = NumberFormatter.percentage.string(decimal: decimalPriceChangePercentage7D / 100)
@@ -104,6 +105,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     
     public private(set) lazy var decimalPriceChangePercentage24H = Decimal(string: priceChangePercentage24H, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var localizedPriceChangePercentage24H = NumberFormatter.percentage.string(decimal: decimalPriceChangePercentage24H / 100)
+    public private(set) lazy var localizedPriceChangePercentage24HAlwaysSign = PercentageFormatter.string(from: decimalPriceChangePercentage24H / 100, format: .pretty, sign: .always)
     public private(set) lazy var sparklineIn24HURL = URL(string: sparklineIn24H)
     
     public private(set) lazy var localizedDescription: String? = {
@@ -271,9 +273,18 @@ extension Market {
         
     }
     
-    public enum Category: String {
+    public enum DashboardCategory: String {
         case all
         case favorite
+    }
+    
+    public enum RequestCategory: String {
+        case all
+        case favorite
+        case trending
+        case stocks
+        case topGainers = "top_gainers"
+        case topLosers = "top_losers"
     }
     
     public enum ChangePeriod: Int, CaseIterable {
@@ -307,6 +318,49 @@ extension Market {
             marketCapRank: marketCapRank,
             updatedAt: updatedAt
         )
+    }
+    
+}
+
+extension Market {
+    
+    private enum ShortPriceFormatter {
+        
+        static func string(usdPrice: Decimal) -> String {
+            let price = usdPrice * Currency.current.decimalRate
+            let formatStyle = Decimal.FormatStyle.Currency
+                .currency(code: Currency.current.code)
+                .presentation(.narrow)
+                .rounded(rule: .towardZero)
+            return if price >= 1 {
+                if #available(iOS 18, *) {
+                    price.formatted(
+                        formatStyle
+                            .notation(.compactName)
+                            .precision(.fractionLength(0...2))
+                    )
+                } else {
+                    if price >= 1000 {
+                        (price / 1000).formatted(
+                            formatStyle.precision(.fractionLength(0...2))
+                        ) + "K"
+                    } else {
+                        price.formatted(
+                            formatStyle.precision(.fractionLength(0...2))
+                        )
+                    }
+                }
+            } else if price >= 0.0001 {
+                price.formatted(
+                    formatStyle.precision(.fractionLength(0...4))
+                )
+            } else {
+                "<" + Decimal(0.00001).formatted(
+                    formatStyle.precision(.fractionLength(0...4))
+                )
+            }
+        }
+        
     }
     
 }

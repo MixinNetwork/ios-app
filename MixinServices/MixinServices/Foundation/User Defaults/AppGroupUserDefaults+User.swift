@@ -278,7 +278,7 @@ extension AppGroupUserDefaults {
         public static var collectibleOrdering: CollectibleDisplayOrdering
         
         @RawRepresentableDefault(namespace: .user, key: Key.marketCategory, defaultValue: .all)
-        public static var marketCategory: Market.Category
+        public static var marketCategory: Market.DashboardCategory
         
         @RawRepresentableDefault(namespace: .user, key: Key.marketChangePeriod, defaultValue: .sevenDays)
         public static var marketChangePeriod: Market.ChangePeriod

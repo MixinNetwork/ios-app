@@ -275,15 +275,20 @@ final class MarketViewController: UIViewController {
     @objc private func trade(_ sender: Any) {
         if let token = tokens?.first {
             UserOperationAnalytics.tradeSource = .marketDetail
-            let trade = TradeViewController(
-                wallet: .privacy,
-                trading: .simpleSpot,
-                sendAssetID: AssetID.erc20USDT,
-                receiveAssetID: token.assetID,
-                referral: nil
-            )
-            if let trade {
-                self.navigationController?.pushViewController(trade, animated: true)
+            if let trade = pushingViewController as? TradeMixinSpotViewController {
+                trade.buy(assetID: token.assetID)
+                navigationController?.popViewController(animated: true)
+            } else {
+                let trade = TradeViewController(
+                    wallet: .privacy,
+                    trading: .simpleSpot,
+                    sendAssetID: AssetID.erc20USDT,
+                    receiveAssetID: token.assetID,
+                    referral: nil
+                )
+                if let trade {
+                    navigationController?.pushViewController(trade, animated: true)
+                }
             }
         } else if let market {
             alert(R.string.localizable.swap_not_supported(market.symbol))
@@ -765,8 +770,8 @@ extension MarketViewController {
         case warning
         case chart
         case stats
-        case infos
         case myBalance
+        case infos
         case description
     }
     

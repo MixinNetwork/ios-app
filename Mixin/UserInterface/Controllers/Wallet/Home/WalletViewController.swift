@@ -35,12 +35,15 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     
     private(set) var isViewAppearing = false
     private(set) var dataSource: DiffableDataSource!
+    private(set) var remoteBanners: [AppBanner] = []
     
-    private weak var tipsPageControl: UIPageControl?
+    private weak var bannersPageControl: UIPageControl?
     
-    private var tipsCurrentPage: Int = 0 {
+    private var allowsReloadingRemoteBanners = true
+    
+    private var bannersCurrentPage: Int = 0 {
         didSet {
-            tipsPageControl?.currentPage = tipsCurrentPage
+            bannersPageControl?.currentPage = bannersCurrentPage
         }
     }
     
@@ -150,7 +153,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                     let section = singleItem(estimatedHeight: 290)
                     section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     return section
-                case .tips:
+                case .banners:
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(110))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
@@ -160,13 +163,13 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                     if #available(iOS 17.0, *) {
                         section.orthogonalScrollingProperties.bounce = .always
                     }
-                    let numberOfTips = self?.dataSource.snapshot().numberOfItems(inSection: .tips) ?? 0
-                    if numberOfTips > 1 {
+                    let bannersCount = self?.dataSource.snapshot().numberOfItems(inSection: .banners) ?? 0
+                    if bannersCount > 1 {
                         section.visibleItemsInvalidationHandler = { (items, location, environment) in
                             let width = environment.container.contentSize.width
                             let pageOffset = location.x.truncatingRemainder(dividingBy: width)
                             if pageOffset < width / 5 {
-                                self?.tipsCurrentPage = Int(location.x / width)
+                                self?.bannersCurrentPage = Int(location.x / width)
                             }
                         }
                         let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(16))
@@ -176,6 +179,8 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                             alignment: .bottom
                         )
                         section.boundarySupplementaryItems = [footer]
+                    } else {
+                        section.visibleItemsInvalidationHandler = nil
                     }
                     return section
                 case .perpsPositions:
@@ -276,24 +281,24 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         }
         let emptyWalletInstructionRegistration = UICollectionView.CellRegistration<EmptyWalletInstructionCell, Void>(
             cellNib: UINib(resource: R.nib.emptyWalletInstructionCell)
-        ) { [weak self] cell, indexPath, tip in
+        ) { [weak self] cell, indexPath, _ in
             cell.delegate = self
         }
-        let tipRegistration = UICollectionView.CellRegistration<WalletTipCell, WalletTip>(
-            cellNib: UINib(resource: R.nib.walletTipCell)
-        ) { [weak self] cell, indexPath, tip in
-            cell.tip = tip
+        let bannerRegistration = UICollectionView.CellRegistration<WalletBannerCell, WalletBanner>(
+            cellNib: UINib(resource: R.nib.walletBannerCell)
+        ) { [weak self] cell, indexPath, banner in
+            cell.banner = banner
             cell.delegate = self
         }
-        let tipPageControlRegistration = UICollectionView.SupplementaryRegistration<WalletTipPageControlFooterView>(
+        let bannerPageControlRegistration = UICollectionView.SupplementaryRegistration<WalletBannerPageControlFooterView>(
             elementKind: UICollectionView.elementKindSectionFooter
         ) { [weak self] footerView, elementKind, indexPath in
             guard let self else {
                 return
             }
-            let tipsCount = self.dataSource.snapshot().numberOfItems(inSection: .tips)
-            footerView.configure(with: tipsCount, currentPage: 0)
-            self.tipsPageControl = footerView.pageControl
+            let bannersCount = self.dataSource.snapshot().numberOfItems(inSection: .banners)
+            footerView.configure(with: bannersCount, currentPage: 0)
+            self.bannersPageControl = footerView.pageControl
         }
         let supportRegistration = UICollectionView.CellRegistration<WalletSupportCell, WalletSupport>(
             cellNib: UINib(resource: R.nib.walletSupportCell)
@@ -325,8 +330,8 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 return cell
             case .emptyWalletInstruction:
                 return collectionView.dequeueConfiguredReusableCell(using: emptyWalletInstructionRegistration, for: indexPath, item: ())
-            case let .tip(tip):
-                return collectionView.dequeueConfiguredReusableCell(using: tipRegistration, for: indexPath, item: tip)
+            case let .banner(banner):
+                return collectionView.dequeueConfiguredReusableCell(using: bannerRegistration, for: indexPath, item: banner)
             case let .perpsPosition(positionID):
                 if let viewModel = self?.perpsPositions[positionID] {
                     switch viewModel.state {
@@ -384,8 +389,8 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 case .general, .none:
                     return nil
                 }
-            case .tips:
-                return collectionView.dequeueConfiguredReusableSupplementary(using: tipPageControlRegistration, for: indexPath)
+            case .banners:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: bannerPageControlRegistration, for: indexPath)
             case .perpsPositions:
                 switch elementKind {
                 case UICollectionView.elementKindSectionHeader:
@@ -499,6 +504,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         isViewAppearing = false
+        allowsReloadingRemoteBanners = true
     }
     
     @IBAction func switchFromWallets(_ sender: Any) {
@@ -574,7 +580,7 @@ extension WalletViewController {
     enum Section {
         case overview
         case emptyWalletInstruction
-        case tips
+        case banners
         case perpsPositions
         case tokens
         case transactions
@@ -587,7 +593,7 @@ extension WalletViewController {
     enum Item: Hashable {
         case overview
         case emptyWalletInstruction
-        case tip(WalletTip)
+        case banner(WalletBanner)
         case perpsPosition(positionID: String)
         case token(assetID: String)
         case transaction(id: String)
@@ -600,18 +606,76 @@ extension WalletViewController {
     typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, Item>
     typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Item>
     
-    func insertTipsReferralSection(into snapshot: inout DataSourceSnapshot) {
-        var tips: [WalletTip] = []
-        if !BadgeManager.shared.hasViewed(identifier: .addWalletTip) {
-            tips.append(.addWallet)
+    func insertBannersReferralSection(into snapshot: inout DataSourceSnapshot) {
+        var banners: [WalletBanner] = remoteBanners.map({ .remote($0) })
+        if !BadgeManager.shared.hasViewed(identifier: .addWalletBanner) {
+            banners.append(.embedded(.addWallet))
         }
-        if !tips.isEmpty, let firstSection = snapshot.sectionIdentifiers.first {
-            snapshot.insertSections([.tips], afterSection: firstSection)
-            snapshot.appendItems(tips.map({ Item.tip($0) }), toSection: .tips)
+        if !banners.isEmpty, let firstSection = snapshot.sectionIdentifiers.first {
+            snapshot.insertSections([.banners], afterSection: firstSection)
+            snapshot.appendItems(banners.map({ Item.banner($0) }), toSection: .banners)
         }
         if !BadgeManager.shared.hasViewed(identifier: .walletHomeReferral) {
             snapshot.insertSections([.referral], beforeSection: .support)
             snapshot.appendItems([.referral], toSection: .referral)
+        }
+    }
+    
+    // nil for all chains
+    func reloadRemoteBannersIfAllowed(chainIDs: Set<String>?) {
+        guard allowsReloadingRemoteBanners && isViewAppearing else {
+            return
+        }
+        allowsReloadingRemoteBanners = false
+        RewardAPI.appBanners(chainIDs: chainIDs) { [weak self] result in
+            guard let self else {
+                return
+            }
+            switch result {
+            case .success(let banners):
+                if banners.isEmpty {
+                    AppGroupUserDefaults.Wallet.closedBannerIDs = []
+                }
+                let closedBannerIDs = Set(AppGroupUserDefaults.Wallet.closedBannerIDs)
+                let displayBanners = banners.filter { banner in
+                    !closedBannerIDs.contains(banner.bannerID)
+                }
+                self.remoteBanners = displayBanners
+                let bannerItems = displayBanners.map { banner in
+                    Item.banner(.remote(banner))
+                }
+                var snapshot = self.dataSource.snapshot()
+                if snapshot.sectionIdentifiers.contains(.banners) {
+                    snapshot.deleteItems(
+                        snapshot.itemIdentifiers(inSection: .banners).filter { item in
+                            switch item {
+                            case .banner(.remote):
+                                true
+                            default:
+                                false
+                            }
+                        }
+                    )
+                    if !bannerItems.isEmpty {
+                        if let firstItem = snapshot.itemIdentifiers(inSection: .banners).first {
+                            snapshot.insertItems(bannerItems, beforeItem: firstItem)
+                        } else {
+                            snapshot.appendItems(bannerItems, toSection: .banners)
+                        }
+                    }
+                    self.dataSource.apply(snapshot, animatingDifferences: false)
+                } else if !bannerItems.isEmpty {
+                    if let firstSection = snapshot.sectionIdentifiers.first {
+                        snapshot.insertSections([.banners], afterSection: firstSection)
+                    } else {
+                        snapshot.appendSections([.banners])
+                    }
+                    snapshot.appendItems(bannerItems, toSection: .banners)
+                    self.dataSource.apply(snapshot, animatingDifferences: false)
+                }
+            case .failure(let error):
+                Logger.general.debug(category: "Wallet", message: "\(error)")
+            }
         }
     }
     
@@ -637,37 +701,57 @@ extension WalletViewController: HomeNavigationController.NavigationBarStyling {
     
 }
 
-extension WalletViewController: WalletTipCell.Delegate {
+extension WalletViewController: WalletBannerCell.Delegate {
     
-    func walletTipCell(_ cell: WalletTipCell, requestPerformAction tip: WalletTip) {
-        switch tip {
-        case .addWallet:
-            BadgeManager.shared.setHasViewed(identifier: .addWalletAction)
-            let selector = AddWalletMethodSelectorViewController()
-            selector.onSelected = { [weak self] method in
-                let introduction = AddWalletIntroductionViewController(action: .addWallet(method))
-                self?.navigationController?.pushViewController(introduction, animated: true)
+    func walletBannerCell(_ cell: WalletBannerCell, requestPerformAction banner: WalletBanner, index: Int) {
+        switch banner {
+        case .embedded(let banner):
+            switch banner {
+            case .addWallet:
+                BadgeManager.shared.setHasViewed(identifier: .addWalletAction)
+                let selector = AddWalletMethodSelectorViewController()
+                selector.onSelected = { [weak self] method in
+                    let introduction = AddWalletIntroductionViewController(action: .addWallet(method))
+                    self?.navigationController?.pushViewController(introduction, animated: true)
+                }
+                present(selector, animated: true)
             }
-            present(selector, animated: true)
+        case .remote(let banner):
+            if let action = banner.actions?[index].action,
+               let url = URL(string: action)
+            {
+                _ = UrlWindow.checkUrl(url: url)
+                if !banner.trackingKey.isEmpty {
+                    reporter.report(
+                        eventName: banner.trackingKey,
+                        tags: ["source": "wallet_home_ad_banner_button"]
+                    )
+                }
+            }
         }
     }
     
-    func walletTipCell(_ cell: WalletTipCell, requestDismiss tip: WalletTip) {
-        switch tip {
-        case .addWallet:
-            BadgeManager.shared.setHasViewed(identifier: .addWalletTip)
-            var snapshot = dataSource.snapshot()
-            let tipIdentifiers = snapshot.itemIdentifiers(inSection: .tips)
-            if tipIdentifiers.contains(.tip(tip)) {
-                snapshot.deleteItems([.tip(tip)])
-                if tipIdentifiers.count - 1 == 0 {
-                    snapshot.deleteSections([.tips])
-                } else {
-                    tipsPageControl?.numberOfPages -= 1
-                }
+    func walletBannerCell(_ cell: WalletBannerCell, requestDismiss banner: WalletBanner) {
+        switch banner {
+        case .embedded(let banner):
+            switch banner {
+            case .addWallet:
+                BadgeManager.shared.setHasViewed(identifier: .addWalletBanner)
             }
-            dataSource.apply(snapshot, animatingDifferences: true)
+        case .remote(let banner):
+            AppGroupUserDefaults.Wallet.closedBannerIDs.append(banner.bannerID)
         }
+        var snapshot = dataSource.snapshot()
+        let identifiers = snapshot.itemIdentifiers(inSection: .banners)
+        if identifiers.contains(.banner(banner)) {
+            snapshot.deleteItems([.banner(banner)])
+            if identifiers.count - 1 == 0 {
+                snapshot.deleteSections([.banners])
+            } else {
+                bannersPageControl?.numberOfPages -= 1
+            }
+        }
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
     
 }

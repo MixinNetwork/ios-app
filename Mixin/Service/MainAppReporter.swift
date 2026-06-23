@@ -24,9 +24,6 @@ final class MainAppReporter: Reporter {
     }
     
     override func report(event: Event, tags: [String: String]? = nil) {
-        super.report(event: event, tags: tags)
-        Analytics.logEvent(event.rawValue, parameters: tags)
-        
         switch event {
         case .signUpStart,
              .buyStart,
@@ -55,6 +52,11 @@ final class MainAppReporter: Reporter {
         default:
             break
         }
+        report(eventName: event.rawValue, tags: tags)
+    }
+    
+    override func report(eventName: String, tags: [String : String]? = nil) {
+        Analytics.logEvent(eventName, parameters: tags)
     }
     
     override func updateUserProperties(_ properties: UserProperty, account: Account? = nil) {

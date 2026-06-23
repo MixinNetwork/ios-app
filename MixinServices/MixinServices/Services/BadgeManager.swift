@@ -19,7 +19,7 @@ public final class BadgeManager {
         case freeTransfer = "free_transfer"
         case perpsTakeProfit = "perps_take_profit"
         case perpsStopLoss = "perps_stop_loss"
-        case addWalletTip = "add_wallet_tip"
+        case addWalletBanner = "add_wallet_tip"
         case walletHomeReferral = "wallet_home_referral"
     }
     

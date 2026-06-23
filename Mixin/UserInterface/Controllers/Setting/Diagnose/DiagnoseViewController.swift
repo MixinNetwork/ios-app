@@ -147,6 +147,7 @@ extension DiagnoseViewController: UITableViewDelegate {
             AppGroupUserDefaults.notificationTipDismissalDate = nil
             AppGroupUserDefaults.appRatingRequestDate = nil
             AppGroupUserDefaults.User.verifyPhoneTipDismissalDate = nil
+            AppGroupUserDefaults.Wallet.closedBannerIDs = []
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
         case (11, 0):
             // Inspect WebView

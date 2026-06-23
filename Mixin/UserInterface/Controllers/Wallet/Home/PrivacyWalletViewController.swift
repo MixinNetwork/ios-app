@@ -332,9 +332,10 @@ final class PrivacyWalletViewController: WalletViewController {
                 self.hasMorePerpsPositions = hasMorePerpsPositions
                 self.perpsTopMovers = perpsTopMovers
                 
-                self.insertTipsReferralSection(into: &snapshot)
+                self.insertBannersReferralSection(into: &snapshot)
                 self.dataSource.applySnapshotUsingReloadData(snapshot)
                 
+                self.reloadRemoteBannersIfAllowed(chainIDs: nil)
                 if !perpsPositions.isEmpty {
                     let positionLoader: PerpetualPositionLoader
                     if let loader = self.perpsPositionLoader {
@@ -523,8 +524,10 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
             return
         }
         switch item {
-        case .overview, .emptyWalletInstruction, .tip, .referral, .benefit:
+        case .overview, .emptyWalletInstruction, .referral, .benefit:
             break
+        case .banner(let banner):
+            banner.invokeRemoteActionURL()
         case .perpsPosition(let positionID):
             if let position = perpsPositions[positionID],
                let market = PerpsMarketDAO.shared.market(marketID: position.marketID),

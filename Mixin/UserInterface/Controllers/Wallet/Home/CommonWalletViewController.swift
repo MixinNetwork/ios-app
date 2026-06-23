@@ -437,8 +437,9 @@ final class CommonWalletViewController: WalletViewController {
                     tradeSource: .walletHome,
                     responder: self
                 )
-                self.insertTipsReferralSection(into: &snapshot)
+                self.insertBannersReferralSection(into: &snapshot)
                 self.dataSource.applySnapshotUsingReloadData(snapshot)
+                self.reloadRemoteBannersIfAllowed(chainIDs: chainIDs)
                 self.updateDappConnectionWalletIfNeeded()
             }
         }
@@ -481,8 +482,10 @@ extension CommonWalletViewController: UICollectionViewDelegate {
             return
         }
         switch item {
-        case .overview, .emptyWalletInstruction, .tip, .perpsPosition, .perpsTopMover, .referral, .benefit:
+        case .overview, .emptyWalletInstruction, .perpsPosition, .perpsTopMover, .referral, .benefit:
             break
+        case .banner(let banner):
+            banner.invokeRemoteActionURL()
         case .token(let assetID):
             if let token = tokens[assetID] {
                 let viewController = Web3TokenViewController(

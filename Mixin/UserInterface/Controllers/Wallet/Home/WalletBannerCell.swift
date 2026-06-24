@@ -75,10 +75,10 @@ final class WalletBannerCell: UICollectionViewCell {
             imageView.sd_setImage(with: URL(string: banner.iconURL))
             titleLabel.text = banner.title
             titleLabel.isHidden = false
-            if let actions = banner.actions, !actions.isEmpty {
+            if let actions = banner.actions, let title = actions.first?.label {
                 // Title + Button
                 descriptionLabel.isHidden = true
-                reloadActionButtons(titles: actions.map(\.label))
+                reloadActionButtons(titles: [title])
                 actionStackView.isHidden = false
             } else {
                 // Title + Description

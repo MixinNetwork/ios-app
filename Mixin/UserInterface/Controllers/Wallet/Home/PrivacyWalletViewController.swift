@@ -38,7 +38,6 @@ final class PrivacyWalletViewController: WalletViewController {
         )
         let pendingDepositObserver = PrivacyWalletPendingDepositObserver()
         pendingDepositObserver.delegate = self
-        pendingDepositObserver.reloadPendingDeposits()
         self.pendingDepositObserver = pendingDepositObserver
         collectionView.delegate = self
         
@@ -79,7 +78,7 @@ final class PrivacyWalletViewController: WalletViewController {
             name: PerpsMarketDAO.marketsDidUpdateNotification,
             object: nil
         )
-        reloadData()
+        // Not calling `reloadData`, it will be reloaded in `viewWillAppear`
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -90,7 +89,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 self.hasAssetInLegacyNetwork = hasAssetInLegacyNetwork
             }
         }
-        pendingDepositObserver?.reloadPendingDeposits()
+        pendingDepositObserver?.reloadPendingDeposits() // Will trigger `reloadData`
         perpsPositionLoader?.start()
         perpsTopMoverLoader?.start()
     }

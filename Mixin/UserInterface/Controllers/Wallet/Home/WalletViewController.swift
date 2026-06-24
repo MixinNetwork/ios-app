@@ -740,6 +740,9 @@ extension WalletViewController: WalletBannerCell.Delegate {
             }
         case .remote(let banner):
             AppGroupUserDefaults.Wallet.closedBannerIDs.append(banner.bannerID)
+            self.remoteBanners.removeAll { savedBanner in
+                savedBanner.bannerID == banner.bannerID
+            }
         }
         var snapshot = dataSource.snapshot()
         let identifiers = snapshot.itemIdentifiers(inSection: .banners)

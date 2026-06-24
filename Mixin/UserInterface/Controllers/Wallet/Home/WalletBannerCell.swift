@@ -28,6 +28,8 @@ final class WalletBannerCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
         contentStackView.setCustomSpacing(12, after: descriptionLabel)
+        imageView.layer.cornerRadius = 8
+        imageView.layer.masksToBounds = true
         titleLabel.setFont(
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true
@@ -65,22 +67,23 @@ final class WalletBannerCell: UICollectionViewCell {
                 imageView.image = R.image.wallet_tip_add()
                 titleLabel.isHidden = true
                 descriptionLabel.text = R.string.localizable.wallet_home_add_wallet_banner_title()
+                descriptionLabel.isHidden = false
                 actionStackView.isHidden = false
                 reloadActionButtons(titles: [R.string.localizable.add_wallet()])
             }
         case .remote(let banner):
             imageView.sd_setImage(with: URL(string: banner.iconURL))
-            if banner.title.isEmpty {
-                titleLabel.isHidden = true
-            } else {
-                titleLabel.isHidden = false
-                titleLabel.text = banner.title
-            }
-            descriptionLabel.text = banner.description
+            titleLabel.text = banner.title
+            titleLabel.isHidden = false
             if let actions = banner.actions, !actions.isEmpty {
-                actionStackView.isHidden = false
+                // Title + Button
+                descriptionLabel.isHidden = true
                 reloadActionButtons(titles: actions.map(\.label))
+                actionStackView.isHidden = false
             } else {
+                // Title + Description
+                descriptionLabel.isHidden = false
+                descriptionLabel.text = banner.description
                 actionStackView.isHidden = true
             }
         case .none:

@@ -35,7 +35,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     
     private(set) var isViewAppearing = false
     private(set) var dataSource: DiffableDataSource!
-    private(set) var remoteBanners: [AppBanner] = []
+    private(set) var bannerItems: [Item] = []
     
     private weak var bannersPageControl: UIPageControl?
     
@@ -607,13 +607,9 @@ extension WalletViewController {
     typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Item>
     
     func insertBannersReferralSection(into snapshot: inout DataSourceSnapshot) {
-        var banners: [WalletBanner] = remoteBanners.map({ .remote($0) })
-        if !BadgeManager.shared.hasViewed(identifier: .addWalletBanner) {
-            banners.append(.embedded(.addWallet))
-        }
-        if !banners.isEmpty, let firstSection = snapshot.sectionIdentifiers.first {
+        if !bannerItems.isEmpty, let firstSection = snapshot.sectionIdentifiers.first {
             snapshot.insertSections([.banners], afterSection: firstSection)
-            snapshot.appendItems(banners.map({ Item.banner($0) }), toSection: .banners)
+            snapshot.appendItems(bannerItems, toSection: .banners)
         }
         if !BadgeManager.shared.hasViewed(identifier: .walletHomeReferral) {
             snapshot.insertSections([.referral], beforeSection: .support)
@@ -622,7 +618,7 @@ extension WalletViewController {
     }
     
     // nil for all chains
-    func reloadRemoteBannersIfAllowed(chainIDs: Set<String>?) {
+    func reloadBannersIfAllowed(chainIDs: Set<String>?) {
         guard allowsReloadingRemoteBanners && isViewAppearing else {
             return
         }
@@ -631,50 +627,47 @@ extension WalletViewController {
             guard let self else {
                 return
             }
+            var bannerItems: [Item]
             switch result {
-            case .success(let banners):
-                if banners.isEmpty {
+            case .success(let remoteBanners):
+                if remoteBanners.isEmpty {
                     AppGroupUserDefaults.Wallet.closedBannerIDs = []
                 }
                 let closedBannerIDs = Set(AppGroupUserDefaults.Wallet.closedBannerIDs)
-                let displayBanners = banners.filter { banner in
-                    !closedBannerIDs.contains(banner.bannerID)
-                }
-                self.remoteBanners = displayBanners
-                let bannerItems = displayBanners.map { banner in
-                    Item.banner(.remote(banner))
-                }
-                var snapshot = self.dataSource.snapshot()
-                if snapshot.sectionIdentifiers.contains(.banners) {
-                    snapshot.deleteItems(
-                        snapshot.itemIdentifiers(inSection: .banners).filter { item in
-                            switch item {
-                            case .banner(.remote):
-                                true
-                            default:
-                                false
-                            }
-                        }
-                    )
-                    if !bannerItems.isEmpty {
-                        if let firstItem = snapshot.itemIdentifiers(inSection: .banners).first {
-                            snapshot.insertItems(bannerItems, beforeItem: firstItem)
-                        } else {
-                            snapshot.appendItems(bannerItems, toSection: .banners)
-                        }
-                    }
-                    self.dataSource.apply(snapshot, animatingDifferences: false)
-                } else if !bannerItems.isEmpty {
-                    if let firstSection = snapshot.sectionIdentifiers.first {
-                        snapshot.insertSections([.banners], afterSection: firstSection)
+                bannerItems = remoteBanners.compactMap { banner in
+                    if closedBannerIDs.contains(banner.bannerID) {
+                        nil
                     } else {
-                        snapshot.appendSections([.banners])
+                        Item.banner(.remote(banner))
                     }
-                    snapshot.appendItems(bannerItems, toSection: .banners)
-                    self.dataSource.apply(snapshot, animatingDifferences: false)
                 }
             case .failure(let error):
                 Logger.general.debug(category: "Wallet", message: "\(error)")
+                bannerItems = []
+            }
+            if !BadgeManager.shared.hasViewed(identifier: .addWalletBanner) {
+                bannerItems.append(.banner(.embedded(.addWallet)))
+            }
+            self.bannerItems = bannerItems
+            var snapshot = self.dataSource.snapshot()
+            if snapshot.sectionIdentifiers.contains(.banners) {
+                snapshot.deleteItems(
+                    snapshot.itemIdentifiers(inSection: .banners)
+                )
+                if bannerItems.isEmpty {
+                    snapshot.deleteSections([.banners])
+                } else {
+                    snapshot.appendItems(bannerItems, toSection: .banners)
+                }
+                self.dataSource.apply(snapshot, animatingDifferences: false)
+            } else if !bannerItems.isEmpty {
+                if let firstSection = snapshot.sectionIdentifiers.first {
+                    snapshot.insertSections([.banners], afterSection: firstSection)
+                } else {
+                    snapshot.appendSections([.banners])
+                }
+                snapshot.appendItems(bannerItems, toSection: .banners)
+                self.dataSource.apply(snapshot, animatingDifferences: false)
             }
         }
     }
@@ -740,8 +733,13 @@ extension WalletViewController: WalletBannerCell.Delegate {
             }
         case .remote(let banner):
             AppGroupUserDefaults.Wallet.closedBannerIDs.append(banner.bannerID)
-            self.remoteBanners.removeAll { savedBanner in
-                savedBanner.bannerID == banner.bannerID
+            bannerItems.removeAll { item in
+                switch item {
+                case .banner(.remote(let displayingBanner)):
+                    displayingBanner.bannerID == banner.bannerID
+                default:
+                    false
+                }
             }
         }
         var snapshot = dataSource.snapshot()

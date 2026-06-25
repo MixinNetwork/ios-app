@@ -439,7 +439,7 @@ final class CommonWalletViewController: WalletViewController {
                 )
                 self.insertBannersReferralSection(into: &snapshot)
                 self.dataSource.applySnapshotUsingReloadData(snapshot)
-                self.reloadRemoteBannersIfAllowed(chainIDs: chainIDs)
+                self.reloadBannersIfAllowed(chainIDs: chainIDs)
                 self.updateDappConnectionWalletIfNeeded()
             }
         }

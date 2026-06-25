@@ -334,7 +334,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 self.insertBannersReferralSection(into: &snapshot)
                 self.dataSource.applySnapshotUsingReloadData(snapshot)
                 
-                self.reloadRemoteBannersIfAllowed(chainIDs: nil)
+                self.reloadBannersIfAllowed(chainIDs: nil)
                 if !perpsPositions.isEmpty {
                     let positionLoader: PerpetualPositionLoader
                     if let loader = self.perpsPositionLoader {

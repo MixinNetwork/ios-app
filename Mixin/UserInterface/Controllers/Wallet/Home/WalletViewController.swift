@@ -66,7 +66,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         config.interSectionSpacing = 10
         let layout = UICollectionViewCompositionalLayout(
             sectionProvider: { [weak self] sectionIndex, environment in
-                guard let section = self?.dataSource?.sectionIdentifier(for: sectionIndex) else {
+                guard let dataSource = self?.dataSource, let section = dataSource.sectionIdentifier(for: sectionIndex) else {
                     return nil
                 }
                 
@@ -154,16 +154,28 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                     section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     return section
                 case .banners:
-                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(110))
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-                    let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.orthogonalScrollingBehavior = .groupPaging
+                    let bannersCount = dataSource.snapshot().numberOfItems(inSection: .banners)
+                    let section: NSCollectionLayoutSection
                     if #available(iOS 17.0, *) {
+                        let itemSize = NSCollectionLayoutSize(
+                            widthDimension: .fractionalWidth(1.0 / CGFloat(bannersCount)),
+                            heightDimension: .uniformAcrossSiblings(estimate: 81)
+                        )
+                        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(CGFloat(bannersCount)), heightDimension: .estimated(81))
+                        let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, repeatingSubitem: item, count: bannersCount)
+                        section = NSCollectionLayoutSection(group: group)
                         section.orthogonalScrollingProperties.bounce = .always
+                        section.orthogonalScrollingBehavior = .paging
+                    } else {
+                        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(81))
+                        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                        let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
+                        section = NSCollectionLayoutSection(group: group)
+                        section.orthogonalScrollingBehavior = .groupPaging
                     }
-                    let bannersCount = self?.dataSource.snapshot().numberOfItems(inSection: .banners) ?? 0
                     if bannersCount > 1 {
                         section.visibleItemsInvalidationHandler = { (items, location, environment) in
                             let width = environment.container.contentSize.width

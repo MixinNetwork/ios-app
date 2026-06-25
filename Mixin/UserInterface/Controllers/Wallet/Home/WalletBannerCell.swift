@@ -27,7 +27,8 @@ final class WalletBannerCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
-        contentStackView.setCustomSpacing(12, after: descriptionLabel)
+        contentStackView.setCustomSpacing(8, after: descriptionLabel)
+        contentStackView.setCustomSpacing(0, after: actionStackView)
         imageView.layer.cornerRadius = 8
         imageView.layer.masksToBounds = true
         titleLabel.setFont(

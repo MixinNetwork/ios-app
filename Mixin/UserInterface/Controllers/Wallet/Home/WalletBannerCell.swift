@@ -73,17 +73,19 @@ final class WalletBannerCell: UICollectionViewCell {
             }
         case .remote(let banner):
             imageView.sd_setImage(with: URL(string: banner.iconURL))
-            titleLabel.text = banner.title
-            titleLabel.isHidden = false
             if let actions = banner.actions, let title = actions.first?.label {
                 // Title + Button
-                descriptionLabel.isHidden = true
+                titleLabel.isHidden = true
+                descriptionLabel.text = banner.title
+                descriptionLabel.isHidden = false
                 reloadActionButtons(titles: [title])
                 actionStackView.isHidden = false
             } else {
                 // Title + Description
-                descriptionLabel.isHidden = false
+                titleLabel.text = banner.title
+                titleLabel.isHidden = false
                 descriptionLabel.text = banner.description
+                descriptionLabel.isHidden = false
                 actionStackView.isHidden = true
             }
         case .none:

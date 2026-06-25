@@ -68,9 +68,10 @@ final class WalletBannerCell: UICollectionViewCell {
                 imageView.image = R.image.wallet_tip_add()
                 titleLabel.isHidden = true
                 descriptionLabel.text = R.string.localizable.wallet_home_add_wallet_banner_title()
+                descriptionLabel.textColor = R.color.text_secondary()
                 descriptionLabel.isHidden = false
-                actionStackView.isHidden = false
                 reloadActionButtons(titles: [R.string.localizable.add_wallet()])
+                actionStackView.isHidden = false
             }
         case .remote(let banner):
             imageView.sd_setImage(with: URL(string: banner.iconURL))
@@ -78,6 +79,7 @@ final class WalletBannerCell: UICollectionViewCell {
                 // Title + Button
                 titleLabel.isHidden = true
                 descriptionLabel.text = banner.title
+                descriptionLabel.textColor = R.color.text_secondary()
                 descriptionLabel.isHidden = false
                 reloadActionButtons(titles: [title])
                 actionStackView.isHidden = false
@@ -86,6 +88,7 @@ final class WalletBannerCell: UICollectionViewCell {
                 titleLabel.text = banner.title
                 titleLabel.isHidden = false
                 descriptionLabel.text = banner.description
+                descriptionLabel.textColor = R.color.text_tertiary()
                 descriptionLabel.isHidden = false
                 actionStackView.isHidden = true
             }
@@ -126,6 +129,7 @@ final class WalletBannerCell: UICollectionViewCell {
         config.baseBackgroundColor = R.color.background_quaternary()
         config.cornerStyle = .capsule
         config.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 10, bottom: 3, trailing: 10)
+        config.titleLineBreakMode = .byTruncatingTail
         var attributes = AttributeContainer()
         attributes.font = UIFontMetrics.default.scaledFont(
             for: .systemFont(ofSize: 14, weight: .medium)

@@ -29,8 +29,6 @@ final class WalletBannerCell: UICollectionViewCell {
         contentView.layer.masksToBounds = true
         contentStackView.setCustomSpacing(8, after: descriptionLabel)
         contentStackView.setCustomSpacing(0, after: actionStackView)
-        imageView.layer.cornerRadius = 8
-        imageView.layer.masksToBounds = true
         titleLabel.setFont(
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true

@@ -525,7 +525,7 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
         switch item {
         case .overview, .emptyWalletInstruction, .referral, .benefit:
             break
-        case .banner(let banner):
+        case let .banner(banner, _):
             banner.invokeRemoteActionURL()
         case .perpsPosition(let positionID):
             if let position = perpsPositions[positionID],

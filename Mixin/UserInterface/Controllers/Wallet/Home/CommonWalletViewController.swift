@@ -293,16 +293,18 @@ final class CommonWalletViewController: WalletViewController {
             )
             
             let tray: WalletOverview.Tray?
-            let pendingTransactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
             if let watchingAddresses {
                 let description = R.string.localizable.you_are_watching_address(
                     watchingAddresses.prettyFormatted
                 )
                 tray = .watching(description: description)
-            } else if !pendingTransactions.isEmpty {
-                tray = .pendingTransactions(pendingTransactions)
             } else {
-                tray = nil
+                let pendingTransactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
+                if pendingTransactions.isEmpty {
+                    tray = nil
+                } else {
+                    tray = .pendingTransactions(pendingTransactions)
+                }
             }
             
             var snapshot = DataSourceSnapshot()

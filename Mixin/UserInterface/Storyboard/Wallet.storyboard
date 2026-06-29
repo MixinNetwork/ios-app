@@ -212,122 +212,6 @@
             </objects>
             <point key="canvasLocation" x="1075" y="-2"/>
         </scene>
-        <!--Log View Controller-->
-        <scene sceneID="C3f-e1-AOT">
-            <objects>
-                <viewController storyboardIdentifier="logs" id="ARA-W9-gKp" customClass="LogViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="oia-LS-o6s">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Sg-JU-X7E" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="20" width="414" height="44"/>
-                                <color key="backgroundColor" name="background"/>
-                                <color key="tintColor" name="text_tertiary"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="t6F-r2-vye"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="YES"/>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="101" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7Uf-9B-IRa">
-                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
-                                <color key="backgroundColor" name="background"/>
-                                <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="pin_logs" rowHeight="101" id="ppN-Gv-i2N" userLabel="PINLog" customClass="PINLogCell" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="50" width="414" height="101"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ppN-Gv-i2N" id="nE0-KF-6ar">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="101"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Psd-ZB-Mlq">
-                                                    <rect key="frame" x="20" y="16" width="374" height="69.333333333333329"/>
-                                                    <subviews>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Ih0-zx-5L9">
-                                                            <rect key="frame" x="0.0" y="0.0" width="374" height="19.333333333333332"/>
-                                                            <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Transfer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hEy-Th-Zg0">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="249" height="19.333333333333332"/>
-                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                                                    <color key="textColor" name="text"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="2019/9/16, 13:27 PM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J8N-Y1-4GD">
-                                                                    <rect key="frame" x="259" y="0.0" width="115" height="19.333333333333332"/>
-                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                    <color key="textColor" name="text_tertiary"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                            </subviews>
-                                                        </stackView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="211.22.184.210" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eI0-S1-Ypp">
-                                                            <rect key="frame" x="0.0" y="27.333333333333336" width="374" height="17"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <color key="textColor" name="text_tertiary"/>
-                                                            <nil key="highlightedColor"/>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                            </userDefinedRuntimeAttributes>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="211.22.184.210" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UsK-4m-Ile">
-                                                            <rect key="frame" x="0.0" y="52.333333333333329" width="374" height="17"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <color key="textColor" name="text_tertiary"/>
-                                                            <nil key="highlightedColor"/>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                            </userDefinedRuntimeAttributes>
-                                                        </label>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="Psd-ZB-Mlq" secondAttribute="trailing" constant="20" id="13e-gY-NV4"/>
-                                                <constraint firstItem="Psd-ZB-Mlq" firstAttribute="centerY" secondItem="nE0-KF-6ar" secondAttribute="centerY" id="fAT-TD-xgD"/>
-                                                <constraint firstItem="Psd-ZB-Mlq" firstAttribute="leading" secondItem="nE0-KF-6ar" secondAttribute="leading" constant="20" id="hYD-S4-qvQ"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" name="background"/>
-                                        <connections>
-                                            <outlet property="descLabel" destination="eI0-S1-Ypp" id="w50-vM-8fW"/>
-                                            <outlet property="ipLabel" destination="UsK-4m-Ile" id="OpL-Jl-FAT"/>
-                                            <outlet property="timeLabel" destination="J8N-Y1-4GD" id="PsJ-z7-ywf"/>
-                                            <outlet property="titleLabel" destination="hEy-Th-Zg0" id="7kc-q1-HC6"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
-                            </tableView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="wte-0g-xNC"/>
-                        <color key="backgroundColor" name="background"/>
-                        <constraints>
-                            <constraint firstItem="1Sg-JU-X7E" firstAttribute="leading" secondItem="oia-LS-o6s" secondAttribute="leading" id="2wL-3T-lJg"/>
-                            <constraint firstItem="7Uf-9B-IRa" firstAttribute="top" secondItem="1Sg-JU-X7E" secondAttribute="bottom" priority="500" id="KA3-Zx-8Vv"/>
-                            <constraint firstItem="7Uf-9B-IRa" firstAttribute="top" secondItem="oia-LS-o6s" secondAttribute="top" priority="250" id="QhJ-HM-rcg"/>
-                            <constraint firstItem="7Uf-9B-IRa" firstAttribute="leading" secondItem="oia-LS-o6s" secondAttribute="leading" id="Y9q-fz-bEo"/>
-                            <constraint firstAttribute="trailing" secondItem="1Sg-JU-X7E" secondAttribute="trailing" id="YCd-t3-NgJ"/>
-                            <constraint firstAttribute="bottom" secondItem="7Uf-9B-IRa" secondAttribute="bottom" id="j0s-WM-JF0"/>
-                            <constraint firstItem="1Sg-JU-X7E" firstAttribute="top" secondItem="wte-0g-xNC" secondAttribute="top" id="uhA-Wx-CX2"/>
-                            <constraint firstAttribute="trailing" secondItem="7Uf-9B-IRa" secondAttribute="trailing" id="xni-Ne-lR2"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="activityIndicator" destination="1Sg-JU-X7E" id="4hX-0x-Mr1"/>
-                        <outlet property="hideActivityIndicatorConstraint" destination="QhJ-HM-rcg" id="Hey-YV-d1Z"/>
-                        <outlet property="showActivityIndicatorConstraint" destination="KA3-Zx-8Vv" id="WFk-4t-TIQ"/>
-                        <outlet property="tableView" destination="7Uf-9B-IRa" id="XJK-rN-Ici"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="T5f-yL-bnC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1844.9275362318842" y="1414.4021739130435"/>
-        </scene>
         <!--Legacy Transfer Out View Controller-->
         <scene sceneID="GuS-7v-ke8">
             <objects>
@@ -587,7 +471,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

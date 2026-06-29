@@ -38,7 +38,7 @@ extension SecuritySettingViewController: UITableViewDelegate {
         case 2:
             MixinAuthorizationsViewController()
         default:
-            LogViewController.instance(category: .all)
+            LogViewController(category: .all)
         }
         navigationController?.pushViewController(next, animated: true)
     }

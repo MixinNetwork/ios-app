@@ -97,7 +97,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
     @objc private func presentMoreActions(_ sender: Any) {
         let sheet = UIAlertController(title: R.string.localizable.help(), message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.logs(), style: .default, handler: { _ in
-            let logs = LogViewController.instance(category: .all)
+            let logs = LogViewController(category: .all)
             let navigationController = GeneralAppearanceNavigationController(rootViewController: logs)
             self.present(navigationController, animated: true)
         }))

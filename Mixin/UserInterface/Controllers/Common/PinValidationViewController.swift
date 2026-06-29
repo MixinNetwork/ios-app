@@ -53,7 +53,7 @@ class PinValidationViewController: UIViewController {
     }
     
     @IBAction func showLogs(_ sender: Any) {
-        let logs = LogViewController.instance(category: .all)
+        let logs = LogViewController(category: .all)
         let navigationController = GeneralAppearanceNavigationController(rootViewController: logs)
         present(navigationController, animated: true)
     }

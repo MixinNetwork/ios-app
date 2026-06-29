@@ -1,0 +1,51 @@
+name: Bump Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      full_version:
+        description: 'Enter the version and build (e.g., 5.1.0-819)'
+        required: true
+        type: string
+
+jobs:
+  create-release:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Parse Version and Build
+        id: parse_version
+        run: |
+          INPUT="${{ inputs.full_version }}"
+          
+          VERSION=$(echo "$INPUT" | cut -d'-' -f1)
+          BUILD=$(echo "$INPUT" | cut -d'-' -f2)
+          
+          echo "Version: $VERSION"
+          echo "Build: $BUILD"
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "build=$BUILD" >> $GITHUB_OUTPUT
+          echo "branch_name=release/$VERSION-$BUILD" >> $GITHUB_OUTPUT
+
+      - name: Create and Checkout Release Branch
+        run: |
+          git checkout -b "${{ steps.parse_version.outputs.branch_name }}"
+
+      - name: Update Xcode Project Version
+        run: |
+          agvtool new-marketing-version "${{ steps.parse_version.outputs.version }}"
+          agvtool new-version -all "${{ steps.parse_version.outputs.build }}"
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Bump version to ${{ inputs.full_version }}"
+          git push origin "${{ steps.parse_version.outputs.branch_name }}"

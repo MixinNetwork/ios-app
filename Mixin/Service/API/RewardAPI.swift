@@ -15,4 +15,27 @@ enum RewardAPI {
         )
     }
     
+    static func appBanners(
+        chainIDs: Set<String>? = nil,
+        completion: @escaping (MixinAPI.Result<[AppBanner]>) -> Void
+    ) {
+        var path = "/app-banners"
+        var arguments: [String] = []
+        if let language = Locale.preferredLanguages.first {
+            arguments.append("lang=\(language)")
+        }
+        chainIDs?.forEach { chainID in
+            arguments.append("chain=\(chainID)")
+        }
+        if !arguments.isEmpty {
+            path.append("?" + arguments.joined(separator: "&"))
+        }
+        RouteAPI.request(
+            method: .get,
+            path: path,
+            config: .rewards,
+            completion: completion
+        )
+    }
+    
 }

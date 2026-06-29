@@ -41,6 +41,8 @@ extension AppGroupUserDefaults {
             
             case marketChartPeriod = "market_chart_period"
             case perpsChartTimeFrame = "perps_chart_time_frame"
+            
+            case closedBannerIDs = "closed_banner_ids"
         }
         
         public static let didChangeWalletIntroductionNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeWalletIntro")
@@ -129,6 +131,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .wallet, key: Key.perpsChartTimeFrame, defaultValue: nil)
         public static var perpsChartTimeFrame: String?
+        
+        @Default(namespace: .wallet, key: Key.closedBannerIDs, defaultValue: [])
+        public static var closedBannerIDs: [String]
         
         internal static func migrate() {
             lastPINVerifiedDate = Date(timeIntervalSince1970: WalletUserDefault.shared.lastInputPinTime)

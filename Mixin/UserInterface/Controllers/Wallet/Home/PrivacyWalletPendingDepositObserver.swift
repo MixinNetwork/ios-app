@@ -59,7 +59,10 @@ final class PrivacyWalletPendingDepositObserver {
                 }
                 
                 SafeSnapshotDAO.shared.replaceAllPendingSnapshots(with: myDeposits)
-                let snapshots = myDeposits.map(SafeSnapshot.init(pendingDeposit:))
+                let newSnapshots = myDeposits.map(SafeSnapshot.init(pendingDeposit:))
+                if snapshots.isEmpty && newSnapshots.isEmpty {
+                    return
+                }
                 DispatchQueue.main.async {
                     guard let self else {
                         return
@@ -67,7 +70,7 @@ final class PrivacyWalletPendingDepositObserver {
                     self.delegate?.privacyWalletPendingDepositObserver(
                         self,
                         didUpdateWith: tokens,
-                        snapshots: snapshots
+                        snapshots: newSnapshots
                     )
                 }
             }

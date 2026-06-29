@@ -1,6 +1,6 @@
 import UIKit
 
-final class WalletTipPageControlFooterView: UICollectionReusableView {
+final class WalletBannerPageControlFooterView: UICollectionReusableView {
     
     weak var pageControl: UIPageControl!
     
@@ -26,7 +26,8 @@ final class WalletTipPageControlFooterView: UICollectionReusableView {
         pageControl.pageIndicatorTintColor = R.color.button_background_disabled()
         addSubview(pageControl)
         pageControl.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview().offset(3)
         }
         self.pageControl = pageControl
     }

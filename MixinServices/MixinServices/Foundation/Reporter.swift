@@ -143,6 +143,10 @@ open class Reporter {
         // Reduce bug report usage
     }
     
+    open func report(eventName: String, tags: [String: String]? = nil) {
+        
+    }
+    
     open func updateUserProperties(_ properties: UserProperty, account: Account? = nil) {
         
     }

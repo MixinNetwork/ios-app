@@ -38,7 +38,6 @@ final class PrivacyWalletViewController: WalletViewController {
         )
         let pendingDepositObserver = PrivacyWalletPendingDepositObserver()
         pendingDepositObserver.delegate = self
-        pendingDepositObserver.reloadPendingDeposits()
         self.pendingDepositObserver = pendingDepositObserver
         collectionView.delegate = self
         
@@ -79,7 +78,7 @@ final class PrivacyWalletViewController: WalletViewController {
             name: PerpsMarketDAO.marketsDidUpdateNotification,
             object: nil
         )
-        reloadData()
+        // Not calling `reloadData`, it will be reloaded in `viewWillAppear`
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -90,7 +89,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 self.hasAssetInLegacyNetwork = hasAssetInLegacyNetwork
             }
         }
-        pendingDepositObserver?.reloadPendingDeposits()
+        pendingDepositObserver?.reloadPendingDeposits() // Will trigger `reloadData`
         perpsPositionLoader?.start()
         perpsTopMoverLoader?.start()
     }
@@ -332,9 +331,10 @@ final class PrivacyWalletViewController: WalletViewController {
                 self.hasMorePerpsPositions = hasMorePerpsPositions
                 self.perpsTopMovers = perpsTopMovers
                 
-                self.insertTipsReferralSection(into: &snapshot)
+                self.insertBannersReferralSection(into: &snapshot)
                 self.dataSource.applySnapshotUsingReloadData(snapshot)
                 
+                self.reloadBannersIfAllowed(chainIDs: nil)
                 if !perpsPositions.isEmpty {
                     let positionLoader: PerpetualPositionLoader
                     if let loader = self.perpsPositionLoader {
@@ -523,8 +523,10 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
             return
         }
         switch item {
-        case .overview, .emptyWalletInstruction, .tip, .referral, .benefit:
+        case .overview, .emptyWalletInstruction, .referral, .benefit:
             break
+        case let .banner(banner, _):
+            banner.invokeRemoteActionURL()
         case .perpsPosition(let positionID):
             if let position = perpsPositions[positionID],
                let market = PerpsMarketDAO.shared.market(marketID: position.marketID),

@@ -36,13 +36,19 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     private(set) var isViewAppearing = false
     private(set) var dataSource: DiffableDataSource!
     
-    private weak var tipsPageControl: UIPageControl?
+    private let bannersInfiniteIllusionMultiplier = 7
+    private let touchDetectionGestureCoordinator = TouchDetectionGestureCoordinator()
     
-    private var tipsCurrentPage: Int = 0 {
-        didSet {
-            tipsPageControl?.currentPage = tipsCurrentPage
-        }
-    }
+    private weak var bannersPageControl: UIPageControl?
+    private weak var bannerAutoScrollingTimer: Timer?
+    
+    // To reduce API access, store remote banners together with local ones here
+    // When it performs full reloading, like triggered by a transaction, take
+    // values from here.
+    private var banners: [WalletBanner] = []
+    private var allowsReloadingBanners = true
+    private var isTouchingCollectionView = false
+    private var focusedBannerIndexPath: IndexPath?
     
     init() {
         let nib = R.nib.walletView
@@ -63,7 +69,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         config.interSectionSpacing = 10
         let layout = UICollectionViewCompositionalLayout(
             sectionProvider: { [weak self] sectionIndex, environment in
-                guard let section = self?.dataSource?.sectionIdentifier(for: sectionIndex) else {
+                guard let dataSource = self?.dataSource, let section = dataSource.sectionIdentifier(for: sectionIndex) else {
                     return nil
                 }
                 
@@ -150,23 +156,55 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                     let section = singleItem(estimatedHeight: 290)
                     section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     return section
-                case .tips:
-                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(110))
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-                    let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.orthogonalScrollingBehavior = .groupPaging
+                case .banners:
+                    let bannersCount = dataSource.snapshot().numberOfItems(inSection: .banners)
+                    let section: NSCollectionLayoutSection
                     if #available(iOS 17.0, *) {
+                        let itemSize = NSCollectionLayoutSize(
+                            widthDimension: .fractionalWidth(1.0 / CGFloat(bannersCount)),
+                            heightDimension: .uniformAcrossSiblings(estimate: 81)
+                        )
+                        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(CGFloat(bannersCount)), heightDimension: .estimated(81))
+                        let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, repeatingSubitem: item, count: bannersCount)
+                        section = NSCollectionLayoutSection(group: group)
                         section.orthogonalScrollingProperties.bounce = .always
+                        section.orthogonalScrollingBehavior = .paging
+                    } else {
+                        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(81))
+                        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                        let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
+                        section = NSCollectionLayoutSection(group: group)
+                        section.orthogonalScrollingBehavior = .groupPaging
                     }
-                    let numberOfTips = self?.dataSource.snapshot().numberOfItems(inSection: .tips) ?? 0
-                    if numberOfTips > 1 {
-                        section.visibleItemsInvalidationHandler = { (items, location, environment) in
-                            let width = environment.container.contentSize.width
-                            let pageOffset = location.x.truncatingRemainder(dividingBy: width)
-                            if pageOffset < width / 5 {
-                                self?.tipsCurrentPage = Int(location.x / width)
+                    if bannersCount > 1 {
+                        section.visibleItemsInvalidationHandler = { (visibleItems, scrollOffset, environment) in
+                            guard let self else {
+                                return
+                            }
+                            let visibleCells = visibleItems.filter { item in
+                                item.representedElementCategory == .cell
+                            }
+                            guard let firstCell = visibleCells.first else {
+                                return
+                            }
+                            let focusCell: (any NSCollectionLayoutVisibleItem)?
+                            if visibleCells.count == 1 {
+                                focusCell = firstCell
+                            } else if let lastCell = visibleCells.last {
+                                focusCell = scrollOffset.x < firstCell.center.x ? firstCell : lastCell
+                            } else {
+                                focusCell = nil
+                            }
+                            if let focusCell {
+                                if let pageControl = self.bannersPageControl, pageControl.numberOfPages > 0 {
+                                    pageControl.currentPage = focusCell.indexPath.item % pageControl.numberOfPages
+                                }
+                                self.focusedBannerIndexPath = focusCell.indexPath
+                            } else {
+                                self.focusedBannerIndexPath = nil
                             }
                         }
                         let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(16))
@@ -176,6 +214,8 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                             alignment: .bottom
                         )
                         section.boundarySupplementaryItems = [footer]
+                    } else {
+                        section.visibleItemsInvalidationHandler = nil
                     }
                     return section
                 case .perpsPositions:
@@ -276,24 +316,24 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         }
         let emptyWalletInstructionRegistration = UICollectionView.CellRegistration<EmptyWalletInstructionCell, Void>(
             cellNib: UINib(resource: R.nib.emptyWalletInstructionCell)
-        ) { [weak self] cell, indexPath, tip in
+        ) { [weak self] cell, indexPath, _ in
             cell.delegate = self
         }
-        let tipRegistration = UICollectionView.CellRegistration<WalletTipCell, WalletTip>(
-            cellNib: UINib(resource: R.nib.walletTipCell)
-        ) { [weak self] cell, indexPath, tip in
-            cell.tip = tip
+        let bannerRegistration = UICollectionView.CellRegistration<WalletBannerCell, WalletBanner>(
+            cellNib: UINib(resource: R.nib.walletBannerCell)
+        ) { [weak self] cell, indexPath, banner in
+            cell.banner = banner
             cell.delegate = self
         }
-        let tipPageControlRegistration = UICollectionView.SupplementaryRegistration<WalletTipPageControlFooterView>(
+        let bannerPageControlRegistration = UICollectionView.SupplementaryRegistration<WalletBannerPageControlFooterView>(
             elementKind: UICollectionView.elementKindSectionFooter
         ) { [weak self] footerView, elementKind, indexPath in
             guard let self else {
                 return
             }
-            let tipsCount = self.dataSource.snapshot().numberOfItems(inSection: .tips)
-            footerView.configure(with: tipsCount, currentPage: 0)
-            self.tipsPageControl = footerView.pageControl
+            let bannersCount = self.dataSource.snapshot().numberOfItems(inSection: .banners)
+            footerView.configure(with: bannersCount / bannersInfiniteIllusionMultiplier, currentPage: 0)
+            self.bannersPageControl = footerView.pageControl
         }
         let supportRegistration = UICollectionView.CellRegistration<WalletSupportCell, WalletSupport>(
             cellNib: UINib(resource: R.nib.walletSupportCell)
@@ -325,8 +365,8 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 return cell
             case .emptyWalletInstruction:
                 return collectionView.dequeueConfiguredReusableCell(using: emptyWalletInstructionRegistration, for: indexPath, item: ())
-            case let .tip(tip):
-                return collectionView.dequeueConfiguredReusableCell(using: tipRegistration, for: indexPath, item: tip)
+            case let .banner(banner, _):
+                return collectionView.dequeueConfiguredReusableCell(using: bannerRegistration, for: indexPath, item: banner)
             case let .perpsPosition(positionID):
                 if let viewModel = self?.perpsPositions[positionID] {
                     switch viewModel.state {
@@ -384,8 +424,8 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 case .general, .none:
                     return nil
                 }
-            case .tips:
-                return collectionView.dequeueConfiguredReusableSupplementary(using: tipPageControlRegistration, for: indexPath)
+            case .banners:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: bannerPageControlRegistration, for: indexPath)
             case .perpsPositions:
                 switch elementKind {
                 case UICollectionView.elementKindSectionHeader:
@@ -489,6 +529,17 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         collectionView.dataSource = dataSource
         self.collectionView = collectionView
         self.dataSource = dataSource
+        
+        let touchDetectionRecognizer = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(detectTouchingOnCollectionView(_:))
+        )
+        touchDetectionRecognizer.minimumPressDuration = 0
+        touchDetectionRecognizer.cancelsTouchesInView = false
+        touchDetectionRecognizer.delaysTouchesBegan = false
+        touchDetectionRecognizer.delaysTouchesEnded = false
+        touchDetectionRecognizer.delegate = touchDetectionGestureCoordinator
+        collectionView.addGestureRecognizer(touchDetectionRecognizer)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -499,6 +550,9 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         isViewAppearing = false
+        allowsReloadingBanners = true
+        bannerAutoScrollingTimer?.invalidate()
+        bannerAutoScrollingTimer = nil
     }
     
     @IBAction func switchFromWallets(_ sender: Any) {
@@ -567,6 +621,21 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         
     }
     
+    @objc private func detectTouchingOnCollectionView(_ recognizer: UILongPressGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            isTouchingCollectionView = true
+            bannerAutoScrollingTimer?.invalidate()
+        case .ended, .cancelled, .failed:
+            isTouchingCollectionView = false
+            scheduleBannersAutoScrolling()
+        case .possible, .changed:
+            fallthrough
+        @unknown default:
+            bannerAutoScrollingTimer?.invalidate()
+        }
+    }
+    
 }
 
 extension WalletViewController {
@@ -574,7 +643,7 @@ extension WalletViewController {
     enum Section {
         case overview
         case emptyWalletInstruction
-        case tips
+        case banners
         case perpsPositions
         case tokens
         case transactions
@@ -587,7 +656,7 @@ extension WalletViewController {
     enum Item: Hashable {
         case overview
         case emptyWalletInstruction
-        case tip(WalletTip)
+        case banner(WalletBanner, duplicationOffset: Int)
         case perpsPosition(positionID: String)
         case token(assetID: String)
         case transaction(id: String)
@@ -600,19 +669,182 @@ extension WalletViewController {
     typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, Item>
     typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Item>
     
-    func insertTipsReferralSection(into snapshot: inout DataSourceSnapshot) {
-        var tips: [WalletTip] = []
-        if !BadgeManager.shared.hasViewed(identifier: .addWalletTip) {
-            tips.append(.addWallet)
+}
+
+extension WalletViewController {
+    
+    private final class TouchDetectionGestureCoordinator: NSObject, UIGestureRecognizerDelegate {
+        
+        func gestureRecognizer(
+            _ gestureRecognizer: UIGestureRecognizer,
+            shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+        ) -> Bool {
+            return true
         }
-        if !tips.isEmpty, let firstSection = snapshot.sectionIdentifiers.first {
-            snapshot.insertSections([.tips], afterSection: firstSection)
-            snapshot.appendItems(tips.map({ Item.tip($0) }), toSection: .tips)
+        
+    }
+    
+    func insertBannersReferralSection(into snapshot: inout DataSourceSnapshot) {
+        if !banners.isEmpty, let firstSection = snapshot.sectionIdentifiers.first {
+            snapshot.insertSections([.banners], afterSection: firstSection)
+            let items = displayBannerItems(
+                banners: banners,
+                multiplier: bannersInfiniteIllusionMultiplier
+            )
+            snapshot.appendItems(items, toSection: .banners)
         }
         if !BadgeManager.shared.hasViewed(identifier: .walletHomeReferral) {
             snapshot.insertSections([.referral], beforeSection: .support)
             snapshot.appendItems([.referral], toSection: .referral)
         }
+    }
+    
+    // nil for all chains
+    func reloadBannersIfAllowed(chainIDs: Set<String>?) {
+        guard allowsReloadingBanners && isViewAppearing else {
+            scheduleBannersAutoScrolling()
+            resetBannersToCenter()
+            return
+        }
+        allowsReloadingBanners = false
+        RewardAPI.appBanners(chainIDs: chainIDs) { [weak self] result in
+            guard let self else {
+                return
+            }
+            var banners: [WalletBanner]
+            switch result {
+            case .success(let remoteBanners):
+                if remoteBanners.isEmpty {
+                    AppGroupUserDefaults.Wallet.closedBannerIDs = []
+                }
+                let closedBannerIDs = Set(AppGroupUserDefaults.Wallet.closedBannerIDs)
+                banners = remoteBanners.compactMap { banner in
+                    if closedBannerIDs.contains(banner.bannerID) {
+                        nil
+                    } else {
+                        .remote(banner)
+                    }
+                }
+            case .failure(let error):
+                Logger.general.debug(category: "Wallet", message: "\(error)")
+                banners = []
+            }
+            if !BadgeManager.shared.hasViewed(identifier: .addWalletBanner) {
+                banners.append(.embedded(.addWallet))
+            }
+            self.reload(banners: banners)
+        }
+    }
+    
+    func resetBannersToCenter() {
+        if let indexPath = focusedBannerIndexPath,
+           case let .banner(banner, offset) = dataSource.itemIdentifier(for: indexPath),
+           offset != 0,
+           let newIndexPath = dataSource.indexPath(for: .banner(banner, duplicationOffset: 0))
+        {
+            collectionView.scrollToItem(at: newIndexPath, at: .centeredHorizontally, animated: false)
+            focusedBannerIndexPath = newIndexPath
+        }
+    }
+    
+    func scheduleBannersAutoScrolling() {
+        bannerAutoScrollingTimer?.invalidate()
+        guard isViewAppearing, banners.count > 1 else {
+            return
+        }
+        bannerAutoScrollingTimer = .scheduledTimer(
+            withTimeInterval: 3,
+            repeats: true
+        ) { [weak self] _ in
+            guard let self, self.isViewAppearing, !self.isTouchingCollectionView else {
+                return
+            }
+            self.resetBannersToCenter()
+            guard
+                let focusedIndexPath = self.focusedBannerIndexPath,
+                let focusedItem = self.dataSource.itemIdentifier(for: focusedIndexPath)
+            else {
+                return
+            }
+            let bannerItems = self.dataSource.snapshot(for: .banners).items
+            guard
+                let focusedIndex = bannerItems.firstIndex(of: focusedItem),
+                focusedIndex + 1 < bannerItems.count
+            else {
+                return
+            }
+            let nextItem = bannerItems[focusedIndex + 1]
+            guard let nextIndexPath = self.dataSource.indexPath(for: nextItem) else {
+                return
+            }
+            collectionView.scrollToItem(at: nextIndexPath, at: .centeredHorizontally, animated: true)
+        }
+    }
+    
+    private func reload(banners: [WalletBanner]) {
+        self.banners = banners
+        let displayBannerItems = displayBannerItems(
+            banners: banners,
+            multiplier: bannersInfiniteIllusionMultiplier
+        )
+        var snapshot = dataSource.snapshot()
+        if snapshot.sectionIdentifiers.contains(.banners) {
+            snapshot.deleteItems(
+                snapshot.itemIdentifiers(inSection: .banners)
+            )
+            if displayBannerItems.isEmpty {
+                snapshot.deleteSections([.banners])
+                focusedBannerIndexPath = nil
+            } else {
+                snapshot.appendItems(displayBannerItems, toSection: .banners)
+            }
+        } else if !banners.isEmpty {
+            if let firstSection = snapshot.sectionIdentifiers.first {
+                snapshot.insertSections([.banners], afterSection: firstSection)
+            } else {
+                snapshot.appendSections([.banners])
+            }
+            snapshot.appendItems(displayBannerItems, toSection: .banners)
+        } else {
+            return
+        }
+        dataSource.apply(snapshot, animatingDifferences: false) { [weak self] in
+            guard let self else {
+                return
+            }
+            self.scrollToFirstBanner()
+            self.scheduleBannersAutoScrolling()
+        }
+    }
+    
+    private func displayBannerItems(banners: [WalletBanner], multiplier: Int) -> [Item] {
+        if banners.count == 1 {
+            return [Item.banner(banners[banners.startIndex], duplicationOffset: 0)]
+        } else {
+            let groups: [[Item]] = (-multiplier/2..<0).map { offset in
+                banners.map { banner in
+                    Item.banner(banner, duplicationOffset: offset)
+                }
+            } + [banners.map { banner in
+                Item.banner(banner, duplicationOffset: 0)
+            }] + (1...multiplier/2).map { offset in
+                banners.map { banner in
+                    Item.banner(banner, duplicationOffset: offset)
+                }
+            }
+            return groups.flatMap { $0 }
+        }
+    }
+    
+    private func scrollToFirstBanner() {
+        guard let firstBanner = banners.first else {
+            return
+        }
+        let center: Item = .banner(firstBanner, duplicationOffset: 0)
+        guard let indexPath = dataSource.indexPath(for: center) else {
+            return
+        }
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
     }
     
 }
@@ -637,37 +869,80 @@ extension WalletViewController: HomeNavigationController.NavigationBarStyling {
     
 }
 
-extension WalletViewController: WalletTipCell.Delegate {
+extension WalletViewController: WalletBannerCell.Delegate {
     
-    func walletTipCell(_ cell: WalletTipCell, requestPerformAction tip: WalletTip) {
-        switch tip {
-        case .addWallet:
-            BadgeManager.shared.setHasViewed(identifier: .addWalletAction)
-            let selector = AddWalletMethodSelectorViewController()
-            selector.onSelected = { [weak self] method in
-                let introduction = AddWalletIntroductionViewController(action: .addWallet(method))
-                self?.navigationController?.pushViewController(introduction, animated: true)
+    func walletBannerCell(_ cell: WalletBannerCell, requestPerformAction banner: WalletBanner, index: Int) {
+        switch banner {
+        case .embedded(let banner):
+            switch banner {
+            case .addWallet:
+                BadgeManager.shared.setHasViewed(identifier: .addWalletAction)
+                let selector = AddWalletMethodSelectorViewController()
+                selector.onSelected = { [weak self] method in
+                    let introduction = AddWalletIntroductionViewController(action: .addWallet(method))
+                    self?.navigationController?.pushViewController(introduction, animated: true)
+                }
+                present(selector, animated: true)
             }
-            present(selector, animated: true)
+        case .remote(let banner):
+            if let action = banner.actions?[index].action,
+               let url = URL(string: action)
+            {
+                _ = UrlWindow.checkUrl(url: url)
+                if !banner.trackingKey.isEmpty {
+                    reporter.report(
+                        eventName: banner.trackingKey,
+                        tags: ["source": "wallet_home_ad_banner_button"]
+                    )
+                }
+            }
         }
     }
     
-    func walletTipCell(_ cell: WalletTipCell, requestDismiss tip: WalletTip) {
-        switch tip {
-        case .addWallet:
-            BadgeManager.shared.setHasViewed(identifier: .addWalletTip)
-            var snapshot = dataSource.snapshot()
-            let tipIdentifiers = snapshot.itemIdentifiers(inSection: .tips)
-            if tipIdentifiers.contains(.tip(tip)) {
-                snapshot.deleteItems([.tip(tip)])
-                if tipIdentifiers.count - 1 == 0 {
-                    snapshot.deleteSections([.tips])
-                } else {
-                    tipsPageControl?.numberOfPages -= 1
-                }
+    func walletBannerCell(_ cell: WalletBannerCell, requestDismiss banner: WalletBanner) {
+        switch banner {
+        case .embedded(let banner):
+            switch banner {
+            case .addWallet:
+                BadgeManager.shared.setHasViewed(identifier: .addWalletBanner)
             }
-            dataSource.apply(snapshot, animatingDifferences: true)
+        case .remote(let banner):
+            AppGroupUserDefaults.Wallet.closedBannerIDs.append(banner.bannerID)
         }
+        if let index = banners.firstIndex(of: banner) {
+            banners.remove(at: index)
+        }
+        var snapshot = dataSource.snapshot()
+        snapshot.deleteItems(
+            (
+                -bannersInfiniteIllusionMultiplier / 2
+                 ...
+                 bannersInfiniteIllusionMultiplier / 2
+            ).map { offset in
+                Item.banner(banner, duplicationOffset: offset)
+            }
+        )
+        let itemsAfterDeletion = snapshot.itemIdentifiers(inSection: .banners)
+        if itemsAfterDeletion.isEmpty {
+            snapshot.deleteSections([.banners])
+            focusedBannerIndexPath = nil
+        } else {
+            if itemsAfterDeletion.count == bannersInfiniteIllusionMultiplier {
+                let duplicationItems = itemsAfterDeletion.filter { item in
+                    switch item {
+                    case let .banner(_, offset):
+                        offset != 0
+                    default:
+                        false
+                    }
+                }
+                snapshot.deleteItems(duplicationItems)
+            }
+            if let pageControl = bannersPageControl {
+                pageControl.numberOfPages -= 1
+            }
+        }
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
     
 }

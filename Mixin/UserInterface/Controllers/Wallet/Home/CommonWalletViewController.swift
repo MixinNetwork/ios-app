@@ -293,16 +293,18 @@ final class CommonWalletViewController: WalletViewController {
             )
             
             let tray: WalletOverview.Tray?
-            let pendingTransactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
             if let watchingAddresses {
                 let description = R.string.localizable.you_are_watching_address(
                     watchingAddresses.prettyFormatted
                 )
                 tray = .watching(description: description)
-            } else if !pendingTransactions.isEmpty {
-                tray = .pendingTransactions(pendingTransactions)
             } else {
-                tray = nil
+                let pendingTransactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
+                if pendingTransactions.isEmpty {
+                    tray = nil
+                } else {
+                    tray = .pendingTransactions(pendingTransactions)
+                }
             }
             
             var snapshot = DataSourceSnapshot()
@@ -437,8 +439,9 @@ final class CommonWalletViewController: WalletViewController {
                     tradeSource: .walletHome,
                     responder: self
                 )
-                self.insertTipsReferralSection(into: &snapshot)
+                self.insertBannersReferralSection(into: &snapshot)
                 self.dataSource.applySnapshotUsingReloadData(snapshot)
+                self.reloadBannersIfAllowed(chainIDs: chainIDs)
                 self.updateDappConnectionWalletIfNeeded()
             }
         }
@@ -481,8 +484,10 @@ extension CommonWalletViewController: UICollectionViewDelegate {
             return
         }
         switch item {
-        case .overview, .emptyWalletInstruction, .tip, .perpsPosition, .perpsTopMover, .referral, .benefit:
+        case .overview, .emptyWalletInstruction, .perpsPosition, .perpsTopMover, .referral, .benefit:
             break
+        case let .banner(banner, _):
+            banner.invokeRemoteActionURL()
         case .token(let assetID):
             if let token = tokens[assetID] {
                 let viewController = Web3TokenViewController(

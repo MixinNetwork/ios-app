@@ -3,11 +3,6 @@ import Alamofire
 
 public final class AccountAPI: MixinAPI {
     
-    public enum LogCategory {
-        case incorrectPin
-        case all
-    }
-    
     enum Path {
         static let verifications = "/verifications"
         static func verifications(id: String) -> String {
@@ -23,29 +18,6 @@ public final class AccountAPI: MixinAPI {
         
         static let deactivate = "/me/deactivate"
         
-        static func logs(offset: String? = nil, category: LogCategory, limit: Int? = nil) -> String {
-            var params = [String]()
-            if let offset = offset {
-                params.append("offset=\(offset)")
-            }
-            switch category {
-            case .incorrectPin:
-                params.append("category=PIN_INCORRECT")
-            case .all:
-                break
-            }
-            if let limit = limit {
-                params.append("limit=\(limit)")
-            }
-            
-            var path = "/logs"
-            if !params.isEmpty {
-                let query = "?" + params.joined(separator: "&")
-                path.append(contentsOf: query)
-            }
-            return path
-        }
-
     }
     
     public enum VoIPToken {
@@ -297,8 +269,34 @@ public final class AccountAPI: MixinAPI {
         }
     }
     
-    public static func logs(offset: String? = nil, category: LogCategory, limit: Int? = nil, completion: @escaping (MixinAPI.Result<[LogResponse]>) -> Void) {
-        request(method: .get, path: Path.logs(offset: offset, category: category, limit: limit), completion: completion)
+    public static func logs(
+        category: AccountLog.Category,
+        offset: String? = nil,
+        limit: Int? = nil,
+        completion: @escaping (MixinAPI.Result<[AccountLog]>) -> Void
+    ) {
+        let path = {
+            var params: [String] = switch category {
+            case .incorrectPIN:
+                ["category=PIN_INCORRECT"]
+            case .all:
+                []
+            }
+            if let offset = offset {
+                params.append("offset=\(offset)")
+            }
+            if let limit = limit {
+                params.append("limit=\(limit)")
+            }
+            
+            var path = "/logs"
+            if !params.isEmpty {
+                let query = "?" + params.joined(separator: "&")
+                path.append(contentsOf: query)
+            }
+            return path
+        }()
+        request(method: .get, path: path, completion: completion)
     }
     
     public static func logout(

@@ -1236,6 +1236,9 @@
 		9482FE832F8E54A7006A463A /* GaslessTransactionEVMPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9482FE7F2F8E5498006A463A /* GaslessTransactionEVMPayload.swift */; };
 		9482FEA72F8F69C5006A463A /* Web3Transaction+Simulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9482FEA62F8F69C1006A463A /* Web3Transaction+Simulation.swift */; };
 		9482FED62F8F6CCD006A463A /* GaslessTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9482FED52F8F6CCD006A463A /* GaslessTransaction.swift */; };
+		94834AC32FE949AA00A0AADF /* LogView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94834AC22FE949AA00A0AADF /* LogView.xib */; };
+		94834ACC2FE949E000A0AADF /* LogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94834ACA2FE949E000A0AADF /* LogCell.swift */; };
+		94834ACD2FE949E000A0AADF /* LogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94834ACB2FE949E000A0AADF /* LogCell.xib */; };
 		948374822A5D49110011A2CA /* PopupSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948374802A5D49110011A2CA /* PopupSelectorViewController.swift */; };
 		948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948374812A5D49110011A2CA /* PopupSelectorView.xib */; };
 		94838A442C02ADFB005B6A27 /* Solana.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94838A432C02ADFB005B6A27 /* Solana.swift */; };
@@ -1793,7 +1796,6 @@
 		DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */; };
 		DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */; };
 		DFB19002233219650021CAF3 /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB19001233219650021CAF3 /* LogViewController.swift */; };
-		DFB19006233220290021CAF3 /* PINLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB19005233220290021CAF3 /* PINLogCell.swift */; };
 		DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB2062921AC1771006E4341 /* RestoreJob.swift */; };
 		DFB6CE1E23C4805B00FB6615 /* KeychainExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6CE1D23C4805B00FB6615 /* KeychainExtension.swift */; };
 		DFB6CE2123C485AB00FB6615 /* SendMessageService+Sending.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB6CE2023C485AB00FB6615 /* SendMessageService+Sending.swift */; };
@@ -3199,6 +3201,9 @@
 		9482FE7F2F8E5498006A463A /* GaslessTransactionEVMPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaslessTransactionEVMPayload.swift; sourceTree = "<group>"; };
 		9482FEA62F8F69C1006A463A /* Web3Transaction+Simulation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Transaction+Simulation.swift"; sourceTree = "<group>"; };
 		9482FED52F8F6CCD006A463A /* GaslessTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaslessTransaction.swift; sourceTree = "<group>"; };
+		94834AC22FE949AA00A0AADF /* LogView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogView.xib; sourceTree = "<group>"; };
+		94834ACA2FE949E000A0AADF /* LogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogCell.swift; sourceTree = "<group>"; };
+		94834ACB2FE949E000A0AADF /* LogCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogCell.xib; sourceTree = "<group>"; };
 		948374802A5D49110011A2CA /* PopupSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupSelectorViewController.swift; sourceTree = "<group>"; };
 		948374812A5D49110011A2CA /* PopupSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSelectorView.xib; sourceTree = "<group>"; };
 		94838A432C02ADFB005B6A27 /* Solana.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solana.swift; sourceTree = "<group>"; };
@@ -3758,7 +3763,6 @@
 		DFB18FFD2330E7350021CAF3 /* AnnouncementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementViewController.swift; sourceTree = "<group>"; };
 		DFB18FFF2330F6A40021CAF3 /* BiographyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiographyViewController.swift; sourceTree = "<group>"; };
 		DFB19001233219650021CAF3 /* LogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
-		DFB19005233220290021CAF3 /* PINLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINLogCell.swift; sourceTree = "<group>"; };
 		DFB2062921AC1771006E4341 /* RestoreJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreJob.swift; sourceTree = "<group>"; };
 		DFB6CE1D23C4805B00FB6615 /* KeychainExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainExtension.swift; sourceTree = "<group>"; };
 		DFB6CE2023C485AB00FB6615 /* SendMessageService+Sending.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SendMessageService+Sending.swift"; sourceTree = "<group>"; };
@@ -6195,7 +6199,6 @@
 				94FE11F42DA7AC830026AB9A /* Web3TransactionCell.swift */,
 				7BDFAE932559165800296F8B /* CompactAssetCell.xib */,
 				7B0BE45F21A5630500B91A1E /* CompactAssetCell.swift */,
-				DFB19005233220290021CAF3 /* PINLogCell.swift */,
 				94FE0C4E2B3083CA006DEFC5 /* SendingDestinationCell.xib */,
 				94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */,
 				94CF1F3E2BA1EC0400BC52C1 /* Web3DappCell.xib */,
@@ -6671,6 +6674,9 @@
 				7B9E7ABF21E6F8F000012A28 /* DesktopViewController.swift */,
 				94DC24382D08051C006501B3 /* DesktopSessionValidationView.xib */,
 				94DC229E2D072F6D006501B3 /* DesktopSessionValidationViewController.swift */,
+				94834ACB2FE949E000A0AADF /* LogCell.xib */,
+				94834ACA2FE949E000A0AADF /* LogCell.swift */,
+				94834AC22FE949AA00A0AADF /* LogView.xib */,
 				DFB19001233219650021CAF3 /* LogViewController.swift */,
 				DF8CECE81FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift */,
 				ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */,
@@ -7094,6 +7100,7 @@
 				9484BA3A2FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib in Resources */,
 				940D10A52C5C91630071E36D /* InsetGroupedTitleCell.xib in Resources */,
 				94E206EF2F4EB61100D65D98 /* PerpetualPositionValueCell.xib in Resources */,
+				94834ACD2FE949E000A0AADF /* LogCell.xib in Resources */,
 				944ED8D22646535B00C97215 /* WebContentView.xib in Resources */,
 				940CA1912F59593500914435 /* PerpetualMarketInfoCell.xib in Resources */,
 				94327CF72D53662700DEE36D /* AddressInfoInputHeaderView.xib in Resources */,
@@ -7248,6 +7255,7 @@
 				944C60FE2B6A899700C7DF06 /* AuthenticationPreviewHeaderView.xib in Resources */,
 				94A72C992C2EBE1E001E8782 /* InscriptionTraitsCell.xib in Resources */,
 				946EA0882D4763CF00DBC308 /* AddressInfoInputView.xib in Resources */,
+				94834AC32FE949AA00A0AADF /* LogView.xib in Resources */,
 				944F54072E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.xib in Resources */,
 				94B89D532DE75A30002A0DDC /* MembershipViewAllOrdersCell.xib in Resources */,
 				E09C5EC223703FEE0095F729 /* ProfileShortcutView.xib in Resources */,
@@ -7803,7 +7811,6 @@
 				7B95860F2369599800F1F6E1 /* ProfileViewController.swift in Sources */,
 				7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */,
 				94C56D3E2C560DD6009F3AB8 /* CircularProgressView.swift in Sources */,
-				DFB19006233220290021CAF3 /* PINLogCell.swift in Sources */,
 				94DF7D5928DC0F17006E415B /* Acknowledgement.swift in Sources */,
 				949D7D812F863C97005A26CD /* GaslessTransactionProposal.swift in Sources */,
 				9420F3052DAF993500434E0D /* RichWeb3RawTransaction.swift in Sources */,
@@ -8615,6 +8622,7 @@
 				94F6F4682EBDE6A000D15424 /* Web3OrderDAO+Query.swift in Sources */,
 				DF9E66E5205B9AF300F1A0B9 /* HiddenTokensViewController.swift in Sources */,
 				7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */,
+				94834ACC2FE949E000A0AADF /* LogCell.swift in Sources */,
 				94E35CA3298B836300ADB40D /* WalletConnectService.swift in Sources */,
 				7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */,
 				7BF42E3522DCAC93005066E6 /* GalleryVideoItemViewController.swift in Sources */,

@@ -2,10 +2,19 @@ import Foundation
 
 public class RefreshStickerJob: BaseJob {
     
-    private let stickerId: String
+    public static let didUpdateNotification = Notification.Name("one.mixin.messenger.RefreshStickerJob.Update")
     
-    public init(stickerId: String) {
+    public enum UserInfoKey {
+        public static let sticker = "sticker"
+        public static let messageId = "mid"
+    }
+    
+    private let stickerId: String
+    private let messageId: String?
+    
+    public init(stickerId: String, messageId: String?) {
         self.stickerId = stickerId
+        self.messageId = messageId
     }
     
     override public func getJobId() -> String {
@@ -22,6 +31,15 @@ public class RefreshStickerJob: BaseJob {
                 return
             }
             StickerPrefetcher.prefetch(stickers: [stickerItem])
+            if let messageId {
+                let userInfo: [String: Any] = [
+                    Self.UserInfoKey.sticker: stickerItem,
+                    Self.UserInfoKey.messageId: messageId
+                ]
+                NotificationCenter.default.post(onMainThread: Self.didUpdateNotification,
+                                                object: self,
+                                                userInfo: userInfo)
+            }
         case let .failure(error):
             if error.worthReporting {
                 reporter.report(error: error)

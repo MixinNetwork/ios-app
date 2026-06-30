@@ -2,12 +2,18 @@ import UIKit
 
 final class PerpetualPositionHeaderCell: UICollectionViewCell {
     
+    protocol Delegate: AnyObject {
+        func perpetualPositionHeaderCellRequestToViewMarket(_ cell: PerpetualPositionHeaderCell)
+    }
+    
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var directionLabel: InsetLabel!
     @IBOutlet weak var actionView: PillActionView!
+    
+    weak var delegate: Delegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,6 +29,10 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         iconView.prepareForReuse()
+    }
+    
+    @IBAction func viewMarket(_ sender: Any) {
+        delegate?.perpetualPositionHeaderCellRequestToViewMarket(self)
     }
     
     func load(viewModel: PerpetualActivityViewModel) {

@@ -450,7 +450,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 switch elementKind {
                 case UICollectionView.elementKindSectionHeader:
                     let header = collectionView.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
-                    header.titleLabel.text = R.string.localizable.wallet_home_tokens()
+                    header.titleLabel.text = R.string.localizable.assets()
                     header.subtitleLabel.text = self?.tokensValue
                     header.disclosureImageView.isHidden = false
                     header.onShowAll = { _ in

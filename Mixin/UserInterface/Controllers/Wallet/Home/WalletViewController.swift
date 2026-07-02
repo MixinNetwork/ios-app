@@ -29,6 +29,8 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     
     var perpsTopMovers: OrderedDictionary<String, PerpetualMarketViewModel> = [:]
     
+    var cashAccount: CashAccount?
+    
     var walletActionHandler: (any WalletActionHandler)?
     
     private(set) weak var collectionView: UICollectionView!
@@ -218,6 +220,10 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                         section.visibleItemsInvalidationHandler = nil
                     }
                     return section
+                case .cash:
+                    let section = singleItem(estimatedHeight: 86)
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                    return section
                 case .perpsPositions:
                     return listSection(
                         showFooter: self?.hasMorePerpsPositions ?? false,
@@ -325,6 +331,11 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
             cell.banner = banner
             cell.delegate = self
         }
+        let cashAccountRegistration = UICollectionView.CellRegistration<WalletCashAccountCell, Void>(
+            cellNib: UINib(resource: R.nib.walletCashAccountCell)
+        ) { [weak self] cell, indexPath, _ in
+            cell.load(account: self?.cashAccount)
+        }
         let bannerPageControlRegistration = UICollectionView.SupplementaryRegistration<WalletBannerPageControlFooterView>(
             elementKind: UICollectionView.elementKindSectionFooter
         ) { [weak self] footerView, elementKind, indexPath in
@@ -367,6 +378,8 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 return collectionView.dequeueConfiguredReusableCell(using: emptyWalletInstructionRegistration, for: indexPath, item: ())
             case let .banner(banner, _):
                 return collectionView.dequeueConfiguredReusableCell(using: bannerRegistration, for: indexPath, item: banner)
+            case .cash:
+                return collectionView.dequeueConfiguredReusableCell(using: cashAccountRegistration, for: indexPath, item: ())
             case let .perpsPosition(positionID):
                 if let viewModel = self?.perpsPositions[positionID] {
                     switch viewModel.state {
@@ -644,6 +657,7 @@ extension WalletViewController {
         case overview
         case emptyWalletInstruction
         case banners
+        case cash
         case perpsPositions
         case tokens
         case transactions
@@ -657,6 +671,7 @@ extension WalletViewController {
         case overview
         case emptyWalletInstruction
         case banner(WalletBanner, duplicationOffset: Int)
+        case cash
         case perpsPosition(positionID: String)
         case token(assetID: String)
         case transaction(id: String)
@@ -669,10 +684,6 @@ extension WalletViewController {
     typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, Item>
     typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Item>
     
-}
-
-extension WalletViewController {
-    
     private final class TouchDetectionGestureCoordinator: NSObject, UIGestureRecognizerDelegate {
         
         func gestureRecognizer(
@@ -683,6 +694,10 @@ extension WalletViewController {
         }
         
     }
+    
+}
+
+extension WalletViewController {
     
     func insertBannersReferralSection(into snapshot: inout DataSourceSnapshot) {
         if !banners.isEmpty, let firstSection = snapshot.sectionIdentifiers.first {
@@ -845,6 +860,63 @@ extension WalletViewController {
             return
         }
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+    }
+    
+}
+
+extension WalletViewController {
+    
+    func reloadCashAccount() {
+        CashAPI.account { [weak self] result in
+            DispatchQueue.global().async {
+                let account = try? result.get()
+                PropertiesDAO.shared.set(jsonObject: account, forKey: .cashAccount)
+            }
+            switch result {
+            case .success(let account):
+                self?.reload(account: account)
+            case .failure(let error):
+                Logger.general.debug(category: "Wallet", message: "\(error)")
+                self?.reload(account: nil)
+            }
+        }
+    }
+    
+    func insertOrUpdateCashAccountItem(into snapshot: inout DataSourceSnapshot) {
+        if snapshot.sectionIdentifiers.contains(.cash) {
+            if snapshot.itemIdentifiers(inSection: .cash).contains(.cash) {
+                snapshot.reconfigureItems([.cash])
+            } else {
+                snapshot.appendItems([.cash], toSection: .cash)
+            }
+        } else {
+            if snapshot.sectionIdentifiers.contains(.banners) {
+                snapshot.insertSections([.cash], afterSection: .banners)
+            } else if let firstSection = snapshot.sectionIdentifiers.first {
+                snapshot.insertSections([.cash], afterSection: firstSection)
+            } else {
+                snapshot.appendSections([.cash])
+            }
+            snapshot.appendItems([.cash], toSection: .cash)
+        }
+    }
+    
+    private func reload(account: CashAccount?) {
+        switch (self.cashAccount, account) {
+        case let (_, .some(new)):
+            self.cashAccount = new
+            var snapshot = dataSource.snapshot()
+            insertOrUpdateCashAccountItem(into: &snapshot)
+            dataSource.apply(snapshot, animatingDifferences: false)
+        case (.some, .none):
+            self.cashAccount = nil
+            var snapshot = dataSource.snapshot()
+            snapshot.deleteItems([.cash])
+            snapshot.deleteSections([.cash])
+            dataSource.apply(snapshot, animatingDifferences: false)
+        case (.none, .none):
+            break
+        }
     }
     
 }

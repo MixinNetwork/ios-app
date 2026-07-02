@@ -1116,13 +1116,18 @@ extension RouteAPI {
     public struct Config {
         
         static let route = Config(
-            botUserID: "61cb8dd4-16b1-4744-ba0c-7b2d2e52fc59",
+            botUserID: BotUserID.mixinRoute,
             host: "https://api.route.mixin.one"
         )
         
         static let rewards = Config(
-            botUserID: "b35af74d-cca6-400c-a62b-5a7e659de91e",
+            botUserID: BotUserID.rewards,
             host: "https://api.reward.mixin.one"
+        )
+        
+        static let cash = Config(
+            botUserID: BotUserID.mixinCash,
+            host: "https://api.cash.mixin.one"
         )
         
         let botUserID: String

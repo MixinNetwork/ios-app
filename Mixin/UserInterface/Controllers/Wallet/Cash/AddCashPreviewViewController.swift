@@ -156,6 +156,22 @@ final class AddCashPreviewViewController: UIViewController {
         present(authentication, animated: true)
     }
     
+    @objc private func done(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true) {
+            guard let navigationController = UIApplication.homeNavigationController else {
+                return
+            }
+            var viewControllers = navigationController.viewControllers
+            if viewControllers.last is AddCashInputAmountViewController {
+                viewControllers.removeLast()
+            }
+            if viewControllers.last is MixinTokenReceiverViewController {
+                viewControllers.removeLast()
+            }
+            navigationController.setViewControllers(viewControllers, animated: true)
+        }
+    }
+    
     private func pay(with pin: String) {
         titleView.closeButton.alpha = 0
         errorDescriptionLabel.text = nil
@@ -174,7 +190,7 @@ final class AddCashPreviewViewController: UIViewController {
                     doneTrayView.backgroundColor = R.color.background_quaternary()
                     doneTrayView.button.configuration?.title = R.string.localizable.done()
                     trayWrapperView.addSubview(doneTrayView)
-                    doneTrayView.button.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
+                    doneTrayView.button.addTarget(self, action: #selector(done(_:)), for: .touchUpInside)
                     doneTrayView.snp.makeEdgesEqualToSuperview()
                 }
             } catch {

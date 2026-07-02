@@ -39,7 +39,7 @@ final class Web3TokensViewController: TokensViewController {
         super.viewDidLoad()
         
         navigationItem.titleView = WalletIdentifyingNavigationTitleView(
-            title: R.string.localizable.wallet_home_tokens(),
+            title: R.string.localizable.assets(),
             wallet: .common(wallet)
         )
         navigationItem.rightBarButtonItems = [

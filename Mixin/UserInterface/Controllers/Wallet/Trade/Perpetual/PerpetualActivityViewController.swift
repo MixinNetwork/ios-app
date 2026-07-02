@@ -125,8 +125,8 @@ final class PerpetualActivityViewController: UIViewController {
         collectionView.register(R.nib.perpetualPositionWalletCell)
         collectionView.register(R.nib.perpetualPositionInfoCell)
         collectionView.register(R.nib.perpetualPositionCompactInfoCell)
-        collectionView.allowsSelection = false
         collectionView.dataSource = self
+        collectionView.delegate = self
         collectionView.reloadData()
     }
     
@@ -134,6 +134,27 @@ final class PerpetualActivityViewController: UIViewController {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
         reporter.report(event: .customerServiceDialog, tags: ["source": "perps_position"])
+    }
+    
+    private func viewMarket() {
+        if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID),
+           let viewModel = PerpetualMarketViewModel(market: market),
+           let navigationController
+        {
+            let market = PerpetualMarketViewController(
+                wallet: wallet,
+                viewModel: viewModel,
+            )
+            var viewControllers = navigationController.viewControllers
+            viewControllers.removeAll { controller in
+                controller is PerpetualMarketViewController
+                || controller is PerpetualPositionsViewController
+                || controller is PerpetualActivitiesViewController
+                || controller is PerpetualActivityViewController
+            }
+            viewControllers.append(market)
+            navigationController.setViewControllers(viewControllers, animated: true)
+        }
     }
     
 }
@@ -167,6 +188,7 @@ extension PerpetualActivityViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_header, for: indexPath)!
             cell.load(viewModel: viewModel)
             cell.actionView.delegate = self
+            cell.delegate = self
             return cell
         case .info:
             switch infos[indexPath.item] {
@@ -214,29 +236,30 @@ extension PerpetualActivityViewController: UICollectionViewDataSource {
     
 }
 
+extension PerpetualActivityViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch Section(rawValue: indexPath.section)! {
+        case .info:
+            switch infos[indexPath.item] {
+            case .product:
+                viewMarket()
+            default:
+                break
+            }
+        default:
+            break
+        }
+    }
+    
+}
+
 extension PerpetualActivityViewController: PillActionView.Delegate {
     
     func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
         switch viewModel.actions[index] {
         case .viewMarket, .tradeAgain:
-            if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID),
-               let viewModel = PerpetualMarketViewModel(market: market),
-               let navigationController
-            {
-                let market = PerpetualMarketViewController(
-                    wallet: wallet,
-                    viewModel: viewModel,
-                )
-                var viewControllers = navigationController.viewControllers
-                viewControllers.removeAll { controller in
-                    controller is PerpetualMarketViewController
-                    || controller is PerpetualPositionsViewController
-                    || controller is PerpetualActivitiesViewController
-                    || controller is PerpetualActivityViewController
-                }
-                viewControllers.append(market)
-                navigationController.setViewControllers(viewControllers, animated: true)
-            }
+            viewMarket()
         case .share:
             let dataSource: SharePerpetualPositionDataSource
             switch viewModel.type {
@@ -263,6 +286,14 @@ extension PerpetualActivityViewController: PillActionView.Delegate {
                 self?.present(share, animated: true)
             }
         }
+    }
+    
+}
+
+extension PerpetualActivityViewController: PerpetualPositionHeaderCell.Delegate {
+    
+    func perpetualPositionHeaderCellRequestToViewMarket(_ cell: PerpetualPositionHeaderCell) {
+        viewMarket()
     }
     
 }

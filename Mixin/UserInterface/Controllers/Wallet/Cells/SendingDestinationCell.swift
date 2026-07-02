@@ -5,6 +5,7 @@ final class SendingDestinationCell: UITableViewCell {
     enum TitleTag {
         case free
         case privacyShield
+        case apy(String)
     }
     
     @IBOutlet weak var iconImageView: UIImageView!
@@ -12,7 +13,7 @@ final class SendingDestinationCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     
-    private weak var freeLabel: InsetLabel?
+    private weak var tagLabel: InsetLabel?
     private weak var privacyShieldImageView: UIImageView?
     
     var titleTag: TitleTag? = nil {
@@ -35,25 +36,20 @@ final class SendingDestinationCell: UITableViewCell {
         case .free:
             privacyShieldImageView?.removeFromSuperview()
             privacyShieldImageView = nil
-            if freeLabel == nil {
-                let label = InsetLabel()
-                label.contentInset = UIEdgeInsets(top: 2, left: 6, bottom: 2, right: 6)
-                label.textColor = .white
-                label.backgroundColor = R.color.background_tinted()
-                label.layer.cornerRadius = 4
-                label.layer.masksToBounds = true
-                label.setFont(
-                    scaledFor: .systemFont(ofSize: 12),
-                    adjustForContentSize: true
-                )
-                label.text = R.string.localizable.free().uppercased()
-                titleStackView.addArrangedSubview(label)
-                self.freeLabel = label
+            let tagLabel: InsetLabel
+            if let label = self.tagLabel {
+                tagLabel = label
+            } else {
+                tagLabel = makeTagLabel()
+                titleStackView.addArrangedSubview(tagLabel)
+                self.tagLabel = tagLabel
             }
+            tagLabel.backgroundColor = R.color.background_tinted()
+            tagLabel.text = R.string.localizable.free().uppercased()
             titleStackView.spacing = 6
         case .privacyShield:
-            freeLabel?.removeFromSuperview()
-            freeLabel = nil
+            tagLabel?.removeFromSuperview()
+            tagLabel = nil
             if privacyShieldImageView == nil {
                 let imageView = UIImageView(image: R.image.privacy_wallet())
                 imageView.contentMode = .scaleAspectFit
@@ -64,12 +60,39 @@ final class SendingDestinationCell: UITableViewCell {
                 self.privacyShieldImageView = imageView
             }
             titleStackView.spacing = 4
+        case .apy(let apy):
+            privacyShieldImageView?.removeFromSuperview()
+            privacyShieldImageView = nil
+            let tagLabel: InsetLabel
+            if let label = self.tagLabel {
+                tagLabel = label
+            } else {
+                tagLabel = makeTagLabel()
+                titleStackView.addArrangedSubview(tagLabel)
+                self.tagLabel = tagLabel
+            }
+            tagLabel.backgroundColor = R.color.market_green()
+            tagLabel.text = apy
+            titleStackView.spacing = 6
         case .none:
-            freeLabel?.removeFromSuperview()
-            freeLabel = nil
+            tagLabel?.removeFromSuperview()
+            tagLabel = nil
             privacyShieldImageView?.removeFromSuperview()
             privacyShieldImageView = nil
         }
+    }
+    
+    private func makeTagLabel() -> InsetLabel {
+        let label = InsetLabel()
+        label.contentInset = UIEdgeInsets(top: 2, left: 6, bottom: 2, right: 6)
+        label.textColor = .white
+        label.layer.cornerRadius = 4
+        label.layer.masksToBounds = true
+        label.setFont(
+            scaledFor: .systemFont(ofSize: 12),
+            adjustForContentSize: true
+        )
+        return label
     }
     
 }

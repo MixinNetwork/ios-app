@@ -484,7 +484,7 @@ extension CommonWalletViewController: UICollectionViewDelegate {
             return
         }
         switch item {
-        case .overview, .emptyWalletInstruction, .perpsPosition, .perpsTopMover, .referral, .benefit:
+        case .overview, .emptyWalletInstruction, .cash, .perpsPosition, .perpsTopMover, .referral, .benefit:
             break
         case let .banner(banner, _):
             banner.invokeRemoteActionURL()

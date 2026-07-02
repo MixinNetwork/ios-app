@@ -7,6 +7,7 @@ struct Payment: PaymentPreconditionChecker {
         case trade(TradeContext)
         case perps(PerpsContext)
         case inscription(InscriptionContext)
+        case cash
     }
     
     let traceID: String
@@ -232,6 +233,11 @@ extension Payment {
                         AlreadyPaidPrecondition(traceID: traceID),
                         ReferenceValidityPrecondition(reference: reference),
                     ]
+                case .cash:
+                    preconditions = [
+                        NoPendingTransactionPrecondition(),
+                        AlreadyPaidPrecondition(traceID: traceID),
+                    ]
                 case .none:
                     preconditions = [
                         NoPendingTransactionPrecondition(),
@@ -269,7 +275,7 @@ extension Payment {
                     } else {
                         .failure(.description("Invalid Amount"))
                     }
-                case .trade, .perps, .none:
+                case .trade, .perps, .cash, .none:
                     await collectOutputs(token: token, amount: tokenAmount, on: parent)
                 }
                 
@@ -286,7 +292,7 @@ extension Payment {
                             reference: reference,
                             context: context
                         )
-                    case .trade, .perps:
+                    case .trade, .perps, .cash:
                         TransferPaymentOperation.trade(
                             traceID: traceID,
                             spendingOutputs: collection,

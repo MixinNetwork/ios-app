@@ -487,9 +487,9 @@ extension MixinWebViewController {
             titleImageView.sd_setImage(with: iconUrl, completed: nil)
         }
         let url: URL
-        if !context.extraParams.isEmpty, var components = URLComponents(url: context.initialUrl, resolvingAgainstBaseURL: true) {
+        if !context.additionalURLQueries.isEmpty, var components = URLComponents(url: context.initialUrl, resolvingAgainstBaseURL: true) {
             var queryItems: [URLQueryItem] = components.queryItems ?? []
-            for item in context.extraParams {
+            for item in context.additionalURLQueries {
                 queryItems.append(URLQueryItem(name: item.key, value: item.value))
             }
             components.queryItems = queryItems

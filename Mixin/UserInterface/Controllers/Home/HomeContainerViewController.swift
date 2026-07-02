@@ -154,8 +154,10 @@ final class HomeContainerViewController: UIViewController {
     }
     
     func presentReferralPage() {
-        let appID = BotUserID.rewards
-        
+        presentAppPage(appID: BotUserID.rewards)
+    }
+    
+    func presentAppPage(appID: String) {
         if let app = AppDAO.shared.getApp(appId: appID) {
             presentWebViewController(context: .init(conversationId: "", app: app))
             let updateUser = RefreshUserJob(userIds: [appID])

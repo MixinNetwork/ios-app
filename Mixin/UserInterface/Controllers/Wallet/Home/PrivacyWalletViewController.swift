@@ -220,6 +220,10 @@ final class PrivacyWalletViewController: WalletViewController {
                 perpsValue: perpsValue.decimalValue,
                 btcPrice: btcPrice
             )
+            let cashAccount = PropertiesDAO.shared.jsonObject(
+                forKey: .cashAccount,
+                type: CashAccount.self
+            )
             
             let tokens = TokenDAO.shared.notHiddenTokens(
                 includesZeroBalanceItems: true,
@@ -330,11 +334,16 @@ final class PrivacyWalletViewController: WalletViewController {
                 self.perpsPositionsCount = perpsPositions.count
                 self.hasMorePerpsPositions = hasMorePerpsPositions
                 self.perpsTopMovers = perpsTopMovers
+                self.cashAccount = cashAccount
                 
                 self.insertBannersReferralSection(into: &snapshot)
+                if cashAccount != nil {
+                    self.insertOrUpdateCashAccountItem(into: &snapshot)
+                }
                 self.dataSource.applySnapshotUsingReloadData(snapshot)
                 
                 self.reloadBannersIfAllowed(chainIDs: nil)
+                self.reloadCashAccount()
                 if !perpsPositions.isEmpty {
                     let positionLoader: PerpetualPositionLoader
                     if let loader = self.perpsPositionLoader {
@@ -527,6 +536,8 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
             break
         case let .banner(banner, _):
             banner.invokeRemoteActionURL()
+        case .cash:
+            UIApplication.homeContainerViewController?.presentAppPage(appID: BotUserID.mixinCash)
         case .perpsPosition(let positionID):
             if let position = perpsPositions[positionID],
                let market = PerpsMarketDAO.shared.market(marketID: position.marketID),

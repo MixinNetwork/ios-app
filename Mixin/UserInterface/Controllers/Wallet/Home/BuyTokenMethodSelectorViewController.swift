@@ -10,7 +10,8 @@ final class BuyTokenMethodSelectorViewController: PopupSelectorViewController, U
     
     var onSelected: ((Method) -> Void)?
     
-    private var methods: [Method] = []
+    private let methods: [Method] = [.card, .bankTransfer]
+    
     private var cashAccount: CashAccount?
     
     override func viewDidLoad() {
@@ -39,6 +40,7 @@ final class BuyTokenMethodSelectorViewController: PopupSelectorViewController, U
         tableView.register(R.nib.buyTokenMethodCell)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.contentInsetAdjustmentBehavior = .never
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
         DispatchQueue.global().async {
             let cashAccount = PropertiesDAO.shared.jsonObject(
@@ -46,11 +48,17 @@ final class BuyTokenMethodSelectorViewController: PopupSelectorViewController, U
                 type: CashAccount.self
             )
             DispatchQueue.main.async {
-                self.methods = [.card, .bankTransfer]
                 self.cashAccount = cashAccount
                 self.tableView.reloadData()
             }
         }
+    }
+    
+    
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        tableView.contentInset.bottom = 40 + view.safeAreaInsets.bottom
+        updatePreferredContentHeight()
     }
     
     // MARK: - UITableViewDataSource

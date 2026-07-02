@@ -5,14 +5,15 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
     
     private enum Destination {
         case addressBook
-        case cashAccount(CashAccount)
+        case cashAccount
         case myWallets
         case contact
     }
     
     private let token: MixinTokenItem
     
-    private var destinations: [Destination] = [.addressBook, .contact]
+    private var destinations: [Destination] = []
+    private var cashAccount: CashAccount?
     
     init(token: MixinTokenItem) {
         self.token = token
@@ -35,7 +36,7 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        var destinations = self.destinations
+        var destinations: [Destination] = [.addressBook, .cashAccount, .contact]
         DispatchQueue.global().async { [weak self, token] in
             let hasReceivingWallet = Web3WalletDAO.shared.hasWallet(chainID: token.chainID)
             || SafeWalletDAO.shared.hasSafeWallet(chainID: token.chainID)
@@ -46,14 +47,12 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
                 forKey: .cashAccount,
                 type: CashAccount.self
             )
-            if let account = cashAccount {
-                destinations.insert(.cashAccount(account), at: 1)
-            }
             DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
                 self.destinations = destinations
+                self.cashAccount = cashAccount
                 self.tableView.reloadData()
             }
         }
@@ -126,10 +125,14 @@ extension MixinTokenReceiverViewController: UITableViewDataSource {
             cell.titleLabel.text = R.string.localizable.address_book()
             cell.titleTag = nil
             cell.descriptionLabel.text = R.string.localizable.send_to_address_description()
-        case .cashAccount(let account):
+        case .cashAccount:
             cell.iconImageView.image = R.image.token_receiver_cash_account()
             cell.titleLabel.text = R.string.localizable.cash_account()
-            cell.titleTag = .apy(R.string.localizable.cash_account_apy(account.displayAPY))
+            if let account = cashAccount {
+                cell.titleTag = .apy(account.displayAPY)
+            } else {
+                cell.titleTag = nil
+            }
             cell.descriptionLabel.text = R.string.localizable.send_to_cash_account_description()
         case .myWallets:
             cell.iconImageView.image = R.image.token_receiver_wallet()
@@ -165,9 +168,13 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
                 }
             }
             self.present(selector, animated: true)
-        case .cashAccount(let account):
-            let input = AddCashInputAmountViewController(account: account, tokenItem: token)
-            navigationController?.pushViewController(input, animated: true)
+        case .cashAccount:
+            if let account = cashAccount {
+                let input = AddCashInputAmountViewController(account: account, tokenItem: token)
+                navigationController?.pushViewController(input, animated: true)
+            } else {
+                UIApplication.homeContainerViewController?.presentCashPage()
+            }
         case .myWallets:
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
             let selector = WalletSelectorViewController(

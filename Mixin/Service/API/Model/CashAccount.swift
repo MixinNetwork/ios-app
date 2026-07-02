@@ -38,7 +38,9 @@ extension CashAccount: Codable {
         )
         self.decimalMinAmount = Decimal(string: minAmount, locale: .enUSPOSIX) ?? 5
         self.displayAPY = if let apy = Decimal(string: rewardAPY, locale: .enUSPOSIX) {
-            PercentageFormatter.string(from: apy / 100, format: .pretty, sign: .never)
+            R.string.localizable.cash_account_apy(
+                PercentageFormatter.string(from: apy / 100, format: .pretty, sign: .never)
+            )
         } else {
             ""
         }

@@ -157,6 +157,10 @@ final class HomeContainerViewController: UIViewController {
         presentAppPage(appID: BotUserID.rewards)
     }
     
+    func presentCashPage() {
+        presentAppPage(appID: BotUserID.mixinCash)
+    }
+    
     func presentAppPage(appID: String) {
         if let app = AppDAO.shared.getApp(appId: appID) {
             presentWebViewController(context: .init(conversationId: "", app: app))

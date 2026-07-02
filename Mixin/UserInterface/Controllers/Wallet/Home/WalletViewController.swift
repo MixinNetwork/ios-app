@@ -868,11 +868,12 @@ extension WalletViewController {
     
     func reloadCashAccount() {
         CashAPI.account { [weak self] result in
+            DispatchQueue.global().async {
+                let account = try? result.get()
+                PropertiesDAO.shared.set(jsonObject: account, forKey: .cashAccount)
+            }
             switch result {
             case .success(let account):
-                DispatchQueue.global().async {
-                    PropertiesDAO.shared.set(jsonObject: account, forKey: .cashAccount)
-                }
                 self?.reload(account: account)
             case .failure(let error):
                 Logger.general.debug(category: "Wallet", message: "\(error)")

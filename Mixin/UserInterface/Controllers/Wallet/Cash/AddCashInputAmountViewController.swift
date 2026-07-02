@@ -45,7 +45,7 @@ final class AddCashInputAmountViewController: TokenConsumingInputAmountViewContr
             apyLabel.backgroundColor = R.color.market_green()
             apyLabel.font = .preferredFont(forTextStyle: .caption1)
             apyLabel.adjustsFontForContentSizeCategory = true
-            apyLabel.text = R.string.localizable.cash_account_apy(account.displayAPY)
+            apyLabel.text = account.displayAPY
             apyLabel.textColor = .white
             apyLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             

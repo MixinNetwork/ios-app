@@ -537,7 +537,7 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
         case let .banner(banner, _):
             banner.invokeRemoteActionURL()
         case .cash:
-            UIApplication.homeContainerViewController?.presentAppPage(appID: BotUserID.mixinCash)
+            UIApplication.homeContainerViewController?.presentCashPage()
         case .perpsPosition(let positionID):
             if let position = perpsPositions[positionID],
                let market = PerpsMarketDAO.shared.market(marketID: position.marketID),

@@ -24,7 +24,7 @@ class TokensViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = R.string.localizable.wallet_home_tokens()
+        title = R.string.localizable.assets()
         view.backgroundColor = R.color.background_secondary()
         
         let config = UICollectionViewCompositionalLayoutConfiguration()

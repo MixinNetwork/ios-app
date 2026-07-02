@@ -16,7 +16,7 @@ final class MixinTokensViewController: TokensViewController {
         super.viewDidLoad()
         
         navigationItem.titleView = WalletIdentifyingNavigationTitleView(
-            title: R.string.localizable.wallet_home_tokens(),
+            title: R.string.localizable.assets(),
             wallet: .privacy
         )
         navigationItem.rightBarButtonItems = [

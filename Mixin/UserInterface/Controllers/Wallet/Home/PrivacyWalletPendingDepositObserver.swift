@@ -15,7 +15,10 @@ final class PrivacyWalletPendingDepositObserver {
     
     weak var delegate: Delegate?
     
-    init() {
+    private let delegationQueue: DispatchQueue
+    
+    init(delegationQueue: DispatchQueue) {
+        self.delegationQueue = delegationQueue
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadPendingDeposits),
@@ -25,11 +28,11 @@ final class PrivacyWalletPendingDepositObserver {
     }
     
     @objc func reloadPendingDeposits() {
-        DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global().async { [weak self, delegationQueue] in
             let snapshots = SafeSnapshotDAO.shared.snapshots(assetID: nil, pending: true, limit: nil)
             let assetIDs = Set(snapshots.map(\.assetID))
             let tokens = TokenDAO.shared.tokens(with: assetIDs)
-            DispatchQueue.main.async {
+            delegationQueue.async {
                 guard let self else {
                     return
                 }
@@ -63,7 +66,7 @@ final class PrivacyWalletPendingDepositObserver {
                 if snapshots.isEmpty && newSnapshots.isEmpty {
                     return
                 }
-                DispatchQueue.main.async {
+                delegationQueue.async {
                     guard let self else {
                         return
                     }

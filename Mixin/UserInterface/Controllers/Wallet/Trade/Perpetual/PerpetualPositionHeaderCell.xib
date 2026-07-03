@@ -70,16 +70,31 @@
                             <constraint firstItem="Spv-tC-Pb2" firstAttribute="width" secondItem="0oX-4c-71S" secondAttribute="width" id="o2Y-7f-QaR"/>
                         </constraints>
                     </stackView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKA-TG-h4F">
+                        <rect key="frame" x="103.33333333333333" y="30" width="128.66666666666669" height="128.66666666666666"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain"/>
+                        <connections>
+                            <action selector="viewMarket:" destination="k3O-Sa-2pR" eventType="touchUpInside" id="uOB-Uh-iNm"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
                     <constraint firstItem="0oX-4c-71S" firstAttribute="top" secondItem="maQ-zn-Po1" secondAttribute="bottom" constant="13" id="3EI-Vw-Xyx"/>
                     <constraint firstAttribute="bottom" secondItem="0oX-4c-71S" secondAttribute="bottom" constant="24" id="A3r-xW-4Bm"/>
+                    <constraint firstItem="vKA-TG-h4F" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="fZf-91-i3N" secondAttribute="trailing" id="GoN-dK-X3O"/>
                     <constraint firstAttribute="trailing" secondItem="0oX-4c-71S" secondAttribute="trailing" constant="16" id="KMv-NT-lnl"/>
                     <constraint firstItem="fZf-91-i3N" firstAttribute="top" secondItem="u9K-YF-Swi" secondAttribute="top" constant="30" id="N5g-pK-ph6"/>
+                    <constraint firstItem="vKA-TG-h4F" firstAttribute="top" secondItem="fZf-91-i3N" secondAttribute="top" id="U4c-mn-gVb"/>
                     <constraint firstItem="maQ-zn-Po1" firstAttribute="top" secondItem="fZf-91-i3N" secondAttribute="bottom" constant="10" id="cpC-Xt-zqy"/>
                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="maQ-zn-Po1" secondAttribute="trailing" id="foI-Xb-brY"/>
+                    <constraint firstItem="vKA-TG-h4F" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="maQ-zn-Po1" secondAttribute="trailing" id="hVg-YJ-pod"/>
                     <constraint firstItem="0oX-4c-71S" firstAttribute="leading" secondItem="u9K-YF-Swi" secondAttribute="leading" constant="16" id="iME-h3-MEW"/>
+                    <constraint firstItem="vKA-TG-h4F" firstAttribute="bottom" secondItem="maQ-zn-Po1" secondAttribute="bottom" id="nmx-qs-XDp"/>
+                    <constraint firstItem="maQ-zn-Po1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vKA-TG-h4F" secondAttribute="leading" id="oN0-0H-46m"/>
+                    <constraint firstItem="fZf-91-i3N" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vKA-TG-h4F" secondAttribute="leading" id="op0-WQ-QBx"/>
                     <constraint firstItem="fZf-91-i3N" firstAttribute="centerX" secondItem="u9K-YF-Swi" secondAttribute="centerX" id="sTZ-Lu-CLU"/>
                     <constraint firstItem="maQ-zn-Po1" firstAttribute="centerX" secondItem="u9K-YF-Swi" secondAttribute="centerX" id="toR-uy-F6j"/>
                     <constraint firstItem="maQ-zn-Po1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="u9K-YF-Swi" secondAttribute="leading" id="v4j-yK-6lP"/>
@@ -102,7 +117,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

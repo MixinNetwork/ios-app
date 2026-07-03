@@ -145,6 +145,9 @@ open class Database {
     }
     
     private func handleDatabaseError(_ error: Error) {
+        if case DecodingError.valueNotFound = error {
+            return
+        }
         let isDatabaseLockedInExtension = switch error {
         case GRDB.DatabaseError.SQLITE_BUSY:
             isAppExtension

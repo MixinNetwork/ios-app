@@ -875,6 +875,9 @@ extension WalletViewController {
             switch result {
             case .success(let account):
                 self?.reload(account: account)
+            case .failure(.response(.notFound)):
+                Logger.general.debug(category: "Wallet", message: "No cash account")
+                self?.reload(account: nil)
             case .failure(let error):
                 Logger.general.debug(category: "Wallet", message: "\(error)")
                 self?.reload(account: nil)

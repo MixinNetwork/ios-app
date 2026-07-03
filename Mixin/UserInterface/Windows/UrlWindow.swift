@@ -155,7 +155,13 @@ class UrlWindow {
             case let .conversations(conversationId, userId):
                 result = checkConversation(conversationId: conversationId, userId: userId)
             case let .apps(userId):
-                result = checkApp(url: url, userId: userId)
+                var params = url.getKeyVals()
+                let action = params.removeValue(forKey: "action")
+                if action == "open" {
+                    result = checkApp(userID: userId, action: .presentHomePage(additionalQueries: params))
+                } else {
+                    result = checkApp(userID: userId, action: .presentProfile)
+                }
             case let .transfer(id):
                 result = checkTransferUrl(id, clearNavigationStack: clearNavigationStack)
             case let .send(context):
@@ -216,67 +222,7 @@ class UrlWindow {
             return false
         }
     }
-
-    class func checkApp(url: URL, userId: String) -> Bool {
-        guard !userId.isEmpty, UUID(uuidString: userId) != nil else {
-            return false
-        }
-
-        let params = url.getKeyVals()
-        let isOpenApp = params["action"] == "open"
-
-        DispatchQueue.global().async {
-            var appItem = AppDAO.shared.getApp(ofUserId: userId)
-            var userItem = UserDAO.shared.getUser(userId: userId)
-            var refreshUser = true
-            if appItem == nil || userItem == nil {
-                switch UserAPI.showUser(userId: userId) {
-                case let .success(response):
-                    refreshUser = false
-                    userItem = UserItem.createUser(from: response)
-                    appItem = response.app
-                    UserDAO.shared.updateUsers(users: [response])
-                case let .failure(error):
-                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.bot_not_found())
-                    DispatchQueue.main.async {
-                        showAutoHiddenHud(style: .error, text: text)
-                    }
-                    return
-                }
-            }
-
-            guard let user = userItem else {
-                return
-            }
-
-            guard let app = appItem else {
-                DispatchQueue.main.async {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.bot_not_found())
-                }
-                return
-            }
-
-            let conversationId = ConversationDAO.shared.makeConversationId(userId: user.userId, ownerUserId: myUserId)
-
-            DispatchQueue.main.async {
-                if isOpenApp {
-                    guard let container = UIApplication.homeContainerViewController else {
-                        return
-                    }
-                    let extraParams = params.filter { $0.key != "action" }
-                    DispatchQueue.main.async {
-                        container.presentWebViewController(context: .init(conversationId: conversationId, app: app, extraParams: extraParams))
-                    }
-                } else {
-                    let vc = UserProfileViewController(user: user)
-                    vc.updateUserFromRemoteAfterReloaded = refreshUser
-                    UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
-                }
-            }
-        }
-        return true
-    }
-
+    
     class func checkSnapshot(url: URL) -> Bool {
         let snapshotId: String? = (url.pathComponents.count > 1 ? url.pathComponents[1] : nil).uuidString
         let traceId: String? = url.getKeyVals()["trace"].uuidString
@@ -1010,6 +956,68 @@ class UrlWindow {
            let navigationController = checkEnvironment.contentViewController as? UINavigationController
         {
             navigationController.pushViewController(progress, animated: true)
+        }
+        return true
+    }
+    
+}
+
+extension UrlWindow {
+    
+    enum AppAction {
+        case presentProfile
+        case presentHomePage(additionalQueries: [String: String])
+    }
+    
+    class func checkApp(userID: String, action: AppAction) -> Bool {
+        guard !userID.isEmpty, UUID(uuidString: userID) != nil else {
+            return false
+        }
+        DispatchQueue.global().async {
+            var appItem = AppDAO.shared.getApp(ofUserId: userID)
+            var userItem = UserDAO.shared.getUser(userId: userID)
+            var refreshUser = true
+            if appItem == nil || userItem == nil {
+                switch UserAPI.showUser(userId: userID) {
+                case let .success(response):
+                    refreshUser = false
+                    userItem = UserItem.createUser(from: response)
+                    appItem = response.app
+                    UserDAO.shared.updateUsers(users: [response])
+                case let .failure(error):
+                    let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.bot_not_found())
+                    DispatchQueue.main.async {
+                        showAutoHiddenHud(style: .error, text: text)
+                    }
+                    return
+                }
+            }
+
+            guard let user = userItem else {
+                return
+            }
+
+            guard let app = appItem else {
+                DispatchQueue.main.async {
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.bot_not_found())
+                }
+                return
+            }
+
+            let conversationId = ConversationDAO.shared.makeConversationId(userId: user.userId, ownerUserId: myUserId)
+
+            DispatchQueue.main.async {
+                switch action {
+                case .presentProfile:
+                    let vc = UserProfileViewController(user: user)
+                    vc.updateUserFromRemoteAfterReloaded = refreshUser
+                    UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                case .presentHomePage(let additionalQueries):
+                    UIApplication.homeContainerViewController?.presentWebViewController(
+                        context: .init(conversationId: conversationId, app: app, additionalURLQueries: additionalQueries)
+                    )
+                }
+            }
         }
         return true
     }

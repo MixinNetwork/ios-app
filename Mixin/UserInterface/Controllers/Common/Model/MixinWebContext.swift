@@ -15,7 +15,7 @@ struct MixinWebContext {
     
     var style: Style
     var isImmersive: Bool
-    var extraParams: [String: String] = [:]
+    var additionalURLQueries: [String: String] = [:]
     
     var appContextString: String {
         let ctx: [String: Any] = [
@@ -34,7 +34,7 @@ struct MixinWebContext {
         }
     }
     
-    init(conversationId: String, app: App, shareable: Bool? = nil, extraParams: [String: String] = [:]) {
+    init(conversationId: String, app: App, shareable: Bool? = nil, additionalURLQueries: [String: String] = [:]) {
         if conversationId.isEmpty {
             self.conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: app.appId)
         } else {
@@ -45,7 +45,7 @@ struct MixinWebContext {
         self.saveAsRecentSearch = false
         self.style = .app(app: app, isHomeUrl: true)
         self.isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
-        self.extraParams = extraParams
+        self.additionalURLQueries = additionalURLQueries
     }
     
     init(conversationId: String, initialUrl: URL, shareable: Bool? = nil, saveAsRecentSearch: Bool = false) {

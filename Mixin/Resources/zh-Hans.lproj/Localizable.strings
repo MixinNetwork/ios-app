@@ -256,6 +256,15 @@
 "cant_receive_the_code" = "接收不到验证码？";
 "caption_send" = "转出";
 "card" = "卡片";
+"cash_account" = "现金账户";
+"cash_account_add_cash" = "添加现金";
+"cash_account_apy" = "年化 %@";
+"cash_account_invalid_amount" = "输入金额太大，请重新输入";
+"cash_account_invalid_token" = "暂不支持该币种转入现金账户";
+"cash_account_minimum_receive" = "最低到账金额为 %1$@ %2$@";
+"cash_account_preview_description" = "你的现金账户预计收到 %1$@，总余额将增至 %2$@。";
+"cash_account_preview_pay_with_value" = "%1$@ %2$@（%3$@%4$@）";
+"cash_balance" = "现金余额";
 "category_chats" = "最近聊天";
 "chain" = "所属公链";
 "change" = "更改";
@@ -1543,6 +1552,7 @@
 "send_this_location" = "发送这个位置";
 "send_to" = "发送给 %@";
 "send_to_address_description" = "转到我地址薄中的地址，地址受到 PIN 保护，避免地址钓鱼攻击。";
+"send_to_cash_account_description" = "轻松出售加密货币，账户余额自动赚取年化收益。";
 "send_to_contact_common_wallet_description" = "转到 Mixin 好友的普通钱包，转账快捷又方便。";
 "send_to_contact_description" = "转给我的 Mixin 好友，转账隐私、零手续费且秒到账。";
 "send_to_developer" = "把日志发给开发者";
@@ -1954,6 +1964,10 @@
 "waiting_transaction_description" = "您有一笔转账或提现未完成，请稍后再试";
 "wallet" = "钱包";
 "wallet_already_added" = "这个钱包已经添加过了";
+"wallet_buy_option_apple_pay_or_card" = "Apple Pay 或银行卡";
+"wallet_buy_option_apple_pay_or_card_desc" = "使用 Apple Pay、信用卡或借记卡，立刻购买加密货币。";
+"wallet_buy_option_bank_transfer" = "银行转账";
+"wallet_buy_option_bank_transfer_desc" = "向现金账户充值，之后可随时购买加密货币。";
 "wallet_candidate_imported" = "已导入";
 "wallet_category_created" = "创建的钱包";
 "wallet_category_imported" = "导入的钱包";
@@ -1979,7 +1993,6 @@
 "wallet_home_referral_banner_desc" = "邀请好友可获得高达 %@ 的交易返利和会员佣金。";
 "wallet_home_referral_banner_title" = "邀请返佣";
 "wallet_home_support" = "支持";
-"wallet_home_tokens" = "代币";
 "wallet_imported" = "导入";
 "wallet_password_not_equal" = "PIN 不一致, 请重新输入";
 "wallet_password_unsafe" = "PIN 过于简单不安全";

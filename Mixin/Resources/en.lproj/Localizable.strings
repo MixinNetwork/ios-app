@@ -256,6 +256,15 @@
 "cant_receive_the_code" = "Can't receive the code?";
 "caption_send" = "Send";
 "card" = "card";
+"cash_account" = "Cash Account";
+"cash_account_add_cash" = "Add Cash";
+"cash_account_apy" = "%@ APY";
+"cash_account_invalid_amount" = "Amount exceeds limit. Please re-enter.";
+"cash_account_invalid_token" = "Token not supported for Cash Account";
+"cash_account_minimum_receive" = "Minimum received amount is %1$@ %2$@";
+"cash_account_preview_description" = "Your Cash Account is expected to receive %1$@, and the total balance will increase to %2$@.";
+"cash_account_preview_pay_with_value" = "%1$@ %2$@ (%3$@%4$@)";
+"cash_balance" = "Cash Balance";
 "category_chats" = "Chats";
 "chain" = "Chain";
 "change" = "Change";
@@ -1543,6 +1552,7 @@
 "send_this_location" = "Send This Location";
 "send_to" = "Send to %@";
 "send_to_address_description" = "Send to an address in your Address Book, PIN-protected to prevent phishing.";
+"send_to_cash_account_description" = "Sell crypto easily and automatically earn APY on your balance.";
 "send_to_contact_common_wallet_description" = "Send to your friends’ Common Wallets quickly and easily.";
 "send_to_contact_description" = "Send to your Mixin friends with privacy, zero fees, and instant delivery.";
 "send_to_developer" = "Send to Developer";
@@ -1954,6 +1964,10 @@
 "waiting_transaction_description" = "You have a transfer or withdrawal that has not been completed. Please try again later.";
 "wallet" = "Wallet";
 "wallet_already_added" = "This wallet has already been added";
+"wallet_buy_option_apple_pay_or_card" = "Apple Pay or Card";
+"wallet_buy_option_apple_pay_or_card_desc" = "Use Apple Pay, credit or debit card to buy crypto instantly.";
+"wallet_buy_option_bank_transfer" = "Bank Transfer";
+"wallet_buy_option_bank_transfer_desc" = "Add money to your Cash Account, then buy crypto anytime.";
 "wallet_candidate_imported" = "Imported";
 "wallet_category_created" = "Created";
 "wallet_category_imported" = "Imported";
@@ -1979,7 +1993,6 @@
 "wallet_home_referral_banner_desc" = "Invite and get up to %@ trading fee and exclusive revenue sharing.";
 "wallet_home_referral_banner_title" = "Referral";
 "wallet_home_support" = "Support";
-"wallet_home_tokens" = "Tokens";
 "wallet_imported" = "Imported";
 "wallet_password_not_equal" = "The PIN is not the same twice, please try again.";
 "wallet_password_unsafe" = "The PIN is too simple and insecure.";

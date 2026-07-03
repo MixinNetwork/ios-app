@@ -28,9 +28,21 @@ extension PrivacyWalletOverviewActionHandler: AssetChangeAccountRecoveryChecking
 extension PrivacyWalletOverviewActionHandler: WalletActionHandler {
     
     func buy() {
-        let buy = BuyTokenInputAmountViewController(wallet: .privacy)
-        responder?.navigationController?.pushViewController(buy, animated: true)
-        reporter.report(event: .buyStart, tags: ["wallet": "main", "source": tradeSource.rawValue])
+        let selector = BuyTokenMethodSelectorViewController()
+        selector.onSelected = { [weak responder, tradeSource] method in
+            switch method {
+            case .card:
+                let buy = BuyTokenInputAmountViewController(wallet: .privacy)
+                responder?.navigationController?.pushViewController(buy, animated: true)
+            case .bankTransfer:
+                _ = UrlWindow.checkApp(
+                    userID: BotUserID.mixinCash,
+                    action: .presentHomePage(additionalQueries: ["action": "add-cash-bank"])
+                )
+            }
+            reporter.report(event: .buyStart, tags: ["wallet": "main", "source": tradeSource.rawValue])
+        }
+        responder?.present(selector, animated: true)
     }
     
     func receive() {

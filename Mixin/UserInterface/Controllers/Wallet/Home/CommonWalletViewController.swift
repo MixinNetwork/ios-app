@@ -357,6 +357,7 @@ final class CommonWalletViewController: WalletViewController {
             let overview = WalletOverview(
                 tokensValue: tokensValue,
                 perpsValue: 0,
+                cashValue: 0,
                 btcPrice: btcPrice
             )
             

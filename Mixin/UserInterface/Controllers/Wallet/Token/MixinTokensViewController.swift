@@ -108,6 +108,7 @@ final class MixinTokensViewController: TokensViewController {
             let overview = WalletOverview(
                 tokensValue: tokensValue,
                 perpsValue: 0,
+                cashValue: 0,
                 btcPrice: btcPrice
             )
             let tokens = TokenDAO.shared.notHiddenTokens(

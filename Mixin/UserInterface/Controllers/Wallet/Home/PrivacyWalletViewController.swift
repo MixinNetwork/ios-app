@@ -139,6 +139,31 @@ final class PrivacyWalletViewController: WalletViewController {
         transactionCell.load(snapshot: snapshot)
     }
     
+    override func reload(account: CashAccount?) {
+        self.cashAccount = account
+        switch (self.cashAccount, account) {
+        case let (_, .some(new)):
+            overview?.update(cashValue: new.decimalBalance)
+            var snapshot = dataSource.snapshot()
+            if snapshot.itemIdentifiers.contains(.overview) {
+                snapshot.reconfigureItems([.overview])
+            }
+            insertOrUpdateCashAccountItem(into: &snapshot)
+            dataSource.apply(snapshot, animatingDifferences: false)
+        case (.some, .none):
+            overview?.update(cashValue: 0)
+            var snapshot = dataSource.snapshot()
+            if snapshot.itemIdentifiers.contains(.overview) {
+                snapshot.reconfigureItems([.overview])
+            }
+            snapshot.deleteItems([.cash])
+            snapshot.deleteSections([.cash])
+            dataSource.apply(snapshot, animatingDifferences: false)
+        case (.none, .none):
+            break
+        }
+    }
+    
     override func hideTokenAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(
             style: .destructive,
@@ -207,14 +232,15 @@ final class PrivacyWalletViewController: WalletViewController {
             )
             let perpsValue = PerpsPositionDAO.shared.positionValue()
             let btcPrice = TokenDAO.shared.usdPrice(assetID: AssetID.btc)
-            let overview = WalletOverview(
-                tokensValue: tokensValue,
-                perpsValue: perpsValue.decimalValue,
-                btcPrice: btcPrice
-            )
             let cashAccount = PropertiesDAO.shared.jsonObject(
                 forKey: .cashAccount,
                 type: CashAccount.self
+            )
+            let overview = WalletOverview(
+                tokensValue: tokensValue,
+                perpsValue: perpsValue.decimalValue,
+                cashValue: cashAccount?.decimalBalance ?? 0,
+                btcPrice: btcPrice
             )
             
             let tokens = TokenDAO.shared.notHiddenTokens(

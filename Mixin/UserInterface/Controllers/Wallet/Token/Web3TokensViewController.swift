@@ -214,6 +214,7 @@ final class Web3TokensViewController: TokensViewController {
             let overview = WalletOverview(
                 tokensValue: tokensValue,
                 perpsValue: 0,
+                cashValue: 0,
                 btcPrice: btcPrice
             )
             let tokens = Web3TokenDAO.shared.notHiddenTokens(

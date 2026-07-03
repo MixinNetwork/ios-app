@@ -1,4 +1,5 @@
 import UIKit
+import Combine
 import OrderedCollections
 import MixinServices
 
@@ -12,6 +13,8 @@ final class PrivacyWalletViewController: WalletViewController {
     private var perpsPositionLoader: PerpetualPositionLoader?
     private var perpsTopMoverLoader: PerpetualMarketLoader?
     private var searchTokenHandler: WalletSearchMixinTokenHandler?
+    
+    private var reloadingPublisher: Set<AnyCancellable> = []
     
     private weak var walletSwitchBadgeView: BadgeDotView?
     
@@ -41,38 +44,27 @@ final class PrivacyWalletViewController: WalletViewController {
         self.pendingDepositObserver = pendingDepositObserver
         collectionView.delegate = self
         
-        let notificationCenter: NotificationCenter = .default
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: TokenDAO.tokensDidChangeNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: ChainDAO.chainsDidChangeNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: TokenExtraDAO.tokenVisibilityDidChangeNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: UTXOService.balanceDidUpdateNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
+        let reloadingPublishers = [
+            TokenDAO.tokensDidChangeNotification,
+            ChainDAO.chainsDidChangeNotification,
+            TokenExtraDAO.tokenVisibilityDidChangeNotification,
+            UTXOService.balanceDidUpdateNotification,
+        ].map { name in
+            NotificationCenter.default.publisher(for: name)
+        }
+        Publishers.MergeMany(reloadingPublishers)
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.reloadData()
+            }
+            .store(in: &reloadingPublisher)
+        NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadPerpsPositions),
             name: PerpsPositionDAO.perpsPositionDidChangeNotification,
             object: nil
         )
-        notificationCenter.addObserver(
+        NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadPerpsTopMovers),
             name: PerpsMarketDAO.marketsDidUpdateNotification,

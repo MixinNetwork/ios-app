@@ -192,6 +192,7 @@ final class AddCashPreviewViewController: UIViewController {
                     trayWrapperView.addSubview(doneTrayView)
                     doneTrayView.button.addTarget(self, action: #selector(done(_:)), for: .touchUpInside)
                     doneTrayView.snp.makeEdgesEqualToSuperview()
+                    updatePreferredContentSizeHeight()
                 }
             } catch {
                 let errorDescription = if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {

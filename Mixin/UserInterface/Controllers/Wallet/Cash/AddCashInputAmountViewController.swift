@@ -95,7 +95,7 @@ final class AddCashInputAmountViewController: TokenConsumingInputAmountViewContr
                         self.requestQuote(receiver: receiver)
                     }
                 case .failure(let error):
-                    self?.reportError(description: error.localizedDescription)
+                    self?.updateViews(errorDescription: error.localizedDescription)
                 }
             }
         }
@@ -104,7 +104,7 @@ final class AddCashInputAmountViewController: TokenConsumingInputAmountViewContr
     override func reloadViewsWithBalanceRequirements() {
         if inputAmountRequirement.isSufficient {
             if token.decimalUSDPrice == 0 {
-                reportError(description: R.string.localizable.cash_account_invalid_token())
+                updateViews(errorDescription: R.string.localizable.cash_account_invalid_token())
             } else if tokenAmount == 0 || tokenAmount * token.decimalUSDPrice >= account.decimalMinAmount {
                 insufficientBalanceLabel.text = nil
                 reviewButton.isEnabled = tokenAmount > 0
@@ -113,7 +113,7 @@ final class AddCashInputAmountViewController: TokenConsumingInputAmountViewContr
                     account.decimalMinAmount.formatted(),
                     Currency.usd.code
                 )
-                reportError(description: minimum)
+                updateViews(errorDescription: minimum)
             }
         } else {
             insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
@@ -142,25 +142,22 @@ final class AddCashInputAmountViewController: TokenConsumingInputAmountViewContr
                     if receiveAmount >= account.decimalMinAmount {
                         self.prepareForPayment(receiver: receiver, receiveAmount: receiveAmount)
                     } else {
-                        self.reportError(description: R.string.localizable.cash_account_invalid_amount())
+                        self.updateViews(errorDescription: R.string.localizable.cash_account_invalid_amount())
                     }
                 } else {
-                    self.reportError(description: R.string.localizable.error_network_task_failed())
+                    self.updateViews(errorDescription: R.string.localizable.error_network_task_failed())
                 }
             case .failure(.response(.noAvailableQuote)), .failure(.response(.tokenPairNotSupported)):
-                self.reportError(description: R.string.localizable.cash_account_invalid_token())
+                self.updateViews(errorDescription: R.string.localizable.cash_account_invalid_token())
             case .failure(.response(.invalidQuoteAmount)):
-                self.reportError(description: R.string.localizable.cash_account_invalid_amount())
+                self.updateViews(errorDescription: R.string.localizable.cash_account_invalid_amount())
             case .failure(let error):
-                self.reportError(description: error.localizedDescription)
+                self.updateViews(errorDescription: error.localizedDescription)
             }
         }
     }
     
     private func prepareForPayment(receiver: UserItem, receiveAmount: Decimal) {
-        reviewButton.isBusy = false
-        insufficientBalanceLabel.text = nil
-        reviewButton.isEnabled = true
         let payment = Payment(
             traceID: traceID,
             token: tokenItem,
@@ -169,7 +166,8 @@ final class AddCashInputAmountViewController: TokenConsumingInputAmountViewContr
             memo: "",
             context: .cash,
         )
-        let onPreconditonFailure = { (reason: PaymentPreconditionFailureReason) in
+        let onPreconditonFailure = { [weak self] (reason: PaymentPreconditionFailureReason) in
+            self?.updateViewsForSuccess()
             switch reason {
             case .userCancelled, .loggedOut:
                 break
@@ -182,7 +180,8 @@ final class AddCashInputAmountViewController: TokenConsumingInputAmountViewContr
             reference: nil,
             on: self,
             onFailure: onPreconditonFailure
-        ) { [account] (operation, issues) in
+        ) { [account, weak self] (operation, issues) in
+            self?.updateViewsForSuccess()
             let preview = AddCashPreviewViewController(
                 account: account,
                 addingAmount: receiveAmount,
@@ -192,9 +191,15 @@ final class AddCashInputAmountViewController: TokenConsumingInputAmountViewContr
         }
     }
     
-    private func reportError(description: String) {
+    private func updateViewsForSuccess() {
         reviewButton.isBusy = false
-        insufficientBalanceLabel.text = description
+        insufficientBalanceLabel.text = nil
+        reviewButton.isEnabled = true
+    }
+    
+    private func updateViews(errorDescription: String) {
+        reviewButton.isBusy = false
+        insufficientBalanceLabel.text = errorDescription
         reviewButton.isEnabled = false
     }
     

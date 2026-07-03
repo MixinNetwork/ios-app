@@ -618,6 +618,10 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         
     }
     
+    func reload(account: CashAccount?) {
+        
+    }
+    
     func hideTokenAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         nil
     }
@@ -875,6 +879,9 @@ extension WalletViewController {
             switch result {
             case .success(let account):
                 self?.reload(account: account)
+            case .failure(.response(.notFound)):
+                Logger.general.debug(category: "Wallet", message: "No cash account")
+                self?.reload(account: nil)
             case .failure(let error):
                 Logger.general.debug(category: "Wallet", message: "\(error)")
                 self?.reload(account: nil)
@@ -898,24 +905,6 @@ extension WalletViewController {
                 snapshot.appendSections([.cash])
             }
             snapshot.appendItems([.cash], toSection: .cash)
-        }
-    }
-    
-    private func reload(account: CashAccount?) {
-        switch (self.cashAccount, account) {
-        case let (_, .some(new)):
-            self.cashAccount = new
-            var snapshot = dataSource.snapshot()
-            insertOrUpdateCashAccountItem(into: &snapshot)
-            dataSource.apply(snapshot, animatingDifferences: false)
-        case (.some, .none):
-            self.cashAccount = nil
-            var snapshot = dataSource.snapshot()
-            snapshot.deleteItems([.cash])
-            snapshot.deleteSections([.cash])
-            dataSource.apply(snapshot, animatingDifferences: false)
-        case (.none, .none):
-            break
         }
     }
     

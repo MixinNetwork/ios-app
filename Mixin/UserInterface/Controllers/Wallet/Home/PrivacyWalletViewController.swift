@@ -1,4 +1,5 @@
 import UIKit
+import Combine
 import OrderedCollections
 import MixinServices
 
@@ -12,6 +13,8 @@ final class PrivacyWalletViewController: WalletViewController {
     private var perpsPositionLoader: PerpetualPositionLoader?
     private var perpsTopMoverLoader: PerpetualMarketLoader?
     private var searchTokenHandler: WalletSearchMixinTokenHandler?
+    
+    private var reloadingPublisher: Set<AnyCancellable> = []
     
     private weak var walletSwitchBadgeView: BadgeDotView?
     
@@ -41,38 +44,27 @@ final class PrivacyWalletViewController: WalletViewController {
         self.pendingDepositObserver = pendingDepositObserver
         collectionView.delegate = self
         
-        let notificationCenter: NotificationCenter = .default
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: TokenDAO.tokensDidChangeNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: ChainDAO.chainsDidChangeNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: TokenExtraDAO.tokenVisibilityDidChangeNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: UTXOService.balanceDidUpdateNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
+        let reloadingPublishers = [
+            TokenDAO.tokensDidChangeNotification,
+            ChainDAO.chainsDidChangeNotification,
+            TokenExtraDAO.tokenVisibilityDidChangeNotification,
+            UTXOService.balanceDidUpdateNotification,
+        ].map { name in
+            NotificationCenter.default.publisher(for: name)
+        }
+        Publishers.MergeMany(reloadingPublishers)
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.reloadData()
+            }
+            .store(in: &reloadingPublisher)
+        NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadPerpsPositions),
             name: PerpsPositionDAO.perpsPositionDidChangeNotification,
             object: nil
         )
-        notificationCenter.addObserver(
+        NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadPerpsTopMovers),
             name: PerpsMarketDAO.marketsDidUpdateNotification,
@@ -147,6 +139,31 @@ final class PrivacyWalletViewController: WalletViewController {
         transactionCell.load(snapshot: snapshot)
     }
     
+    override func reload(account: CashAccount?) {
+        self.cashAccount = account
+        switch (self.cashAccount, account) {
+        case let (_, .some(new)):
+            overview?.update(cashValue: new.decimalBalance)
+            var snapshot = dataSource.snapshot()
+            if snapshot.itemIdentifiers.contains(.overview) {
+                snapshot.reconfigureItems([.overview])
+            }
+            insertOrUpdateCashAccountItem(into: &snapshot)
+            dataSource.apply(snapshot, animatingDifferences: false)
+        case (.some, .none):
+            overview?.update(cashValue: 0)
+            var snapshot = dataSource.snapshot()
+            if snapshot.itemIdentifiers.contains(.overview) {
+                snapshot.reconfigureItems([.overview])
+            }
+            snapshot.deleteItems([.cash])
+            snapshot.deleteSections([.cash])
+            dataSource.apply(snapshot, animatingDifferences: false)
+        case (.none, .none):
+            break
+        }
+    }
+    
     override func hideTokenAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(
             style: .destructive,
@@ -215,14 +232,15 @@ final class PrivacyWalletViewController: WalletViewController {
             )
             let perpsValue = PerpsPositionDAO.shared.positionValue()
             let btcPrice = TokenDAO.shared.usdPrice(assetID: AssetID.btc)
-            let overview = WalletOverview(
-                tokensValue: tokensValue,
-                perpsValue: perpsValue.decimalValue,
-                btcPrice: btcPrice
-            )
             let cashAccount = PropertiesDAO.shared.jsonObject(
                 forKey: .cashAccount,
                 type: CashAccount.self
+            )
+            let overview = WalletOverview(
+                tokensValue: tokensValue,
+                perpsValue: perpsValue.decimalValue,
+                cashValue: cashAccount?.decimalBalance ?? 0,
+                btcPrice: btcPrice
             )
             
             let tokens = TokenDAO.shared.notHiddenTokens(

@@ -306,7 +306,7 @@ final class HomeViewController: UIViewController {
             }
             Logger.general.debug(category: "Home", message: "Reporting \(firebaseInfos)")
             AppsFlyerLib.shared().customData = firebaseInfos
-            AppsFlyerLib.shared().customerUserID = myUserId
+            AppsFlyerLib.shared().customerUserID = Reporter.userIDHash(userID: myUserId)
             AppsFlyerLib.shared().disableAdvertisingIdentifier = true
             try await AppsFlyerLib.shared().start()
         }

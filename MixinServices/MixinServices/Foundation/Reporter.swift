@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 import Bugsnag
 
 open class Reporter {
@@ -132,7 +133,12 @@ open class Reporter {
     }
     
     open func registerUserInformation(account: Account) {
-        Bugsnag.setUser(account.userID, withEmail: "\(account.identityNumber)@mixin.id", andName: account.fullName)
+        let userIDHash = Reporter.userIDHash(userID: account.userID)
+        Bugsnag.setUser(
+            userIDHash,
+            withEmail: "\(account.identityNumber)@mixin.id",
+            andName: account.fullName
+        )
     }
     
     open func report(error: Error) {
@@ -153,6 +159,16 @@ open class Reporter {
     
     open func updateUserProperty(key: String, value: String) {
         
+    }
+    
+}
+
+extension Reporter {
+    
+    public static func userIDHash(userID: String) -> String {
+        let data = Data(userID.utf8)
+        let hash = SHA256.hash(data: data)
+        return hash.hexEncodedString()
     }
     
 }

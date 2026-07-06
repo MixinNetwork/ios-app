@@ -5,6 +5,8 @@ import MixinServices
 
 final class PrivacyWalletViewController: WalletViewController {
     
+    private let dataLoadingQueue = DispatchQueue(label: "one.mixin.messenger.PrivacyWallet")
+    
     private var hasAssetInLegacyNetwork = false
     private var tokens: OrderedDictionary<String, MixinTokenItem> = [:]
     private var transactions: OrderedDictionary<String, SafeSnapshotItem> = [:]
@@ -39,7 +41,7 @@ final class PrivacyWalletViewController: WalletViewController {
             tradeSource: .walletHome,
             responder: self
         )
-        let pendingDepositObserver = PrivacyWalletPendingDepositObserver()
+        let pendingDepositObserver = PrivacyWalletPendingDepositObserver(delegationQueue: dataLoadingQueue)
         pendingDepositObserver.delegate = self
         self.pendingDepositObserver = pendingDepositObserver
         collectionView.delegate = self
@@ -70,7 +72,7 @@ final class PrivacyWalletViewController: WalletViewController {
             name: PerpsMarketDAO.marketsDidUpdateNotification,
             object: nil
         )
-        // Not calling `reloadData`, it will be reloaded in `viewWillAppear`
+        reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,7 +83,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 self.hasAssetInLegacyNetwork = hasAssetInLegacyNetwork
             }
         }
-        pendingDepositObserver?.reloadPendingDeposits() // Will trigger `reloadData`
+        pendingDepositObserver?.reloadPendingDeposits()
         perpsPositionLoader?.start()
         perpsTopMoverLoader?.start()
     }
@@ -220,7 +222,7 @@ final class PrivacyWalletViewController: WalletViewController {
     @objc private func reloadData() {
         let displayItemsCount = itemsCount
         let hasMoreDeterminatingItemsCount = itemsCount + 1
-        DispatchQueue.global().async { [weak self, perpsTopMoversCount] in
+        dataLoadingQueue.async { [weak self, perpsTopMoversCount] in
             var snapshot = DataSourceSnapshot()
             
             let tokensValue = TokenDAO.shared.usdBalanceSum(includesHiddenTokens: false)
@@ -406,7 +408,7 @@ final class PrivacyWalletViewController: WalletViewController {
             return
         }
         let displayItemsCount = itemsCount
-        DispatchQueue.global().async { [weak self] in
+        dataLoadingQueue.async { [weak self] in
             let perpsPositions = PerpsPositionDAO.shared.positionItems()
             guard !perpsPositions.isEmpty else {
                 DispatchQueue.main.async {
@@ -460,7 +462,7 @@ final class PrivacyWalletViewController: WalletViewController {
         guard snapshot.sectionIdentifiers.contains(.perpsTopMovers) else {
             return
         }
-        DispatchQueue.global().async { [perpsTopMoversCount, weak self] in
+        dataLoadingQueue.async { [perpsTopMoversCount, weak self] in
             let perpsTopMovers = PerpsMarketDAO.shared.availableTopMovers(
                 count: perpsTopMoversCount
             ).reduce(into: OrderedDictionary()) { result, market in
@@ -602,17 +604,22 @@ extension PrivacyWalletViewController: PrivacyWalletPendingDepositObserver.Deleg
         didUpdateWith tokens: [MixinToken],
         snapshots: [SafeSnapshot]
     ) {
-        if snapshots.isEmpty {
-            overviewTray = nil
-        } else {
-            overviewTray = .pendingDeposits(tokens: tokens, snapshots: snapshots)
-        }
-        var snapshot = dataSource.snapshot()
-        if snapshot.itemIdentifiers.contains(.overview) {
-            snapshot.reconfigureItems([.overview])
-            dataSource.apply(snapshot, animatingDifferences: false)
-        } else {
-            reloadData()
+        DispatchQueue.main.async { [weak self] in
+            guard let self else {
+                return
+            }
+            if snapshots.isEmpty {
+                self.overviewTray = nil
+            } else {
+                self.overviewTray = .pendingDeposits(tokens: tokens, snapshots: snapshots)
+            }
+            var snapshot = self.dataSource.snapshot()
+            if snapshot.itemIdentifiers.contains(.overview) {
+                snapshot.reconfigureItems([.overview])
+                self.dataSource.apply(snapshot, animatingDifferences: false)
+            } else {
+                self.reloadData()
+            }
         }
     }
     

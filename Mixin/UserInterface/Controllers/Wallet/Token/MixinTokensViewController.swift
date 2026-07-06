@@ -40,7 +40,7 @@ final class MixinTokensViewController: TokensViewController {
             tradeSource: .tokenList,
             responder: self
         )
-        let pendingDepositObserver = PrivacyWalletPendingDepositObserver()
+        let pendingDepositObserver = PrivacyWalletPendingDepositObserver(delegationQueue: .main)
         pendingDepositObserver.delegate = self
         pendingDepositObserver.reloadPendingDeposits()
         self.pendingDepositObserver = pendingDepositObserver

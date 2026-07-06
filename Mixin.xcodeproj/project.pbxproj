@@ -31,6 +31,7 @@
 		6001E88C2B0B7140006A053A /* DeviceTransferToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6001E88A2B0B713F006A053A /* DeviceTransferToken.swift */; };
 		6001E88D2B0B7140006A053A /* DeviceTransferSafeSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6001E88B2B0B7140006A053A /* DeviceTransferSafeSnapshot.swift */; };
 		6E01B01F201DC896B6A8B1BE /* Pods_MixinNotificationService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */; };
+		784636A725630BA0C9CCCA3C /* Pods_MixinTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00D5DC292A2514EA364175F8 /* Pods_MixinTests.framework */; };
 		7B015D7F21A81C81000C9F1E /* SearchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */; };
 		7B015D8121A81C8D000C9F1E /* SearchBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */; };
 		7B015F49241F60BC0004A563 /* LocationTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B015F48241F60BC0004A563 /* LocationTableView.swift */; };
@@ -1953,6 +1954,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		00D5DC292A2514EA364175F8 /* Pods_MixinTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		23987C4F141F7C6E533A683D /* Pods_Mixin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mixin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		273A5E0B1F95EA4500AE802F /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		274264A820011BB0000A8808 /* mixin.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mixin.caf; sourceTree = "<group>"; };
@@ -1985,8 +1987,10 @@
 		6001E88B2B0B7140006A053A /* DeviceTransferSafeSnapshot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTransferSafeSnapshot.swift; sourceTree = "<group>"; };
 		60A0F3EECBE8095220D78A70 /* Pods-MixinShare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinShare.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinShare/Pods-MixinShare.debug.xcconfig"; sourceTree = "<group>"; };
 		621D5146A79BB7A673B026F9 /* Pods-mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.release.xcconfig"; sourceTree = "<group>"; };
+		629C886E042123D6D7142538 /* Pods-MixinTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinTests/Pods-MixinTests.release.xcconfig"; sourceTree = "<group>"; };
 		679B81508A1C57B537AAF496 /* Pods-MixinDebug.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinDebug.release.xcconfig"; path = "Pods/Target Support Files/Pods-MixinDebug/Pods-MixinDebug.release.xcconfig"; sourceTree = "<group>"; };
 		67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinShare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B8F8C5686431175171DCB43 /* Pods-MixinTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinTests/Pods-MixinTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7B015D7E21A81C81000C9F1E /* SearchBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxView.swift; sourceTree = "<group>"; };
 		7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchBoxView.xib; sourceTree = "<group>"; };
 		7B015F48241F60BC0004A563 /* LocationTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTableView.swift; sourceTree = "<group>"; };
@@ -3930,6 +3934,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				784636A725630BA0C9CCCA3C /* Pods_MixinTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4026,6 +4031,8 @@
 				46EBB0CE75C6636B3D8BA6D0 /* Pods-MixinShare.release.xcconfig */,
 				BD555D0ADB2F0ED629DB90DA /* Pods-MixinDebug.debug.xcconfig */,
 				679B81508A1C57B537AAF496 /* Pods-MixinDebug.release.xcconfig */,
+				6B8F8C5686431175171DCB43 /* Pods-MixinTests.debug.xcconfig */,
+				629C886E042123D6D7142538 /* Pods-MixinTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -5814,6 +5821,7 @@
 				DD2C79AAFC0C43AD7C5C9B4D /* Pods_MixinNotificationService.framework */,
 				67A8E0E9B65F16ADB27E6F25 /* Pods_MixinShare.framework */,
 				E49F74E7017E780C23E3311F /* Pods_MixinDebug.framework */,
+				00D5DC292A2514EA364175F8 /* Pods_MixinTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -6954,6 +6962,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 94ED30602E269B2A00B99837 /* Build configuration list for PBXNativeTarget "MixinTests" */;
 			buildPhases = (
+				FFF013EA4012E10CC19C17DD /* [CP] Check Pods Manifest.lock */,
 				94ED30562E269B2A00B99837 /* Sources */,
 				94ED30572E269B2A00B99837 /* Frameworks */,
 				94ED30582E269B2A00B99837 /* Resources */,
@@ -7703,6 +7712,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-MixinNotificationService-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FFF013EA4012E10CC19C17DD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MixinTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -9661,6 +9692,7 @@
 		};
 		94ED30612E269B2A00B99837 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6B8F8C5686431175171DCB43 /* Pods-MixinTests.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -9672,8 +9704,11 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/**";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/**",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
@@ -9694,6 +9729,7 @@
 		};
 		94ED30622E269B2A00B99837 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 629C886E042123D6D7142538 /* Pods-MixinTests.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -9705,8 +9741,11 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/**";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/**",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;

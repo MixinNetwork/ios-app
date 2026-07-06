@@ -9,13 +9,14 @@ final class MainAppReporter: Reporter {
     
     override func registerUserInformation(account: Account) {
         super.registerUserInformation(account: account)
-        Crashlytics.crashlytics().setUserID(account.userID)
+        let userIDHash = Reporter.userIDHash(userID: account.userID)
+        Crashlytics.crashlytics().setUserID(userIDHash)
         Crashlytics.crashlytics().setCustomKeysAndValues([
             "FullName": account.fullName,
             "IdentityNumber": account.identityNumber
         ])
-        Analytics.setUserID(account.userID)
-        AppsFlyerLib.shared().customerUserID = account.userID
+        Analytics.setUserID(userIDHash)
+        AppsFlyerLib.shared().customerUserID = userIDHash
     }
     
     override func report(error: Error) {

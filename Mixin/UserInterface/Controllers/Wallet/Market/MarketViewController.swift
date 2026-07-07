@@ -458,10 +458,25 @@ final class MarketViewController: UIViewController {
         guard let viewModel = PerpetualMarketViewModel(market: market) else {
             return
         }
-        let next = if PerpsPositionDAO.shared.hasPosition(marketID: viewModel.market.marketID) {
-            PerpetualMarketViewController(wallet: .privacy, viewModel: viewModel)
+        let next: UIViewController
+        if PerpsPositionDAO.shared.hasPosition(marketID: viewModel.market.marketID) {
+            next = PerpetualMarketViewController(
+                wallet: .privacy,
+                viewModel: viewModel
+            )
         } else {
-            OpenPerpetualPositionViewController(wallet: .privacy, side: side, viewModel: viewModel)
+            next = OpenPerpetualPositionViewController(
+                wallet: .privacy,
+                side: side,
+                viewModel: viewModel
+            )
+            reporter.report(
+                event: .tradePerpsOpenPositionStart,
+                tags: [
+                    "direction": side.rawValue,
+                    "source": "spot_market_detail",
+                ]
+            )
         }
         navigationController?.pushViewController(next, animated: true)
     }

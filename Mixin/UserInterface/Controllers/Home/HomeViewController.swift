@@ -36,6 +36,7 @@ final class HomeViewController: UIViewController {
     private var isEditingRow = false
     private var insufficientBalanceForEmergencyContactBulletinConfirmedDate: Date?
     private var isShowingSearch = false
+    private var hasStartedAppsFlyer = false
     
     private var topLeftTitle: String {
         AppGroupUserDefaults.User.circleName ?? R.string.localizable.mixin()
@@ -110,15 +111,18 @@ final class HomeViewController: UIViewController {
         }
         ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
-        if UIApplication.shared.applicationState == .active {
-            startAppsFlyer()
-        } else {
-            appsFlyerStartingObserver = NotificationCenter.default.addObserver(
-                forName: UIApplication.didBecomeActiveNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                self?.startAppsFlyer()
+        if !hasStartedAppsFlyer {
+            hasStartedAppsFlyer = true
+            if UIApplication.shared.applicationState == .active {
+                startAppsFlyer()
+            } else {
+                appsFlyerStartingObserver = NotificationCenter.default.addObserver(
+                    forName: UIApplication.didBecomeActiveNotification,
+                    object: nil,
+                    queue: .main
+                ) { [weak self] _ in
+                    self?.startAppsFlyer()
+                }
             }
         }
     }

@@ -142,8 +142,11 @@ final class PrivacyWalletViewController: WalletViewController {
     }
     
     override func reload(account: CashAccount?) {
-        self.cashAccount = account
-        switch (self.cashAccount, account) {
+        let old = self.cashAccount
+        let new = account
+        
+        self.cashAccount = new
+        switch (old, new) {
         case let (_, .some(new)):
             overview?.update(cashValue: new.decimalBalance)
             var snapshot = dataSource.snapshot()

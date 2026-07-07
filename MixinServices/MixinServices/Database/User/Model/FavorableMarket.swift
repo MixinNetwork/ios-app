@@ -48,6 +48,7 @@ public final class FavorableMarket: Market {
             sparklineIn24H: market.sparklineIn24H,
             updatedAt: market.updatedAt,
             descriptions: market.descriptions,
+            perpsMarketID: market.perpsMarketID,
         )
     }
     

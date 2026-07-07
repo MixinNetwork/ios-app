@@ -978,6 +978,13 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("market_perps_action") { db in
+            let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(markets)").map(\.name)
+            if !columns.contains("perps_market_id") {
+                try db.execute(sql: "ALTER TABLE `markets` ADD COLUMN `perps_market_id` TEXT")
+            }
+        }
+        
         return migrator
     }
     

@@ -143,7 +143,7 @@
                         <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="rsU-9b-FXo" firstAttribute="top" secondItem="eKZ-hn-khl" secondAttribute="top" id="72w-AI-2rV"/>
-                            <constraint firstItem="g5M-p6-SRf" firstAttribute="leading" secondItem="6Wu-Zy-PPg" secondAttribute="trailing" constant="-12" id="B0c-cu-dnT"/>
+                            <constraint firstItem="g5M-p6-SRf" firstAttribute="leading" secondItem="6Wu-Zy-PPg" secondAttribute="trailing" constant="-9" id="B0c-cu-dnT"/>
                             <constraint firstAttribute="bottom" secondItem="rsU-9b-FXo" secondAttribute="bottom" id="CGE-zA-Adr"/>
                             <constraint firstItem="rsU-9b-FXo" firstAttribute="leading" secondItem="eKZ-hn-khl" secondAttribute="leading" id="HCA-Cf-IZi"/>
                             <constraint firstItem="g5M-p6-SRf" firstAttribute="top" secondItem="eKZ-hn-khl" secondAttribute="top" id="RyC-X3-XVk"/>

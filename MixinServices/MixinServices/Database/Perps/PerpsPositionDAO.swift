@@ -33,6 +33,14 @@ public final class PerpsPositionDAO: PerpsDAO {
         return .open(margin: margin, pnl: pnl)
     }
     
+    public func hasPosition(marketID: String) -> Bool {
+        let value: Int? = db.select(
+            with: "SELECT 1 FROM positions WHERE market_id = ?",
+            arguments: [marketID]
+        )
+        return value == 1
+    }
+    
     public func position(marketID: String) -> PerpetualPositionItem? {
         db.select(with: Self.itemSQL + "WHERE p.market_id = ?", arguments: [marketID])
     }

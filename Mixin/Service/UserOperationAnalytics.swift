@@ -7,7 +7,7 @@ enum UserOperationAnalytics {
         case tokenList          = "token_list"
         case moreExplore        = "more_explore"
         case appCard            = "app_card"
-        case marketDetail       = "market_detail"
+        case spotMarketDetail   = "spot_market_detail"
         case tradeDetail        = "trade_detail"
         case assetDetail        = "asset_detail"
         case perpsMarginInput   = "perps_margin_input"

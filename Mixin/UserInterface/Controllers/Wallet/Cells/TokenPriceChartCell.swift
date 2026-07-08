@@ -5,6 +5,7 @@ final class TokenPriceChartCell: UITableViewCell {
     
     protocol Delegate: AnyObject {
         func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistoryPeriod)
+        func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPerpsOn side: PerpetualOrderSide)
     }
     
     @IBOutlet weak var titleStackView: UIStackView!
@@ -17,8 +18,16 @@ final class TokenPriceChartCell: UITableViewCell {
     @IBOutlet weak var loadingIndicatorView: ActivityIndicatorView!
     @IBOutlet weak var periodSelectorStackView: UIStackView!
     
+    @IBOutlet weak var perpsActionView: UIView!
+    @IBOutlet weak var longPerpsBackgroundView: UIImageView!
+    @IBOutlet weak var longPerpsButton: UIButton!
+    @IBOutlet weak var shortPerpsBackgroundView: UIImageView!
+    @IBOutlet weak var shortPerpsButton: UIButton!
+    
     @IBOutlet weak var periodSelectorHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var periodSelectorScrollViewBottomConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var showPerpsActionConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hidePerpsActionConstraint: NSLayoutConstraint!
     
     weak var delegate: Delegate?
     
@@ -58,6 +67,34 @@ final class TokenPriceChartCell: UITableViewCell {
             periodSelectorStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(changePeriod(_:)), for: .touchUpInside)
         }
+        switch AppGroupUserDefaults.User.marketColorAppearance {
+        case .greenUpRedDown:
+            longPerpsBackgroundView.tintColor = R.color.market_perps_action_background_green()
+            longPerpsButton.configuration?.baseForegroundColor = R.color.market_perps_action_foreground_green()
+            shortPerpsBackgroundView.tintColor = R.color.market_perps_action_background_red()
+            shortPerpsButton.configuration?.baseForegroundColor = R.color.market_perps_action_foreground_red()
+        case .redUpGreenDown:
+            longPerpsBackgroundView.tintColor = R.color.market_perps_action_background_red()
+            longPerpsButton.configuration?.baseForegroundColor = R.color.market_perps_action_foreground_red()
+            shortPerpsBackgroundView.tintColor = R.color.market_perps_action_background_green()
+            shortPerpsButton.configuration?.baseForegroundColor = R.color.market_perps_action_foreground_green()
+        }
+        longPerpsButton.configuration?.attributedTitle = AttributedString(
+            string: R.string.localizable.long(),
+            font: .systemFont(ofSize: 14, weight: .medium)
+        )
+        shortPerpsButton.configuration?.attributedTitle = AttributedString(
+            string: R.string.localizable.short(),
+            font: .systemFont(ofSize: 14, weight: .medium)
+        )
+    }
+    
+    @IBAction func long(_ sender: Any) {
+        delegate?.tokenPriceChartCell(self, didSelectPerpsOn: .long)
+    }
+    
+    @IBAction func short(_ sender: Any) {
+        delegate?.tokenPriceChartCell(self, didSelectPerpsOn: .short)
     }
     
     func setPeriodSelection(period: PriceHistoryPeriod) {
@@ -101,6 +138,18 @@ final class TokenPriceChartCell: UITableViewCell {
             symbol: .currencySymbol
         )
         updateChange(base: base, now: now)
+    }
+    
+    func showPerpsActions() {
+        showPerpsActionConstraint.priority = .defaultHigh
+        hidePerpsActionConstraint.priority = .defaultLow
+        perpsActionView.isHidden = false
+    }
+    
+    func hidePerpsActions() {
+        showPerpsActionConstraint.priority = .defaultLow
+        hidePerpsActionConstraint.priority = .defaultHigh
+        perpsActionView.isHidden = true
     }
     
     @objc private func changePeriod(_ sender: UIButton) {

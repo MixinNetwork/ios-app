@@ -12,6 +12,7 @@ final class MarketViewController: UIViewController {
     private let id: Identifier
     private let isMalicious: Bool
     private let maliciousWarningReuseIdentifier = "m"
+    private let analyticSource: UserOperationAnalytics.TradeSource = .spotMarketDetail
     
     private var market: FavorableMarket?
     private var tokens: [MixinTokenItem]?
@@ -211,7 +212,7 @@ final class MarketViewController: UIViewController {
                 }
             }
         } else {
-            reporter.report(event: .marketFavoriteAdd, tags: ["source": "market_detail"])
+            reporter.report(event: .marketFavoriteAdd, tags: ["source": analyticSource.rawValue])
             market.isFavorite = true
             updateFavoriteButtonImage()
             RouteAPI.favoriteMarket(coinID: market.coinID) { [weak self] result in
@@ -274,7 +275,7 @@ final class MarketViewController: UIViewController {
     
     @objc private func trade(_ sender: Any) {
         if let token = tokens?.first {
-            UserOperationAnalytics.tradeSource = .marketDetail
+            UserOperationAnalytics.tradeSource = .spotMarketDetail
             if let trade = pushingViewController as? TradeMixinSpotViewController {
                 trade.buy(assetID: token.assetID)
                 navigationController?.popViewController(animated: true)
@@ -454,6 +455,33 @@ final class MarketViewController: UIViewController {
         present(tip, animated: true)
     }
     
+    private func viewPerps(market: PerpetualMarket, openOnSide side: PerpetualOrderSide) {
+        guard let viewModel = PerpetualMarketViewModel(market: market) else {
+            return
+        }
+        let next: UIViewController
+        if PerpsPositionDAO.shared.hasPosition(marketID: viewModel.market.marketID) {
+            next = PerpetualMarketViewController(
+                wallet: .privacy,
+                viewModel: viewModel
+            )
+        } else {
+            next = OpenPerpetualPositionViewController(
+                wallet: .privacy,
+                side: side,
+                viewModel: viewModel
+            )
+            reporter.report(
+                event: .tradePerpsOpenPositionStart,
+                tags: [
+                    "direction": side.rawValue,
+                    "source": analyticSource.rawValue,
+                ]
+            )
+        }
+        navigationController?.pushViewController(next, animated: true)
+    }
+    
 }
 
 extension MarketViewController: HomeNavigationController.NavigationBarStyling {
@@ -493,23 +521,28 @@ extension MarketViewController: UITableViewDataSource {
             return tableView.dequeueReusableCell(withIdentifier: maliciousWarningReuseIdentifier, for: indexPath)
         case .chart:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_price_chart, for: indexPath)!
+            let isPerpsAvailable: Bool
             if let market {
+                isPerpsAvailable = market.perpsMarketID != nil
                 cell.titleLabel.text = market.symbol
                 cell.rankLabel.text = market.numberedRank
                 cell.tokenIconView.setIcon(market: market)
                 cell.updatePriceAndChangeByMarket(price: market.localizedPrice, points: chartPoints)
             } else if let token = tokens?.first {
+                isPerpsAvailable = false
                 cell.titleLabel.text = token.symbol
                 cell.rankLabel.text = nil
                 cell.tokenIconView.setIcon(token: token)
                 cell.updatePriceAndChangeByMarket(price: token.localizedFiatMoneyPrice, points: chartPoints)
             } else {
+                isPerpsAvailable = false
                 cell.titleLabel.text = viewModel.symbol
                 cell.rankLabel.text = nil
             }
             cell.rankLabel.isHidden = cell.rankLabel.text == nil
             cell.setPeriodSelection(period: chartPeriod)
             cell.updateChart(points: chartPoints)
+            isPerpsAvailable ? cell.showPerpsActions() : cell.hidePerpsActions()
             cell.delegate = self
             cell.chartView.delegate = self
             return cell
@@ -660,6 +693,7 @@ extension MarketViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section)! {
         case .myBalance:
+            let source = analyticSource.rawValue
             pickSingleToken { [market] token in
                 let pushingToken = (self.pushingViewController as? MixinTokenViewController)?.token
                 if token.assetID == pushingToken?.assetID {
@@ -667,7 +701,7 @@ extension MarketViewController: UITableViewDelegate {
                 } else {
                     let controller = MixinTokenViewController(token: token, market: market)
                     self.navigationController?.pushViewController(controller, animated: true)
-                    reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "market_detail"])
+                    reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": source])
                 }
             }
         default:
@@ -726,6 +760,31 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
         self.chartPeriod = period
         reloadPriceChart(period: period)
         AppGroupUserDefaults.Wallet.marketChartPeriod = period.rawValue
+    }
+    
+    func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPerpsOn side: PerpetualOrderSide) {
+        guard let marketID = market?.perpsMarketID else {
+            return
+        }
+        if let market = PerpsMarketDAO.shared.market(marketID: marketID) {
+            viewPerps(market: market, openOnSide: side)
+        } else {
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            RouteAPI.perpsMarket(marketID: marketID) { [weak self] result in
+                switch result {
+                case .success(let market):
+                    DispatchQueue.global().async {
+                        PerpsMarketDAO.shared.save(market: market)
+                    }
+                    hud.hide()
+                    self?.viewPerps(market: market, openOnSide: side)
+                case .failure(let error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+            }
+        }
     }
     
 }

@@ -13,6 +13,7 @@ public final class PropertiesDAO: UserDatabaseDAO {
         case mixinSwapRecentReceiveIDs  = "mixin_swap_recent_receive"
         case transferRecentAssetIDs     = "transfer_recent_assets"
         case cashAccount        = "cash_account"
+        case walletBanners      = "wallet_banners"
     }
     
     public enum Change {

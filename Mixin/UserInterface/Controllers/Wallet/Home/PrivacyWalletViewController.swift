@@ -248,6 +248,8 @@ final class PrivacyWalletViewController: WalletViewController {
                 btcPrice: btcPrice
             )
             
+            let remoteBanners = AppBanner.loadFromCache(chainIDs: nil)
+            
             let tokens = TokenDAO.shared.notHiddenTokens(
                 includesZeroBalanceItems: true,
                 limit: hasMoreDeterminatingItemsCount,
@@ -345,6 +347,8 @@ final class PrivacyWalletViewController: WalletViewController {
                 }
                 self.overview = overview
                 
+                self.reloadBanners(with: remoteBanners, updating: &snapshot)
+                
                 self.tokens = displayTokens
                 self.tokensValue = formattedTokensValue
                 self.hasMoreTokens = hasMoreToken
@@ -359,11 +363,14 @@ final class PrivacyWalletViewController: WalletViewController {
                 self.perpsTopMovers = perpsTopMovers
                 self.cashAccount = cashAccount
                 
-                self.insertBannersReferralSection(into: &snapshot)
+                self.insertReferralSection(into: &snapshot)
                 if cashAccount != nil {
                     self.insertOrUpdateCashAccountItem(into: &snapshot)
                 }
-                self.dataSource.applySnapshotUsingReloadData(snapshot)
+                self.dataSource.applySnapshotUsingReloadData(snapshot) {
+                    self.scrollToFirstBanner()
+                    self.scheduleBannersAutoScrolling()
+                }
                 
                 self.reloadBannersIfAllowed(chainIDs: nil)
                 self.reloadCashAccount()

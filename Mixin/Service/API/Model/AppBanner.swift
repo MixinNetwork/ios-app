@@ -1,6 +1,7 @@
 import Foundation
+import MixinServices
 
-struct AppBanner: Decodable {
+struct AppBanner: Codable {
     
     enum CodingKeys: String, CodingKey {
         case bannerID = "banner_id"
@@ -10,6 +11,7 @@ struct AppBanner: Decodable {
         case actionURL = "action_url"
         case actions = "actions"
         case trackingKey = "tracking_key"
+        case endAt = "end_at"
         case chains = "chains"
     }
     
@@ -20,13 +22,14 @@ struct AppBanner: Decodable {
     let actionURL: String?
     let actions: [Action]?
     let trackingKey: String
+    let endAt: String
     let chains: [String]
     
 }
 
 extension AppBanner {
     
-    struct Action: Decodable {
+    struct Action: Codable {
         
         enum CodingKeys: String, CodingKey {
             case label = "label"
@@ -52,6 +55,35 @@ extension AppBanner: Hashable {
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(bannerID)
+    }
+    
+}
+
+extension AppBanner {
+    
+    static func saveToCache(remoteBanners: [AppBanner]) {
+        PropertiesDAO.shared.set(jsonObject: remoteBanners, forKey: .walletBanners)
+    }
+    
+    // nil for all chains
+    static func loadFromCache(chainIDs: Set<String>?) -> [AppBanner] {
+        let closedBannerIDs = Set(AppGroupUserDefaults.Wallet.closedBannerIDs)
+        return PropertiesDAO.shared.jsonObject(
+            forKey: .walletBanners,
+            type: [AppBanner].self
+        )?.filter { banner in
+            guard let endAt = DateFormatter.iso8601Full.date(from: banner.endAt) else {
+                return false
+            }
+            let chainsMatch: Bool = if let chainIDs {
+                banner.chains.isEmpty || !chainIDs.intersection(banner.chains).isEmpty
+            } else {
+                true
+            }
+            return endAt.timeIntervalSinceNow > 0
+            && !closedBannerIDs.contains(banner.bannerID)
+            && chainsMatch
+        } ?? []
     }
     
 }

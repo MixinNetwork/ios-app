@@ -703,55 +703,49 @@ extension WalletViewController {
 
 extension WalletViewController {
     
-    func insertBannersReferralSection(into snapshot: inout DataSourceSnapshot) {
-        if !banners.isEmpty, let firstSection = snapshot.sectionIdentifiers.first {
-            snapshot.insertSections([.banners], afterSection: firstSection)
-            let items = displayBannerItems(
-                banners: banners,
-                multiplier: bannersInfiniteIllusionMultiplier
-            )
-            snapshot.appendItems(items, toSection: .banners)
+    func insertReferralSection(into snapshot: inout DataSourceSnapshot) {
+        guard !BadgeManager.shared.hasViewed(identifier: .walletHomeReferral) else {
+            return
         }
-        if !BadgeManager.shared.hasViewed(identifier: .walletHomeReferral) {
-            snapshot.insertSections([.referral], beforeSection: .support)
-            snapshot.appendItems([.referral], toSection: .referral)
-        }
+        snapshot.insertSections([.referral], beforeSection: .support)
+        snapshot.appendItems([.referral], toSection: .referral)
     }
+    
+}
+
+extension WalletViewController {
     
     // nil for all chains
     func reloadBannersIfAllowed(chainIDs: Set<String>?) {
         guard allowsReloadingBanners && isViewAppearing else {
-            scheduleBannersAutoScrolling()
-            resetBannersToCenter()
             return
         }
         allowsReloadingBanners = false
         RewardAPI.appBanners(chainIDs: chainIDs) { [weak self] result in
-            guard let self else {
-                return
-            }
-            var banners: [WalletBanner]
             switch result {
+            case .failure(let error):
+                Logger.general.debug(category: "Wallet", message: "\(error)")
             case .success(let remoteBanners):
+                DispatchQueue.global().async {
+                    AppBanner.saveToCache(remoteBanners: remoteBanners)
+                }
                 if remoteBanners.isEmpty {
                     AppGroupUserDefaults.Wallet.closedBannerIDs = []
                 }
-                let closedBannerIDs = Set(AppGroupUserDefaults.Wallet.closedBannerIDs)
-                banners = remoteBanners.compactMap { banner in
-                    if closedBannerIDs.contains(banner.bannerID) {
-                        nil
-                    } else {
-                        .remote(banner)
-                    }
+                guard let self else {
+                    return
                 }
-            case .failure(let error):
-                Logger.general.debug(category: "Wallet", message: "\(error)")
-                banners = []
+                let closedBannerIDs = Set(AppGroupUserDefaults.Wallet.closedBannerIDs)
+                let notClosedBanners = remoteBanners.filter { banner in
+                    !closedBannerIDs.contains(banner.bannerID)
+                }
+                var snapshot = self.dataSource.snapshot()
+                self.reloadBanners(with: notClosedBanners, updating: &snapshot)
+                self.dataSource.apply(snapshot, animatingDifferences: false) {
+                    self.scrollToFirstBanner()
+                    self.scheduleBannersAutoScrolling()
+                }
             }
-            if !BadgeManager.shared.hasViewed(identifier: .addWalletBanner) {
-                banners.append(.embedded(.addWallet))
-            }
-            self.reload(banners: banners)
         }
     }
     
@@ -800,13 +794,22 @@ extension WalletViewController {
         }
     }
     
-    private func reload(banners: [WalletBanner]) {
+    func reloadBanners(
+        with remoteBanners: [AppBanner],
+        updating snapshot: inout DataSourceSnapshot
+    ) {
+        var banners: [WalletBanner] = remoteBanners.map { banner in
+                .remote(banner)
+        }
+        if !BadgeManager.shared.hasViewed(identifier: .addWalletBanner) {
+            banners.append(.embedded(.addWallet))
+        }
         self.banners = banners
+        
         let displayBannerItems = displayBannerItems(
             banners: banners,
             multiplier: bannersInfiniteIllusionMultiplier
         )
-        var snapshot = dataSource.snapshot()
         if snapshot.sectionIdentifiers.contains(.banners) {
             snapshot.deleteItems(
                 snapshot.itemIdentifiers(inSection: .banners)
@@ -824,16 +827,18 @@ extension WalletViewController {
                 snapshot.appendSections([.banners])
             }
             snapshot.appendItems(displayBannerItems, toSection: .banners)
-        } else {
+        }
+    }
+    
+    func scrollToFirstBanner() {
+        guard let firstBanner = banners.first else {
             return
         }
-        dataSource.apply(snapshot, animatingDifferences: false) { [weak self] in
-            guard let self else {
-                return
-            }
-            self.scrollToFirstBanner()
-            self.scheduleBannersAutoScrolling()
+        let center: Item = .banner(firstBanner, duplicationOffset: 0)
+        guard let indexPath = dataSource.indexPath(for: center) else {
+            return
         }
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
     }
     
     private func displayBannerItems(banners: [WalletBanner], multiplier: Int) -> [Item] {
@@ -853,17 +858,6 @@ extension WalletViewController {
             }
             return groups.flatMap { $0 }
         }
-    }
-    
-    private func scrollToFirstBanner() {
-        guard let firstBanner = banners.first else {
-            return
-        }
-        let center: Item = .banner(firstBanner, duplicationOffset: 0)
-        guard let indexPath = dataSource.indexPath(for: center) else {
-            return
-        }
-        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
     }
     
 }

@@ -12,6 +12,7 @@ final class MarketViewController: UIViewController {
     private let id: Identifier
     private let isMalicious: Bool
     private let maliciousWarningReuseIdentifier = "m"
+    private let analyticSource: UserOperationAnalytics.TradeSource = .spotMarketDetail
     
     private var market: FavorableMarket?
     private var tokens: [MixinTokenItem]?
@@ -211,7 +212,7 @@ final class MarketViewController: UIViewController {
                 }
             }
         } else {
-            reporter.report(event: .marketFavoriteAdd, tags: ["source": "market_detail"])
+            reporter.report(event: .marketFavoriteAdd, tags: ["source": analyticSource.rawValue])
             market.isFavorite = true
             updateFavoriteButtonImage()
             RouteAPI.favoriteMarket(coinID: market.coinID) { [weak self] result in
@@ -274,7 +275,7 @@ final class MarketViewController: UIViewController {
     
     @objc private func trade(_ sender: Any) {
         if let token = tokens?.first {
-            UserOperationAnalytics.tradeSource = .marketDetail
+            UserOperationAnalytics.tradeSource = .spotMarketDetail
             if let trade = pushingViewController as? TradeMixinSpotViewController {
                 trade.buy(assetID: token.assetID)
                 navigationController?.popViewController(animated: true)
@@ -474,7 +475,7 @@ final class MarketViewController: UIViewController {
                 event: .tradePerpsOpenPositionStart,
                 tags: [
                     "direction": side.rawValue,
-                    "source": "spot_market_detail",
+                    "source": analyticSource.rawValue,
                 ]
             )
         }
@@ -692,6 +693,7 @@ extension MarketViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section)! {
         case .myBalance:
+            let source = analyticSource.rawValue
             pickSingleToken { [market] token in
                 let pushingToken = (self.pushingViewController as? MixinTokenViewController)?.token
                 if token.assetID == pushingToken?.assetID {
@@ -699,7 +701,7 @@ extension MarketViewController: UITableViewDelegate {
                 } else {
                     let controller = MixinTokenViewController(token: token, market: market)
                     self.navigationController?.pushViewController(controller, animated: true)
-                    reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "market_detail"])
+                    reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": source])
                 }
             }
         default:

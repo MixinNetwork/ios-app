@@ -10,10 +10,10 @@
       "resizing" : {
         "cap-insets" : {
           "left" : 18,
-          "right" : 44
+          "right" : 48
         },
         "center" : {
-          "mode" : "stretch",
+          "mode" : "tile",
           "width" : 1
         },
         "mode" : "3-part-horizontal"
@@ -25,11 +25,11 @@
       "idiom" : "universal",
       "resizing" : {
         "cap-insets" : {
-          "left" : 26,
-          "right" : 67
+          "left" : 27,
+          "right" : 72
         },
         "center" : {
-          "mode" : "stretch",
+          "mode" : "tile",
           "width" : 1
         },
         "mode" : "3-part-horizontal"

@@ -100,18 +100,18 @@
                         <viewLayoutGuide key="frameLayoutGuide" id="k6W-Hj-XN9"/>
                     </scrollView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eKZ-hn-khl">
-                        <rect key="frame" x="20" y="397" width="280" height="35"/>
+                        <rect key="frame" x="20" y="394" width="280" height="38"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="market_perps_action_left" translatesAutoresizingMaskIntoConstraints="NO" id="6Wu-Zy-PPg">
-                                <rect key="frame" x="0.0" y="0.0" width="142.66666666666666" height="35"/>
+                                <rect key="frame" x="0.0" y="0.0" width="145" height="38"/>
                                 <color key="tintColor" name="market_perps_action_background_green"/>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="market_perps_action_right" translatesAutoresizingMaskIntoConstraints="NO" id="g5M-p6-SRf">
-                                <rect key="frame" x="137.66666666666663" y="0.0" width="142.33333333333337" height="35"/>
+                                <rect key="frame" x="135" y="0.0" width="145" height="38"/>
                                 <color key="tintColor" name="market_perps_action_background_red"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="689-hF-jgC">
-                                <rect key="frame" x="0.0" y="0.0" width="132.66666666666666" height="35"/>
+                                <rect key="frame" x="0.0" y="0.0" width="135" height="38"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="long" title="Long" imagePadding="4">
@@ -123,7 +123,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ufa-Ug-ydT">
-                                <rect key="frame" x="147.66666666666663" y="0.0" width="132.33333333333337" height="35"/>
+                                <rect key="frame" x="145" y="0.0" width="135" height="38"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="short" title="Short" imagePadding="4">
@@ -137,7 +137,7 @@
                         </subviews>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
-                            <constraint firstItem="g5M-p6-SRf" firstAttribute="leading" secondItem="6Wu-Zy-PPg" secondAttribute="trailing" constant="-5" id="B0c-cu-dnT"/>
+                            <constraint firstItem="g5M-p6-SRf" firstAttribute="leading" secondItem="6Wu-Zy-PPg" secondAttribute="trailing" constant="-10" id="B0c-cu-dnT"/>
                             <constraint firstItem="ufa-Ug-ydT" firstAttribute="top" secondItem="eKZ-hn-khl" secondAttribute="top" id="KB0-Kg-wir"/>
                             <constraint firstItem="689-hF-jgC" firstAttribute="leading" secondItem="eKZ-hn-khl" secondAttribute="leading" id="MeZ-O3-B4q"/>
                             <constraint firstItem="g5M-p6-SRf" firstAttribute="top" secondItem="eKZ-hn-khl" secondAttribute="top" id="RyC-X3-XVk"/>
@@ -148,7 +148,6 @@
                             <constraint firstAttribute="bottom" secondItem="689-hF-jgC" secondAttribute="bottom" id="bOl-O5-ksm"/>
                             <constraint firstItem="ufa-Ug-ydT" firstAttribute="leading" secondItem="g5M-p6-SRf" secondAttribute="leading" constant="10" id="jFc-dM-Nad"/>
                             <constraint firstAttribute="trailing" secondItem="g5M-p6-SRf" secondAttribute="trailing" id="kAf-PA-cyS"/>
-                            <constraint firstAttribute="height" constant="35" id="kO8-nd-3wd"/>
                             <constraint firstItem="6Wu-Zy-PPg" firstAttribute="trailing" secondItem="689-hF-jgC" secondAttribute="trailing" constant="10" id="ntg-ne-nVN"/>
                             <constraint firstItem="g5M-p6-SRf" firstAttribute="width" secondItem="6Wu-Zy-PPg" secondAttribute="width" id="qMo-ZV-u2f"/>
                             <constraint firstItem="ufa-Ug-ydT" firstAttribute="trailing" secondItem="g5M-p6-SRf" secondAttribute="trailing" id="qlA-VW-T9d"/>
@@ -202,8 +201,8 @@
     </objects>
     <resources>
         <image name="long" width="24" height="24"/>
-        <image name="market_perps_action_left" width="31.333333969116211" height="35"/>
-        <image name="market_perps_action_right" width="31.333333969116211" height="35"/>
+        <image name="market_perps_action_left" width="33.333332061767578" height="38"/>
+        <image name="market_perps_action_right" width="33.333332061767578" height="38"/>
         <image name="short" width="24" height="24"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

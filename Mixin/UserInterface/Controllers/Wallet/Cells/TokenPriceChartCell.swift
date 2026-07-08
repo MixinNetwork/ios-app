@@ -79,6 +79,14 @@ final class TokenPriceChartCell: UITableViewCell {
             shortPerpsBackgroundView.tintColor = R.color.market_perps_action_background_green()
             shortPerpsButton.configuration?.baseForegroundColor = R.color.market_perps_action_foreground_green()
         }
+        longPerpsButton.configuration?.attributedTitle = AttributedString(
+            string: R.string.localizable.long(),
+            font: .systemFont(ofSize: 14, weight: .medium)
+        )
+        shortPerpsButton.configuration?.attributedTitle = AttributedString(
+            string: R.string.localizable.short(),
+            font: .systemFont(ofSize: 14, weight: .medium)
+        )
     }
     
     @IBAction func long(_ sender: Any) {

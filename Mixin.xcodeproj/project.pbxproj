@@ -1421,6 +1421,7 @@
 		94B9FD9E2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B9FD9D2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib */; };
 		94BC7B002F5D8771009D8970 /* PerpsManualShortPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BC7AFF2F5D876D009D8970 /* PerpsManualShortPageView.swift */; };
 		94BD7E772B2983CA0004576D /* MultisigURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BD7E762B2983CA0004576D /* MultisigURL.swift */; };
+		94BDBFE32FFE3587009A7F76 /* AttributedString+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BDBFE22FFE3587009A7F76 /* AttributedString+Convenience.swift */; };
 		94BE14BF2E891CC200BA95A7 /* DepositAmountLimitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE14BE2E891CBC00BA95A7 /* DepositAmountLimitation.swift */; };
 		94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE548D25D96932006575E2 /* OggOpusReader.swift */; };
 		94BED02F2B692F11004381FA /* PopupPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BED02E2B692F11004381FA /* PopupPresentationManager.swift */; };
@@ -3398,6 +3399,7 @@
 		94B9FD9D2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositAddressGeneratingView.xib; sourceTree = "<group>"; };
 		94BC7AFF2F5D876D009D8970 /* PerpsManualShortPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualShortPageView.swift; sourceTree = "<group>"; };
 		94BD7E762B2983CA0004576D /* MultisigURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultisigURL.swift; sourceTree = "<group>"; };
+		94BDBFE22FFE3587009A7F76 /* AttributedString+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+Convenience.swift"; sourceTree = "<group>"; };
 		94BE14BE2E891CBC00BA95A7 /* DepositAmountLimitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositAmountLimitation.swift; sourceTree = "<group>"; };
 		94BE548D25D96932006575E2 /* OggOpusReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusReader.swift; sourceTree = "<group>"; };
 		94BED02E2B692F11004381FA /* PopupPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationManager.swift; sourceTree = "<group>"; };
@@ -5982,6 +5984,7 @@
 				943A28072B878FCE0050929A /* TIPNodeResponseError+Localization.swift */,
 				E061E52A23B208E600598FC3 /* NSAttributedString+CoreText.swift */,
 				9458A06E2CC8E72000A51154 /* NSAttributedString+Constant.swift */,
+				94BDBFE22FFE3587009A7F76 /* AttributedString+Convenience.swift */,
 				DFB6CE1D23C4805B00FB6615 /* KeychainExtension.swift */,
 				DFB6CE2423C48A8E00FB6615 /* DateExtension.swift */,
 				9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */,
@@ -8201,6 +8204,7 @@
 				E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */,
 				94E207722F4EE78300D65D98 /* ClosePerpetualOrderResponse.swift in Sources */,
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,
+				94BDBFE32FFE3587009A7F76 /* AttributedString+Convenience.swift in Sources */,
 				7B7DACA623505793006AA2AC /* AudioCell.swift in Sources */,
 				949775792E57733C00B0BB81 /* LoginLogViewController.swift in Sources */,
 				5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */,

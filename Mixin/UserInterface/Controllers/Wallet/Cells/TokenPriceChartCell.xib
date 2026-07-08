@@ -103,54 +103,55 @@
                         <rect key="frame" x="20" y="394" width="280" height="38"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="market_perps_action_left" translatesAutoresizingMaskIntoConstraints="NO" id="6Wu-Zy-PPg">
-                                <rect key="frame" x="0.0" y="0.0" width="145" height="38"/>
+                                <rect key="frame" x="0.0" y="0.0" width="146" height="38"/>
                                 <color key="tintColor" name="market_perps_action_background_green"/>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="market_perps_action_right" translatesAutoresizingMaskIntoConstraints="NO" id="g5M-p6-SRf">
-                                <rect key="frame" x="135" y="0.0" width="145" height="38"/>
+                                <rect key="frame" x="134" y="0.0" width="146" height="38"/>
                                 <color key="tintColor" name="market_perps_action_background_red"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="689-hF-jgC">
-                                <rect key="frame" x="0.0" y="0.0" width="135" height="38"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="long" title="Long" imagePadding="4">
-                                    <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="14"/>
-                                    <color key="baseForegroundColor" name="market_perps_action_foreground_green"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="long:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="cLO-vO-EPX"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ufa-Ug-ydT">
-                                <rect key="frame" x="145" y="0.0" width="135" height="38"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="short" title="Short" imagePadding="4">
-                                    <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="14"/>
-                                    <color key="baseForegroundColor" name="market_perps_action_foreground_red"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="short:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="hbd-Fi-uQ9"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rsU-9b-FXo">
+                                <rect key="frame" x="0.0" y="0.0" width="280" height="38"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="689-hF-jgC">
+                                        <rect key="frame" x="0.0" y="0.0" width="140" height="38"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="long" title="Long" imagePadding="4">
+                                            <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="14"/>
+                                            <color key="baseForegroundColor" name="market_perps_action_foreground_green"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="long:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="cLO-vO-EPX"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ufa-Ug-ydT">
+                                        <rect key="frame" x="140" y="0.0" width="140" height="38"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="short" title="Short" imagePadding="4">
+                                            <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="14"/>
+                                            <color key="baseForegroundColor" name="market_perps_action_foreground_red"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="short:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="hbd-Fi-uQ9"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
-                            <constraint firstItem="g5M-p6-SRf" firstAttribute="leading" secondItem="6Wu-Zy-PPg" secondAttribute="trailing" constant="-10" id="B0c-cu-dnT"/>
-                            <constraint firstItem="ufa-Ug-ydT" firstAttribute="top" secondItem="eKZ-hn-khl" secondAttribute="top" id="KB0-Kg-wir"/>
-                            <constraint firstItem="689-hF-jgC" firstAttribute="leading" secondItem="eKZ-hn-khl" secondAttribute="leading" id="MeZ-O3-B4q"/>
+                            <constraint firstItem="rsU-9b-FXo" firstAttribute="top" secondItem="eKZ-hn-khl" secondAttribute="top" id="72w-AI-2rV"/>
+                            <constraint firstItem="g5M-p6-SRf" firstAttribute="leading" secondItem="6Wu-Zy-PPg" secondAttribute="trailing" constant="-12" id="B0c-cu-dnT"/>
+                            <constraint firstAttribute="bottom" secondItem="rsU-9b-FXo" secondAttribute="bottom" id="CGE-zA-Adr"/>
+                            <constraint firstItem="rsU-9b-FXo" firstAttribute="leading" secondItem="eKZ-hn-khl" secondAttribute="leading" id="HCA-Cf-IZi"/>
                             <constraint firstItem="g5M-p6-SRf" firstAttribute="top" secondItem="eKZ-hn-khl" secondAttribute="top" id="RyC-X3-XVk"/>
                             <constraint firstItem="6Wu-Zy-PPg" firstAttribute="top" secondItem="eKZ-hn-khl" secondAttribute="top" id="XNo-77-6LX"/>
-                            <constraint firstAttribute="bottom" secondItem="ufa-Ug-ydT" secondAttribute="bottom" id="ZHA-M3-haL"/>
+                            <constraint firstAttribute="trailing" secondItem="rsU-9b-FXo" secondAttribute="trailing" id="YsY-ZC-Mah"/>
                             <constraint firstItem="6Wu-Zy-PPg" firstAttribute="leading" secondItem="eKZ-hn-khl" secondAttribute="leading" id="a4n-1l-HT4"/>
-                            <constraint firstItem="689-hF-jgC" firstAttribute="top" secondItem="eKZ-hn-khl" secondAttribute="top" id="agu-TS-TwC"/>
-                            <constraint firstAttribute="bottom" secondItem="689-hF-jgC" secondAttribute="bottom" id="bOl-O5-ksm"/>
-                            <constraint firstItem="ufa-Ug-ydT" firstAttribute="leading" secondItem="g5M-p6-SRf" secondAttribute="leading" constant="10" id="jFc-dM-Nad"/>
                             <constraint firstAttribute="trailing" secondItem="g5M-p6-SRf" secondAttribute="trailing" id="kAf-PA-cyS"/>
-                            <constraint firstItem="6Wu-Zy-PPg" firstAttribute="trailing" secondItem="689-hF-jgC" secondAttribute="trailing" constant="10" id="ntg-ne-nVN"/>
                             <constraint firstItem="g5M-p6-SRf" firstAttribute="width" secondItem="6Wu-Zy-PPg" secondAttribute="width" id="qMo-ZV-u2f"/>
-                            <constraint firstItem="ufa-Ug-ydT" firstAttribute="trailing" secondItem="g5M-p6-SRf" secondAttribute="trailing" id="qlA-VW-T9d"/>
                             <constraint firstAttribute="bottom" secondItem="6Wu-Zy-PPg" secondAttribute="bottom" id="sPR-9t-mCR"/>
                             <constraint firstAttribute="bottom" secondItem="g5M-p6-SRf" secondAttribute="bottom" id="zOd-bu-5B4"/>
                         </constraints>

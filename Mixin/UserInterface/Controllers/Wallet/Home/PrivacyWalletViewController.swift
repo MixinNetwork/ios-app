@@ -142,8 +142,11 @@ final class PrivacyWalletViewController: WalletViewController {
     }
     
     override func reload(account: CashAccount?) {
-        self.cashAccount = account
-        switch (self.cashAccount, account) {
+        let old = self.cashAccount
+        let new = account
+        
+        self.cashAccount = new
+        switch (old, new) {
         case let (_, .some(new)):
             overview?.update(cashValue: new.decimalBalance)
             var snapshot = dataSource.snapshot()
@@ -245,6 +248,8 @@ final class PrivacyWalletViewController: WalletViewController {
                 btcPrice: btcPrice
             )
             
+            let remoteBanners = AppBanner.loadFromCache(chainIDs: nil)
+            
             let tokens = TokenDAO.shared.notHiddenTokens(
                 includesZeroBalanceItems: true,
                 limit: hasMoreDeterminatingItemsCount,
@@ -342,6 +347,8 @@ final class PrivacyWalletViewController: WalletViewController {
                 }
                 self.overview = overview
                 
+                self.reloadBanners(with: remoteBanners, updating: &snapshot)
+                
                 self.tokens = displayTokens
                 self.tokensValue = formattedTokensValue
                 self.hasMoreTokens = hasMoreToken
@@ -356,11 +363,14 @@ final class PrivacyWalletViewController: WalletViewController {
                 self.perpsTopMovers = perpsTopMovers
                 self.cashAccount = cashAccount
                 
-                self.insertBannersReferralSection(into: &snapshot)
+                self.insertReferralSection(into: &snapshot)
                 if cashAccount != nil {
                     self.insertOrUpdateCashAccountItem(into: &snapshot)
                 }
-                self.dataSource.applySnapshotUsingReloadData(snapshot)
+                self.dataSource.applySnapshotUsingReloadData(snapshot) {
+                    self.scrollToFirstBanner()
+                    self.scheduleBannersAutoScrolling()
+                }
                 
                 self.reloadBannersIfAllowed(chainIDs: nil)
                 self.reloadCashAccount()

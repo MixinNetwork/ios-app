@@ -292,6 +292,8 @@ final class CommonWalletViewController: WalletViewController {
                 supportedChainIDs: chainIDs,
             )
             
+            let remoteBanners = AppBanner.loadFromCache(chainIDs: chainIDs)
+            
             let tray: WalletOverview.Tray?
             if let watchingAddresses {
                 let description = R.string.localizable.you_are_watching_address(
@@ -413,6 +415,8 @@ final class CommonWalletViewController: WalletViewController {
                 self.overviewAction = action
                 self.overviewTray = tray
                 
+                self.reloadBanners(with: remoteBanners, updating: &snapshot)
+                
                 self.importedSecret = importedSecret
                 self.availability = availability
                 self.supportedChainIDs = chainIDs
@@ -440,8 +444,11 @@ final class CommonWalletViewController: WalletViewController {
                     tradeSource: .walletHome,
                     responder: self
                 )
-                self.insertBannersReferralSection(into: &snapshot)
-                self.dataSource.applySnapshotUsingReloadData(snapshot)
+                self.insertReferralSection(into: &snapshot)
+                self.dataSource.applySnapshotUsingReloadData(snapshot) {
+                    self.scrollToFirstBanner()
+                    self.scheduleBannersAutoScrolling()
+                }
                 self.reloadBannersIfAllowed(chainIDs: chainIDs)
                 self.updateDappConnectionWalletIfNeeded()
             }

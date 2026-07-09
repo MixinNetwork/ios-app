@@ -21,9 +21,6 @@ enum RewardAPI {
     ) {
         var path = "/app-banners"
         var arguments: [String] = []
-        if let language = Locale.preferredLanguages.first {
-            arguments.append("lang=\(language)")
-        }
         chainIDs?.forEach { chainID in
             arguments.append("chain=\(chainID)")
         }

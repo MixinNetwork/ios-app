@@ -658,9 +658,9 @@ final class PerpetualMarketViewController: UIViewController {
     
 }
 
-extension PerpetualMarketViewController: HomeNavigationController.NavigationBarStyling {
+extension PerpetualMarketViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

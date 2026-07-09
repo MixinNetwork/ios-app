@@ -484,9 +484,9 @@ final class MarketViewController: UIViewController {
     
 }
 
-extension MarketViewController: HomeNavigationController.NavigationBarStyling {
+extension MarketViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

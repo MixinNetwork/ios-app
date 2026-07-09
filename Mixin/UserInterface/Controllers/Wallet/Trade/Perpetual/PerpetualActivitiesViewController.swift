@@ -177,9 +177,9 @@ final class PerpetualActivitiesViewController: UIViewController {
     
 }
 
-extension PerpetualActivitiesViewController: HomeNavigationController.NavigationBarStyling {
+extension PerpetualActivitiesViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

@@ -98,7 +98,7 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
     @objc func dismissAsChild() {
         onWillDismiss?()
         let showNavigationBar: Bool
-        if let parent = parent as? HomeNavigationController.NavigationBarStyling,
+        if let parent = parent as? NavigationBarStyling,
            parent.navigationBarStyle == .hide
         {
             showNavigationBar = false

@@ -66,9 +66,9 @@ final class MembershipOrderViewController: UIViewController {
     
 }
 
-extension MembershipOrderViewController: HomeNavigationController.NavigationBarStyling {
+extension MembershipOrderViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

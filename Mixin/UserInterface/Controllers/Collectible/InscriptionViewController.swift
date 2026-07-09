@@ -323,9 +323,9 @@ final class InscriptionViewController: UIViewController {
     
 }
 
-extension InscriptionViewController: HomeNavigationController.NavigationBarStyling {
+extension InscriptionViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .hide
     }
     

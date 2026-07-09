@@ -494,9 +494,9 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
     
 }
 
-extension OpenPerpetualPositionViewController: HomeNavigationController.NavigationBarStyling {
+extension OpenPerpetualPositionViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

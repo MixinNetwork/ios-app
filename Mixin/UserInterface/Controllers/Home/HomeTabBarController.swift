@@ -247,9 +247,9 @@ extension HomeTabBarController: TabBarDelegate {
     
 }
 
-extension HomeTabBarController: HomeNavigationController.NavigationBarStyling {
+extension HomeTabBarController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .hide
     }
     

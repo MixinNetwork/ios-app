@@ -181,9 +181,9 @@ final class MixinTokensViewController: TokensViewController {
     
 }
 
-extension MixinTokensViewController: HomeNavigationController.NavigationBarStyling {
+extension MixinTokensViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         isDisplayingSearch ? .hide : .secondaryBackground
     }
     

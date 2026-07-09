@@ -241,9 +241,9 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     
 }
 
-extension AddressInfoInputViewController: HomeNavigationController.NavigationBarStyling {
+extension AddressInfoInputViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

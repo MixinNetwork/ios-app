@@ -386,9 +386,9 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
     
 }
 
-extension TokenViewController: HomeNavigationController.NavigationBarStyling {
+extension TokenViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

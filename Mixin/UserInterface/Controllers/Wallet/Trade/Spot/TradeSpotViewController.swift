@@ -648,9 +648,9 @@ class TradeSpotViewController: UIViewController {
     
 }
 
-extension TradeSpotViewController: HomeNavigationController.NavigationBarStyling {
+extension TradeSpotViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

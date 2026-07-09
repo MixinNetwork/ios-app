@@ -193,9 +193,9 @@ final class DepositViewController: UIViewController {
     
 }
 
-extension DepositViewController: HomeNavigationController.NavigationBarStyling {
+extension DepositViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

@@ -178,9 +178,9 @@ final class QRCodeScannerViewController: UIViewController, MixinNavigationAnimat
     
 }
 
-extension QRCodeScannerViewController: HomeNavigationController.NavigationBarStyling {
+extension QRCodeScannerViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .hide
     }
     

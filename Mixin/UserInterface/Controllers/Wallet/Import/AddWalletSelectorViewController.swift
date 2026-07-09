@@ -268,9 +268,9 @@ final class AddWalletSelectorViewController: UIViewController {
     
 }
 
-extension AddWalletSelectorViewController: HomeNavigationController.NavigationBarStyling {
+extension AddWalletSelectorViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

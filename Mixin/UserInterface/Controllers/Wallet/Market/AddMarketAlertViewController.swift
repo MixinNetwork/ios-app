@@ -287,9 +287,9 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     
 }
 
-extension AddMarketAlertViewController: HomeNavigationController.NavigationBarStyling {
+extension AddMarketAlertViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

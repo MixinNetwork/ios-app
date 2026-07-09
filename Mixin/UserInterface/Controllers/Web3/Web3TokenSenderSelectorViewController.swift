@@ -44,9 +44,9 @@ final class Web3TokenSenderSelectorViewController: UIViewController {
     
 }
 
-extension Web3TokenSenderSelectorViewController: HomeNavigationController.NavigationBarStyling {
+extension Web3TokenSenderSelectorViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

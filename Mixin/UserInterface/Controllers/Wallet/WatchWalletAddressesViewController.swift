@@ -83,9 +83,9 @@ final class WatchWalletAddressesViewController: UIViewController {
     
 }
 
-extension WatchWalletAddressesViewController: HomeNavigationController.NavigationBarStyling {
+extension WatchWalletAddressesViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

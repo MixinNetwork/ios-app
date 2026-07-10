@@ -16,20 +16,11 @@ enum RewardAPI {
     }
     
     static func appBanners(
-        chainIDs: Set<String>? = nil,
         completion: @escaping (MixinAPI.Result<[AppBanner]>) -> Void
     ) {
-        var path = "/app-banners"
-        var arguments: [String] = []
-        chainIDs?.forEach { chainID in
-            arguments.append("chain=\(chainID)")
-        }
-        if !arguments.isEmpty {
-            path.append("?" + arguments.joined(separator: "&"))
-        }
         RouteAPI.request(
             method: .get,
-            path: path,
+            path: "/app-banners",
             config: .rewards,
             completion: completion
         )

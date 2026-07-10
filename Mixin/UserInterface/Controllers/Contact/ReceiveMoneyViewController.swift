@@ -87,9 +87,9 @@ final class ReceiveMoneyViewController: UIViewController {
     
 }
 
-extension ReceiveMoneyViewController: HomeNavigationController.NavigationBarStyling {
+extension ReceiveMoneyViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

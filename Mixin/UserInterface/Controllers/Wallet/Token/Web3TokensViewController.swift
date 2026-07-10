@@ -296,9 +296,9 @@ final class Web3TokensViewController: TokensViewController {
     
 }
 
-extension Web3TokensViewController: HomeNavigationController.NavigationBarStyling {
+extension Web3TokensViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         isDisplayingSearch ? .hide : .secondaryBackground
     }
     

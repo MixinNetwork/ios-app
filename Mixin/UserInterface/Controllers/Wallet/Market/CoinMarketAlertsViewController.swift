@@ -68,9 +68,9 @@ final class CoinMarketAlertsViewController: MarketAlertViewController {
     
 }
 
-extension CoinMarketAlertsViewController: HomeNavigationController.NavigationBarStyling {
+extension CoinMarketAlertsViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

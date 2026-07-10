@@ -923,9 +923,9 @@ extension WalletViewController: EmptyWalletInstructionCell.Delegate {
     
 }
 
-extension WalletViewController: HomeNavigationController.NavigationBarStyling {
+extension WalletViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .hide
     }
     

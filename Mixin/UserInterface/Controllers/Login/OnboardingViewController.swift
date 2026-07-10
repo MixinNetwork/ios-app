@@ -5,8 +5,8 @@ final class OnboardingViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var pageControl: UIPageControl!
-    @IBOutlet weak var signUpButton: StyledButton!
-    @IBOutlet weak var signInButton: StyledButton!
+    @IBOutlet weak var signUpButton: UIButton!
+    @IBOutlet weak var signInButton: UIButton!
     @IBOutlet weak var versionLabel: UILabel!
     
     @IBOutlet weak var actionsBottomConstraint: NSLayoutConstraint!
@@ -96,12 +96,18 @@ final class OnboardingViewController: UIViewController {
         case .long, .extraLong:
             actionsBottomConstraint.constant = 38
         }
-        signUpButton.setTitle(R.string.localizable.create_account(), for: .normal)
-        signUpButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
-        signUpButton.style = .filled
-        signInButton.setTitle(R.string.localizable.landing_have_account(), for: .normal)
-        signInButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
-        signInButton.style = .tinted
+        signUpButton.configuration?.attributedTitle = AttributedString(
+            string: R.string.localizable.create_account(),
+            scalingByFontSize: 16,
+            weight: .medium
+        )
+        signUpButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        signInButton.configuration?.attributedTitle = AttributedString(
+            string: R.string.localizable.landing_have_account(),
+            scalingByFontSize: 16,
+            weight: .medium
+        )
+        signInButton.titleLabel?.adjustsFontForContentSizeCategory = true
         versionLabel.text = R.string.localizable.current_version(Bundle.main.fullVersion)
         
         collectionView.dataSource = self

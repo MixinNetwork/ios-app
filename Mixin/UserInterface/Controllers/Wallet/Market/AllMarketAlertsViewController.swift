@@ -68,9 +68,9 @@ final class AllMarketAlertsViewController: MarketAlertViewController {
     
 }
 
-extension AllMarketAlertsViewController: HomeNavigationController.NavigationBarStyling {
+extension AllMarketAlertsViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

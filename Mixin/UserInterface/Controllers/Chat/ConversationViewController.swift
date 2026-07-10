@@ -1427,10 +1427,10 @@ final class ConversationViewController: UIViewController {
     
 }
 
-// MARK: - HomeNavigationController.NavigationBarStyling
-extension ConversationViewController: HomeNavigationController.NavigationBarStyling {
+// MARK: - NavigationBarStyling
+extension ConversationViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .hide
     }
     

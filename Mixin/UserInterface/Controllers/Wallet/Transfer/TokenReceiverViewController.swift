@@ -94,9 +94,9 @@ class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
 }
 
-extension TokenReceiverViewController: HomeNavigationController.NavigationBarStyling {
+extension TokenReceiverViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

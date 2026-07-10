@@ -235,9 +235,9 @@ final class TradeOrderViewController: UITableViewController {
     
 }
 
-extension TradeOrderViewController: HomeNavigationController.NavigationBarStyling {
+extension TradeOrderViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

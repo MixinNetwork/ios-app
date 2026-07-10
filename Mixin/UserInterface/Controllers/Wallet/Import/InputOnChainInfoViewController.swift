@@ -177,9 +177,9 @@ class InputOnChainInfoViewController: UIViewController {
     
 }
 
-extension InputOnChainInfoViewController: HomeNavigationController.NavigationBarStyling {
+extension InputOnChainInfoViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

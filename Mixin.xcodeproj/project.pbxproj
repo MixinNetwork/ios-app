@@ -1628,6 +1628,7 @@
 		94ECCCAB261A029F004E9E2A /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ECCCAA261A029F004E9E2A /* Window.swift */; };
 		94ECDEBF2FD1DA1200617524 /* TokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ECDEBE2FD1DA1200617524 /* TokenCell.swift */; };
 		94ECDEC72FD1DA3100617524 /* TokenCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94ECDEC62FD1DA3100617524 /* TokenCell.xib */; };
+		94ECE18D2FFF8365000F434E /* NavigationBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ECE18C2FFF8364000F434E /* NavigationBarStyle.swift */; };
 		94ED08B02B5FAFC900493312 /* AppUserSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED08AF2B5FAFC900493312 /* AppUserSearchResult.swift */; };
 		94ED08B62B5FB1C300493312 /* ExploreActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED08B42B5FB1C300493312 /* ExploreActionCell.swift */; };
 		94ED08B72B5FB1C300493312 /* ExploreActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94ED08B52B5FB1C300493312 /* ExploreActionCell.xib */; };
@@ -3605,6 +3606,7 @@
 		94ECCCAA261A029F004E9E2A /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
 		94ECDEBE2FD1DA1200617524 /* TokenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenCell.swift; sourceTree = "<group>"; };
 		94ECDEC62FD1DA3100617524 /* TokenCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenCell.xib; sourceTree = "<group>"; };
+		94ECE18C2FFF8364000F434E /* NavigationBarStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarStyle.swift; sourceTree = "<group>"; };
 		94ED08AF2B5FAFC900493312 /* AppUserSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUserSearchResult.swift; sourceTree = "<group>"; };
 		94ED08B42B5FB1C300493312 /* ExploreActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreActionCell.swift; sourceTree = "<group>"; };
 		94ED08B52B5FB1C300493312 /* ExploreActionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreActionCell.xib; sourceTree = "<group>"; };
@@ -4460,6 +4462,7 @@
 				7B26D1CD219EEB5A00AE113A /* Views */,
 				94E619B72645BA7400A38049 /* Web */,
 				DF2081B320060C4400B87DB0 /* QRCode Scanner */,
+				94ECE18C2FFF8364000F434E /* NavigationBarStyle.swift */,
 				94635C9C2CC264F7005BA4CA /* SelectCountryView.xib */,
 				7B2E3E4A1FA07F4500DDDDEB /* SelectCountryViewController.swift */,
 				943CAA222CC82C9E00346677 /* MobileNumberView.xib */,
@@ -9026,6 +9029,7 @@
 				946331B62C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift in Sources */,
 				9427D52225E0E8DE00B1EF0E /* PlaylistItemCell.swift in Sources */,
 				7B86B1E923F69E3600C80AD9 /* ContactMessageCellRightView.swift in Sources */,
+				94ECE18D2FFF8365000F434E /* NavigationBarStyle.swift in Sources */,
 				943CAA282CC832E000346677 /* UIBarButtonItem+Convenience.swift in Sources */,
 				94438D57252DAD73005760AF /* Clip.swift in Sources */,
 				7C6132B627953B15002777EE /* DeleteAccountAbortWindow.swift in Sources */,

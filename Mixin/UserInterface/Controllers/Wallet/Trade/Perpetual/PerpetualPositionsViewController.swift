@@ -128,9 +128,9 @@ final class PerpetualPositionsViewController: UIViewController {
     
 }
 
-extension PerpetualPositionsViewController: HomeNavigationController.NavigationBarStyling {
+extension PerpetualPositionsViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

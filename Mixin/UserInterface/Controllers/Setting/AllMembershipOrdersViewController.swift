@@ -50,9 +50,9 @@ final class AllMembershipOrdersViewController: UIViewController {
     
 }
 
-extension AllMembershipOrdersViewController: HomeNavigationController.NavigationBarStyling {
+extension AllMembershipOrdersViewController: NavigationBarStyling {
     
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+    var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
     }
     

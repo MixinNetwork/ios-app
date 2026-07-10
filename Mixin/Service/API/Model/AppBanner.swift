@@ -25,6 +25,14 @@ struct AppBanner: Codable {
     let endAt: String
     let chains: [String]
     
+    func available(to chainIDs: Set<String>) -> Bool {
+        if chains.isEmpty {
+            true
+        } else {
+            !chainIDs.intersection(chains).isEmpty
+        }
+    }
+    
 }
 
 extension AppBanner {
@@ -76,7 +84,7 @@ extension AppBanner {
                 return false
             }
             let chainsMatch: Bool = if let chainIDs {
-                banner.chains.isEmpty || !chainIDs.intersection(banner.chains).isEmpty
+                banner.available(to: chainIDs)
             } else {
                 true
             }

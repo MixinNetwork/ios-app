@@ -721,7 +721,7 @@ extension WalletViewController {
             return
         }
         allowsReloadingBanners = false
-        RewardAPI.appBanners(chainIDs: chainIDs) { [weak self] result in
+        RewardAPI.appBanners() { [weak self] result in
             switch result {
             case .failure(let error):
                 Logger.general.debug(category: "Wallet", message: "\(error)")
@@ -736,11 +736,16 @@ extension WalletViewController {
                     return
                 }
                 let closedBannerIDs = Set(AppGroupUserDefaults.Wallet.closedBannerIDs)
-                let notClosedBanners = remoteBanners.filter { banner in
+                var availableBanners = remoteBanners.filter { banner in
                     !closedBannerIDs.contains(banner.bannerID)
                 }
+                if let chainIDs {
+                    availableBanners.removeAll { banner in
+                        !banner.available(to: chainIDs)
+                    }
+                }
                 var snapshot = self.dataSource.snapshot()
-                self.reloadBanners(with: notClosedBanners, updating: &snapshot)
+                self.reloadBanners(with: availableBanners, updating: &snapshot)
                 self.dataSource.apply(snapshot, animatingDifferences: false) {
                     self.scrollToFirstBanner()
                     self.scheduleBannersAutoScrolling()

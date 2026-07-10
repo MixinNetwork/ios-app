@@ -36,7 +36,7 @@ final class WalletCashAccountCell: UICollectionViewCell {
             balanceLabel.text = "-"
             apyLabel.text = ""
         }
-        symbolLabel.text = Currency.current.code
+        symbolLabel.text = Currency.usd.code
     }
     
 }

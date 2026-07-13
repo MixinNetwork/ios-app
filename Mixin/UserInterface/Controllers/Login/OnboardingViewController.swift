@@ -61,6 +61,7 @@ final class OnboardingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Mixin"
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.collectionViewLayout = { [weak pageControl] in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
@@ -117,19 +118,9 @@ final class OnboardingViewController: UIViewController {
         Logger.login.info(category: "Onboarding", message: "App \(Bundle.main.fullVersion) onboards, device: \(Device.current.machineName) \(ProcessInfo.processInfo.operatingSystemVersionString), id: \(Device.current.id)")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         resetBannersToCenterAndScheduleAutoScrolling()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -143,9 +134,17 @@ final class OnboardingViewController: UIViewController {
     }
     
     @IBAction func signIn(_ sender: Any) {
-        let mobileNumber = SignInWithMobileNumberViewController()
-        navigationController?.pushViewController(mobileNumber, animated: true)
+        let methods = SignInMethodSelectorViewController()
+        navigationController?.pushViewController(methods, animated: true)
         Logger.login.info(category: "Onboarding", message: "Sign in")
+    }
+    
+}
+
+extension OnboardingViewController: NavigationBarStyling {
+    
+    var navigationBarStyle: NavigationBarStyle {
+        .hide
     }
     
 }

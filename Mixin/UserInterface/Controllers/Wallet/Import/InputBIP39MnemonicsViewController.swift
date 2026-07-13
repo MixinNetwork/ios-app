@@ -1,12 +1,13 @@
 import UIKit
 import MixinServices
 
-class InputBIP39MnemonicsViewController: InputMnemonicsViewController {
+class InputBIP39MnemonicsViewController: TitledMnemonicsViewController {
     
     let encryptionKey: Data
     
     private(set) weak var errorDescriptionLabel: UILabel!
     
+    private var mnemonicsInputHandler: MnemonicsInputHandler!
     private var phrasesCount: BIP39Mnemonics.PhrasesCount = .medium
     private var phraseCountSwitchButtons: [UIButton] = []
     private var eliminateLayoutAnimations = true
@@ -22,6 +23,7 @@ class InputBIP39MnemonicsViewController: InputMnemonicsViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mnemonicsInputHandler = MnemonicsInputHandler(viewController: self)
         navigationItem.rightBarButtonItems = [
             .customerService(
                 target: self,
@@ -139,7 +141,7 @@ class InputBIP39MnemonicsViewController: InputMnemonicsViewController {
         for view in inputStackView.subviews {
             view.removeFromSuperview()
         }
-        addTextFields(count: count.rawValue)
+        addTextFields(backgroundColor: .secondary, count: count.rawValue)
         for textField in inputFields.map(\.textField) {
             if textField.tag == count.rawValue - 1 {
                 textField.returnKeyType = .done
@@ -147,8 +149,8 @@ class InputBIP39MnemonicsViewController: InputMnemonicsViewController {
                 textField.returnKeyType = .next
             }
             textField.clearButtonMode = .whileEditing
-            textField.delegate = self
-            textField.deleteDelegate = self
+            textField.delegate = mnemonicsInputHandler
+            textField.deleteDelegate = mnemonicsInputHandler
         }
         
         addRowStackViewForButtonsIntoInputStackView()

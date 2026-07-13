@@ -2,6 +2,12 @@ import UIKit
 
 class MobileNumberViewController: UIViewController {
     
+    enum Style {
+        case primary
+        case secondary
+    }
+    
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var inputBoxView: UIView!
@@ -12,6 +18,7 @@ class MobileNumberViewController: UIViewController {
     @IBOutlet weak var actionStackView: UIStackView!
     @IBOutlet weak var continueButton: StyledButton!
     
+    private let style: Style
     private let countryLibrary = CountryLibrary()
     private let invertedPhoneNumberCharacterSet = CharacterSet(charactersIn: "0123456789+-() ").inverted
     
@@ -25,7 +32,8 @@ class MobileNumberViewController: UIViewController {
         }
     }
     
-    init() {
+    init(style: Style) {
+        self.style = style
         self.country = countryLibrary.deviceCountry
         let nib = R.nib.mobileNumberView
         super.init(nibName: nib.name, bundle: nib.bundle)
@@ -37,6 +45,16 @@ class MobileNumberViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        switch style {
+        case .primary:
+            scrollView.backgroundColor = R.color.background()
+            contentView.backgroundColor = R.color.background()
+            inputBoxView.backgroundColor = R.color.background_secondary()
+        case .secondary:
+            scrollView.backgroundColor = R.color.background_secondary()
+            contentView.backgroundColor = R.color.background_secondary()
+            inputBoxView.backgroundColor = R.color.background()
+        }
         titleLabel.text = R.string.localizable.sign_with_mobile_number()
         inputBoxView.layer.cornerRadius = 8
         inputBoxView.layer.masksToBounds = true

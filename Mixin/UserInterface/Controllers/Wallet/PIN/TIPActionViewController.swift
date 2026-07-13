@@ -134,8 +134,9 @@ final class TIPActionViewController: UIViewController {
                     try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
                     try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
+                    let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: pin)
                     await MainActor.run {
-                        finish()
+                        finish(importWalletEncryptionKey: importWalletKey)
                     }
                 } catch {
                     await handle(
@@ -181,8 +182,9 @@ final class TIPActionViewController: UIViewController {
                     try await TIP.registerToSafeIfNeeded(account: account, pin: new)
                     try await TIP.registerDefaultCommonWalletIfNeeded(pin: new)
                     AppGroupUserDefaults.User.loginPINValidated = true
+                    let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: new)
                     await MainActor.run {
-                        finish()
+                        finish(importWalletEncryptionKey: importWalletKey)
                     }
                 } catch {
                     await handle(
@@ -213,8 +215,9 @@ final class TIPActionViewController: UIViewController {
                     try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
                     try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
+                    let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: pin)
                     await MainActor.run {
-                        finish()
+                        finish(importWalletEncryptionKey: importWalletKey)
                     }
                 } catch {
                     await handle(
@@ -248,18 +251,24 @@ final class TIPActionViewController: UIViewController {
     }
     
     @MainActor
-    private func finish() {
+    private func finish(importWalletEncryptionKey: Data?) {
         Logger.tip.info(category: "TIPAction", message: "Finished successfully")
         switch action {
         case .create:
-            tipNavigationController?.finish()
+            tipNavigationController?.finish(
+                importWalletEncryptionKey: importWalletEncryptionKey
+            )
         case .change:
             alert(R.string.localizable.change_pin_successfully()) { (_) in
-                self.tipNavigationController?.finish()
+                self.tipNavigationController?.finish(
+                    importWalletEncryptionKey: importWalletEncryptionKey
+                )
             }
         case .migrate:
             alert(R.string.localizable.upgrade_tip_successfully()) { (_) in
-                self.tipNavigationController?.finish()
+                self.tipNavigationController?.finish(
+                    importWalletEncryptionKey: importWalletEncryptionKey
+                )
             }
         }
     }
@@ -310,8 +319,9 @@ final class TIPActionViewController: UIViewController {
                     try await TIP.registerDefaultCommonWalletIfNeeded(pin: context.pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     Logger.tip.warn(category: "TIPAction", message: "Registration finished")
+                    let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: context.pin)
                     await MainActor.run {
-                        finish()
+                        finish(importWalletEncryptionKey: importWalletKey)
                     }
                 }
             }
@@ -381,7 +391,7 @@ final class TIPActionViewController: UIViewController {
                 let intro = TIPIntroViewController(context: context)
                 self.navigationController?.setViewControllers([intro], animated: true)
             } else {
-                self.finish()
+                self.finish(importWalletEncryptionKey: nil)
             }
         }
     }

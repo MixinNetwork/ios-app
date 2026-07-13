@@ -901,6 +901,14 @@
 "log_out_instead" = "僅退出登入";
 "login_and_abort_account_deletion" = "繼續登入並放棄刪除賬號";
 "login_desktop_first" = "請先登入桌面端";
+"login_method_from_other_wallets" = "來自其他錢包";
+"login_method_mnemonic_12_24_desc" = "從其他錢包匯入賬號。";
+"login_method_mnemonic_12_24_title" = "12 或 24 個詞";
+"login_method_mnemonic_13_25_desc" = "使用 Mixin 助記詞登入。";
+"login_method_mnemonic_13_25_title" = "13 或 25 個詞";
+"login_method_mobile_desc" = "使用賬號繫結的手機號碼登入。";
+"login_method_mobile_title" = "手機號碼";
+"login_method_recovery_kit" = "Mixin 賬號恢復";
 "logined" = "已登入";
 "logout_confirmation" = "你確定要退出登入？";
 "logout_description" = "退出賬號不會影響當前賬號的資產安全，也不會刪除當前賬號的聊天記錄。";
@@ -976,6 +984,10 @@
 "mixin_referral" = "Mixin 邀請";
 "mixin_server_encounters_errors" = "伺服器出錯，請稍後重試";
 "mixin_support" = "Mixin 客服";
+"mnemonic_login_security_tip_1" = "· Mixin 開源、可復現，並經過獨立審計。";
+"mnemonic_login_security_tip_2" = "· 你的資料會被安全加密並存儲在本機。";
+"mnemonic_login_security_tip_3" = "· Mixin 不會訪問你的隱私資訊，也不會與第三方共享。";
+"mnemonic_login_security_title" = "匯入到 Mixin 安全嗎？";
 "mnemonic_phrase" = "助記詞";
 "mnemonic_phrase_instruction" = "你可以通過助記詞登入你的賬號，當前助記詞已關聯到 MPC 錢包的金鑰分片，完整的金鑰只存在當前裝置的 TEE 安全環境中，閱讀檔案以瞭解%@。";
 "mnemonic_phrase_take_long" = "這應該不會花太長時間。";

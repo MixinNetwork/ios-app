@@ -901,6 +901,14 @@
 "log_out_instead" = "仅退出登录";
 "login_and_abort_account_deletion" = "继续登录并放弃删除账号";
 "login_desktop_first" = "请先登录桌面端";
+"login_method_from_other_wallets" = "来自其他钱包";
+"login_method_mnemonic_12_24_desc" = "从其他钱包导入账号。";
+"login_method_mnemonic_12_24_title" = "12 或 24 个词";
+"login_method_mnemonic_13_25_desc" = "使用 Mixin 助记词登录。";
+"login_method_mnemonic_13_25_title" = "13 或 25 个词";
+"login_method_mobile_desc" = "使用账号绑定的手机号码登录。";
+"login_method_mobile_title" = "手机号码";
+"login_method_recovery_kit" = "Mixin 账号恢复";
 "logined" = "已登录";
 "logout_confirmation" = "你确定要退出登录？";
 "logout_description" = "退出账号不会影响当前账号的资产安全，也不会删除当前账号的聊天记录。";
@@ -976,6 +984,10 @@
 "mixin_referral" = "Mixin 邀请";
 "mixin_server_encounters_errors" = "服务器出错，请稍后重试";
 "mixin_support" = "Mixin 客服";
+"mnemonic_login_security_tip_1" = "· Mixin 开源、可复现，并经过独立审计。";
+"mnemonic_login_security_tip_2" = "· 你的数据会被安全加密并存储在本机。";
+"mnemonic_login_security_tip_3" = "· Mixin 不会访问你的隐私信息，也不会与第三方共享。";
+"mnemonic_login_security_title" = "导入到 Mixin 安全吗？";
 "mnemonic_phrase" = "助记词";
 "mnemonic_phrase_instruction" = "你可以通过助记词登录你的账号，当前助记词已关联到 MPC 钱包的密钥分片，完整的密钥只存在当前设备的 TEE 安全环境中，阅读文档以了解%@。";
 "mnemonic_phrase_take_long" = "这应该不会花太长时间。";

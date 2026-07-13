@@ -2,16 +2,14 @@ import UIKit
 import WebKit
 import MixinServices
 
-protocol LoginAccountHandler {
-    func login(account: Account, signingUp: Bool, sessionKey: Ed25519PrivateKey) -> MixinAPIError?
-}
+protocol LoginAccountHandler { }
 
 extension LoginAccountHandler where Self: UIViewController {
     
     func login(
         account: Account,
-        signingUp: Bool,
-        sessionKey: Ed25519PrivateKey
+        method: AccountVerificationMethod,
+        sessionKey: Ed25519PrivateKey,
     ) -> MixinAPIError? {
         guard
             !account.pinToken.isEmpty,
@@ -25,7 +23,7 @@ extension LoginAccountHandler where Self: UIViewController {
             return .invalidServerPinToken
         }
         Logger.login.info(category: "Login", message: "Got account: \(account.userID), has_pin: \(account.hasPIN), has_safe: \(account.hasSafe), tip_key: \(account.tipKey?.count ?? -1)")
-        AppGroupUserDefaults.isSigningUp = signingUp
+        AccountVerificationMethod.current = method
         AppGroupKeychain.sessionSecret = sessionKey.rawRepresentation
         AppGroupKeychain.pinToken = pinToken
         if !account.isAnonymous {

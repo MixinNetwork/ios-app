@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="SignInWithBIP39MnemonicsFooterView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="213"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tbN-a0-VqO">
+                    <rect key="frame" x="8" y="0.0" width="377" height="153"/>
+                </stackView>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="verifications" translatesAutoresizingMaskIntoConstraints="NO" id="by0-Kp-4UW">
+                    <rect key="frame" x="12" y="177" width="369" height="36"/>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="tbN-a0-VqO" secondAttribute="trailing" constant="8" id="4WH-Vy-mZQ"/>
+                <constraint firstAttribute="bottom" secondItem="by0-Kp-4UW" secondAttribute="bottom" id="I1h-EP-MiH"/>
+                <constraint firstAttribute="trailing" secondItem="by0-Kp-4UW" secondAttribute="trailing" constant="12" id="YLj-HJ-5tR"/>
+                <constraint firstItem="tbN-a0-VqO" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ZFc-aN-Vwr"/>
+                <constraint firstItem="tbN-a0-VqO" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="kGp-9N-QQg"/>
+                <constraint firstItem="by0-Kp-4UW" firstAttribute="top" secondItem="tbN-a0-VqO" secondAttribute="bottom" constant="24" id="nOU-up-jgY"/>
+                <constraint firstItem="by0-Kp-4UW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="12" id="wcS-vY-f8I"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="descriptionStackView" destination="tbN-a0-VqO" id="dCo-QY-Yq2"/>
+            </connections>
+            <point key="canvasLocation" x="-356.48854961832058" y="153.87323943661971"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="verifications" width="312" height="36"/>
+    </resources>
+</document>

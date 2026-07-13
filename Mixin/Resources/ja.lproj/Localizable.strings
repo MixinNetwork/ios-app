@@ -901,6 +901,14 @@
 "log_out_instead" = "Log out Instead";
 "login_and_abort_account_deletion" = "そのままログインし、アカウント削除をキャンセルします";
 "login_desktop_first" = "Please log in to the desktop first";
+"login_method_from_other_wallets" = "From other wallets";
+"login_method_mnemonic_12_24_desc" = "Import accounts from another wallet.";
+"login_method_mnemonic_12_24_title" = "12 or 24 words";
+"login_method_mnemonic_13_25_desc" = "Sign in with your Mixin recovery phrase.";
+"login_method_mnemonic_13_25_title" = "13 or 25 words";
+"login_method_mobile_desc" = "Sign in with the mobile number linked to your account.";
+"login_method_mobile_title" = "Mobile Number";
+"login_method_recovery_kit" = "Mixin Recovery Kit";
 "logined" = "ログインしました";
 "logout_confirmation" = "Are you sure you want to log out?";
 "logout_description" = "Logging out will not compromise asset security, nor will it delete chat history.";
@@ -976,6 +984,10 @@
 "mixin_referral" = "Mixin Referral";
 "mixin_server_encounters_errors" = "Mixinのサーバーにエラーが発生しています";
 "mixin_support" = "Mixin Support";
+"mnemonic_login_security_tip_1" = "· Mixin is open source, reproducible, and independently audited.";
+"mnemonic_login_security_tip_2" = "· Your data is securely encrypted and stored locally on your device.";
+"mnemonic_login_security_tip_3" = "· Mixin never accesses your private information or shares it with third parties.";
+"mnemonic_login_security_title" = "Is it safe to import into Mixin?";
 "mnemonic_phrase" = "Mnemonic Phrase";
 "mnemonic_phrase_instruction" = "You can log in to your account using the mnemonic phrase. The current mnemonic phrase is linked to a key shard of the MPC wallet, with the complete key existing only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "mnemonic_phrase_take_long" = "This shouldn't take long.";

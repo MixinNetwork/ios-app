@@ -77,6 +77,19 @@ public final class Web3AddressDAO: Web3DAO {
         return paths.compactMap({ $0 })
     }
     
+    public func firstWalletID(matching addresses: [String]) -> String? {
+        for address in addresses {
+            let walletID: String? = db.select(
+                with: "SELECT wallet_id FROM addresses WHERE destination = ?",
+                arguments: [address]
+            )
+            if let walletID {
+                return walletID
+            }
+        }
+        return nil
+    }
+    
     public func save(addresses: [Web3Address]) {
         db.save(addresses)
     }

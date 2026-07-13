@@ -4,14 +4,25 @@ import MixinServices
 
 final class AddWalletFetchAddressViewController: IntroductionViewController {
     
+    enum Behavior {
+        case alwaysNavigateToSelector
+        case breaksOnImportedWalletFound((_ walletID: String) -> Void)
+    }
+    
     private let mnemonics: BIP39Mnemonics
     private let encryptedMnemonics: EncryptedBIP39Mnemonics
+    private let behavior: Behavior
     private let busyIndicator = ActivityIndicatorView()
     private let searchWalletDerivationsCount: UInt32 = 10
     
-    init(mnemonics: BIP39Mnemonics, encryptedMnemonics: EncryptedBIP39Mnemonics) {
+    init(
+        mnemonics: BIP39Mnemonics,
+        encryptedMnemonics: EncryptedBIP39Mnemonics,
+        behavior: Behavior,
+    ) {
         self.mnemonics = mnemonics
         self.encryptedMnemonics = encryptedMnemonics
+        self.behavior = behavior
         super.init()
     }
     
@@ -73,7 +84,7 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
     private func fetchAddresses(mnemonics: BIP39Mnemonics) {
         showLoading()
         let lastPathIndex: UInt32 = searchWalletDerivationsCount - 1
-        DispatchQueue.global().async { [weak self, encryptedMnemonics] in
+        DispatchQueue.global().async { [weak self, behavior, encryptedMnemonics] in
             let wallets: [BIP39Mnemonics.DerivedWallet]
             do {
                 wallets = try mnemonics.deriveWallets(indices: 0...lastPathIndex)
@@ -85,6 +96,17 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
             }
             let addresses = wallets.flatMap { wallet in
                 [wallet.bitcoin.address, wallet.evm.address, wallet.solana.address]
+            }
+            switch behavior {
+            case .alwaysNavigateToSelector:
+                break
+            case .breaksOnImportedWalletFound(let callback):
+                if let id = Web3AddressDAO.shared.firstWalletID(matching: addresses) {
+                    DispatchQueue.main.async {
+                        callback(id)
+                    }
+                    return
+                }
             }
             let firstNameIndex = SequentialWalletNameGenerator.nextNameIndex(category: .common)
             let walletNames = Web3WalletDAO.shared.walletNames()

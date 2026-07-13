@@ -19,6 +19,7 @@
                 <outlet property="continueButton" destination="HnF-2X-28H" id="iQX-5M-H0U"/>
                 <outlet property="declarationTextView" destination="eBo-ON-daF" id="e7P-0g-Elc"/>
                 <outlet property="inputBoxView" destination="wDO-FL-eRJ" id="bBN-HI-wJQ"/>
+                <outlet property="scrollView" destination="b6J-82-9e0" id="3B9-K5-GbP"/>
                 <outlet property="textField" destination="fxJ-sl-NpC" id="zCi-LA-6mE"/>
                 <outlet property="titleLabel" destination="Uv7-x7-KIX" id="8JP-J1-hdr"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -35,7 +36,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zcm-nd-yEP">
                             <rect key="frame" x="0.0" y="0.0" width="393" height="666"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your mobile number" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uv7-x7-KIX">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="21.666666666666671" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uv7-x7-KIX">
                                     <rect key="frame" x="20" y="30" width="353" height="21.666666666666671"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                     <color key="textColor" name="text"/>
@@ -100,7 +101,7 @@
                                 </view>
                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" textAlignment="natural" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eBo-ON-daF">
                                     <rect key="frame" x="20" y="165.66666666666666" width="353" height="31.666666666666657"/>
-                                    <color key="backgroundColor" name="background"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <color key="textColor" systemColor="labelColor"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -121,14 +122,13 @@
                                     </subviews>
                                 </stackView>
                             </subviews>
-                            <color key="backgroundColor" name="background"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="Uv7-x7-KIX" secondAttribute="trailing" constant="20" id="97X-Qj-cgV"/>
                                 <constraint firstAttribute="trailing" secondItem="vZe-ke-XgV" secondAttribute="trailing" constant="36" id="Atz-hs-p4X"/>
                                 <constraint firstItem="Uv7-x7-KIX" firstAttribute="leading" secondItem="zcm-nd-yEP" secondAttribute="leading" constant="20" id="CAx-Qf-zmL"/>
                                 <constraint firstItem="eBo-ON-daF" firstAttribute="leading" secondItem="zcm-nd-yEP" secondAttribute="leading" constant="20" id="FiG-6L-MJL"/>
                                 <constraint firstItem="eBo-ON-daF" firstAttribute="top" secondItem="wDO-FL-eRJ" secondAttribute="bottom" constant="10" id="JuA-5k-Z5f"/>
-                                <constraint firstItem="vZe-ke-XgV" firstAttribute="top" secondItem="eBo-ON-daF" secondAttribute="bottom" constant="44" id="ata-oM-8d8"/>
+                                <constraint firstItem="vZe-ke-XgV" firstAttribute="top" secondItem="eBo-ON-daF" secondAttribute="bottom" constant="44" placeholder="YES" id="ata-oM-8d8"/>
                                 <constraint firstItem="Uv7-x7-KIX" firstAttribute="top" secondItem="zcm-nd-yEP" secondAttribute="top" constant="30" id="dRU-c2-tNF"/>
                                 <constraint firstItem="wDO-FL-eRJ" firstAttribute="leading" secondItem="zcm-nd-yEP" secondAttribute="leading" constant="20" id="fxg-dN-sMq"/>
                                 <constraint firstItem="wDO-FL-eRJ" firstAttribute="top" secondItem="Uv7-x7-KIX" secondAttribute="bottom" constant="50" id="hp7-ek-2JA"/>
@@ -138,7 +138,6 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstItem="zcm-nd-yEP" firstAttribute="bottom" secondItem="cgz-MW-zyj" secondAttribute="bottom" id="0qT-rS-R5A"/>
                         <constraint firstItem="zcm-nd-yEP" firstAttribute="top" secondItem="cgz-MW-zyj" secondAttribute="top" id="WDg-mz-6wd"/>
@@ -151,7 +150,6 @@
                 </scrollView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="b6J-82-9e0" secondAttribute="bottom" id="I0y-wW-EYa"/>
                 <constraint firstItem="b6J-82-9e0" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="TgG-SV-v6L"/>
@@ -164,9 +162,6 @@
         </view>
     </objects>
     <resources>
-        <namedColor name="background">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="background_quaternary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

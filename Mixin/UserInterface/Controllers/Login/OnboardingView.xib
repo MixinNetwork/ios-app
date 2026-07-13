@@ -50,14 +50,14 @@
                     <rect key="frame" x="36" y="635.33333333333337" width="321" height="102.66666666666663"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DL9-pg-F8H">
-                            <rect key="frame" x="0.0" y="0.0" width="321" height="44.333333333333336"/>
+                            <rect key="frame" x="0.0" y="0.0" width="321" height="43.333333333333336"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                             <inset key="contentEdgeInsets" minX="0.0" minY="14" maxX="0.0" maxY="15"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Create account"/>
                             <buttonConfiguration key="configuration" style="filled" title="Create account" cornerStyle="capsule">
                                 <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="16"/>
-                                <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="13" trailing="0.0"/>
+                                <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="12" trailing="0.0"/>
                                 <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="baseBackgroundColor" name="theme"/>
                             </buttonConfiguration>
@@ -66,14 +66,14 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GyF-Ya-ePo">
-                            <rect key="frame" x="0.0" y="60.333333333333258" width="321" height="42.333333333333343"/>
+                            <rect key="frame" x="0.0" y="59.333333333333258" width="321" height="43.333333333333343"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                             <inset key="contentEdgeInsets" minX="0.0" minY="14" maxX="0.0" maxY="15"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="I already have an account"/>
                             <buttonConfiguration key="configuration" style="filled" title="I already have an account" cornerStyle="capsule">
                                 <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="16"/>
-                                <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="11" trailing="0.0"/>
+                                <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="12" trailing="0.0"/>
                                 <color key="baseForegroundColor" name="theme"/>
                                 <color key="baseBackgroundColor" name="background_quaternary"/>
                             </buttonConfiguration>

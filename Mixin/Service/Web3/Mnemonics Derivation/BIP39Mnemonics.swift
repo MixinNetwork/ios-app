@@ -64,6 +64,19 @@ struct BIP39Mnemonics {
 
 extension BIP39Mnemonics {
     
+    static func areValid(phrases: [String]) -> Bool {
+        do {
+            _ = try BIP39Mnemonics(phrases: phrases)
+            return true
+        } catch {
+            return false
+        }
+    }
+    
+}
+
+extension BIP39Mnemonics {
+    
     struct Derivation {
         let privateKey: Data
         let address: String

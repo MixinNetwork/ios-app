@@ -7,11 +7,24 @@ protocol CheckSessionEnvironmentChild {
 
 extension CheckSessionEnvironmentChild where Self: UIViewController {
     
-    func checkSessionEnvironmentAgain(freshAccount: Account? = nil) {
-        let checker = parent as? CheckSessionEnvironmentViewController
+    var sessionEnvironmentChecker: CheckSessionEnvironmentViewController? {
+        parent as? CheckSessionEnvironmentViewController
         ?? navigationController?.parent as? CheckSessionEnvironmentViewController
-        if let checker {
-            checker.check(freshAccount: freshAccount)
+    }
+    
+    var isCheckingSessionEnvironment: Bool {
+        sessionEnvironmentChecker != nil
+    }
+    
+    func checkSessionEnvironmentAgain(
+        freshAccount: Account? = nil,
+        importWalletEncryptionKey: Data? = nil,
+    ) {
+        if let checker = sessionEnvironmentChecker {
+            checker.check(
+                freshAccount: freshAccount,
+                importWalletEncryptionKey: importWalletEncryptionKey
+            )
         } else {
             assertionFailure()
         }
@@ -19,14 +32,17 @@ extension CheckSessionEnvironmentChild where Self: UIViewController {
     
 }
 
-final class CheckSessionEnvironmentViewController: UIViewController {
+final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     
     private(set) weak var contentViewController: UIViewController?
     
     private lazy var restoreChatNavigationHandler = RestoreChatNavigationHandler()
     
+    private weak var retryButton: UIButton?
+    
     private var account: Account
     private var isAccountFresh: Bool
+    private var importWalletEncryptionKey: Data?
     
     private var initialBots: [String] {
         if Locale.preferredLanguages.first?.hasPrefix("zh-Hans") ?? false {
@@ -57,13 +73,13 @@ final class CheckSessionEnvironmentViewController: UIViewController {
     init(freshAccount account: Account) {
         self.account = account
         self.isAccountFresh = true
-        super.init(nibName: nil, bundle: nil)
+        super.init()
     }
     
     init(localAccount account: Account) {
         self.account = account
         self.isAccountFresh = false
-        super.init(nibName: nil, bundle: nil)
+        super.init()
     }
     
     required init?(coder: NSCoder) {
@@ -73,16 +89,43 @@ final class CheckSessionEnvironmentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = R.color.background()
-        Logger.login.info(category: "CheckSessionEnvironment", message: "View loaded with account fresh: \(isAccountFresh)")
-        check()
+        Logger.login.info(category: "CheckSessionEnvironment", message: "View loaded with account fresh: \(isAccountFresh), verification method: \(AccountVerificationMethod.current?.debugDescription ?? "(null)")")
+        if AccountVerificationMethod.current == nil {
+            // Permissive path for app relauncch
+            check()
+        } else {
+            // Strict path for login
+            if isAccountFresh {
+                check()
+            } else {
+                reloadAccountThenCheck()
+            }
+        }
     }
     
-    func check(freshAccount: Account? = nil) {
+    func check(
+        freshAccount: Account? = nil,
+        importWalletEncryptionKey: Data? = nil,
+    ) {
+        assert(Thread.isMainThread)
         if let freshAccount {
             Logger.login.info(category: "CheckSessionEnvironment", message: "Account refreshed")
             self.account = freshAccount
             self.isAccountFresh = true
         }
+        if let importWalletEncryptionKey {
+            self.importWalletEncryptionKey = importWalletEncryptionKey
+        }
+        
+        // `self.account` is guaranteed to be fresh afterwards, unless it's not necessary
+        //
+        // It either comes from the argument of `freshAccount`, or it's a property of this class.
+        // In the latter case, `viewDidLoad` verifies or fetch to make it fresh, but only when
+        // it's in login progress. When it's simple app relaunch, the checking is permissive.
+        //
+        // For checking items that causes an account update, `check(freshAccount:)` should be
+        // manually executed by the child, after it finishes its job
+        
         Logger.login.info(category: "CheckSessionEnvironment", message: "Check environments")
         if AppGroupUserDefaults.isClockSkewed {
             Logger.login.info(category: "CheckSessionEnvironment", message: "Clock skewed")
@@ -109,65 +152,166 @@ final class CheckSessionEnvironmentViewController: UIViewController {
         } else if !SignalLoadingViewController.isLoaded {
             Logger.login.info(category: "CheckSessionEnvironment", message: "Load Signal")
             let signalLoading = SignalLoadingViewController()
-            signalLoading.onFinished = { [weak self] in
-                guard let self else {
-                    return
-                }
-                
-                if !AppGroupUserDefaults.isSigningUp {
-                    Logger.login.info(category: "CheckSessionEnvironment", message: "Sync contacts")
-                    ContactAPI.syncContacts()
-                }
-                assert(MixinKeys.testAccountPrefix != nil)
-                let initializeBots: Bool
-                if let phone = self.account.phone, let invalidPrefix = MixinKeys.testAccountPrefix {
-                    initializeBots = !phone.hasPrefix(invalidPrefix)
-                } else {
-                    initializeBots = true
-                }
-                if initializeBots {
-                    Logger.login.info(category: "CheckSessionEnvironment", message: "Initialize bots")
-                    for id in self.initialBots {
-                        let job = InitializeBotJob(userID: id)
-                        ConcurrentJobQueue.shared.addJob(job: job)
-                    }
-                }
-                self.check()
-            }
-            let navigationController = UINavigationController(rootViewController: signalLoading)
-            navigationController.navigationBar.standardAppearance = .secondaryBackgroundColor
-            navigationController.navigationBar.scrollEdgeAppearance = .secondaryBackgroundColor
-            navigationController.navigationBar.tintColor = R.color.icon_tint()
+            let navigationController = SecondaryAppearanceNavigationController(rootViewController: signalLoading)
+            reload(content: navigationController)
+        } else if !account.hasPIN {
+            Logger.login.info(category: "CheckSessionEnvironment", message: "Create PIN")
+            // No need to detect interruption, the TIP view will do it
+            let navigationController = TIPNavigationController(intent: .create)
             reload(content: navigationController)
         } else {
-            let root: UIViewController
-            if account.hasPIN {
-                let isReady = account.hasSafe
-                    && AppGroupUserDefaults.User.loginPINValidated
-                    && Web3WalletDAO.shared.hasClassicWallet()
-                if isReady {
-                    Logger.login.info(category: "CheckSessionEnvironment", message: "Everything ready")
-                    Logger.redirectLogsToLogin = false
-                    root = HomeContainerViewController(initialTab: .chat)
-                } else {
-                    Logger.login.info(category: "CheckSessionEnvironment", message: "Load TIP")
-                    let freshAccount = isAccountFresh ? account : nil
-                    root = LoginPINStatusCheckingViewController(freshAccount: freshAccount)
-                }
-            } else {
-                Logger.login.info(category: "CheckSessionEnvironment", message: "Create PIN")
-                root = TIPNavigationController(intent: .create)
+            let isReady = account.hasSafe
+                && AppGroupUserDefaults.User.loginPINValidated
+                && Web3WalletDAO.shared.hasClassicWallet()
+            guard isReady else {
+                registerNecessaries()
+                return
             }
-            AppDelegate.current.mainWindow.rootViewController = root
+            switch AccountVerificationMethod.current {
+            case .none:
+                Logger.login.info(category: "CheckSessionEnvironment", message: "App relaunch checking finished")
+                finishChecking(initialTab: .chat)
+            case .signUp:
+                Logger.login.info(category: "CheckSessionEnvironment", message: "Sign up checking finished")
+                reporter.report(event: .signUpEnd)
+                finishChecking(initialTab: .wallet)
+            case .signInWithMixinMnemonics, .signInWithMobileNumber:
+                Logger.login.info(category: "CheckSessionEnvironment", message: "Sign in checking finished")
+                reporter.report(event: .loginEnd)
+                finishChecking(initialTab: .wallet)
+            case .signInWithBIP39Mnemonics:
+                guard let importWalletEncryptionKey else {
+                    // The key should be ready after the registration
+                    registerNecessaries()
+                    return
+                }
+                do {
+                    guard let entropy = AppGroupKeychain.mnemonics else {
+                        throw RegisterError.missingEntropy
+                    }
+                    let mnemonics = try BIP39Mnemonics(entropy: entropy)
+                    let encryptedMnemonics = try EncryptedBIP39Mnemonics(
+                        mnemonics: mnemonics,
+                        key: importWalletEncryptionKey
+                    )
+                    let fetch = AddWalletFetchAddressViewController(
+                        mnemonics: mnemonics,
+                        encryptedMnemonics: encryptedMnemonics,
+                        behavior: .breaksOnImportedWalletFound({ [weak self] walletID in
+                            self?.finishCheckingForBIP39SignIn(
+                                welcomeWalletID: walletID,
+                                updateWalletSecretsWith: encryptedMnemonics,
+                            )
+                        })
+                    )
+                    let navigation = GeneralAppearanceNavigationController(rootViewController: fetch)
+                    reload(content: navigation)
+                } catch {
+                    // No way to recover from bad entropy. Go back to start around.
+                    AppDelegate.current.mainWindow.rootViewController = LoginNavigationController()
+                }
+            }
         }
     }
     
-    private func reload(content: UIViewController) {
+    func finishCheckingForBIP39SignIn(
+        welcomeWalletID: String?,
+        updateWalletSecretsWith mnemonics: EncryptedBIP39Mnemonics? = nil, // nil for not updating
+    ) {
+        Logger.login.info(category: "CheckSessionEnvironment", message: "BIP39 checking finished")
+        if let mnemonics {
+            let wallets = Web3WalletDAO.shared.wallets()
+            for wallet in wallets {
+                switch wallet.category.knownCase {
+                case .importedMnemonic:
+                    Logger.login.info(category: "CheckSessionEnvironment", message: "Saved mnemonics for wallet: \(wallet.walletID)")
+                    AppGroupKeychain.setImportedMnemonics(mnemonics, forWalletID: wallet.walletID)
+                case .importedPrivateKey:
+                    break
+                case .classic, .watchAddress, .none:
+                    break
+                }
+            }
+        }
+        reporter.report(event: .signUpEnd) // FIXME: Does it counts for sign up?
+        if let id = welcomeWalletID {
+            AppGroupUserDefaults.Wallet.lastSelectedWallet = .common(id: id)
+        }
+        finishChecking(initialTab: .wallet)
+    }
+    
+    @objc private func reloadAccountThenCheck() {
+        removeContentViewController()
+        activityIndicator.startAnimating()
+        descriptionLabel.text = R.string.localizable.initializing()
+        descriptionLabel.textColor = R.color.text_tertiary()
+        retryButton?.removeFromSuperview()
+        AccountAPI.me { [weak self] result in
+            guard let self else {
+                return
+            }
+            switch result {
+            case .success(let account):
+                self.check(freshAccount: account)
+            case .failure(let error):
+                self.reportFailure(
+                    description: error.localizedDescription,
+                    retryWithSelector: #selector(reloadAccountThenCheck)
+                )
+            }
+        }
+    }
+    
+    @objc private func registerNecessaries() {
+        Logger.login.info(category: "CheckSessionEnvironment", message: "Register necessaries")
+        removeContentViewController()
+        activityIndicator.startAnimating()
+        descriptionLabel.text = R.string.localizable.initializing()
+        descriptionLabel.textColor = R.color.text_tertiary()
+        Task {
+            do {
+                let context = try await TIP.checkCounter(with: account)
+                await MainActor.run {
+                    if let context {
+                        let intro = TIPIntroViewController(context: context)
+                        let navigation = TIPNavigationController(intro: intro)
+                        reload(content: navigation)
+                        switch context.action {
+                        case .create:
+                            break
+                        case .change:
+                            reporter.report(event: .loginVerifyPIN, tags: ["type": "pin_change"])
+                        case .migrate:
+                            reporter.report(event: .loginVerifyPIN, tags: ["type": "pin_upgrade"])
+                        }
+                    } else {
+                        let validation = LoginPINValidationViewController(account: account)
+                        let navigation = GeneralAppearanceNavigationController(rootViewController: validation)
+                        reload(content: navigation)
+                    }
+                }
+            } catch {
+                Logger.login.error(category: "LoginPINStatusChecking", message: "Failed: \(error)")
+                await MainActor.run {
+                    reportFailure(
+                        description: error.localizedDescription,
+                        retryWithSelector: #selector(registerNecessaries)
+                    )
+                }
+            }
+        }
+    }
+    
+    private func removeContentViewController() {
         if let content = contentViewController {
             content.willMove(toParent: nil)
             content.view.removeFromSuperview()
             content.removeFromParent()
         }
+    }
+    
+    private func reload(content: UIViewController) {
+        removeContentViewController()
         addChild(content)
         view.addSubview(content.view)
         content.view.snp.makeEdgesEqualToSuperview()
@@ -175,9 +319,60 @@ final class CheckSessionEnvironmentViewController: UIViewController {
         self.contentViewController = content
     }
     
+    private func finishChecking(initialTab: HomeTabBarController.ChildID) {
+        Logger.redirectLogsToLogin = false
+        let verificationMethod = AccountVerificationMethod.current
+        AccountVerificationMethod.current = nil
+        AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(initialTab: initialTab)
+        if verificationMethod != .signUp {
+            Logger.login.info(category: "CheckSessionEnvironment", message: "Sync contacts")
+            ContactAPI.syncContacts()
+        }
+        assert(MixinKeys.testAccountPrefix != nil)
+        let initializeBots: Bool
+        if let phone = account.phone, let invalidPrefix = MixinKeys.testAccountPrefix {
+            initializeBots = !phone.hasPrefix(invalidPrefix)
+        } else {
+            initializeBots = true
+        }
+        if initializeBots {
+            Logger.login.info(category: "CheckSessionEnvironment", message: "Initialize bots")
+            for id in initialBots {
+                let job = InitializeBotJob(userID: id)
+                ConcurrentJobQueue.shared.addJob(job: job)
+            }
+        }
+    }
+    
+    private func reportFailure(
+        description: String,
+        retryWithSelector retrySelector: Selector
+    ) {
+        activityIndicator.stopAnimating()
+        descriptionLabel.text = description
+        descriptionLabel.textColor = R.color.error_red()
+        var retryConfig: UIButton.Configuration = .filled()
+        retryConfig.baseBackgroundColor = R.color.theme()
+        retryConfig.baseForegroundColor = .white
+        retryConfig.attributedTitle = AttributedString(
+            string: R.string.localizable.retry(),
+            scalingByFontSize: 16,
+            weight: .medium
+        )
+        retryConfig.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 36, bottom: 15, trailing: 36)
+        let button = UIButton(configuration: retryConfig)
+        button.addTarget(self, action: retrySelector, for: .touchUpInside)
+        bottomStackView.addArrangedSubview(button)
+        self.retryButton = button
+    }
+    
 }
 
 extension CheckSessionEnvironmentViewController {
+    
+    private enum RegisterError: Error {
+        case missingEntropy
+    }
     
     private final class RestoreChatNavigationHandler: NSObject, UINavigationControllerDelegate {
         

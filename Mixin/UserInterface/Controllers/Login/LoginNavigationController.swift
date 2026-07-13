@@ -13,7 +13,11 @@ final class LoginNavigationController: GeneralAppearanceNavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let presentLogRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(presentLog(_:)))
+        self.delegate = self
+        let presentLogRecognizer = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(presentLog(_:))
+        )
         presentLogRecognizer.minimumPressDuration = 3
         navigationBar.addGestureRecognizer(presentLogRecognizer)
     }
@@ -30,6 +34,18 @@ final class LoginNavigationController: GeneralAppearanceNavigationController {
         default:
             break
         }
+    }
+    
+}
+
+extension LoginNavigationController: UINavigationControllerDelegate {
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        NavigationBarStyle.updateAppearances(
+            navigationController: navigationController,
+            willShow: viewController,
+            animated: animated
+        )
     }
     
 }

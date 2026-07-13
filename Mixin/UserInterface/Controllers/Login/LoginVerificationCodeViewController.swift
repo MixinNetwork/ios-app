@@ -101,7 +101,12 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
             }
             switch result {
             case let .success(account):
-                if let error = self.login(account: account, signingUp: false, sessionKey: sessionKey) {
+                let error = self.login(
+                    account: account,
+                    method: .signInWithMobileNumber,
+                    sessionKey: sessionKey,
+                )
+                if let error {
                     self.handleVerificationCodeError(error)
                 }
             case let .failure(error):

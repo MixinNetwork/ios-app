@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class LoginPINValidationViewController: FullscreenPINValidationViewController {
+final class LoginPINValidationViewController: FullscreenPINValidationViewController, CheckSessionEnvironmentChild {
     
     private let account: Account
     
@@ -52,19 +52,14 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 }
                 try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
-                
                 AppGroupUserDefaults.User.loginPINValidated = true
+                let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: pin)
                 await MainActor.run {
-                    if AppGroupUserDefaults.isSigningUp {
-                        reporter.report(event: .signUpEnd)
-                    } else {
-                        reporter.report(event: .loginEnd)
-                    }
-                    Logger.login.info(category: "LoginPINValidation", message: "Validated")
-                    Logger.redirectLogsToLogin = false
-                    AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(
-                        initialTab: .wallet
+                    checkSessionEnvironmentAgain(
+                        freshAccount: LoginManager.shared.account,
+                        importWalletEncryptionKey: importWalletKey
                     )
+                    Logger.login.info(category: "LoginPINValidation", message: "Validated")
                 }
             } catch MixinAPIResponseError.malformedPin {
                 Logger.login.error(category: "LoginPINValidation", message: "malformedPin...hasPIN:\(account.hasPIN)...hasSafe:\(account.hasSafe)")

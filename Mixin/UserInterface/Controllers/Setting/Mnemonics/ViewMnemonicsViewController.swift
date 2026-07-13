@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class ViewMnemonicsViewController: MnemonicsViewController {
+final class ViewMnemonicsViewController: TitledMnemonicsViewController {
     
     private let mnemonics: MixinMnemonics
     
@@ -18,7 +18,7 @@ final class ViewMnemonicsViewController: MnemonicsViewController {
         super.viewDidLoad()
         titleLabel.text = R.string.localizable.write_down_mnemonic_phrase()
         descriptionLabel.text = R.string.localizable.write_down_secret_description()
-        addTextFields(count: mnemonics.phrases.count)
+        addTextFields(backgroundColor: .secondary, count: mnemonics.phrases.count)
         addButtonIntoInputFields(
             image: R.image.ic_user_qr_code()!,
             title: R.string.localizable.qr_code(),

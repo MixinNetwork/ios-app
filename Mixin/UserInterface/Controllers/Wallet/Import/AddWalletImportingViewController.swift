@@ -2,7 +2,7 @@ import UIKit
 import web3
 import MixinServices
 
-final class AddWalletImportingViewController: IntroductionViewController {
+final class AddWalletImportingViewController: IntroductionViewController, CheckSessionEnvironmentChild {
     
     enum ImportingWallet {
         case byCreating(request: CreateWalletRequest)
@@ -118,6 +118,7 @@ final class AddWalletImportingViewController: IntroductionViewController {
         }
         Task { [weak self] in
             var hasPartialSuccess = false
+            var firstImportedWalletID: String?
             do {
                 for wallet in wallets {
                     let bitcoinWallet = wallet.candidate.bitcoinWallet
@@ -175,14 +176,33 @@ final class AddWalletImportingViewController: IntroductionViewController {
                     }
                     AppGroupKeychain.setImportedMnemonics(mnemonics, forWalletID: response.wallet.walletID)
                     hasPartialSuccess = true
+                    if firstImportedWalletID == nil {
+                        firstImportedWalletID = response.wallet.walletID
+                    }
                 }
                 await MainActor.run {
-                    _ = self?.navigationController?.popToRootViewController(animated: true)
+                    guard let self else {
+                        return
+                    }
+                    if let checker = self.sessionEnvironmentChecker {
+                        checker.finishCheckingForBIP39SignIn(welcomeWalletID: firstImportedWalletID)
+                    } else {
+                        self.navigationController?.popToRootViewController(animated: true)
+                    }
                 }
             } catch MixinAPIResponseError.tooManyWallets {
                 await MainActor.run {
-                    let error = AddWalletErrorViewController(error: .tooManyWallets(hasPartialSuccess: hasPartialSuccess))
-                    self?.navigationController?.pushViewController(replacingCurrent: error, animated: true)
+                    guard let self else {
+                        return
+                    }
+                    if let checker = self.sessionEnvironmentChecker {
+                        // Not likely to be the first time sign up to have these many wallets
+                        // Just let it pass
+                        checker.finishCheckingForBIP39SignIn(welcomeWalletID: firstImportedWalletID)
+                    } else {
+                        let error = AddWalletErrorViewController(error: .tooManyWallets(hasPartialSuccess: hasPartialSuccess))
+                        self.navigationController?.pushViewController(replacingCurrent: error, animated: true)
+                    }
                 }
             } catch {
                 await MainActor.run {

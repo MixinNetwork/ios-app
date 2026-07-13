@@ -5,7 +5,10 @@ final class TIPPopupInputViewController: PinValidationViewController {
     
     enum Action {
         case migrate((_ pin: String) -> Void)
-        case `continue`(TIP.InterruptionContext, _ onSuccess: @MainActor @Sendable () -> Void)
+        case `continue`(
+            _ context: TIP.InterruptionContext,
+            _ onSuccess: @MainActor @Sendable (_ importWalletEncryptionKey: Data?) -> Void
+        )
     }
     
     struct ReportingError: Error, CustomNSError {
@@ -126,11 +129,13 @@ final class TIPPopupInputViewController: PinValidationViewController {
     private func continueCreate(
         with pin: String,
         failedSigners: [TIPSigner],
-        onSuccess: @MainActor @Sendable @escaping () -> Void
+        onSuccess: @MainActor @Sendable @escaping (_ importWalletEncryptionKey: Data?) -> Void
     ) {
 #if DEBUG
         if TIPDiagnostic.uiTestOnly {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: onSuccess)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                onSuccess(nil)
+            }
             return
         }
 #endif
@@ -150,7 +155,10 @@ final class TIPPopupInputViewController: PinValidationViewController {
                 try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                 Logger.tip.info(category: "TIPPopupInput", message: "Registered classic wallet")
                 AppGroupUserDefaults.User.loginPINValidated = true
-                await MainActor.run(body: onSuccess)
+                let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: pin)
+                await MainActor.run {
+                    onSuccess(importWalletKey)
+                }
             } catch {
                 let reportingError = ReportingError(underlying: error, location: "ContinueCreate")
                 reporter.report(error: reportingError)
@@ -171,11 +179,13 @@ final class TIPPopupInputViewController: PinValidationViewController {
         isOldPINLegacy: Bool,
         new: String,
         failedSigners: [TIPSigner],
-        onSuccess: @MainActor @Sendable @escaping () -> Void
+        onSuccess: @MainActor @Sendable @escaping (_ importWalletEncryptionKey: Data?) -> Void
     ) {
 #if DEBUG
         if TIPDiagnostic.uiTestOnly {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: onSuccess)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                onSuccess(nil)
+            }
             return
         }
 #endif
@@ -216,7 +226,10 @@ final class TIPPopupInputViewController: PinValidationViewController {
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 AppGroupUserDefaults.User.loginPINValidated = true
                 Logger.tip.info(category: "TIPPopupInput", message: "Changed successfully")
-                await MainActor.run(body: onSuccess)
+                let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: new)
+                await MainActor.run {
+                    onSuccess(importWalletKey)
+                }
             } catch let error as TIPNode.Error {
                 let reportingError = ReportingError(underlying: error, location: "ContinueChange.Node")
                 reporter.report(error: reportingError)

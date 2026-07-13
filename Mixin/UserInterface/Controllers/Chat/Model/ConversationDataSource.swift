@@ -93,6 +93,7 @@ class ConversationDataSource {
         NotificationCenter.default.addObserver(self, selector: #selector(updateMessageMediaStatus(_:)), name: MessageDAO.messageMediaStatusDidUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateMessagePinning(_:)), name: PinMessageDAO.didSaveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateMessagePinning(_:)), name: PinMessageDAO.didDeleteNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateStickerMessage(_:)), name: RefreshStickerJob.didUpdateNotification, object: nil)
         reload(completion: completion)
     }
     
@@ -629,6 +630,26 @@ extension ConversationDataSource {
         }
         if let cell = cell as? AudioMessageCell {
             cell.updateUnreadStyle()
+        }
+    }
+    
+    @objc private func updateStickerMessage(_ notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let messageId = userInfo[RefreshStickerJob.UserInfoKey.messageId] as? String,
+            let stickerItem = userInfo[RefreshStickerJob.UserInfoKey.sticker] as? StickerItem,
+            let indexPath = indexPath(where: { $0.messageId == messageId })
+        else {
+            return
+        }
+        
+        let viewModel = self.viewModel(for: indexPath)
+        let cell = tableView?.cellForRow(at: indexPath)
+        if let viewModel = viewModel as? StickerMessageViewModel {
+            viewModel.message.assetUrl = stickerItem.assetUrl
+            if let cell = cell as? StickerMessageCell {
+                cell.render(viewModel: viewModel)
+            }
         }
     }
     

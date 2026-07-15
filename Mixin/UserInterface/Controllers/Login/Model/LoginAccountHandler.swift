@@ -23,7 +23,12 @@ extension LoginAccountHandler where Self: UIViewController {
             return .invalidServerPinToken
         }
         Logger.login.info(category: "Login", message: "Got account: \(account.userID), has_pin: \(account.hasPIN), has_safe: \(account.hasSafe), tip_key: \(account.tipKey?.count ?? -1)")
-        AccountVerificationMethod.current = method
+        AccountVerificationMethod.current = switch method {
+        case .signInWithBIP39Mnemonics where account.hasEmptyName:
+                .signUpWithBIP39Mnemonics
+        default:
+            method
+        }
         AppGroupKeychain.sessionSecret = sessionKey.rawRepresentation
         AppGroupKeychain.pinToken = pinToken
         if !account.isAnonymous {

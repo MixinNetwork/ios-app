@@ -66,6 +66,10 @@ public struct Account {
         }
     }
     
+    public var hasEmptyName: Bool {
+        fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
 }
 
 extension Account: Codable {

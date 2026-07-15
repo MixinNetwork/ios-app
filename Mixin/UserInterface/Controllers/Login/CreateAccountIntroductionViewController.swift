@@ -10,10 +10,10 @@ final class CreateAccountIntroductionViewController: UIViewController {
     @IBOutlet weak var importWalletButton: UIButton!
     @IBOutlet weak var footerTextView: IntroTextView!
     
-    private let analyticSource: String
+    private let signUpSource: String
     
-    init(analyticSource: String) {
-        self.analyticSource = analyticSource
+    init(signUpSource: String) {
+        self.signUpSource = signUpSource
         let nib = R.nib.createAccountIntroductionView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -70,7 +70,7 @@ final class CreateAccountIntroductionViewController: UIViewController {
         guard let navigationController else {
             return
         }
-        presentingViewController.dismiss(animated: true) { [analyticSource] in
+        presentingViewController.dismiss(animated: true) { [signUpSource] in
             let mnemonics: MixinMnemonics? = if let entropy = AppGroupKeychain.mnemonics {
                 try? MixinMnemonics(entropy: entropy)
             } else {
@@ -83,7 +83,7 @@ final class CreateAccountIntroductionViewController: UIViewController {
             viewControllers.append(next)
             navigationController.setViewControllers(viewControllers, animated: true)
             Logger.login.info(category: "CreateAccountIntro", message: "Sign Up")
-            reporter.report(event: .signUpStart, tags: ["source": analyticSource])
+            reporter.report(event: .signUpStart, tags: ["source": signUpSource])
         }
     }
     
@@ -97,7 +97,7 @@ final class CreateAccountIntroductionViewController: UIViewController {
             return
         }
         presentingViewController.dismiss(animated: true) {
-            let next = SignInWithBIP39MnemonicsViewController()
+            let next = SignInWithBIP39MnemonicsViewController(analyticSource: "sign_up_intro_dialog")
             var viewControllers = navigationController.viewControllers.filter { controller in
                 controller is OnboardingViewController
             }

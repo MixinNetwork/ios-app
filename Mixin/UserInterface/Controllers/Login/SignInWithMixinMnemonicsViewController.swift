@@ -3,7 +3,10 @@ import MixinServices
 
 final class SignInWithMixinMnemonicsViewController: SignInWithMnemonicsViewController<MixinMnemonics.PhrasesCount> {
     
-    init() {
+    private let analyticSource: String
+    
+    init(analyticSource: String) {
+        self.analyticSource = analyticSource
         super.init(phrasesCount: .default)
     }
     
@@ -13,7 +16,13 @@ final class SignInWithMixinMnemonicsViewController: SignInWithMnemonicsViewContr
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        reporter.report(event: .loginMnemonicPhrase)
+        reporter.report(
+            event: .loginStart,
+            tags: [
+                "type": "login_mnemonic_phrase_13",
+                "source": analyticSource,
+            ]
+        )
     }
     
     override func reloadViews(count: MixinMnemonics.PhrasesCount) {

@@ -3,7 +3,10 @@ import MixinServices
 
 final class SignInWithBIP39MnemonicsViewController: SignInWithMnemonicsViewController<BIP39Mnemonics.PhrasesCount> {
     
-    init() {
+    private let analyticSource: String
+    
+    init(analyticSource: String) {
+        self.analyticSource = analyticSource
         super.init(phrasesCount: .medium)
     }
     
@@ -15,7 +18,13 @@ final class SignInWithBIP39MnemonicsViewController: SignInWithMnemonicsViewContr
         super.viewDidLoad()
         let footer = R.nib.signInWithBIP39MnemonicsFooterView(withOwner: nil)!
         contentStackView.addArrangedSubview(footer)
-        reporter.report(event: .loginMnemonicPhrase)
+        reporter.report(
+            event: .loginStart,
+            tags: [
+                "type": "login_mnemonic_phrase_12",
+                "source": analyticSource,
+            ]
+        )
     }
     
     override func reloadViews(count: BIP39Mnemonics.PhrasesCount) {

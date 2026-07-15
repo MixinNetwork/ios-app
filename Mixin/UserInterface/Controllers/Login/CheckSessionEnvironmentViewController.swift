@@ -135,7 +135,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
             }
             let clockSkew = ClockSkewViewController()
             reload(content: clockSkew)
-        } else if account.fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        } else if account.hasEmptyName {
             Logger.login.info(category: "CheckSessionEnvironment", message: "Create username")
             let username = UsernameViewController()
             let navigationController = GeneralAppearanceNavigationController(rootViewController: username)
@@ -180,7 +180,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                 Logger.login.info(category: "CheckSessionEnvironment", message: "Sign in checking finished")
                 reporter.report(event: .loginEnd)
                 finishChecking(initialTab: .wallet)
-            case .signInWithBIP39Mnemonics:
+            case .signInWithBIP39Mnemonics, .signUpWithBIP39Mnemonics:
                 guard let importWalletEncryptionKey else {
                     // The key should be ready after the registration
                     registerNecessaries()
@@ -199,7 +199,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                         mnemonics: mnemonics,
                         encryptedMnemonics: encryptedMnemonics,
                         behavior: .breaksOnImportedWalletFound({ [weak self] walletID in
-                            self?.finishCheckingForBIP39SignIn(
+                            self?.finishCheckingForBIP39Session(
                                 welcomeWalletID: walletID,
                                 updateWalletSecretsWith: encryptedMnemonics,
                             )
@@ -216,7 +216,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         }
     }
     
-    func finishCheckingForBIP39SignIn(
+    func finishCheckingForBIP39Session(
         welcomeWalletID: String?,
         updateWalletSecretsWith mnemonics: EncryptedBIP39Mnemonics? = nil, // nil for not updating
     ) {
@@ -235,7 +235,13 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                 }
             }
         }
-        reporter.report(event: .signUpEnd) // FIXME: Does it counts for sign up?
+        if let method = AccountVerificationMethod.current {
+            if method.isSigningUp {
+                reporter.report(event: .signUpEnd)
+            } else {
+                reporter.report(event: .loginEnd)
+            }
+        }
         if let id = welcomeWalletID {
             AppGroupUserDefaults.Wallet.lastSelectedWallet = .common(id: id)
         }
@@ -282,9 +288,9 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                         case .create:
                             break
                         case .change:
-                            reporter.report(event: .loginVerifyPIN, tags: ["type": "pin_change"])
+                            reporter.report(event: .loginPINVerify, tags: ["type": "pin_change"])
                         case .migrate:
-                            reporter.report(event: .loginVerifyPIN, tags: ["type": "pin_upgrade"])
+                            reporter.report(event: .loginPINVerify, tags: ["type": "pin_upgrade"])
                         }
                     } else {
                         let validation = LoginPINValidationViewController(account: account)
@@ -326,7 +332,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         let verificationMethod = AccountVerificationMethod.current
         AccountVerificationMethod.current = nil
         AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(initialTab: initialTab)
-        if verificationMethod != .signUp {
+        if let verificationMethod, !verificationMethod.isSigningUp {
             Logger.login.info(category: "CheckSessionEnvironment", message: "Sync contacts")
             ContactAPI.syncContacts()
         }

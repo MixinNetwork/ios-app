@@ -6,6 +6,7 @@ import MixinServices
 final class SignInWithMobileNumberViewController: MobileNumberViewController {
     
     private let cellularData = CTCellularData()
+    private let loginSource: String
     
     private weak var signUpButton: UIButton!
     private weak var actionStackViewToKeyboardConstraint: NSLayoutConstraint!
@@ -21,7 +22,8 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
         cellularData.restrictedState == .restricted && !ReachabilityManger.shared.isReachable
     }
     
-    init() {
+    init(loginSource: String) {
+        self.loginSource = loginSource
         super.init(style: .secondary)
     }
     
@@ -89,7 +91,13 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         textField.becomeFirstResponder()
-        reporter.report(event: .loginStart)
+        reporter.report(
+            event: .loginStart,
+            tags: [
+                "type": "phone_number",
+                "source": loginSource,
+            ]
+        )
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -120,7 +128,7 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
     }
     
     @objc private func signup(_ sender: Any) {
-        let intro = CreateAccountIntroductionViewController(analyticSource: "login_start")
+        let intro = CreateAccountIntroductionViewController(signUpSource: "login_phone_number")
         present(intro, animated: true)
     }
     

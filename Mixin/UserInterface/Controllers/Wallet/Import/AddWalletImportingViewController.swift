@@ -185,7 +185,7 @@ final class AddWalletImportingViewController: IntroductionViewController, CheckS
                         return
                     }
                     if let checker = self.sessionEnvironmentChecker {
-                        checker.finishCheckingForBIP39SignIn(welcomeWalletID: firstImportedWalletID)
+                        checker.finishCheckingForBIP39Session(welcomeWalletID: firstImportedWalletID)
                     } else {
                         self.navigationController?.popToRootViewController(animated: true)
                     }
@@ -198,7 +198,7 @@ final class AddWalletImportingViewController: IntroductionViewController, CheckS
                     if let checker = self.sessionEnvironmentChecker {
                         // Not likely to be the first time sign up to have these many wallets
                         // Just let it pass
-                        checker.finishCheckingForBIP39SignIn(welcomeWalletID: firstImportedWalletID)
+                        checker.finishCheckingForBIP39Session(welcomeWalletID: firstImportedWalletID)
                     } else {
                         let error = AddWalletErrorViewController(error: .tooManyWallets(hasPartialSuccess: hasPartialSuccess))
                         self.navigationController?.pushViewController(replacingCurrent: error, animated: true)

@@ -2,10 +2,22 @@ import Foundation
 import MixinServices
 
 enum AccountVerificationMethod: Int {
+    
     case signUp
+    case signUpWithBIP39Mnemonics
     case signInWithMixinMnemonics
     case signInWithBIP39Mnemonics
     case signInWithMobileNumber
+    
+    var isSigningUp: Bool {
+        switch self {
+        case .signUp, .signUpWithBIP39Mnemonics:
+            true
+        case .signInWithMixinMnemonics, .signInWithBIP39Mnemonics, .signInWithMobileNumber:
+            false
+        }
+    }
+    
 }
 
 extension AccountVerificationMethod: CustomDebugStringConvertible {
@@ -14,12 +26,14 @@ extension AccountVerificationMethod: CustomDebugStringConvertible {
         switch self {
         case .signUp:
             "SignUp"
+        case .signUpWithBIP39Mnemonics:
+            "SignUp-BIP39Mnemonics"
         case .signInWithMixinMnemonics:
-            "SignInWithMixinMnemonics"
+            "SignIn-MixinMnemonics"
         case .signInWithBIP39Mnemonics:
-            "SignInWithBIP39Mnemonics"
+            "SignIn-BIP39Mnemonics"
         case .signInWithMobileNumber:
-            "SignInWithMobileNumber"
+            "SignIn-MobileNumber"
         }
     }
     

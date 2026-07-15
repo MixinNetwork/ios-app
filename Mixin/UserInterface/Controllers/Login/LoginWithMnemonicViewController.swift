@@ -123,7 +123,7 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     }
     
     @objc private func goToSignIn(_ sender: Any) {
-        let signIn = SignInWithMobileNumberViewController()
+        let signIn = SignInWithMobileNumberViewController(loginSource: "sign_up")
         navigationController?.pushViewController(replacingCurrent: signIn, animated: true)
     }
     

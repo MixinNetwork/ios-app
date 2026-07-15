@@ -1,5 +1,9 @@
 import UIKit
 
+protocol NavigationBarStyling {
+    var navigationBarStyle: NavigationBarStyle { get }
+}
+
 enum NavigationBarStyle {
     
     case normal
@@ -38,6 +42,22 @@ enum NavigationBarStyle {
     
 }
 
-protocol NavigationBarStyling {
-    var navigationBarStyle: NavigationBarStyle { get }
+extension NavigationBarStyle {
+    
+    final class AppearanceUpdater: NSObject, UINavigationControllerDelegate {
+        
+        func navigationController(
+            _ navigationController: UINavigationController,
+            willShow viewController: UIViewController,
+            animated: Bool
+        ) {
+            NavigationBarStyle.updateAppearances(
+                navigationController: navigationController,
+                willShow: viewController,
+                animated: animated
+            )
+        }
+        
+    }
+    
 }

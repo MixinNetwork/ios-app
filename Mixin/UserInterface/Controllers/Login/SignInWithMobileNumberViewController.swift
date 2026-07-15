@@ -35,10 +35,12 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
             .customerService(target: self, action: #selector(presentCustomerService(_:))),
         ]
         
+        declarationTextView.textContainerInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         declarationTextView.textColor = R.color.text_tertiary()
+        declarationTextView.textAlignment = .center
         declarationTextView.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
         declarationTextView.adjustsFontForContentSizeCategory = true
-        declarationTextView.text = R.string.localizable.login_method_mobile_desc()
+        declarationTextView.text = R.string.localizable.mobile_number_description()
         
         let signUpConfig: UIButton.Configuration = {
             var config: UIButton.Configuration = .filled()
@@ -95,8 +97,8 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
         isViewAppearing = true
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         isViewAppearing = false
     }
     
@@ -123,7 +125,7 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
     }
     
     @objc private func keyboardWillShow(_ notification: Notification) {
-        hideOtherOptions()
+        signUpButton.alpha = 0
         actionStackViewToKeyboardConstraint.priority = .almostRequired
         actionStackViewToSignUpConstraint.priority = .almostInexist
         if isViewAppearing {
@@ -133,11 +135,13 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
     
     @objc private func keyboardWillHide(_ notification: Notification) {
         if !isBusy && presentedViewController == nil {
-            showOtherOptions()
+            signUpButton.alpha = 1
         }
         actionStackViewToKeyboardConstraint.priority = .almostInexist
         actionStackViewToSignUpConstraint.priority = .almostRequired
-        view.layoutIfNeeded()
+        if isViewAppearing {
+            view.layoutIfNeeded()
+        }
     }
     
 }
@@ -159,6 +163,12 @@ extension SignInWithMobileNumberViewController: Captcha.Reporting {
 }
 
 extension SignInWithMobileNumberViewController {
+    
+    private func updateViews(isBusy: Bool) {
+        self.isBusy = isBusy
+        continueButton.isBusy = isBusy
+        signUpButton.alpha = isBusy ? 0 : 1
+    }
     
     private func requestVerificationCode(captchaToken token: CaptchaToken?) {
         updateViews(isBusy: true)
@@ -234,20 +244,6 @@ extension SignInWithMobileNumberViewController {
                 }
             }
         }
-    }
-    
-    private func updateViews(isBusy: Bool) {
-        self.isBusy = isBusy
-        continueButton.isBusy = isBusy
-        isBusy ? hideOtherOptions() : showOtherOptions()
-    }
-    
-    private func hideOtherOptions() {
-        signUpButton.alpha = 0
-    }
-    
-    private func showOtherOptions() {
-        signUpButton.alpha = 1
     }
     
 }

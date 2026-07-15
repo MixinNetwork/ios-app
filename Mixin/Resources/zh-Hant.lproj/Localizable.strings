@@ -777,6 +777,7 @@
 "impact_on_pnl_2" = "槓桿越低，盈虧越小且越慢";
 "import" = "匯入";
 "import_failed" = "匯入失敗";
+"import_from_another_wallet" = "匯入其他錢包？";
 "import_mnemonic_phrase" = "匯入助記詞";
 "import_now" = "立即匯入";
 "import_private_key" = "匯入私鑰";
@@ -1001,6 +1002,7 @@
 "mobile_number_added" = "新增成功";
 "mobile_number_added_description" = "新增手機號碼有助於提升賬號安全";
 "mobile_number_changed" = "已更改手機號碼";
+"mobile_number_description" = "請輸入已繫結 Mixin 賬號的手機號";
 "mobile_phone" = "手機";
 "monthly" = "每月";
 "months_count_short" = "%d月";

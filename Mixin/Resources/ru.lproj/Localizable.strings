@@ -777,6 +777,7 @@
 "impact_on_pnl_2" = "Lower leverage, smaller and slower PnL";
 "import" = "Импорт";
 "import_failed" = "Import Failed";
+"import_from_another_wallet" = "Import from another wallet?";
 "import_mnemonic_phrase" = "Import Mnemonic Phrase";
 "import_now" = "Import Now";
 "import_private_key" = "Import Private Key";
@@ -1001,6 +1002,7 @@
 "mobile_number_added" = "Mobile Number Added";
 "mobile_number_added_description" = "Adding mobile number helps improve account security";
 "mobile_number_changed" = "Mobile Number Changed";
+"mobile_number_description" = "This is the mobile number linked to your account";
 "mobile_phone" = "Mobile Phone";
 "monthly" = "Ежемесячно";
 "months_count_short" = "%dM";

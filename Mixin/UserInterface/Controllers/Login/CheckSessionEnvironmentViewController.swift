@@ -37,6 +37,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     private(set) weak var contentViewController: UIViewController?
     
     private lazy var restoreChatNavigationHandler = RestoreChatNavigationHandler()
+    private lazy var navigationBarAppearanceUpdater = NavigationBarStyle.AppearanceUpdater()
     
     private weak var retryButton: UIButton?
     
@@ -205,6 +206,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                         })
                     )
                     let navigation = GeneralAppearanceNavigationController(rootViewController: fetch)
+                    navigation.delegate = navigationBarAppearanceUpdater
                     reload(content: navigation)
                 } catch {
                     // No way to recover from bad entropy. Go back to start around.
@@ -375,6 +377,45 @@ extension CheckSessionEnvironmentViewController {
     }
     
     private final class RestoreChatNavigationHandler: NSObject, UINavigationControllerDelegate {
+        
+        private lazy var presentFromBottomAnimator = PresentFromBottomAnimator()
+        
+        func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+            if viewController is QRCodeScannerViewController && !navigationController.isNavigationBarHidden {
+                navigationController.setNavigationBarHidden(true, animated: animated)
+            } else if !(viewController is QRCodeScannerViewController) && navigationController.isNavigationBarHidden {
+                navigationController.setNavigationBarHidden(false, animated: animated)
+            }
+        }
+        
+        func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+            if operation == .push {
+                if let targetVC = toVC as? MixinNavigationAnimating {
+                    switch targetVC.pushAnimation {
+                    case .push:
+                        return nil
+                    case .present:
+                        presentFromBottomAnimator.operation = operation
+                        return presentFromBottomAnimator
+                    }
+                }
+            } else if operation == .pop {
+                if let targetVC = fromVC as? MixinNavigationAnimating {
+                    switch targetVC.popAnimation {
+                    case .pop:
+                        return nil
+                    case .dismiss:
+                        presentFromBottomAnimator.operation = operation
+                        return presentFromBottomAnimator
+                    }
+                }
+            }
+            return nil
+        }
+        
+    }
+    
+    private final class FetchWalletNavigationController: GeneralAppearanceNavigationController {
         
         private lazy var presentFromBottomAnimator = PresentFromBottomAnimator()
         

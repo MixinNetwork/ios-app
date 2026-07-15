@@ -88,7 +88,6 @@
                                             </constraints>
                                         </stackView>
                                     </subviews>
-                                    <color key="backgroundColor" name="background_quaternary"/>
                                     <constraints>
                                         <constraint firstItem="Xf2-hx-arL" firstAttribute="leading" secondItem="wDO-FL-eRJ" secondAttribute="leading" id="8KS-7W-FfA"/>
                                         <constraint firstAttribute="trailing" secondItem="Xf2-hx-arL" secondAttribute="trailing" id="ICe-Ox-Woj"/>
@@ -162,9 +161,6 @@
         </view>
     </objects>
     <resources>
-        <namedColor name="background_quaternary">
-            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

@@ -163,6 +163,7 @@ final class TIPPopupInputViewController: PinValidationViewController {
                 let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: pin)
                 let custodialSalt = try await TIP.custodialSalt(pin: pin)
                 await MainActor.run {
+                    presentingViewController?.dismiss(animated: true)
                     onSuccess(importWalletKey, custodialSalt)
                 }
             } catch {
@@ -235,6 +236,7 @@ final class TIPPopupInputViewController: PinValidationViewController {
                 let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: new)
                 let custodialSalt = try await TIP.custodialSalt(pin: new)
                 await MainActor.run {
+                    presentingViewController?.dismiss(animated: true)
                     onSuccess(importWalletKey, custodialSalt)
                 }
             } catch let error as TIPNode.Error {

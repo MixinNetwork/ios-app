@@ -174,11 +174,9 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                 finishChecking(initialTab: .chat)
             case .signUp:
                 Logger.login.info(category: "CheckSessionEnvironment", message: "Sign up checking finished")
-                reporter.report(event: .signUpEnd)
                 finishChecking(initialTab: .wallet)
             case .signInWithMixinMnemonics, .signInWithMobileNumber:
                 Logger.login.info(category: "CheckSessionEnvironment", message: "Sign in checking finished")
-                reporter.report(event: .loginEnd)
                 finishChecking(initialTab: .wallet)
             case .signInWithBIP39Mnemonics, .signUpWithBIP39Mnemonics:
                 guard let importWalletEncryptionKey else {
@@ -233,13 +231,6 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                 case .classic, .watchAddress, .none:
                     break
                 }
-            }
-        }
-        if let method = AccountVerificationMethod.current {
-            if method.isSigningUp {
-                reporter.report(event: .signUpEnd)
-            } else {
-                reporter.report(event: .loginEnd)
             }
         }
         if let id = welcomeWalletID {
@@ -331,6 +322,14 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         Logger.redirectLogsToLogin = false
         let verificationMethod = AccountVerificationMethod.current
         AccountVerificationMethod.current = nil
+        switch verificationMethod {
+        case .signUp, .signUpWithBIP39Mnemonics:
+            reporter.report(event: .signUpEnd)
+        case .signInWithMixinMnemonics, .signInWithBIP39Mnemonics, .signInWithMobileNumber:
+            reporter.report(event: .loginEnd)
+        case nil:
+            break
+        }
         AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(initialTab: initialTab)
         if let verificationMethod, !verificationMethod.isSigningUp {
             Logger.login.info(category: "CheckSessionEnvironment", message: "Sync contacts")

@@ -54,10 +54,12 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 AppGroupUserDefaults.User.loginPINValidated = true
                 let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: pin)
+                let custodialSalt = try await TIP.custodialSalt(pin: pin)
                 await MainActor.run {
                     checkSessionEnvironmentAgain(
                         freshAccount: LoginManager.shared.account,
-                        importWalletEncryptionKey: importWalletKey
+                        importWalletEncryptionKey: importWalletKey,
+                        custodialSalt: custodialSalt,
                     )
                     Logger.login.info(category: "LoginPINValidation", message: "Validated")
                 }

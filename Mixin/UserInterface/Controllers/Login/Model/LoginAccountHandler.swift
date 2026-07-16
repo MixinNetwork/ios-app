@@ -22,17 +22,20 @@ extension LoginAccountHandler where Self: UIViewController {
             Logger.login.error(category: "Login", message: "Invalid Server PIN Token")
             return .invalidServerPinToken
         }
-        Logger.login.info(category: "Login", message: "Got account: \(account.userID), has_pin: \(account.hasPIN), has_safe: \(account.hasSafe), tip_key: \(account.tipKey?.count ?? -1)")
-        AccountVerificationMethod.current = switch method {
+        Logger.login.info(category: "Login", message: "Got account: \(account.userID), method: \(method.debugDescription), has_pin: \(account.hasPIN), has_safe: \(account.hasSafe), tip_key: \(account.tipKey?.count ?? -1)")
+        
+        let method: AccountVerificationMethod = switch method {
         case .signInWithBIP39Mnemonics where account.hasEmptyName:
                 .signUpWithBIP39Mnemonics
         default:
             method
         }
+        AccountVerificationMethod.current = method
+        
         AppGroupKeychain.sessionSecret = sessionKey.rawRepresentation
         AppGroupKeychain.pinToken = pinToken
         if !account.isAnonymous {
-            // That's for mnemonic-based users. Should be cleared after phone number users log in to avoid confusion.
+            // That's for mnemonic-based users. Use custodial salt for phone number users.
             AppGroupKeychain.mnemonics = nil
             Logger.login.info(category: "Login", message: "AppGroupKeychain.mnemonics cleared")
         }

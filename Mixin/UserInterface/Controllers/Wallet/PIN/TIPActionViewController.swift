@@ -135,8 +135,12 @@ final class TIPActionViewController: UIViewController {
                     try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: pin)
+                    let custodialSalt = try await TIP.custodialSalt(pin: pin)
                     await MainActor.run {
-                        finish(importWalletEncryptionKey: importWalletKey)
+                        finish(
+                            importWalletEncryptionKey: importWalletKey,
+                            custodialSalt: custodialSalt,
+                        )
                     }
                 } catch {
                     await handle(
@@ -183,8 +187,12 @@ final class TIPActionViewController: UIViewController {
                     try await TIP.registerDefaultCommonWalletIfNeeded(pin: new)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: new)
+                    let custodialSalt = try await TIP.custodialSalt(pin: new)
                     await MainActor.run {
-                        finish(importWalletEncryptionKey: importWalletKey)
+                        finish(
+                            importWalletEncryptionKey: importWalletKey,
+                            custodialSalt: custodialSalt
+                        )
                     }
                 } catch {
                     await handle(
@@ -216,8 +224,12 @@ final class TIPActionViewController: UIViewController {
                     try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: pin)
+                    let custodialSalt = try await TIP.custodialSalt(pin: pin)
                     await MainActor.run {
-                        finish(importWalletEncryptionKey: importWalletKey)
+                        finish(
+                            importWalletEncryptionKey: importWalletKey,
+                            custodialSalt: custodialSalt,
+                        )
                     }
                 } catch {
                     await handle(
@@ -251,23 +263,29 @@ final class TIPActionViewController: UIViewController {
     }
     
     @MainActor
-    private func finish(importWalletEncryptionKey: Data?) {
+    private func finish(
+        importWalletEncryptionKey: Data?,
+        custodialSalt: Data?,
+    ) {
         Logger.tip.info(category: "TIPAction", message: "Finished successfully")
         switch action {
         case .create:
             tipNavigationController?.finish(
-                importWalletEncryptionKey: importWalletEncryptionKey
+                importWalletEncryptionKey: importWalletEncryptionKey,
+                custodialSalt: custodialSalt,
             )
         case .change:
             alert(R.string.localizable.change_pin_successfully()) { (_) in
                 self.tipNavigationController?.finish(
-                    importWalletEncryptionKey: importWalletEncryptionKey
+                    importWalletEncryptionKey: importWalletEncryptionKey,
+                    custodialSalt: custodialSalt,
                 )
             }
         case .migrate:
             alert(R.string.localizable.upgrade_tip_successfully()) { (_) in
                 self.tipNavigationController?.finish(
-                    importWalletEncryptionKey: importWalletEncryptionKey
+                    importWalletEncryptionKey: importWalletEncryptionKey,
+                    custodialSalt: custodialSalt,
                 )
             }
         }
@@ -320,8 +338,12 @@ final class TIPActionViewController: UIViewController {
                     AppGroupUserDefaults.User.loginPINValidated = true
                     Logger.tip.warn(category: "TIPAction", message: "Registration finished")
                     let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: context.pin)
+                    let custodialSalt = try await TIP.custodialSalt(pin: context.pin)
                     await MainActor.run {
-                        finish(importWalletEncryptionKey: importWalletKey)
+                        finish(
+                            importWalletEncryptionKey: importWalletKey,
+                            custodialSalt: custodialSalt,
+                        )
                     }
                 }
             }
@@ -391,7 +413,7 @@ final class TIPActionViewController: UIViewController {
                 let intro = TIPIntroViewController(context: context)
                 self.navigationController?.setViewControllers([intro], animated: true)
             } else {
-                self.finish(importWalletEncryptionKey: nil)
+                self.finish(importWalletEncryptionKey: nil, custodialSalt: nil)
             }
         }
     }

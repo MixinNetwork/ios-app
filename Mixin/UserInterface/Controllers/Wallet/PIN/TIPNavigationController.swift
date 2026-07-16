@@ -31,12 +31,13 @@ final class TIPNavigationController: GeneralAppearanceNavigationController, Chec
         popToViewController(controller, animated: true)
     }
     
-    func finish(importWalletEncryptionKey: Data?) {
+    func finish(importWalletEncryptionKey: Data?, custodialSalt: Data?) {
         Logger.tip.info(category: "TIPNavigation", message: "Finished")
         if isCheckingSessionEnvironment {
             checkSessionEnvironmentAgain(
                 freshAccount: LoginManager.shared.account,
-                importWalletEncryptionKey: importWalletEncryptionKey
+                importWalletEncryptionKey: importWalletEncryptionKey,
+                custodialSalt: custodialSalt,
             )
         } else {
             presentingViewController?.dismiss(animated: true)

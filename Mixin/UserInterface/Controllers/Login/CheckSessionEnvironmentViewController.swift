@@ -19,11 +19,13 @@ extension CheckSessionEnvironmentChild where Self: UIViewController {
     func checkSessionEnvironmentAgain(
         freshAccount: Account? = nil,
         importWalletEncryptionKey: Data? = nil,
+        custodialSalt: Data? = nil,
     ) {
         if let checker = sessionEnvironmentChecker {
             checker.check(
                 freshAccount: freshAccount,
-                importWalletEncryptionKey: importWalletEncryptionKey
+                importWalletEncryptionKey: importWalletEncryptionKey,
+                custodialSalt: custodialSalt,
             )
         } else {
             assertionFailure()
@@ -44,6 +46,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     private var account: Account
     private var isAccountFresh: Bool
     private var importWalletEncryptionKey: Data?
+    private var custodialSalt: Data?
     
     private var initialBots: [String] {
         if Locale.preferredLanguages.first?.hasPrefix("zh-Hans") ?? false {
@@ -107,6 +110,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     func check(
         freshAccount: Account? = nil,
         importWalletEncryptionKey: Data? = nil,
+        custodialSalt: Data? = nil,
     ) {
         assert(Thread.isMainThread)
         if let freshAccount {
@@ -116,6 +120,9 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         }
         if let importWalletEncryptionKey {
             self.importWalletEncryptionKey = importWalletEncryptionKey
+        }
+        if let custodialSalt {
+            self.custodialSalt = custodialSalt
         }
         
         // `self.account` is guaranteed to be fresh afterwards, unless it's not necessary
@@ -179,19 +186,27 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                 Logger.login.info(category: "CheckSessionEnvironment", message: "Sign in checking finished")
                 finishChecking(initialTab: .wallet)
             case .signInWithBIP39Mnemonics, .signUpWithBIP39Mnemonics:
-                guard let importWalletEncryptionKey else {
+                guard let importWalletKey = self.importWalletEncryptionKey else {
                     // The key should be ready after the registration
                     registerNecessaries()
                     return
                 }
                 do {
-                    guard let entropy = AppGroupKeychain.mnemonics else {
+                    let entropy: Data
+                    if let mnemonics = AppGroupKeychain.mnemonics {
+                        entropy = mnemonics
+                    } else if let salt = self.custodialSalt {
+                        // For 12/24 Mnemonics users with phone number added
+                        // They have `AppGroupKeychain.mnemonics` deleted by receiving account
+                        // Use custodialSalt instead
+                        entropy = salt
+                    } else {
                         throw RegisterError.missingEntropy
                     }
                     let mnemonics = try BIP39Mnemonics(entropy: entropy)
                     let encryptedMnemonics = try EncryptedBIP39Mnemonics(
                         mnemonics: mnemonics,
-                        key: importWalletEncryptionKey
+                        key: importWalletKey
                     )
                     let fetch = AddWalletFetchAddressViewController(
                         mnemonics: mnemonics,

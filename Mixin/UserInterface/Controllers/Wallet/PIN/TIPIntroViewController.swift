@@ -155,8 +155,12 @@ final class TIPIntroViewController: UIViewController {
             }
         case .inputNeeded(let context):
             let navigationController = self.tipNavigationController
-            let action: @MainActor @Sendable (Data?) -> Void = { [weak navigationController] importWalletEncryptionKey in
-                navigationController?.finish(importWalletEncryptionKey: importWalletEncryptionKey)
+            let action: TIPPopupInputViewController.ContinueActionSuccess = {
+                [weak navigationController] importWalletEncryptionKey, custodialSalt in
+                navigationController?.finish(
+                    importWalletEncryptionKey: importWalletEncryptionKey,
+                    custodialSalt: custodialSalt
+                )
             }
             let validator = TIPPopupInputViewController(action: .continue(context, action))
             present(validator, animated: true)

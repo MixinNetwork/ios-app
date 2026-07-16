@@ -56,12 +56,12 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: pin)
                 let custodialSalt = try await TIP.custodialSalt(pin: pin)
                 await MainActor.run {
+                    Logger.login.info(category: "LoginPINValidation", message: "Validated")
                     checkSessionEnvironmentAgain(
                         freshAccount: LoginManager.shared.account,
                         importWalletEncryptionKey: importWalletKey,
                         custodialSalt: custodialSalt,
                     )
-                    Logger.login.info(category: "LoginPINValidation", message: "Validated")
                 }
             } catch MixinAPIResponseError.malformedPin {
                 Logger.login.error(category: "LoginPINValidation", message: "malformedPin...hasPIN:\(account.hasPIN)...hasSafe:\(account.hasSafe)")

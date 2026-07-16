@@ -163,7 +163,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
             let navigationController = SecondaryAppearanceNavigationController(rootViewController: signalLoading)
             reload(content: navigationController)
         } else if !account.hasPIN {
-            Logger.login.info(category: "CheckSessionEnvironment", message: "Create PIN")
+            Logger.login.info(category: "CheckSessionEnvironment", message: "Create PIN for account: \(account.userID)")
             // No need to detect interruption, the TIP view will do it
             let navigationController = TIPNavigationController(intent: .create)
             reload(content: navigationController)
@@ -186,8 +186,10 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                 Logger.login.info(category: "CheckSessionEnvironment", message: "Sign in checking finished")
                 finishChecking(initialTab: .wallet)
             case .signIn(.bip39Mnemonics), .signUp(.bip39Mnemonics):
+                Logger.login.error(category: "CheckSessionEnvironment", message: "Import BIP-39 Wallet")
                 guard let importWalletKey = self.importWalletEncryptionKey else {
                     // The key should be ready after the registration
+                    Logger.login.warn(category: "CheckSessionEnvironment", message: "Missing import wallet key")
                     registerNecessaries()
                     return
                 }
@@ -201,6 +203,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                         // Use custodialSalt instead
                         entropy = salt
                     } else {
+                        Logger.login.error(category: "CheckSessionEnvironment", message: "Missing entropy")
                         throw RegisterError.missingEntropy
                     }
                     let mnemonics = try BIP39Mnemonics(entropy: entropy)
@@ -222,6 +225,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                     navigation.delegate = navigationBarAppearanceUpdater
                     reload(content: navigation)
                 } catch {
+                    Logger.login.error(category: "CheckSessionEnvironment", message: "Invalid entropy: \(error)")
                     // No way to recover from bad entropy. Go back to start around.
                     AppDelegate.current.mainWindow.rootViewController = LoginNavigationController()
                 }
@@ -277,7 +281,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     }
     
     @objc private func registerNecessaries() {
-        Logger.login.info(category: "CheckSessionEnvironment", message: "Register necessaries")
+        Logger.login.info(category: "CheckSessionEnvironment", message: "Register necessaries for account: \(account.userID)")
         removeContentViewController()
         activityIndicator.startAnimating()
         descriptionLabel.text = R.string.localizable.initializing()

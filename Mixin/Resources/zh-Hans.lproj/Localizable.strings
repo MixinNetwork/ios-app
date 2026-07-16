@@ -787,12 +787,6 @@
 "import_wallet_count" = "导入 %d 个钱包";
 "import_wallet_count_one" = "导入 1 个钱包";
 "import_wallet_empty_description" = "通过私钥或 12/24 个助记词导入钱包，支持 Bitcoin、Solana、Ethereum 及其他 EVM 网络。";
-"import_wallet_guide_1" = "· 创建一个 Mixin 账号。";
-"import_wallet_guide_2" = "· 前往钱包列表 → 添加钱包 > 选择导入助记词。";
-"import_wallet_guide_3" = "· 输入您的 12 或 24 位助记词或私钥完成导入。";
-"import_wallet_guide_4" = "· 开始使用。";
-"import_wallet_guide_footer" = "创建 Mixin 账号后，将默认生成一个隐私钱包，您的余额、转账、交易等功能都会默认受到隐私保护，查看文档了解更多。";
-"import_wallet_guide_header" = "如需使用 12 或 24 位助记词钱包，请按以下步骤操作：";
 "import_wallet_title" = "导入钱包";
 "import_wallets" = "导入钱包";
 "import_wallets_from_another_wallet" = "从其他钱包导入钱包";
@@ -996,7 +990,6 @@
 "mnemonic_phrase_tip_2" = "·不要在网络上发送";
 "mnemonic_phrases" = "助记词";
 "mnemonics_mismatched" = "助记词不符";
-"mnemonics_policy" = "你的助记词仅用于本地处理，不会进行储存。";
 "mobile_contacts" = "通讯录";
 "mobile_number" = "手机号码";
 "mobile_number_added" = "添加成功";
@@ -1598,15 +1591,6 @@
 "set_up" = "设置";
 "set_up_now" = "现在设置";
 "set_up_pin" = "设置 PIN";
-"set_up_pin_answer_1" = "我可以稍后恢复我的帐户。";
-"set_up_pin_answer_2" = "我将无法访问我的帐户和资金。";
-"set_up_pin_desc" = "Mixin 的 MPC 钱包基于去中心化密钥协议 TIP 构建，PIN 是密钥分片之一。钱包完整的密钥只存在当前设备的 TEE 安全环境中。阅读文档以了解%@。";
-"set_up_pin_desc_1" = "为您的钱包设置 6 位数的 PIN";
-"set_up_pin_desc_2" = "请再次确认您的 6 位数的 PIN";
-"set_up_pin_instruction_1" = "请在稳定的网络环境下完成操作。";
-"set_up_pin_instruction_2" = "请保持应用在前台运行，设置过程中请勿强制退出。";
-"set_up_pin_instruction_3" = "该过程开始后无法取消。请记住 6 位数字 PIN，如果过程意外中止，请重新输入。";
-"set_up_pin_question" = "如果我丢失了 PIN 会发生什么？";
 "set_up_pin_tip_1" = "如果丢失 PIN 则无法恢复您的钱包。";
 "set_up_pin_tip_2" = "很少在其他地方看到三次确认，因此请记住，如果丢失 PIN 将无法恢复钱包。";
 "set_up_pin_warning" = "在验证碎片密钥并同步到 TIP 网络时，请将应用程序保留在前台；在设置过程中不要强制退出应用程序。";
@@ -1655,7 +1639,6 @@
 "sign_in" = "登录";
 "sign_in_no_account" = "还没有账号？";
 "sign_in_with_mnemonic_phrase" = "助记词登录";
-"sign_up_15_secs" = "15 秒完成注册";
 "sign_up_have_account" = "已有帐户?";
 "sign_with_mobile_number" = "通过手机号登录";
 "signature_request" = "签名确认";
@@ -1854,7 +1837,6 @@
 "trying_connect_tip_network" = "正在连接 TIP 网络";
 "trying_connect_tip_node" = "正在连接节点...";
 "type" = "类型";
-"type_your_private_key" = "请输入你的私钥";
 "type_your_wallet_address" = "请输入钱包地址";
 "unable_connect_to_desktop" = "无法连接到桌面，请稍后重试";
 "unable_synced_between_different_account" = "不同账号之间无法同步聊天记录";
@@ -1864,7 +1846,6 @@
 "unable_to_save_video" = "保存视频失败";
 "unable_to_share_content" = "无法分享此内容";
 "unauthorized" = "未授权";
-"unavailable_mnemonics_word_count" = "12 个词或 24 个词";
 "unblock" = "解除屏蔽";
 "unfamiliar_person_reminder" = "%1$@（%2$@）不是你的联系人，请注意收款人是否正确。";
 "unit_day" = "天";

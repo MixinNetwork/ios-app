@@ -8,7 +8,7 @@ extension LoginAccountHandler where Self: UIViewController {
     
     func login(
         account: Account,
-        method: AccountVerificationMethod,
+        intent: AccountVerificationIntent,
         sessionKey: Ed25519PrivateKey,
     ) -> MixinAPIError? {
         guard
@@ -22,15 +22,15 @@ extension LoginAccountHandler where Self: UIViewController {
             Logger.login.error(category: "Login", message: "Invalid Server PIN Token")
             return .invalidServerPinToken
         }
-        Logger.login.info(category: "Login", message: "Got account: \(account.userID), method: \(method.debugDescription), has_pin: \(account.hasPIN), has_safe: \(account.hasSafe), tip_key: \(account.tipKey?.count ?? -1)")
+        Logger.login.info(category: "Login", message: "Got account: \(account.userID), method: \(intent.debugDescription), has_pin: \(account.hasPIN), has_safe: \(account.hasSafe), tip_key: \(account.tipKey?.count ?? -1)")
         
-        let method: AccountVerificationMethod = switch method {
-        case .signInWithBIP39Mnemonics where account.hasEmptyName:
-                .signUpWithBIP39Mnemonics
+        let intent: AccountVerificationIntent = switch intent {
+        case let .signIn(method) where account.hasEmptyName:
+                .signUp(method)
         default:
-            method
+            intent
         }
-        AccountVerificationMethod.current = method
+        AccountVerificationIntent.current = intent
         
         AppGroupKeychain.sessionSecret = sessionKey.rawRepresentation
         AppGroupKeychain.pinToken = pinToken

@@ -143,8 +143,8 @@ extension AppGroupUserDefaults {
     @Default(namespace: nil, key: "app_public_key", defaultValue: [:])
     public static var appPublicKey: [String: Data]
     
-    @Default(namespace: nil, key: "account_verification_method", defaultValue: nil)
-    public static var accountVerificationMethod: Int?
+    @Default(namespace: nil, key: "account_verification_intent", defaultValue: nil)
+    public static var accountVerificationIntent: Int?
     
 }
 

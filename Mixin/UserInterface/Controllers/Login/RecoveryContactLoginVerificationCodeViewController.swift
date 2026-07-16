@@ -36,7 +36,7 @@ final class RecoveryContactLoginVerificationCodeViewController: LoginVerificatio
                 }
                 let error = self.login(
                     account: account,
-                    method: .signInWithMobileNumber,
+                    intent: .signIn(.mobileNumber),
                     sessionKey: sessionKey
                 )
                 if let error {

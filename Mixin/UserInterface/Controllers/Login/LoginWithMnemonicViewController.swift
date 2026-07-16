@@ -269,28 +269,28 @@ extension LoginWithMnemonicViewController {
                 }
                 switch result {
                 case let .success(account):
-                    let method: AccountVerificationMethod
+                    let intent: AccountVerificationIntent
                     switch self.action {
                     case let .signInWithMixinMnemonics(mnemonics):
-                        method = .signInWithMixinMnemonics
+                        intent = .signIn(.mixinMnemonics)
                         if account.isAnonymous {
                             AppGroupKeychain.mnemonics = mnemonics.entropy
                             Logger.login.info(category: "MnemonicLogin", message: "Mnemonics saved to Keychain")
                         }
                     case let .signInWithBIP39Mnemonics(mnemonics):
-                        method = .signInWithBIP39Mnemonics
+                        intent = .signIn(.bip39Mnemonics)
                         if account.isAnonymous {
                             AppGroupKeychain.mnemonics = mnemonics.entropy
                             Logger.login.info(category: "MnemonicLogin", message: "Mnemonics saved to Keychain")
                         }
                     case .signUp:
-                        method = .signUp
+                        intent = .signUp(.mixinMnemonics)
                         reporter.registerUserInformation(account: account)
                         reporter.report(event: .signUpAccountCreated)
                     }
                     let error = self.login(
                         account: account,
-                        method: method,
+                        intent: intent,
                         sessionKey: context.sessionKey,
                     )
                     if let error {

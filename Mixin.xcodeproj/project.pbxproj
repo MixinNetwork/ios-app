@@ -1385,7 +1385,7 @@
 		94ADE11F2CD80AC70040A426 /* ChangeMobileNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ADE11E2CD80AC70040A426 /* ChangeMobileNumberViewController.swift */; };
 		94ADE1242CD80C0B0040A426 /* MobileNumberIntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ADE1232CD80C0B0040A426 /* MobileNumberIntroductionViewController.swift */; };
 		94B03D3D30049C1F004FD28C /* SecondaryAppearanceNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B03D3C30049C1A004FD28C /* SecondaryAppearanceNavigationController.swift */; };
-		94B03DD5300772D5004FD28C /* AccountVerificationMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B03DD4300772D3004FD28C /* AccountVerificationMethod.swift */; };
+		94B03DD5300772D5004FD28C /* AccountVerificationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B03DD4300772D3004FD28C /* AccountVerificationIntent.swift */; };
 		94B0B7462BECD4DE00346AF4 /* CollectibleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B0B7442BECD4DE00346AF4 /* CollectibleCell.swift */; };
 		94B0B7472BECD4DE00346AF4 /* CollectibleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B0B7452BECD4DE00346AF4 /* CollectibleCell.xib */; };
 		94B13FC22B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B13FC02B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift */; };
@@ -3377,7 +3377,7 @@
 		94ADE11E2CD80AC70040A426 /* ChangeMobileNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeMobileNumberViewController.swift; sourceTree = "<group>"; };
 		94ADE1232CD80C0B0040A426 /* MobileNumberIntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileNumberIntroductionViewController.swift; sourceTree = "<group>"; };
 		94B03D3C30049C1A004FD28C /* SecondaryAppearanceNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryAppearanceNavigationController.swift; sourceTree = "<group>"; };
-		94B03DD4300772D3004FD28C /* AccountVerificationMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountVerificationMethod.swift; sourceTree = "<group>"; };
+		94B03DD4300772D3004FD28C /* AccountVerificationIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountVerificationIntent.swift; sourceTree = "<group>"; };
 		94B0B7442BECD4DE00346AF4 /* CollectibleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleCell.swift; sourceTree = "<group>"; };
 		94B0B7452BECD4DE00346AF4 /* CollectibleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectibleCell.xib; sourceTree = "<group>"; };
 		94B13FC02B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreAggregatedSearchViewController.swift; sourceTree = "<group>"; };
@@ -4392,7 +4392,7 @@
 				940FC5F42CDBDD250056BFF2 /* SessionVerificationContext.swift */,
 				94CD0FB22CD36CF700363C93 /* LoginAccountHandler.swift */,
 				94ECE1692FFF7748000F434E /* SignInAvailablePhrasesCount.swift */,
-				94B03DD4300772D3004FD28C /* AccountVerificationMethod.swift */,
+				94B03DD4300772D3004FD28C /* AccountVerificationIntent.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -8879,7 +8879,7 @@
 				7CB0955326CD18F70049F4C7 /* PinMessagesPreviewViewController.swift in Sources */,
 				7BF0E07C221ABE050053040D /* BadgeIconView.swift in Sources */,
 				E07E38A623A774940005A538 /* MixinError.swift in Sources */,
-				94B03DD5300772D5004FD28C /* AccountVerificationMethod.swift in Sources */,
+				94B03DD5300772D5004FD28C /* AccountVerificationIntent.swift in Sources */,
 				7B84218D2011A214000EF99C /* CardMessageCell.swift in Sources */,
 				7B8144631FDD62B900404431 /* SystemMessageViewModel.swift in Sources */,
 				7BA722811FC1F2A100132FF4 /* PhotoMessageCell.swift in Sources */,

@@ -30,12 +30,13 @@ final class SignalLoadingViewController: LoginLoadingViewController, CheckSessio
             }
         }
         
-        if let method = AccountVerificationMethod.current {
-            if method.isSigningUp {
-                reporter.report(event: .signUpSignalInit)
-            } else {
-                reporter.report(event: .loginSignalInit)
-            }
+        switch AccountVerificationIntent.current {
+        case .signUp:
+            reporter.report(event: .signUpSignalInit)
+        case .signIn:
+            reporter.report(event: .loginSignalInit)
+        default:
+            assertionFailure("Signal init on app relaunch")
         }
     }
     

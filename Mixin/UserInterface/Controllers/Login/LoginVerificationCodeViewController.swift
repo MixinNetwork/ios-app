@@ -106,7 +106,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
                 }
                 let error = self.login(
                     account: account,
-                    method: .signInWithMobileNumber,
+                    intent: .signIn(.mobileNumber),
                     sessionKey: sessionKey,
                 )
                 if let error {

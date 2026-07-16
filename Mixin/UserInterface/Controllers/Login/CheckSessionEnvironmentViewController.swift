@@ -93,8 +93,8 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = R.color.background()
-        Logger.login.info(category: "CheckSessionEnvironment", message: "View loaded with account fresh: \(isAccountFresh), verification method: \(AccountVerificationMethod.current?.debugDescription ?? "(null)")")
-        if AccountVerificationMethod.current == nil {
+        Logger.login.info(category: "CheckSessionEnvironment", message: "View loaded with account fresh: \(isAccountFresh), intent: \(AccountVerificationIntent.current?.debugDescription ?? "(null)")")
+        if AccountVerificationIntent.current == nil {
             // Permissive path for app relauncch
             check()
         } else {
@@ -175,17 +175,17 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                 registerNecessaries()
                 return
             }
-            switch AccountVerificationMethod.current {
+            switch AccountVerificationIntent.current {
             case .none:
                 Logger.login.info(category: "CheckSessionEnvironment", message: "App relaunch checking finished")
                 finishChecking(initialTab: .chat)
-            case .signUp:
+            case .signUp(.mixinMnemonics), .signUp(.mobileNumber):
                 Logger.login.info(category: "CheckSessionEnvironment", message: "Sign up checking finished")
                 finishChecking(initialTab: .wallet)
-            case .signInWithMixinMnemonics, .signInWithMobileNumber:
+            case .signIn(.mixinMnemonics), .signIn(.mobileNumber):
                 Logger.login.info(category: "CheckSessionEnvironment", message: "Sign in checking finished")
                 finishChecking(initialTab: .wallet)
-            case .signInWithBIP39Mnemonics, .signUpWithBIP39Mnemonics:
+            case .signIn(.bip39Mnemonics), .signUp(.bip39Mnemonics):
                 guard let importWalletKey = self.importWalletEncryptionKey else {
                     // The key should be ready after the registration
                     registerNecessaries()
@@ -335,33 +335,36 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     
     private func finishChecking(initialTab: HomeTabBarController.ChildID) {
         Logger.redirectLogsToLogin = false
-        let verificationMethod = AccountVerificationMethod.current
-        AccountVerificationMethod.current = nil
-        switch verificationMethod {
-        case .signUp, .signUpWithBIP39Mnemonics:
+        
+        let intent = AccountVerificationIntent.current
+        switch intent {
+        case .signUp:
             reporter.report(event: .signUpEnd)
-        case .signInWithMixinMnemonics, .signInWithBIP39Mnemonics, .signInWithMobileNumber:
+        case .signIn:
             reporter.report(event: .loginEnd)
+            Logger.login.info(category: "CheckSessionEnvironment", message: "Sync contacts")
+            ContactAPI.syncContacts()
         case nil:
             break
         }
+        AccountVerificationIntent.current = nil
+        
         AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(initialTab: initialTab)
-        if let verificationMethod, !verificationMethod.isSigningUp {
-            Logger.login.info(category: "CheckSessionEnvironment", message: "Sync contacts")
-            ContactAPI.syncContacts()
-        }
-        assert(MixinKeys.testAccountPrefix != nil)
-        let initializeBots: Bool
-        if let phone = account.phone, let invalidPrefix = MixinKeys.testAccountPrefix {
-            initializeBots = !phone.hasPrefix(invalidPrefix)
-        } else {
-            initializeBots = true
-        }
-        if initializeBots {
-            Logger.login.info(category: "CheckSessionEnvironment", message: "Initialize bots")
-            for id in initialBots {
-                let job = InitializeBotJob(userID: id)
-                ConcurrentJobQueue.shared.addJob(job: job)
+        
+        if intent != nil {
+            assert(MixinKeys.testAccountPrefix != nil)
+            let initializeBots: Bool
+            if let phone = account.phone, let invalidPrefix = MixinKeys.testAccountPrefix {
+                initializeBots = !phone.hasPrefix(invalidPrefix)
+            } else {
+                initializeBots = true
+            }
+            if initializeBots {
+                Logger.login.info(category: "CheckSessionEnvironment", message: "Initialize bots")
+                for id in initialBots {
+                    let job = InitializeBotJob(userID: id)
+                    ConcurrentJobQueue.shared.addJob(job: job)
+                }
             }
         }
     }

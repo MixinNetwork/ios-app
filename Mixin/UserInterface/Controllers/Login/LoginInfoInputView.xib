@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -14,6 +14,7 @@
                 <outlet property="contentStackView" destination="LMt-YL-8xb" id="pDn-CX-1tU"/>
                 <outlet property="continueButton" destination="S1I-a7-vg7" id="hHh-BY-DaH"/>
                 <outlet property="descriptionLabel" destination="dfP-M8-p02" id="gcf-bX-7rA"/>
+                <outlet property="inputBoxView" destination="su9-vn-eaz" id="DNN-Kj-8FU"/>
                 <outlet property="textField" destination="gLK-0J-a7x" id="ig7-DX-qO5"/>
                 <outlet property="titleLabel" destination="Wqh-dr-T6I" id="h70-3p-fte"/>
                 <outlet property="view" destination="EHu-Vl-rCl" id="ImN-SK-ZLj"/>
@@ -25,7 +26,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="LMt-YL-8xb">
-                    <rect key="frame" x="0.0" y="138" width="375" height="130"/>
+                    <rect key="frame" x="0.0" y="150" width="375" height="130"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="22" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wqh-dr-T6I">
                             <rect key="frame" x="36" y="0.0" width="303" height="22"/>
@@ -52,7 +53,6 @@
                                     </connections>
                                 </textField>
                             </subviews>
-                            <color key="backgroundColor" name="background_input"/>
                             <constraints>
                                 <constraint firstAttribute="bottom" secondItem="gLK-0J-a7x" secondAttribute="bottom" id="2gf-RP-idl"/>
                                 <constraint firstItem="gLK-0J-a7x" firstAttribute="leading" secondItem="su9-vn-eaz" secondAttribute="leading" constant="16" id="9rc-ed-JCo"/>
@@ -80,7 +80,7 @@
                     </constraints>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S1I-a7-vg7" customClass="StyledButton" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="36" y="371" width="303" height="44"/>
+                    <rect key="frame" x="36" y="366" width="303" height="44"/>
                     <constraints>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="nD9-ac-WIT"/>
                     </constraints>
@@ -92,7 +92,6 @@
                 </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="2mi-pK-2bZ"/>
-            <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="S1I-a7-vg7" firstAttribute="leading" secondItem="2mi-pK-2bZ" secondAttribute="leading" constant="36" id="Eoj-su-rGB"/>
                 <constraint firstItem="LMt-YL-8xb" firstAttribute="top" secondItem="2mi-pK-2bZ" secondAttribute="top" constant="50" id="J98-EI-Xc4" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
@@ -112,12 +111,6 @@
         </view>
     </objects>
     <resources>
-        <namedColor name="background">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

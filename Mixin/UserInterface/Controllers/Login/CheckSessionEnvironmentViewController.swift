@@ -145,7 +145,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         } else if account.hasEmptyName {
             Logger.login.info(category: "CheckSessionEnvironment", message: "Create username")
             let username = UsernameViewController()
-            let navigationController = GeneralAppearanceNavigationController(rootViewController: username)
+            let navigationController = SecondaryAppearanceNavigationController(rootViewController: username)
             reload(content: navigationController)
         } else if AppGroupUserDefaults.Account.canRestoreFromPhone {
             Logger.login.info(category: "CheckSessionEnvironment", message: "Restore chat")
@@ -186,7 +186,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                 Logger.login.info(category: "CheckSessionEnvironment", message: "Sign in checking finished")
                 finishChecking(initialTab: .wallet)
             case .signIn(.bip39Mnemonics), .signUp(.bip39Mnemonics):
-                Logger.login.error(category: "CheckSessionEnvironment", message: "Import BIP-39 Wallet")
+                Logger.login.info(category: "CheckSessionEnvironment", message: "Import BIP-39 Wallet")
                 guard let importWalletKey = self.importWalletEncryptionKey else {
                     // The key should be ready after the registration
                     Logger.login.warn(category: "CheckSessionEnvironment", message: "Missing import wallet key")

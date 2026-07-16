@@ -3,6 +3,14 @@ import MixinServices
 
 final class UsernameViewController: LoginInfoInputViewController, CheckSessionEnvironmentChild {
     
+    init() {
+        super.init(style: .secondary)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = .customerService(

@@ -47,7 +47,10 @@ final class AddWalletImportingViewController: IntroductionViewController, CheckS
             make.height.equalTo(48)
         }
         
-        retry(self)
+        showLoading()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.retry(self)
+        }
     }
     
     @objc private func retry(_ sender: Any) {

@@ -56,7 +56,6 @@ final class SignInWithMixinMnemonicsViewController: SignInWithMnemonicsViewContr
             navigationController?.pushViewController(login, animated: true)
         } catch {
             errorDescriptionLabel.text = R.string.localizable.invalid_mnemonic_phrase()
-            errorDescriptionLabel.isHidden = false
             signInButton.isEnabled = false
         }
     }

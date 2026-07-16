@@ -57,7 +57,6 @@ final class SignInWithBIP39MnemonicsViewController: SignInWithMnemonicsViewContr
             navigationController?.pushViewController(login, animated: true)
         } catch {
             errorDescriptionLabel.text = R.string.localizable.invalid_mnemonic_phrase()
-            errorDescriptionLabel.isHidden = false
             signInButton.isEnabled = false
         }
     }

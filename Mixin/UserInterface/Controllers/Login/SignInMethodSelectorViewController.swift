@@ -58,7 +58,7 @@ final class SignInMethodSelectorViewController: UIViewController {
     }
     
     @IBAction func signUp(_ sender: Any) {
-        let intro = CreateAccountIntroductionViewController(signUpSource: "login_by")
+        let intro = CreateAccountIntroductionViewController(signUpSource: "login_methods")
         present(intro, animated: true)
     }
     
@@ -138,14 +138,14 @@ extension SignInMethodSelectorViewController: UICollectionViewDelegate {
         case .fromOtherWallets:
             switch FromOtherWalletsMethod.allCases[indexPath.item] {
             case .mnemonicPhrases:
-                SignInWithBIP39MnemonicsViewController(analyticSource: "login_by")
+                SignInWithBIP39MnemonicsViewController(analyticSource: "login_methods")
             }
         case .mixinRecoveryKit:
             switch MixinRecoveryKitMethod.allCases[indexPath.item] {
             case .phoneNumber:
-                SignInWithMobileNumberViewController(loginSource: "login_by")
+                SignInWithMobileNumberViewController(loginSource: "login_methods")
             case .mnemonicPhrases:
-                SignInWithMixinMnemonicsViewController(analyticSource: "login_by")
+                SignInWithMixinMnemonicsViewController(analyticSource: "login_methods")
             }
         }
         navigationController?.pushViewController(next, animated: true)

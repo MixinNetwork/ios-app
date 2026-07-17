@@ -481,6 +481,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
             weight: .medium
         )
         retryConfig.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 36, bottom: 15, trailing: 36)
+        retryConfig.cornerStyle = .capsule
         let button = UIButton(configuration: retryConfig)
         button.addTarget(self, action: retrySelector, for: .touchUpInside)
         bottomStackView.addArrangedSubview(button)

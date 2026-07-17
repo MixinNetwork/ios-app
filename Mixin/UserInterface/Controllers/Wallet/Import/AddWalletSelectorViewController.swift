@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class AddWalletSelectorViewController: UIViewController, CheckSessionEnvironmentChild {
+final class AddWalletSelectorViewController: UIViewController {
     
     @IBOutlet weak var importButtonWrapperView: UIView!
     @IBOutlet weak var importButton: UIButton!
@@ -58,12 +58,10 @@ final class AddWalletSelectorViewController: UIViewController, CheckSessionEnvir
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = R.string.localizable.import_wallets()
-        if isCheckingSessionEnvironment {
-            navigationItem.rightBarButtonItem = .customerService(
-                target: self,
-                action: #selector(presentCustomerService(_:))
-            )
-        }
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         let layout = UICollectionViewCompositionalLayout { (_, _) in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(112))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)

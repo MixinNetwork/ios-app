@@ -18,14 +18,12 @@ extension CheckSessionEnvironmentChild where Self: UIViewController {
     
     func checkSessionEnvironmentAgain(
         freshAccount: Account? = nil,
-        importWalletEncryptionKey: Data? = nil,
-        custodialSalt: Data? = nil,
+        pin: String? = nil,
     ) {
         if let checker = sessionEnvironmentChecker {
             checker.check(
                 freshAccount: freshAccount,
-                importWalletEncryptionKey: importWalletEncryptionKey,
-                custodialSalt: custodialSalt,
+                freshPIN: pin,
             )
         } else {
             assertionFailure()
@@ -45,8 +43,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     
     private var account: Account
     private var isAccountFresh: Bool
-    private var importWalletEncryptionKey: Data?
-    private var custodialSalt: Data?
+    private var pin: String?
     
     private var initialBots: [String] {
         if Locale.preferredLanguages.first?.hasPrefix("zh-Hans") ?? false {
@@ -90,10 +87,14 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         fatalError("Storyboard not supported")
     }
     
+    deinit {
+        Logger.login.debug(category: "CheckSessionEnv", message: "Deinit")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = R.color.background()
-        Logger.login.info(category: "CheckSessionEnvironment", message: "View loaded with account fresh: \(isAccountFresh), intent: \(AccountVerificationIntent.current?.debugDescription ?? "(null)")")
+        Logger.login.info(category: "CheckSessionEnv", message: "View loaded with account fresh: \(isAccountFresh), intent: \(AccountVerificationIntent.current?.debugDescription ?? "(null)")")
         if AccountVerificationIntent.current == nil {
             // Permissive path for app relauncch
             check()
@@ -109,20 +110,16 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     
     func check(
         freshAccount: Account? = nil,
-        importWalletEncryptionKey: Data? = nil,
-        custodialSalt: Data? = nil,
+        freshPIN: String? = nil,
     ) {
         assert(Thread.isMainThread)
         if let freshAccount {
-            Logger.login.info(category: "CheckSessionEnvironment", message: "Account refreshed")
+            Logger.login.info(category: "CheckSessionEnv", message: "Account refreshed")
             self.account = freshAccount
             self.isAccountFresh = true
         }
-        if let importWalletEncryptionKey {
-            self.importWalletEncryptionKey = importWalletEncryptionKey
-        }
-        if let custodialSalt {
-            self.custodialSalt = custodialSalt
+        if let freshPIN {
+            self.pin = freshPIN
         }
         
         // `self.account` is guaranteed to be fresh afterwards, unless it's not necessary
@@ -134,100 +131,59 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         // For checking items that causes an account update, `check(freshAccount:)` should be
         // manually executed by the child, after it finishes its job
         
-        Logger.login.info(category: "CheckSessionEnvironment", message: "Check environments")
+        Logger.login.info(category: "CheckSessionEnv", message: "Check environments")
         if AppGroupUserDefaults.isClockSkewed {
-            Logger.login.info(category: "CheckSessionEnvironment", message: "Clock skewed")
+            Logger.login.info(category: "CheckSessionEnv", message: "Clock skewed")
             while UIApplication.shared.keyWindow?.subviews.last is BottomSheetView {
                 UIApplication.shared.keyWindow?.subviews.last?.removeFromSuperview()
             }
             let clockSkew = ClockSkewViewController()
             reload(content: clockSkew)
         } else if account.hasEmptyName {
-            Logger.login.info(category: "CheckSessionEnvironment", message: "Create username")
+            Logger.login.info(category: "CheckSessionEnv", message: "Create username")
             let username = UsernameViewController()
             let navigationController = SecondaryAppearanceNavigationController(rootViewController: username)
             reload(content: navigationController)
         } else if AppGroupUserDefaults.Account.canRestoreFromPhone {
-            Logger.login.info(category: "CheckSessionEnvironment", message: "Restore chat")
+            Logger.login.info(category: "CheckSessionEnv", message: "Restore chat")
             let restore = RestoreChatViewController()
             let navigationController = GeneralAppearanceNavigationController(rootViewController: restore)
             navigationController.delegate = restoreChatNavigationHandler
             reload(content: navigationController)
         } else if DatabaseUpgradeViewController.needsUpgrade {
-            Logger.login.info(category: "CheckSessionEnvironment", message: "Upgrade db")
+            Logger.login.info(category: "CheckSessionEnv", message: "Upgrade db")
             let upgrade = DatabaseUpgradeViewController()
             reload(content: upgrade)
         } else if !SignalLoadingViewController.isLoaded {
-            Logger.login.info(category: "CheckSessionEnvironment", message: "Load Signal")
+            Logger.login.info(category: "CheckSessionEnv", message: "Load Signal")
             let signalLoading = SignalLoadingViewController()
             let navigationController = SecondaryAppearanceNavigationController(rootViewController: signalLoading)
             reload(content: navigationController)
         } else if !account.hasPIN {
-            Logger.login.info(category: "CheckSessionEnvironment", message: "Create PIN for account: \(account.userID)")
+            Logger.login.info(category: "CheckSessionEnv", message: "Create PIN for account: \(account.userID)")
             // No need to detect interruption, the TIP view will do it
             let navigationController = TIPNavigationController(intent: .create)
             reload(content: navigationController)
+        } else if !AppGroupUserDefaults.User.loginPINValidated {
+            validatePIN()
+        } else if !account.hasSafe || !Web3WalletDAO.shared.hasClassicWallet() {
+            registerNecessaries()
         } else {
-            let isReady = account.hasSafe
-                && AppGroupUserDefaults.User.loginPINValidated
-                && Web3WalletDAO.shared.hasClassicWallet()
-            guard isReady else {
-                registerNecessaries()
-                return
-            }
             switch AccountVerificationIntent.current {
             case .none:
-                Logger.login.info(category: "CheckSessionEnvironment", message: "App relaunch checking finished")
+                Logger.login.info(category: "CheckSessionEnv", message: "App relaunch checking finished")
                 finishChecking(initialTab: .chat)
             case .signUp(.mixinMnemonics), .signUp(.mobileNumber):
-                Logger.login.info(category: "CheckSessionEnvironment", message: "Sign up checking finished")
+                Logger.login.info(category: "CheckSessionEnv", message: "Sign up checking finished")
                 finishChecking(initialTab: .wallet)
             case .signIn(.mixinMnemonics), .signIn(.mobileNumber):
-                Logger.login.info(category: "CheckSessionEnvironment", message: "Sign in checking finished")
+                Logger.login.info(category: "CheckSessionEnv", message: "Sign in checking finished")
                 finishChecking(initialTab: .wallet)
             case .signIn(.bip39Mnemonics), .signUp(.bip39Mnemonics):
-                Logger.login.info(category: "CheckSessionEnvironment", message: "Import BIP-39 Wallet")
-                guard let importWalletKey = self.importWalletEncryptionKey else {
-                    // The key should be ready after the registration
-                    Logger.login.warn(category: "CheckSessionEnvironment", message: "Missing import wallet key")
-                    registerNecessaries()
-                    return
-                }
-                do {
-                    let entropy: Data
-                    if let mnemonics = AppGroupKeychain.mnemonics {
-                        entropy = mnemonics
-                    } else if let salt = self.custodialSalt {
-                        // For 12/24 Mnemonics users with phone number added
-                        // They have `AppGroupKeychain.mnemonics` deleted by receiving account
-                        // Use custodialSalt instead
-                        entropy = salt
-                    } else {
-                        Logger.login.error(category: "CheckSessionEnvironment", message: "Missing entropy")
-                        throw RegisterError.missingEntropy
-                    }
-                    let mnemonics = try BIP39Mnemonics(entropy: entropy)
-                    let encryptedMnemonics = try EncryptedBIP39Mnemonics(
-                        mnemonics: mnemonics,
-                        key: importWalletKey
-                    )
-                    let fetch = AddWalletFetchAddressViewController(
-                        mnemonics: mnemonics,
-                        encryptedMnemonics: encryptedMnemonics,
-                        behavior: .breaksOnImportedWalletFound({ [weak self] walletID in
-                            self?.finishCheckingForBIP39Session(
-                                welcomeWalletID: walletID,
-                                updateWalletSecretsWith: encryptedMnemonics,
-                            )
-                        })
-                    )
-                    let navigation = GeneralAppearanceNavigationController(rootViewController: fetch)
-                    navigation.delegate = navigationBarAppearanceUpdater
-                    reload(content: navigation)
-                } catch {
-                    Logger.login.error(category: "CheckSessionEnvironment", message: "Invalid entropy: \(error)")
-                    // No way to recover from bad entropy. Go back to start around.
-                    AppDelegate.current.mainWindow.rootViewController = LoginNavigationController()
+                if account.hasSaltExported {
+                    importBIP39Wallets()
+                } else {
+                    markMnemonicsExported()
                 }
             }
         }
@@ -237,13 +193,13 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         welcomeWalletID: String?,
         updateWalletSecretsWith mnemonics: EncryptedBIP39Mnemonics? = nil, // nil for not updating
     ) {
-        Logger.login.info(category: "CheckSessionEnvironment", message: "BIP39 checking finished")
+        Logger.login.info(category: "CheckSessionEnv", message: "BIP39 checking finished")
         if let mnemonics {
             let wallets = Web3WalletDAO.shared.wallets()
             for wallet in wallets {
                 switch wallet.category.knownCase {
                 case .importedMnemonic:
-                    Logger.login.info(category: "CheckSessionEnvironment", message: "Saved mnemonics for wallet: \(wallet.walletID)")
+                    Logger.login.info(category: "CheckSessionEnv", message: "Saved mnemonics for wallet: \(wallet.walletID)")
                     AppGroupKeychain.setImportedMnemonics(mnemonics, forWalletID: wallet.walletID)
                 case .importedPrivateKey:
                     break
@@ -259,11 +215,8 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     }
     
     @objc private func reloadAccountThenCheck() {
-        removeContentViewController()
-        activityIndicator.startAnimating()
-        descriptionLabel.text = R.string.localizable.initializing()
-        descriptionLabel.textColor = R.color.text_tertiary()
-        retryButton?.removeFromSuperview()
+        reportBusy()
+        Logger.login.info(category: "CheckSessionEnv", message: "Reload account from remote")
         AccountAPI.me { [weak self] result in
             guard let self else {
                 return
@@ -280,17 +233,15 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         }
     }
     
-    @objc private func registerNecessaries() {
-        Logger.login.info(category: "CheckSessionEnvironment", message: "Register necessaries for account: \(account.userID)")
-        removeContentViewController()
-        activityIndicator.startAnimating()
-        descriptionLabel.text = R.string.localizable.initializing()
-        descriptionLabel.textColor = R.color.text_tertiary()
+    @objc private func validatePIN() {
+        Logger.login.info(category: "CheckSessionEnv", message: "Validate PIN for account: \(account.userID)")
+        reportBusy()
         Task {
             do {
                 let context = try await TIP.checkCounter(with: account)
                 await MainActor.run {
                     if let context {
+                        Logger.login.info(category: "CheckSessionEnv", message: "Interruption detected")
                         let intro = TIPIntroViewController(context: context)
                         let navigation = TIPNavigationController(intro: intro)
                         reload(content: navigation)
@@ -303,17 +254,131 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                             reporter.report(event: .loginPINVerify, tags: ["type": "pin_upgrade"])
                         }
                     } else {
+                        Logger.login.info(category: "CheckSessionEnv", message: "No interruption, start validation")
                         let validation = LoginPINValidationViewController(account: account)
                         let navigation = GeneralAppearanceNavigationController(rootViewController: validation)
                         reload(content: navigation)
                     }
                 }
             } catch {
-                Logger.login.error(category: "LoginPINStatusChecking", message: "Failed: \(error)")
+                Logger.login.error(category: "CheckSessionEnv", message: "Validation failed: \(error)")
+                await MainActor.run {
+                    reportFailure(
+                        description: error.localizedDescription,
+                        retryWithSelector: #selector(validatePIN)
+                    )
+                }
+            }
+        }
+    }
+    
+    // Safe, Default common wallet
+    @objc private func registerNecessaries() {
+        guard let pin else {
+            Logger.login.info(category: "CheckSessionEnv", message: "Missing PIN when registering necessaries")
+            validatePIN()
+            return
+        }
+        Logger.login.info(category: "CheckSessionEnv", message: "Register necessaries for account: \(account.userID)")
+        reportBusy()
+        Task {
+            do {
+                try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
+                try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
+                await MainActor.run {
+                    Logger.login.info(category: "CheckSessionEnv", message: "Necessaries registered")
+                    check(freshAccount: LoginManager.shared.account)
+                }
+            } catch {
+                Logger.login.error(category: "CheckSessionEnv", message: "Registration failed: \(error)")
                 await MainActor.run {
                     reportFailure(
                         description: error.localizedDescription,
                         retryWithSelector: #selector(registerNecessaries)
+                    )
+                }
+            }
+        }
+    }
+    
+    @objc private func markMnemonicsExported() {
+        guard let pin else {
+            // Not likely to happen as long as previous checks are fulfilled
+            // Anyway, the PIN should be ready after the validation
+            Logger.login.error(category: "CheckSessionEnv", message: "Export mnemonics with no PIN")
+            validatePIN()
+            return
+        }
+        Logger.login.info(category: "CheckSessionEnv", message: "Mark mnemonics exported")
+        reportBusy()
+        Task {
+            do {
+                let request = try await ExportSaltRequest(userID: account.userID, pin: pin)
+                let account = try await AccountAPI.exportSalt(request: request)
+                LoginManager.shared.setAccount(account)
+                Logger.login.info(category: "CheckSessionEnv", message: "Marking finished")
+                await MainActor.run {
+                    check(freshAccount: account)
+                }
+            } catch {
+                await MainActor.run {
+                    reportFailure(
+                        description: error.localizedDescription,
+                        retryWithSelector: #selector(markMnemonicsExported)
+                    )
+                }
+            }
+        }
+    }
+    
+    @objc private func importBIP39Wallets() {
+        guard let pin else {
+            // Not likely to happen as long as previous checks are fulfilled
+            // Anyway, the PIN should be ready after the validation
+            Logger.login.error(category: "CheckSessionEnv", message: "Import BIP-39 Wallet with no PIN")
+            validatePIN()
+            return
+        }
+        Logger.login.info(category: "CheckSessionEnv", message: "Import BIP-39 Wallet")
+        reportBusy()
+        Task {
+            do {
+                let entropy: Data
+                if let mnemonics = AppGroupKeychain.mnemonics {
+                    Logger.login.info(category: "CheckSessionEnv", message: "Using mnemonics from KeyChain")
+                    entropy = mnemonics
+                } else {
+                    Logger.login.info(category: "CheckSessionEnv", message: "Using custodial salt as mnemonics")
+                    // For 12/24 Mnemonics users with phone number added
+                    // They have `AppGroupKeychain.mnemonics` deleted by receiving account
+                    // Use custodialSalt instead
+                    entropy = try await TIP.custodialSalt(pin: pin)
+                }
+                let mnemonics = try BIP39Mnemonics(entropy: entropy)
+                let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: pin)
+                let encryptedMnemonics = try EncryptedBIP39Mnemonics(
+                    mnemonics: mnemonics,
+                    key: importWalletKey
+                )
+                let fetch = AddWalletFetchAddressViewController(
+                    mnemonics: mnemonics,
+                    encryptedMnemonics: encryptedMnemonics,
+                    behavior: .breaksOnImportedWalletFound({ [weak self] walletID in
+                        self?.finishCheckingForBIP39Session(
+                            welcomeWalletID: walletID,
+                            updateWalletSecretsWith: encryptedMnemonics,
+                        )
+                    })
+                )
+                let navigation = GeneralAppearanceNavigationController(rootViewController: fetch)
+                navigation.delegate = navigationBarAppearanceUpdater
+                reload(content: navigation)
+            } catch {
+                Logger.login.error(category: "CheckSessionEnv", message: "Import failed: \(error)")
+                await MainActor.run {
+                    reportFailure(
+                        description: error.localizedDescription,
+                        retryWithSelector: #selector(importBIP39Wallets)
                     )
                 }
             }
@@ -346,7 +411,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
             reporter.report(event: .signUpEnd)
         case .signIn:
             reporter.report(event: .loginEnd)
-            Logger.login.info(category: "CheckSessionEnvironment", message: "Sync contacts")
+            Logger.login.info(category: "CheckSessionEnv", message: "Sync contacts")
             ContactAPI.syncContacts()
         case nil:
             break
@@ -364,13 +429,21 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                 initializeBots = true
             }
             if initializeBots {
-                Logger.login.info(category: "CheckSessionEnvironment", message: "Initialize bots")
+                Logger.login.info(category: "CheckSessionEnv", message: "Initialize bots")
                 for id in initialBots {
                     let job = InitializeBotJob(userID: id)
                     ConcurrentJobQueue.shared.addJob(job: job)
                 }
             }
         }
+    }
+    
+    private func reportBusy() {
+        removeContentViewController()
+        retryButton?.removeFromSuperview()
+        activityIndicator.startAnimating()
+        descriptionLabel.text = R.string.localizable.initializing()
+        descriptionLabel.textColor = R.color.text_tertiary()
     }
     
     private func reportFailure(
@@ -398,10 +471,6 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
 }
 
 extension CheckSessionEnvironmentViewController {
-    
-    private enum RegisterError: Error {
-        case missingEntropy
-    }
     
     private final class RestoreChatNavigationHandler: NSObject, UINavigationControllerDelegate {
         

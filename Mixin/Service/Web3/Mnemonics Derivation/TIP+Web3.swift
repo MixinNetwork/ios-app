@@ -255,7 +255,7 @@ extension TIP {
                 wallets: [defaultWallet.wallet],
                 addresses: defaultWallet.addresses
             )
-            Logger.login.info(category: "TIP+Web3", message: "Registered")
+            Logger.login.info(category: "TIP+Web3", message: "Default common wallet registered")
         }
     }
     

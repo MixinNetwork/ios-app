@@ -113,7 +113,7 @@ extension TIP {
         legacyPIN: String?,
         forRecover: Bool,
         progressHandler: (@MainActor (Progress) -> Void)?
-    ) async throws -> (tipPriv: Data, account: Account?) {
+    ) async throws -> Data {
         Logger.tip.info(category: "TIP", message: "createTIPPriv with failedSigners: \(failedSigners.map(\.index)), legacyPIN: \(legacyPIN != nil), forRecover: \(forRecover)")
         guard let pinData = pin.data(using: .utf8) else {
             throw Error.invalidPIN
@@ -151,7 +151,7 @@ extension TIP {
         if forRecover {
             Logger.tip.info(category: "TIP", message: "Recovering")
             try await encryptAndSaveTIPPriv(pinData: pinData, tipPriv: tipPriv, aesKey: aesKey)
-            return (tipPriv: tipPriv, account: nil)
+            return tipPriv
         }
         
         let oldEncryptedPIN: String?
@@ -192,7 +192,7 @@ extension TIP {
         
         try encryptAndSaveTIPPriv(pinData: pinData, tipPriv: tipPriv, aesKey: aesKey)
         Logger.tip.info(category: "TIP", message: "TIP Priv is saved")
-        return (tipPriv: tipPriv, account: account)
+        return tipPriv
     }
     
     @discardableResult
@@ -202,7 +202,7 @@ extension TIP {
         isCounterBalanced: Bool,
         failedSigners: [TIPSigner],
         progressHandler: (@MainActor (Progress) -> Void)?
-    ) async throws -> Account {
+    ) async throws {
         Logger.tip.info(category: "TIP", message: "Update priv with oldPIN: \(oldPIN != nil), failedSigners: \(failedSigners.map(\.index))")
         guard let oldPINData = oldPIN.data(using: .utf8) else {
             throw Error.invalidPIN
@@ -335,7 +335,6 @@ extension TIP {
         Logger.tip.info(category: "TIP", message: "TIP Priv is saved")
         AppGroupKeychain.encryptedSalt = encryptedSaltToSave
         Logger.tip.info(category: "TIP", message: "Encrypted salt(\(encryptedSaltToSave == nil)) is saved")
-        return account
     }
     
     public static func checkCounter(with freshAccount: Account? = nil, timeoutInterval: TimeInterval = 15) async throws -> InterruptionContext? {
@@ -667,7 +666,7 @@ extension TIP {
             }
         }
         Logger.tip.info(category: "TIP", message: "Using new created priv")
-        let (tipPriv, _) = try await createTIPPriv(
+        let tipPriv = try await createTIPPriv(
             pin: pin,
             failedSigners: [],
             legacyPIN: nil,

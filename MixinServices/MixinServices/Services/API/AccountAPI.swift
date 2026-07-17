@@ -357,26 +357,33 @@ public final class AccountAPI: MixinAPI {
         }
     }
     
-    public static func exportSalt(
-        pin: String,
-        userID: String,
-        masterPublicKey: String,
-        masterSignature: String,
+    public static func exportSalt(request: ExportSaltRequest) async throws -> Account {
+        try await withCheckedThrowingContinuation { continuation in
+            exportSalt(request: request) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
+    static func exportSalt(
+        request: ExportSaltRequest,
         completion: @escaping (MixinAPI.Result<Account>) -> Void
     ) {
-        PINEncryptor.encrypt(pin: pin, tipBody: {
-            try TIPBody.exportPrivate(userID: userID)
-        }, onFailure: completion) { (pin) in
+        PINEncryptor.encrypt(pin: request.pin, tipBody: {
+            try TIPBody.exportPrivate(userID: request.userID)
+        }, onFailure: completion) { (encryptedPIN) in
             let parameters = [
-                "pin_base64": pin,
-                "master_public_hex": masterPublicKey,
-                "master_signature_hex": masterSignature,
+                "pin_base64": encryptedPIN,
+                "master_public_hex": request.publicKey,
+                "master_signature_hex": request.signature,
             ]
-            request(method: .post,
-                    path: "/me/salt_export",
-                    parameters: parameters,
-                    options: .disableRetryOnRequestSigningTimeout,
-                    completion: completion)
+            Self.request(
+                method: .post,
+                path: "/me/salt_export",
+                parameters: parameters,
+                options: .disableRetryOnRequestSigningTimeout,
+                completion: completion
+            )
         }
     }
     

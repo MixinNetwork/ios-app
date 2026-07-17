@@ -33,53 +33,25 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
     override func continueAction(_ sender: Any) {
         isBusy = true
         let pin = pinField.text
-        Task { [account] in
-            do {
-                if account.hasSafe {
-                    Logger.login.info(category: "LoginPINValidation", message: "Already had safe")
-                    try await withCheckedThrowingContinuation { continuation in
-                        AccountAPI.verify(pin: pin) { result in
-                            switch result {
-                            case .success:
-                                continuation.resume()
-                            case .failure(let error):
-                                continuation.resume(throwing: error)
-                            }
-                        }
-                    }
-                } else {
-                    try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
-                }
-                try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
+        AccountAPI.verify(pin: pin) { [weak self, account] result in
+            switch result {
+            case .success:
+                Logger.login.info(category: "LoginPINValidation", message: "Validated")
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 AppGroupUserDefaults.User.loginPINValidated = true
-                let importWalletKey = try await TIP.importedWalletEncryptionKey(pin: pin)
-                let custodialSalt = try await TIP.custodialSalt(pin: pin)
-                await MainActor.run {
-                    Logger.login.info(category: "LoginPINValidation", message: "Validated")
-                    checkSessionEnvironmentAgain(
-                        freshAccount: LoginManager.shared.account,
-                        importWalletEncryptionKey: importWalletKey,
-                        custodialSalt: custodialSalt,
-                    )
-                }
-            } catch MixinAPIResponseError.malformedPin {
+                self?.checkSessionEnvironmentAgain(pin: pin)
+            case .failure(.response(.malformedPin)):
                 Logger.login.error(category: "LoginPINValidation", message: "malformedPin...hasPIN:\(account.hasPIN)...hasSafe:\(account.hasSafe)")
-                await MainActor.run {
-                    AppDelegate.current.mainWindow.rootViewController = LegacyPINViewController()
-                }
-            } catch {
+                AppDelegate.current.mainWindow.rootViewController = LegacyPINViewController()
+            case .failure(let error):
                 Logger.login.error(category: "LoginPINValidation", message: "Failed: \(error)")
-                await MainActor.run {
-                    self.pinField.clear()
-                    self.isBusy = false
-                    if let error = error as? MixinAPIError {
-                        PINVerificationFailureHandler.handle(error: error) { (description) in
-                            self.alert(description)
-                        }
-                    } else {
-                        self.alert(error.localizedDescription)
-                    }
+                guard let self else {
+                    return
+                }
+                self.pinField.clear()
+                self.isBusy = false
+                PINVerificationFailureHandler.handle(error: error) { (description) in
+                    self.alert(description)
                 }
             }
         }

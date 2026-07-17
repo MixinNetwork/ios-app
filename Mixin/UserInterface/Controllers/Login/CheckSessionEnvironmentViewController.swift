@@ -34,6 +34,8 @@ extension CheckSessionEnvironmentChild where Self: UIViewController {
 
 final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     
+    typealias BIP39MnemonicsGroup = (plain: BIP39Mnemonics, encrypted: EncryptedBIP39Mnemonics)
+    
     private(set) weak var contentViewController: UIViewController?
     
     private lazy var restoreChatNavigationHandler = RestoreChatNavigationHandler()
@@ -191,21 +193,38 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     
     func finishCheckingForBIP39Session(
         welcomeWalletID: String?,
-        updateWalletSecretsWith mnemonics: EncryptedBIP39Mnemonics? = nil, // nil for not updating
+        updateWalletSecretsWith mnemonics: BIP39MnemonicsGroup? = nil, // nil for not updating
     ) {
         Logger.login.info(category: "CheckSessionEnv", message: "BIP39 checking finished")
         if let mnemonics {
-            let wallets = Web3WalletDAO.shared.wallets()
-            for wallet in wallets {
-                switch wallet.category.knownCase {
-                case .importedMnemonic:
-                    Logger.login.info(category: "CheckSessionEnv", message: "Saved mnemonics for wallet: \(wallet.walletID)")
-                    AppGroupKeychain.setImportedMnemonics(mnemonics, forWalletID: wallet.walletID)
-                case .importedPrivateKey:
-                    break
-                case .classic, .watchAddress, .none:
-                    break
+            var walletIDs: Set<String> = []
+            for address in Web3AddressDAO.shared.addresses() {
+                guard let path = address.path, !walletIDs.contains(address.walletID) else {
+                    continue
                 }
+                do {
+                    let path = try DerivationPath(string: path)
+                    let derivation: BIP39Mnemonics.Derivation
+                    switch address.chainID {
+                    case ChainID.bitcoin:
+                        derivation = try mnemonics.plain.checkedDerivationForBitcoin(path: path)
+                    case ChainID.ethereum:
+                        derivation = try mnemonics.plain.checkedDerivationForEVM(path: path)
+                    case ChainID.solana:
+                        derivation = try mnemonics.plain.checkedDerivationForSolana(path: path)
+                    default:
+                        continue
+                    }
+                    if address.destination == derivation.address {
+                        walletIDs.insert(address.walletID)
+                    }
+                } catch {
+                    continue
+                }
+            }
+            for walletID in walletIDs {
+                Logger.login.info(category: "CheckSessionEnv", message: "Saved mnemonics for wallet: \(walletID)")
+                AppGroupKeychain.setImportedMnemonics(mnemonics.encrypted, forWalletID: walletID)
             }
         }
         if let id = welcomeWalletID {
@@ -366,7 +385,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                     behavior: .breaksOnImportedWalletFound({ [weak self] walletID in
                         self?.finishCheckingForBIP39Session(
                             welcomeWalletID: walletID,
-                            updateWalletSecretsWith: encryptedMnemonics,
+                            updateWalletSecretsWith: (mnemonics, encryptedMnemonics),
                         )
                     })
                 )

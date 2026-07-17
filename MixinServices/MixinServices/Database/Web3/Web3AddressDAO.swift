@@ -22,6 +22,10 @@ public final class Web3AddressDAO: Web3DAO {
         }
     }
     
+    public func addresses() -> [Web3Address] {
+        db.select(with: "SELECT * FROM addresses")
+    }
+    
     public func address(walletID: String, chainID: String) -> Web3Address? {
         let sql = "SELECT * FROM addresses WHERE wallet_id = ? AND chain_id = ?"
         return db.select(with: sql, arguments: [walletID, chainID])

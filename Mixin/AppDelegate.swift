@@ -304,10 +304,6 @@ extension AppDelegate {
 
 extension AppDelegate {
     
-    func checkSessionEnvironment(freshAccount account: Account) {
-        mainWindow.rootViewController = CheckSessionEnvironmentViewController(freshAccount: account)
-    }
-    
     private func updateFirstLaunch(isProtectedDataAvailable: Bool) {
         guard isProtectedDataAvailable else {
             return

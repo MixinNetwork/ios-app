@@ -102,7 +102,7 @@ extension LoginAccountHandler where Self: UIViewController {
         if !account.fullName.isEmpty {
             AppGroupUserDefaults.Account.canRestoreFromPhone = true
         }
-        AppDelegate.current.checkSessionEnvironment(freshAccount: account)
+        AppDelegate.current.mainWindow.rootViewController = CheckSessionEnvironmentViewController(freshAccount: account)
         
         UIApplication.shared.setShortcutItemsEnabled(true)
         return nil

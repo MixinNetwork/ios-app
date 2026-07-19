@@ -412,7 +412,7 @@ extension TIP {
         return try await getOrRecoverTIPPriv(pin: pin, pinToken: pinToken)
     }
     
-    public static func registerToSafeIfNeeded(account: Account?, pin: String) async throws {
+    public static func registerToSafeIfNeeded(account: Account?, pin: String) async throws -> Account? {
         Logger.tip.info(category: "TIP", message: "Register to safe")
         let account = if let account {
             account
@@ -421,7 +421,7 @@ extension TIP {
         }
         guard !account.hasSafe else {
             Logger.tip.info(category: "TIP", message: "Already safe")
-            return
+            return nil
         }
         guard let pinData = pin.data(using: .utf8) else {
             throw Error.invalidPIN
@@ -508,6 +508,7 @@ extension TIP {
             }
             AppGroupKeychain.encryptedSalt = encryptedSalt
             Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
+            return account
         } catch {
             Logger.tip.error(category: "TIP", message: "Error: \(error), step1: \(step1), step2: \(step2)")
             let registerError = RegisterSafeError(underlying: error, step1: step1, step2: step2)

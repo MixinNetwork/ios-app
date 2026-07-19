@@ -116,7 +116,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     ) {
         assert(Thread.isMainThread)
         if let freshAccount {
-            Logger.login.info(category: "CheckSessionEnv", message: "Account refreshed")
+            Logger.login.info(category: "CheckSessionEnv", message: "Account refreshed, has_pin: \(freshAccount.hasPIN), has_safe: \(freshAccount.hasSafe)")
             self.account = freshAccount
             self.isAccountFresh = true
         }
@@ -244,6 +244,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
             case .success(let account):
                 self.check(freshAccount: account)
             case .failure(let error):
+                Logger.login.error(category: "CheckSessionEnv", message: "Unable to reload account: \(error)")
                 self.reportFailure(
                     description: error.localizedDescription,
                     retryWithSelector: #selector(reloadAccountThenCheck)
@@ -302,11 +303,11 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         reportBusy()
         Task {
             do {
-                try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
+                let updatedAccount = try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
                 try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                 await MainActor.run {
                     Logger.login.info(category: "CheckSessionEnv", message: "Necessaries registered")
-                    check(freshAccount: LoginManager.shared.account)
+                    check(freshAccount: updatedAccount ?? LoginManager.shared.account)
                 }
             } catch {
                 Logger.login.error(category: "CheckSessionEnv", message: "Registration failed: \(error)")
@@ -340,6 +341,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                     check(freshAccount: account)
                 }
             } catch {
+                Logger.login.info(category: "CheckSessionEnv", message: "Unable to mark mnemonics exported: \(error)")
                 await MainActor.run {
                     reportFailure(
                         description: error.localizedDescription,
@@ -379,6 +381,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                     mnemonics: mnemonics,
                     key: importWalletKey
                 )
+                Logger.login.info(category: "CheckSessionEnv", message: "Fetch addresses")
                 let fetch = AddWalletFetchAddressViewController(
                     mnemonics: mnemonics,
                     encryptedMnemonics: encryptedMnemonics,

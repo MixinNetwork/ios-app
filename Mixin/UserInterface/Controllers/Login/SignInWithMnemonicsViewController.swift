@@ -4,7 +4,6 @@ import MixinServices
 class SignInWithMnemonicsViewController<PhrasesCount: SignInAvailablePhrasesCount>: UIViewController, MnemonicsViewController {
 
     @IBOutlet weak var wordsCountSelectorStackView: UIStackView!
-    @IBOutlet weak var contentScrollView: UIScrollView!
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var inputStackView: UIStackView!
     @IBOutlet weak var errorDescriptionLabel: UILabel!

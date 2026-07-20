@@ -11,7 +11,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SignInWithMnemonicsViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
-                <outlet property="contentScrollView" destination="I9S-Ai-iO1" id="ubK-HD-FJI"/>
                 <outlet property="contentStackView" destination="YmI-Te-nNl" id="dBI-6q-Hel"/>
                 <outlet property="errorDescriptionLabel" destination="Y26-Fy-cdO" id="b78-0y-6fX"/>
                 <outlet property="inputStackView" destination="xoK-Sd-hf2" id="0nb-X4-Dav"/>

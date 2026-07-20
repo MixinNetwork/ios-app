@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="sign_in_method_header" id="U6b-Vx-4bR" customClass="SignInMethodHeaderView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mKF-cT-Qe7">
+                    <rect key="frame" x="0.0" y="10" width="320" height="20"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" name="text_tertiary"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <constraints>
+                <constraint firstItem="mKF-cT-Qe7" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" id="0Yx-II-4lj"/>
+                <constraint firstItem="mKF-cT-Qe7" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" constant="10" id="4aC-Hj-OES"/>
+                <constraint firstAttribute="bottom" secondItem="mKF-cT-Qe7" secondAttribute="bottom" constant="10" id="Mfh-kZ-v6A"/>
+                <constraint firstAttribute="trailing" secondItem="mKF-cT-Qe7" secondAttribute="trailing" id="N2e-uV-JVS"/>
+            </constraints>
+            <connections>
+                <outlet property="label" destination="mKF-cT-Qe7" id="sCG-d5-tay"/>
+            </connections>
+            <point key="canvasLocation" x="-11" y="154"/>
+        </collectionReusableView>
+    </objects>
+    <resources>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -13,7 +13,7 @@ final class VerifyMobileNumberInputNumberViewController: MobileNumberViewControl
     
     init(context: MobileNumberVerificationContext) {
         self.context = context
-        super.init()
+        super.init(style: .primary)
     }
     
     required init?(coder: NSCoder) {
@@ -22,6 +22,9 @@ final class VerifyMobileNumberInputNumberViewController: MobileNumberViewControl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        actionStackView.snp.makeConstraints { make in
+            make.top.equalTo(declarationTextView.snp.bottom).offset(44)
+        }
         switch context.intent {
         case .periodicVerification:
             callingCodeButton.isUserInteractionEnabled = false

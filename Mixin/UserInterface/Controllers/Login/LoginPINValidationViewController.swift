@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class LoginPINValidationViewController: FullscreenPINValidationViewController {
+final class LoginPINValidationViewController: FullscreenPINValidationViewController, CheckSessionEnvironmentChild {
     
     private let account: Account
     
@@ -27,62 +27,31 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 action: #selector(presentCustomerService(_:))
             ),
         ]
-        reporter.report(event: .loginVerifyPIN, tags: ["type": "pin_verify"])
+        reporter.report(event: .loginPINVerify, tags: ["type": "pin_verify"])
     }
     
     override func continueAction(_ sender: Any) {
         isBusy = true
         let pin = pinField.text
-        Task { [account] in
-            do {
-                if account.hasSafe {
-                    Logger.login.info(category: "LoginPINValidation", message: "Already had safe")
-                    try await withCheckedThrowingContinuation { continuation in
-                        AccountAPI.verify(pin: pin) { result in
-                            switch result {
-                            case .success:
-                                continuation.resume()
-                            case .failure(let error):
-                                continuation.resume(throwing: error)
-                            }
-                        }
-                    }
-                } else {
-                    try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
-                }
-                try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
+        AccountAPI.verify(pin: pin) { [weak self, account] result in
+            switch result {
+            case .success:
+                Logger.login.info(category: "LoginPINValidation", message: "Validated")
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
-                
                 AppGroupUserDefaults.User.loginPINValidated = true
-                await MainActor.run {
-                    if AppGroupUserDefaults.isSigningUp {
-                        reporter.report(event: .signUpEnd)
-                    } else {
-                        reporter.report(event: .loginEnd)
-                    }
-                    Logger.login.info(category: "LoginPINValidation", message: "Validated")
-                    Logger.redirectLogsToLogin = false
-                    AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(
-                        initialTab: .wallet
-                    )
-                }
-            } catch MixinAPIResponseError.malformedPin {
+                self?.checkSessionEnvironmentAgain(pin: pin)
+            case .failure(.response(.malformedPin)):
                 Logger.login.error(category: "LoginPINValidation", message: "malformedPin...hasPIN:\(account.hasPIN)...hasSafe:\(account.hasSafe)")
-                await MainActor.run {
-                    AppDelegate.current.mainWindow.rootViewController = LegacyPINViewController()
-                }
-            } catch {
+                AppDelegate.current.mainWindow.rootViewController = LegacyPINViewController()
+            case .failure(let error):
                 Logger.login.error(category: "LoginPINValidation", message: "Failed: \(error)")
-                await MainActor.run {
-                    self.pinField.clear()
-                    self.isBusy = false
-                    if let error = error as? MixinAPIError {
-                        PINVerificationFailureHandler.handle(error: error) { (description) in
-                            self.alert(description)
-                        }
-                    } else {
-                        self.alert(error.localizedDescription)
-                    }
+                guard let self else {
+                    return
+                }
+                self.pinField.clear()
+                self.isBusy = false
+                PINVerificationFailureHandler.handle(error: error) { (description) in
+                    self.alert(description)
                 }
             }
         }

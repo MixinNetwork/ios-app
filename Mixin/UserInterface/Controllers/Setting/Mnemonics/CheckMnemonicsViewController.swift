@@ -1,13 +1,15 @@
 import UIKit
 import MixinServices
 
-final class CheckMnemonicsViewController: InputMnemonicsViewController {
+final class CheckMnemonicsViewController: TitledMnemonicsViewController {
     
     private enum CheckingError: Error {
         case mismatched
     }
     
     private let mnemonics: MixinMnemonics
+    
+    private var mnemonicsInputHandler: MnemonicsInputHandler!
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard not supported")
@@ -20,9 +22,10 @@ final class CheckMnemonicsViewController: InputMnemonicsViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mnemonicsInputHandler = MnemonicsInputHandler(viewController: self)
         titleLabel.text = R.string.localizable.check_mnemonic_phrase()
         descriptionLabel.text = R.string.localizable.check_mnemonic_phrase_desc()
-        addTextFields(count: mnemonics.phrases.count)
+        addTextFields(backgroundColor: .secondary, count: mnemonics.phrases.count)
         for textField in inputFields.map(\.textField) {
             if textField.tag == mnemonics.phrases.count - 1 {
                 textField.returnKeyType = .done
@@ -30,8 +33,8 @@ final class CheckMnemonicsViewController: InputMnemonicsViewController {
                 textField.returnKeyType = .next
             }
             textField.clearButtonMode = .whileEditing
-            textField.delegate = self
-            textField.deleteDelegate = self
+            textField.delegate = mnemonicsInputHandler
+            textField.deleteDelegate = mnemonicsInputHandler
         }
         addSpacerIntoInputFields()
         addButtonIntoInputFields(

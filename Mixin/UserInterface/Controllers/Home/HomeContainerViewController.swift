@@ -56,6 +56,7 @@ final class HomeContainerViewController: UIViewController {
     
     private let sessionReporter = SessionReporter()
     
+    private var refreshAccountAfterViewAppears: Bool
     private var navigationInteractiveGestureWasEnabled = true
     
     var galleryIsOnTopMost: Bool {
@@ -66,6 +67,12 @@ final class HomeContainerViewController: UIViewController {
         let homeTabBarController = HomeTabBarController(initialChild: initialTab)
         self.homeTabBarController = homeTabBarController
         self.homeNavigationController = HomeNavigationController(rootViewController: homeTabBarController)
+        switch initialTab {
+        case .chat:
+            refreshAccountAfterViewAppears = false
+        case .wallet, .market, .more:
+            refreshAccountAfterViewAppears = true
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -129,6 +136,14 @@ final class HomeContainerViewController: UIViewController {
                     ConcurrentJobQueue.shared.addJob(job: job)
                 }
             }
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if refreshAccountAfterViewAppears {
+            refreshAccountAfterViewAppears = false
+            ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         }
     }
     

@@ -123,7 +123,7 @@ final class TIPActionViewController: UIViewController {
 #endif
             Task {
                 do {
-                    let (_, account) = try await TIP.createTIPPriv(
+                    _ = try await TIP.createTIPPriv(
                         pin: pin,
                         failedSigners: [],
                         legacyPIN: nil,
@@ -131,11 +131,9 @@ final class TIPActionViewController: UIViewController {
                         progressHandler: showProgress
                     )
                     AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
-                    try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
-                    try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     await MainActor.run {
-                        finish()
+                        finish(pin: pin)
                     }
                 } catch {
                     await handle(
@@ -155,7 +153,7 @@ final class TIPActionViewController: UIViewController {
 #endif
             Task {
                 do {
-                    let account = switch old {
+                    switch old {
                     case let .legacy(old):
                         try await TIP.createTIPPriv(
                             pin: new,
@@ -163,7 +161,7 @@ final class TIPActionViewController: UIViewController {
                             legacyPIN: old,
                             forRecover: false,
                             progressHandler: showProgress
-                        ).account
+                        )
                     case let .tip(old):
                         try await TIP.updateTIPPriv(
                             oldPIN: old,
@@ -178,11 +176,9 @@ final class TIPActionViewController: UIViewController {
                     }
                     AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                     AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
-                    try await TIP.registerToSafeIfNeeded(account: account, pin: new)
-                    try await TIP.registerDefaultCommonWalletIfNeeded(pin: new)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     await MainActor.run {
-                        finish()
+                        finish(pin: new)
                     }
                 } catch {
                     await handle(
@@ -202,7 +198,7 @@ final class TIPActionViewController: UIViewController {
 #endif
             Task {
                 do {
-                    let (_, account) = try await TIP.createTIPPriv(
+                    _ = try await TIP.createTIPPriv(
                         pin: pin,
                         failedSigners: [],
                         legacyPIN: pin,
@@ -210,11 +206,9 @@ final class TIPActionViewController: UIViewController {
                         progressHandler: showProgress
                     )
                     AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
-                    try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
-                    try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     await MainActor.run {
-                        finish()
+                        finish(pin: pin)
                     }
                 } catch {
                     await handle(
@@ -248,18 +242,18 @@ final class TIPActionViewController: UIViewController {
     }
     
     @MainActor
-    private func finish() {
+    private func finish(pin: String) {
         Logger.tip.info(category: "TIPAction", message: "Finished successfully")
         switch action {
         case .create:
-            tipNavigationController?.finish()
+            tipNavigationController?.finish(pin: pin)
         case .change:
             alert(R.string.localizable.change_pin_successfully()) { (_) in
-                self.tipNavigationController?.finish()
+                self.tipNavigationController?.finish(pin: pin)
             }
         case .migrate:
             alert(R.string.localizable.upgrade_tip_successfully()) { (_) in
-                self.tipNavigationController?.finish()
+                self.tipNavigationController?.finish(pin: pin)
             }
         }
     }
@@ -306,12 +300,10 @@ final class TIPActionViewController: UIViewController {
                     }
                 } else {
                     Logger.tip.warn(category: "TIPAction", message: "No interruption is detected")
-                    try await TIP.registerToSafeIfNeeded(account: nil, pin: context.pin)
-                    try await TIP.registerDefaultCommonWalletIfNeeded(pin: context.pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     Logger.tip.warn(category: "TIPAction", message: "Registration finished")
                     await MainActor.run {
-                        finish()
+                        finish(pin: context.pin)
                     }
                 }
             }
@@ -381,7 +373,7 @@ final class TIPActionViewController: UIViewController {
                 let intro = TIPIntroViewController(context: context)
                 self.navigationController?.setViewControllers([intro], animated: true)
             } else {
-                self.finish()
+                self.finish(pin: "")
             }
         }
     }

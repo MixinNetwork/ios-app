@@ -2,16 +2,14 @@ import UIKit
 import WebKit
 import MixinServices
 
-protocol LoginAccountHandler {
-    func login(account: Account, signingUp: Bool, sessionKey: Ed25519PrivateKey) -> MixinAPIError?
-}
+protocol LoginAccountHandler { }
 
 extension LoginAccountHandler where Self: UIViewController {
     
     func login(
         account: Account,
-        signingUp: Bool,
-        sessionKey: Ed25519PrivateKey
+        intent: AccountVerificationIntent,
+        sessionKey: Ed25519PrivateKey,
     ) -> MixinAPIError? {
         guard
             !account.pinToken.isEmpty,
@@ -24,12 +22,20 @@ extension LoginAccountHandler where Self: UIViewController {
             Logger.login.error(category: "Login", message: "Invalid Server PIN Token")
             return .invalidServerPinToken
         }
-        Logger.login.info(category: "Login", message: "Got account: \(account.userID), has_pin: \(account.hasPIN), has_safe: \(account.hasSafe), tip_key: \(account.tipKey?.count ?? -1)")
-        AppGroupUserDefaults.isSigningUp = signingUp
+        Logger.login.info(category: "Login", message: "Got account: \(account.userID), method: \(intent.debugDescription), has_pin: \(account.hasPIN), has_safe: \(account.hasSafe), tip_key: \(account.tipKey?.count ?? -1)")
+        
+        let intent: AccountVerificationIntent = switch intent {
+        case let .signIn(method) where account.hasEmptyName:
+                .signUp(method)
+        default:
+            intent
+        }
+        AccountVerificationIntent.current = intent
+        
         AppGroupKeychain.sessionSecret = sessionKey.rawRepresentation
         AppGroupKeychain.pinToken = pinToken
         if !account.isAnonymous {
-            // That's for mnemonic-based users. Should be cleared after phone number users log in to avoid confusion.
+            // That's for mnemonic-based users. Use custodial salt for phone number users.
             AppGroupKeychain.mnemonics = nil
             Logger.login.info(category: "Login", message: "AppGroupKeychain.mnemonics cleared")
         }
@@ -96,7 +102,7 @@ extension LoginAccountHandler where Self: UIViewController {
         if !account.fullName.isEmpty {
             AppGroupUserDefaults.Account.canRestoreFromPhone = true
         }
-        AppDelegate.current.checkSessionEnvironment(freshAccount: account)
+        AppDelegate.current.mainWindow.rootViewController = CheckSessionEnvironmentViewController(freshAccount: account)
         
         UIApplication.shared.setShortcutItemsEnabled(true)
         return nil

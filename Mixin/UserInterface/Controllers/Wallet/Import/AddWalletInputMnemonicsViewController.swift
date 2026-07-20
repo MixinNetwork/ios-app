@@ -10,7 +10,8 @@ final class AddWalletInputMnemonicsViewController: InputBIP39MnemonicsViewContro
         }
         let fetchAddress = AddWalletFetchAddressViewController(
             mnemonics: mnemonics.plain,
-            encryptedMnemonics: mnemonics.encrypted
+            encryptedMnemonics: mnemonics.encrypted,
+            behavior: .alwaysNavigateToSelector
         )
         navigationController?.pushViewController(fetchAddress, animated: true)
     }

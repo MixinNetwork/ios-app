@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -14,6 +14,7 @@
                 <outlet property="activityIndicator" destination="GHF-fd-1FX" id="Zds-hf-Jkm"/>
                 <outlet property="bottomStackView" destination="1hM-1U-2aX" id="CK0-zk-tuE"/>
                 <outlet property="descriptionLabel" destination="GBu-hh-nII" id="Vey-lp-ghX"/>
+                <outlet property="topStackView" destination="HSE-yd-Ytc" id="TFV-bN-rKz"/>
                 <outlet property="view" destination="8eF-bh-ziB" id="JbJ-vx-WZg"/>
             </connections>
         </placeholder>
@@ -22,11 +23,17 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="HSE-yd-Ytc">
+                    <rect key="frame" x="0.0" y="118" width="393" height="0.0"/>
+                    <constraints>
+                        <constraint firstAttribute="height" priority="1" id="jHm-AF-0I1"/>
+                    </constraints>
+                </stackView>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Setting/ic_about_app" translatesAutoresizingMaskIntoConstraints="NO" id="XyQ-Dj-wtM">
-                    <rect key="frame" x="156.66666666666666" y="153" width="80" height="80"/>
+                    <rect key="frame" x="156.66666666666666" y="212" width="80" height="80"/>
                 </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="1hM-1U-2aX">
-                    <rect key="frame" x="20" y="712" width="353" height="46"/>
+                    <rect key="frame" x="20" y="678" width="353" height="46"/>
                     <subviews>
                         <view opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="GHF-fd-1FX" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="166.66666666666666" y="0.0" width="20" height="20"/>
@@ -47,7 +54,7 @@
                     </subviews>
                 </stackView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Messages between users are protected with an end- to-end encryption" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9z2-2l-kxA">
-                    <rect key="frame" x="36" y="249.00000000000003" width="321" height="38.333333333333343"/>
+                    <rect key="frame" x="36" y="308" width="321" height="38.333333333333314"/>
                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <color key="textColor" name="text"/>
                     <nil key="highlightedColor"/>
@@ -67,21 +74,24 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </constraint>
-                <constraint firstItem="XyQ-Dj-wtM" firstAttribute="top" secondItem="Vmd-4x-KUI" secondAttribute="top" constant="94" id="JDS-bm-T1S" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                <constraint firstItem="Vmd-4x-KUI" firstAttribute="trailing" secondItem="1hM-1U-2aX" secondAttribute="trailing" constant="20" id="JDl-Qr-6a2"/>
+                <constraint firstItem="Vmd-4x-KUI" firstAttribute="trailing" secondItem="9z2-2l-kxA" secondAttribute="trailing" constant="36" id="Q5Z-2o-Y07"/>
+                <constraint firstItem="HSE-yd-Ytc" firstAttribute="leading" secondItem="8eF-bh-ziB" secondAttribute="leading" id="Z4D-bv-R7L"/>
+                <constraint firstItem="9z2-2l-kxA" firstAttribute="top" secondItem="XyQ-Dj-wtM" secondAttribute="bottom" constant="16" id="cK0-qM-64J"/>
+                <constraint firstItem="1hM-1U-2aX" firstAttribute="leading" secondItem="Vmd-4x-KUI" secondAttribute="leading" constant="20" id="fbe-bn-rdM"/>
+                <constraint firstItem="9z2-2l-kxA" firstAttribute="leading" secondItem="Vmd-4x-KUI" secondAttribute="leading" constant="36" id="rQ9-2F-8sg"/>
+                <constraint firstItem="XyQ-Dj-wtM" firstAttribute="top" secondItem="HSE-yd-Ytc" secondAttribute="bottom" constant="94" id="uAo-CL-gWF" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
                             <real key="value" value="60"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </constraint>
-                <constraint firstItem="Vmd-4x-KUI" firstAttribute="trailing" secondItem="1hM-1U-2aX" secondAttribute="trailing" constant="20" id="JDl-Qr-6a2"/>
-                <constraint firstItem="Vmd-4x-KUI" firstAttribute="trailing" secondItem="9z2-2l-kxA" secondAttribute="trailing" constant="36" id="Q5Z-2o-Y07"/>
-                <constraint firstItem="9z2-2l-kxA" firstAttribute="top" secondItem="XyQ-Dj-wtM" secondAttribute="bottom" constant="16" id="cK0-qM-64J"/>
-                <constraint firstItem="1hM-1U-2aX" firstAttribute="leading" secondItem="Vmd-4x-KUI" secondAttribute="leading" constant="20" id="fbe-bn-rdM"/>
-                <constraint firstItem="9z2-2l-kxA" firstAttribute="leading" secondItem="Vmd-4x-KUI" secondAttribute="leading" constant="36" id="rQ9-2F-8sg"/>
                 <constraint firstItem="XyQ-Dj-wtM" firstAttribute="centerX" secondItem="Vmd-4x-KUI" secondAttribute="centerX" id="w4X-O4-XPN"/>
+                <constraint firstAttribute="trailing" secondItem="HSE-yd-Ytc" secondAttribute="trailing" id="xqf-Ld-ROC"/>
+                <constraint firstItem="HSE-yd-Ytc" firstAttribute="top" secondItem="Vmd-4x-KUI" secondAttribute="top" id="zfc-Sh-bp5"/>
             </constraints>
-            <point key="canvasLocation" x="-24" y="42"/>
+            <point key="canvasLocation" x="-25.190839694656489" y="41.549295774647888"/>
         </view>
     </objects>
     <resources>
@@ -93,7 +103,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

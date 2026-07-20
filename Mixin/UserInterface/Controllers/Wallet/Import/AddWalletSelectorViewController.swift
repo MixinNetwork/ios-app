@@ -58,6 +58,10 @@ final class AddWalletSelectorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = R.string.localizable.import_wallets()
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         let layout = UICollectionViewCompositionalLayout { (_, _) in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(112))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -149,6 +153,12 @@ final class AddWalletSelectorViewController: UIViewController {
             importingWallet: .byMnemonics(mnemonics: encryptedMnemonics, wallets: namedWallets)
         )
         navigationController?.pushViewController(importing, animated: true)
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "add_wallet_selector"])
     }
     
     private func updateViewsWithSelectionCount() {

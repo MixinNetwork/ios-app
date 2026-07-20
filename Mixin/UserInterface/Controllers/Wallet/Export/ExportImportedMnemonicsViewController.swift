@@ -1,6 +1,6 @@
 import UIKit
 
-final class ExportImportedMnemonicsViewController: MnemonicsViewController {
+final class ExportImportedMnemonicsViewController: TitledMnemonicsViewController {
     
     private let mnemonics: BIP39Mnemonics
     
@@ -17,7 +17,7 @@ final class ExportImportedMnemonicsViewController: MnemonicsViewController {
         super.viewDidLoad()
         titleLabel.text = R.string.localizable.your_mnemonic_phrase()
         descriptionLabel.text = R.string.localizable.write_down_secret_description()
-        addTextFields(count: mnemonics.phrases.count)
+        addTextFields(backgroundColor: .secondary, count: mnemonics.phrases.count)
         addRowStackViewForButtonsIntoInputStackView()
         addButtonIntoInputFields(
             image: R.image.ic_user_qr_code()!,

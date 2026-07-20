@@ -31,9 +31,15 @@ final class RecoveryContactLoginVerificationCodeViewController: LoginVerificatio
             switch result {
             case let .success(account):
                 HomeViewController.showChangePhoneNumberTips = true
-                if let self,
-                   let error = self.login(account: account, signingUp: false, sessionKey: sessionKey)
-                {
+                guard let self else {
+                    return
+                }
+                let error = self.login(
+                    account: account,
+                    intent: .signIn(.mobileNumber),
+                    sessionKey: sessionKey
+                )
+                if let error {
                     self.handleVerificationCodeError(error)
                 }
             case let .failure(error):

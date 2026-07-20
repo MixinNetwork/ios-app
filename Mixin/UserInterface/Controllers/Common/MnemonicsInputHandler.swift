@@ -1,12 +1,15 @@
 import UIKit
 import MixinServices
 
-class InputMnemonicsViewController: MnemonicsViewController {
+final class MnemonicsInputHandler: NSObject {
     
     private let mnemonicsInputAccessoryView = R.nib.mnemonicsInputAccessoryView(withOwner: nil)!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    private weak var viewController: MnemonicsViewController?
+    
+    init(viewController: MnemonicsViewController) {
+        self.viewController = viewController
+        super.init()
         mnemonicsInputAccessoryView.delegate = self
     }
     
@@ -46,6 +49,9 @@ class InputMnemonicsViewController: MnemonicsViewController {
     }
     
     private func handleInputFinished(textField: UITextField) {
+        guard let inputFields = viewController?.inputFields else {
+            return
+        }
         let nextIndex = textField.tag + 1
         if nextIndex == inputFields.count {
             textField.resignFirstResponder()
@@ -56,16 +62,16 @@ class InputMnemonicsViewController: MnemonicsViewController {
     
 }
 
-extension InputMnemonicsViewController: UITextFieldDelegate {
+extension MnemonicsInputHandler: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         reloadInputAccessoryView(textField: textField, keyword: textField.text)
-        inputFields[textField.tag].setTextColor(.normal)
+        viewController?.inputFields[textField.tag].setTextColor(.normal)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         hideInputAccessoryView(textField: textField)
-        inputFields[textField.tag].setTextColor(phrase: textField.text)
+        viewController?.inputFields[textField.tag].setTextColor(phrase: textField.text)
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -87,7 +93,7 @@ extension InputMnemonicsViewController: UITextFieldDelegate {
     
 }
 
-extension InputMnemonicsViewController: MnemonicTextField.DeleteDelegate {
+extension MnemonicsInputHandler: MnemonicTextField.DeleteDelegate {
     
     func mnemonicTextField(
         _ textField: MnemonicTextField,
@@ -97,14 +103,14 @@ extension InputMnemonicsViewController: MnemonicTextField.DeleteDelegate {
         if textBefore.isNilOrEmpty && textAfter.isNilOrEmpty {
             let previousIndex = textField.tag - 1
             if previousIndex >= 0 {
-                inputFields[previousIndex].textField.becomeFirstResponder()
+                viewController?.inputFields[previousIndex].textField.becomeFirstResponder()
             }
         }
     }
     
 }
 
-extension InputMnemonicsViewController: MnemonicsInputAccessoryView.Delegate {
+extension MnemonicsInputHandler: MnemonicsInputAccessoryView.Delegate {
     
     func mnemonicsInputAccessoryView(_ view: MnemonicsInputAccessoryView, didSelect word: String) {
         guard let textField = view.textField else {

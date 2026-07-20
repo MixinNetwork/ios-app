@@ -1,104 +1,69 @@
 import UIKit
 import MixinServices
 
-final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
+class SignInWithMnemonicsViewController<PhrasesCount: SignInAvailablePhrasesCount>: UIViewController, MnemonicsViewController {
+
+    @IBOutlet weak var wordsCountSelectorStackView: UIStackView!
+    @IBOutlet weak var contentScrollView: UIScrollView!
+    @IBOutlet weak var contentStackView: UIStackView!
+    @IBOutlet weak var inputStackView: UIStackView!
+    @IBOutlet weak var errorDescriptionLabel: UILabel!
+    @IBOutlet weak var signInButton: UIButton!
     
-    private(set) var phrasesCount: MixinMnemonics.PhrasesCount? = .default
+    var inputFields: [MnemonicsInputField] = []
     
-    private var phraseCountSwitchButtons: [UIButton] = []
+    private(set) var phrasesCount: PhrasesCount
+    private(set) var phraseCountSwitchButtons: [UIButton] = []
+    private(set) var mnemonicsInputHandler: MnemonicsInputHandler!
     
-    private let unavailablePhrasesCountTag = -1
+    init(phrasesCount: PhrasesCount) {
+        self.phrasesCount = phrasesCount
+        let nib = R.nib.signInWithMnemonicsView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
     
-    private let errorDescriptionLabel = {
-        let label = UILabel()
-        label.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
-        label.adjustsFontForContentSizeCategory = true
-        label.numberOfLines = 0
-        label.textColor = R.color.error_red()
-        return label
-    }()
-    
-    private lazy var signUpHintLabel = {
-        let label = UILabel()
-        label.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
-        label.adjustsFontForContentSizeCategory = true
-        label.textColor = R.color.text_quaternary()
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        label.text = R.string.localizable.sign_up_15_secs()
-        signUpHintLabelIfLoaded = label
-        return label
-    }()
-    
-    private weak var signUpHintLabelIfLoaded: UILabel?
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.sign_in()
+        mnemonicsInputHandler = MnemonicsInputHandler(viewController: self)
         navigationItem.rightBarButtonItem = .customerService(
             target: self,
             action: #selector(presentCustomerService(_:))
         )
         
-        scrollView.isDirectionalLockEnabled = true
-        titleLabel.text = R.string.localizable.sign_in_with_mnemonic_phrase()
-        descriptionLabel.text = R.string.localizable.mnemonics_policy()
-        titleStackView.setCustomSpacing(32, after: descriptionLabel)
-        
-        phraseCountSwitchButtons = MixinMnemonics.PhrasesCount.allCases
-            .map(wordCountSwitchingButton(count:))
-        phraseCountSwitchButtons.append(wordCountSwitchingButton(count: nil))
-        let stackView = UIStackView(arrangedSubviews: phraseCountSwitchButtons)
-        stackView.axis = .horizontal
-        stackView.spacing = 11
-        stackView.distribution = .fillProportionally
-        let buttonsScrollView = UIScrollView()
-        buttonsScrollView.isDirectionalLockEnabled = true
-        buttonsScrollView.showsHorizontalScrollIndicator = false
-        buttonsScrollView.addSubview(stackView)
-        stackView.snp.makeConstraints { make in
-            make.edges.equalTo(buttonsScrollView.contentLayoutGuide)
-            make.height.equalTo(buttonsScrollView.frameLayoutGuide.snp.height)
-        }
-        titleStackView.addArrangedSubview(buttonsScrollView)
-        
-        inputStackViewTopConstraint.constant = 20
-        reloadViews(count: phrasesCount)
-        
-        footerStackView.addArrangedSubview(errorDescriptionLabel)
-        confirmButton.setTitle(R.string.localizable.confirm(), for: .normal)
-        confirmButton.titleLabel?.setFont(
-            scaledFor: .systemFont(ofSize: 16, weight: .semibold),
-            adjustForContentSize: true
+        phraseCountSwitchButtons = PhrasesCount.allCases.map(
+            wordCountSwitchingButton(count:)
         )
-        confirmButton.isEnabled = false
-        NotificationCenter.default.addObserver(self, selector: #selector(detectPhrases(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        phraseCountSwitchButtons.forEach(
+            wordsCountSelectorStackView.addArrangedSubview(_:)
+        )
         
-        reporter.report(event: .loginMnemonicPhrase)
+        reloadViews(count: phrasesCount)
+        signInButton.configuration?.attributedTitle = AttributedString(
+            string: R.string.localizable.sign_in_with_mnemonic_phrase(),
+            scalingByFontSize: 16,
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(detectPhrases(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
     }
     
-    override func confirm(_ sender: Any) {
-        if phrasesCount == nil {
-            let intro = CreateAccountIntroductionViewController(
-                analyticSource: "login_mnemonic_phrase"
-            )
-            present(intro, animated: true)
-        } else {
-            do {
-                let mnemonics = try MixinMnemonics(phrases: textFieldPhrases)
-                let login = LoginWithMnemonicViewController(action: .signIn(mnemonics))
-                navigationController?.pushViewController(login, animated: true)
-            } catch {
-                errorDescriptionLabel.text = R.string.localizable.invalid_mnemonic_phrase()
-                errorDescriptionLabel.isHidden = false
-                confirmButton.isEnabled = false
-            }
-        }
+    @IBAction func signIn(_ sender: Any) {
+        
     }
     
-    func reloadViews(count: MixinMnemonics.PhrasesCount?) {
+    func reloadViews(count: PhrasesCount) {
         view.endEditing(true)
         self.phrasesCount = count
-        let selectedTag = count?.rawValue ?? unavailablePhrasesCountTag
+        let selectedTag = count.rawValue
         for button in phraseCountSwitchButtons {
             button.isSelected = button.tag == selectedTag
         }
@@ -107,58 +72,47 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
             view.removeFromSuperview()
         }
         
-        if let count {
-            addTextFields(count: count.rawValue)
-            for textField in inputFields.map(\.textField) {
-                if textField.tag == count.rawValue - 1 {
-                    textField.returnKeyType = .done
-                } else {
-                    textField.returnKeyType = .next
-                }
-                textField.clearButtonMode = .whileEditing
-                textField.delegate = self
-                textField.deleteDelegate = self
+        addTextFields(backgroundColor: .primary, count: count.rawValue)
+        for textField in inputFields.map(\.textField) {
+            if textField.tag == count.rawValue - 1 {
+                textField.returnKeyType = .done
+            } else {
+                textField.returnKeyType = .next
             }
-            
-            addButtonIntoInputFields(
-                image: R.image.explore.web3_send_scan()!,
-                title: R.string.localizable.scan(),
-                action: #selector(scanQRCode(_:))
-            )
-            addButtonIntoInputFields(
-                image: R.image.paste()!,
-                title: R.string.localizable.paste(),
-                action: #selector(pastePhrases(_:))
-            )
-            addRowStackViewForButtonsIntoInputStackView()
-            addButtonIntoInputFields(
-                image: R.image.explore.web3_send_delete()!,
-                title: R.string.localizable.clear(),
-                action: #selector(emptyPhrases(_:))
-            )
-            
-            confirmButton.setTitle(R.string.localizable.confirm(), for: .normal)
-            UIView.performWithoutAnimation(confirmButton.layoutIfNeeded)
-            signUpHintLabelIfLoaded?.removeFromSuperview()
-            detectPhrases(self)
-        } else {
-            let textView = UITextView()
-            textView.backgroundColor = R.color.background_input()
-            textView.layer.cornerRadius = 8
-            textView.layer.masksToBounds = true
-            textView.textContainer.lineFragmentPadding = 0
-            textView.textContainerInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
-            textView.isScrollEnabled = false
-            textView.attributedText = .importWalletGuide()
-            inputStackView.addArrangedSubview(textView)
-            
-            confirmButton.setTitle(R.string.localizable.create_an_account(), for: .normal)
-            UIView.performWithoutAnimation(confirmButton.layoutIfNeeded)
-            confirmButton.isEnabled = true
-            if signUpHintLabelIfLoaded?.superview == nil {
-                actionStackView.addArrangedSubview(signUpHintLabel)
-            }
+            textField.clearButtonMode = .whileEditing
+            textField.delegate = mnemonicsInputHandler
+            textField.deleteDelegate = mnemonicsInputHandler
         }
+        
+        detectPhrases(self)
+    }
+    
+    func arePhrasesValid(_ phrases: [String]) -> Bool {
+        false
+    }
+    
+    @objc func scanQRCode(_ sender: Any) {
+        let scanner = QRCodeScannerViewController()
+        scanner.delegate = self
+        navigationController?.pushViewController(scanner, animated: true)
+    }
+    
+    @objc func pastePhrases(_ sender: Any) {
+        let phrases = UIPasteboard.general.string?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .components(separatedBy: " ")
+        guard let phrases else {
+            return
+        }
+        input(phrases: phrases)
+    }
+    
+    @objc func emptyPhrases(_ sender: Any) {
+        for inputField in inputFields {
+            inputField.textField.text = nil
+            inputField.setTextColor(.normal)
+        }
+        detectPhrases(sender)
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
@@ -168,100 +122,65 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
     }
     
     @objc private func switchWordCount(_ button: UIButton) {
-        if let count = MixinMnemonics.PhrasesCount(rawValue: button.tag) {
+        if let count = PhrasesCount(rawValue: button.tag) {
             reloadViews(count: count)
-        } else {
-            reloadViews(count: nil)
         }
         view.endEditing(true)
-    }
-    
-    @objc private func scanQRCode(_ sender: Any) {
-        let scanner = QRCodeScannerViewController()
-        scanner.delegate = self
-        navigationController?.pushViewController(scanner, animated: true)
-    }
-    
-    @objc private func pastePhrases(_ sender: Any) {
-        let phrases = UIPasteboard.general.string?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .components(separatedBy: " ")
-        guard let phrases else {
-            return
-        }
-        input(phrases: phrases)
-        view.layoutIfNeeded()
-        if scrollView.contentSize.height + scrollView.adjustedContentInset.top > scrollView.frame.height {
-            let bottomOffset = CGPoint(
-                x: scrollView.contentOffset.x,
-                y: max(0, scrollView.contentSize.height - scrollView.frame.height)
-            )
-            scrollView.setContentOffset(bottomOffset, animated: true)
-        }
-    }
-    
-    @objc private func emptyPhrases(_ sender: Any) {
-        for inputField in inputFields {
-            inputField.textField.text = nil
-            inputField.setTextColor(.normal)
-        }
-        detectPhrases(sender)
     }
     
     @objc private func detectPhrases(_ sender: Any) {
         let phrases = self.textFieldPhrases
         if phrases.contains(where: \.isEmpty) {
-            errorDescriptionLabel.isHidden = true
-            confirmButton.isEnabled = false
-        } else if MixinMnemonics.areValid(phrases: phrases) {
-            errorDescriptionLabel.isHidden = true
-            confirmButton.isEnabled = true
+            errorDescriptionLabel.text = nil
+            signInButton.isEnabled = false
+        } else if arePhrasesValid(phrases) {
+            errorDescriptionLabel.text = nil
+            signInButton.isEnabled = true
         } else {
             errorDescriptionLabel.text = R.string.localizable.invalid_mnemonic_phrase()
-            errorDescriptionLabel.isHidden = false
-            confirmButton.isEnabled = false
+            signInButton.isEnabled = false
         }
     }
     
-    private func wordCountSwitchingButton(count: MixinMnemonics.PhrasesCount?) -> UIButton {
-        let button = ConfigurationBasedOutlineButton(type: .system)
-        let title = if let count {
-            R.string.localizable.number_of_words(count.rawValue)
-        } else {
-            R.string.localizable.unavailable_mnemonics_word_count()
+    private func input(phrases: [String]) {
+        guard let count = PhrasesCount(rawValue: phrases.count) else {
+            return
         }
+        if self.phrasesCount != count {
+            reloadViews(count: count)
+        }
+        for (index, phrase) in phrases.prefix(inputFields.count).enumerated() {
+            let inputField = inputFields[index]
+            inputField.setTextColor(phrase: phrase)
+            inputField.textField.text = phrase
+        }
+        detectPhrases(self)
+    }
+    
+    private func wordCountSwitchingButton(count: PhrasesCount) -> UIButton {
+        let button = ConfigurationBasedOutlineButton(type: .system)
         button.configuration = {
             var config: UIButton.Configuration = .bordered()
             config.cornerStyle = .capsule
             config.attributedTitle = AttributedString(
-                title,
-                attributes: AttributeContainer([
-                    .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
-                ])
+                string: R.string.localizable.number_of_words(count.rawValue),
+                scalingByFontSize: 14,
             )
             config.contentInsets = NSDirectionalEdgeInsets(top: 9, leading: 14, bottom: 9, trailing: 14)
             return config
         }()
-        button.tag = count?.rawValue ?? unavailablePhrasesCountTag
+        button.tag = count.rawValue
         button.addTarget(self, action: #selector(switchWordCount(_:)), for: .touchUpInside)
         button.isSelected = count == phrasesCount
         return button
     }
     
-    private func input(phrases: [String]) {
-        if let count = MixinMnemonics.PhrasesCount(rawValue: phrases.count) {
-            if self.phrasesCount != count {
-                reloadViews(count: count)
-            }
-            for (index, phrase) in phrases.prefix(inputFields.count).enumerated() {
-                let inputField = inputFields[index]
-                inputField.setTextColor(phrase: phrase)
-                inputField.textField.text = phrase
-            }
-            detectPhrases(self)
-        } else {
-            reloadViews(count: nil)
-        }
+}
+
+extension SignInWithMnemonicsViewController: NavigationBarStyling {
+    
+    var navigationBarStyle: NavigationBarStyle {
+        .secondaryBackground
     }
     
 }

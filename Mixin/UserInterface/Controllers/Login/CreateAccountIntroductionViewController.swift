@@ -5,13 +5,15 @@ final class CreateAccountIntroductionViewController: UIViewController {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var featureStackView: UIStackView!
-    @IBOutlet weak var continueButton: UIButton!
+    @IBOutlet weak var actionStackView: UIStackView!
+    @IBOutlet weak var createAccountButton: UIButton!
+    @IBOutlet weak var importWalletButton: UIButton!
     @IBOutlet weak var footerTextView: IntroTextView!
     
-    private let analyticSource: String
+    private let signUpSource: String
     
-    init(analyticSource: String) {
-        self.analyticSource = analyticSource
+    init(signUpSource: String) {
+        self.signUpSource = signUpSource
         let nib = R.nib.createAccountIntroductionView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -41,17 +43,17 @@ final class CreateAccountIntroductionViewController: UIViewController {
             ),
         ]
         featureViews.forEach(featureStackView.addArrangedSubview(_:))
-        continueButton.configuration?.attributedTitle = {
-            var attributes = AttributeContainer()
-            attributes.font = UIFontMetrics.default.scaledFont(
-                for: .systemFont(ofSize: 16, weight: .medium)
-            )
-            attributes.foregroundColor = .white
-            return AttributedString(
-                R.string.localizable.create_an_account(),
-                attributes: attributes
-            )
-        }()
+        actionStackView.setCustomSpacing(16, after: createAccountButton)
+        createAccountButton.configuration?.attributedTitle = AttributedString(
+            string: R.string.localizable.create_an_account(),
+            scalingByFontSize: 16,
+            weight: .medium
+        )
+        importWalletButton.configuration?.attributedTitle = AttributedString(
+            string: R.string.localizable.import_from_another_wallet(),
+            scalingByFontSize: 16,
+            weight: .medium
+        )
         footerTextView.attributedText = .agreement()
     }
     
@@ -68,7 +70,7 @@ final class CreateAccountIntroductionViewController: UIViewController {
         guard let navigationController else {
             return
         }
-        presentingViewController.dismiss(animated: true) { [analyticSource] in
+        presentingViewController.dismiss(animated: true) { [signUpSource] in
             let mnemonics: MixinMnemonics? = if let entropy = AppGroupKeychain.mnemonics {
                 try? MixinMnemonics(entropy: entropy)
             } else {
@@ -80,8 +82,28 @@ final class CreateAccountIntroductionViewController: UIViewController {
             }
             viewControllers.append(next)
             navigationController.setViewControllers(viewControllers, animated: true)
-            Logger.login.info(category: "CreateAccountIntro", message: "Sign up start")
-            reporter.report(event: .signUpStart, tags: ["source": analyticSource])
+            Logger.login.info(category: "CreateAccountIntro", message: "Sign Up")
+            reporter.report(event: .signUpStart, tags: ["source": signUpSource])
+        }
+    }
+    
+    @IBAction func importWallet(_ sender: Any) {
+        guard let presentingViewController else {
+            return
+        }
+        let navigationController = presentingViewController.navigationController
+        ?? (presentingViewController as? UINavigationController)
+        guard let navigationController else {
+            return
+        }
+        presentingViewController.dismiss(animated: true) {
+            let next = SignInWithBIP39MnemonicsViewController(analyticSource: "sign_up_intro_dialog")
+            var viewControllers = navigationController.viewControllers.filter { controller in
+                controller is OnboardingViewController
+            }
+            viewControllers.append(next)
+            navigationController.setViewControllers(viewControllers, animated: true)
+            Logger.login.info(category: "CreateAccountIntro", message: "Import Wallet")
         }
     }
     

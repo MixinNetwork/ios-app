@@ -1,7 +1,9 @@
 import UIKit
 import MixinServices
 
-final class TIPNavigationController: GeneralAppearanceNavigationController {
+final class TIPNavigationController: GeneralAppearanceNavigationController, CheckSessionEnvironmentChild {
+    
+    private let navigationBarAppearanceUpdater = NavigationBarStyle.AppearanceUpdater()
     
     convenience init(intent: TIP.Action) {
         Logger.tip.info(category: "TIPNavigation", message: "Init with intent: \(intent)")
@@ -13,6 +15,7 @@ final class TIPNavigationController: GeneralAppearanceNavigationController {
         Logger.tip.info(category: "TIPNavigation", message: "Init with arbitrary intro")
         super.init(rootViewController: intro)
         modalPresentationStyle = .fullScreen
+        delegate = navigationBarAppearanceUpdater
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -28,17 +31,12 @@ final class TIPNavigationController: GeneralAppearanceNavigationController {
         popToViewController(controller, animated: true)
     }
     
-    func finish() {
-        if AppDelegate.current.mainWindow.rootViewController == self {
-            if AppGroupUserDefaults.isSigningUp {
-                reporter.report(event: .signUpEnd)
-            } else {
-                reporter.report(event: .loginEnd)
-            }
-            Logger.tip.info(category: "TIPNavigation", message: "Finished")
-            Logger.redirectLogsToLogin = false
-            AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(
-                initialTab: .wallet
+    func finish(pin: String) {
+        Logger.tip.info(category: "TIPNavigation", message: "Finished")
+        if isCheckingSessionEnvironment {
+            checkSessionEnvironmentAgain(
+                freshAccount: LoginManager.shared.account,
+                pin: pin,
             )
         } else {
             presentingViewController?.dismiss(animated: true)

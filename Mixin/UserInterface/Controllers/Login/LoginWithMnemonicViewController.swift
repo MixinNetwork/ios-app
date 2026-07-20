@@ -5,7 +5,8 @@ import MixinServices
 final class LoginWithMnemonicViewController: IntroductionViewController, LoginAccountHandler {
     
     enum Action {
-        case signIn(MixinMnemonics)
+        case signInWithMixinMnemonics(MixinMnemonics)
+        case signInWithBIP39Mnemonics(MixinMnemonics)
         case signUp(MixinMnemonics?)
     }
     
@@ -51,7 +52,7 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
         actionButton.setTitle(R.string.localizable.retry(), for: .normal)
         actionButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
         switch action {
-        case .signIn:
+        case .signInWithMixinMnemonics, .signInWithBIP39Mnemonics:
             break
         case .signUp:
             var config: UIButton.Configuration = .plain()
@@ -96,9 +97,12 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
                 do {
                     let mnemonics: MixinMnemonics
                     switch action {
-                    case .signIn(let m):
+                    case let .signInWithMixinMnemonics(m):
                         mnemonics = m
-                        Logger.login.info(category: "MnemonicLogin", message: "Sign in with arbitrary mnemonics")
+                        Logger.login.info(category: "MnemonicLogin", message: "Sign in with arbitrary mixin mnemonics")
+                    case let .signInWithBIP39Mnemonics(m):
+                        mnemonics = m
+                        Logger.login.info(category: "MnemonicLogin", message: "Sign in with arbitrary bip39 mnemonics")
                     case .signUp(let m):
                         if let m {
                             mnemonics = m
@@ -122,13 +126,13 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     }
     
     @objc private func goToSignIn(_ sender: Any) {
-        let signIn = SignInWithMobileNumberViewController()
+        let signIn = SignInWithMobileNumberViewController(loginSource: "sign_up")
         navigationController?.pushViewController(replacingCurrent: signIn, animated: true)
     }
     
     private func showLoading() {
         titleLabel.text = switch action {
-        case .signIn:
+        case .signInWithMixinMnemonics, .signInWithBIP39Mnemonics:
             R.string.localizable.signing_in_to_your_account()
         case .signUp:
             R.string.localizable.creating_your_account()
@@ -143,7 +147,7 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     
     private func showError(_ description: String) {
         switch action {
-        case .signIn:
+        case .signInWithMixinMnemonics, .signInWithBIP39Mnemonics:
             titleLabel.text = R.string.localizable.signing_in_to_your_account()
         case .signUp:
             titleLabel.text = R.string.localizable.account_creation_failed()
@@ -164,7 +168,7 @@ extension LoginWithMnemonicViewController: Captcha.Reporting {
         switch action {
         case .signUp:
             (event: .signUpCAPTCHA, type: nil)
-        case .signIn:
+        case .signInWithMixinMnemonics, .signInWithBIP39Mnemonics:
             (event: .loginCAPTCHA, type: "mnemonic_phrase")
         }
     }
@@ -237,7 +241,7 @@ extension LoginWithMnemonicViewController {
             case .failure(let error):
                 Logger.login.error(category: "MnemonicLogin", message: "\(error)")
                 switch action {
-                case .signIn:
+                case .signInWithMixinMnemonics, .signInWithBIP39Mnemonics:
                     reporter.report(event: .errorSessionVerifications, tags: ["source":"login"])
                 case .signUp:
                     reporter.report(event: .errorSessionVerifications, tags: ["source":"sign_up"])
@@ -268,23 +272,29 @@ extension LoginWithMnemonicViewController {
                 }
                 switch result {
                 case let .success(account):
-                    let isSigningUp: Bool
+                    let intent: AccountVerificationIntent
                     switch self.action {
-                    case .signIn(let mnemonics):
-                        isSigningUp = false
+                    case let .signInWithMixinMnemonics(mnemonics):
+                        intent = .signIn(.mixinMnemonics)
+                        if account.isAnonymous {
+                            AppGroupKeychain.mnemonics = mnemonics.entropy
+                            Logger.login.info(category: "MnemonicLogin", message: "Mnemonics saved to Keychain")
+                        }
+                    case let .signInWithBIP39Mnemonics(mnemonics):
+                        intent = .signIn(.bip39Mnemonics)
                         if account.isAnonymous {
                             AppGroupKeychain.mnemonics = mnemonics.entropy
                             Logger.login.info(category: "MnemonicLogin", message: "Mnemonics saved to Keychain")
                         }
                     case .signUp:
-                        isSigningUp = true
+                        intent = .signUp(.mixinMnemonics)
                         reporter.registerUserInformation(account: account)
                         reporter.report(event: .signUpAccountCreated)
                     }
                     let error = self.login(
                         account: account,
-                        signingUp: isSigningUp,
-                        sessionKey: context.sessionKey
+                        intent: intent,
+                        sessionKey: context.sessionKey,
                     )
                     if let error {
                         Logger.login.error(category: "MnemonicLogin", message: "\(error)")

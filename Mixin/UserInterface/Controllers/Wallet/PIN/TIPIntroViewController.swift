@@ -155,9 +155,10 @@ final class TIPIntroViewController: UIViewController {
             }
         case .inputNeeded(let context):
             let navigationController = self.tipNavigationController
-            let validator = TIPPopupInputViewController(action: .continue(context, { [weak navigationController] in
-                navigationController?.finish()
-            }))
+            let action: TIPPopupInputViewController.ContinueActionSuccess = { [weak navigationController] pin in
+                navigationController?.finish(pin: pin)
+            }
+            let validator = TIPPopupInputViewController(action: .continue(context, action))
             present(validator, animated: true)
         case let .noInputNeeded(action, _):
             let viewController = TIPActionViewController(action: action)

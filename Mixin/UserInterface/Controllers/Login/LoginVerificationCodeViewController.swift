@@ -101,7 +101,15 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
             }
             switch result {
             case let .success(account):
-                if let error = self.login(account: account, signingUp: false, sessionKey: sessionKey) {
+                if account.hasEmptyName {
+                    reporter.report(event: .signUpAccountCreated)
+                }
+                let error = self.login(
+                    account: account,
+                    intent: .signIn(.mobileNumber),
+                    sessionKey: sessionKey,
+                )
+                if let error {
                     self.handleVerificationCodeError(error)
                 }
             case let .failure(error):

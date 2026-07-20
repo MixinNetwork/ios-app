@@ -1,15 +1,13 @@
 import UIKit
 import MixinServices
 
-final class SignalLoadingViewController: LoginLoadingViewController {
+final class SignalLoadingViewController: LoginLoadingViewController, CheckSessionEnvironmentChild {
     
     static var isLoaded: Bool {
         AppGroupUserDefaults.Crypto.isPrekeyLoaded
         && AppGroupUserDefaults.Crypto.isSessionSynchronized
         && AppGroupUserDefaults.User.isCircleSynchronized
     }
-    
-    var onFinished: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,14 +26,17 @@ final class SignalLoadingViewController: LoginLoadingViewController {
             
             let delay = max(0, 2 + startTime.timeIntervalSinceNow)
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                self.onFinished?()
+                self.checkSessionEnvironmentAgain()
             }
         }
         
-        if AppGroupUserDefaults.isSigningUp {
+        switch AccountVerificationIntent.current {
+        case .signUp:
             reporter.report(event: .signUpSignalInit)
-        } else {
+        case .signIn:
             reporter.report(event: .loginSignalInit)
+        default:
+            assertionFailure("Signal init on app relaunch")
         }
     }
     

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -12,9 +12,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CreateAccountIntroductionViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
-                <outlet property="continueButton" destination="UEE-2t-hQl" id="GUp-8L-4kM"/>
+                <outlet property="actionStackView" destination="xM7-U9-vWr" id="yxx-00-nwT"/>
+                <outlet property="createAccountButton" destination="UEE-2t-hQl" id="GUp-8L-4kM"/>
                 <outlet property="featureStackView" destination="DTz-lU-U3E" id="Is8-mC-VNd"/>
                 <outlet property="footerTextView" destination="Il3-1C-98l" id="L92-DL-xDf"/>
+                <outlet property="importWalletButton" destination="ONA-RI-Xwz" id="UZo-jl-BhJ"/>
                 <outlet property="titleLabel" destination="GyJ-kF-vh9" id="Pig-X2-648"/>
                 <outlet property="view" destination="iN0-l3-epB" id="fss-H6-TdZ"/>
             </connections>
@@ -28,7 +30,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oc3-od-6LT">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="666"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="685"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mnemonic_login" translatesAutoresizingMaskIntoConstraints="NO" id="VyS-Bj-EJy">
                                     <rect key="frame" x="158.66666666666666" y="70" width="76" height="72.333333333333314"/>
@@ -43,7 +45,7 @@
                                     <rect key="frame" x="24" y="243" width="345" height="235"/>
                                 </stackView>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="xM7-U9-vWr">
-                                    <rect key="frame" x="20" y="531.33333333333337" width="353" height="98.666666666666629"/>
+                                    <rect key="frame" x="20" y="498" width="353" height="151"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UEE-2t-hQl">
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="44"/>
@@ -62,8 +64,21 @@
                                                 <action selector="createAccount:" destination="-1" eventType="touchUpInside" id="Eat-Tw-d8g"/>
                                             </connections>
                                         </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ONA-RI-Xwz">
+                                            <rect key="frame" x="0.0" y="54" width="353" height="42.333333333333343"/>
+                                            <state key="normal" title="Button"/>
+                                            <buttonConfiguration key="configuration" style="filled" title="Import from another wallet?" cornerStyle="capsule">
+                                                <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="16"/>
+                                                <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="11" trailing="0.0"/>
+                                                <color key="baseForegroundColor" name="theme"/>
+                                                <color key="baseBackgroundColor" name="background_quaternary"/>
+                                            </buttonConfiguration>
+                                            <connections>
+                                                <action selector="importWallet:" destination="-1" eventType="touchUpInside" id="qOu-4w-GO3"/>
+                                            </connections>
+                                        </button>
                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="By proceeding, you agree to the Privacy Policy and Terms of Service." textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Il3-1C-98l" customClass="IntroTextView" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="54" width="353" height="44.666666666666657"/>
+                                            <rect key="frame" x="0.0" y="106.33333333333339" width="353" height="44.666666666666671"/>
                                             <color key="backgroundColor" name="background"/>
                                             <color key="textColor" systemColor="labelColor"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -131,6 +146,9 @@
         <image name="mnemonic_login" width="76" height="72.333335876464844"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_quaternary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

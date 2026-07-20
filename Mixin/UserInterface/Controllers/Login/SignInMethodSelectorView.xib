@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SignInMethodSelectorViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="agreementTextView" destination="VnZ-E0-7W4" id="suA-QQ-aBu"/>
+                <outlet property="signUpButton" destination="zTx-aI-kVp" id="JR2-bN-7Lk"/>
+                <outlet property="trayView" destination="SOK-OT-ifx" id="OCw-sL-nT8"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SOK-OT-ifx">
+                    <rect key="frame" x="0.0" y="661" width="393" height="123"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zTx-aI-kVp">
+                            <rect key="frame" x="36" y="0.0" width="321" height="43.333333333333336"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Don’t have an account yet?" cornerStyle="capsule">
+                                <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="16"/>
+                                <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="12" trailing="0.0"/>
+                                <color key="baseForegroundColor" name="theme"/>
+                                <color key="baseBackgroundColor" name="background"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="signUp:" destination="-1" eventType="touchUpInside" id="U65-xX-cUM"/>
+                            </connections>
+                        </button>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="By proceeding, you agree to the Privacy Policy and Terms of Service." textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="VnZ-E0-7W4" customClass="IntroTextView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="20" y="53.333333333333371" width="353" height="49.666666666666657"/>
+                            <color key="backgroundColor" name="background_secondary"/>
+                            <color key="textColor" systemColor="labelColor"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                        </textView>
+                    </subviews>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <constraints>
+                        <constraint firstItem="VnZ-E0-7W4" firstAttribute="leading" secondItem="SOK-OT-ifx" secondAttribute="leading" constant="20" id="0rq-Of-n0d"/>
+                        <constraint firstItem="zTx-aI-kVp" firstAttribute="leading" secondItem="SOK-OT-ifx" secondAttribute="leading" constant="36" id="283-Vf-Eis"/>
+                        <constraint firstItem="VnZ-E0-7W4" firstAttribute="top" secondItem="zTx-aI-kVp" secondAttribute="bottom" constant="10" id="J1U-s0-vr6"/>
+                        <constraint firstItem="zTx-aI-kVp" firstAttribute="top" secondItem="SOK-OT-ifx" secondAttribute="top" id="dgB-86-NFv"/>
+                        <constraint firstAttribute="trailing" secondItem="zTx-aI-kVp" secondAttribute="trailing" constant="36" id="eDB-Gb-nun"/>
+                        <constraint firstAttribute="trailing" secondItem="VnZ-E0-7W4" secondAttribute="trailing" constant="20" id="t9y-iA-bCM"/>
+                        <constraint firstAttribute="bottom" secondItem="VnZ-E0-7W4" secondAttribute="bottom" constant="20" id="uQT-ku-uGs"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="background_secondary"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="SOK-OT-ifx" secondAttribute="bottom" id="6xs-YJ-2Mi"/>
+                <constraint firstItem="SOK-OT-ifx" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="COC-HP-Xto"/>
+                <constraint firstAttribute="trailing" secondItem="SOK-OT-ifx" secondAttribute="trailing" id="FED-tr-hXM"/>
+            </constraints>
+            <point key="canvasLocation" x="-411.4503816793893" y="153.52112676056339"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

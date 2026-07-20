@@ -3,9 +3,14 @@ import MixinServices
 
 final class TIPPopupInputViewController: PinValidationViewController {
     
+    typealias ContinueActionSuccess = @MainActor @Sendable (_ pin: String) -> Void
+    
     enum Action {
         case migrate((_ pin: String) -> Void)
-        case `continue`(TIP.InterruptionContext, _ onSuccess: @MainActor @Sendable () -> Void)
+        case `continue`(
+            _ context: TIP.InterruptionContext,
+            _ onSuccess: ContinueActionSuccess,
+        )
     }
     
     struct ReportingError: Error, CustomNSError {
@@ -126,18 +131,20 @@ final class TIPPopupInputViewController: PinValidationViewController {
     private func continueCreate(
         with pin: String,
         failedSigners: [TIPSigner],
-        onSuccess: @MainActor @Sendable @escaping () -> Void
+        onSuccess: @escaping ContinueActionSuccess,
     ) {
 #if DEBUG
         if TIPDiagnostic.uiTestOnly {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: onSuccess)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                onSuccess("")
+            }
             return
         }
 #endif
         Logger.tip.info(category: "TIPPopupInput", message: "Continue create with failed signers: \(failedSigners.map(\.index))")
         Task {
             do {
-                let (_, account) = try await TIP.createTIPPriv(
+                _ = try await TIP.createTIPPriv(
                     pin: pin,
                     failedSigners: failedSigners,
                     legacyPIN: nil,
@@ -145,12 +152,11 @@ final class TIPPopupInputViewController: PinValidationViewController {
                     progressHandler: nil
                 )
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
-                try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
-                Logger.tip.info(category: "TIPPopupInput", message: "Registered to safe")
-                try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
-                Logger.tip.info(category: "TIPPopupInput", message: "Registered classic wallet")
                 AppGroupUserDefaults.User.loginPINValidated = true
-                await MainActor.run(body: onSuccess)
+                await MainActor.run {
+                    presentingViewController?.dismiss(animated: true)
+                    onSuccess(pin)
+                }
             } catch {
                 let reportingError = ReportingError(underlying: error, location: "ContinueCreate")
                 reporter.report(error: reportingError)
@@ -171,20 +177,21 @@ final class TIPPopupInputViewController: PinValidationViewController {
         isOldPINLegacy: Bool,
         new: String,
         failedSigners: [TIPSigner],
-        onSuccess: @MainActor @Sendable @escaping () -> Void
+        onSuccess: @escaping ContinueActionSuccess,
     ) {
 #if DEBUG
         if TIPDiagnostic.uiTestOnly {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: onSuccess)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                onSuccess("")
+            }
             return
         }
 #endif
         Logger.tip.info(category: "TIPPopupInput", message: "Continue change with failed signers: \(failedSigners.map(\.index))")
         Task {
             do {
-                let account: Account?
                 if isOldPINLegacy {
-                    (_, account) = try await TIP.createTIPPriv(
+                    _ = try await TIP.createTIPPriv(
                         pin: new,
                         failedSigners: failedSigners,
                         legacyPIN: old,
@@ -199,7 +206,7 @@ final class TIPPopupInputViewController: PinValidationViewController {
                     case .migrate:
                         isCounterBalanced = true
                     }
-                    account = try await TIP.updateTIPPriv(
+                    try await TIP.updateTIPPriv(
                         oldPIN: old,
                         newPIN: new,
                         isCounterBalanced: isCounterBalanced,
@@ -207,8 +214,6 @@ final class TIPPopupInputViewController: PinValidationViewController {
                         progressHandler: nil
                     )
                 }
-                try await TIP.registerToSafeIfNeeded(account: account, pin: new)
-                try await TIP.registerDefaultCommonWalletIfNeeded(pin: new)
                 if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                     Keychain.shared.storePIN(pin: new)
                 }
@@ -216,7 +221,10 @@ final class TIPPopupInputViewController: PinValidationViewController {
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 AppGroupUserDefaults.User.loginPINValidated = true
                 Logger.tip.info(category: "TIPPopupInput", message: "Changed successfully")
-                await MainActor.run(body: onSuccess)
+                await MainActor.run {
+                    presentingViewController?.dismiss(animated: true)
+                    onSuccess(new)
+                }
             } catch let error as TIPNode.Error {
                 let reportingError = ReportingError(underlying: error, location: "ContinueChange.Node")
                 reporter.report(error: reportingError)

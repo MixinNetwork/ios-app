@@ -22,6 +22,10 @@ public final class Web3AddressDAO: Web3DAO {
         }
     }
     
+    public func addresses() -> [Web3Address] {
+        db.select(with: "SELECT * FROM addresses")
+    }
+    
     public func address(walletID: String, chainID: String) -> Web3Address? {
         let sql = "SELECT * FROM addresses WHERE wallet_id = ? AND chain_id = ?"
         return db.select(with: sql, arguments: [walletID, chainID])
@@ -75,6 +79,19 @@ public final class Web3AddressDAO: Web3DAO {
             arguments: [walletCategory.rawValue]
         )
         return paths.compactMap({ $0 })
+    }
+    
+    public func firstWalletID(matching addresses: [String]) -> String? {
+        for address in addresses {
+            let walletID: String? = db.select(
+                with: "SELECT wallet_id FROM addresses WHERE destination = ?",
+                arguments: [address]
+            )
+            if let walletID {
+                return walletID
+            }
+        }
+        return nil
     }
     
     public func save(addresses: [Web3Address]) {

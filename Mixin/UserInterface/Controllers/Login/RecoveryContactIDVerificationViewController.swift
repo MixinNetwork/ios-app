@@ -7,8 +7,7 @@ final class RecoveryContactIDVerificationViewController: LoginInfoInputViewContr
     
     init(context: MobileNumberLoginContext) {
         self.context = context
-        let nib = R.nib.loginInfoInputView
-        super.init(nibName: nib.name, bundle: nib.bundle)
+        super.init(style: .primary)
     }
     
     required init?(coder: NSCoder) {

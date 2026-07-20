@@ -6,17 +6,29 @@ import MixinServices
 final class SignInWithMobileNumberViewController: MobileNumberViewController {
     
     private let cellularData = CTCellularData()
-    private let separatorLineView = R.nib.loginSeparatorLineView(withOwner: nil)!
-    private let mnemonicLoginButton = StyledButton(type: .system)
-    private let signupButton = StyledButton(type: .system)
+    private let loginSource: String
+    
+    private weak var signUpButton: UIButton!
+    private weak var actionStackViewToKeyboardConstraint: NSLayoutConstraint!
+    private weak var actionStackViewToSignUpConstraint: NSLayoutConstraint!
     
     private lazy var captcha = Captcha(viewController: self)
     
+    private var isViewAppearing = false
     private var isBusy = false
     private var request: Request?
     
     private var isNetworkPermissionRestricted: Bool {
         cellularData.restrictedState == .restricted && !ReachabilityManger.shared.isReachable
+    }
+    
+    init(loginSource: String) {
+        self.loginSource = loginSource
+        super.init(style: .secondary)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
     }
     
     override func viewDidLoad() {
@@ -25,45 +37,77 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
             .customerService(target: self, action: #selector(presentCustomerService(_:))),
         ]
         
-        declarationTextView.attributedText = .agreement()
+        declarationTextView.textContainerInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        declarationTextView.textColor = R.color.text_tertiary()
+        declarationTextView.textAlignment = .center
+        declarationTextView.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+        declarationTextView.adjustsFontForContentSizeCategory = true
+        declarationTextView.text = R.string.localizable.mobile_number_description()
         
-        actionStackView.addArrangedSubview(separatorLineView)
-        separatorLineView.snp.makeConstraints { make in
-            make.height.equalTo(24)
-        }
-        
-        mnemonicLoginButton.setTitle(R.string.localizable.sign_in_with_mnemonic_phrase(), for: .normal)
-        if let label = mnemonicLoginButton.titleLabel {
-            label.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
+        let signUpConfig: UIButton.Configuration = {
+            var config: UIButton.Configuration = .filled()
+            config.baseBackgroundColor = R.color.background()
+            config.baseForegroundColor = R.color.theme()
+            config.attributedTitle = AttributedString(
+                string: R.string.localizable.sign_in_no_account(),
+                scalingByFontSize: 16,
+                weight: .medium
+            )
+            config.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 20, bottom: 14, trailing: 20)
+            config.cornerStyle = .capsule
+            return config
+        }()
+        let signUpButton = UIButton(configuration: signUpConfig)
+        if let label = signUpButton.titleLabel {
             label.adjustsFontSizeToFitWidth = true
             label.minimumScaleFactor = 0.5
         }
-        mnemonicLoginButton.style = .outline
-        mnemonicLoginButton.applyDefaultContentInsets()
-        actionStackView.addArrangedSubview(mnemonicLoginButton)
-        mnemonicLoginButton.addTarget(self, action: #selector(mnemonicLogin(_:)), for: .touchUpInside)
-        
-        signupButton.setTitle(R.string.localizable.sign_in_no_account(), for: .normal)
-        if let label = signupButton.titleLabel {
-            label.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
-            label.adjustsFontSizeToFitWidth = true
-            label.minimumScaleFactor = 0.5
-        }
-        signupButton.style = .tinted
-        contentView.addSubview(signupButton)
-        signupButton.snp.makeConstraints { make in
+        contentView.addSubview(signUpButton)
+        signUpButton.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(36)
             make.trailing.equalToSuperview().offset(-36)
             make.bottom.equalTo(contentView.snp.bottom).offset(-30)
             make.top.greaterThanOrEqualTo(actionStackView.snp.bottom).offset(10)
         }
-        signupButton.applyDefaultContentInsets()
-        signupButton.addTarget(self, action: #selector(signup(_:)), for: .touchUpInside)
+        signUpButton.addTarget(self, action: #selector(signup(_:)), for: .touchUpInside)
+        self.signUpButton = signUpButton
+        
+        let actionStackViewToKeyboardConstraint = actionStackView.bottomAnchor
+            .constraint(equalTo: view.keyboardLayoutGuide.topAnchor, constant: -26)
+        actionStackViewToKeyboardConstraint.priority = .almostInexist
+        self.actionStackViewToKeyboardConstraint = actionStackViewToKeyboardConstraint
+        
+        let actionStackViewToSignUpConstraint = actionStackView.bottomAnchor
+            .constraint(equalTo: signUpButton.topAnchor, constant: -16)
+        actionStackViewToSignUpConstraint.priority = .almostRequired
+        self.actionStackViewToSignUpConstraint = actionStackViewToSignUpConstraint
+        
+        NSLayoutConstraint.activate([
+            actionStackViewToKeyboardConstraint,
+            actionStackViewToSignUpConstraint,
+        ])
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
-        reporter.report(event: .loginStart)
+        textField.becomeFirstResponder()
+        reporter.report(
+            event: .loginStart,
+            tags: [
+                "type": "phone_number",
+                "source": loginSource,
+            ]
+        )
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isViewAppearing = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        isViewAppearing = false
     }
     
     override func continueToNext(_ sender: Any) {
@@ -83,24 +127,37 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
         reporter.report(event: .customerServiceDialog, tags: ["source": "sign_in_phone_number"])
     }
     
-    @objc private func mnemonicLogin(_ sender: Any) {
-        let signIn = SignInWithMnemonicsViewController()
-        navigationController?.pushViewController(signIn, animated: true)
-    }
-    
     @objc private func signup(_ sender: Any) {
-        let intro = CreateAccountIntroductionViewController(analyticSource: "login_start")
+        let intro = CreateAccountIntroductionViewController(signUpSource: "login_phone_number")
         present(intro, animated: true)
     }
     
     @objc private func keyboardWillShow(_ notification: Notification) {
-        hideOtherOptions()
+        signUpButton.alpha = 0
+        actionStackViewToKeyboardConstraint.priority = .almostRequired
+        actionStackViewToSignUpConstraint.priority = .almostInexist
+        if isViewAppearing {
+            view.layoutIfNeeded()
+        }
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {
         if !isBusy && presentedViewController == nil {
-            showOtherOptions()
+            signUpButton.alpha = 1
         }
+        actionStackViewToKeyboardConstraint.priority = .almostInexist
+        actionStackViewToSignUpConstraint.priority = .almostRequired
+        if isViewAppearing {
+            view.layoutIfNeeded()
+        }
+    }
+    
+}
+
+extension SignInWithMobileNumberViewController: NavigationBarStyling {
+    
+    var navigationBarStyle: NavigationBarStyle {
+        .secondaryBackground
     }
     
 }
@@ -114,6 +171,12 @@ extension SignInWithMobileNumberViewController: Captcha.Reporting {
 }
 
 extension SignInWithMobileNumberViewController {
+    
+    private func updateViews(isBusy: Bool) {
+        self.isBusy = isBusy
+        continueButton.isBusy = isBusy
+        signUpButton.alpha = isBusy ? 0 : 1
+    }
     
     private func requestVerificationCode(captchaToken token: CaptchaToken?) {
         updateViews(isBusy: true)
@@ -189,24 +252,6 @@ extension SignInWithMobileNumberViewController {
                 }
             }
         }
-    }
-    
-    private func updateViews(isBusy: Bool) {
-        self.isBusy = isBusy
-        continueButton.isBusy = isBusy
-        isBusy ? hideOtherOptions() : showOtherOptions()
-    }
-    
-    private func hideOtherOptions() {
-        separatorLineView.alpha = 0
-        mnemonicLoginButton.alpha = 0
-        signupButton.alpha = 0
-    }
-    
-    private func showOtherOptions() {
-        separatorLineView.alpha = 1
-        mnemonicLoginButton.alpha = 1
-        signupButton.alpha = 1
     }
     
 }

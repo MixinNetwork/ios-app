@@ -492,6 +492,9 @@ extension TIP {
             let pin = try encryptTIPPIN(tipPriv: tipPriv, target: body)
             step2 += ", pin ready"
             
+            AppGroupKeychain.encryptedSalt = encryptedSalt
+            Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
+            
             let account = try await SafeAPI.register(
                 publicKey: pkHex,
                 signature: registerSignature.base64RawURLEncodedString(),
@@ -506,8 +509,6 @@ extension TIP {
                 AppGroupKeychain.mnemonics = nil
                 Logger.tip.info(category: "TIP", message: "AppGroupKeychain.mnemonics cleared")
             }
-            AppGroupKeychain.encryptedSalt = encryptedSalt
-            Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
             return account
         } catch {
             Logger.tip.error(category: "TIP", message: "Error: \(error), step1: \(step1), step2: \(step2)")

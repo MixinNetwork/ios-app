@@ -2,6 +2,7 @@ import UIKit
 
 class LoginLoadingViewController: UIViewController {
     
+    @IBOutlet weak var topStackView: UIStackView!
     @IBOutlet weak var bottomStackView: UIStackView!
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
     @IBOutlet weak var descriptionLabel: UILabel!

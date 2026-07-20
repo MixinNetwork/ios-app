@@ -97,9 +97,12 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
                 do {
                     let mnemonics: MixinMnemonics
                     switch action {
-                    case let .signInWithMixinMnemonics(m), let .signInWithBIP39Mnemonics(m):
+                    case let .signInWithMixinMnemonics(m):
                         mnemonics = m
-                        Logger.login.info(category: "MnemonicLogin", message: "Sign in with arbitrary mnemonics")
+                        Logger.login.info(category: "MnemonicLogin", message: "Sign in with arbitrary mixin mnemonics")
+                    case let .signInWithBIP39Mnemonics(m):
+                        mnemonics = m
+                        Logger.login.info(category: "MnemonicLogin", message: "Sign in with arbitrary bip39 mnemonics")
                     case .signUp(let m):
                         if let m {
                             mnemonics = m

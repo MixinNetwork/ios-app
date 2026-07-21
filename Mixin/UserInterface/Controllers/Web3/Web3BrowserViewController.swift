@@ -133,9 +133,11 @@ extension Web3BrowserViewController: UITableViewDelegate {
                 self?.present(profile, animated: true)
             }
         } else {
-            if let container = UIApplication.homeContainerViewController {
+            if let navigationController = UIApplication.homeNavigationController {
                 let url = searchResults[indexPath.row].homeURL
-                container.presentWebViewController(context: .init(conversationId: "", initialUrl: url))
+                navigationController.pushWebViewController(
+                    context: .init(conversationId: "", initialUrl: url)
+                )
             }
         }
     }

@@ -420,7 +420,8 @@ extension ExternalSharingConfirmationViewController {
         guard message.category.hasSuffix("_POST") else {
             return
         }
-        PostWebViewController.presentInstance(message: message, asChildOf: self)
+        let post = PostWebViewController(message: message)
+        navigationController?.pushViewController(post, animated: true)
     }
     
 }

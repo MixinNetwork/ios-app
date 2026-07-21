@@ -124,7 +124,9 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
         } else {
             let app = apps[indexPath.row - fixedExtensions.count].app
             if let conversationId = composer?.conversationId {
-                UIApplication.homeContainerViewController?.presentWebViewController(context: .init(conversationId: conversationId, app: app))
+                UIApplication.homeNavigationController?.pushWebViewController(
+                    context: .init(conversationId: conversationId, app: app),
+                )
             }
         }
     }

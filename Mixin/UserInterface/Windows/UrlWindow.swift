@@ -869,10 +869,12 @@ class UrlWindow {
             .compactMap(URL.init)
             .compactMap(\.host)
         if externalSchemeHosts.contains(host) {
-            guard let container = UIApplication.homeContainerViewController else {
+            guard let navigationController = UIApplication.homeNavigationController else {
                 return false
             }
-            container.presentWebViewController(context: .init(conversationId: "", initialUrl: url))
+            navigationController.pushWebViewController(
+                context: .init(conversationId: "", initialUrl: url)
+            )
             return true
         }
         return false
@@ -1013,8 +1015,12 @@ extension UrlWindow {
                     vc.updateUserFromRemoteAfterReloaded = refreshUser
                     UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
                 case .presentHomePage(let additionalQueries):
-                    UIApplication.homeContainerViewController?.presentWebViewController(
-                        context: .init(conversationId: conversationId, app: app, additionalURLQueries: additionalQueries)
+                    UIApplication.homeNavigationController?.pushWebViewController(
+                        context: .init(
+                            conversationId: conversationId,
+                            app: app,
+                            additionalURLQueries: additionalQueries
+                        )
                     )
                 }
             }

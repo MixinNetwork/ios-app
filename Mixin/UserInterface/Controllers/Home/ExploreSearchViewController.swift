@@ -42,11 +42,11 @@ extension ExploreSearchViewController where Self: UIViewController {
     }
     
     func presentDapp(app: Web3Dapp) {
-        guard let container = UIApplication.homeContainerViewController else {
+        guard let navigationController = UIApplication.homeNavigationController else {
             return
         }
         let context = MixinWebContext(conversationId: "", initialUrl: app.homeURL)
-        container.presentWebViewController(context: context)
+        navigationController.pushWebViewController(context: context)
         AppGroupUserDefaults.User.insertRecentSearch(.dapp(name: app.name))
     }
     

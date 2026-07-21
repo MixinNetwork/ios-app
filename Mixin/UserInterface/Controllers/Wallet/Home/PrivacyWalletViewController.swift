@@ -510,8 +510,12 @@ final class PrivacyWalletViewController: WalletViewController {
             case let .success(response):
                 hud.hide()
                 UserDAO.shared.updateUsers(users: [response])
-                if let app = response.app, let container = UIApplication.homeContainerViewController {
-                    container.presentWebViewController(context: .init(conversationId: conversationID, app: app))
+                if let app = response.app,
+                   let navigationController = UIApplication.homeNavigationController
+                {
+                    navigationController.pushWebViewController(
+                        context: .init(conversationId: conversationID, app: app)
+                    )
                 }
             case .failure:
                 hud.set(style: .error, text: R.string.localizable.network_connection_lost())
@@ -567,7 +571,7 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
         case let .banner(banner, _):
             banner.invokeRemoteActionURL()
         case .cash:
-            UIApplication.homeContainerViewController?.presentCashPage()
+            UIApplication.homeNavigationController?.presentCashPage()
         case .perpsPosition(let positionID):
             if let position = perpsPositions[positionID],
                let market = PerpsMarketDAO.shared.market(marketID: position.marketID),

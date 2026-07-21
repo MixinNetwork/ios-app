@@ -7,7 +7,7 @@ protocol QRCodeScannerViewControllerDelegate: AnyObject {
     func qrCodeScannerViewController(_ controller: QRCodeScannerViewController, shouldRecognizeString string: String) -> Bool
 }
 
-final class QRCodeScannerViewController: UIViewController, MixinNavigationAnimating {
+final class QRCodeScannerViewController: UIViewController, PopupNavigationAnimating {
     
     @IBOutlet weak var previewView: CaptureVideoPreviewView!
     @IBOutlet weak var gridView: UIImageView!

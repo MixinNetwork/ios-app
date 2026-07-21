@@ -3,9 +3,11 @@ import WebKit
 import Alamofire
 import MixinServices
 
-class WebViewController: FullscreenPopupViewController {
+class WebViewController: UIViewController {
     
     static let didDismissNotification = Notification.Name("one.mixin.messenger.WebViewController.didDismiss")
+    
+    @IBOutlet weak var pageControlView: PageControlView!
     
     @IBOutlet weak var statusBarBackgroundView: UIView!
     @IBOutlet weak var titleWrapperView: UIView!
@@ -16,38 +18,39 @@ class WebViewController: FullscreenPopupViewController {
     
     @IBOutlet weak var showPageTitleConstraint: NSLayoutConstraint!
     
-    weak var webContentView: UIView!
     weak var webView: WKWebView!
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        return statusBarStyle
+        statusBarStyle
     }
     
     var webViewConfiguration: WKWebViewConfiguration {
-        return WKWebViewConfiguration()
+        WKWebViewConfiguration()
     }
     
-    var availableNavigationController: UINavigationController? {
-        navigationController ?? UIApplication.homeNavigationController
-    }
-    
-    private let textDarkColor = R.color.text()!.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
-    
-    private var statusBarStyle = UIStatusBarStyle.default
+    private var statusBarStyle: UIStatusBarStyle = .default
     private var imageRequest: DataRequest?
+    
+    init() {
+        let nib = R.nib.webView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        webContentView = R.nib.webContentView(withOwner: self)!
-        contentView.insertSubview(webContentView, belowSubview: pageControlView)
-        webContentView.snp.makeEdgesEqualToSuperview()
-        titleStackView.snp.makeConstraints { make in
-            make.trailing.equalTo(pageControlView.snp.leading).offset(-20)
-        }
+        pageControlView.moreButton.addTarget(self, action: #selector(moreAction(_:)), for: .touchUpInside)
+        pageControlView.dismissButton.addTarget(self, action: #selector(dismissAction(_:)), for: .touchUpInside)
         reloadWebView()
-        let extractImageRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(extractImage(_:)))
+        let extractImageRecognizer = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(extractImage(_:))
+        )
         extractImageRecognizer.delegate = self
-        webContentView.addGestureRecognizer(extractImageRecognizer)
+        webViewWrapperView.addGestureRecognizer(extractImageRecognizer)
         updateBackground(pageThemeColor: .background, measureDarknessWithUserInterfaceStyle: true)
     }
     
@@ -56,8 +59,12 @@ class WebViewController: FullscreenPopupViewController {
         imageRequest?.cancel()
     }
     
-    override func popupDidDismissAsChild() {
-        NotificationCenter.default.post(name: Self.didDismissNotification, object: self)
+    @objc func dismissAction(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func moreAction(_ sender: Any) {
+        
     }
     
     func reloadWebView() {
@@ -75,7 +82,6 @@ class WebViewController: FullscreenPopupViewController {
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         webViewWrapperView.addSubview(webView)
         webView.snp.makeEdgesEqualToSuperview()
-        webView.scrollView.panGestureRecognizer.require(toFail: edgePanGestureRecognizer)
         webView.allowsBackForwardNavigationGestures = true
         self.webView = webView
         if let url {
@@ -96,7 +102,9 @@ class WebViewController: FullscreenPopupViewController {
             isThemeColorDark = pageThemeColor.w3cLightness < 0.5
         }
         
-        titleLabel.textColor = isThemeColorDark ? .white : textDarkColor
+        titleLabel.textColor = isThemeColorDark ? .white : R.color.text()!.resolvedColor(
+            with: UITraitCollection(userInterfaceStyle: .light)
+        )
         pageControlView.style = isThemeColorDark ? .dark : .light
         statusBarStyle = isThemeColorDark ? .lightContent : .darkContent
         setNeedsStatusBarAppearanceUpdate()
@@ -153,6 +161,22 @@ class WebViewController: FullscreenPopupViewController {
         }
         controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(controller, animated: true, completion: nil)
+    }
+    
+}
+
+extension WebViewController: NavigationBarStyling {
+    
+    var navigationBarStyle: NavigationBarStyle {
+        .hide
+    }
+    
+}
+
+extension WebViewController: PopupNavigationAnimating {
+    
+    var interactivePopOut: Bool {
+        true
     }
     
 }

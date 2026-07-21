@@ -149,7 +149,7 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
             }
             BadgeManager.shared.setHasViewed(identifier: .membership)
         case .referral:
-            UIApplication.homeContainerViewController?.presentReferralPage()
+            UIApplication.homeNavigationController?.presentReferralPage()
             BadgeManager.shared.setHasViewed(identifier: .referral)
         case .linkDesktop:
             let desktop = DesktopViewController()
@@ -193,18 +193,12 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
     }
     
     func openApp(user: User) {
-        guard let container = UIApplication.homeContainerViewController else {
+        guard let app = AppDAO.shared.getApp(ofUserId: user.userId) else {
             return
         }
-        DispatchQueue.global().async {
-            guard let app = AppDAO.shared.getApp(ofUserId: user.userId) else {
-                return
-            }
-            DispatchQueue.main.async {
-                AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
-                container.presentWebViewController(context: .init(conversationId: "", app: app))
-            }
-        }
+        AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
+        let web = MixinWebViewController(context: .init(conversationId: "", app: app))
+        navigationController?.pushViewController(web, animated: true)
     }
     
 }

@@ -1021,7 +1021,7 @@ extension WalletViewController: WalletReferralCell.Delegate {
     }
     
     func walletReferralCellDidSelectLearnMore(_ cell: WalletReferralCell) {
-        UIApplication.homeContainerViewController?.presentReferralPage()
+        UIApplication.homeNavigationController?.presentReferralPage()
         BadgeManager.shared.setHasViewed(identifier: .referral)
     }
     

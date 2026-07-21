@@ -262,9 +262,10 @@ extension StaticMessagesViewController {
                     let vc = UserProfileViewController(user: user)
                     present(vc, animated: true, completion: nil)
                 }
-            } else if message.category.hasSuffix("_POST"), let parent = parent {
+            } else if message.category.hasSuffix("_POST") {
                 let message = Message.createMessage(message: message)
-                PostWebViewController.presentInstance(message: message, asChildOf: parent)
+                let post = PostWebViewController(message: message)
+                navigationController?.pushViewController(post, animated: true)
             } else if message.category.hasSuffix("_LOCATION"), let location = message.location {
                 let vc = LocationPreviewViewController(location: location)
                 navigationController?.pushViewController(vc, animated: true)
@@ -287,11 +288,11 @@ extension StaticMessagesViewController {
                         guard !UrlWindow.checkUrl(url: content.action) else {
                             return
                         }
-                        guard let container = UIApplication.homeContainerViewController else {
+                        guard let navigationController = UIApplication.homeNavigationController else {
                             return
                         }
                         let context = MixinWebContext(conversationId: "", url: content.action, app: app)
-                        container.presentWebViewController(context: context)
+                        navigationController.pushWebViewController(context: context)
                     }
                 }
             } else if message.category.hasSuffix("_TRANSCRIPT"), let parent = parent {
@@ -635,10 +636,12 @@ extension StaticMessagesViewController {
         guard !UrlWindow.checkUrl(url: url) else {
             return
         }
-        guard let container = UIApplication.homeContainerViewController else {
+        guard let navigationController = UIApplication.homeNavigationController else {
             return
         }
-        container.presentWebViewController(context: .init(conversationId: "", initialUrl: url))
+        navigationController.pushWebViewController(
+            context: .init(conversationId: "", initialUrl: url)
+        )
     }
     
     private func contextMenuConfigurationForRow(at indexPath: IndexPath) -> UIContextMenuConfiguration? {

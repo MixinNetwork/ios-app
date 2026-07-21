@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCell>, MixinNavigationAnimating {
+final class ContactSelectorViewController: UserItemPeerViewController<CheckmarkPeerCell>, PopupNavigationAnimating {
     
     private weak var conversationInputViewController: ConversationInputViewController?
     

@@ -555,8 +555,6 @@ extension CheckSessionEnvironmentViewController {
     
     private final class RestoreChatNavigationHandler: NSObject, UINavigationControllerDelegate {
         
-        private lazy var presentFromBottomAnimator = PresentFromBottomAnimator()
-        
         func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
             if viewController is QRCodeScannerViewController && !navigationController.isNavigationBarHidden {
                 navigationController.setNavigationBarHidden(true, animated: animated)
@@ -565,37 +563,26 @@ extension CheckSessionEnvironmentViewController {
             }
         }
         
-        func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-            if operation == .push {
-                if let targetVC = toVC as? MixinNavigationAnimating {
-                    switch targetVC.pushAnimation {
-                    case .push:
-                        return nil
-                    case .present:
-                        presentFromBottomAnimator.operation = operation
-                        return presentFromBottomAnimator
-                    }
-                }
-            } else if operation == .pop {
-                if let targetVC = fromVC as? MixinNavigationAnimating {
-                    switch targetVC.popAnimation {
-                    case .pop:
-                        return nil
-                    case .dismiss:
-                        presentFromBottomAnimator.operation = operation
-                        return presentFromBottomAnimator
-                    }
-                }
+        func navigationController(
+            _ navigationController: UINavigationController,
+            animationControllerFor operation: UINavigationController.Operation,
+            from fromVC: UIViewController,
+            to toVC: UIViewController
+        ) -> UIViewControllerAnimatedTransitioning? {
+            switch operation {
+            case .push where toVC is PopupNavigationAnimating:
+                PopInNavigationAnimator()
+            case .pop where fromVC is PopupNavigationAnimating:
+                PopOutNavigationAnimator()
+            default:
+                nil
             }
-            return nil
         }
         
     }
     
     private final class FetchWalletNavigationController: GeneralAppearanceNavigationController {
         
-        private lazy var presentFromBottomAnimator = PresentFromBottomAnimator()
-        
         func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
             if viewController is QRCodeScannerViewController && !navigationController.isNavigationBarHidden {
                 navigationController.setNavigationBarHidden(true, animated: animated)
@@ -604,29 +591,20 @@ extension CheckSessionEnvironmentViewController {
             }
         }
         
-        func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-            if operation == .push {
-                if let targetVC = toVC as? MixinNavigationAnimating {
-                    switch targetVC.pushAnimation {
-                    case .push:
-                        return nil
-                    case .present:
-                        presentFromBottomAnimator.operation = operation
-                        return presentFromBottomAnimator
-                    }
-                }
-            } else if operation == .pop {
-                if let targetVC = fromVC as? MixinNavigationAnimating {
-                    switch targetVC.popAnimation {
-                    case .pop:
-                        return nil
-                    case .dismiss:
-                        presentFromBottomAnimator.operation = operation
-                        return presentFromBottomAnimator
-                    }
-                }
+        func navigationController(
+            _ navigationController: UINavigationController,
+            animationControllerFor operation: UINavigationController.Operation,
+            from fromVC: UIViewController,
+            to toVC: UIViewController
+        ) -> UIViewControllerAnimatedTransitioning? {
+            switch operation {
+            case .push where toVC is PopupNavigationAnimating:
+                PopInNavigationAnimator()
+            case .pop where fromVC is PopupNavigationAnimating:
+                PopOutNavigationAnimator()
+            default:
+                nil
             }
-            return nil
         }
         
     }

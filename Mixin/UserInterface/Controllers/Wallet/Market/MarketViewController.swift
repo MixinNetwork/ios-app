@@ -471,13 +471,7 @@ final class MarketViewController: UIViewController {
                 side: side,
                 viewModel: viewModel
             )
-            reporter.report(
-                event: .tradePerpsOpenPositionStart,
-                tags: [
-                    "direction": side.rawValue,
-                    "source": analyticSource.rawValue,
-                ]
-            )
+            UserOperationAnalytics.tradeSource = analyticSource
         }
         navigationController?.pushViewController(next, animated: true)
     }

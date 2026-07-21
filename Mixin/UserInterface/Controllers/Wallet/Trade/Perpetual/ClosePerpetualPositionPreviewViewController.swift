@@ -69,12 +69,12 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
     
     override func confirm(_ sender: Any) {
         super.confirm(sender)
-        reporter.report(event: .tradePerpsClosePositionPreviewConfirm)
+        reporter.report(event: .tradePerpsClosePreviewConfirm)
     }
     
     override func close(_ sender: Any) {
         super.close(sender)
-        reporter.report(event: .tradePerpsClosePositionPreviewCancel)
+        reporter.report(event: .tradePerpsClosePreviewCancel)
     }
     
     override func performAction(with pin: String) {
@@ -89,7 +89,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         Task {
             do {
                 try await AccountAPI.verify(pin: pin)
-                try await RouteAPI.closePerpsOrder(positionID: positionID)
+                _ = try await RouteAPI.closePerpsOrder(positionID: positionID)
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {
                     canDismissInteractively = true
@@ -100,7 +100,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                     )
                     tableView.setContentOffset(.zero, animated: true)
                     loadFinishedTrayView()
-                    reporter.report(event: .tradePerpsClosePositionEnd)
+                    reporter.report(event: .tradePerpsCloseEnd)
                 }
             } catch {
                 let errorDescription = if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {

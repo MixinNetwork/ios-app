@@ -318,7 +318,7 @@ final class PerpetualMarketViewController: UIViewController {
         }
         let preview = ClosePerpetualPositionPreviewViewController(viewModel: viewModel)
         present(preview, animated: true)
-        reporter.report(event: .tradePerpsClosePositionStart)
+        reporter.report(event: .tradePerpsCloseStart, tags: ["type": "single"])
     }
     
     @objc private func reloadMarket(_ notification: Notification) {
@@ -431,7 +431,7 @@ final class PerpetualMarketViewController: UIViewController {
         let activities = PerpetualActivitiesViewController(wallet: wallet)
         navigationController?.pushViewController(activities, animated: true)
         reporter.report(
-            event: .tradePerpsActivity,
+            event: .tradePerpsActivities,
             tags: ["source": "perps_market"]
         )
     }

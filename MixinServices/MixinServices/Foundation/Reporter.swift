@@ -35,20 +35,27 @@ open class Reporter {
         case tradeSpotOrders        = "trade_spot_orders"
         case tradeSpotOrderDetail   = "trade_spot_order_detail"
         
-        case tradePerpsOpenPositionStart    = "trade_perps_open_position_start"
-        case tradePerpsMarginTokenSelect    = "trade_perps_margin_token_select"
-        case tradePerpsAmountInputPercent   = "trade_perps_amount_input_percent"
-        case tradePerpsAmountInputBalance   = "trade_perps_amount_input_balance"
-        case tradePerpsLeverageSelect       = "trade_perps_leverage_select"
-        case tradePerpsPreview              = "trade_perps_preview"
-        case tradePerpsPreviewConfirm       = "trade_perps_preview_confirm"
-        case tradePerpsPreviewCancel        = "trade_perps_preview_cancel"
-        case tradePerpsOpenPositionEnd      = "trade_perps_open_position_end"
-        case tradePerpsClosePositionStart   = "trade_perps_close_position_start"
-        case tradePerpsClosePositionPreviewConfirm  = "trade_perps_close_position_preview_confirm"
-        case tradePerpsClosePositionPreviewCancel   = "trade_perps_close_position_preview_cancel"
-        case tradePerpsClosePositionEnd     = "trade_perps_close_position_end"
-        case tradePerpsActivity             = "trade_perps_activity"
+        case tradePerpsOpenStart            = "trade_perps_open_start"
+        case tradePerpsOpenMarginSelect     = "trade_perps_open_margin_select"
+        case tradePerpsOpenAmountPercent    = "trade_perps_open_amount_percent"
+        case tradePerpsOpenAmountBalance    = "trade_perps_open_amount_balance"
+        case tradePerpsOpenLeverageSelect   = "trade_perps_open_leverage_select"
+        case tradePerpsOpenPreview          = "trade_perps_open_preview"
+        case tradePerpsOpenPreviewConfirm   = "trade_perps_open_preview_confirm"
+        case tradePerpsOpenPreviewCancel    = "trade_perps_open_preview_cancel"
+        case tradePerpsOpenEnd              = "trade_perps_open_end"
+        case tradePerpsAddStart             = "trade_perps_add_start"
+        case tradePerpsAddMarginSelect      = "trade_perps_add_margin_select"
+        case tradePerpsAddPreview           = "trade_perps_add_preview"
+        case tradePerpsAddPreviewConfirm    = "trade_perps_add_preview_confirm"
+        case tradePerpsAddPreviewCancel     = "trade_perps_add_preview_cancel"
+        case tradePerpsAddCancel            = "trade_perps_add_cancel"
+        case tradePerpsAddEnd               = "trade_perps_add_end"
+        case tradePerpsCloseStart           = "trade_perps_close_start"
+        case tradePerpsClosePreviewConfirm  = "trade_perps_close_preview_confirm"
+        case tradePerpsClosePreviewCancel   = "trade_perps_close_preview_cancel"
+        case tradePerpsCloseEnd             = "trade_perps_close_end"
+        case tradePerpsActivities           = "trade_perps_activities"
         case tradePerpsActivityDetail       = "trade_perps_activity_detail"
         case tradePerpsGuide                = "trade_perps_guide"
         case tradePerpsAllPositions         = "trade_perps_all_positions"
@@ -168,6 +175,14 @@ extension Reporter {
         let data = Data(userID.utf8)
         let hash = SHA256.hash(data: data)
         return hash.hexEncodedString()
+    }
+    
+}
+
+extension Reporter {
+ 
+    public static func assetLevel(decimalUSDPrice: Decimal, decimalAmount: Decimal) -> String {
+        decimalUSDPrice.isZero ? "N/A" : (decimalUSDPrice * decimalAmount).reportingAssetLevel
     }
     
 }

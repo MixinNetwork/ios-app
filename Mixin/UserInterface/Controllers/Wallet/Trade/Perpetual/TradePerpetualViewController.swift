@@ -485,7 +485,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewActivities()
                     reporter.report(
-                        event: .tradePerpsActivity,
+                        event: .tradePerpsActivities,
                         tags: ["source": "perps_home_card_arrow"]
                     )
                 }
@@ -513,7 +513,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.onViewAll = { [weak self] (sender) in
                     self?.viewActivities()
                     reporter.report(
-                        event: .tradePerpsActivity,
+                        event: .tradePerpsActivities,
                         tags: ["source": "perps_home_card_more"]
                     )
                 }

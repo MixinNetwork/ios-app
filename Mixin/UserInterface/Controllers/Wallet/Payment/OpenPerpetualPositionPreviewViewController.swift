@@ -187,12 +187,22 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
     
     override func confirm(_ sender: Any) {
         super.confirm(sender)
-        reporter.report(event: .tradePerpsPreviewConfirm)
+        switch context.operation {
+        case .open:
+            reporter.report(event: .tradePerpsOpenPreviewConfirm)
+        case .increase:
+            reporter.report(event: .tradePerpsAddPreviewConfirm)
+        }
     }
     
     override func close(_ sender: Any) {
         super.close(sender)
-        reporter.report(event: .tradePerpsPreviewCancel)
+        switch context.operation {
+        case .open:
+            reporter.report(event: .tradePerpsOpenPreviewCancel)
+        case .increase:
+            reporter.report(event: .tradePerpsAddPreviewCancel)
+        }
     }
     
     override func performAction(with pin: String) {
@@ -233,13 +243,18 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     if let callback = context.onDismissAfterSuccess {
                         onDismiss = callback
                     }
-                    reporter.report(
-                        event: .tradePerpsOpenPositionEnd,
-                        tags: [
-                            "leverage": "\(context.leverageMultiplier)",
-                            "trade_asset_level": operation.amount.reportingAssetLevel,
-                        ]
-                    )
+                    switch context.operation {
+                    case .open:
+                        reporter.report(
+                            event: .tradePerpsOpenEnd,
+                            tags: [
+                                "leverage": "\(context.leverageMultiplier)",
+                                "asset_level": Reporter.assetLevel(decimalUSDPrice: operation.token.decimalUSDPrice, decimalAmount: operation.amount),
+                            ]
+                        )
+                    case .increase:
+                        reporter.report(event: .tradePerpsAddEnd)
+                    }
                 }
             } catch {
                 let errorDescription = if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {

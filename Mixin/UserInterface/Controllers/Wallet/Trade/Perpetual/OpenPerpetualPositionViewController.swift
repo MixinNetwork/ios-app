@@ -211,7 +211,7 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
         
         var tags = ["direction": side.rawValue]
         tags["source"] = UserOperationAnalytics.tradeSource?.rawValue
-        reporter.report(event: .tradePerpsOpenPositionStart, tags: tags)
+        reporter.report(event: .tradePerpsOpenStart, tags: tags)
     }
     
     override func editMarginAmount(_ textField: UITextField) {
@@ -294,7 +294,7 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
         guard let marginToken, let liquidationPrice else {
             return
         }
-        reporter.report(event: .tradePerpsPreview)
+        reporter.report(event: .tradePerpsOpenPreview)
         marginAmountTextField.resignFirstResponder()
         let request = OpenPerpetualOrderRequest(
             assetID: marginToken.assetID,
@@ -529,7 +529,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         switch multipliers[indexPath.item] {
         case .custom:
-            reporter.report(event: .tradePerpsLeverageSelect, tags: ["leverage": "custom_tab"])
+            reporter.report(event: .tradePerpsOpenLeverageSelect, tags: ["leverage": "custom_tab"])
             inputCustomLeverageMultiplier()
             return false
         default:
@@ -540,7 +540,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         switch multipliers[indexPath.item] {
         case .custom:
-            reporter.report(event: .tradePerpsLeverageSelect, tags: ["leverage": "custom_tab"])
+            reporter.report(event: .tradePerpsOpenLeverageSelect, tags: ["leverage": "custom_tab"])
             inputCustomLeverageMultiplier()
         default:
             break
@@ -552,10 +552,10 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
         marginAmountTextField.resignFirstResponder()
         switch multipliers[indexPath.item] {
         case .fixed(let leverage):
-            reporter.report(event: .tradePerpsLeverageSelect, tags: ["leverage": "\(leverage)x"])
+            reporter.report(event: .tradePerpsOpenLeverageSelect, tags: ["leverage": "\(leverage)x"])
             inputLeverageMultiplier(value: leverage)
         case .max:
-            reporter.report(event: .tradePerpsLeverageSelect, tags: ["leverage": "max"])
+            reporter.report(event: .tradePerpsOpenLeverageSelect, tags: ["leverage": "max"])
             inputLeverageMultiplier(value: viewModel.maxLeverageMultiplier)
         case .custom:
             break
@@ -567,7 +567,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
 extension OpenPerpetualPositionViewController: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        reporter.report(event: .tradePerpsLeverageSelect, tags: ["leverage": "custom_input"])
+        reporter.report(event: .tradePerpsOpenLeverageSelect, tags: ["leverage": "custom_input"])
         inputCustomLeverageMultiplier()
         return false
     }

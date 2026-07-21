@@ -1297,8 +1297,8 @@ extension ReceiveMessageService {
             insert(message: message)
             var tags: [String: String] = [:]
             if let token = mixinToken {
-                tags["receive_asset_symbol"] = token.symbol
-                tags["receive_asset_level"] = (token.decimalUSDPrice * snapshot.decimalAmount).reportingAssetLevel
+                tags["asset_symbol"] = token.symbol
+                tags["asset_level"] = Reporter.assetLevel(decimalUSDPrice: token.decimalUSDPrice, decimalAmount: snapshot.decimalAmount)
             }
             reporter.report(event: .receiveSuccess, tags: tags)
         }

@@ -208,7 +208,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                         event: .tradeSpotEnd,
                         tags: [
                             "wallet": "main",
-                            "trade_asset_level": (sendToken.decimalUSDPrice * sendAmount).reportingAssetLevel
+                            "asset_level": Reporter.assetLevel(decimalUSDPrice: sendToken.decimalUSDPrice, decimalAmount: sendAmount)
                         ]
                     )
                     let inexistAssetIDs = TokenDAO.shared.inexistAssetIDs(in: assetIDs)
@@ -222,7 +222,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                         event: .tradeSpotEnd,
                         tags: [
                             "wallet": "web3",
-                            "trade_asset_level": (sendToken.decimalUSDPrice * sendAmount).reportingAssetLevel
+                            "asset_level": Reporter.assetLevel(decimalUSDPrice: sendToken.decimalUSDPrice, decimalAmount: sendAmount)
                         ]
                     )
                     let walletID = operation.wallet.walletID

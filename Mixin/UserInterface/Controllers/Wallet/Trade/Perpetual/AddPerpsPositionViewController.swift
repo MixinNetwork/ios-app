@@ -30,6 +30,10 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     
     private var liquidationPriceAfterAdding: Decimal?
     
+    override var operation: OperationType {
+        .increase
+    }
+    
     private var isAdding = false {
         didSet {
             if isAdding {
@@ -77,6 +81,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         presentationController?.delegate = self
+        reporter.report(event: .tradePerpsAddStart, tags: ["type": "add_position"])
         
         titleView.iconView.setIcon(tokenIconURL: marketViewModel.iconURL)
         titleView.titleLabel.text = R.string.localizable.add_position_title(
@@ -180,6 +185,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     
     @IBAction func cancel(_ sender: Any) {
         presentingViewController?.dismiss(animated: true)
+        reporter.report(event: .tradePerpsAddCancel)
     }
     
     @IBAction func add(_ sender: Any) {
@@ -189,6 +195,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
         else {
             return
         }
+        reporter.report(event: .tradePerpsAddPreview)
         isAdding = true
         showError(description: nil)
         let amount = marginAmount.formatted(

@@ -223,6 +223,11 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         )
     }
     
+    override func inputTokenBalance(_ sender: Any) {
+        inputAmount(withBalanceMultipliedBy: 1)
+        reporter.report(event: .tradePerpsOpenAmountBalance)
+    }
+    
     override func inputAmount(withBalanceMultipliedBy balanceMultiplier: Decimal) {
         super.inputAmount(withBalanceMultipliedBy: balanceMultiplier)
         updateDescriptions(
@@ -353,6 +358,14 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
                 self.reviewButton.isBusy = false
             }
         }
+    }
+    
+    override func reportPercentageInput(percent: String) {
+        reporter.report(event: .tradePerpsOpenAmountPercent, tags: ["percent": percent])
+    }
+    
+    override func reportMarginTokenSelection(tags: [String : String]) {
+        reporter.report(event: .tradePerpsOpenMarginSelect, tags: tags)
     }
     
     @objc private func presentCustomerService(_ sender: Any) {

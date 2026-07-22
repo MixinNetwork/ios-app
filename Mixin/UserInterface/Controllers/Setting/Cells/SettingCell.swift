@@ -150,10 +150,11 @@ final class SettingCell: ModernSelectedBackgroundCell {
         }
         switch accessory {
         case .none:
-            accessoryImageViewIfLoaded?.isHidden = true
             accessorySwitchIfLoaded?.isHidden = true
+            accessoryImageViewIfLoaded?.isHidden = true
             accessoryBusyIndicatorIfLoaded?.stopAnimating()
         case .disclosure:
+            accessorySwitchIfLoaded?.isHidden = true
             accessoryBusyIndicatorIfLoaded?.stopAnimating()
             accessoryImageView.image = R.image.ic_accessory_disclosure()
             if accessoryImageView.superview == nil {
@@ -161,6 +162,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
             }
             accessoryImageView.isHidden = false
         case .checkmark:
+            accessorySwitchIfLoaded?.isHidden = true
             accessoryBusyIndicatorIfLoaded?.stopAnimating()
             accessoryImageView.image = R.image.setting.ic_checkmark()
             if accessoryImageView.superview == nil {
@@ -172,6 +174,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
                 UIView.setAnimationsEnabled(false)
             }
             accessoryBusyIndicatorIfLoaded?.stopAnimating()
+            accessoryImageViewIfLoaded?.isHidden = true
             if accessorySwitch.superview == nil {
                 contentStackView.addArrangedSubview(accessorySwitch)
             }
@@ -182,6 +185,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
             accessorySwitch.isEnabled = isEnabled
             accessorySwitch.setOn(isOn, animated: animated)
         case .busy:
+            accessorySwitchIfLoaded?.isHidden = true
             accessoryImageViewIfLoaded?.isHidden = true
             if accessoryBusyIndicator.superview == nil {
                 contentStackView.addArrangedSubview(accessoryBusyIndicator)

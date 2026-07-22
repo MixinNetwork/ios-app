@@ -43,6 +43,9 @@ final class DiagnoseViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: "Reset Perps Orders"),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Membership", accessory: .disclosure),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -108,6 +111,9 @@ extension DiagnoseViewController: UITableViewDelegate {
         switch (indexPath.section, indexPath.row) {
         case (0, 0):
             navigationController?.pushViewController(DatabaseDiagnosticViewController(), animated: true)
+        case (1, 0):
+            // Enable WebRTC Log
+            break
         case (2, 0):
             navigationController?.pushViewController(AttachmentDiagnosticViewController(), animated: true)
         case (3, 0):
@@ -155,12 +161,15 @@ extension DiagnoseViewController: UITableViewDelegate {
         case (12, 0):
             PerpsOrderDAO.shared.deleteAll()
             showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
-#if DEBUG
         case (13, 0):
+            navigationController?.pushViewController(MembershipDiagnoseViewController(), animated: true)
+#if DEBUG
+        default:
             navigationController?.pushViewController(TIPDiagnosticViewController(), animated: true)
-#endif
+#else
         default:
             break
+#endif
         }
     }
     

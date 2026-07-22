@@ -730,6 +730,8 @@
 		940FC5EB2CDBC4F10056BFF2 /* ViewMnemonicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC5EA2CDBC4B30056BFF2 /* ViewMnemonicsViewController.swift */; };
 		940FC5F52CDBDD260056BFF2 /* SessionVerificationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC5F42CDBDD250056BFF2 /* SessionVerificationContext.swift */; };
 		940FC8602CDCA8970056BFF2 /* MobileNumberLoginContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC85F2CDCA8970056BFF2 /* MobileNumberLoginContext.swift */; };
+		9410C94D300FCE4E0062E8F3 /* MembershipDiagnoseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9410C94C300FCE4E0062E8F3 /* MembershipDiagnoseView.xib */; };
+		9410C94E300FCE4E0062E8F3 /* MembershipDiagnoseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9410C94B300FCE4E0062E8F3 /* MembershipDiagnoseViewController.swift */; };
 		9411B3B42C7F2EBD005753F0 /* ExploreMarketHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9411B3B32C7F2EBD005753F0 /* ExploreMarketHeaderView.xib */; };
 		9411B3B52C7F2EBD005753F0 /* ExploreMarketHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411B3B22C7F2EBD005753F0 /* ExploreMarketHeaderView.swift */; };
 		9412AF4D2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9412AF4C2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib */; };
@@ -2709,6 +2711,8 @@
 		940FC5EA2CDBC4B30056BFF2 /* ViewMnemonicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewMnemonicsViewController.swift; sourceTree = "<group>"; };
 		940FC5F42CDBDD250056BFF2 /* SessionVerificationContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionVerificationContext.swift; sourceTree = "<group>"; };
 		940FC85F2CDCA8970056BFF2 /* MobileNumberLoginContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileNumberLoginContext.swift; sourceTree = "<group>"; };
+		9410C94B300FCE4E0062E8F3 /* MembershipDiagnoseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipDiagnoseViewController.swift; sourceTree = "<group>"; };
+		9410C94C300FCE4E0062E8F3 /* MembershipDiagnoseView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipDiagnoseView.xib; sourceTree = "<group>"; };
 		9411B3B22C7F2EBD005753F0 /* ExploreMarketHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreMarketHeaderView.swift; sourceTree = "<group>"; };
 		9411B3B32C7F2EBD005753F0 /* ExploreMarketHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreMarketHeaderView.xib; sourceTree = "<group>"; };
 		9412AF4B2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewAsPictureViewController.swift; sourceTree = "<group>"; };
@@ -5450,6 +5454,8 @@
 				94658CA72B34829B00F5EB21 /* OutputCell.xib */,
 				94658CA12B34824E00F5EB21 /* OutputsViewController.swift */,
 				948DFCED2F192E4000200EFA /* Web3OutputsViewController.swift */,
+				9410C94C300FCE4E0062E8F3 /* MembershipDiagnoseView.xib */,
+				9410C94B300FCE4E0062E8F3 /* MembershipDiagnoseViewController.swift */,
 			);
 			path = Diagnose;
 			sourceTree = "<group>";
@@ -7310,6 +7316,7 @@
 				940EADA32EAA12AC009B3DAA /* referral@3x.json in Resources */,
 				7B595359226749A100D59DB4 /* PeerCell.xib in Resources */,
 				945A72E12E59EE38006A11E9 /* TIPQuizAnswerView.xib in Resources */,
+				9410C94D300FCE4E0062E8F3 /* MembershipDiagnoseView.xib in Resources */,
 				948723392C9DF6380034BCB0 /* AddMarketAlertView.xib in Resources */,
 				94DC24392D08051C006501B3 /* DesktopSessionValidationView.xib in Resources */,
 				7C53049F28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib in Resources */,
@@ -8021,6 +8028,7 @@
 				941E360B2D78B813000E7093 /* RefreshWeb3WalletTokenJob.swift in Sources */,
 				7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */,
 				94FB2ED52F51516E00F85AB4 /* OpenPerpetualPositionViewController.swift in Sources */,
+				9410C94E300FCE4E0062E8F3 /* MembershipDiagnoseViewController.swift in Sources */,
 				9419C2202E673CEE00BEAB42 /* DepositConfirmationCountViewController.swift in Sources */,
 				946C50982E95651800A0EA6A /* TradeMixinTokenSelectorViewController.swift in Sources */,
 				94FCC9912FD7003400AA6AA7 /* CommonWalletPendingTransactionLoader.swift in Sources */,

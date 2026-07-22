@@ -28,6 +28,7 @@ final class PerpetualMarketViewController: UIViewController {
         case info
         case activities([PerpetualActivityViewModel])
         case introduction
+        case description(String)
     }
     
     private let wallet: Wallet
@@ -110,83 +111,87 @@ final class PerpetualMarketViewController: UIViewController {
         )
         view.backgroundColor = R.color.background_secondary()
         
+        let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = {
+            [weak self, maxItemCount] (sectionIndex, environment) in
+            
+            func oneCell(estimatedHeight: CGFloat) -> NSCollectionLayoutSection {
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(estimatedHeight)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                return section
+            }
+            
+            func multipleCells(estimatedHeight: CGFloat) -> NSCollectionLayoutSection {
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(estimatedHeight)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
+                let section = NSCollectionLayoutSection(group: group)
+                section.interGroupSpacing = 20
+                return section
+            }
+            
+            switch self?.sections[sectionIndex] {
+            case .price, .none:
+                return oneCell(estimatedHeight: 358)
+            case .autoClosingIntroduction:
+                return oneCell(estimatedHeight: 116)
+            case .openPosition:
+                return oneCell(estimatedHeight: 238)
+            case .info:
+                let section = multipleCells(estimatedHeight: 50)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
+                let background: NSCollectionLayoutDecorationItem = .background(
+                    elementKind: TradeSectionBackgroundView.elementKind
+                )
+                background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                section.decorationItems = [background]
+                return section
+            case .activities(let positions):
+                let section = multipleCells(estimatedHeight: 50)
+                let footerHeight: CGFloat = positions.count <= maxItemCount ? 20 : 56
+                section.boundarySupplementaryItems = [
+                    NSCollectionLayoutBoundarySupplementaryItem(
+                        layoutSize: NSCollectionLayoutSize(
+                            widthDimension: .fractionalWidth(1),
+                            heightDimension: .absolute(57)
+                        ),
+                        elementKind: UICollectionView.elementKindSectionHeader,
+                        alignment: .top
+                    ),
+                    NSCollectionLayoutBoundarySupplementaryItem(
+                        layoutSize: NSCollectionLayoutSize(
+                            widthDimension: .fractionalWidth(1),
+                            heightDimension: .absolute(footerHeight)
+                        ),
+                        elementKind: UICollectionView.elementKindSectionFooter,
+                        alignment: .bottom
+                    ),
+                ]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                let background: NSCollectionLayoutDecorationItem = .background(
+                    elementKind: TradeSectionBackgroundView.elementKind
+                )
+                background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                section.decorationItems = [background]
+                return section
+            case .introduction:
+                return oneCell(estimatedHeight: 90)
+            case .description:
+                return oneCell(estimatedHeight: 60)
+            }
+        }
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.interSectionSpacing = 10
         let layout = UICollectionViewCompositionalLayout(
-            sectionProvider: { [weak self, maxItemCount] (sectionIndex, environment) in
-                
-                func oneCell(estimatedHeight: CGFloat) -> NSCollectionLayoutSection {
-                    let itemSize = NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1),
-                        heightDimension: .estimated(estimatedHeight)
-                    )
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-                    return section
-                }
-                
-                func multipleCells(estimatedHeight: CGFloat) -> NSCollectionLayoutSection {
-                    let itemSize = NSCollectionLayoutSize(
-                        widthDimension: .fractionalWidth(1),
-                        heightDimension: .estimated(estimatedHeight)
-                    )
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
-                    let section = NSCollectionLayoutSection(group: group)
-                    section.interGroupSpacing = 20
-                    return section
-                }
-                
-                switch self?.sections[sectionIndex] {
-                case .price, .none:
-                    return oneCell(estimatedHeight: 358)
-                case .autoClosingIntroduction:
-                    return oneCell(estimatedHeight: 116)
-                case .openPosition:
-                    return oneCell(estimatedHeight: 238)
-                case .info:
-                    let section = multipleCells(estimatedHeight: 50)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
-                    let background: NSCollectionLayoutDecorationItem = .background(
-                        elementKind: TradeSectionBackgroundView.elementKind
-                    )
-                    background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-                    section.decorationItems = [background]
-                    return section
-                case .activities(let positions):
-                    let section = multipleCells(estimatedHeight: 50)
-                    let footerHeight: CGFloat = positions.count <= maxItemCount ? 20 : 56
-                    section.boundarySupplementaryItems = [
-                        NSCollectionLayoutBoundarySupplementaryItem(
-                            layoutSize: NSCollectionLayoutSize(
-                                widthDimension: .fractionalWidth(1),
-                                heightDimension: .absolute(57)
-                            ),
-                            elementKind: UICollectionView.elementKindSectionHeader,
-                            alignment: .top
-                        ),
-                        NSCollectionLayoutBoundarySupplementaryItem(
-                            layoutSize: NSCollectionLayoutSize(
-                                widthDimension: .fractionalWidth(1),
-                                heightDimension: .absolute(footerHeight)
-                            ),
-                            elementKind: UICollectionView.elementKindSectionFooter,
-                            alignment: .bottom
-                        ),
-                    ]
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-                    let background: NSCollectionLayoutDecorationItem = .background(
-                        elementKind: TradeSectionBackgroundView.elementKind
-                    )
-                    background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-                    section.decorationItems = [background]
-                    return section
-                case .introduction:
-                    return oneCell(estimatedHeight: 90)
-                }
-            },
+            sectionProvider: sectionProvider,
             configuration: config
         )
         layout.register(
@@ -227,6 +232,7 @@ final class PerpetualMarketViewController: UIViewController {
         collectionView.register(R.nib.perpsAutoClosingIntroCell)
         collectionView.register(R.nib.perpetualMarketOpenPositionCell)
         collectionView.register(R.nib.perpetualActivityCell)
+        collectionView.register(R.nib.perpsMarketDescriptionCell)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
@@ -423,6 +429,9 @@ final class PerpetualMarketViewController: UIViewController {
             } else {
                 loadActionView(state: .opening)
             }
+        }
+        if let description = viewModel.description {
+            sections.append(.description(description))
         }
         collectionView.reloadData()
     }
@@ -686,6 +695,8 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             min(maxItemCount, activities.count)
         case .introduction:
             1
+        case .description:
+            1
         }
     }
     
@@ -738,6 +749,11 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             return cell
         case .introduction:
             return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_introduction, for: indexPath)!
+        case .description(let description):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_description, for: indexPath)!
+            cell.contentLabel.text = description
+            cell.delegate = self
+            return cell
         }
     }
     
@@ -776,7 +792,7 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         switch sections[indexPath.section] {
-        case .price, .autoClosingIntroduction, .openPosition, .info:
+        case .price, .autoClosingIntroduction, .openPosition, .info, .description:
             false
         case .activities, .introduction:
             true
@@ -785,7 +801,7 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch sections[indexPath.section] {
-        case .price, .autoClosingIntroduction, .openPosition, .info:
+        case .price, .autoClosingIntroduction, .openPosition, .info, .description:
             break
         case .activities(let viewModels):
             let viewModel = viewModels[indexPath.item]
@@ -974,6 +990,21 @@ extension PerpetualMarketViewController: PerpsAutoClosingIntroCell.Delegate {
         case .stopLoss:
             setupStopLoss(positionViewModel: positionViewModel)
         }
+    }
+    
+}
+
+extension PerpetualMarketViewController: PerpsMarketDescriptionCell.Delegate {
+    
+    func perpsMarketDescriptionCellDidSelectMore(_ cell: PerpsMarketDescriptionCell) {
+        collectionView.performBatchUpdates {
+            cell.isExpanded.toggle()
+        } completion: { _ in
+        }
+        guard let indexPath = self.collectionView.indexPath(for: cell) else {
+            return
+        }
+        self.collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
     }
     
 }

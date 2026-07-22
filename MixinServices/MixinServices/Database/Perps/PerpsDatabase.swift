@@ -142,6 +142,14 @@ public final class PerpsDatabase: Database {
             }
         }
         
+        migrator.registerMigration("market_description") { db in
+            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(markets)")
+            let columnNames = infos.map(\.name)
+            if !columnNames.contains("descriptions") {
+                try db.execute(sql: "ALTER TABLE markets ADD COLUMN descriptions TEXT")
+            }
+        }
+        
         return migrator
     }
     

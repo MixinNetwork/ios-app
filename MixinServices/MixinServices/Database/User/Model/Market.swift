@@ -213,7 +213,7 @@ extension Market: TableRecord, PersistableRecord {
 
 extension Market {
     
-    static let languageIdentifier = if #available(iOS 16, *) {
+    public static let languageIdentifier = if #available(iOS 16, *) {
         Locale.current.language.languageCode?.identifier ?? "en"
     } else {
         Locale.current.languageCode ?? "en"

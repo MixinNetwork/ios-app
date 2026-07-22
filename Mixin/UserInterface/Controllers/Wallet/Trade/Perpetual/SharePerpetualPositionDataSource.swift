@@ -27,8 +27,8 @@ struct SharePerpetualPositionDataSource {
     init(viewModel: PerpetualPositionViewModel, latestPrice: Decimal?) {
         self.title = viewModel.directionWithSymbol
         self.iconURL = viewModel.iconURL
-        self.pnl = viewModel.roeWithSign ?? ""
-        self.roe = viewModel.pnl
+        self.pnl = viewModel.pnl
+        self.roe = viewModel.roeWithSign ?? ""
         self.color = viewModel.pnlColor
         self.operation = viewModel.directionWithSymbol
         self.leverage = viewModel.leverage
@@ -52,8 +52,8 @@ struct SharePerpetualPositionDataSource {
     ) {
         self.title = viewModel.directionWithSymbol
         self.iconURL = viewModel.iconURL
-        self.pnl = pnl.percentage
-        self.roe = pnl.receivingAmount
+        self.pnl = pnl.receivingAmount
+        self.roe = pnl.percentage
         self.color = pnl.color
         self.operation = viewModel.directionWithSymbol
         self.leverage = viewModel.leverage

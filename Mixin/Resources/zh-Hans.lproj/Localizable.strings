@@ -1225,8 +1225,8 @@
 "perps_share_card_trade_now" = "💰 立即交易";
 "perps_share_mixin_contact_desc" = "带朋友一起上车";
 "perps_share_mixin_contact_desc_with_percent" = "通过此链接赚取 %@ 分佣";
-"perps_share_pnl" = "收益率";
-"perps_share_roe" = "收益额";
+"perps_share_pnl" = "收益额";
+"perps_share_roe" = "收益率";
 "perps_share_to_mixin_contact" = "发送到 Mixin 联系人";
 "perps_short_overview" = "做空是指在预期价格下跌时建立仓位，价格下跌可获得盈利，价格上涨则产生亏损。";
 "perps_top_movers" = "涨跌榜";
@@ -2008,7 +2008,7 @@
 "wallets_count" = "%d 个钱包";
 "watch_address" = "观察 %@";
 "watch_wallet" = "观察钱包";
-"watch_wallet_description" = "你无法使用观察钱包中的资产，但可以追踪它们。 ";
+"watch_wallet_description" = "你无法使用观察钱包中的资产，但可以追踪它们。";
 "watch_wallet_empty_description" = "无需私钥即可添加观察地址，支持查看余额、交易记录，并接收交易通知。";
 "watch_wallet_index" = "观察钱包 %@";
 "watch_wallet_instruction_benefit" = "可方便地监控指定地址的余额与交易记录。";

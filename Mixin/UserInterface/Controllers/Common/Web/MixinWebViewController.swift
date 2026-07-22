@@ -56,6 +56,7 @@ final class MixinWebViewController: WebViewController {
     private let defaultEVMChain: Web3Chain = .ethereum
     
     private(set) var context: MixinWebContext!
+    private(set) var isMinimizable: Bool = true
     
     private lazy var messageHandler = WebViewMessageHandler(delegate: self)
     private lazy var suspicousLinkView = R.nib.suspiciousLinkView(withOwner: self)!
@@ -276,9 +277,17 @@ extension MixinWebViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         }
+        let isNavigatingOnMainFrame = navigationAction.targetFrame?.isMainFrame ?? false
+        isMinimizable = !isNavigatingOnMainFrame
         if isViewLoaded && parent != nil && (UrlWindow.checkUrl(url: url, from: .webView(context)) || UrlWindow.checkWithdrawal(string: url.absoluteString)) {
+            if isNavigatingOnMainFrame {
+                dismissAsChild(animated: true)
+            }
             decisionHandler(.cancel)
-        } else if "file" == url.scheme {
+            return
+        }
+        isMinimizable = true
+        if "file" == url.scheme {
             decisionHandler(.allow)
         } else if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
             decisionHandler(.allow)

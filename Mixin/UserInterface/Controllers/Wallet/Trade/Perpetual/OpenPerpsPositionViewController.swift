@@ -39,7 +39,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     
     private let wallet: Wallet
     private let side: PerpetualOrderSide
-    private let viewModel: PerpetualMarketViewModel
+    private let marketLoader: PerpetualMarketLoader
     private let amountValidator: AmountValidator
     private let multipliers: [Multiplier]
     private let liquidationPriceRequester: OpenPerpsPositionLiquidationPriceRequester
@@ -47,8 +47,8 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     
     private weak var contentSizeObserver: NSKeyValueObservation?
     
+    private var viewModel: PerpetualMarketViewModel
     private var leverageMultiplier: Decimal
-    
     private var liquidationPrice: Decimal?
     
     private var takeProfitPrice: Decimal? {
@@ -93,7 +93,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         
         self.wallet = wallet
         self.side = side
-        self.viewModel = viewModel
+        self.marketLoader = PerpetualMarketLoader(marketID: viewModel.market.marketID)
         self.amountValidator = AmountValidator(market: viewModel.market)
         self.multipliers = [
             .fixed(5),
@@ -109,6 +109,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
                 true
             }
         }
+        self.viewModel = viewModel
         self.leverageMultiplier = leverageMultiplier
         self.liquidationPriceRequester = OpenPerpsPositionLiquidationPriceRequester(
             marketID: viewModel.market.marketID,
@@ -209,9 +210,26 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
             underlyingAsset: viewModel
         )
         
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadMarket(_:)),
+            name: PerpsMarketDAO.marketsDidUpdateNotification,
+            object: nil
+        )
+        
         var tags = ["direction": side.rawValue]
         tags["source"] = UserOperationAnalytics.tradeSource?.rawValue
         reporter.report(event: .tradePerpsOpenStart, tags: tags)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        marketLoader.start()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        marketLoader.stop()
     }
     
     override func editMarginAmount(_ textField: UITextField) {
@@ -372,6 +390,23 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
         reporter.report(event: .customerServiceDialog, tags: ["source": "perps_open_position"])
+    }
+    
+    @objc private func reloadMarket(_ notification: Notification) {
+        guard
+            let market = notification.userInfo?[PerpsMarketDAO.UserInfoKey.market],
+            let market = market as? PerpetualMarket,
+            let viewModel = PerpetualMarketViewModel(market: market)
+        else {
+            return
+        }
+        self.viewModel = viewModel
+        priceLabel.text = R.string.localizable.current_price(viewModel.price)
+        updateDescriptions(
+            marginAmount: marginAmount,
+            leverageMultiplier: leverageMultiplier,
+            underlyingAsset: viewModel
+        )
     }
     
     private func inputCustomLeverageMultiplier() {

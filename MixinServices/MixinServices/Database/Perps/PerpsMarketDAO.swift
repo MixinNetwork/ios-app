@@ -26,6 +26,10 @@ public final class PerpsMarketDAO: PerpsDAO {
         
     }
     
+    public enum UserInfoKey {
+        public static let market = "m"
+    }
+    
     public static let shared = PerpsMarketDAO()
     
     public static let marketsDidUpdateNotification = Notification.Name(rawValue: "one.mixin.services.PerpsMarketDAO.Update")
@@ -93,7 +97,8 @@ public final class PerpsMarketDAO: PerpsDAO {
         db.save(market) { _ in
             NotificationCenter.default.postAsynchornously(
                 onMainThread: Self.marketsDidUpdateNotification,
-                object: self
+                object: self,
+                userInfo: [UserInfoKey.market: market],
             )
         }
     }

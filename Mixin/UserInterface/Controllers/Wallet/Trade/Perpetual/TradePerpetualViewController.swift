@@ -312,7 +312,7 @@ final class TradePerpetualViewController: UIViewController {
                     )
                     self.navigationController?.pushViewController(market, animated: true)
                 } else {
-                    let open = OpenPerpetualPositionViewController(
+                    let open = OpenPerpsPositionViewController(
                         wallet: wallet,
                         side: side,
                         viewModel: viewModel,

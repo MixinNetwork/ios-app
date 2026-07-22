@@ -466,7 +466,7 @@ final class MarketViewController: UIViewController {
                 viewModel: viewModel
             )
         } else {
-            next = OpenPerpetualPositionViewController(
+            next = OpenPerpsPositionViewController(
                 wallet: .privacy,
                 side: side,
                 viewModel: viewModel

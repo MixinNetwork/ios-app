@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class OpenPerpetualPositionViewController: PerpsMarginInputViewController {
+final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     
     private enum Multiplier {
         case fixed(Decimal)
@@ -494,7 +494,7 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
     
 }
 
-extension OpenPerpetualPositionViewController: NavigationBarStyling {
+extension OpenPerpsPositionViewController: NavigationBarStyling {
     
     var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
@@ -502,7 +502,7 @@ extension OpenPerpetualPositionViewController: NavigationBarStyling {
     
 }
 
-extension OpenPerpetualPositionViewController: UICollectionViewDataSource {
+extension OpenPerpsPositionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         multipliers.count
@@ -524,7 +524,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDataSource {
     
 }
 
-extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
+extension OpenPerpsPositionViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         switch multipliers[indexPath.item] {
@@ -564,7 +564,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
     
 }
 
-extension OpenPerpetualPositionViewController: UITextFieldDelegate {
+extension OpenPerpsPositionViewController: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         reporter.report(event: .tradePerpsOpenLeverageSelect, tags: ["leverage": "custom_input"])
@@ -574,7 +574,7 @@ extension OpenPerpetualPositionViewController: UITextFieldDelegate {
     
 }
 
-extension OpenPerpetualPositionViewController {
+extension OpenPerpsPositionViewController {
     
     private enum LiquidationPrice {
         case invalid

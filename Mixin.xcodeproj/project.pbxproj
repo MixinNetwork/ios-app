@@ -1712,7 +1712,7 @@
 		94FB2E932F5050BD00F85AB4 /* PerpsMarketDescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FB2E922F5050BD00F85AB4 /* PerpsMarketDescriptionCell.xib */; };
 		94FB2E942F5050BD00F85AB4 /* PerpsMarketDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB2E912F5050BD00F85AB4 /* PerpsMarketDescriptionCell.swift */; };
 		94FB2ED42F51516E00F85AB4 /* OpenPerpetualPositionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FB2ED32F51516E00F85AB4 /* OpenPerpetualPositionView.xib */; };
-		94FB2ED52F51516E00F85AB4 /* OpenPerpetualPositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB2ED22F51516E00F85AB4 /* OpenPerpetualPositionViewController.swift */; };
+		94FB2ED52F51516E00F85AB4 /* OpenPerpsPositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB2ED22F51516E00F85AB4 /* OpenPerpsPositionViewController.swift */; };
 		94FB2EEA2F51672200F85AB4 /* LeverageMultiplierInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FB2EE92F51672200F85AB4 /* LeverageMultiplierInputView.xib */; };
 		94FB2EEB2F51672200F85AB4 /* LeverageMultiplierInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB2EE82F51672200F85AB4 /* LeverageMultiplierInputViewController.swift */; };
 		94FB2F022F516AB800F85AB4 /* ManualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB2F012F516AB400F85AB4 /* ManualViewController.swift */; };
@@ -3706,7 +3706,7 @@
 		94FB2E6B2F50A50E00F85AB4 /* PerpetualMarketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualMarketViewModel.swift; sourceTree = "<group>"; };
 		94FB2E912F5050BD00F85AB4 /* PerpsMarketDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsMarketDescriptionCell.swift; sourceTree = "<group>"; };
 		94FB2E922F5050BD00F85AB4 /* PerpsMarketDescriptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpsMarketDescriptionCell.xib; sourceTree = "<group>"; };
-		94FB2ED22F51516E00F85AB4 /* OpenPerpetualPositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenPerpetualPositionViewController.swift; sourceTree = "<group>"; };
+		94FB2ED22F51516E00F85AB4 /* OpenPerpsPositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenPerpsPositionViewController.swift; sourceTree = "<group>"; };
 		94FB2ED32F51516E00F85AB4 /* OpenPerpetualPositionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OpenPerpetualPositionView.xib; sourceTree = "<group>"; };
 		94FB2EE82F51672200F85AB4 /* LeverageMultiplierInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeverageMultiplierInputViewController.swift; sourceTree = "<group>"; };
 		94FB2EE92F51672200F85AB4 /* LeverageMultiplierInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LeverageMultiplierInputView.xib; sourceTree = "<group>"; };
@@ -4875,7 +4875,7 @@
 				94D9DE432F5AB3C600B3B990 /* PerpetualMarketOpenPositionCell.xib */,
 				94D9DE422F5AB3C600B3B990 /* PerpetualMarketOpenPositionCell.swift */,
 				94FB2ED32F51516E00F85AB4 /* OpenPerpetualPositionView.xib */,
-				94FB2ED22F51516E00F85AB4 /* OpenPerpetualPositionViewController.swift */,
+				94FB2ED22F51516E00F85AB4 /* OpenPerpsPositionViewController.swift */,
 				948C1CC22FAF3F22005C8653 /* FixedInputCell.xib */,
 				948C1CC12FAF3F22005C8653 /* FixedInputCell.swift */,
 				94ABA8E62FBC3D7500FC536D /* EditPerpsPositionTitleView.xib */,
@@ -8034,7 +8034,7 @@
 				942FD9FF2D3B591F004DCC4C /* LocalizedEnum.swift in Sources */,
 				941E360B2D78B813000E7093 /* RefreshWeb3WalletTokenJob.swift in Sources */,
 				7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */,
-				94FB2ED52F51516E00F85AB4 /* OpenPerpetualPositionViewController.swift in Sources */,
+				94FB2ED52F51516E00F85AB4 /* OpenPerpsPositionViewController.swift in Sources */,
 				9410C94E300FCE4E0062E8F3 /* MembershipDiagnoseViewController.swift in Sources */,
 				9419C2202E673CEE00BEAB42 /* DepositConfirmationCountViewController.swift in Sources */,
 				946C50982E95651800A0EA6A /* TradeMixinTokenSelectorViewController.swift in Sources */,

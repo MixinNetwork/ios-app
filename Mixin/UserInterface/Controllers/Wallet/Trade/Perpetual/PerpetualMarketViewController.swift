@@ -285,7 +285,7 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     @objc private func openLongPosition(_ sender: UIButton) {
-        let open = OpenPerpetualPositionViewController(
+        let open = OpenPerpsPositionViewController(
             wallet: wallet,
             side: .long,
             viewModel: viewModel
@@ -294,7 +294,7 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     @objc private func openShortPosition(_ sender: UIButton) {
-        let open = OpenPerpetualPositionViewController(
+        let open = OpenPerpsPositionViewController(
             wallet: wallet,
             side: .short,
             viewModel: viewModel

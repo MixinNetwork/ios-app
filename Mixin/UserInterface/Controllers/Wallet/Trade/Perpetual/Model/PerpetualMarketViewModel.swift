@@ -14,6 +14,7 @@ struct PerpetualMarketViewModel {
     let change: String
     let changeColor: MarketColor
     let userDisplayPriceFormatStyle: Decimal.FormatStyle.Currency
+    let description: String?
     
     init?(market m: PerpetualMarket) {
         guard
@@ -45,6 +46,13 @@ struct PerpetualMarketViewModel {
         self.change = changePercentage
         self.changeColor = change >= 0 ? .rising : .falling
         self.userDisplayPriceFormatStyle = userDisplayPriceFormatStyle
+        if let description = m.descriptions?[Market.languageIdentifier],
+           !description.isEmpty
+        {
+            self.description = description
+        } else {
+            self.description = nil
+        }
     }
     
 }

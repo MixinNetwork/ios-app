@@ -229,7 +229,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     if let navigationController = UIApplication.homeNavigationController {
                         var viewControllers = navigationController.viewControllers
                         viewControllers.removeAll { viewController in
-                            viewController is OpenPerpetualPositionViewController
+                            viewController is OpenPerpsPositionViewController
                         }
                         if !(viewControllers.last is PerpetualMarketViewController) {
                             let market = PerpetualMarketViewController(

@@ -3,11 +3,6 @@ import MixinServices
 
 class PerpsMarginInputViewController: UIViewController {
     
-    enum OperationType {
-        case open
-        case increase
-    }
-    
     @IBOutlet weak var marginView: UIView!
     @IBOutlet weak var marginContentStackView: UIStackView!
     @IBOutlet weak var marginTitleLabel: UILabel!
@@ -23,10 +18,6 @@ class PerpsMarginInputViewController: UIViewController {
     @IBOutlet weak var marginLoadingView: ActivityIndicatorView!
     
     var marginAmount: Decimal = 0
-    
-    var operation: OperationType {
-        .open
-    }
     
     var marginTokens: [MixinTokenItem] = []
     var marginToken: MixinTokenItem? {
@@ -63,36 +54,21 @@ class PerpsMarginInputViewController: UIViewController {
                             return
                         }
                         self.inputAmount(withBalanceMultipliedBy: 0.25)
-                        switch self.operation {
-                        case .open:
-                            reporter.report(event: .tradePerpsOpenAmountPercent, tags: ["percent": "25%"])
-                        case .increase:
-                            break
-                        }
+                        self.reportPercentageInput(percent: "25%")
                     },
                     .init(title: "50%") { [weak self] in
                         guard let self else {
                             return
                         }
                         self.inputAmount(withBalanceMultipliedBy: 0.5)
-                        switch self.operation {
-                        case .open:
-                            reporter.report(event: .tradePerpsOpenAmountPercent, tags: ["percent": "50%"])
-                        case .increase:
-                            break
-                        }
+                        self.reportPercentageInput(percent: "50%")
                     },
                     .init(title: R.string.localizable.max()) { [weak self] in
                         guard let self else {
                             return
                         }
                         self.inputAmount(withBalanceMultipliedBy: 1)
-                        switch self.operation {
-                        case .open:
-                            reporter.report(event: .tradePerpsOpenAmountPercent, tags: ["percent": "max"])
-                        case .increase:
-                            break
-                        }
+                        self.reportPercentageInput(percent: "max")
                     },
                 ]
                 accessoryView.onDone = { [weak textField=marginAmountTextField] in
@@ -153,12 +129,7 @@ class PerpsMarginInputViewController: UIViewController {
                     tags["chain"] = chain
                 }
             }
-            switch self.operation {
-            case .open:
-                reporter.report(event: .tradePerpsOpenMarginSelect, tags: tags)
-            case .increase:
-                reporter.report(event: .tradePerpsAddMarginSelect, tags: tags)
-            }
+            self.reportMarginTokenSelection(tags: tags)
             
             self.dismiss(animated: true)
         }
@@ -166,13 +137,7 @@ class PerpsMarginInputViewController: UIViewController {
     }
     
     @IBAction func inputTokenBalance(_ sender: Any) {
-        inputAmount(withBalanceMultipliedBy: 1)
-        switch operation {
-        case .open:
-            reporter.report(event: .tradePerpsOpenAmountBalance)
-        case .increase:
-            break
-        }
+        
     }
     
     @IBAction func depositMarginToken(_ sender: Any) {
@@ -194,6 +159,14 @@ class PerpsMarginInputViewController: UIViewController {
             format: .precision,
             sign: .never,
         )
+    }
+    
+    func reportPercentageInput(percent: String) {
+        
+    }
+    
+    func reportMarginTokenSelection(tags: [String: String]) {
+        
     }
     
     private func reloadMarginTokens() {

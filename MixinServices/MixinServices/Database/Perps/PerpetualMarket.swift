@@ -34,6 +34,7 @@ public struct PerpetualMarket {
     public let category: UnknownableEnum<Category>
     public let tags: [String]
     public let priceScale: Int
+    public let descriptions: [String: String]?
     
     public var canonicalPriceFormatStyle: Decimal.FormatStyle {
         Decimal.FormatStyle.number
@@ -72,6 +73,7 @@ extension PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchableRec
         case category = "category"
         case tags = "tags"
         case priceScale = "price_scale"
+        case descriptions = "descriptions"
     }
     
 }

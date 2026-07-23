@@ -30,10 +30,6 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     
     private var liquidationPriceAfterAdding: Decimal?
     
-    override var operation: OperationType {
-        .increase
-    }
-    
     private var isAdding = false {
         didSet {
             if isAdding {
@@ -169,6 +165,14 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     override func inputAmount(withBalanceMultipliedBy balanceMultiplier: Decimal) {
         super.inputAmount(withBalanceMultipliedBy: balanceMultiplier)
         updateDescriptions(marginAmount: marginAmount)
+    }
+    
+    override func inputTokenBalance(_ sender: Any) {
+        inputAmount(withBalanceMultipliedBy: 1)
+    }
+    
+    override func reportMarginTokenSelection(tags: [String : String]) {
+        reporter.report(event: .tradePerpsAddMarginSelect, tags: tags)
     }
     
     @IBAction func introduceSize(_ sender: Any) {

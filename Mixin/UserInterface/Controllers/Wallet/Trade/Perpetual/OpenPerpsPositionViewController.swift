@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class OpenPerpetualPositionViewController: PerpsMarginInputViewController {
+final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     
     private enum Multiplier {
         case fixed(Decimal)
@@ -39,7 +39,7 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
     
     private let wallet: Wallet
     private let side: PerpetualOrderSide
-    private let viewModel: PerpetualMarketViewModel
+    private let marketLoader: PerpetualMarketLoader
     private let amountValidator: AmountValidator
     private let multipliers: [Multiplier]
     private let liquidationPriceRequester: OpenPerpsPositionLiquidationPriceRequester
@@ -47,8 +47,8 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
     
     private weak var contentSizeObserver: NSKeyValueObservation?
     
+    private var viewModel: PerpetualMarketViewModel
     private var leverageMultiplier: Decimal
-    
     private var liquidationPrice: Decimal?
     
     private var takeProfitPrice: Decimal? {
@@ -93,7 +93,7 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
         
         self.wallet = wallet
         self.side = side
-        self.viewModel = viewModel
+        self.marketLoader = PerpetualMarketLoader(marketID: viewModel.market.marketID)
         self.amountValidator = AmountValidator(market: viewModel.market)
         self.multipliers = [
             .fixed(5),
@@ -109,6 +109,7 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
                 true
             }
         }
+        self.viewModel = viewModel
         self.leverageMultiplier = leverageMultiplier
         self.liquidationPriceRequester = OpenPerpsPositionLiquidationPriceRequester(
             marketID: viewModel.market.marketID,
@@ -209,9 +210,26 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
             underlyingAsset: viewModel
         )
         
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadMarket(_:)),
+            name: PerpsMarketDAO.marketsDidUpdateNotification,
+            object: nil
+        )
+        
         var tags = ["direction": side.rawValue]
         tags["source"] = UserOperationAnalytics.tradeSource?.rawValue
         reporter.report(event: .tradePerpsOpenStart, tags: tags)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        marketLoader.start()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        marketLoader.stop()
     }
     
     override func editMarginAmount(_ textField: UITextField) {
@@ -221,6 +239,11 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
             leverageMultiplier: leverageMultiplier,
             underlyingAsset: viewModel
         )
+    }
+    
+    override func inputTokenBalance(_ sender: Any) {
+        inputAmount(withBalanceMultipliedBy: 1)
+        reporter.report(event: .tradePerpsOpenAmountBalance)
     }
     
     override func inputAmount(withBalanceMultipliedBy balanceMultiplier: Decimal) {
@@ -355,10 +378,35 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
         }
     }
     
+    override func reportPercentageInput(percent: String) {
+        reporter.report(event: .tradePerpsOpenAmountPercent, tags: ["percent": percent])
+    }
+    
+    override func reportMarginTokenSelection(tags: [String : String]) {
+        reporter.report(event: .tradePerpsOpenMarginSelect, tags: tags)
+    }
+    
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
         reporter.report(event: .customerServiceDialog, tags: ["source": "perps_open_position"])
+    }
+    
+    @objc private func reloadMarket(_ notification: Notification) {
+        guard
+            let market = notification.userInfo?[PerpsMarketDAO.UserInfoKey.market],
+            let market = market as? PerpetualMarket,
+            let viewModel = PerpetualMarketViewModel(market: market)
+        else {
+            return
+        }
+        self.viewModel = viewModel
+        priceLabel.text = R.string.localizable.current_price(viewModel.price)
+        updateDescriptions(
+            marginAmount: marginAmount,
+            leverageMultiplier: leverageMultiplier,
+            underlyingAsset: viewModel
+        )
     }
     
     private func inputCustomLeverageMultiplier() {
@@ -494,7 +542,7 @@ final class OpenPerpetualPositionViewController: PerpsMarginInputViewController 
     
 }
 
-extension OpenPerpetualPositionViewController: NavigationBarStyling {
+extension OpenPerpsPositionViewController: NavigationBarStyling {
     
     var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
@@ -502,7 +550,7 @@ extension OpenPerpetualPositionViewController: NavigationBarStyling {
     
 }
 
-extension OpenPerpetualPositionViewController: UICollectionViewDataSource {
+extension OpenPerpsPositionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         multipliers.count
@@ -524,7 +572,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDataSource {
     
 }
 
-extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
+extension OpenPerpsPositionViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         switch multipliers[indexPath.item] {
@@ -564,7 +612,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
     
 }
 
-extension OpenPerpetualPositionViewController: UITextFieldDelegate {
+extension OpenPerpsPositionViewController: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         reporter.report(event: .tradePerpsOpenLeverageSelect, tags: ["leverage": "custom_input"])
@@ -574,7 +622,7 @@ extension OpenPerpetualPositionViewController: UITextFieldDelegate {
     
 }
 
-extension OpenPerpetualPositionViewController {
+extension OpenPerpsPositionViewController {
     
     private enum LiquidationPrice {
         case invalid

@@ -6,7 +6,6 @@ public final class PerpsPositionDAO: PerpsDAO {
     public static let shared = PerpsPositionDAO()
     
     public static let perpsPositionDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.PerpsPositionDAO.Change")
-    public static let newPositionItemsUserInfoKey = "np"
     
     private static let itemSQL = """
     SELECT p.*,
@@ -60,7 +59,7 @@ public final class PerpsPositionDAO: PerpsDAO {
         db.select(with: Self.itemSQL + "ORDER BY created_at DESC")
     }
     
-    // Returns if there's difference between old and new ones
+    // Returns true if there's difference between old and new ones
     public func replace(positions: [PerpetualPosition]) -> Bool {
         try! db.writeAndReturnError { (db) -> Bool in
             let positionsBefore = try PerpetualPositionUniqueIdentifier.fetchSet(
@@ -68,13 +67,15 @@ public final class PerpsPositionDAO: PerpsDAO {
                 sql: "SELECT position_id, open_pay_amount FROM positions"
             )
             let positionsAfter = Set(positions.map(PerpetualPositionUniqueIdentifier.init(position:)))
+            if positionsBefore.isEmpty && positionsAfter.isEmpty {
+                return false
+            }
             try PerpetualPosition.deleteAll(db)
             try positions.save(db)
             db.afterNextTransaction { _ in
                 NotificationCenter.default.postAsynchornously(
                     onMainThread: Self.perpsPositionDidChangeNotification,
                     object: self,
-                    userInfo: [Self.newPositionItemsUserInfoKey: []]
                 )
             }
             return positionsBefore != positionsAfter

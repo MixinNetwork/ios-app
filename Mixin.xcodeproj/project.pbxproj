@@ -1025,6 +1025,7 @@
 		94510FCE2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */; };
 		94510FD42C8743AA00ACD972 /* MarketTokenSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FD22C8743AA00ACD972 /* MarketTokenSelectorCell.swift */; };
 		94510FD52C8743AA00ACD972 /* MarketTokenSelectorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94510FD32C8743AA00ACD972 /* MarketTokenSelectorCell.xib */; };
+		945132352FEE51B90084B6D6 /* Mixin.icon in Resources */ = {isa = PBXBuildFile; fileRef = 945132342FEE51B90084B6D6 /* Mixin.icon */; };
 		945138B82C6622F600839CBB /* TokenMarketCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945138B72C6622F600839CBB /* TokenMarketCell.xib */; };
 		945138B92C6622F600839CBB /* TokenMarketCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945138B62C6622F600839CBB /* TokenMarketCell.swift */; };
 		9451E1F22E6B6AC300A5CA45 /* ReceiveMoneyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9451E1F02E6B6AC300A5CA45 /* ReceiveMoneyViewController.swift */; };
@@ -3006,6 +3007,7 @@
 		94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		94510FD22C8743AA00ACD972 /* MarketTokenSelectorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTokenSelectorCell.swift; sourceTree = "<group>"; };
 		94510FD32C8743AA00ACD972 /* MarketTokenSelectorCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketTokenSelectorCell.xib; sourceTree = "<group>"; };
+		945132342FEE51B90084B6D6 /* Mixin.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = Mixin.icon; sourceTree = "<group>"; };
 		945138B62C6622F600839CBB /* TokenMarketCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMarketCell.swift; sourceTree = "<group>"; };
 		945138B72C6622F600839CBB /* TokenMarketCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenMarketCell.xib; sourceTree = "<group>"; };
 		9451E1EF2E6B6AC300A5CA45 /* ReceiveMoneyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReceiveMoneyView.xib; sourceTree = "<group>"; };
@@ -4048,6 +4050,7 @@
 				277FF7021F909A1200DBB2EB /* AppDelegate.swift */,
 				277FF70B1F909A1200DBB2EB /* Assets.xcassets */,
 				7B8BB58F234F36C000991ACB /* Colors.xcassets */,
+				945132342FEE51B90084B6D6 /* Mixin.icon */,
 			);
 			path = Mixin;
 			sourceTree = "<group>";
@@ -7394,6 +7397,7 @@
 				943B5F572F5C02C60043078A /* ManualPageContentView.xib in Resources */,
 				ABCB87E023F1A56B00780E60 /* PermissionsTableViewCell.xib in Resources */,
 				7B45A51C2189F28E0008F894 /* ringtone_outgoing.caf in Resources */,
+				945132352FEE51B90084B6D6 /* Mixin.icon in Resources */,
 				943BC66F2BCD7227003FA778 /* Web3NoAssetView.xib in Resources */,
 				DF43304722648B4E006D971D /* AssetInfoWindow.xib in Resources */,
 				7B11788E2293D55C000F934E /* BalanceInputAccessoryView.xib in Resources */,
@@ -9510,7 +9514,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4A0AC6121929BE42B09D0F1E /* Pods-Mixin.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Mixin;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -9600,7 +9604,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Mixin;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Mixin/Mixin.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

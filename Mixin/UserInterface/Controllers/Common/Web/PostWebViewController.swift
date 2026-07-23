@@ -5,20 +5,23 @@ import MixinServices
 
 final class PostWebViewController: WebViewController {
     
-    private var message: Message!
-    private var pageTitle: String?
-    private var html: String?
-    
     override var webViewConfiguration: WKWebViewConfiguration {
         let config = WKWebViewConfiguration()
         config.dataDetectorTypes = .link
         return config
     }
     
-    class func presentInstance(message: Message, asChildOf parent: UIViewController) {
-        let vc = PostWebViewController(nib: R.nib.fullscreenPopupView)
-        vc.message = message
-        vc.presentAsChild(of: parent, completion: nil)
+    private var message: Message
+    private var pageTitle: String?
+    private var html: String?
+    
+    init(message: Message) {
+        self.message = message
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {
@@ -58,7 +61,7 @@ final class PostWebViewController: WebViewController {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: R.string.localizable.forward(), style: .default, handler: { (_) in
             let vc = MessageReceiverViewController.instance(content: .message(self.message))
-            self.availableNavigationController?.pushViewController(vc, animated: true)
+            self.navigationController?.pushViewController(vc, animated: true)
         }))
         if let url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
             controller.addAction(UIAlertAction(title: R.string.localizable.export(), style: .default, handler: { _ in
@@ -90,7 +93,9 @@ extension PostWebViewController: WKNavigationDelegate {
         if UrlWindow.checkUrl(url: url) {
             return
         }
-        UIApplication.homeContainerViewController?.presentWebViewController(context: .init(conversationId: "", initialUrl: url))
+        UIApplication.homeNavigationController?.pushWebViewController(
+            context: .init(conversationId: "", initialUrl: url)
+        )
     }
     
 }

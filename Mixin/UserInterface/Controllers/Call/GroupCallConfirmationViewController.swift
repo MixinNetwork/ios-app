@@ -45,12 +45,14 @@ class GroupCallConfirmationViewController: CallViewController {
     }
     
     override func learnMoreAboutEncryption() {
-        guard let container = UIApplication.homeContainerViewController else {
+        guard let navigationController = UIApplication.homeNavigationController else {
             return
         }
         hideContentView {
             self.service.removeViewControllerAsContainersChildIfNeeded(self)
-            container.presentWebViewController(context: .init(conversationId: "", initialUrl: .aboutEncryption))
+            navigationController.pushWebViewController(
+                context: .init(conversationId: "", initialUrl: .aboutEncryption)
+            )
         }
     }
     

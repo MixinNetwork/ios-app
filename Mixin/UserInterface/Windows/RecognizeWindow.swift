@@ -64,11 +64,13 @@ class RecognizeWindow: BottomSheetView {
     }
     
     @discardableResult private func open(_ url: URL) -> Bool {
-        guard let container = UIApplication.homeContainerViewController else {
+        guard let navigationController = UIApplication.homeNavigationController else {
             return true
         }
         dismissPopupController(animated: true)
-        container.presentWebViewController(context: .init(conversationId: "", initialUrl: url))
+        navigationController.pushWebViewController(
+            context: .init(conversationId: "", initialUrl: url)
+        )
         return false
     }
     

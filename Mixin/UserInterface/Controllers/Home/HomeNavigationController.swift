@@ -2,39 +2,23 @@ import UIKit
 import AVFoundation
 import MixinServices
 
-class HomeNavigationController: GeneralAppearanceNavigationController {
+final class HomeNavigationController: GeneralAppearanceNavigationController {
     
-    private lazy var presentFromBottomAnimator = PresentFromBottomAnimator()
+    private let interactivePopOutRecognizer = UIScreenEdgePanGestureRecognizer()
     
-    override var childForStatusBarStyle: UIViewController? {
-        if let web = activeWebViewController {
-            return web
-        } else {
-            return super.childForStatusBarStyle
-        }
-    }
-    
-    override var childForStatusBarHidden: UIViewController? {
-        if let web = activeWebViewController {
-            return web
-        } else {
-            return super.childForStatusBarHidden
-        }
-    }
-    
-    private var activeWebViewController: WebViewController? {
-        return viewControllers.last?.children
-            .compactMap({ $0 as? WebViewController })
-            .filter({ !$0.isBeingDismissedAsChild })
-            .last
-    }
+    private var interactivePopOutTransition: UIPercentDrivenInteractiveTransition?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.interactivePopGestureRecognizer?.isEnabled = true
         self.interactivePopGestureRecognizer?.delegate = self
+        interactivePopOutRecognizer.edges = .left
+        interactivePopOutRecognizer.addTarget(self, action: #selector(popOutInteractively(_:)))
+        interactivePopOutRecognizer.delegate = self
+        view.addGestureRecognizer(interactivePopOutRecognizer)
         self.delegate = self
+        
         if AppGroupUserDefaults.Crypto.isPrekeyLoaded,
            AppGroupUserDefaults.Crypto.isSessionSynchronized,
            !AppGroupUserDefaults.isClockSkewed,
@@ -69,49 +53,111 @@ class HomeNavigationController: GeneralAppearanceNavigationController {
         }
     }
     
+    func pushWebViewController(context: MixinWebContext) {
+        let web = MixinWebViewController(context: context)
+        pushViewController(web, animated: true)
+    }
+    
+    func presentReferralPage() {
+        presentAppPage(appID: BotUserID.rewards)
+    }
+    
+    func presentCashPage() {
+        presentAppPage(appID: BotUserID.mixinCash)
+    }
+    
+    func presentAppPage(appID: String) {
+        if let app = AppDAO.shared.getApp(appId: appID) {
+            pushWebViewController(context: .init(conversationId: "", app: app))
+            let updateUser = RefreshUserJob(userIds: [appID])
+            ConcurrentJobQueue.shared.addJob(job: updateUser)
+            return
+        }
+        
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: view)
+        UserAPI.showUser(userId: appID) { [weak self] result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.global().async {
+                    UserDAO.shared.updateUsers(users: [response])
+                }
+                hud.hide()
+                if let app = response.app {
+                    self?.pushWebViewController(context: .init(conversationId: "", app: app))
+                }
+            case .failure(let error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
+            }
+        }
+    }
+    
+    @objc private func popOutInteractively(_ gesture: UIScreenEdgePanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        let decisionDistance = view.bounds.width / 4
+        let progress = max(0, min(1, translation.x / decisionDistance))
+        switch gesture.state {
+        case .began:
+            interactivePopOutTransition = UIPercentDrivenInteractiveTransition()
+            popViewController(animated: true)
+        case .changed:
+            interactivePopOutTransition?.update(progress * 0.5)
+            if translation.x > decisionDistance {
+                gesture.isEnabled = false
+                gesture.isEnabled = true
+            }
+        case .ended, .cancelled:
+            let velocity = gesture.velocity(in: view).x
+            if velocity >= 0 && (progress > 0.3 || velocity > 300) {
+                interactivePopOutTransition?.finish()
+            } else {
+                interactivePopOutTransition?.cancel()
+            }
+            interactivePopOutTransition = nil
+        default:
+            interactivePopOutTransition?.cancel()
+            interactivePopOutTransition = nil
+        }
+    }
+    
 }
 
 extension HomeNavigationController: UINavigationControllerDelegate {
     
-    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+    func navigationController(
+        _ navigationController: UINavigationController,
+        willShow viewController: UIViewController,
+        animated: Bool
+    ) {
         NavigationBarStyle.updateAppearances(
             navigationController: navigationController,
             willShow: viewController,
             animated: animated
         )
-        if let container = UIApplication.homeContainerViewController {
-            let webViewControllers = container.children.compactMap { child in
-                child as? MixinWebViewController
-            }
-            for webViewController in webViewControllers {
-                webViewController.minimizeWithAnimation()
-            }
-        }
     }
     
-    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        if operation == .push {
-            if let targetVC = toVC as? MixinNavigationAnimating {
-                switch targetVC.pushAnimation {
-                case .push:
-                    return nil
-                case .present:
-                    presentFromBottomAnimator.operation = operation
-                    return presentFromBottomAnimator
-                }
-            }
-        } else if operation == .pop {
-            if let targetVC = fromVC as? MixinNavigationAnimating {
-                switch targetVC.popAnimation {
-                case .pop:
-                    return nil
-                case .dismiss:
-                    presentFromBottomAnimator.operation = operation
-                    return presentFromBottomAnimator
-                }
-            }
+    func navigationController(
+        _ navigationController: UINavigationController,
+        interactionControllerFor animationController: any UIViewControllerAnimatedTransitioning
+    ) -> (any UIViewControllerInteractiveTransitioning)? {
+        interactivePopOutTransition
+    }
+    
+    func navigationController(
+        _ navigationController: UINavigationController,
+        animationControllerFor operation: UINavigationController.Operation,
+        from fromVC: UIViewController,
+        to toVC: UIViewController
+    ) -> UIViewControllerAnimatedTransitioning? {
+        switch operation {
+        case .push where toVC is PopupNavigationAnimating:
+            PopInNavigationAnimator()
+        case .pop where fromVC is PopupNavigationAnimating:
+            PopOutNavigationAnimator()
+        default:
+            nil
         }
-        return nil
     }
     
 }
@@ -119,12 +165,30 @@ extension HomeNavigationController: UINavigationControllerDelegate {
 extension HomeNavigationController: UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard viewControllers.count > 1 else {
-            return false
-        }
-        if let vc = viewControllers.last {
-            return !(vc is QRCodeScannerViewController)
-        } else {
+        switch gestureRecognizer {
+        case interactivePopGestureRecognizer:
+            guard viewControllers.count > 1 else {
+                return false
+            }
+            if let vc = viewControllers.last {
+                if let vc = vc as? PopupNavigationAnimating, vc.interactivePopOut {
+                    return false
+                } else {
+                    return !(vc is QRCodeScannerViewController)
+                }
+            } else {
+                return true
+            }
+        case interactivePopOutRecognizer:
+            guard viewControllers.count > 1 else {
+                return false
+            }
+            if let vc = viewControllers.last, let vc = vc as? PopupNavigationAnimating {
+                return vc.interactivePopOut
+            } else {
+                return false
+            }
+        default:
             return true
         }
     }

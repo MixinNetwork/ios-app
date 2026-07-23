@@ -21,30 +21,6 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         return true
     }
     
-    override var childForStatusBarStyle: UIViewController? {
-        if let web = activeWebViewController {
-            return web
-        } else {
-            return super.childForStatusBarStyle
-        }
-    }
-    
-    override var childForStatusBarHidden: UIViewController? {
-        if let web = activeWebViewController {
-            return web
-        } else {
-            return super.childForStatusBarHidden
-        }
-    }
-    
-    override var childForHomeIndicatorAutoHidden: UIViewController? {
-        if let web = activeWebViewController {
-            return web
-        } else {
-            return super.childForHomeIndicatorAutoHidden
-        }
-    }
-    
     weak var delegate: GalleryViewControllerDelegate?
     
     var conversationId: String? {
@@ -66,12 +42,6 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     private var itemToShowAfterAvPipStops: (GalleryItem, GalleryTransitionSource)?
     
     private(set) var panRecognizer: UIPanGestureRecognizer!
-    
-    private var activeWebViewController: WebViewController? {
-        return parent?.children.compactMap({ $0 as? WebViewController })
-            .filter({ !$0.isBeingDismissedAsChild })
-            .last
-    }
     
     var currentItemViewController: GalleryItemViewController? {
         return pageViewController.viewControllers?.first as? GalleryItemViewController
@@ -226,11 +196,6 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     func dismiss(transitionViewInitialOffsetY: CGFloat, completion: (() -> Void)? = nil) {
         guard let itemViewController = currentItemViewController, let item = itemViewController.item else {
             return
-        }
-        children.forEach { controller in
-            if let vc = controller as? MixinWebViewController {
-                vc.dismissAsChild(animated: false, completion: nil)
-            }
         }
         delegate?.galleryViewController(self, willDismiss: item)
         pageViewController.view.alpha = 0

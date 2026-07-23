@@ -850,7 +850,8 @@ final class ConversationViewController: UIViewController {
                 }
             } else if message.category.hasSuffix("_POST") {
                 let message = Message.createMessage(message: message)
-                PostWebViewController.presentInstance(message: message, asChildOf: self)
+                let post = PostWebViewController(message: message)
+                navigationController?.pushViewController(post, animated: true)
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 conversationInputViewController.dismiss()
                 open(url: .aboutEncryption)
@@ -1368,10 +1369,9 @@ final class ConversationViewController: UIViewController {
         guard !conversationId.isEmpty else {
             return
         }
-        guard let container = UIApplication.homeContainerViewController else {
-            return
-        }
-        container.presentWebViewController(context: .init(conversationId: conversationId, app: app))
+        UIApplication.homeNavigationController?.pushWebViewController(
+            context: .init(conversationId: conversationId, app: app),
+        )
     }
     
     func startOrJoinGroupCall() {
@@ -2687,16 +2687,13 @@ extension ConversationViewController {
         guard !conversationId.isEmpty else {
             return
         }
-        guard let container = UIApplication.homeContainerViewController else {
-            return
-        }
         let context: MixinWebContext
         if let app = app {
             context = .init(conversationId: conversationId, url: url, app: app, shareable: shareable)
         } else {
             context = .init(conversationId: conversationId, initialUrl: url)
         }
-        container.presentWebViewController(context: context)
+        UIApplication.homeNavigationController?.pushWebViewController(context: context)
     }
     
     private func reportAirDop(conversationId: String) {

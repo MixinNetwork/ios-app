@@ -216,14 +216,16 @@ extension ProfileViewController: CoreTextLabelDelegate {
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
         let conversationId = self.conversationId
         dismiss(animated: true) {
-            guard let container = UIApplication.homeContainerViewController else {
+            guard let navigationController = UIApplication.homeNavigationController else {
                 return
             }
             guard !self.openUrlOutsideApplication(url) else {
                 return
             }
             if !UrlWindow.checkUrl(url: url) {
-                container.presentWebViewController(context: .init(conversationId: conversationId, initialUrl: url))
+                navigationController.pushWebViewController(
+                    context: .init(conversationId: conversationId, initialUrl: url)
+                )
             }
         }
     }

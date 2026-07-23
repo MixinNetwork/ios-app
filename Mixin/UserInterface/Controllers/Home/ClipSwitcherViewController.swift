@@ -177,26 +177,29 @@ extension ClipSwitcherViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let clip = clips[indexPath.row]
-        guard let container = UIApplication.homeContainerViewController else {
+        guard let navigationController = UIApplication.homeNavigationController else {
             return
         }
-        guard !container.children.contains(clip.controller) else {
-            hide()
-            return
-        }
-        func present() {
-            hide()
-            container.present(webViewController: clip.controller) {
-                container.children
-                    .compactMap { $0 as? MixinWebViewController }
-                    .filter { $0 != clip.controller }
-                    .forEach { $0.dismissAsChild(animated: false) }
+        if let index = navigationController.viewControllers.lastIndex(of: clip.controller) {
+            if navigationController.viewControllers.last == clip.controller {
+                hide()
+            } else {
+                var viewControllers = navigationController.viewControllers
+                viewControllers.remove(at: index)
+                viewControllers.append(clip.controller)
+                navigationController.setViewControllers(viewControllers, animated: false)
+                hide()
             }
-        }
-        if let presented = container.presentedViewController {
-            presented.dismiss(animated: true, completion: present)
         } else {
-            present()
+            if let presented = UIApplication.homeContainerViewController?.presentedViewController {
+                presented.dismiss(animated: true) {
+                    self.hide()
+                    navigationController.pushViewController(clip.controller, animated: true)
+                }
+            } else {
+                hide()
+                navigationController.pushViewController(clip.controller, animated: true)
+            }
         }
     }
     

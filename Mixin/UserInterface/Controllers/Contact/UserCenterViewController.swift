@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class UserCenterViewController: SettingsTableViewController, MixinNavigationAnimating {
+final class UserCenterViewController: SettingsTableViewController, PopupNavigationAnimating {
     
     private lazy var dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
@@ -92,7 +92,7 @@ extension UserCenterViewController: UITableViewDelegate {
                     return
                 }
             default:
-                UIApplication.homeContainerViewController?.presentReferralPage()
+                UIApplication.homeNavigationController?.presentReferralPage()
                 BadgeManager.shared.setHasViewed(identifier: .referral)
                 return
             }

@@ -1,7 +1,7 @@
 import UIKit
 import WebKit
 
-final class FileSendViewController: UIViewController, MixinNavigationAnimating {
+final class FileSendViewController: UIViewController, PopupNavigationAnimating {
     
     private var documentUrl: URL!
     private var webView : WKWebView!

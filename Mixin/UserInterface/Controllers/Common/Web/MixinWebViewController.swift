@@ -55,7 +55,7 @@ final class MixinWebViewController: WebViewController {
     private let loadingIndicator = AppLoadingIndicatorView(frame: .zero)
     private let defaultEVMChain: Web3Chain = .ethereum
     
-    private(set) var context: MixinWebContext!
+    private(set) var context: MixinWebContext
     
     private lazy var messageHandler = WebViewMessageHandler(delegate: self)
     private lazy var suspicousLinkView = R.nib.suspiciousLinkView(withOwner: self)!
@@ -100,21 +100,24 @@ final class MixinWebViewController: WebViewController {
         return [Script.web3Provider, web3Config]
     }
     
+    init(context: MixinWebContext) {
+        self.context = context
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
     deinit {
         #if DEBUG
         print("\(self) deinited")
         #endif
     }
     
-    class func instance(with context: MixinWebContext) -> MixinWebViewController {
-        let vc = MixinWebViewController(nib: R.nib.fullscreenPopupView)
-        vc.context = context
-        return vc
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        contentView.insertSubview(loadingIndicator, aboveSubview: webContentView)
+        view.insertSubview(loadingIndicator, aboveSubview: webViewWrapperView)
         loadingIndicator.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
         }
@@ -138,14 +141,9 @@ final class MixinWebViewController: WebViewController {
         }
     }
     
-    override func popupDidDismissAsChild() {
-        super.popupDidDismissAsChild()
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         if associatedClip == nil {
-            // Remove message handlers here because viewDidDisappear: is not getting called
-            // everytime view is disappeared. Since MixinWebViewController is always being
-            // added as a child view controller of some parent controller, when the user pop that
-            // parent view controller immediately after he dismiss this one, viewDidDisappear:
-            // is not getting called.
             removeAllMessageHandlers()
         }
     }
@@ -212,10 +210,8 @@ final class MixinWebViewController: WebViewController {
             }
             DispatchQueue.main.async {
                 hud.hide()
-                if let navigationController = self?.availableNavigationController {
-                    let conversation = ConversationViewController.instance(ownerUser: developUser)
-                    navigationController.pushViewController(withBackRoot: conversation)
-                }
+                let conversation = ConversationViewController.instance(ownerUser: developUser)
+                self?.navigationController?.pushViewController(withBackRoot: conversation)
             }
         }
     }
@@ -232,39 +228,52 @@ final class MixinWebViewController: WebViewController {
     
     func minimizeWithAnimation(completion: (() -> Void)? = nil) {
         guard
-            let switcher = clipSwitcher, !switcher.isMaximumLimitReached,
-            let controller = UIApplication.homeContainerViewController?.minimizedClipSwitcherViewController
+            let switcher = clipSwitcher,
+            !switcher.isMaximumLimitReached,
+            let container = UIApplication.homeContainerViewController,
+            let navigationController,
+            let index = navigationController.viewControllers.firstIndex(of: self)
         else {
             completion?()
             return
         }
-        isBeingDismissedAsChild = true
-        CATransaction.begin()
-        let fromPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: contentViewCornerRadius)
-        let dx = controller.horizontalContentMargin / 2
-        let dy = controller.verticalContentMargin / 2
-        let toRect = controller.view.frame.insetBy(dx: dx, dy: dy)
-        let toPath = UIBezierPath(roundedRect: toRect, cornerRadius: toRect.size.height / 2)
-        let basicAniamtion = CABasicAnimation(keyPath: "path")
-        basicAniamtion.duration = 0.3
-        basicAniamtion.fromValue = fromPath.cgPath
-        basicAniamtion.toValue = toPath.cgPath
-        basicAniamtion.timingFunction = CAMediaTimingFunction(name: .easeIn)
-        let maskLayer = CAShapeLayer()
-        maskLayer.path = toPath.cgPath
-        view.layer.mask = maskLayer
-        CATransaction.setCompletionBlock {
-            self.willMove(toParent: nil)
-            self.view.layer.mask = nil
-            self.view.removeFromSuperview()
-            self.removeFromParent()
-            self.clipSwitcher?.appendClip(with: self)
-            completion?()
-            self.isBeingDismissedAsChild = false
-            self.popupDidDismissAsChild()
+        
+        let snapshotView = view.snapshotView(afterScreenUpdates: false)
+        if let snapshotView {
+            container.view.addSubview(snapshotView)
         }
-        maskLayer.add(basicAniamtion, forKey: "pathAnimation")
-        CATransaction.commit()
+        
+        var viewControllers = navigationController.viewControllers
+        viewControllers.remove(at: index)
+        navigationController.setViewControllers(viewControllers, animated: false)
+        
+        let switcherController = container.minimizedClipSwitcherViewController
+        if let snapshotView {
+            CATransaction.begin()
+            let fromPath = UIBezierPath(roundedRect: snapshotView.bounds, cornerRadius: 1)
+            let dx = switcherController.horizontalContentMargin / 2
+            let dy = switcherController.verticalContentMargin / 2
+            let toRect = switcherController.view.frame.insetBy(dx: dx, dy: dy)
+            let toPath = UIBezierPath(roundedRect: toRect, cornerRadius: toRect.size.height / 2)
+            let pathAniamtion = CABasicAnimation(keyPath: "path")
+            pathAniamtion.duration = 0.3
+            pathAniamtion.fromValue = fromPath.cgPath
+            pathAniamtion.toValue = toPath.cgPath
+            pathAniamtion.timingFunction = CAMediaTimingFunction(name: .easeIn)
+            let maskLayer = CAShapeLayer()
+            maskLayer.path = toPath.cgPath
+            snapshotView.layer.mask = maskLayer
+            CATransaction.setCompletionBlock {
+                snapshotView.removeFromSuperview()
+                switcher.appendClip(with: self)
+                completion?()
+            }
+            maskLayer.add(pathAniamtion, forKey: "pathAnimation")
+            CATransaction.commit()
+        } else {
+            switcher.appendClip(with: self)
+            completion?()
+        }
     }
     
 }
@@ -331,10 +340,10 @@ extension MixinWebViewController: WKNavigationDelegate {
         switch nsError.code {
         case NSURLErrorNotConnectedToInternet, NSURLErrorTimedOut, NSURLErrorInternationalRoamingOff, NSURLErrorDataNotAllowed, NSURLErrorCannotFindHost, NSURLErrorCannotConnectToHost, NSURLErrorNetworkConnectionLost:
             if loadingFailureView.superview == nil {
-                contentView.insertSubview(loadingFailureView, belowSubview: pageControlView)
+                view.insertSubview(loadingFailureView, belowSubview: pageControlView)
                 loadingFailureView.snp.makeConstraints { make in
                     make.leading.trailing.equalToSuperview()
-                    make.top.bottom.equalTo(contentView.safeAreaLayoutGuide)
+                    make.top.bottom.equalTo(view.safeAreaLayoutGuide)
                 }
             }
             loadFailLabel.text = R.string.localizable.web_cannot_reached_desc(host)
@@ -375,7 +384,7 @@ extension MixinWebViewController: WebViewMessageHandler.Delegate {
         case .reloadTheme:
             reloadTheme(webView: webView)
         case .close:
-            dismissAsChild(animated: true, completion: nil)
+            navigationController?.popViewController(animated: true)
         case .getTIPAddress(let callback):
             webView.evaluateJavaScript(callback)
         case .tipSign(let callback):
@@ -443,7 +452,7 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             case .viewAuthorization(let appId):
                 let vc = PermissionsViewController.instance(dataSource: .app(id: appId))
-                availableNavigationController?.pushViewController(vc, animated: true)
+                navigationController?.pushViewController(vc, animated: true)
             }
         }
         
@@ -557,11 +566,13 @@ extension MixinWebViewController {
                             self.loadAppUrl(title: title, iconUrl: iconUrl, appID: appId)
                         } else {
                             if self.suspicousLinkView.superview == nil {
-                                self.contentView.insertSubview(self.suspicousLinkView,
-                                                               belowSubview: self.pageControlView)
+                                self.view.insertSubview(
+                                    self.suspicousLinkView,
+                                    belowSubview: self.pageControlView
+                                )
                                 self.suspicousLinkView.snp.makeConstraints { make in
                                     make.leading.trailing.equalToSuperview()
-                                    make.top.bottom.equalTo(self.contentView.safeAreaLayoutGuide)
+                                    make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
                                 }
                             }
                             self.context.style = .webPage
@@ -660,9 +671,6 @@ extension MixinWebViewController {
             }
             
             DispatchQueue.main.async {
-                guard let navigationController = self?.availableNavigationController else {
-                    return
-                }
                 if let app = app,
                    let iconUrl = URL(string: app.iconUrl),
                    app.resourcePatterns(accepts: currentUrl)
@@ -675,10 +683,10 @@ extension MixinWebViewController {
                                                         updatedAt: nil,
                                                         isShareable: isShareable)
                     let vc = MessageReceiverViewController.instance(content: .appCard(.v0(content)))
-                    navigationController.pushViewController(vc, animated: true)
+                    self?.navigationController?.pushViewController(vc, animated: true)
                 } else {
                     let vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
-                    navigationController.pushViewController(vc, animated: true)
+                    self?.navigationController?.pushViewController(vc, animated: true)
                 }
             }
         }
@@ -689,7 +697,7 @@ extension MixinWebViewController {
             return
         }
         let vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
-        availableNavigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     private static func syncUser(userId: String, hud: Hud) -> UserItem? {

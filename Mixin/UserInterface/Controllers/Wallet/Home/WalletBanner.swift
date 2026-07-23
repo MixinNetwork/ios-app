@@ -18,7 +18,11 @@ enum WalletBanner: Equatable, Hashable {
             if let action = banner.actionURL,
                let url = URL(string: action)
             {
-                _ = UrlWindow.checkUrl(url: url)
+                if !UrlWindow.checkUrl(url: url) {
+                    UIApplication.homeNavigationController?.pushWebViewController(
+                        context: .init(conversationId: "", initialUrl: url)
+                    )
+                }
             }
             if !banner.trackingKey.isEmpty {
                 reporter.report(

@@ -474,13 +474,13 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
                     return
                 }
                 let isOpened = UrlWindow.checkUrl(url: url)
-                if !isOpened, let container = UIApplication.homeContainerViewController {
+                if !isOpened, let navigationController = UIApplication.homeNavigationController {
                     let context = MixinWebContext(
                         conversationId: "",
                         initialUrl: url,
                         saveAsRecentSearch: false
                     )
-                    container.presentWebViewController(context: context)
+                    navigationController.pushWebViewController(context: context)
                 }
             }
         }

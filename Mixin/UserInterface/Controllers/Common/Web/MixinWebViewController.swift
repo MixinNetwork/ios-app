@@ -143,7 +143,9 @@ final class MixinWebViewController: WebViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if associatedClip == nil {
+        if let clip = associatedClip {
+            clip.updateProperties()
+        } else {
             removeAllMessageHandlers()
         }
     }

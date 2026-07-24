@@ -5,6 +5,7 @@ struct AppBanner: Codable {
     
     enum CodingKeys: String, CodingKey {
         case bannerID = "banner_id"
+        case placement = "placement"
         case iconURL = "icon_url"
         case title = "title"
         case description = "description"
@@ -16,6 +17,7 @@ struct AppBanner: Codable {
     }
     
     let bannerID: String
+    let placement: UnknownableEnum<Placement>
     let iconURL: String
     let title: String
     let description: String
@@ -36,6 +38,10 @@ struct AppBanner: Codable {
 }
 
 extension AppBanner {
+    
+    enum Placement: String {
+        case wallet = "wallet_banner"
+    }
     
     struct Action: Codable {
         

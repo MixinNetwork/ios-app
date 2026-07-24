@@ -5,8 +5,6 @@ import MixinServices
 
 class WebViewController: UIViewController {
     
-    static let didDismissNotification = Notification.Name("one.mixin.messenger.WebViewController.didDismiss")
-    
     @IBOutlet weak var pageControlView: PageControlView!
     
     @IBOutlet weak var statusBarBackgroundView: UIView!

@@ -118,6 +118,21 @@ final class Clip: Codable {
         try container.encode(url, forKey: .url)
     }
     
+    func updateProperties( ) {
+        guard let controller = controllerIfLoaded else {
+            return
+        }
+        
+        let config = WKSnapshotConfiguration()
+        config.rect = controller.webView.frame
+        config.snapshotWidth = NSNumber(value: Int(controller.webView.frame.width))
+        controller.webView.takeSnapshot(with: config) { [weak self] (image, error) in
+            self?.thumbnail = image
+        }
+        
+        updateURLAndTitle()
+    }
+    
 }
 
 extension Clip: Equatable {
@@ -146,21 +161,6 @@ extension Clip {
         }
     }
     
-    @objc private func updateProperties(_ notification: Notification) {
-        guard let controller = notification.object as? WebViewController, controller == controllerIfLoaded else {
-            return
-        }
-        
-        let config = WKSnapshotConfiguration()
-        config.rect = controller.webView.frame
-        config.snapshotWidth = NSNumber(value: Int(controller.webView.frame.width))
-        controller.webView.takeSnapshot(with: config) { [weak self] (image, error) in
-            self?.thumbnail = image
-        }
-        
-        updateURLAndTitle()
-    }
-    
     @objc private func applicationWillTerminate() {
         if controllerIfLoaded?.parent != nil {
             updateURLAndTitle()
@@ -176,10 +176,6 @@ extension Clip {
         center.addObserver(self,
                            selector: #selector(removeCachedController),
                            name: UIApplication.didReceiveMemoryWarningNotification,
-                           object: nil)
-        center.addObserver(self,
-                           selector: #selector(updateProperties(_:)),
-                           name: WebViewController.didDismissNotification,
                            object: nil)
         center.addObserver(self,
                            selector: #selector(applicationWillTerminate),

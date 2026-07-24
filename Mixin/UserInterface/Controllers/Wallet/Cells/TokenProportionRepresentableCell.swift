@@ -124,7 +124,7 @@ extension TokenProportionRepresentableCell {
             stackView.axis = .horizontal
             stackView.spacing = 4
             proportionStackView.addArrangedSubview(stackView)
-            iconView.setIcons(urls: tokens[2...].map(\.iconURL))
+            iconView.setIcons(urlStrings: tokens[2...].map(\.iconURL))
         }
     }
     

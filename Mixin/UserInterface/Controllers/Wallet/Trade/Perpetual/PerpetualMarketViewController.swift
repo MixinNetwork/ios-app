@@ -319,10 +319,12 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     @objc private func closePosition(_ sender: UIButton) {
-        guard let viewModel = openPositionViewModel else {
+        guard
+            let viewModel = openPositionViewModel,
+            let preview = ClosePerpetualPositionPreviewViewController(viewModels: [viewModel])
+        else {
             return
         }
-        let preview = ClosePerpetualPositionPreviewViewController(viewModel: viewModel)
         present(preview, animated: true)
         reporter.report(event: .tradePerpsCloseStart, tags: ["type": "single"])
     }

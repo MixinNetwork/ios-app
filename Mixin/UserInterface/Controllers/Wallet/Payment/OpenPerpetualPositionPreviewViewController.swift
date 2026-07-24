@@ -55,10 +55,12 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         )
         var rows: [Row]
         rows = [
-            .perpsProduct(
+            .perpsPositions([(
                 iconURL: context.viewModel.iconURL,
-                name: context.viewModel.market.displaySymbol
-            ),
+                name: context.viewModel.market.displaySymbol,
+                side: context.side,
+                leverage: nil
+            )]),
             .doubleLineInfo(
                 caption: .string(R.string.localizable.direction()),
                 primary: direction,

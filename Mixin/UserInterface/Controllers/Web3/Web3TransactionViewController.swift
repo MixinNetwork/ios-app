@@ -157,6 +157,7 @@ extension Web3TransactionViewController: UITableViewDataSource {
                 }
                 row.amountLabel.attributedText = change.amount
                 row.networkLabel.text = nil
+                row.leverageLabel?.removeFromSuperview()
             }
             return cell
         case let .fee(token, fiatMoney):

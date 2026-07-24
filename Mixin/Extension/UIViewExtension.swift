@@ -31,6 +31,7 @@ extension UIView.AnimationOptions {
 extension UILayoutPriority {
     
     static let almostRequired = UILayoutPriority(999)
+    static let medium = UILayoutPriority(500)
     static let almostInexist = UILayoutPriority(1)
     
 }

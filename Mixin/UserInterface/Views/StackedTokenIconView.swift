@@ -41,7 +41,12 @@ final class StackedTokenIconView: UIView {
         loadSubviews()
     }
     
-    func setIcons(urls: [String]) {
+    func setIcons(urlStrings: [String]) {
+        let urls = urlStrings.map(URL.init(string:))
+        setIcons(urls: urls)
+    }
+    
+    func setIcons(urls: [URL?]) {
         if urls.count > 3 {
             loadIconViews(count: 2) { _, wrapperView in
                 wrapperView.snp.makeConstraints { make in
@@ -86,8 +91,7 @@ final class StackedTokenIconView: UIView {
             }
         }
         for (i, wrapperView) in wrapperViews.enumerated() {
-            let url = URL(string: urls[i])
-            wrapperView.iconView.setIcon(tokenIconURL: url)
+            wrapperView.iconView.setIcon(tokenIconURL: urls[i])
         }
     }
     

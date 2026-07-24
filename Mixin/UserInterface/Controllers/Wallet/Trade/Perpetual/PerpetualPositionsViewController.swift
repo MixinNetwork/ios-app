@@ -11,9 +11,9 @@ final class PerpetualPositionsViewController: UIViewController {
     private let wallet: Wallet
     private let positionsLoader: PerpetualPositionLoader
     private let sections: [Section] = [.summary, .positions]
-    private let pageCount = 50
     
     private weak var collectionView: UICollectionView!
+    private weak var trayView: AuthenticationPreviewSingleButtonTrayView?
     
     private var value: PerpetualPositionValue?
     private var viewModels: [PerpetualPositionViewModel]?
@@ -33,6 +33,7 @@ final class PerpetualPositionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.positions()
+        view.backgroundColor = R.color.background_secondary()
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.interSectionSpacing = 10
         let layout = UICollectionViewCompositionalLayout(
@@ -80,8 +81,8 @@ final class PerpetualPositionsViewController: UIViewController {
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.backgroundColor = R.color.background_secondary()
         view.addSubview(collectionView)
-        collectionView.snp.makeEdgesEqualToSuperview()
         self.collectionView = collectionView
+        reloadTrayView()
         collectionView.register(R.nib.perpetualPositionValueCell)
         collectionView.register(R.nib.perpetualMarketCell)
         collectionView.register(R.nib.perpetualActivityCell)
@@ -121,7 +122,61 @@ final class PerpetualPositionsViewController: UIViewController {
                 }
                 self.value = value
                 self.viewModels = viewModels
+                self.reloadTrayView()
                 self.collectionView.reloadData()
+            }
+        }
+    }
+    
+    @objc private func closeAllPositions(_ sender: ConfigurationBasedBusyButton) {
+        guard
+            let viewModels,
+            let preview = ClosePerpetualPositionPreviewViewController(viewModels: viewModels)
+        else {
+            return
+        }
+        present(preview, animated: true)
+    }
+    
+    private func reloadTrayView() {
+        if let viewModels, !viewModels.isEmpty {
+            let trayView: AuthenticationPreviewSingleButtonTrayView
+            if let view = self.trayView {
+                trayView = view
+            } else {
+                trayView = AuthenticationPreviewSingleButtonTrayView()
+                trayView.backgroundColor = R.color.background_secondary()
+                trayView.button.addTarget(
+                    self,
+                    action: #selector(closeAllPositions(_:)),
+                    for: .touchUpInside
+                )
+                view.addSubview(trayView)
+                trayView.snp.makeConstraints { make in
+                    make.leading.trailing.equalToSuperview()
+                    make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+                }
+                collectionView.snp.remakeConstraints { make in
+                    make.top.leading.trailing.equalToSuperview()
+                    make.bottom.equalTo(trayView.snp.top)
+                }
+                self.trayView = trayView
+            }
+            if var config = trayView.button.configuration {
+                config.title = R.string.localizable.close_all_positions(viewModels.count)
+                config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 34, bottom: 11, trailing: 34)
+                trayView.button.configuration = config
+                if let label = trayView.button.titleLabel {
+                    label.adjustsFontForContentSizeCategory = true
+                    label.adjustsFontSizeToFitWidth = true
+                    label.minimumScaleFactor = 0.5
+                }
+            }
+        } else if let trayView {
+            trayView.removeFromSuperview()
+            self.trayView = nil
+            collectionView.snp.remakeConstraints { make in
+                make.edges.equalToSuperview()
             }
         }
     }

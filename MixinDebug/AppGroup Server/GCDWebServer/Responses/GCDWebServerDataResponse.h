@@ -91,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Initializes a data response from an HTML template encoded using UTF-8.
  *
- *  All occurences of "%variable%" within the HTML template are replaced with
+ *  All occurrences of "%variable%" within the HTML template are replaced with
  *  their corresponding values.
  */
 - (nullable instancetype)initWithHTMLTemplate:(NSString*)path variables:(NSDictionary<NSString*, NSString*>*)variables;

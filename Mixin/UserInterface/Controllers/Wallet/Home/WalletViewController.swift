@@ -803,8 +803,13 @@ extension WalletViewController {
         with remoteBanners: [AppBanner],
         updating snapshot: inout DataSourceSnapshot
     ) {
-        var banners: [WalletBanner] = remoteBanners.map { banner in
-                .remote(banner)
+        var banners: [WalletBanner] = remoteBanners.compactMap { banner in
+            switch banner.placement.knownCase {
+            case .wallet:
+                    .remote(banner)
+            case .none:
+                    .none
+            }
         }
         if !BadgeManager.shared.hasViewed(identifier: .addWalletBanner) {
             banners.append(.embedded(.addWallet))

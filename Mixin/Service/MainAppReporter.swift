@@ -32,8 +32,11 @@ final class MainAppReporter: Reporter {
              .tradeSpotEnd,
              .tradePerpsOpenStart,
              .tradePerpsOpenEnd,
+             .tradePerpsCloseStart,
+             .tradePerpsCloseEnd,
              .receiveStart,
              .receiveEnd,
+             .receiveSuccess,
              .sendStart,
              .sendEnd:
             AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)

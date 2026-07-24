@@ -135,7 +135,14 @@ final class AuthenticationPreviewHeaderView: UIView {
         iconView.setIcon(sendToken: sendToken, receiveToken: receiveToken)
     }
     
-    func setIcon(tokens: [MixinTokenItem]) {
+    func setIcon(tokens: [any Token]) {
+        let urls = tokens.map { token in
+            URL(string: token.iconURL)
+        }
+        setIcon(tokenIconURLs: urls)
+    }
+    
+    func setIcon(tokenIconURLs: [URL?]) {
         let iconView: StackedTokenIconView
         if let view = self.multipleTokenIconView, view.isDescendant(of: iconWrapperView) {
             iconView = view
@@ -152,7 +159,7 @@ final class AuthenticationPreviewHeaderView: UIView {
             }
             self.multipleTokenIconView = iconView
         }
-        iconView.setIcons(urls: tokens.map(\.iconURL))
+        iconView.setIcons(urls: tokenIconURLs)
     }
     
     func setTokenIcon(url: URL?) {

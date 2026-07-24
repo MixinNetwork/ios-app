@@ -19,6 +19,7 @@ struct PerpetualPositionViewModel {
     let leverage: String
     let pnl: String
     let pnlColor: MarketColor
+    let decimalROE: Decimal?
     let roeWithSign: String?
     let roeWithoutSign: String?
     let pnlWithROE: String
@@ -85,6 +86,7 @@ struct PerpetualPositionViewModel {
                 sign: .never,
                 options: .keepOneFractionDigitForZero
             )
+            self.decimalROE = roe
             self.roeWithSign = roeWithSign
             self.roeWithoutSign = roeWithoutSign
             self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
@@ -95,6 +97,7 @@ struct PerpetualPositionViewModel {
                 symbol: .dollarSign,
             )
         } else {
+            self.decimalROE = roe
             self.roeWithSign = nil
             self.roeWithoutSign = nil
             self.pnlWithROE = localizedPnL

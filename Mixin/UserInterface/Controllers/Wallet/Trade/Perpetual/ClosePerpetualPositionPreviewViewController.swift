@@ -3,13 +3,24 @@ import MixinServices
 
 final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
-    private let viewModel: PerpetualPositionViewModel
+    private let viewModels: [PerpetualPositionViewModel]
+    private let wallet: Wallet
     
-    init(
-        viewModel: PerpetualPositionViewModel
+    init?(
+        viewModels: [PerpetualPositionViewModel]
     ) {
-        self.viewModel = viewModel
-        super.init(wallet: viewModel.wallet, warnings: [])
+        guard let wallet = viewModels.first?.wallet else {
+            return nil
+        }
+        let sameWallet = viewModels.allSatisfy { viewModel in
+            viewModel.wallet == wallet
+        }
+        guard sameWallet else {
+            return nil
+        }
+        self.viewModels = viewModels
+        self.wallet = wallet
+        super.init(wallet: wallet, warnings: [])
     }
     
     @MainActor required init?(coder: NSCoder) {
@@ -19,23 +30,44 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableHeaderView.setTokenIcon(url: viewModel.iconURL)
+        if viewModels.count == 1, let viewModel = viewModels.first {
+            tableHeaderView.setTokenIcon(url: viewModel.iconURL)
+        } else {
+            tableHeaderView.setIcon(tokenIconURLs: viewModels.map(\.iconURL))
+        }
         tableHeaderView.titleLabel.text = R.string.localizable.confirm_closing_position()
         tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixin)
         
         var rows: [Row] = []
-        if let name = viewModel.displaySymbol {
-            rows.append(.perpsProduct(iconURL: viewModel.iconURL, name: name))
+        
+        let positions = viewModels.map { viewModel in
+            (
+                iconURL: viewModel.iconURL,
+                name: viewModel.displaySymbol ?? "",
+                side: viewModel.side,
+                leverage: viewModel.leverage
+            )
         }
-        if let receiving = viewModel.estimatedReceiving,
-           let token = TokenDAO.shared.tokenItem(assetID: receiving.assetID)
-        {
+        rows.append(.perpsPositions(positions))
+        
+        let receivings = viewModels.compactMap(\.estimatedReceiving)
+        let token = receivings.lazy
+            .compactMap { receiving in
+                TokenDAO.shared.tokenItem(assetID: receiving.assetID)
+            }
+            .first
+        if let token {
+            let totalReceivingAmount = receivings.map(\.receivingAmount).reduce(0, +)
+            let totalPnLAmount = receivings.map(\.pnlAmount).reduce(0, +)
+            let pnlColor: MarketColor = totalPnLAmount >= 0 ? .rising : .falling
+            
             let count = CurrencyFormatter.localizedString(
-                from: receiving.receivingAmount,
+                from: totalReceivingAmount,
                 format: .precision,
                 sign: .always,
                 symbol: .custom(token.symbol)
             )
+            
             let pnl = NSMutableAttributedString(
                 string: R.string.localizable.pnl() + ": ",
                 attributes: [
@@ -44,25 +76,44 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 ]
             )
             var pnlValue = CurrencyFormatter.localizedString(
-                from: receiving.pnlAmount,
+                from: totalPnLAmount,
                 format: .precision,
                 sign: .always,
                 symbol: .custom(token.symbol)
             )
-            if let roe = viewModel.roeWithoutSign {
+            
+            let totalWeightedROE: Decimal = viewModels.reduce(0) { result, viewModel in
+                if let margin = viewModel.decimalMargin,
+                   let roe = viewModel.decimalROE
+                {
+                    result + margin * roe
+                } else {
+                    result
+                }
+            }
+            let totalMargin = viewModels.compactMap(\.decimalMargin).reduce(0, +)
+            if totalMargin > 0 {
+                let aggregatedROE = totalWeightedROE / totalMargin
+                let roe = PercentageFormatter.string(
+                    from: aggregatedROE,
+                    format: .pretty,
+                    sign: .never,
+                )
                 pnlValue += " (" + roe + ")"
             }
+            
             pnl.append(NSAttributedString(
                 string: pnlValue,
                 attributes: [
                     .font: UIFont.preferredFont(forTextStyle: .caption1),
-                    .foregroundColor: viewModel.pnlColor.uiColor
+                    .foregroundColor: pnlColor.uiColor
                 ]
             ))
+            
             rows.append(.estimatedReceive(token: token, count: count, pnl: pnl))
         }
         rows.append(contentsOf: [
-            .wallet(caption: .sender, wallet: viewModel.wallet, threshold: nil),
+            .wallet(caption: .sender, wallet: wallet, threshold: nil),
         ])
         reloadData(with: rows)
     }
@@ -85,11 +136,31 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             subtitle: R.string.localizable.signature_request_from(.mixin)
         )
         replaceTrayView(with: nil, animation: .vertical)
-        let positionID = viewModel.positionID
         Task {
             do {
                 try await AccountAPI.verify(pin: pin)
-                _ = try await RouteAPI.closePerpsOrder(positionID: positionID)
+                let errors = await withTaskGroup(of: Error?.self) { group in
+                    for viewModel in viewModels {
+                        group.addTask { [positionID=viewModel.positionID] in
+                            do {
+                                _ = try await RouteAPI.closePerpsOrder(positionID: positionID)
+                                return nil
+                            } catch {
+                                return error
+                            }
+                        }
+                    }
+                    var errors: [Error] = []
+                    for await error in group {
+                        if let error {
+                            errors.append(error)
+                        }
+                    }
+                    return errors
+                }
+                if errors.count == viewModels.count, let firstError = errors.first {
+                    throw firstError
+                }
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {
                     canDismissInteractively = true

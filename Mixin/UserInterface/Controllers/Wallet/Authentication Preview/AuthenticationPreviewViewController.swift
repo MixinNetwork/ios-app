@@ -356,9 +356,9 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.secondaryLabel.text = token
             }
             return cell
-        case let .perpsProduct(iconURL, name):
+        case let .perpsPositions(positions):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
-            cell.reloadPerpsProduct(iconURL: iconURL, name: name)
+            cell.reloadData(perpsPositions: positions)
             return cell
         case let .estimatedReceive(token, count, pnl):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.close_perps_receiving, for: indexPath)!
@@ -498,7 +498,7 @@ extension AuthenticationPreviewViewController {
         case commonWalletReceiver(user: UserItem, address: String)
         case user(title: String, user: UserItem)
         case waivedFee(token: String, fiatMoney: String, display: AmountIntent)
-        case perpsProduct(iconURL: URL?, name: String)
+        case perpsPositions([(iconURL: URL?, name: String, side: PerpetualOrderSide, leverage: String?)])
         case estimatedReceive(token: MixinTokenItem, count: String, pnl: NSAttributedString)
     }
     

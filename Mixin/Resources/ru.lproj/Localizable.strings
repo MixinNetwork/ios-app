@@ -356,6 +356,7 @@
 "collectible_released_description" = "The collectible was released successfully.";
 "collectible_releasing" = "Releasing";
 "collectible_releasing_description" = "The collectible is being released, please wait.";
+"close_all_positions" = "Close All Positions (%d)";
 "collectible_token_id" = "#%@";
 "collectible_traits" = "Traits";
 "collectibles" = "Collectibles";

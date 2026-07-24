@@ -338,6 +338,7 @@
 "cleared" = "已清空";
 "clock_skew_hint" = "請校正後再繼續使用，設定 > 一般 > 日期與時間 > 自動設定";
 "close" = "關閉";
+"close_all_positions" = "全部平倉（%d）";
 "close_position" = "平倉";
 "close_price" = "平倉價格";
 "closed_long" = "平倉做多";

@@ -338,6 +338,7 @@
 "cleared" = "已清空";
 "clock_skew_hint" = "请校正后再继续使用，设置 > 通用 > 日期与时间 > 自动设置。";
 "close" = "关闭";
+"close_all_positions" = "全部平仓（%d）";
 "close_position" = "平仓";
 "close_price" = "平仓价格";
 "closed_long" = "平仓做多";

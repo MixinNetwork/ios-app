@@ -2711,6 +2711,9 @@
 		940FC85F2CDCA8970056BFF2 /* MobileNumberLoginContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileNumberLoginContext.swift; sourceTree = "<group>"; };
 		9410C94B300FCE4E0062E8F3 /* MembershipDiagnoseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipDiagnoseViewController.swift; sourceTree = "<group>"; };
 		9410C94C300FCE4E0062E8F3 /* MembershipDiagnoseView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipDiagnoseView.xib; sourceTree = "<group>"; };
+		9410C999301099010062E8F3 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9410C99A301099010062E8F3 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9410C99B301099010062E8F3 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9411B3B22C7F2EBD005753F0 /* ExploreMarketHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreMarketHeaderView.swift; sourceTree = "<group>"; };
 		9411B3B32C7F2EBD005753F0 /* ExploreMarketHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreMarketHeaderView.xib; sourceTree = "<group>"; };
 		9412AF4B2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewAsPictureViewController.swift; sourceTree = "<group>"; };
@@ -7116,6 +7119,7 @@
 				ru,
 				"zh-Hant",
 				es,
+				ko,
 			);
 			mainGroup = 277FF6F61F909A1200DBB2EB;
 			packageReferences = (
@@ -9337,6 +9341,7 @@
 				7C11361F2893AE4D00862893 /* ru */,
 				7CFD7472288FC88A00D7A0EE /* zh-Hant */,
 				7C0CC2D629B81649003F411F /* es */,
+				9410C99A301099010062E8F3 /* ko */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9350,6 +9355,7 @@
 				7C11361E2893AE4C00862893 /* ru */,
 				7CFD7471288FC88900D7A0EE /* zh-Hant */,
 				7C0CC2D529B81649003F411F /* es */,
+				9410C999301099010062E8F3 /* ko */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -9371,6 +9377,7 @@
 				7C1136202893AE4D00862893 /* ru */,
 				7CFD7473288FC88A00D7A0EE /* zh-Hant */,
 				7C0CC2D729B81649003F411F /* es */,
+				9410C99B301099010062E8F3 /* ko */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

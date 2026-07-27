@@ -4,7 +4,7 @@ import TIP
 
 enum MIXAddress {
     
-    static let storageFeeReceiver = MIXAddress(string: "MIXSK624cFT3CXbbjYxU17CeYWCwj6CZgkp2VsfiRsDMXw4MzpfYKPKKYwLmfDby2z85MLAbSWZbAB1dfPetCxUf7vwwJnToaG8")
+    static let storageFeeReceiver = MIXAddress(string: "MIXSK6TsZiYZ8uUxjggvf5CmfYmny8qf831CrXaGEZ2KwkwWguJn1Y21Nh1Rw1sN5GFnFW1R2Qc3p6KtAbqpEGXq4MMSTZET3YP")
     
     case user(String)
     case multisig(threshold: Int32, userIDs: [String])

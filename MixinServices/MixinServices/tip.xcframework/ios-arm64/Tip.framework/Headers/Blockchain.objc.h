@@ -11,6 +11,8 @@
 #include "Universe.objc.h"
 
 
+@class BlockchainBitcoinInput;
+@class BlockchainBitcoinTransaction;
 @class BlockchainKey;
 @protocol BlockchainKeccakState;
 @class BlockchainKeccakState;
@@ -22,6 +24,35 @@
 - (long)size;
 - (NSData* _Nullable)sum:(NSData* _Nullable)b;
 - (BOOL)write:(NSData* _Nullable)p0 n:(long* _Nullable)n error:(NSError* _Nullable* _Nullable)error;
+@end
+
+/**
+ * BitcoinInput identifies a UTXO controlled by the signing key.
+ */
+@interface BlockchainBitcoinInput : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+@property (nonatomic) NSString* _Nonnull transactionHash;
+// skipped field BitcoinInput.OutputIndex with unsupported type: uint32
+
+@property (nonatomic) int64_t satoshi;
+@end
+
+/**
+ * BitcoinTransaction is a signed transaction ready for broadcast.
+ */
+@interface BlockchainBitcoinTransaction : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+@property (nonatomic) NSString* _Nonnull transactionHash;
+@property (nonatomic) NSString* _Nonnull rawTransaction;
+@property (nonatomic) int64_t fee;
 @end
 
 @interface BlockchainKey : NSObject <goSeqRefInterface> {
@@ -37,6 +68,12 @@
 FOUNDATION_EXPORT NSData* _Nullable BlockchainAesDecrypt(NSData* _Nullable secret, NSData* _Nullable b, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSData* _Nullable BlockchainAesEncrypt(NSData* _Nullable secret, NSData* _Nullable plaintext, NSData* _Nullable nonce, NSError* _Nullable* _Nullable error);
+
+// skipped function BuildBitcoinTransaction with unsupported parameter or return types
+
+
+// skipped function BuildPearlTransaction with unsupported parameter or return types
+
 
 // skipped function CKDPriv with unsupported parameter or return types
 
@@ -70,6 +107,11 @@ FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEvmAddressFromMnemonic(NS
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEvmAddressFromPrivateKey(NSString* _Nullable privateKey, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateLitecoinAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
+
+/**
+ * GeneratePearlAddress derives a Pearl Taproot address from a hexadecimal seed.
+ */
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGeneratePearlAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddress(NSString* _Nullable seed, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 

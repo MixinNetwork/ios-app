@@ -1192,7 +1192,7 @@
 "perps_category_stocks" = "股票";
 "perps_current_price" = "最新價格";
 "perps_funding_frequency" = "頻率";
-"perps_funding_frequency_value" = "8 小時";
+"perps_funding_frequency_value" = "1/4/8 小時";
 "perps_funding_rate_key_point_1" = "資金費率為正時，多頭向空頭支付資金費。";
 "perps_funding_rate_key_point_2" = "資金費率為負時，空頭向多頭支付資金費。";
 "perps_funding_rate_key_point_3" = "實際資金費取決於您的倉位價值和當前資金費率。";

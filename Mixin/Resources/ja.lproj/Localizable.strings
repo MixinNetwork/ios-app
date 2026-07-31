@@ -1192,7 +1192,7 @@
 "perps_category_stocks" = "株式";
 "perps_current_price" = "現在の価格";
 "perps_funding_frequency" = "頻度";
-"perps_funding_frequency_value" = "8 時間";
+"perps_funding_frequency_value" = "1/4/8 時間";
 "perps_funding_rate_key_point_1" = "Perps価格を現物価格に近づける";
 "perps_funding_rate_key_point_2" = "ロングポジションとショートポジションのバランスを取る";
 "perps_funding_rate_key_point_3" = "裁定取引の機会を創出する";

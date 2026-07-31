@@ -1192,7 +1192,7 @@
 "perps_category_stocks" = "Stocks";
 "perps_current_price" = "Current Price";
 "perps_funding_frequency" = "Frequency";
-"perps_funding_frequency_value" = "8 hours";
+"perps_funding_frequency_value" = "1/4/8 hours";
 "perps_funding_rate_key_point_1" = "Keep perp prices close to spot prices";
 "perps_funding_rate_key_point_2" = "Balance long and short positions";
 "perps_funding_rate_key_point_3" = "Create arbitrage opportunities";

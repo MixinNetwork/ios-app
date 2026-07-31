@@ -1192,7 +1192,7 @@
 "perps_category_stocks" = "Акции";
 "perps_current_price" = "Текущая цена";
 "perps_funding_frequency" = "Частота";
-"perps_funding_frequency_value" = "8 часов";
+"perps_funding_frequency_value" = "1/4/8 часов";
 "perps_funding_rate_key_point_1" = "Поддерживать цены Perps близкими к спотовым ценам";
 "perps_funding_rate_key_point_2" = "Сбалансировать лонг- и шорт-позиции";
 "perps_funding_rate_key_point_3" = "Создавайте арбитражные возможности";

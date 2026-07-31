@@ -1192,7 +1192,7 @@
 "perps_category_stocks" = "주식";
 "perps_current_price" = "현재 가격";
 "perps_funding_frequency" = "빈도";
-"perps_funding_frequency_value" = "8시간";
+"perps_funding_frequency_value" = "1/4/8시간";
 "perps_funding_rate_key_point_1" = "Perps 가격을 현물 가격에 가깝게 유지";
 "perps_funding_rate_key_point_2" = "롱 포지션과 숏 포지션의 균형";
 "perps_funding_rate_key_point_3" = "차익거래 기회 창출";

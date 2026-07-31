@@ -13,7 +13,7 @@ final class SharePerpsPositionViewController: UIViewController {
     private let dataSource: SharePerpetualPositionDataSource
     private let obiContent: ShareObiView.Content
     
-    private var style: SharePerpsPositionStyle = .pnl
+    private var style: SharePerpsPositionStyle = .roe
     private var styleSelectorSizeObserver: NSKeyValueObservation?
     private var layoutContentPreviewWidth: CGFloat?
     
@@ -137,7 +137,12 @@ extension SharePerpsPositionViewController: UICollectionViewDataSource {
             return cell
         case contentPreviewCollectionView:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.share_perps_position_preview, for: indexPath)!
-            cell.load(dataSource: dataSource, obiContent: obiContent, style: style, mascotIndex: indexPath.item)
+            cell.load(
+                dataSource: dataSource,
+                obiContent: obiContent,
+                style: style,
+                mascotIndex: indexPath.item
+            )
             return cell
         default:
             return UICollectionViewCell()

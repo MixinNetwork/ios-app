@@ -1,0 +1,8 @@
+"CFBundleDisplayName" = "Mixin";
+"NSContactsUsageDescription" = "Mixin은 주소록을 Mixin 서버에 동기화하여 다른 Mixin 사용자와 연결하는 데 도움을 줍니다.";
+"NSCameraUsageDescription" = "Mixin은 카메라를 사용하여 프로필 사진을 설정하고 채팅 상대에게 사진을 보냅니다.";
+"NSPhotoLibraryAddUsageDescription" = "Mixin은 귀하가 선택한 경우에만 채팅 이미지, 동영상, QR 코드 및 비문 이미지를 사진 라이브러리에 저장합니다.";
+"NSMicrophoneUsageDescription" = "Mixin은 마이크를 사용하여 음성 메시지를 녹음하여 연락처와 공유합니다.";
+"NSFaceIDUsageDescription" = "Mixin은 Face ID를 사용하여 결제를 승인합니다.";
+"NSLocationWhenInUseUsageDescription" = "현재 위치나 주변 장소를 대화로 보내려면 위치 서비스를 켜세요.";
+"NSLocalNetworkUsageDescription" = "Mixin uses the local network to transfer or restore your chat history.";

@@ -1192,7 +1192,7 @@
 "perps_category_stocks" = "Acciones";
 "perps_current_price" = "Precio actual";
 "perps_funding_frequency" = "Frecuencia";
-"perps_funding_frequency_value" = "8 horas";
+"perps_funding_frequency_value" = "1/4/8 horas";
 "perps_funding_rate_key_point_1" = "Mantener los precios de Perps cerca de los precios spot";
 "perps_funding_rate_key_point_2" = "Equilibrar posiciones long y short";
 "perps_funding_rate_key_point_3" = "Crear oportunidades de arbitraje";

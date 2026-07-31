@@ -108,7 +108,6 @@ class BackupJob: BaseJob {
             return
         }
 
-        var uploadPaths: [String] = []
         var backupPaths: [String] = []
         monitors = SafeDictionary<String, Int64>()
         totalFileSize = 0
@@ -122,31 +121,39 @@ class BackupJob: BaseJob {
         for filename in localPaths {
             let localURL = AttachmentContainer.url.appendingPathComponent(filename)
             let cloudURL = backupUrl.appendingPathComponent(filename)
-            let localFileSize = FileManager.default.fileSize(localURL.path)
             let cloudExists = FileManager.default.fileExists(atPath: cloudURL.path)
-
-            if !cloudExists || FileManager.default.fileSize(cloudURL.path) != localFileSize {
+            let cloudFileSize = FileManager.default.fileSize(cloudURL.path)
+            let localFileSize = FileManager.default.fileSize(localURL.path)
+            let isFileUploading = cloudURL.isUploaded || cloudURL.isUploading
+            // 1. Cloud file doesn't exist.
+            // 2. Cloud file size is different from the local file size.
+            // 3. File has not been uploaded and is currently not uploading.
+            if !cloudExists || cloudFileSize != localFileSize || !isFileUploading {
                 backupPaths.append(filename)
                 backupTotalSize += localFileSize
-
-                uploadPaths.append(filename)
-            } else if cloudExists {
-                if cloudURL.isUploaded {
-                    withoutUploadSize += localFileSize
-                } else {
-                    uploadPaths.append(filename)
-                }
+            }
+            if cloudURL.isUploading {
+                monitors[cloudURL.lastPathComponent] = 0
+            }
+            if cloudURL.isUploaded {
+                withoutUploadSize += localFileSize
             }
             totalFileSize += localFileSize
         }
 
-        let databaseFileSize = getDatabaseFileSize()
+        let localDatabaseSize = getDatabaseFileSize()
         let databaseCloudURL = backupUrl.appendingPathComponent(backupDatabaseName)
-        let isBackupDatabase = !FileManager.default.fileExists(atPath: databaseCloudURL.path) || FileManager.default.fileSize(databaseCloudURL.path) != databaseFileSize
+        let cloudDatabaseExists = FileManager.default.fileExists(atPath: databaseCloudURL.path)
+        let cloudDatabaseSize = FileManager.default.fileSize(databaseCloudURL.path)
+        let isDatabaseUploading = databaseCloudURL.isUploaded || databaseCloudURL.isUploading
+        let isBackupDatabase = !cloudDatabaseExists || cloudDatabaseSize != localDatabaseSize || !isDatabaseUploading
 
         if !isBackupDatabase {
-            withoutUploadSize += databaseFileSize
-            totalFileSize += databaseFileSize
+            withoutUploadSize += localDatabaseSize
+            totalFileSize += localDatabaseSize
+        }
+        if databaseCloudURL.isUploading {
+            monitors[databaseCloudURL.lastPathComponent] = 0
         }
 
         guard isContinueBackup else {

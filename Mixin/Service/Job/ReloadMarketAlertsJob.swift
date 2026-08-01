@@ -49,7 +49,7 @@ final class ReloadMarketAlertsJob: AsynchronousJob {
                 switch result {
                 case let .success(markets):
                     Logger.general.debug(category: "ReloadMarketAlerts", message: "Loaded \(alerts.count) alerts")
-                    MarketDAO.shared.save(markets: markets)
+                    MarketDAO.shared.save(markets: markets, replaceRanks: false, updatingCategory: nil)
                     MarketAlertDAO.shared.replace(alerts: alerts)
                     self.finishJob()
                 case let .failure(error):

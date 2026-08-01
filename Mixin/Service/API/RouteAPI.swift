@@ -172,12 +172,13 @@ extension RouteAPI {
     }
     
     static func perpsMarkets(
+        category: PerpetualMarket.RequestCategory,
         queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<[PerpetualMarket]>) -> Void
     ) {
         request(
             method: .get,
-            path: "/perps/markets",
+            path: "/perps/markets?category=\(category.rawValue)",
             queue: queue,
             completion: completion
         )
@@ -192,6 +193,40 @@ extension RouteAPI {
             method: .get,
             path: "/perps/markets/" + marketID,
             queue: queue,
+            completion: completion
+        )
+    }
+    
+    static func favoritePerpsMarket(
+        marketID: String,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/perps/markets/\(marketID)/favorite",
+            completion: completion
+        )
+    }
+    
+    static func favoritePerpsMarkets(
+        marketIDs: [String],
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/perps/markets/favorites",
+            with: marketIDs,
+            completion: completion
+        )
+    }
+    
+    static func unfavoritePerpsMarket(
+        marketID: String,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/perps/markets/\(marketID)/unfavorite",
             completion: completion
         )
     }
@@ -359,10 +394,13 @@ extension RouteAPI {
     static func markets(
         category: Market.RequestCategory,
         queue: DispatchQueue = .main,
-        limit: Int,
+        limit: Int?,
         completion: @escaping (MixinAPI.Result<[Market]>) -> Void
     ) -> Request {
-        let path = "/markets?category=\(category.rawValue)&limit=\(limit)"
+        var path = "/markets?category=\(category.rawValue)"
+        if let limit {
+            path += "&limit=\(limit)"
+        }
         return request(method: .get, path: path, queue: queue, completion: completion)
     }
     
@@ -395,6 +433,13 @@ extension RouteAPI {
         completion: @escaping (MixinAPI.Result<Empty>) -> Void
     ) {
         request(method: .post, path: "/markets/\(coinID)/favorite", completion: completion)
+    }
+    
+    static func favoriteMarkets(
+        coinIDs: [String],
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
+        request(method: .post, path: "/markets/favorites", with: coinIDs, completion: completion)
     }
     
     static func unfavoriteMarket(

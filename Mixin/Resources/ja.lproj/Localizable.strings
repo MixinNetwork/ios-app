@@ -44,6 +44,7 @@
 "add_stickers" = "スタンプを追加";
 "add_tag" = "タグを追加";
 "add_to_stickers" = "スタンプを追加";
+"add_to_watchlist" = "Add to Watchlist";
 "add_token" = "%@ を追加します";
 "add_wallet" = "ウォレットを追加";
 "add_wallet_instruction_delete_unsupported" = "このウォレットは一度作成すると削除できません。";
@@ -211,6 +212,7 @@
 "balance_max" = "最大";
 "batch_transfer_confirmation" = "一括転送の確認";
 "before_you_proceed" = "次に進む前に";
+"bitcoin_dominance" = "Bitcoin Dominance";
 "bitcoin_private_key_hint" = "WIF または 32 バイトの 16 進秘密キーを入力します。例: Kx45...9Ab または 0x1a2b...cdef";
 "block" = "ブロック";
 "block_confirmations" = "ブロック確認";
@@ -458,6 +460,7 @@
 "created_this_group" = "%@がグループを作成しました";
 "creating_wallet_terminated_unexpectedly" = "ウォレットの作成が予期せず終了しました。[続行] をクリックして作成を完了します";
 "creating_your_account" = "アカウントを作成しています...";
+"crypto" = "Crypto";
 "currency" = "通貨";
 "currency_code" = "コード";
 "current_language" = "日本語";
@@ -558,7 +561,6 @@
 "disconnected" = "切断されました";
 "disconnecting" = "切断";
 "dismiss_as_admin" = "管理者権限を解除";
-"dominance" = "優位性";
 "done" = "完了";
 "dont_have_assets" = "アセットなし";
 "duplicate_transfer_confirmation" = "二重送金の確認";
@@ -796,6 +798,7 @@
 "include_files" = "ファイルが含まれています";
 "include_videos" = "動画が含まれています";
 "incoming_voice_call" = "着信";
+"indicator" = "Indicator";
 "info" = "プロフィール";
 "initializing" = "初期化中...";
 "input_referral_code_hint" = "お友達に誘われましたか?";
@@ -836,6 +839,7 @@
 "is_it_safe_to_import_into_mixin" = "Mixin にインポートしても安全ですか?";
 "join_group" = "グループに参加";
 "joined_in" = "参加日 %@";
+"keep" = "Keep";
 "keep_running_foreground" = "画面を閉じずに、Mixin をフォアグラウンドで実行したままにしてください。";
 "keep_waiting" = "そのままお待ちください";
 "label" = "ラベル";
@@ -924,12 +928,16 @@
 "margin_isolated" = "マージン (分離)";
 "market" = "市場";
 "market_cap" = "時価総額";
+"market_change_short" = "Change";
+"market_display" = "Market Display";
 "market_share_card_asset" = "🔥 %1$@ (%2$@)";
 "market_share_card_market_button" = "市場";
 "market_share_card_market_cap" = "📈 時価総額: %@";
 "market_share_card_price" = "🏷️ 価格: %@";
 "market_share_card_price_change" = "💰 24 時間の価格変更: %@";
 "market_share_card_title" = "トレード%@";
+"market_stock" = "Stock";
+"market_volume_short" = "Vol";
 "markets" = "市場";
 "max" = "マックス";
 "max_favorite_bots_description" = "お気に入りのボットは最大 5 つまで追加できます。他の人があなたのプロフィールでこれらのボットを閲覧できることに注意してください。";
@@ -1179,6 +1187,7 @@
 "permission_denied_photos" = "写真の追加が拒否されました";
 "permission_denied_photos_hint" = "Mixin には、ライブラリに写真を追加する権限がありません。 「設定」をタップして承認します。";
 "permissions" = "許可";
+"perp" = "Perp";
 "perp_state_opening" = "オープニング";
 "perpetual" = "永久";
 "perpetual_futures" = "無期限先物";
@@ -1189,6 +1198,7 @@
 "perps_category_crypto" = "暗号";
 "perps_category_forex" = "外国為替";
 "perps_category_indices" = "インデックス";
+"perps_category_meme" = "Memes";
 "perps_category_stocks" = "株式";
 "perps_current_price" = "現在の価格";
 "perps_funding_frequency" = "頻度";
@@ -1434,6 +1444,7 @@
 "remove_emergency_contact" = "回復連絡先を削除する";
 "remove_emergency_contact_for_sure" = "回復連絡先を削除しますか?";
 "remove_from_group" = "グループから退会させる";
+"remove_from_watchlist" = "Remove from Watchlist";
 "remove_stickers" = "スタンプの削除";
 "rename_wallet" = "ウォレットの名前を変更";
 "renew_plan" = "プランを更新する";
@@ -2017,6 +2028,8 @@
 "watchlist" = "ウォッチリスト";
 "watchlist_add_desc" = "%@ がウォッチリストに追加されました";
 "watchlist_empty" = "ウォッチリストは空です";
+"watchlist_remove_alert_prompt" = "Removed from your watchlist. Also delete the related price alerts?";
+"watchlist_remove_desc" = "%@ has been removed from your watchlist";
 "web_cannot_reached_desc" = "%@ 接続に時間がかかり過ぎています、ネットワーク設定を確認してページをリロードしてください。";
 "web_cannot_reached_title" = "アクセスできません";
 "web_suspicious_link_tips" = "リンクは対応するリソースパターンにありません。";

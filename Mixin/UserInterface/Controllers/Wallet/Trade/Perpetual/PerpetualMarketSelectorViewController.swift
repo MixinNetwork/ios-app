@@ -28,7 +28,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     
     private var selectedCategory: DisplayCategory
     private var markets: [DisplayCategory: [PerpetualMarketViewModel]] = [:]
-    private var ordering: PerpsMarketDAO.Ordering?
+    private var ordering: MarketOrdering?
     
     private var trimmedKeyword: String {
         (searchBoxView.textField.text ?? "")
@@ -40,7 +40,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         markets[selectedCategory] ?? []
     }
     
-    init(selectedCategory: DisplayCategory, ordering: PerpsMarketDAO.Ordering?) {
+    init(selectedCategory: DisplayCategory, ordering: MarketOrdering?) {
         self.selectedCategory = selectedCategory
         self.ordering = ordering
         let nib = R.nib.perpetualMarketSelectorView
@@ -153,7 +153,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     }
     
     @IBAction func orderByChange(_ sender: UIButton) {
-        updateOrdering(field: .change)
+        updateOrdering(field: .change(period: .twentyFourHours))
     }
     
     @objc private func prepareForSearch(_ textField: UITextField) {
@@ -188,7 +188,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
                 guard let marketCategory = viewModel.market.category.knownCase else {
                     continue
                 }
-                let displayCategory = DisplayCategory(category: marketCategory)
+                let displayCategory: DisplayCategory = .subset(marketCategory)
                 if results[displayCategory] == nil {
                     results[displayCategory] = [viewModel]
                 } else {
@@ -238,10 +238,10 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         searchBoxView.isBusy = false
     }
     
-    private func updateOrderingButtonsImage(ordering: PerpsMarketDAO.Ordering?) {
+    private func updateOrderingButtonsImage(ordering: MarketOrdering?) {
         if let ordering {
             switch ordering.field {
-            case .volume:
+            case .marketCap, .volume:
                 volumeOrderingButton.configuration?.image = switch ordering.direction {
                 case .ascending:
                     R.image.order_ascending()
@@ -276,7 +276,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         }
     }
     
-    private func updateOrdering(field: PerpsMarketDAO.Ordering.Field) {
+    private func updateOrdering(field: MarketOrdering.Field) {
         ordering = if let ordering, ordering.field == field {
             switch ordering.direction {
             case .ascending:
@@ -357,30 +357,9 @@ extension PerpetualMarketSelectorViewController: PerpetualMarketSelectorViewCont
 
 extension PerpetualMarketSelectorViewController {
     
-    enum DisplayCategory {
-        
+    enum DisplayCategory: Hashable {
         case all
-        case crypto
-        case stocks
-        case indices
-        case commodities
-        case forex
-        
-        init(category: PerpetualMarket.Category) {
-            switch category {
-            case .crypto:
-                self = .crypto
-            case .stocks:
-                self = .stocks
-            case .indices:
-                self = .indices
-            case .commodities:
-                self = .commodities
-            case .forex:
-                self = .forex
-            }
-        }
-        
+        case subset(PerpetualMarket.Category)
     }
     
     protocol CategorySelectorControllerDelegate: AnyObject {
@@ -395,9 +374,7 @@ extension PerpetualMarketSelectorViewController {
         weak var delegate: CategorySelectorControllerDelegate?
         
         private let collectionView: UICollectionView
-        private let categories: [DisplayCategory] = [
-            .all, .crypto, .stocks, .commodities,
-        ]
+        private let categories: [DisplayCategory] = [.all]
         
         init(collectionView: UICollectionView) {
             self.collectionView = collectionView
@@ -422,16 +399,18 @@ extension PerpetualMarketSelectorViewController {
             cell.label.text = switch category {
             case .all:
                 R.string.localizable.perps_category_all()
-            case .crypto:
+            case .subset(.crypto):
                 R.string.localizable.perps_category_crypto()
-            case .stocks:
+            case .subset(.stocks):
                 R.string.localizable.perps_category_stocks()
-            case .indices:
+            case .subset(.indices):
                 R.string.localizable.perps_category_indices()
-            case .commodities:
+            case .subset(.commodities):
                 R.string.localizable.perps_category_commodities()
-            case .forex:
+            case .subset(.forex):
                 R.string.localizable.perps_category_forex()
+            case .subset(.memes):
+                R.string.localizable.perps_category_meme()
             }
             cell.badgeView.isHidden = true
             return cell

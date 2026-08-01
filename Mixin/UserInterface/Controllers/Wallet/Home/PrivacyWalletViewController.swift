@@ -392,7 +392,10 @@ final class PrivacyWalletViewController: WalletViewController {
                     if let loader = self.perpsTopMoverLoader {
                         topMoverLoader = loader
                     } else {
-                        topMoverLoader = PerpetualMarketLoader(marketID: nil)
+                        topMoverLoader = PerpetualMarketLoader(
+                            request: .multiple(.all),
+                            timeInterval: 3
+                        )
                         self.perpsTopMoverLoader = topMoverLoader
                     }
                     if self.isViewAppearing {

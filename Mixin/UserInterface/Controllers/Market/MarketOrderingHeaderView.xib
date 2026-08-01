@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="market_ordering_header" id="U6b-Vx-4bR" customClass="MarketOrderingHeaderView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="67"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="dp8-YX-hP5">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="25"/>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="25" id="vsd-Lf-oJe"/>
+                    </constraints>
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="CH0-sG-u9J">
+                        <size key="itemSize" width="128" height="128"/>
+                        <size key="estimatedItemSize" width="74" height="25"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vOW-ZR-l40">
+                    <rect key="frame" x="0.0" y="25" width="320" height="42"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fWI-Pt-Efg">
+                            <rect key="frame" x="6" y="0.0" width="36" height="42"/>
+                            <color key="tintColor" name="text_tertiary"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" image="setting_compact">
+                                <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="10"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="invokeSetting:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="HDz-b0-bY6"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="grx-au-zqa">
+                            <rect key="frame" x="44" y="0.0" width="57.666666666666657" height="42"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Watchlist" image="order_descending">
+                                <color key="titleColor" name="text_tertiary"/>
+                            </state>
+                            <buttonConfiguration key="configuration" style="plain" image="order_descending" imagePlacement="trailing" title="Vol" imagePadding="4">
+                                <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
+                                <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="10"/>
+                                <color key="baseForegroundColor" name="text_tertiary"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="sortByMarketCap:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Zih-0k-FkB"/>
+                            </connections>
+                        </button>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="SBU-Uo-CVg">
+                            <rect key="frame" x="160.33333333333337" y="0.0" width="153.66666666666663" height="42"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k6E-9M-NO3">
+                                    <rect key="frame" x="0.0" y="0.0" width="70.333333333333329" height="42"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                    <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <state key="normal" title="Price">
+                                        <color key="titleColor" name="text_tertiary"/>
+                                    </state>
+                                    <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="Price" imagePadding="4">
+                                        <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
+                                        <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="10"/>
+                                        <color key="baseForegroundColor" name="text_tertiary"/>
+                                    </buttonConfiguration>
+                                    <connections>
+                                        <action selector="sortByPrice:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="tQh-UR-ov7"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="twI-2A-HMh">
+                                    <rect key="frame" x="83.333333333333314" y="0.0" width="70.333333333333314" height="42"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                    <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <state key="normal" title="7D %">
+                                        <color key="titleColor" name="text_tertiary"/>
+                                    </state>
+                                    <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="7D %" imagePadding="4">
+                                        <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
+                                        <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="10"/>
+                                        <color key="baseForegroundColor" name="text_tertiary"/>
+                                    </buttonConfiguration>
+                                    <connections>
+                                        <action selector="sortByChange:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Aq0-pp-9Vx"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstItem="grx-au-zqa" firstAttribute="leading" secondItem="fWI-Pt-Efg" secondAttribute="trailing" constant="2" id="4B6-cz-ByF"/>
+                        <constraint firstItem="fWI-Pt-Efg" firstAttribute="leading" secondItem="vOW-ZR-l40" secondAttribute="leading" constant="6" id="7HV-Bt-Nvc"/>
+                        <constraint firstAttribute="trailing" secondItem="SBU-Uo-CVg" secondAttribute="trailing" constant="6" id="JFI-Lk-FZv"/>
+                        <constraint firstAttribute="bottom" secondItem="SBU-Uo-CVg" secondAttribute="bottom" id="Qu6-ld-XLN"/>
+                        <constraint firstItem="SBU-Uo-CVg" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="Tfe-P8-2gG"/>
+                        <constraint firstItem="grx-au-zqa" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="bG2-A9-wCr"/>
+                        <constraint firstItem="fWI-Pt-Efg" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="mTW-bA-jac"/>
+                        <constraint firstAttribute="bottom" secondItem="fWI-Pt-Efg" secondAttribute="bottom" id="su3-Do-ewl"/>
+                        <constraint firstAttribute="bottom" secondItem="grx-au-zqa" secondAttribute="bottom" id="yFS-2Q-5g6"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="vOW-ZR-l40" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" id="7z6-pM-n9h"/>
+                <constraint firstAttribute="bottom" secondItem="vOW-ZR-l40" secondAttribute="bottom" id="Stc-m8-aFf"/>
+                <constraint firstItem="dp8-YX-hP5" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" id="T77-p5-QHT"/>
+                <constraint firstItem="dp8-YX-hP5" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" id="YT6-vd-7US"/>
+                <constraint firstAttribute="trailing" secondItem="vOW-ZR-l40" secondAttribute="trailing" id="ZZd-7u-127"/>
+                <constraint firstItem="vOW-ZR-l40" firstAttribute="top" secondItem="dp8-YX-hP5" secondAttribute="bottom" id="bNp-hx-Jbv"/>
+                <constraint firstAttribute="trailing" secondItem="dp8-YX-hP5" secondAttribute="trailing" id="gwP-vm-Oia"/>
+            </constraints>
+            <connections>
+                <outlet property="collectionView" destination="dp8-YX-hP5" id="bmV-zH-bxd"/>
+                <outlet property="collectionViewHeightConstraint" destination="vsd-Lf-oJe" id="xqx-xo-l9w"/>
+                <outlet property="collectionViewLayout" destination="CH0-sG-u9J" id="ohP-IB-i0N"/>
+                <outlet property="leftOrderButton" destination="grx-au-zqa" id="vXn-Xw-Wcq"/>
+                <outlet property="periodButton" destination="twI-2A-HMh" id="7ma-nD-hyc"/>
+                <outlet property="priceButton" destination="k6E-9M-NO3" id="axa-LJ-32t"/>
+            </connections>
+            <point key="canvasLocation" x="138.93129770992365" y="153.16901408450704"/>
+        </collectionReusableView>
+    </objects>
+    <resources>
+        <image name="order_descending" width="16" height="16"/>
+        <image name="order_none" width="16" height="16"/>
+        <image name="setting_compact" width="16" height="16"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

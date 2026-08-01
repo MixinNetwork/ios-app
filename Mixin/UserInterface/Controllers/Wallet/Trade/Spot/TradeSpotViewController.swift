@@ -1108,7 +1108,7 @@ extension TradeSpotViewController: MarketPeriodicRequester.Delegate {
     ) {
         if markets.count == marketCount {
             switch category {
-            case .all, .favorite:
+            case .all, .favorite, .featured:
                 assertionFailure()
             case .trending:
                 let trendings = MarketDAO.shared.favorableMarket(markets: markets)
@@ -1153,7 +1153,7 @@ extension TradeSpotViewController: MarketPeriodicRequester.Delegate {
             }
         } else {
             switch category {
-            case .all, .favorite:
+            case .all, .favorite, .featured:
                 assertionFailure()
             case .trending:
                 DispatchQueue.main.async {
@@ -1579,7 +1579,7 @@ extension TradeSpotViewController {
         RouteAPI.markets(ids: ids, queue: .global()) { result in
             switch result {
             case let .success(markets):
-                MarketDAO.shared.save(markets: markets)
+                MarketDAO.shared.save(markets: markets, replaceRanks: false, updatingCategory: nil)
                 Logger.general.debug(category: "MarketRequester", message: "Saved")
             case .failure:
                 break

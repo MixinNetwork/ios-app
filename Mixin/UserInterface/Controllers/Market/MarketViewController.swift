@@ -172,7 +172,6 @@ final class MarketViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
         requester.start()
     }
     
@@ -201,7 +200,7 @@ final class MarketViewController: UIViewController {
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
-                        MarketDAO.shared.unfavorite(coinID: market.coinID, sendNotification: true)
+                        MarketDAO.shared.unfavorite(coinIDs: [market.coinID])
                     }
                 case .failure(let error):
                     if let self {
@@ -219,7 +218,7 @@ final class MarketViewController: UIViewController {
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
-                        MarketDAO.shared.favorite(coinID: market.coinID, sendNotification: true)
+                        MarketDAO.shared.favorite(coinIDs: [market.coinID])
                     }
                 case .failure(let error):
                     if let self {

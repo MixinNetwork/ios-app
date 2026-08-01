@@ -3,12 +3,29 @@ import MixinServices
 
 final class PerpetualMarketLoader {
     
-    private let marketID: String?
+    protocol Delegate: AnyObject {
+        func perpetualMarketLoader(
+            _ loader: PerpetualMarketLoader,
+            didLoadMultipleMarketsIn category: PerpetualMarket.RequestCategory,
+            markets: [PerpetualMarket]
+        )
+    }
+    
+    enum Request {
+        case single(marketID: String)
+        case multiple(PerpetualMarket.RequestCategory)
+    }
+    
+    weak var delegate: Delegate?
+    
+    private let request: Request
+    private let timeInterval: TimeInterval
     
     private weak var timer: Timer?
     
-    init(marketID: String?) {
-        self.marketID = marketID
+    init(request: Request, timeInterval: TimeInterval) {
+        self.request = request
+        self.timeInterval = timeInterval
     }
     
     deinit {
@@ -19,9 +36,11 @@ final class PerpetualMarketLoader {
         guard timer == nil else {
             return
         }
-        let timer: Timer = if let marketID {
-            .scheduledTimer(
-                withTimeInterval: 3,
+        let timer: Timer
+        switch request {
+        case .single(let marketID):
+            timer = .scheduledTimer(
+                withTimeInterval: timeInterval,
                 repeats: true
             ) { (timer) in
                 RouteAPI.perpsMarket(marketID: marketID, queue: .global()) { result in
@@ -37,15 +56,32 @@ final class PerpetualMarketLoader {
                     }
                 }
             }
-        } else {
-            .scheduledTimer(
-                withTimeInterval: 3,
+        case .multiple(let category):
+            timer = .scheduledTimer(
+                withTimeInterval: timeInterval,
                 repeats: true
-            ) { (timer) in
-                RouteAPI.perpsMarkets(queue: .global()) { result in
+            ) { [weak self] (timer) in
+                RouteAPI.perpsMarkets(category: category, queue: .global()) { result in
                     switch result {
                     case .success(let markets):
-                        PerpsMarketDAO.shared.save(markets: markets)
+                        switch category {
+                        case .all:
+                            PerpsMarketDAO.shared.save(markets: markets, updatingMetadata: nil)
+                        case .favorite:
+                            PerpsMarketDAO.shared.save(markets: markets, updatingMetadata: .favorite)
+                        case .featured:
+                            PerpsMarketDAO.shared.save(markets: markets, updatingMetadata: .category(.featured))
+                        }
+                        DispatchQueue.main.async {
+                            guard let self else {
+                                return
+                            }
+                            self.delegate?.perpetualMarketLoader(
+                                self,
+                                didLoadMultipleMarketsIn: category,
+                                markets: markets
+                            )
+                        }
                     case .failure(let error):
                         Logger.general.debug(category: "PerpMarketLoader", message: "\(error)")
                     }

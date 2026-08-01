@@ -1,10 +1,10 @@
 import UIKit
 import MixinServices
 
-final class ExploreMarketTokenCell: UICollectionViewCell {
+final class FavorableMarketCell: UICollectionViewCell {
     
     protocol Delegate: AnyObject {
-        func exploreTokenMarketCellWantsToggleFavorite(_ cell: ExploreMarketTokenCell)
+        func favorableMarketCellWantsToggleFavorite(_ cell: FavorableMarketCell)
     }
     
     @IBOutlet weak var contentStackView: UIStackView!
@@ -50,31 +50,34 @@ final class ExploreMarketTokenCell: UICollectionViewCell {
     }
     
     @IBAction func toggleFavorite(_ sender: Any) {
-        delegate?.exploreTokenMarketCellWantsToggleFavorite(self)
+        delegate?.favorableMarketCellWantsToggleFavorite(self)
     }
     
-    func reloadData(market: FavorableMarket, changePeriod: Market.ChangePeriod) {
-        symbolLabel.text = market.name
+    func reloadData(market: FavorableMarket) {
         iconView.setIcon(tokenIconURL: URL(string: market.iconURL))
         symbolLabel.text = market.symbol
         rankLabel.text = market.marketCapRank
         marketCapLabel.text = market.localizedMarketCap
         priceLabel.text = market.localizedPrice
-        switch changePeriod {
+        switch AppGroupUserDefaults.User.cryptoMarketChangePeriod {
         case .twentyFourHours:
-            chartImageView.sd_setImage(with: market.sparklineIn24HURL,
-                                       placeholderImage: nil,
-                                       options: .refreshCached,
-                                       context: templateImageTransformingContext)
+            chartImageView.sd_setImage(
+                with: market.sparklineIn24HURL,
+                placeholderImage: nil,
+                options: .refreshCached,
+                context: templateImageTransformingContext
+            )
             changeLabel.text = market.localizedPriceChangePercentage24H
             let color: MarketColor = .byValue(market.decimalPriceChangePercentage24H)
             changeLabel.marketColor = color
             chartImageView.marketColor = color
         case .sevenDays:
-            chartImageView.sd_setImage(with: market.sparklineIn7DURL,
-                                       placeholderImage: nil,
-                                       options: .refreshCached,
-                                       context: templateImageTransformingContext)
+            chartImageView.sd_setImage(
+                with: market.sparklineIn7DURL,
+                placeholderImage: nil,
+                options: .refreshCached,
+                context: templateImageTransformingContext
+            )
             changeLabel.text = market.localizedPriceChangePercentage7D
             let color: MarketColor = .byValue(market.decimalPriceChangePercentage7D)
             changeLabel.marketColor = color

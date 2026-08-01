@@ -44,6 +44,7 @@
 "add_stickers" = "Añadir pegatinas";
 "add_tag" = "Añadir etiqueta";
 "add_to_stickers" = "Añadir a pegatinas";
+"add_to_watchlist" = "Add to Watchlist";
 "add_token" = "Agregar %@";
 "add_wallet" = "Agregar billetera";
 "add_wallet_instruction_delete_unsupported" = "Esta billetera no se puede eliminar una vez creada.";
@@ -211,6 +212,7 @@
 "balance_max" = "MÁX.";
 "batch_transfer_confirmation" = "Confirmación de transferencia por lotes";
 "before_you_proceed" = "Antes de continuar";
+"bitcoin_dominance" = "Bitcoin Dominance";
 "bitcoin_private_key_hint" = "Ingrese WIF o clave privada HEX de 32 bytes. Ejemplo: Kx45...9Ab o 0x1a2b...cdef";
 "block" = "Bloquear";
 "block_confirmations" = "Confirmaciones de bloque";
@@ -458,6 +460,7 @@
 "created_this_group" = "%@ ha creado este grupo";
 "creating_wallet_terminated_unexpectedly" = "La creación de la artera ha finalizado inesperadamente, haz clic en Continuar para completar la creación";
 "creating_your_account" = "Creando tu cuenta...";
+"crypto" = "Crypto";
 "currency" = "Divisa";
 "currency_code" = "Código";
 "current_language" = "Inglés";
@@ -558,7 +561,6 @@
 "disconnected" = "Desconectado";
 "disconnecting" = "Desconectando";
 "dismiss_as_admin" = "Quitar como administrador";
-"dominance" = "Dominancia";
 "done" = "Hecho";
 "dont_have_assets" = "¿No tienes activos?";
 "duplicate_transfer_confirmation" = "Confirmación de transferencia duplicada";
@@ -770,7 +772,7 @@
 "how_are_you" = "Hola, ¿cómo estás?";
 "how_perps_works" = "¿Cómo funcionan los futuros perpetuos?";
 "i_am_good" = "Estoy bien.";
-"id" = "identificación";
+"id" = "ID";
 "im_ready" = "Estoy listo";
 "image" = "imagen";
 "immediately" = "Inmediatamente";
@@ -796,6 +798,7 @@
 "include_files" = "Incluir archivos";
 "include_videos" = "Incluir vídeos";
 "incoming_voice_call" = "Llamada de voz entrante";
+"indicator" = "Indicator";
 "info" = "Información";
 "initializing" = "Inicializando...";
 "input_referral_code_hint" = "¿Invitado por un amigo?";
@@ -836,6 +839,7 @@
 "is_it_safe_to_import_into_mixin" = "¿Es seguro importar a Mixin?";
 "join_group" = "Únete al grupo";
 "joined_in" = "Se ha unido en %@";
+"keep" = "Keep";
 "keep_running_foreground" = "No cierres la pantalla y mantén Mixin ejecutándose en primer plano.";
 "keep_waiting" = "Sigue esperando";
 "label" = "Etiqueta";
@@ -924,12 +928,16 @@
 "margin_isolated" = "Margen (aislado)";
 "market" = "Mercado";
 "market_cap" = "Capitalización de mercado";
+"market_change_short" = "Change";
+"market_display" = "Market Display";
 "market_share_card_asset" = "🔥 %1$@ (%2$@)";
 "market_share_card_market_button" = "Mercado";
 "market_share_card_market_cap" = "📈 Capitalización de mercado: %@";
 "market_share_card_price" = "🏷️ Precio: %@";
 "market_share_card_price_change" = "💰 Cambio de precio las 24 horas: %@";
 "market_share_card_title" = "Negociar %@";
+"market_stock" = "Stock";
+"market_volume_short" = "Vol";
 "markets" = "Mercados";
 "max" = "Máx.";
 "max_favorite_bots_description" = "Puedes agregar un máximo de 5 bots favoritos. Tenga en cuenta que otras personas pueden ver estos bots en su perfil.";
@@ -1179,6 +1187,7 @@
 "permission_denied_photos" = "Adición de foto denegada";
 "permission_denied_photos_hint" = "Mixin no tiene permiso para agregar fotos a tu biblioteca. Toque Configuración para autorizar.";
 "permissions" = "Permisos";
+"perp" = "Perp";
 "perp_state_opening" = "Apertura";
 "perpetual" = "Perpetuo";
 "perpetual_futures" = "Futuros perpetuos";
@@ -1189,6 +1198,7 @@
 "perps_category_crypto" = "Criptomonedas";
 "perps_category_forex" = "Forex";
 "perps_category_indices" = "Índices";
+"perps_category_meme" = "Memes";
 "perps_category_stocks" = "Acciones";
 "perps_current_price" = "Precio actual";
 "perps_funding_frequency" = "Frecuencia";
@@ -1434,6 +1444,7 @@
 "remove_emergency_contact" = "Eliminar contacto de recuperación";
 "remove_emergency_contact_for_sure" = "¿Quitar el contacto de recuperación con seguridad?";
 "remove_from_group" = "Eliminar del grupo";
+"remove_from_watchlist" = "Remove from Watchlist";
 "remove_stickers" = "Eliminar pegatinas";
 "rename_wallet" = "Cambiar nombre de billetera";
 "renew_plan" = "Renovar plan";
@@ -2017,6 +2028,8 @@
 "watchlist" = "Lista de seguimiento";
 "watchlist_add_desc" = "%@ ahora está en tu lista de seguimiento";
 "watchlist_empty" = "Tu lista de seguimiento está vacía";
+"watchlist_remove_alert_prompt" = "Removed from your watchlist. Also delete the related price alerts?";
+"watchlist_remove_desc" = "%@ has been removed from your watchlist";
 "web_cannot_reached_desc" = "%@ ha tardado demasiado en responder. Verifica tu red e intenta cambiar 4G, Wi-Fi o VPN para recargar la página.";
 "web_cannot_reached_title" = "No se puede acceder a esta página web";
 "web_suspicious_link_tips" = "El enlace no está en los patrones de recursos correspondientes.";

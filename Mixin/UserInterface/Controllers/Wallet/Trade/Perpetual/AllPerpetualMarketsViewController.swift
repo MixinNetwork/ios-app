@@ -4,7 +4,7 @@ import MixinServices
 final class AllPerpetualMarketsViewController: UIViewController {
     
     private let wallet: Wallet
-    private let marketLoader = PerpetualMarketLoader(marketID: nil)
+    private let marketLoader = PerpetualMarketLoader(request: .multiple(.all), timeInterval: 3)
     
     private var viewModels: [PerpetualMarketViewModel]
     

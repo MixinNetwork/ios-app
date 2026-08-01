@@ -6,32 +6,57 @@ final class MarketDashboardViewController: UIViewController {
     private let queue = OperationQueue()
     private let hiddenSearchTopMargin: CGFloat = -28
     
+    private var categorySelectorCollectionView: UICollectionView!
+    private var categorySelectorSizeObserver: NSKeyValueObservation?
+    private var categoryController: CategoryController!
+    private var categorySelectorHeightConstraint: NSLayoutConstraint!
+    
+    private var category: Category {
+        didSet {
+            AppGroupUserDefaults.User.marketCategory = category.rawValue
+        }
+    }
+    private var subCategoryIndex: Int
+    private var order: MarketOrdering?
+    
     private var collectionView: UICollectionView!
+    private var dataSource: DiffableDataSource!
     
-    private var marketsRequester: MarketPeriodicRequester!
-    private var favoritesRequester: MarketPeriodicRequester!
+    private var markets: [String: FavorableMarket] = [:]
+    private var perpsMarkets: [String: FavorablePerpetualMarket] = [:]
+    private var marketIndicator: MarketIndicator?
+    private var reloadDataOnViewAppear = false
     
-    private var globalMarketViewModels: [GlobalMarketViewModel] = []
+    // Tracks whether an initial remote fetch for favorite markets is needed.
+    // When the app is reinstalled, local database tables for favorites are empty.
+    // To prevent showing recommendations immediately before checking remote favorites,
+    // the UI displays a busy indicator until an initial remote request completes.
+    private var needsFetchCryptoWatchlistFromRemote = true
+    private var needsFetchPerpsWatchlistFromRemote = true
     
-    private var category: Market.DashboardCategory = AppGroupUserDefaults.User.marketCategory {
-        didSet {
-            AppGroupUserDefaults.User.marketCategory = category
-        }
-    }
-    private var order: Market.OrderingExpression = .marketCap(.descending)
-    private var limit: Market.Limit? = .top100
-    private var changePeriod: Market.ChangePeriod = AppGroupUserDefaults.User.marketChangePeriod {
-        didSet {
-            AppGroupUserDefaults.User.marketChangePeriod = changePeriod
-        }
-    }
-    private var markets: [FavorableMarket] = []
-    private var favoriteMarkets: [FavorableMarket]?
+    private var marketLoader: MarketPeriodicRequester?
+    private var perpsMarketLoader: PerpetualMarketLoader?
     
     private weak var searchViewController: UIViewController?
     private weak var searchViewCenterYConstraint: NSLayoutConstraint?
+    private weak var addToWatchlistButton: UIButton?
     
     init() {
+        let category: Category
+        if let rawValue = AppGroupUserDefaults.User.marketCategory,
+           let savedCategory = Category(rawValue: rawValue)
+        {
+            category = savedCategory
+        } else {
+            category = .crypto
+        }
+        let subCategoryIndex = category.defaultSubCategoryIndex
+        self.category = category
+        self.subCategoryIndex = subCategoryIndex
+        self.order = .derived(
+            category: category,
+            subCategoryIndex: subCategoryIndex
+        )
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -54,25 +79,57 @@ final class MarketDashboardViewController: UIViewController {
         titleView.scanButton.addTarget(self, action: #selector(scanQRCode(_:)), for: .touchUpInside)
         titleView.settingButton.addTarget(self, action: #selector(openSettings(_:)), for: .touchUpInside)
         
-        let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) in
-            switch Section(rawValue: sectionIndex)! {
-            case .global:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+        let categorySelectorLayout = UICollectionViewFlowLayout()
+        categorySelectorLayout.scrollDirection = .horizontal
+        categorySelectorLayout.itemSize = UICollectionViewFlowLayout.automaticSize
+        categorySelectorLayout.estimatedItemSize = CGSize(width: 90, height: 38)
+        categorySelectorLayout.sectionInset = UIEdgeInsets(top: 3, left: 15, bottom: 3, right: 15)
+        categorySelectorLayout.minimumInteritemSpacing = 0
+        categorySelectorLayout.minimumLineSpacing = 0
+        let categorySelectorCollectionView = UICollectionView(
+            frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 44),
+            collectionViewLayout: categorySelectorLayout
+        )
+        categorySelectorCollectionView.backgroundColor = R.color.background()
+        categorySelectorCollectionView.showsHorizontalScrollIndicator = false
+        view.addSubview(categorySelectorCollectionView)
+        categorySelectorCollectionView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(titleView.snp.bottom).offset(13)
+        }
+        let categorySelectorHeightConstraint = categorySelectorCollectionView.heightAnchor.constraint(equalToConstant: 44)
+        categorySelectorHeightConstraint.isActive = true
+        self.categorySelectorHeightConstraint = categorySelectorHeightConstraint
+        categorySelectorSizeObserver = categorySelectorCollectionView.observe(
+            \.contentSize,
+             options: [.new]
+        ) { [weak self] (_, change) in
+            guard let newValue = change.newValue, let self else {
+                return
+            }
+            self.categorySelectorHeightConstraint.constant = newValue.height
+            self.view.layoutIfNeeded()
+        }
+        let categoryController = CategoryController(collectionView: categorySelectorCollectionView)
+        categoryController.dashboard = self
+        categorySelectorCollectionView.register(R.nib.exploreSegmentCell)
+        categorySelectorCollectionView.dataSource = categoryController
+        categorySelectorCollectionView.delegate = categoryController
+        self.categoryController = categoryController
+        categorySelectorCollectionView.reloadData()
+        categoryController.select(category: category)
+        
+        let layout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, environment) in
+            guard let section = self?.dataSource.sectionIdentifier(for: sectionIndex) else {
+                return nil
+            }
+            switch section {
+            case .market, .perps:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 0.0, leading: 6, bottom: 0, trailing: 6)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(132), heightDimension: .absolute(90))
-                let group: NSCollectionLayoutGroup = .vertical(layoutSize: groupSize, subitems: [item])
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 12)
-                section.orthogonalScrollingBehavior = .groupPaging
-                return section
-            case .coins:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
-                let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
+                let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
                 let header = NSCollectionLayoutBoundarySupplementaryItem(
-                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(94)),
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(67)),
                     elementKind: UICollectionView.elementKindSectionHeader,
                     alignment: .top
                 )
@@ -81,64 +138,244 @@ final class MarketDashboardViewController: UIViewController {
                 section.boundarySupplementaryItems = [header]
                 section.interGroupSpacing = 20
                 return section
-            case .noFavoriteIndicator:
-                let margin: CGFloat = switch ScreenHeight.current {
-                case .extraLong:
-                    130
-                case .long:
-                    100
-                case .medium:
-                    80
-                case .short:
-                    60
-                }
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+            case .marketIndicator:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(231))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(margin + 120))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                return section
+            case .busyIndicator:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(149))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
+                return NSCollectionLayoutSection(group: group)
+            case .recommendationItem:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(60))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                group.interItemSpacing = .fixed(10)
+                group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(25)),
+                    elementKind: UICollectionView.elementKindSectionHeader,
+                    alignment: .top
+                )
+                header.pinToVisibleBounds = true
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0) // Adds 20pt gap below header
+                section.interGroupSpacing = 10
+                section.boundarySupplementaryItems = [header]
+                return section
+            case .recommendationAction:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(362))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
                 return NSCollectionLayoutSection(group: group)
             }
         }
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-        collectionView.register(R.nib.exploreGlobalMarketCell)
-        collectionView.register(R.nib.exploreMarketTokenCell)
-        collectionView.register(R.nib.watchlistEmptyCell)
-        collectionView.register(R.nib.exploreMarketHeaderView, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader)
+        collectionView.register(R.nib.favorableMarketCell)
+        collectionView.register(R.nib.favorablePerpsMarketCell)
+        collectionView.register(R.nib.watchlistRecommendationItemCell)
+        collectionView.register(R.nib.watchlistRecommendationActionCell)
+        collectionView.register(R.nib.marketIndicatorCell)
+        collectionView.register(R.nib.marketLoadingCell)
+        collectionView.register(
+            R.nib.marketHeaderView,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader
+        )
+        collectionView.register(
+            R.nib.marketOrderingHeaderView,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader
+        )
         collectionView.backgroundColor = R.color.background()
         collectionView.contentInset.bottom = 20
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
-            make.top.equalTo(titleView.snp.bottom)
+            make.top.equalTo(categorySelectorCollectionView.snp.bottom).offset(13)
         }
         self.collectionView = collectionView
-        collectionView.dataSource = self
         collectionView.delegate = self
         
-        reloadGlobalMarket(overwrites: false)
-        reloadMarketsWithCurrentSettings()
+        let dataSource = DiffableDataSource(
+            collectionView: collectionView
+        ) { [weak self] collectionView, indexPath, item in
+            switch item {
+            case let .market(id):
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.favorable_market, for: indexPath)!
+                if let self, let market = self.markets[id] {
+                    cell.reloadData(market: market)
+                    cell.delegate = self
+                }
+                return cell
+            case let .perps(id):
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.favorable_perps_market, for: indexPath)!
+                if let self, let market = self.perpsMarkets[id] {
+                    cell.reloadData(market: market)
+                    cell.delegate = self
+                }
+                return cell
+            case let .recommendation(category, id):
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.watchlist_recommendation_item, for: indexPath)!
+                switch category {
+                case .crypto:
+                    if let market = self?.markets[id] {
+                        cell.loadCrypto(market: market)
+                    }
+                case .perps:
+                    if let market = self?.perpsMarkets[id] {
+                        cell.loadPerps(market: market)
+                    }
+                }
+                return cell
+            case .recommendationAction:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.watchlist_recommendation_action, for: indexPath)!
+                cell.delegate = self
+                self?.addToWatchlistButton = cell.actionButton
+                return cell
+            case let .marketIndicator(indicator):
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.market_indicator, for: indexPath)!
+                cell.load(indicator: indicator)
+                return cell
+            case .busyIndicator:
+                return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.market_loading, for: indexPath)!
+            }
+        }
+        dataSource.supplementaryViewProvider = { [unowned dataSource, weak self] collectionView, elementKind, indexPath in
+            guard let self, let section = dataSource.sectionIdentifier(for: indexPath.section) else {
+                return nil
+            }
+            switch section {
+            case .market, .perps, .busyIndicator:
+                let header = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: UICollectionView.elementKindSectionHeader,
+                    withReuseIdentifier: R.reuseIdentifier.market_ordering_header,
+                    for: indexPath
+                )!
+                switch self.category {
+                case .watchlist:
+                    header.subCategories = WatchlistSubCategory.allCases.map(\.displayTitle)
+                    header.leftOrderButton.alpha = 0
+                    switch WatchlistSubCategory.allCases[self.subCategoryIndex] {
+                    case .crypto:
+                        header.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
+                    case .perps:
+                        header.changePeriod = .twentyFourHours
+                    }
+                case .crypto:
+                    header.subCategories = Market.SubCategory.allCases.map(\.displayTitle)
+                    header.leftOrderButton.alpha = 1
+                    header.leftOrderingField = Market.SubCategory.allCases[self.subCategoryIndex] == .all ? .marketCap : .volume
+                    header.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
+                case .perps:
+                    header.subCategories = PerpetualMarket.SubCategory.allCases.map(\.displayTitle)
+                    header.leftOrderButton.alpha = 1
+                    header.leftOrderingField = .volume
+                    header.changePeriod = .twentyFourHours
+                case .indicator:
+                    return nil
+                }
+                header.selectSubCategory(at: self.subCategoryIndex)
+                header.order = self.order
+                header.delegate = self
+                return header
+            case .recommendationItem:
+                let header = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: UICollectionView.elementKindSectionHeader,
+                    withReuseIdentifier: R.reuseIdentifier.market_header,
+                    for: indexPath
+                )!
+                switch self.category {
+                case .watchlist:
+                    header.subCategories = WatchlistSubCategory.allCases.map(\.displayTitle)
+                case .crypto:
+                    header.subCategories = Market.SubCategory.allCases.map(\.displayTitle)
+                case .perps:
+                    header.subCategories = PerpetualMarket.SubCategory.allCases.map(\.displayTitle)
+                case .indicator:
+                    return nil
+                }
+                header.selectSubCategory(at: self.subCategoryIndex)
+                header.delegate = self
+                return header
+            case .marketIndicator, .recommendationAction:
+                return nil
+            }
+        }
+        self.dataSource = dataSource
         
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadAll(_:)), name: Currency.currentCurrencyDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(propertiesDatabaseDidUpdate(_:)), name: PropertiesDAO.propertyDidUpdateNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(favoriteChanged(_:)), name: MarketDAO.favoriteNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(favoriteChanged(_:)), name: MarketDAO.unfavoriteNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadMarketsWithCurrentSettings), name: MarketDAO.didUpdateNotification, object: nil)
-        
-        marketsRequester = MarketPeriodicRequester(category: .all, limit: 500)
-        favoritesRequester = MarketPeriodicRequester(category: .favorite, limit: 500)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadDataWithCurrentSettings),
+            name: MarketDAO.didUpdateNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadDataWithCurrentSettings),
+            name: PerpsMarketDAO.marketsDidUpdateNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateMarketIndicator(_:)),
+            name: PropertiesDAO.propertyDidUpdateNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateMarketChangePeriod(_:)),
+            name: AppGroupUserDefaults.User.marketChangePeriodDidChangeNotification,
+            object: nil
+        )
+        reloadData(
+            category: category,
+            subCategoryIndex: subCategoryIndex,
+            order: nil,
+            scheduleRemoteLoader: true
+        )
+        ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
-        marketsRequester.start()
-        favoritesRequester.start()
+        marketLoader?.start()
+        perpsMarketLoader?.start()
+        NotificationCenter.default.removeObserver(
+            self,
+            name: MarketDAO.favoriteNotification,
+            object: nil
+        )
+        NotificationCenter.default.removeObserver(
+            self,
+            name: MarketDAO.unfavoriteNotification,
+            object: nil
+        )
+        if reloadDataOnViewAppear {
+            reloadDataOnViewAppear = false
+            reloadDataWithCurrentSettings()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        marketsRequester.pause()
-        favoritesRequester.pause()
+        marketLoader?.pause()
+        perpsMarketLoader?.stop()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(scheduleReloadDataOnViewAppear),
+            name: MarketDAO.favoriteNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(scheduleReloadDataOnViewAppear),
+            name: MarketDAO.unfavoriteNotification,
+            object: nil
+        )
     }
     
     func cancelSearching(animated: Bool) {
@@ -162,6 +399,96 @@ final class MarketDashboardViewController: UIViewController {
             removeSearch()
         }
     }
+    
+    func reloadData(
+        category: Category,
+        subCategoryIndex: Int,
+        order: MarketOrdering?, // nil to use derived order
+        scheduleRemoteLoader: Bool,
+    ) {
+        queue.cancelAllOperations()
+        if scheduleRemoteLoader {
+            marketLoader?.pause()
+            marketLoader = nil
+            perpsMarketLoader?.stop()
+            perpsMarketLoader = nil
+        }
+        switch category {
+        case .watchlist:
+            let op = ReloadWatchlistOperation(
+                subCategoryIndex: subCategoryIndex,
+                order: order,
+                scheduleRemoteLoader: scheduleRemoteLoader,
+                viewController: self
+            )
+            queue.addOperation(op)
+        case .crypto:
+            let op = ReloadMarketsOperation(
+                subCategoryIndex: subCategoryIndex,
+                order: order,
+                scheduleRemoteLoader: scheduleRemoteLoader,
+                viewController: self,
+            )
+            queue.addOperation(op)
+        case .perps:
+            let op = ReloadPerpsMarketOperation(
+                subCategoryIndex: subCategoryIndex,
+                order: order,
+                scheduleRemoteLoader: scheduleRemoteLoader,
+                viewController: self,
+            )
+            queue.addOperation(op)
+        case .indicator:
+            var snapshot = DataSourceSnapshot()
+            if let marketIndicator {
+                snapshot.appendSections([.marketIndicator])
+                snapshot.appendItems([.marketIndicator(marketIndicator)], toSection: .marketIndicator)
+            } else {
+                snapshot.appendSections([.busyIndicator])
+                snapshot.appendItems([.busyIndicator], toSection: .busyIndicator)
+            }
+            dataSource.applySnapshotUsingReloadData(snapshot)
+            ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
+        }
+    }
+    
+    private func reloadGlobalMarket(overwrites: Bool) {
+        DispatchQueue.global().async { [weak self] in
+            guard let market: GlobalMarket = PropertiesDAO.shared.value(forKey: .globalMarket) else {
+                return
+            }
+            let indicator = MarketIndicator(market: market)
+            DispatchQueue.main.async {
+                guard let self, self.marketIndicator == nil || overwrites else {
+                    return
+                }
+                self.marketIndicator = indicator
+                var snapshot = self.dataSource.snapshot()
+                if snapshot.sectionIdentifiers.contains(.marketIndicator) {
+                    snapshot.deleteAllItems()
+                    snapshot.appendItems([.marketIndicator(indicator)], toSection: .marketIndicator)
+                    self.dataSource.applySnapshotUsingReloadData(snapshot)
+                }
+            }
+        }
+    }
+    
+    private func selectAllRecommendationItems(snapshot: DataSourceSnapshot) {
+        guard snapshot.sectionIdentifiers.contains(.recommendationItem) else {
+            return
+        }
+        let items = snapshot.itemIdentifiers(inSection: .recommendationItem)
+        for item in items {
+            guard let indexPath = dataSource.indexPath(for: item) else {
+                continue
+            }
+            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+        }
+    }
+    
+}
+
+extension MarketDashboardViewController {
     
     @objc private func searchCoins(_ sender: Any) {
         let searchViewController = SearchMarketViewController()
@@ -194,150 +521,50 @@ final class MarketDashboardViewController: UIViewController {
         navigationController?.pushViewController(settings, animated: true)
     }
     
-    @objc private func reloadAll(_ notification: Notification) {
-        reloadGlobalMarket(overwrites: true)
-        reloadMarketsWithCurrentSettings()
-    }
-    
-    @objc private func propertiesDatabaseDidUpdate(_ notification: Notification) {
+    @objc private func updateMarketIndicator(_ notification: Notification) {
         guard notification.userInfo?[PropertiesDAO.Key.globalMarket] != nil else {
             return
         }
         reloadGlobalMarket(overwrites: true)
     }
     
-    @objc private func favoriteChanged(_ notification: Notification) {
-        guard let coinID = notification.userInfo?[MarketDAO.coinIDUserInfoKey] as? String else {
-            return
-        }
-        guard category == .favorite || markets.contains(where: { $0.coinID == coinID }) else {
-            return
-        }
-        reloadMarketsWithCurrentSettings()
+    @objc private func reloadDataWithCurrentSettings() {
+        reloadData(
+            category: category,
+            subCategoryIndex: subCategoryIndex,
+            order: order,
+            scheduleRemoteLoader: false
+        )
     }
     
-    @objc private func reloadMarketsWithCurrentSettings() {
-        reloadMarkets(category: category, order: order, limit: limit)
+    @objc private func scheduleReloadDataOnViewAppear(_ notification: Notification) {
+        reloadDataOnViewAppear = true
     }
     
-    private func reloadGlobalMarket(overwrites: Bool) {
-        DispatchQueue.global().async { [weak self] in
-            guard let market: GlobalMarket = PropertiesDAO.shared.value(forKey: .globalMarket) else {
-                return
-            }
-            DispatchQueue.main.async {
-                guard let self, self.globalMarketViewModels.isEmpty || overwrites else {
-                    return
+    @objc private func updateMarketChangePeriod(_ notification: Notification) {
+        if let order, case .change = order.field {
+            let order = MarketOrdering(
+                field: .change(period: AppGroupUserDefaults.User.cryptoMarketChangePeriod),
+                direction: order.direction
+            )
+            reloadData(
+                category: category,
+                subCategoryIndex: subCategoryIndex,
+                order: order,
+                scheduleRemoteLoader: false
+            )
+        } else {
+            var snapshot = dataSource.snapshot()
+            snapshot.reconfigureItems(snapshot.itemIdentifiers)
+            dataSource.apply(snapshot) {
+                if let headerView = self.collectionView.supplementaryView(
+                    forElementKind: UICollectionView.elementKindSectionHeader,
+                    at: IndexPath(item: 0, section: 0)
+                ) as? MarketOrderingHeaderView {
+                    headerView.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
                 }
-                self.globalMarketViewModels = GlobalMarketViewModel.viewModels(market: market)
-                self.reloadCollectionView(sections: [.global])
             }
         }
-    }
-    
-    private func reloadMarkets(
-        category: Market.DashboardCategory,
-        order: Market.OrderingExpression,
-        limit: Market.Limit?
-    ) {
-        queue.cancelAllOperations()
-        let op = BlockOperation()
-        op.addExecutionBlock { [unowned op, weak self] in
-            let markets = MarketDAO.shared.markets(category: category, order: order, limit: limit)
-            DispatchQueue.main.sync {
-                guard !op.isCancelled, let self else {
-                    return
-                }
-                self.category = category
-                self.order = order
-                self.limit = limit
-                switch category {
-                case .all:
-                    self.markets = markets
-                case .favorite:
-                    self.favoriteMarkets = markets
-                }
-                self.reloadCollectionView(sections: [.coins, .noFavoriteIndicator])
-            }
-        }
-        queue.addOperation(op)
-    }
-    
-    private func reloadCollectionView(sections: [Section]) {
-        let sections = IndexSet(sections.map(\.rawValue))
-        UIView.performWithoutAnimation {
-            collectionView.reloadSections(sections)
-        }
-    }
-    
-}
-
-extension MarketDashboardViewController: UICollectionViewDataSource {
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        Section.allCases.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
-        case .global:
-            globalMarketViewModels.count
-        case .coins:
-            switch category {
-            case .all:
-                markets.count
-            case .favorite:
-                favoriteMarkets?.count ?? 0
-            }
-        case .noFavoriteIndicator:
-            if category == .favorite, let favoriteMarkets, favoriteMarkets.isEmpty {
-                1 // Empty indicator
-            } else {
-                0
-            }
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch Section(rawValue: indexPath.section)! {
-        case .global:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_global_market, for: indexPath)!
-            let info = globalMarketViewModels[indexPath.item]
-            cell.captionLabel.text = info.caption
-            cell.primaryLabel.text = info.primary
-            cell.secondaryLabel.text = info.secondary
-            switch info.secondaryColor {
-            case .market(let color):
-                cell.secondaryLabel.marketColor = color
-            case .arbitrary(let color):
-                cell.secondaryLabel.textColor = color
-            }
-            return cell
-        case .coins:
-            let markets = switch category {
-            case .all:
-                markets
-            case .favorite:
-                favoriteMarkets ?? []
-            }
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_market_token, for: indexPath)!
-            let market = markets[indexPath.item]
-            cell.reloadData(market: market, changePeriod: changePeriod)
-            cell.delegate = self
-            return cell
-        case .noFavoriteIndicator:
-            return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.watchlist_empty, for: indexPath)!
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.explore_market_header, for: indexPath)!
-        view.limit = limit
-        view.category = category
-        view.order = order
-        view.changePeriod = changePeriod
-        view.delegate = self
-        return view
     }
     
 }
@@ -345,78 +572,90 @@ extension MarketDashboardViewController: UICollectionViewDataSource {
 extension MarketDashboardViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch Section(rawValue: indexPath.section)! {
-        case .global, .noFavoriteIndicator:
-            break
-        case .coins:
-            let markets = switch category {
-            case .all:
-                markets
-            case .favorite:
-                favoriteMarkets
-            }
-            if let market = markets?[indexPath.item] {
+        guard let item = dataSource.itemIdentifier(for: indexPath) else {
+            return
+        }
+        switch item {
+        case let .market(id):
+            if let market = markets[id] {
                 let controller = MarketViewController(market: market)
                 controller.pushingViewController = self
                 navigationController?.pushViewController(controller, animated: true)
             }
+        case let .perps(id):
+            if let market = perpsMarkets[id],
+               let viewModel = PerpetualMarketViewModel(market: market)
+            {
+                let market = PerpetualMarketViewController(
+                    wallet: .privacy,
+                    viewModel: viewModel,
+                )
+                navigationController?.pushViewController(market, animated: true)
+            }
+        case .recommendation:
+            addToWatchlistButton?.isEnabled = !(collectionView.indexPathsForSelectedItems?.isEmpty ?? true)
+        case .busyIndicator, .marketIndicator, .recommendationAction:
+            break
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        addToWatchlistButton?.isEnabled = !(collectionView.indexPathsForSelectedItems?.isEmpty ?? true)
     }
     
 }
 
-extension MarketDashboardViewController: ExploreMarketHeaderView.Delegate {
+extension MarketDashboardViewController: MarketHeaderView.Delegate {
     
-    func exploreMarketHeaderView(
-        _ view: ExploreMarketHeaderView,
-        didSwitchToCategory category: Market.DashboardCategory,
-        limit: Market.Limit?
-    ) {
-        reloadMarkets(category: category, order: order, limit: limit)
-    }
-    
-    func exploreMarketHeaderView(
-        _ view: ExploreMarketHeaderView,
-        didSwitchToOrdering order: Market.OrderingExpression,
-        changePeriod period: Market.ChangePeriod
-    ) {
-        self.changePeriod = period
-        if self.order != order {
-            reloadMarkets(category: category, order: order, limit: limit)
-        } else {
-            reloadCollectionView(sections: [.coins, .noFavoriteIndicator])
-        }
+    func marketHeaderView(_ view: MarketHeaderView, didSelectSubCategoryAt index: Int) {
+        reloadData(category: category, subCategoryIndex: index, order: nil, scheduleRemoteLoader: true)
+        AppGroupUserDefaults.User.marketSubCategoryIndices[category.rawValue] = index
     }
     
 }
 
-extension MarketDashboardViewController: ExploreMarketTokenCell.Delegate {
+extension MarketDashboardViewController: MarketOrderingHeaderView.Delegate {
     
-    func exploreTokenMarketCellWantsToggleFavorite(_ cell: ExploreMarketTokenCell) {
+    func marketOrderingHeaderViewDidSelectSetting(_ view: MarketOrderingHeaderView) {
+        let settings: MarketDisplaySettingsViewController
+        switch category {
+        case .watchlist:
+            switch WatchlistSubCategory.allCases[subCategoryIndex] {
+            case .crypto:
+                settings = MarketDisplaySettingsViewController(rows: [.quoteColor, .priceChange])
+            case .perps:
+                settings = MarketDisplaySettingsViewController(rows: [.quoteColor])
+            }
+        case .crypto:
+            settings = MarketDisplaySettingsViewController(rows: [.quoteColor, .priceChange])
+        case .perps:
+            settings = MarketDisplaySettingsViewController(rows: [.quoteColor])
+        case .indicator:
+            return
+        }
+        present(settings, animated: true)
+    }
+    
+    func marketOrderingHeaderView(_ view: MarketOrderingHeaderView, didSwitchToOrdering order: MarketOrdering) {
+        reloadData(category: category, subCategoryIndex: subCategoryIndex, order: order, scheduleRemoteLoader: false)
+    }
+    
+}
+
+extension MarketDashboardViewController: FavorableMarketCell.Delegate {
+    
+    func favorableMarketCellWantsToggleFavorite(_ cell: FavorableMarketCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else {
             return
         }
-        let market = switch category {
-        case .all:
-            markets[indexPath.item]
-        case .favorite:
-            favoriteMarkets?[indexPath.item]
+        guard case let .market(id) = dataSource.itemIdentifier(for: indexPath) else {
+            return
         }
-        guard let market else {
-            assertionFailure()
+        guard let market = markets[id] else {
             return
         }
         collectionView.isUserInteractionEnabled = false
         cell.favoriteActivityIndicatorView.startAnimating()
-        func updateModel(isFavorited: Bool) {
-            switch category {
-            case .all:
-                markets[indexPath.item].isFavorite = isFavorited
-            case .favorite:
-                favoriteMarkets![indexPath.item].isFavorite = isFavorited
-            }
-        }
-        
         if market.isFavorite {
             RouteAPI.unfavoriteMarket(coinID: market.coinID) { [weak self] result in
                 cell.favoriteActivityIndicatorView.stopAnimating()
@@ -424,10 +663,10 @@ extension MarketDashboardViewController: ExploreMarketTokenCell.Delegate {
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
-                        MarketDAO.shared.unfavorite(coinID: market.coinID, sendNotification: false)
+                        MarketDAO.shared.unfavorite(coinIDs: [market.coinID])
                     }
                     cell.isFavorited = false
-                    updateModel(isFavorited: false)
+                    market.isFavorite = false
                 case .failure(let error):
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
@@ -439,10 +678,10 @@ extension MarketDashboardViewController: ExploreMarketTokenCell.Delegate {
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
-                        MarketDAO.shared.favorite(coinID: market.coinID, sendNotification: false)
+                        MarketDAO.shared.favorite(coinIDs: [market.coinID])
                     }
                     cell.isFavorited = true
-                    updateModel(isFavorited: true)
+                    market.isFavorite = true
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(market.symbol))
                 case .failure(let error):
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
@@ -453,59 +692,739 @@ extension MarketDashboardViewController: ExploreMarketTokenCell.Delegate {
     
 }
 
-extension MarketDashboardViewController {
+extension MarketDashboardViewController: FavorablePerpsMarketCell.Delegate {
     
-    private enum Section: Int, CaseIterable {
-        case global
-        case coins
-        case noFavoriteIndicator
+    func favorablePerpsMarketCellWantsToggleFavorite(_ cell: FavorablePerpsMarketCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else {
+            return
+        }
+        guard case let .perps(id) = dataSource.itemIdentifier(for: indexPath) else {
+            return
+        }
+        guard let market = perpsMarkets[id] else {
+            return
+        }
+        collectionView.isUserInteractionEnabled = false
+        cell.favoriteActivityIndicatorView.startAnimating()
+        if market.isFavorite {
+            RouteAPI.unfavoritePerpsMarket(marketID: market.marketID) { [weak self] result in
+                cell.favoriteActivityIndicatorView.stopAnimating()
+                self?.collectionView.isUserInteractionEnabled = true
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        PerpsMarketDAO.shared.unfavorite(marketIDs: [market.marketID])
+                    }
+                    cell.isFavorited = false
+                    market.isFavorite = false
+                case .failure(let error):
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
+            }
+        } else {
+            RouteAPI.favoritePerpsMarket(marketID: market.marketID) { [weak self] result in
+                cell.favoriteActivityIndicatorView.stopAnimating()
+                self?.collectionView.isUserInteractionEnabled = true
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        PerpsMarketDAO.shared.favorite(marketIDs: [market.marketID])
+                    }
+                    cell.isFavorited = true
+                    market.isFavorite = true
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(market.displaySymbol))
+                case .failure(let error):
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
+            }
+        }
     }
     
-    private struct GlobalMarketViewModel {
+}
+
+extension MarketDashboardViewController: WatchlistRecommendationActionCell.Delegate {
+    
+    func watchlistRecommendationActionCellDidInvokeAction(_ cell: WatchlistRecommendationActionCell) {
+        guard let indexPaths = collectionView.indexPathsForSelectedItems, !indexPaths.isEmpty else {
+            return
+        }
+        var marketCoinIDs: [String] = []
+        var perpsMarketIDs: [String] = []
+        for indexPath in indexPaths {
+            guard let item = dataSource.itemIdentifier(for: indexPath) else {
+                continue
+            }
+            guard case let .recommendation(category, id) = item else {
+                continue
+            }
+            switch category {
+            case .crypto:
+                marketCoinIDs.append(id)
+            case .perps:
+                perpsMarketIDs.append(id)
+            }
+        }
+        if !marketCoinIDs.isEmpty {
+            collectionView.isUserInteractionEnabled = false
+            cell.actionButton.isBusy = true
+            RouteAPI.favoriteMarkets(coinIDs: marketCoinIDs) { [weak self] result in
+                cell.actionButton.isBusy = false
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        MarketDAO.shared.favorite(coinIDs: marketCoinIDs) {
+                            guard let self else {
+                                return
+                            }
+                            self.collectionView.isUserInteractionEnabled = true
+                            self.reloadDataWithCurrentSettings()
+                        }
+                    }
+                case .failure(let error):
+                    if let self {
+                        self.collectionView.isUserInteractionEnabled = true
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    }
+                }
+            }
+        } else if !perpsMarketIDs.isEmpty {
+            collectionView.isUserInteractionEnabled = false
+            cell.actionButton.isBusy = true
+            RouteAPI.favoritePerpsMarkets(marketIDs: perpsMarketIDs) { [weak self] result in
+                cell.actionButton.isBusy = false
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        PerpsMarketDAO.shared.favorite(marketIDs: perpsMarketIDs) {
+                            guard let self else {
+                                return
+                            }
+                            self.collectionView.isUserInteractionEnabled = true
+                            self.reloadDataWithCurrentSettings()
+                        }
+                    }
+                case .failure(let error):
+                    if let self {
+                        self.collectionView.isUserInteractionEnabled = true
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+    
+}
+
+extension MarketDashboardViewController: MarketPeriodicRequester.Delegate {
+    
+    func marketPeriodicRequester(
+        _ requester: MarketPeriodicRequester,
+        didLoadMarketsIn category: Market.RequestCategory,
+        markets: [Market]
+    ) {
+        if category == .favorite {
+            needsFetchCryptoWatchlistFromRemote = false
+            if markets.isEmpty {
+                reloadDataWithCurrentSettings()
+            }
+        }
+    }
+    
+}
+
+extension MarketDashboardViewController: PerpetualMarketLoader.Delegate {
+    
+    func perpetualMarketLoader(
+        _ loader: PerpetualMarketLoader,
+        didLoadMultipleMarketsIn category: PerpetualMarket.RequestCategory,
+        markets: [PerpetualMarket]
+    ) {
+        if category == .favorite {
+            needsFetchPerpsWatchlistFromRemote = false
+            if markets.isEmpty {
+                reloadDataWithCurrentSettings()
+            }
+        }
+    }
+    
+}
+
+extension MarketDashboardViewController {
+    
+    enum Category: String, CaseIterable {
         
-        enum Color {
-            case market(MarketColor)
-            case arbitrary(UIColor)
+        case watchlist
+        case crypto
+        case perps
+        case indicator
+        
+        var defaultSubCategoryIndex: Int {
+            let index = AppGroupUserDefaults.User.marketSubCategoryIndices[rawValue]
+            return switch self {
+            case .watchlist:
+                if let index, index < WatchlistSubCategory.allCases.count {
+                    index
+                } else {
+                    0
+                }
+            case .crypto:
+                if let index, index < Market.SubCategory.allCases.count {
+                    index
+                } else {
+                    Market.SubCategory.allCases.firstIndex(of: .trending) ?? 0
+                }
+            case .perps:
+                if let index, index < PerpetualMarket.SubCategory.allCases.count {
+                    index
+                } else {
+                    PerpetualMarket.SubCategory.allCases.firstIndex(of: .trending) ?? 0
+                }
+            case .indicator:
+                0
+            }
         }
         
-        let caption: String
-        let primary: String?
-        let secondary: String?
-        let secondaryColor: Color
+    }
+    
+    enum WatchlistSubCategory: String, CaseIterable {
         
-        static func viewModels(market: GlobalMarket) -> [GlobalMarketViewModel] {
-            [
-                GlobalMarketViewModel(
-                    caption: R.string.localizable.global_market_cap(),
-                    primary: NamedLargeNumberFormatter.string(
-                        number: market.marketCap * Currency.current.decimalRate,
-                        currencyPrefix: .current
-                    ),
-                    secondary: NumberFormatter.percentage.string(
-                        decimal: market.marketCapChangePercentage / 100
-                    ),
-                    secondaryColor: .market(.byValue(market.marketCapChangePercentage))
-                ),
-                GlobalMarketViewModel(
-                    caption: R.string.localizable.volume_24h(),
-                    primary: NamedLargeNumberFormatter.string(
-                        number: market.volume * Currency.current.decimalRate,
-                        currencyPrefix: .current
-                    ),
-                    secondary: NumberFormatter.percentage.string(
-                        decimal: market.volumeChangePercentage / 100
-                    ),
-                    secondaryColor: .market(.byValue(market.volumeChangePercentage))
-                ),
-                GlobalMarketViewModel(
-                    caption: R.string.localizable.dominance(),
-                    primary: NumberFormatter.percentage.string(
-                        decimal: market.dominancePercentage / 100
-                    ),
-                    secondary: market.dominance,
-                    secondaryColor: .arbitrary(R.color.text_secondary()!)
-                ),
-            ]
+        case crypto
+        case perps
+        
+        var displayTitle: String {
+            switch self {
+            case .crypto:
+                R.string.localizable.crypto()
+            case .perps:
+                R.string.localizable.perpetual()
+            }
+        }
+        
+    }
+    
+    enum Section {
+        case market
+        case perps
+        case marketIndicator
+        case busyIndicator
+        case recommendationItem
+        case recommendationAction
+    }
+    
+    enum Item: Hashable {
+        case market(id: String)
+        case perps(id: String)
+        case busyIndicator
+        case marketIndicator(MarketIndicator)
+        case recommendation(subCategory: WatchlistSubCategory, id: String)
+        case recommendationAction
+    }
+    
+    typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, Item>
+    typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Item>
+    
+    private final class CategoryController: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
+        
+        weak var dashboard: MarketDashboardViewController?
+        
+        var selectedCategory: Category? {
+            if let indexPath = collectionView.indexPathsForSelectedItems?.first {
+                categories[indexPath.item]
+            } else {
+                nil
+            }
+        }
+        
+        private let collectionView: UICollectionView
+        private let categories: [Category] = Category.allCases
+        
+        init(collectionView: UICollectionView) {
+            self.collectionView = collectionView
+            super.init()
+        }
+        
+        func select(category: Category) {
+            guard let item = categories.firstIndex(of: category) else {
+                return
+            }
+            let indexPath = IndexPath(item: item, section: 0)
+            collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            categories.count
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
+            let category = categories[indexPath.item]
+            cell.label.text = switch category {
+            case .watchlist:
+                R.string.localizable.watchlist()
+            case .crypto:
+                R.string.localizable.perps_category_crypto()
+            case .perps:
+                R.string.localizable.perpetual()
+            case .indicator:
+                R.string.localizable.indicator()
+            }
+            return cell
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+            false
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+            let category = categories[indexPath.item]
+            dashboard?.reloadData(
+                category: category,
+                subCategoryIndex: category.defaultSubCategoryIndex,
+                order: nil,
+                scheduleRemoteLoader: true,
+            )
+        }
+        
+    }
+    
+    private class ReloadDataOperation: Operation, @unchecked Sendable {
+        
+        weak var viewController: MarketDashboardViewController?
+        
+        init(
+            viewController: MarketDashboardViewController,
+        ) {
+            self.viewController = viewController
+            super.init()
+        }
+        
+        func reloadCryptoWatchlist(
+            order: MarketOrdering?,
+            displayCategory: Category,
+            displaySubCategoryIndex: Int,
+            scheduleRemoteLoader: Bool,
+        ) {
+            var snapshot = DataSourceSnapshot()
+            let markets = MarketDAO.shared.markets(subCategory: .watchlist, order: order)
+            let needsFetchFromRemote = DispatchQueue.main.sync {
+                if !markets.isEmpty {
+                    viewController?.needsFetchCryptoWatchlistFromRemote = false
+                }
+                return viewController?.needsFetchCryptoWatchlistFromRemote ?? true
+            }
+            let showsRecommendations = markets.isEmpty && !needsFetchFromRemote
+            let marketViewModels: [String: FavorableMarket]
+            if showsRecommendations {
+                let recommendations = MarketDAO.shared.watchlistRecommendations()
+                if recommendations.isEmpty {
+                    snapshot.appendSections([.busyIndicator])
+                    snapshot.appendItems([.busyIndicator])
+                } else {
+                    snapshot.appendSections([.recommendationItem])
+                    snapshot.appendItems(recommendations.map { recommendation in
+                        Item.recommendation(subCategory: .crypto, id: recommendation.coinID)
+                    })
+                    snapshot.appendSections([.recommendationAction])
+                    snapshot.appendItems([.recommendationAction])
+                }
+                marketViewModels = recommendations.reduce(into: [:]) { result, market in
+                    result[market.coinID] = market
+                }
+            } else if markets.isEmpty {
+                snapshot.appendSections([.busyIndicator])
+                snapshot.appendItems([.busyIndicator])
+                marketViewModels = [:]
+            } else {
+                snapshot.appendSections([.market])
+                snapshot.appendItems(markets.map { market in
+                    Item.market(id: market.coinID)
+                })
+                marketViewModels = markets.reduce(into: [:]) { result, market in
+                    result[market.coinID] = market
+                }
+            }
+            DispatchQueue.main.sync { [weak self] in
+                guard let self, !self.isCancelled, let viewController else {
+                    return
+                }
+                viewController.category = displayCategory
+                viewController.subCategoryIndex = displaySubCategoryIndex
+                viewController.order = order
+                viewController.markets = marketViewModels
+                if showsRecommendations {
+                    viewController.collectionView.allowsMultipleSelection = true
+                    viewController.dataSource.applySnapshotUsingReloadData(snapshot) {
+                        viewController.selectAllRecommendationItems(snapshot: snapshot)
+                    }
+                } else {
+                    viewController.collectionView.allowsMultipleSelection = false
+                    viewController.dataSource.applySnapshotUsingReloadData(snapshot)
+                }
+                if scheduleRemoteLoader {
+                    if showsRecommendations {
+                        ConcurrentJobQueue.shared.addJob(
+                            job: ReloadWatchlistRecommendationJob(category: .crypto)
+                        )
+                    } else {
+                        let requester = MarketPeriodicRequester(
+                            category: .favorite,
+                            limit: 500
+                        )
+                        requester.delegate = viewController
+                        viewController.marketLoader = requester
+                        requester.start()
+                    }
+                }
+            }
+        }
+        
+        func reloadPerpsWatchlist(
+            order: MarketOrdering?,
+            displayCategory: Category,
+            displaySubCategoryIndex: Int,
+            scheduleRemoteLoader: Bool,
+        ) {
+            var snapshot = DataSourceSnapshot()
+            let markets = PerpsMarketDAO.shared.availableMarkets(subCategory: .watchlist, ordering: order)
+            let needsFetchFromRemote = DispatchQueue.main.sync {
+                if !markets.isEmpty {
+                    viewController?.needsFetchPerpsWatchlistFromRemote = false
+                }
+                return viewController?.needsFetchPerpsWatchlistFromRemote ?? true
+            }
+            let showsRecommendations = markets.isEmpty && !needsFetchFromRemote
+            let marketViewModels: [String: FavorablePerpetualMarket]
+            if showsRecommendations {
+                let recommendations = PerpsMarketDAO.shared.watchlistRecommendations()
+                if recommendations.isEmpty {
+                    snapshot.appendSections([.busyIndicator])
+                    snapshot.appendItems([.busyIndicator])
+                } else {
+                    snapshot.appendSections([.recommendationItem])
+                    snapshot.appendItems(recommendations.map { recommendation in
+                        Item.recommendation(subCategory: .perps, id: recommendation.marketID)
+                    })
+                    snapshot.appendSections([.recommendationAction])
+                    snapshot.appendItems([.recommendationAction])
+                }
+                marketViewModels = recommendations.reduce(into: [:]) { result, market in
+                    result[market.marketID] = market
+                }
+            } else if markets.isEmpty {
+                snapshot.appendSections([.busyIndicator])
+                snapshot.appendItems([.busyIndicator])
+                marketViewModels = [:]
+            } else {
+                snapshot.appendSections([.perps])
+                snapshot.appendItems(markets.map { market in
+                    Item.perps(id: market.marketID)
+                })
+                marketViewModels = markets.reduce(into: [:]) { result, market in
+                    result[market.marketID] = market
+                }
+            }
+            DispatchQueue.main.sync { [weak self] in
+                guard let self, !self.isCancelled, let viewController else {
+                    return
+                }
+                viewController.category = displayCategory
+                viewController.subCategoryIndex = displaySubCategoryIndex
+                viewController.order = order
+                viewController.perpsMarkets = marketViewModels
+                if showsRecommendations {
+                    viewController.collectionView.allowsMultipleSelection = true
+                    viewController.dataSource.applySnapshotUsingReloadData(snapshot) {
+                        viewController.selectAllRecommendationItems(snapshot: snapshot)
+                    }
+                } else {
+                    viewController.collectionView.allowsMultipleSelection = false
+                    viewController.dataSource.applySnapshotUsingReloadData(snapshot)
+                }
+                if scheduleRemoteLoader {
+                    if showsRecommendations {
+                        ConcurrentJobQueue.shared.addJob(
+                            job: ReloadWatchlistRecommendationJob(category: .perps)
+                        )
+                    } else {
+                        let requester = PerpetualMarketLoader(
+                            request: .multiple(.favorite),
+                            timeInterval: 30
+                        )
+                        requester.delegate = viewController
+                        viewController.perpsMarketLoader = requester
+                        requester.start()
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    private class ReloadWatchlistOperation: ReloadDataOperation, @unchecked Sendable {
+        
+        private let subCategoryIndex: Int
+        private let order: MarketOrdering?
+        private let scheduleRemoteLoader: Bool
+        
+        init(
+            subCategoryIndex: Int,
+            order: MarketOrdering?,
+            scheduleRemoteLoader: Bool,
+            viewController: MarketDashboardViewController,
+        ) {
+            self.subCategoryIndex = subCategoryIndex
+            self.order = order ?? .derived(
+                category: .watchlist,
+                subCategoryIndex: subCategoryIndex
+            )
+            self.scheduleRemoteLoader = scheduleRemoteLoader
+            super.init(viewController: viewController)
+        }
+        
+        override func main() {
+            switch WatchlistSubCategory.allCases[subCategoryIndex] {
+            case .crypto:
+                reloadCryptoWatchlist(
+                    order: order,
+                    displayCategory: .watchlist,
+                    displaySubCategoryIndex: subCategoryIndex,
+                    scheduleRemoteLoader: scheduleRemoteLoader,
+                )
+            case .perps:
+                reloadPerpsWatchlist(
+                    order: order,
+                    displayCategory: .watchlist,
+                    displaySubCategoryIndex: subCategoryIndex,
+                    scheduleRemoteLoader: scheduleRemoteLoader,
+                )
+            }
+        }
+        
+    }
+    
+    private final class ReloadMarketsOperation: ReloadDataOperation, @unchecked Sendable {
+        
+        private let subCategoryIndex: Int
+        private let order: MarketOrdering?
+        private let scheduleRemoteLoader: Bool
+        
+        init(
+            subCategoryIndex: Int,
+            order: MarketOrdering?,
+            scheduleRemoteLoader: Bool,
+            viewController: MarketDashboardViewController,
+        ) {
+            self.subCategoryIndex = subCategoryIndex
+            self.order = order ?? .derived(
+                category: .crypto,
+                subCategoryIndex: subCategoryIndex
+            )
+            self.scheduleRemoteLoader = scheduleRemoteLoader
+            super.init(viewController: viewController)
+        }
+        
+        override func main() {
+            let subCategory = Market.SubCategory.allCases[subCategoryIndex]
+            switch subCategory {
+            case .watchlist:
+                reloadCryptoWatchlist(
+                    order: order,
+                    displayCategory: .crypto,
+                    displaySubCategoryIndex: subCategoryIndex,
+                    scheduleRemoteLoader: scheduleRemoteLoader,
+                )
+            default:
+                let markets = MarketDAO.shared.markets(subCategory: subCategory, order: order)
+                let items: [Item] = markets.map { market in
+                        .market(id: market.coinID)
+                }
+                let viewModels = markets.reduce(into: [:]) { result, market in
+                    result[market.coinID] = market
+                }
+                var snapshot = DataSourceSnapshot()
+                if items.isEmpty {
+                    snapshot.appendSections([.busyIndicator])
+                    snapshot.appendItems([.busyIndicator], toSection: .busyIndicator)
+                } else {
+                    snapshot.appendSections([.market])
+                    snapshot.appendItems(items, toSection: .market)
+                }
+                DispatchQueue.main.sync { [weak self] in
+                    guard let self, !self.isCancelled, let viewController else {
+                        return
+                    }
+                    viewController.category = .crypto
+                    viewController.subCategoryIndex = subCategoryIndex
+                    viewController.order = order
+                    viewController.markets = viewModels
+                    viewController.collectionView.allowsMultipleSelection = false
+                    viewController.dataSource.applySnapshotUsingReloadData(snapshot)
+                    if scheduleRemoteLoader {
+                        let requester = MarketPeriodicRequester(
+                            category: Market.RequestCategory(subCategory: subCategory),
+                            limit: 500
+                        )
+                        viewController.marketLoader = requester
+                        requester.start()
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    private final class ReloadPerpsMarketOperation: ReloadDataOperation, @unchecked Sendable {
+        
+        private let subCategoryIndex: Int
+        private let order: MarketOrdering?
+        private let scheduleRemoteLoader: Bool
+        
+        init(
+            subCategoryIndex: Int,
+            order: MarketOrdering?,
+            scheduleRemoteLoader: Bool,
+            viewController: MarketDashboardViewController,
+        ) {
+            self.subCategoryIndex = subCategoryIndex
+            self.order = order ?? .derived(
+                category: .perps,
+                subCategoryIndex: subCategoryIndex
+            )
+            self.scheduleRemoteLoader = scheduleRemoteLoader
+            super.init(viewController: viewController)
+        }
+        
+        override func main() {
+            let subCategory = PerpetualMarket.SubCategory.allCases[subCategoryIndex]
+            switch subCategory {
+            case .watchlist:
+                reloadPerpsWatchlist(
+                    order: order,
+                    displayCategory: .perps,
+                    displaySubCategoryIndex: subCategoryIndex,
+                    scheduleRemoteLoader: scheduleRemoteLoader,
+                )
+            default:
+                let markets = PerpsMarketDAO.shared.availableMarkets(
+                    subCategory: subCategory,
+                    ordering: order
+                )
+                let items: [Item] = markets.map { market in
+                        .perps(id: market.marketID)
+                }
+                let viewModels = markets.reduce(into: [:]) { result, market in
+                    result[market.marketID] = market
+                }
+                var snapshot = DataSourceSnapshot()
+                if items.isEmpty {
+                    snapshot.appendSections([.busyIndicator])
+                    snapshot.appendItems([.busyIndicator], toSection: .busyIndicator)
+                } else {
+                    snapshot.appendSections([.perps])
+                    snapshot.appendItems(items, toSection: .perps)
+                }
+                DispatchQueue.main.sync { [weak self] in
+                    guard let self, !self.isCancelled, let viewController else {
+                        return
+                    }
+                    viewController.category = .perps
+                    viewController.subCategoryIndex = subCategoryIndex
+                    viewController.order = order
+                    viewController.perpsMarkets = viewModels
+                    viewController.collectionView.allowsMultipleSelection = false
+                    viewController.dataSource.applySnapshotUsingReloadData(snapshot)
+                    if scheduleRemoteLoader {
+                        let requester = switch subCategory {
+                        case .watchlist:
+                            PerpetualMarketLoader(
+                                request: .multiple(.favorite),
+                                timeInterval: 30
+                            )
+                        case .trending, .topGainers, .topLosers, .indices, .commodities, .forex, .memes:
+                            PerpetualMarketLoader(
+                                request: .multiple(.all),
+                                timeInterval: 30
+                            )
+                        }
+                        viewController.perpsMarketLoader = requester
+                        requester.start()
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    private final class ReloadWatchlistRecommendationJob: AsynchronousJob, @unchecked Sendable {
+        
+        private static var lastReloadingDate: [WatchlistSubCategory: Date] = [:]
+        
+        private let category: WatchlistSubCategory
+        private let refreshInterval: TimeInterval = .hour
+        
+        init(category: WatchlistSubCategory) {
+            self.category = category
+        }
+        
+        override func getJobId() -> String {
+            "ReloadWatchlistRcmd-" + category.rawValue
+        }
+        
+        override func execute() -> Bool {
+            reload()
+            return true
+        }
+        
+        private func reload() {
+            guard LoginManager.shared.isLoggedIn, !isCancelled else {
+                finishJob()
+                return
+            }
+            let reloadingDate = Queue.main.autoSync {
+                Self.lastReloadingDate[category] ?? .distantPast
+            }
+            let nextReloadingDate = reloadingDate.addingTimeInterval(refreshInterval)
+            guard nextReloadingDate.timeIntervalSinceNow <= 0 else {
+                Logger.general.debug(category: "ReloadWatchlistRcmd", message: "Not reloading \(category.rawValue) before \(nextReloadingDate)")
+                finishJob()
+                return
+            }
+            switch category {
+            case .crypto:
+                RouteAPI.markets(category: .featured, queue: .global(), limit: nil) { result in
+                    switch result {
+                    case let .success(markets):
+                        MarketDAO.shared.save(
+                            markets: markets,
+                            replaceRanks: false,
+                            updatingCategory: .featured
+                        )
+                        DispatchQueue.main.async {
+                            Self.lastReloadingDate[.crypto] = Date()
+                        }
+                        Logger.general.debug(category: "ReloadWatchlistRcmd", message: "Updated for cryptos")
+                        self.finishJob()
+                    case let .failure(error):
+                        Logger.general.debug(category: "ReloadWatchlistRcmd", message: "\(error)")
+                        DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: self.reload)
+                    }
+                }
+            case .perps:
+                RouteAPI.perpsMarkets(category: .featured, queue: .global()) { result in
+                    switch result {
+                    case let .success(markets):
+                        PerpsMarketDAO.shared.save(markets: markets, updatingMetadata: .category(.featured))
+                        DispatchQueue.main.async {
+                            Self.lastReloadingDate[.perps] = Date()
+                        }
+                        Logger.general.debug(category: "ReloadWatchlistRcmd", message: "Updated for perps")
+                        self.finishJob()
+                    case let .failure(error):
+                        Logger.general.debug(category: "ReloadWatchlistRcmd", message: "\(error)")
+                        DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: self.reload)
+                    }
+                }
+            }
         }
         
     }

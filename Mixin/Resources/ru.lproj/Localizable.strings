@@ -44,6 +44,7 @@
 "add_stickers" = "Добавить стикеры";
 "add_tag" = "Добавить тега";
 "add_to_stickers" = "Добавить в стикеры";
+"add_to_watchlist" = "Add to Watchlist";
 "add_token" = "Добавить %@";
 "add_wallet" = "Добавить кошелек";
 "add_wallet_instruction_delete_unsupported" = "Этот кошелек нельзя удалить после создания.";
@@ -211,6 +212,7 @@
 "balance_max" = "МАКС";
 "batch_transfer_confirmation" = "Подтверждение пакетной передачи";
 "before_you_proceed" = "Прежде чем продолжить";
+"bitcoin_dominance" = "Bitcoin Dominance";
 "bitcoin_private_key_hint" = "Введите WIF или 32-байтовый HEX закрытый ключ. Пример: Kx45...9Ab или 0x1a2b...cdef.";
 "block" = "Блокировать";
 "block_confirmations" = "Подтверждения блока";
@@ -458,6 +460,7 @@
 "created_this_group" = "%@ создал эту группу";
 "creating_wallet_terminated_unexpectedly" = "Создание кошелька неожиданно прервано. Нажмите «Продолжить», чтобы завершить создание.";
 "creating_your_account" = "Создание учетной записи...";
+"crypto" = "Crypto";
 "currency" = "Валюта";
 "currency_code" = "Код";
 "current_language" = "Английский";
@@ -558,7 +561,6 @@
 "disconnected" = "Отключено";
 "disconnecting" = "Отключение";
 "dismiss_as_admin" = "Снять права администратора";
-"dominance" = "Доминирование";
 "done" = "Сделано";
 "dont_have_assets" = "Нет объектов";
 "duplicate_transfer_confirmation" = "Дубликат подтверждения перевода";
@@ -770,7 +772,7 @@
 "how_are_you" = "Привет, как дела?";
 "how_perps_works" = "Как работают бессрочные фьючерсы?";
 "i_am_good" = "Я в порядке.";
-"id" = "Идентификатор";
+"id" = "ID";
 "im_ready" = "Я готов";
 "image" = "изображение";
 "immediately" = "Немедленно";
@@ -796,6 +798,7 @@
 "include_files" = "Включить файлы";
 "include_videos" = "Включить видео";
 "incoming_voice_call" = "Входящий голосовой вызов";
+"indicator" = "Indicator";
 "info" = "Информация";
 "initializing" = "Инициализация...";
 "input_referral_code_hint" = "Пригласил друг?";
@@ -836,6 +839,7 @@
 "is_it_safe_to_import_into_mixin" = "Безопасно ли импортировать в Mixin?";
 "join_group" = "Присоединиться к группе";
 "joined_in" = "Присоединился к %@";
+"keep" = "Keep";
 "keep_running_foreground" = "Пожалуйста, не закрывайте экран и оставьте Mixin работать на переднем плане.";
 "keep_waiting" = "Продолжайте ждать";
 "label" = "Этикетка";
@@ -924,12 +928,16 @@
 "margin_isolated" = "Маржа (изолированная)";
 "market" = "Рынок";
 "market_cap" = "Рыночная капитализация";
+"market_change_short" = "Change";
+"market_display" = "Market Display";
 "market_share_card_asset" = "🔥 %1$@ (%2$@)";
 "market_share_card_market_button" = "Рынок";
 "market_share_card_market_cap" = "📈 Рыночная капитализация: %@";
 "market_share_card_price" = "🏷️ Цена: %@";
 "market_share_card_price_change" = "💰 Изменение цены за 24 часа: %@";
 "market_share_card_title" = "Торговля %@";
+"market_stock" = "Stock";
+"market_volume_short" = "Vol";
 "markets" = "Рынки";
 "max" = "Макс";
 "max_favorite_bots_description" = "Вы можете добавить максимум 5 любимых ботов. Имейте в виду, что другие могут просматривать этих ботов в вашем профиле.";
@@ -1179,6 +1187,7 @@
 "permission_denied_photos" = "Добавление фотографии отклонено";
 "permission_denied_photos_hint" = "Mixin не имеет разрешения на добавление фотографий в вашу библиотеку. Нажмите «Настройки», чтобы авторизоваться.";
 "permissions" = "Разрешения";
+"perp" = "Perp";
 "perp_state_opening" = "Открытие";
 "perpetual" = "Бессрочный";
 "perpetual_futures" = "Бессрочные фьючерсы";
@@ -1189,6 +1198,7 @@
 "perps_category_crypto" = "Криптовалюта";
 "perps_category_forex" = "Форекс";
 "perps_category_indices" = "Индексы";
+"perps_category_meme" = "Memes";
 "perps_category_stocks" = "Акции";
 "perps_current_price" = "Текущая цена";
 "perps_funding_frequency" = "Частота";
@@ -1434,6 +1444,7 @@
 "remove_emergency_contact" = "Удалить контакт для восстановления";
 "remove_emergency_contact_for_sure" = "Наверняка удалить контакт для восстановления?";
 "remove_from_group" = "Удалить из группы";
+"remove_from_watchlist" = "Remove from Watchlist";
 "remove_stickers" = "Удалить наклейки";
 "rename_wallet" = "Переименовать кошелек";
 "renew_plan" = "Обновить план";
@@ -2017,6 +2028,8 @@
 "watchlist" = "Список наблюдения";
 "watchlist_add_desc" = "%@ теперь в вашем списке наблюдения";
 "watchlist_empty" = "Ваш список наблюдения пуст";
+"watchlist_remove_alert_prompt" = "Removed from your watchlist. Also delete the related price alerts?";
+"watchlist_remove_desc" = "%@ has been removed from your watchlist";
 "web_cannot_reached_desc" = "%@ заняло слишком много времени для ответа. Пожалуйста, проверьте свою сеть и попробуйте переключить 4G, Wi-Fi или VPN, чтобы перезагрузить страницу.";
 "web_cannot_reached_title" = "Эта веб-страница недоступна";
 "web_suspicious_link_tips" = "Ссылки нет в соответствующих шаблонах ресурсов.";

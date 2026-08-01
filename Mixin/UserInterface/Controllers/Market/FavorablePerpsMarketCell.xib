@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="favorable_perps_market" id="hlu-eX-jqO" customClass="FavorablePerpsMarketCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="YYa-Ex-ymC">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LpP-m3-C03">
+                        <rect key="frame" x="2" y="3" width="44" height="44"/>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="44" id="I6N-VX-Mmw"/>
+                            <constraint firstAttribute="width" constant="44" id="M7C-fR-9sh"/>
+                        </constraints>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <connections>
+                            <action selector="toggleFavorite:" destination="hlu-eX-jqO" eventType="touchUpInside" id="QPS-ax-3d6"/>
+                        </connections>
+                    </button>
+                    <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WCV-NQ-g5x" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="2" y="3" width="44" height="44"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" name="background"/>
+                        <color key="tintColor" name="chat_pin_count_background"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="NO"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r1h-v0-vS9" customClass="PlainTokenIconView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="46" y="9" width="32" height="32"/>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="r1h-v0-vS9" secondAttribute="height" id="EWJ-Fm-MJ6"/>
+                            <constraint firstAttribute="width" constant="32" id="ufx-Vt-dBe"/>
+                        </constraints>
+                    </view>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1Ml-AP-ePn">
+                        <rect key="frame" x="88" y="0.0" width="267" height="50"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="5sZ-tb-pgn">
+                                <rect key="frame" x="0.0" y="8.6666666666666679" width="106.66666666666667" height="32.666666666666657"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Gns-u4-aF5">
+                                        <rect key="frame" x="0.0" y="0.0" width="92.333333333333329" height="14.333333333333334"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="BTC-USDT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gZx-4P-8AO">
+                                                <rect key="frame" x="0.0" y="0.0" width="62" height="14.333333333333334"/>
+                                                <color key="backgroundColor" name="background"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <color key="textColor" name="text"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Perp" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tHM-hL-Tqe" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="66" y="0.0" width="26.333333333333329" height="14.333333333333334"/>
+                                                <color key="backgroundColor" red="0.8980392157" green="0.90980392160000001" blue="0.93333333330000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" secondItem="tHM-hL-Tqe" secondAttribute="height" id="WAI-H2-CgY"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <color key="textColor" name="text_tertiary"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VOL: $410.23M" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="scc-SG-u6n">
+                                        <rect key="frame" x="0.0" y="18.333333333333336" width="87.333333333333329" height="14.333333333333336"/>
+                                        <color key="backgroundColor" name="background"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                        <color key="textColor" name="text_tertiary"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="200" horizontalCompressionResistancePriority="250" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Nyn-l2-oaW">
+                                <rect key="frame" x="106.66666666666664" y="16.666666666666668" width="160.33333333333337" height="17.000000000000004"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="$70,836" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QuQ-a9-BOB">
+                                        <rect key="frame" x="0.0" y="0.0" width="80.333333333333329" height="17"/>
+                                        <color key="backgroundColor" name="background"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                        <color key="textColor" name="text"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="-0.09%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yH7-aR-7pp" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="80.333333333333343" y="0.0" width="80" height="17"/>
+                                        <color key="backgroundColor" name="background"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="5sZ-tb-pgn" firstAttribute="width" secondItem="1Ml-AP-ePn" secondAttribute="width" multiplier="0.4" id="mum-nK-oEN"/>
+                        </constraints>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstItem="LpP-m3-C03" firstAttribute="top" secondItem="YYa-Ex-ymC" secondAttribute="top" constant="3" id="5Gb-7q-JUs"/>
+                    <constraint firstAttribute="bottom" secondItem="LpP-m3-C03" secondAttribute="bottom" constant="3" id="9F3-hE-EVu"/>
+                    <constraint firstItem="1Ml-AP-ePn" firstAttribute="top" secondItem="YYa-Ex-ymC" secondAttribute="top" id="E0r-qX-ls4"/>
+                    <constraint firstItem="LpP-m3-C03" firstAttribute="leading" secondItem="YYa-Ex-ymC" secondAttribute="leading" constant="2" id="OgB-dN-EXw"/>
+                    <constraint firstItem="1Ml-AP-ePn" firstAttribute="leading" secondItem="r1h-v0-vS9" secondAttribute="trailing" constant="10" id="Sb8-KS-usV"/>
+                    <constraint firstAttribute="bottom" secondItem="1Ml-AP-ePn" secondAttribute="bottom" id="cay-eC-Mmd"/>
+                    <constraint firstItem="r1h-v0-vS9" firstAttribute="leading" secondItem="LpP-m3-C03" secondAttribute="trailing" id="ed5-5a-4u1"/>
+                    <constraint firstAttribute="trailing" secondItem="1Ml-AP-ePn" secondAttribute="trailing" constant="20" id="jhh-65-bcj"/>
+                    <constraint firstItem="r1h-v0-vS9" firstAttribute="centerY" secondItem="YYa-Ex-ymC" secondAttribute="centerY" id="wGn-SU-7sS"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <color key="backgroundColor" name="background"/>
+            <connections>
+                <outlet property="changeLabel" destination="yH7-aR-7pp" id="Sgk-HJ-EEB"/>
+                <outlet property="contentStackView" destination="1Ml-AP-ePn" id="wBJ-qm-xvX"/>
+                <outlet property="favoriteActivityIndicatorView" destination="WCV-NQ-g5x" id="LRE-67-uJN"/>
+                <outlet property="favoriteButton" destination="LpP-m3-C03" id="8Gk-jF-JWV"/>
+                <outlet property="iconView" destination="r1h-v0-vS9" id="rTs-jg-Yey"/>
+                <outlet property="marketCapLabel" destination="scc-SG-u6n" id="3wD-jG-Ys9"/>
+                <outlet property="priceLabel" destination="QuQ-a9-BOB" id="HXW-Xk-UJe"/>
+                <outlet property="symbolLabel" destination="gZx-4P-8AO" id="utr-EA-88s"/>
+                <outlet property="tagLabel" destination="tHM-hL-Tqe" id="H5x-md-ity"/>
+            </connections>
+            <point key="canvasLocation" x="64" y="42"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="chat_pin_count_background">
+            <color red="0.32899999618530273" green="0.32400000095367432" blue="0.4779999852180481" alpha="0.33000001311302185" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

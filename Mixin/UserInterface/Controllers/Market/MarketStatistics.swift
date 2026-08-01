@@ -40,15 +40,10 @@ struct MarketStatistics {
         } else {
             marketCap = .notApplicable
         }
-        let fiatMoneyVolume24H: String?
-        if let totalVolume = Decimal(string: market.totalVolume, locale: .enUSPOSIX) {
-            fiatMoneyVolume24H = NamedLargeNumberFormatter.string(
-                number: totalVolume * Currency.current.decimalRate,
-                currencyPrefix: .current
-            )
-        } else {
-            fiatMoneyVolume24H = nil
-        }
+        let fiatMoneyVolume24H = NamedLargeNumberFormatter.string(
+            number: market.decimalVolume * Currency.current.decimalRate,
+            currencyPrefix: .current
+        )
         
         self.high24H = high24H
         self.low24H = low24H

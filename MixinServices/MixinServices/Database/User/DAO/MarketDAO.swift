@@ -10,11 +10,12 @@ public final class MarketDAO: UserDatabaseDAO {
     public static let didUpdateNotification = Notification.Name("one.mixin.service.MarketDAO.Update")
     
     public static let coinIDUserInfoKey = "cid"
+    public static let coinIDsUserInfoKey = "cids"
     
     public func markets(
-        category: Market.DashboardCategory,
-        order: Market.OrderingExpression,
-        limit: Market.Limit?
+        subCategory: Market.SubCategory,
+        order: MarketOrdering?,
+        limit: Market.Limit? = .top500,
     ) -> [FavorableMarket] {
         let marketColumns: [String] = Market.CodingKeys.allCases.compactMap { key in
             if key == .marketCapRank {
@@ -29,16 +30,43 @@ public final class MarketDAO: UserDatabaseDAO {
             ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
         FROM markets m
             LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
+            
         """
-        switch category {
+        switch subCategory {
+        case .watchlist, .trending, .topGainer, .topLoser:
+            sql.append("LEFT JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id")
         case .all:
-            sql.append("\nINNER JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id")
-        case .favorite:
+            sql.append("INNER JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id")
+        }
+        switch subCategory {
+        case .watchlist:
+            sql.append("\nWHERE mf.is_favored")
+        case .trending:
             sql.append("""
             
-            LEFT JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id
-            WHERE mf.is_favored
+            WHERE EXISTS (
+                SELECT 1 FROM market_categories mc 
+                WHERE mc.coin_id = m.coin_id AND mc.category = \(Market.DatabaseCategory.trending.rawValue)
+            )
             """)
+        case .topGainer:
+            sql.append("""
+            
+            WHERE EXISTS (
+                SELECT 1 FROM market_categories mc 
+                WHERE mc.coin_id = m.coin_id AND mc.category = \(Market.DatabaseCategory.topGainer.rawValue)
+            )
+            """)
+        case .topLoser:
+            sql.append("""
+            
+            WHERE EXISTS (
+                SELECT 1 FROM market_categories mc 
+                WHERE mc.coin_id = m.coin_id AND mc.category = \(Market.DatabaseCategory.topLoser.rawValue)
+            )
+            """)
+        case .all:
+            break
         }
         sql.append("\nORDER BY CAST(ifnull(mcr.market_cap_rank, m.market_cap_rank) AS REAL) ASC")
         if let count = limit?.count {
@@ -46,53 +74,80 @@ public final class MarketDAO: UserDatabaseDAO {
         }
         var results: [FavorableMarket] = db.select(with: sql)
         
-        switch order {
-        case let .marketCap(ordering):
-            switch ordering {
-            case .ascending:
-                results.reverse()
-            case .descending:
-                break
-            }
-        case let .price(ordering):
-            switch ordering {
-            case .ascending:
-                results.sort { one, another in
-                    one.decimalPrice < another.decimalPrice
+        if let order {
+            switch order.field {
+            case .marketCap:
+                switch order.direction {
+                case .ascending:
+                    results.reverse()
+                case .descending:
+                    break
                 }
-            case .descending:
-                results.sort { one, another in
-                    one.decimalPrice > another.decimalPrice
-                }
-            }
-        case let .change(period, ordering):
-            switch period {
-            case .sevenDays:
-                switch ordering {
+            case .volume:
+                switch order.direction {
                 case .ascending:
                     results.sort { one, another in
-                        one.decimalPriceChangePercentage7D < another.decimalPriceChangePercentage7D
+                        one.decimalVolume < another.decimalVolume
                     }
                 case .descending:
                     results.sort { one, another in
-                        one.decimalPriceChangePercentage7D > another.decimalPriceChangePercentage7D
+                        one.decimalVolume > another.decimalVolume
                     }
                 }
-            case .twentyFourHours:
-                switch ordering {
+            case .price:
+                switch order.direction {
                 case .ascending:
                     results.sort { one, another in
-                        one.decimalPriceChangePercentage24H < another.decimalPriceChangePercentage24H
+                        one.decimalPrice < another.decimalPrice
                     }
                 case .descending:
                     results.sort { one, another in
-                        one.decimalPriceChangePercentage24H > another.decimalPriceChangePercentage24H
+                        one.decimalPrice > another.decimalPrice
+                    }
+                }
+            case let .change(period):
+                switch period {
+                case .sevenDays:
+                    switch order.direction {
+                    case .ascending:
+                        results.sort { one, another in
+                            one.decimalPriceChangePercentage7D < another.decimalPriceChangePercentage7D
+                        }
+                    case .descending:
+                        results.sort { one, another in
+                            one.decimalPriceChangePercentage7D > another.decimalPriceChangePercentage7D
+                        }
+                    }
+                case .twentyFourHours:
+                    switch order.direction {
+                    case .ascending:
+                        results.sort { one, another in
+                            one.decimalPriceChangePercentage24H < another.decimalPriceChangePercentage24H
+                        }
+                    case .descending:
+                        results.sort { one, another in
+                            one.decimalPriceChangePercentage24H > another.decimalPriceChangePercentage24H
+                        }
                     }
                 }
             }
+        } else {
+            
         }
-        
         return results
+    }
+    
+    public func watchlistRecommendations() -> [FavorableMarket] {
+        let sql = """
+        SELECT m.*
+        FROM markets m
+            INNER JOIN market_categories mc ON mc.coin_id = m.coin_id
+        WHERE mc.category = \(Market.DatabaseCategory.featured.rawValue)
+        """
+        let markets: [Market] = db.select(with: sql)
+        return markets.map { market in
+            FavorableMarket(market: market, isFavorite: false)
+        }
     }
     
     public func markets(keyword: String, limit: Int?) -> [FavorableMarket] {
@@ -228,13 +283,11 @@ public final class MarketDAO: UserDatabaseDAO {
             }
             
             db.afterNextTransaction { _ in
-                DispatchQueue.global().async {
-                    NotificationCenter.default.post(
-                        name: Self.didUpdateNotification,
-                        object: self,
-                        userInfo: [Self.coinIDUserInfoKey: market.coinID]
-                    )
-                }
+                NotificationCenter.default.postAsynchornously(
+                    onMainThread: Self.didUpdateNotification,
+                    object: self,
+                    userInfo: [Self.coinIDUserInfoKey: market.coinID]
+                )
             }
             let sql = """
             SELECT m.*, ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
@@ -248,28 +301,12 @@ public final class MarketDAO: UserDatabaseDAO {
         }
     }
     
-    public func save(markets: [Market]) {
-        try? db.writeAndReturnError { db in
-            try markets.save(db)
-            let now = Date().toUTCString()
-            let ids: [MarketID] = markets.flatMap { market in
-                market.assetIDs?.map { assetID in
-                    MarketID(coinID: market.coinID, assetID: assetID, createdAt: now)
-                } ?? []
-            }
-            try ids.save(db)
-            
-            db.afterNextTransaction { _ in
-                DispatchQueue.global().async {
-                    NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
-                }
-            }
-        }
-    }
-    
-    public func saveMarketsAndReplaceRanks(markets: [Market]) {
+    public func save(
+        markets: [Market],
+        replaceRanks: Bool,
+        updatingCategory: Market.DatabaseCategory?,
+    ) {
         let now = Date().toUTCString()
-        let rankStorages = markets.compactMap(\.rankStorage)
         let ids: [MarketID] = markets.flatMap { market in
             market.assetIDs?.map { assetID in
                 MarketID(coinID: market.coinID, assetID: assetID, createdAt: now)
@@ -277,14 +314,27 @@ public final class MarketDAO: UserDatabaseDAO {
         }
         db.write { db in
             try markets.save(db)
-            try db.execute(sql: "DELETE FROM market_cap_ranks")
-            try rankStorages.save(db)
             try ids.save(db)
-            
-            db.afterNextTransaction { _ in
-                DispatchQueue.global().async {
-                    NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
+            if replaceRanks {
+                try db.execute(sql: "DELETE FROM market_cap_ranks")
+                let rankStorages = markets.compactMap(\.rankStorage)
+                try rankStorages.save(db)
+            }
+            if let category = updatingCategory {
+                try db.execute(
+                    sql: "DELETE FROM market_categories WHERE category = ?",
+                    arguments: [category.rawValue]
+                )
+                let categoriesStorage = markets.map { market in
+                    Market.CategoryStorage(coinID: market.coinID, category: category)
                 }
+                try categoriesStorage.save(db)
+            }
+            db.afterNextTransaction { _ in
+                NotificationCenter.default.postAsynchornously(
+                    onMainThread: Self.didUpdateNotification,
+                    object: self
+                )
             }
         }
     }
@@ -306,9 +356,10 @@ public final class MarketDAO: UserDatabaseDAO {
             try favoredMarkets.save(db)
             
             db.afterNextTransaction { _ in
-                DispatchQueue.global().async {
-                    NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
-                }
+                NotificationCenter.default.postAsynchornously(
+                    onMainThread: Self.didUpdateNotification,
+                    object: self
+                )
             }
         }
     }
@@ -326,31 +377,43 @@ public final class MarketDAO: UserDatabaseDAO {
         }
     }
     
-    public func favorite(coinID: String, sendNotification: Bool) {
-        let market = FavoredMarket(coinID: coinID, isFavored: true, createdAt: Date().toUTCString())
-        db.save(market) { _ in
-            guard sendNotification else {
-                return
-            }
-            DispatchQueue.global().async {
-                NotificationCenter.default.post(name: Self.favoriteNotification,
-                                                object: self,
-                                                userInfo: [Self.coinIDUserInfoKey: coinID])
+    public func favorite(coinIDs: [String], completion: (() -> Void)? = nil) {
+        let markets = coinIDs.map { coinID in
+            FavoredMarket(coinID: coinID, isFavored: true, createdAt: Date().toUTCString())
+        }
+        db.save(markets) { _ in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: Self.favoriteNotification,
+                    object: self,
+                    userInfo: [Self.coinIDsUserInfoKey: coinIDs]
+                )
+                completion?()
             }
         }
     }
     
-    public func unfavorite(coinID: String, sendNotification: Bool) {
-        let sql = "UPDATE market_favored SET is_favored = FALSE WHERE coin_id = ?"
-        db.execute(sql: sql, arguments: [coinID]) { _ in
-            guard sendNotification else {
-                return
+    public func unfavorite(coinIDs: [String], completion: (() -> Void)? = nil) {
+        let update: GRDB.SQL = "UPDATE market_favored SET is_favored = FALSE WHERE coin_id IN \(coinIDs)"
+        db.execute(query: update) { _ in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: Self.unfavoriteNotification,
+                    object: self,
+                    userInfo: [Self.coinIDsUserInfoKey: coinIDs]
+                )
+                completion?()
             }
-            DispatchQueue.global().async {
-                NotificationCenter.default.post(name: Self.unfavoriteNotification,
-                                                object: self,
-                                                userInfo: [Self.coinIDUserInfoKey: coinID])
-            }
+        }
+    }
+    
+    public func deleteAll() {
+        db.write { db in
+            try db.execute(sql: "DELETE FROM markets")
+            try db.execute(sql: "DELETE FROM market_cap_ranks")
+            try db.execute(sql: "DELETE FROM market_categories")
+            try db.execute(sql: "DELETE FROM market_ids")
+            try db.execute(sql: "DELETE FROM market_favored")
         }
     }
     

@@ -985,6 +985,17 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("market_categories") { db in
+            try db.execute(sql: """
+            CREATE TABLE IF NOT EXISTS `market_categories` (
+                `coin_id` TEXT NOT NULL,
+                `category`  INTEGER NOT NULL,
+                PRIMARY KEY(`coin_id`, `category`)
+            )
+            """)
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_market_categories_category ON market_categories(category)")
+        }
+        
         return migrator
     }
     

@@ -44,6 +44,7 @@
 "add_stickers" = "스티커 추가";
 "add_tag" = "태그 추가";
 "add_to_stickers" = "스티커에 추가";
+"add_to_watchlist" = "Add to Watchlist";
 "add_token" = "%@ 추가";
 "add_wallet" = "지갑 추가";
 "add_wallet_instruction_delete_unsupported" = "이 지갑은 한 번 생성되면 삭제할 수 없습니다.";
@@ -211,6 +212,7 @@
 "balance_max" = "최대";
 "batch_transfer_confirmation" = "일괄 전송 확인";
 "before_you_proceed" = "계속하기 전에";
+"bitcoin_dominance" = "Bitcoin Dominance";
 "bitcoin_private_key_hint" = "WIF 또는 32바이트 HEX 개인 키를 입력하세요. 예: Kx45...9Ab 또는 0x1a2b...cdef";
 "block" = "차단";
 "block_confirmations" = "블록 확인";
@@ -458,6 +460,7 @@
 "created_this_group" = "%@이 이 그룹을 만들었습니다.";
 "creating_wallet_terminated_unexpectedly" = "지갑 생성이 예기치 않게 종료되었습니다. \"계속\"을 클릭하여 생성을 완료하세요.";
 "creating_your_account" = "계정을 만드는 중...";
+"crypto" = "Crypto";
 "currency" = "통화";
 "currency_code" = "코드";
 "current_language" = "영어";
@@ -558,7 +561,6 @@
 "disconnected" = "연결이 끊어졌습니다.";
 "disconnecting" = "연결 해제 중";
 "dismiss_as_admin" = "관리자 권한 해제";
-"dominance" = "우세";
 "done" = "완료";
 "dont_have_assets" = "자산 없음";
 "duplicate_transfer_confirmation" = "중복 이체 확인";
@@ -770,7 +772,7 @@
 "how_are_you" = "안녕하세요, 잘 지내세요?";
 "how_perps_works" = "무기한 선물은 어떻게 작동하나요?";
 "i_am_good" = "괜찮습니다.";
-"id" = "아이디";
+"id" = "ID";
 "im_ready" = "준비됐어요";
 "image" = "이미지";
 "immediately" = "즉시";
@@ -796,6 +798,7 @@
 "include_files" = "파일 포함";
 "include_videos" = "동영상 포함";
 "incoming_voice_call" = "음성 통화 수신";
+"indicator" = "Indicator";
 "info" = "정보";
 "initializing" = "초기화 중...";
 "input_referral_code_hint" = "친구가 초대하셨나요?";
@@ -836,6 +839,7 @@
 "is_it_safe_to_import_into_mixin" = "Mixin으로 가져오는 것이 안전한가요?";
 "join_group" = "그룹 가입";
 "joined_in" = "%@에 참여함";
+"keep" = "Keep";
 "keep_running_foreground" = "화면을 닫지 말고 포그라운드에서 Mixin을 계속 실행하세요.";
 "keep_waiting" = "계속 기다리세요";
 "label" = "라벨";
@@ -924,12 +928,16 @@
 "margin_isolated" = "마진(격리)";
 "market" = "시장";
 "market_cap" = "시가총액";
+"market_change_short" = "Change";
+"market_display" = "Market Display";
 "market_share_card_asset" = "🔥 %1$@(%2$@)";
 "market_share_card_market_button" = "시장";
 "market_share_card_market_cap" = "📈 시가총액: %@";
 "market_share_card_price" = "🏷️ 가격: %@";
 "market_share_card_price_change" = "💰 24시간 가격 변동: %@";
 "market_share_card_title" = "%@ 거래";
+"market_stock" = "Stock";
+"market_volume_short" = "Vol";
 "markets" = "시장";
 "max" = "최대";
 "max_favorite_bots_description" = "좋아하는 봇을 최대 5개까지 추가할 수 있습니다. 다른 사람들이 귀하의 프로필에서 이러한 봇을 볼 수 있다는 점에 유의하십시오.";
@@ -1179,6 +1187,7 @@
 "permission_denied_photos" = "사진 추가가 거부되었습니다.";
 "permission_denied_photos_hint" = "Mixin에는 라이브러리에 사진을 추가할 권한이 없습니다. 승인하려면 설정을 탭하세요.";
 "permissions" = "권한";
+"perp" = "Perp";
 "perp_state_opening" = "오픈 중";
 "perpetual" = "무기한";
 "perpetual_futures" = "무기한 선물";
@@ -1189,6 +1198,7 @@
 "perps_category_crypto" = "암호화폐";
 "perps_category_forex" = "외환거래";
 "perps_category_indices" = "지수";
+"perps_category_meme" = "Memes";
 "perps_category_stocks" = "주식";
 "perps_current_price" = "현재 가격";
 "perps_funding_frequency" = "빈도";
@@ -1434,6 +1444,7 @@
 "remove_emergency_contact" = "복구 연락처 삭제";
 "remove_emergency_contact_for_sure" = "복구 연락처를 확실히 삭제하시겠습니까?";
 "remove_from_group" = "그룹에서 제거";
+"remove_from_watchlist" = "Remove from Watchlist";
 "remove_stickers" = "스티커 제거";
 "rename_wallet" = "지갑 이름 바꾸기";
 "renew_plan" = "계획 갱신";
@@ -2017,6 +2028,8 @@
 "watchlist" = "관심 목록";
 "watchlist_add_desc" = "%@이(가) 관심 목록에 있습니다.";
 "watchlist_empty" = "관심 목록이 비어 있습니다.";
+"watchlist_remove_alert_prompt" = "Removed from your watchlist. Also delete the related price alerts?";
+"watchlist_remove_desc" = "%@ has been removed from your watchlist";
 "web_cannot_reached_desc" = "%@ 응답하는 데 너무 오랜 시간이 걸렸습니다. 네트워크를 확인하고 4G, Wi-Fi 또는 VPN을 전환하여 페이지를 새로고침해 보세요.";
 "web_cannot_reached_title" = "이 웹페이지에 접속할 수 없습니다";
 "web_suspicious_link_tips" = "링크가 해당 리소스 패턴에 없습니다.";

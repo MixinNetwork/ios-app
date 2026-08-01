@@ -39,6 +39,7 @@ final class PerpetualMarketViewController: UIViewController {
     private let autoClosingIntroductionDetectInterval: TimeInterval = 14 * .day
     
     private var viewModel: PerpetualMarketViewModel
+    private var isFavorite: Bool = false
     private var sections: [Section] = [.price, .info]
     private var selectedTimeFrame: PerpetualTimeFrame = {
         if let value = AppGroupUserDefaults.Wallet.perpsChartTimeFrame,
@@ -51,6 +52,7 @@ final class PerpetualMarketViewController: UIViewController {
     }()
     private var charts: [PerpetualTimeFrame: PerpetualMarketPriceCell.Chart] = [:]
     
+    private weak var favoriteBarButtonItem: UIBarButtonItem!
     private weak var collectionView: UICollectionView!
     private weak var actionWrapperView: UIView!
     private weak var actionView: UIView?
@@ -83,7 +85,8 @@ final class PerpetualMarketViewController: UIViewController {
             walletID: wallet.tradingWalletID
         )
         self.marketLoader = PerpetualMarketLoader(
-            marketID: viewModel.market.marketID
+            request: .single(marketID: viewModel.market.marketID),
+            timeInterval: 3,
         )
         self.candleLoader = PerpetualCandleLoader(
             marketID: viewModel.market.marketID
@@ -256,6 +259,25 @@ final class PerpetualMarketViewController: UIViewController {
             object: nil
         )
         reloadPositions()
+        
+        let marketID = viewModel.market.marketID
+        let favoriteBarButtonItem: UIBarButtonItem = .tintedIcon(
+            image: nil,
+            target: self,
+            action: #selector(toggleFavorite(_:))
+        )
+        DispatchQueue.global().async { [weak self] in
+            let isFavorite = PerpsMarketDAO.shared.isFavorite(marketID: marketID)
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.isFavorite = isFavorite
+                self.favoriteBarButtonItem = favoriteBarButtonItem
+                self.navigationItem.rightBarButtonItems?.append(favoriteBarButtonItem)
+                self.updateFavoriteButtonImage()
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -276,6 +298,45 @@ final class PerpetualMarketViewController: UIViewController {
         positionsLoader.stop()
         marketLoader.stop()
         candleLoader.stop()
+    }
+    
+    @objc private func toggleFavorite(_ sender: Any) {
+        let marketID = viewModel.market.marketID
+        if isFavorite {
+            isFavorite = false
+            updateFavoriteButtonImage()
+            RouteAPI.unfavoritePerpsMarket(marketID: marketID) { [weak self] result in
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        PerpsMarketDAO.shared.unfavorite(marketIDs: [marketID])
+                    }
+                case .failure(let error):
+                    if let self {
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        self.isFavorite = true
+                        self.updateFavoriteButtonImage()
+                    }
+                }
+            }
+        } else {
+            isFavorite = true
+            updateFavoriteButtonImage()
+            RouteAPI.favoritePerpsMarket(marketID: marketID) { [weak self] result in
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        PerpsMarketDAO.shared.favorite(marketIDs: [marketID])
+                    }
+                case .failure(let error):
+                    if let self {
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        self.isFavorite = false
+                        self.updateFavoriteButtonImage()
+                    }
+                }
+            }
+        }
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
@@ -370,6 +431,19 @@ final class PerpetualMarketViewController: UIViewController {
                     activities: activities
                 )
             }
+        }
+    }
+    
+    private func updateFavoriteButtonImage() {
+        guard let item = favoriteBarButtonItem else {
+            return
+        }
+        if isFavorite {
+            item.image = R.image.market_favorite_solid()?.withRenderingMode(.alwaysTemplate)
+            item.tintColor = R.color.theme()
+        } else {
+            item.image = R.image.market_favorite_hollow()?.withRenderingMode(.alwaysTemplate)
+            item.tintColor = R.color.icon_tint()
         }
     }
     

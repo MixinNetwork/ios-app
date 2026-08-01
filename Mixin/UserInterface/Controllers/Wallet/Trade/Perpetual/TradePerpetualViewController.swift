@@ -12,7 +12,7 @@ final class TradePerpetualViewController: UIViewController {
     
     private let wallet: Wallet
     private let positionsLoader: PerpetualPositionLoader
-    private let marketLoader = PerpetualMarketLoader(marketID: nil)
+    private let marketLoader = PerpetualMarketLoader(request: .multiple(.all), timeInterval: 3)
     private let maxItemCount = 3
     private let topMoversCount = 4
     
@@ -465,7 +465,10 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewAllMarkets(
                         category: .all,
-                        ordering: .init(field: .change, direction: .descending)
+                        ordering: MarketOrdering(
+                            field: .change(period: .twentyFourHours),
+                            direction: .descending
+                        )
                     )
                 }
             case .markets(let category):
@@ -675,15 +678,24 @@ extension TradePerpetualViewController {
     
     private func viewAllMarkets(
         category: MarketCategory,
-        ordering: PerpsMarketDAO.Ordering?
+        ordering: MarketOrdering?
     ) {
         let selector = switch category {
         case .all:
-            PerpetualMarketSelectorViewController(selectedCategory: .all, ordering: ordering)
+            PerpetualMarketSelectorViewController(
+                selectedCategory: .all,
+                ordering: ordering
+            )
         case .stocks:
-            PerpetualMarketSelectorViewController(selectedCategory: .stocks, ordering: ordering)
+            PerpetualMarketSelectorViewController(
+                selectedCategory: .subset(.stocks),
+                ordering: ordering
+            )
         case .commodities:
-            PerpetualMarketSelectorViewController(selectedCategory: .commodities, ordering: ordering)
+            PerpetualMarketSelectorViewController(
+                selectedCategory: .subset(.commodities),
+                ordering: ordering
+            )
         }
         selector.onSelected = { [wallet, weak self] (viewModel) in
             guard let self else {

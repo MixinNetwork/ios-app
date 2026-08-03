@@ -49,22 +49,28 @@ public final class PerpsMarketDAO: PerpsDAO {
         ordering: MarketOrdering?,
         category: PerpetualMarket.Category?,
         limit: Int?
-    ) -> [PerpetualMarket] {
-        var sql: GRDB.SQL = "SELECT * FROM markets WHERE volume > 0"
+    ) -> [FavorablePerpetualMarket] {
+        var sql = """
+        SELECT m.*,
+            ifnull(f.is_favored, FALSE) AS '\(FavorablePerpetualMarket.JoinedQueryCodingKeys.isFavorite.rawValue)'
+        FROM markets m
+            LEFT JOIN favorites f ON m.market_id = f.market_id
+        WHERE m.volume > 0
+        """
         if let category {
-            sql.append(literal: " AND category = \(category.rawValue)")
+            sql += " AND m.category = '\(category.rawValue)'"
         }
         if let ordering {
             switch ordering.field {
             case .marketCap:
                 assertionFailure("No market capitalization ordering in perps")
-                sql += " ORDER BY rowid"
+                sql += "\nORDER BY m.rowid"
             case .volume:
-                sql += " ORDER BY CAST(volume AS REAL)"
+                sql += "\nORDER BY CAST(m.volume AS REAL)"
             case .price:
-                sql += " ORDER BY CAST(last AS REAL)"
+                sql += "\nORDER BY CAST(m.last AS REAL)"
             case .change:
-                sql += " ORDER BY CAST(change AS REAL)"
+                sql += "\nORDER BY CAST(m.change AS REAL)"
             }
             switch ordering.direction {
             case .ascending:
@@ -73,10 +79,10 @@ public final class PerpsMarketDAO: PerpsDAO {
                 sql += " DESC"
             }
         } else {
-            sql += " ORDER BY rowid ASC"
+            sql += "\nORDER BY m.rowid ASC"
         }
         if let limit {
-            sql += " LIMIT \(limit)"
+            sql += "\nLIMIT \(limit)"
         }
         return db.select(with: sql)
     }

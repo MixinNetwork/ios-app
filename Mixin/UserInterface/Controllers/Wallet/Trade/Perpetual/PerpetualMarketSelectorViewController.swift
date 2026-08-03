@@ -183,7 +183,10 @@ final class PerpetualMarketSelectorViewController: UIViewController {
                 limit: nil
             )
             let viewModels = markets.compactMap(PerpetualMarketViewModel.init(market:))
-            var results: [DisplayCategory: [PerpetualMarketViewModel]] = [.all: viewModels]
+            var results: [DisplayCategory: [PerpetualMarketViewModel]] = [
+                .all: viewModels,
+                .favorite: markets.filter(\.isFavorite).compactMap(PerpetualMarketViewModel.init(market:)),
+            ]
             for viewModel in viewModels {
                 guard let marketCategory = viewModel.market.category.knownCase else {
                     continue
@@ -359,6 +362,7 @@ extension PerpetualMarketSelectorViewController {
     
     enum DisplayCategory: Hashable {
         case all
+        case favorite
         case subset(PerpetualMarket.Category)
     }
     
@@ -374,7 +378,13 @@ extension PerpetualMarketSelectorViewController {
         weak var delegate: CategorySelectorControllerDelegate?
         
         private let collectionView: UICollectionView
-        private let categories: [DisplayCategory] = [.all]
+        private let categories: [DisplayCategory] = [
+            .all,
+            .favorite,
+            .subset(.crypto),
+            .subset(.stocks),
+            .subset(.indices)
+        ]
         
         init(collectionView: UICollectionView) {
             self.collectionView = collectionView
@@ -399,6 +409,8 @@ extension PerpetualMarketSelectorViewController {
             cell.label.text = switch category {
             case .all:
                 R.string.localizable.perps_category_all()
+            case .favorite:
+                "☆"
             case .subset(.crypto):
                 R.string.localizable.perps_category_crypto()
             case .subset(.stocks):

@@ -151,10 +151,10 @@ final class MarketDashboardViewController: UIViewController {
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
                 return NSCollectionLayoutSection(group: group)
             case .recommendationItem:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(60))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
                 group.interItemSpacing = .fixed(10)
                 group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                 let header = NSCollectionLayoutBoundarySupplementaryItem(

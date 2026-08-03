@@ -163,6 +163,8 @@ extension BuyTokenWebViewController: WebViewMessageHandler.Delegate {
             webView.evaluateJavaScript(callback)
         case .openInBrowser(let url):
             present(SFSafariViewController(url: url), animated: true)
+        case .startApplePayProvisioning, .completeApplePayProvisioning:
+            break
         }
     }
     

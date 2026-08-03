@@ -6,6 +6,7 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
     protocol Delegate: AnyObject {
         func webViewMessageHander(_ handler: WebViewMessageHandler, didReceiveMessage message: Message)
         func webViewMessageHanderGetCurrentURL(_ handler: WebViewMessageHandler) -> URL?
+        func webViewMessageHander(_ handler: WebViewMessageHandler, acceptsWalletProvisioningFrom frame: WKFrameInfo) -> Bool
     }
     
     enum Name: String, CaseIterable {
@@ -19,6 +20,22 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
         case web3Bridge = "_mw_"
         case signBotSignature = "signBotSignature"
         case openInBrowser = "openInBrowser"
+        case startWalletProvisioning = "startWalletProvisioning"
+        case completeWalletProvisioning = "completeWalletProvisioning"
+    }
+
+    struct ApplePayProvisioningStart {
+        let requestID: UUID
+        let cardholderName: String?
+        let primaryAccountSuffix: String
+        let primaryAccountIdentifier: String?
+        let localizedDescription: String
+        let paymentNetwork: String
+    }
+
+    enum ApplePayProvisioningCompletion {
+        case payload(UUID, Data, Data, Data)
+        case failure(UUID, String)
     }
     
     enum Message {
@@ -30,6 +47,8 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
         case web3Bridge([String: Any])
         case signBotSignature(callback: String)
         case openInBrowser(URL)
+        case startApplePayProvisioning(ApplePayProvisioningStart)
+        case completeApplePayProvisioning(ApplePayProvisioningCompletion)
     }
     
     private enum AppSigningError: Error {
@@ -166,12 +185,107 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
                 return
             }
             delegate?.webViewMessageHander(self, didReceiveMessage: .openInBrowser(url))
+        case .startWalletProvisioning:
+            guard delegate?.webViewMessageHander(self, acceptsWalletProvisioningFrom: message.frameInfo) == true,
+                  let message = Self.applePayProvisioningStartMessage(from: message.body)
+            else {
+                return
+            }
+            delegate?.webViewMessageHander(self, didReceiveMessage: message)
+        case .completeWalletProvisioning:
+            guard delegate?.webViewMessageHander(self, acceptsWalletProvisioningFrom: message.frameInfo) == true,
+                  let message = Self.applePayProvisioningCompletionMessage(from: message.body)
+            else {
+                return
+            }
+            delegate?.webViewMessageHander(self, didReceiveMessage: message)
         }
     }
 
 }
 
+extension WebViewMessageHandler.Delegate {
+
+    func webViewMessageHander(_ handler: WebViewMessageHandler, acceptsWalletProvisioningFrom frame: WKFrameInfo) -> Bool {
+        false
+    }
+
+}
+
 extension WebViewMessageHandler {
+
+    static func applePayProvisioningStartMessage(from body: Any) -> Message? {
+        guard let body = jsonObject(from: body),
+              let request = applePayProvisioningStart(from: body)
+        else {
+            return nil
+        }
+        return .startApplePayProvisioning(request)
+    }
+
+    static func applePayProvisioningCompletionMessage(from body: Any) -> Message? {
+        guard let body = jsonObject(from: body),
+              let requestIDString = body["requestId"] as? String,
+              let requestID = UUID(uuidString: requestIDString)
+        else {
+            return nil
+        }
+        if let error = nonemptyString(body["error"]) {
+            return .completeApplePayProvisioning(.failure(requestID, error))
+        }
+        guard let activationData = base64Data(body["activationData"]),
+              let encryptedPassData = base64Data(body["encryptedPassData"]),
+              let ephemeralPublicKey = base64Data(body["ephemeralPublicKey"])
+        else {
+            return nil
+        }
+        return .completeApplePayProvisioning(
+            .payload(requestID, activationData, encryptedPassData, ephemeralPublicKey)
+        )
+    }
+
+    private static func jsonObject(from value: Any) -> [String: Any]? {
+        guard let value = value as? String,
+              let data = value.data(using: .utf8),
+              let object = try? JSONSerialization.jsonObject(with: data)
+        else {
+            return nil
+        }
+        return object as? [String: Any]
+    }
+
+    private static func applePayProvisioningStart(from body: [String: Any]) -> ApplePayProvisioningStart? {
+        guard let requestIDString = body["requestId"] as? String,
+              let requestID = UUID(uuidString: requestIDString),
+              let primaryAccountSuffix = nonemptyString(body["primaryAccountSuffix"]),
+              let localizedDescription = nonemptyString(body["localizedDescription"]),
+              let paymentNetwork = nonemptyString(body["paymentNetwork"])
+        else {
+            return nil
+        }
+        return ApplePayProvisioningStart(
+            requestID: requestID,
+            cardholderName: nonemptyString(body["cardholderName"]),
+            primaryAccountSuffix: primaryAccountSuffix,
+            primaryAccountIdentifier: nonemptyString(body["primaryAccountIdentifier"]),
+            localizedDescription: localizedDescription,
+            paymentNetwork: paymentNetwork
+        )
+    }
+
+    private static func nonemptyString(_ value: Any?) -> String? {
+        guard let value = value as? String, !value.isEmpty else {
+            return nil
+        }
+        return value
+    }
+
+    private static func base64Data(_ value: Any?) -> Data? {
+        guard let value = nonemptyString(value) else {
+            return nil
+        }
+        return Data(base64Encoded: value)
+    }
 
     static func openInBrowserURL(from value: String) -> URL? {
         let urlString = value.trimmingCharacters(in: .whitespacesAndNewlines)

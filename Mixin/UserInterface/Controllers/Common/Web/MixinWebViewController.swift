@@ -1,6 +1,7 @@
 import UIKit
 import WebKit
 import SafariServices
+import PassKit
 import Alamofire
 import MixinServices
 
@@ -74,6 +75,18 @@ final class MixinWebViewController: WebViewController {
     private var isMessageHandlerAdded = true
     private var webViewTitleObserver: NSKeyValueObservation?
     private var hasSavedAsRecentSearch = false
+    private var applePayProvisioning: ApplePayProvisioning?
+
+    private struct ApplePayProvisioning {
+        let request: WebViewMessageHandler.ApplePayProvisioningStart
+        let controller: PKAddPaymentPassViewController
+        var completionHandler: ((PKAddPaymentPassRequest) -> Void)?
+        var timeoutWorkItem: DispatchWorkItem?
+
+        var requestID: UUID {
+            request.requestID
+        }
+    }
     
     private var web3ProviderScripts: [WKUserScript]? {
         let evmConfig: Script.EVMConfig? = {
@@ -117,6 +130,11 @@ final class MixinWebViewController: WebViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let app = walletProvisioningApp() {
+            context.walletProvisioningSupported = app.capabilities?.contains("WALLET_PROVISIONING") == true
+                && app.resourcePatterns(accepts: context.initialUrl)
+                && PKAddPaymentPassViewController.canAddPaymentPass()
+        }
         view.insertSubview(loadingIndicator, aboveSubview: webViewWrapperView)
         loadingIndicator.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
@@ -222,6 +240,7 @@ final class MixinWebViewController: WebViewController {
         guard isViewLoaded && isMessageHandlerAdded else {
             return
         }
+        cancelApplePayProvisioning(animated: false)
         let controller = webView.configuration.userContentController
         WebViewMessageHandler.Name.allCases.map(\.rawValue)
             .forEach(controller.removeScriptMessageHandler(forName:))
@@ -287,6 +306,9 @@ extension MixinWebViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         }
+        if navigationAction.targetFrame?.isMainFrame == true {
+            cancelApplePayProvisioning(animated: false)
+        }
         if isViewLoaded && parent != nil && (UrlWindow.checkUrl(url: url, from: .webView(context)) || UrlWindow.checkWithdrawal(string: url.absoluteString)) {
             decisionHandler(.cancel)
         } else if "file" == url.scheme {
@@ -319,6 +341,10 @@ extension MixinWebViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         decisionHandler(.allow)
+    }
+
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        cancelApplePayProvisioning(animated: false)
     }
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
@@ -399,13 +425,182 @@ extension MixinWebViewController: WebViewMessageHandler.Delegate {
             webView.evaluateJavaScript(callback)
         case .openInBrowser(let url):
             present(SFSafariViewController(url: url), animated: true)
+        case .startApplePayProvisioning(let request):
+            startApplePayProvisioning(request)
+        case .completeApplePayProvisioning(let completion):
+            completeApplePayProvisioning(completion)
         }
     }
     
     func webViewMessageHanderGetCurrentURL(_ handler: WebViewMessageHandler) -> URL? {
         webView.url
     }
+
+    func webViewMessageHander(_ handler: WebViewMessageHandler, acceptsWalletProvisioningFrom frame: WKFrameInfo) -> Bool {
+        guard frame.isMainFrame,
+              let app = walletProvisioningApp(),
+              app.capabilities?.contains("WALLET_PROVISIONING") == true,
+              let url = frame.request.url
+        else {
+            return false
+        }
+        return app.resourcePatterns(accepts: url)
+    }
     
+}
+
+extension MixinWebViewController: PKAddPaymentPassViewControllerDelegate {
+
+    func addPaymentPassViewController(
+        _ controller: PKAddPaymentPassViewController,
+        generateRequestWithCertificateChain certificates: [Data],
+        nonce: Data,
+        nonceSignature: Data,
+        completionHandler handler: @escaping (PKAddPaymentPassRequest) -> Void
+    ) {
+        guard var operation = applePayProvisioning, operation.controller === controller else {
+            handler(PKAddPaymentPassRequest())
+            return
+        }
+        operation.completionHandler = handler
+        let requestID = operation.requestID
+        let timeoutWorkItem = DispatchWorkItem { [weak self] in
+            self?.failApplePayProvisioning(requestID: requestID, error: "timeout")
+        }
+        operation.timeoutWorkItem = timeoutWorkItem
+        applePayProvisioning = operation
+        DispatchQueue.main.asyncAfter(deadline: .now() + 19, execute: timeoutWorkItem)
+        emitWalletProvisioningEvent(
+            requestID: operation.requestID,
+            status: "challenge",
+            payload: [
+                "certificateChain": certificates.map { $0.base64EncodedString() },
+                "nonce": nonce.base64EncodedString(),
+                "nonceSignature": nonceSignature.base64EncodedString(),
+            ]
+        )
+    }
+
+    func addPaymentPassViewController(
+        _ controller: PKAddPaymentPassViewController,
+        didFinishAdding pass: PKPaymentPass?,
+        error: Error?
+    ) {
+        guard let operation = applePayProvisioning, operation.controller === controller else {
+            controller.dismiss(animated: true)
+            return
+        }
+        operation.timeoutWorkItem?.cancel()
+        applePayProvisioning = nil
+        let status = if pass != nil {
+            "success"
+        } else if error == nil {
+            "cancelled"
+        } else {
+            "error"
+        }
+        emitWalletProvisioningEvent(requestID: operation.requestID, status: status)
+        controller.dismiss(animated: true)
+    }
+
+}
+
+extension MixinWebViewController {
+
+    private func walletProvisioningApp() -> App? {
+        guard case let .app(app, _) = context.style else {
+            return nil
+        }
+        return app
+    }
+
+    private func startApplePayProvisioning(_ request: WebViewMessageHandler.ApplePayProvisioningStart) {
+        guard applePayProvisioning == nil, presentedViewController == nil else {
+            emitWalletProvisioningEvent(requestID: request.requestID, status: "error", payload: ["error": "in_progress"])
+            return
+        }
+        guard PKAddPaymentPassViewController.canAddPaymentPass(),
+              request.paymentNetwork.caseInsensitiveCompare("visa") == .orderedSame,
+              let configuration = PKAddPaymentPassRequestConfiguration(encryptionScheme: .ECC_V2)
+        else {
+            emitWalletProvisioningEvent(requestID: request.requestID, status: "error", payload: ["error": "unsupported"])
+            return
+        }
+        configuration.cardholderName = request.cardholderName
+        configuration.primaryAccountSuffix = request.primaryAccountSuffix
+        configuration.primaryAccountIdentifier = request.primaryAccountIdentifier
+        configuration.localizedDescription = request.localizedDescription
+        configuration.paymentNetwork = .visa
+        guard let controller = PKAddPaymentPassViewController(requestConfiguration: configuration, delegate: self) else {
+            emitWalletProvisioningEvent(requestID: request.requestID, status: "error", payload: ["error": "unavailable"])
+            return
+        }
+        applePayProvisioning = ApplePayProvisioning(request: request, controller: controller)
+        present(controller, animated: true)
+    }
+
+    private func cancelApplePayProvisioning(animated: Bool) {
+        guard let operation = applePayProvisioning else {
+            return
+        }
+        operation.timeoutWorkItem?.cancel()
+        operation.completionHandler?(PKAddPaymentPassRequest())
+        applePayProvisioning = nil
+        operation.controller.dismiss(animated: animated)
+    }
+
+    private func completeApplePayProvisioning(_ completion: WebViewMessageHandler.ApplePayProvisioningCompletion) {
+        switch completion {
+        case let .payload(requestID, activationData, encryptedPassData, ephemeralPublicKey):
+            guard var operation = applePayProvisioning,
+                  operation.requestID == requestID,
+                  let handler = operation.completionHandler
+            else {
+                return
+            }
+            operation.completionHandler = nil
+            operation.timeoutWorkItem?.cancel()
+            operation.timeoutWorkItem = nil
+            applePayProvisioning = operation
+            let request = PKAddPaymentPassRequest()
+            request.activationData = activationData
+            request.encryptedPassData = encryptedPassData
+            request.ephemeralPublicKey = ephemeralPublicKey
+            handler(request)
+        case let .failure(requestID, error):
+            failApplePayProvisioning(requestID: requestID, error: error)
+        }
+    }
+
+    private func failApplePayProvisioning(requestID: UUID, error: String) {
+        guard let operation = applePayProvisioning, operation.requestID == requestID else {
+            return
+        }
+        operation.timeoutWorkItem?.cancel()
+        operation.completionHandler?(PKAddPaymentPassRequest())
+        applePayProvisioning = nil
+        emitWalletProvisioningEvent(requestID: requestID, status: "error", payload: ["error": error])
+        operation.controller.dismiss(animated: true)
+    }
+
+    private func emitWalletProvisioningEvent(
+        requestID: UUID,
+        status: String,
+        payload: [String: Any] = [:]
+    ) {
+        var detail = payload
+        detail["requestId"] = requestID.uuidString.lowercased()
+        detail["status"] = status
+        guard JSONSerialization.isValidJSONObject(detail),
+              let data = try? JSONSerialization.data(withJSONObject: detail),
+              let json = String(data: data, encoding: .utf8)
+        else {
+            return
+        }
+        let script = "window.dispatchEvent(new CustomEvent('mixin:wallet-provisioning',{detail:\(json)}));"
+        webView.evaluateJavaScript(script)
+    }
+
 }
 
 extension MixinWebViewController: WebMoreMenuControllerDelegate {

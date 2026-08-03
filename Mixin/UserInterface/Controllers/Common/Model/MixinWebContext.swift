@@ -15,6 +15,7 @@ struct MixinWebContext {
     
     var style: Style
     var isImmersive: Bool
+    var walletProvisioningSupported = false
     var additionalURLQueries: [String: String] = [:]
     
     var appContextString: String {
@@ -25,7 +26,8 @@ struct MixinWebContext {
             "currency": Currency.current.code,
             "locale": "\(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? "")",
             "platform": "iOS",
-            "conversation_id": conversationId
+            "conversation_id": conversationId,
+            "wallet_provisioning_supported": walletProvisioningSupported
         ]
         if let data = try? JSONSerialization.data(withJSONObject: ctx, options: []), let string = String(data: data, encoding: .utf8) {
             return string

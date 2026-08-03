@@ -1535,6 +1535,7 @@
 		94D82BDD2E40B06C000BA0BF /* AddressLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D82BDC2E40B069000BA0BF /* AddressLabel.swift */; };
 		94D8426C2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */; };
 		94D916EF2DC0C45E009B8A7F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D916EE2DC0C45E009B8A7F /* StoreKit.framework */; };
+		A1C0A0013040000000000001 /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1C0A0013040000000000000 /* PassKit.framework */; };
 		94D9DD3B2F59CF1C00B3B990 /* PerpetualActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DD3A2F59CF1A00B3B990 /* PerpetualActivityViewController.swift */; };
 		94D9DD522F59CFF400B3B990 /* PerpetualPositionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DD512F59CFEF00B3B990 /* PerpetualPositionViewModel.swift */; };
 		94D9DD612F59D26D00B3B990 /* PerpetualPositionHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DD5F2F59D26D00B3B990 /* PerpetualPositionHeaderCell.swift */; };
@@ -3532,6 +3533,7 @@
 		94D82BDC2E40B069000BA0BF /* AddressLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressLabel.swift; sourceTree = "<group>"; };
 		94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		94D916EE2DC0C45E009B8A7F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		A1C0A0013040000000000000 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		94D9DD3A2F59CF1A00B3B990 /* PerpetualActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualActivityViewController.swift; sourceTree = "<group>"; };
 		94D9DD512F59CFEF00B3B990 /* PerpetualPositionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualPositionViewModel.swift; sourceTree = "<group>"; };
 		94D9DD5F2F59D26D00B3B990 /* PerpetualPositionHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualPositionHeaderCell.swift; sourceTree = "<group>"; };
@@ -3956,6 +3958,7 @@
 				9481C03C2A49A9AA0009DAF8 /* Starscream in Frameworks */,
 				94ED938A2E37592700A3E337 /* ReownWalletKit in Frameworks */,
 				94D916EF2DC0C45E009B8A7F /* StoreKit.framework in Frameworks */,
+				A1C0A0013040000000000001 /* PassKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5854,6 +5857,7 @@
 			isa = PBXGroup;
 			children = (
 				94D916EE2DC0C45E009B8A7F /* StoreKit.framework */,
+				A1C0A0013040000000000000 /* PassKit.framework */,
 				DFAA0DEE237823DA003E26B2 /* DeviceCheck.framework */,
 				DFCC4341206B668A006F50BE /* Security.framework */,
 				DFAA4B36200F627500C696D3 /* SafariServices.framework */,

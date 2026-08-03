@@ -17,17 +17,17 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     
     @IBOutlet weak var marketsCollectionView: UICollectionView!
     
-    var onSelected: ((PerpetualMarketViewModel) -> Void)?
+    var onSelected: ((FavorablePerpetualMarket) -> Void)?
     
     private var categorySelectorSizeObserver: NSKeyValueObservation?
     private var categorySelectorController: CategorySelectorController!
     
     private var searchObserver: AnyCancellable?
     private var searchResultsKeyword: String?
-    private var searchResults: [PerpetualMarketViewModel]?
+    private var searchResults: [FavorablePerpetualMarket]?
     
     private var selectedCategory: DisplayCategory
-    private var markets: [DisplayCategory: [PerpetualMarketViewModel]] = [:]
+    private var markets: [DisplayCategory: [FavorablePerpetualMarket]] = [:]
     private var ordering: MarketOrdering?
     
     private var trimmedKeyword: String {
@@ -36,7 +36,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
             .lowercased()
     }
     
-    private var marketsForSelectedCategory: [PerpetualMarketViewModel] {
+    private var marketsForSelectedCategory: [FavorablePerpetualMarket] {
         markets[selectedCategory] ?? []
     }
     
@@ -102,7 +102,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
             return attributes
         }()
         volumeOrderingButton.configuration?.attributedTitle = AttributedString(
-            R.string.localizable.vol_24h(),
+            R.string.localizable.market_volume_short(),
             attributes: orderingAttributes
         )
         volumeOrderingButton.titleLabel?.adjustsFontForContentSizeCategory = true
@@ -112,13 +112,13 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         )
         priceOrderingButton.titleLabel?.adjustsFontForContentSizeCategory = true
         changeOrderingButton.configuration?.attributedTitle = AttributedString(
-            R.string.localizable.change_24h(),
+            R.string.localizable.hours_count_short(24),
             attributes: orderingAttributes
         )
         changeOrderingButton.titleLabel?.adjustsFontForContentSizeCategory = true
         updateOrderingButtonsImage(ordering: ordering)
         
-        marketsCollectionView.register(R.nib.perpetualMarketCell)
+        marketsCollectionView.register(R.nib.favorablePerpsMarketCell)
         marketsCollectionView.collectionViewLayout = UICollectionViewCompositionalLayout { (_, _) in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -182,20 +182,19 @@ final class PerpetualMarketSelectorViewController: UIViewController {
                 category: nil,
                 limit: nil
             )
-            let viewModels = markets.compactMap(PerpetualMarketViewModel.init(market:))
-            var results: [DisplayCategory: [PerpetualMarketViewModel]] = [
-                .all: viewModels,
-                .favorite: markets.filter(\.isFavorite).compactMap(PerpetualMarketViewModel.init(market:)),
+            var results: [DisplayCategory: [FavorablePerpetualMarket]] = [
+                .all: markets,
+                .favorite: markets.filter(\.isFavorite),
             ]
-            for viewModel in viewModels {
-                guard let marketCategory = viewModel.market.category.knownCase else {
+            for market in markets {
+                guard let marketCategory = market.category.knownCase else {
                     continue
                 }
-                let displayCategory: DisplayCategory = .subset(marketCategory)
+                let displayCategory: DisplayCategory = .categorized(marketCategory)
                 if results[displayCategory] == nil {
-                    results[displayCategory] = [viewModel]
+                    results[displayCategory] = [market]
                 } else {
-                    results[displayCategory]!.append(viewModel)
+                    results[displayCategory]!.append(market)
                 }
             }
             DispatchQueue.main.async {
@@ -220,8 +219,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     }
     
     private func search(lowercasedKeyword: String) {
-        let searchResults = marketsForSelectedCategory.filter { viewModel in
-            let market = viewModel.market
+        let searchResults = marketsForSelectedCategory.filter { market in
             let symbolMatches = market.tokenSymbol
                 .lowercased()
                 .contains(lowercasedKeyword)
@@ -294,7 +292,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         reloadData()
     }
     
-    private func viewModel(at indexPath: IndexPath) -> PerpetualMarketViewModel {
+    private func market(at indexPath: IndexPath) -> FavorablePerpetualMarket {
         if let searchResults {
             searchResults[indexPath.item]
         } else {
@@ -320,9 +318,10 @@ extension PerpetualMarketSelectorViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
-        let viewModel = viewModel(at: indexPath)
-        cell.load(viewModel: viewModel)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.favorable_perps_market, for: indexPath)!
+        let market = market(at: indexPath)
+        cell.reloadData(market: market)
+        cell.delegate = self
         return cell
     }
     
@@ -331,8 +330,8 @@ extension PerpetualMarketSelectorViewController: UICollectionViewDataSource {
 extension PerpetualMarketSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let token = viewModel(at: indexPath)
-        onSelected?(token)
+        let market = market(at: indexPath)
+        onSelected?(market)
     }
     
 }
@@ -358,12 +357,57 @@ extension PerpetualMarketSelectorViewController: PerpetualMarketSelectorViewCont
     
 }
 
+extension PerpetualMarketSelectorViewController: FavorablePerpsMarketCell.Delegate {
+    
+    func favorablePerpsMarketCellWantsToggleFavorite(_ cell: FavorablePerpsMarketCell) {
+        guard let indexPath = marketsCollectionView.indexPath(for: cell) else {
+            return
+        }
+        let market = market(at: indexPath)
+        marketsCollectionView.isUserInteractionEnabled = false
+        cell.favoriteActivityIndicatorView.startAnimating()
+        if market.isFavorite {
+            RouteAPI.unfavoritePerpsMarket(marketID: market.marketID) { [weak self] result in
+                cell.favoriteActivityIndicatorView.stopAnimating()
+                self?.marketsCollectionView.isUserInteractionEnabled = true
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        PerpsMarketDAO.shared.unfavorite(marketIDs: [market.marketID])
+                    }
+                    cell.isFavorited = false
+                    market.isFavorite = false
+                case .failure(let error):
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
+            }
+        } else {
+            RouteAPI.favoritePerpsMarket(marketID: market.marketID) { [weak self] result in
+                cell.favoriteActivityIndicatorView.stopAnimating()
+                self?.marketsCollectionView.isUserInteractionEnabled = true
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        PerpsMarketDAO.shared.favorite(marketIDs: [market.marketID])
+                    }
+                    cell.isFavorited = true
+                    market.isFavorite = true
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(market.displaySymbol))
+                case .failure(let error):
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+}
+
 extension PerpetualMarketSelectorViewController {
     
     enum DisplayCategory: Hashable {
         case all
         case favorite
-        case subset(PerpetualMarket.Category)
+        case categorized(PerpetualMarket.Category)
     }
     
     protocol CategorySelectorControllerDelegate: AnyObject {
@@ -381,9 +425,9 @@ extension PerpetualMarketSelectorViewController {
         private let categories: [DisplayCategory] = [
             .all,
             .favorite,
-            .subset(.crypto),
-            .subset(.stocks),
-            .subset(.indices)
+            .categorized(.crypto),
+            .categorized(.stocks),
+            .categorized(.indices)
         ]
         
         init(collectionView: UICollectionView) {
@@ -411,17 +455,17 @@ extension PerpetualMarketSelectorViewController {
                 R.string.localizable.perps_category_all()
             case .favorite:
                 "☆"
-            case .subset(.crypto):
+            case .categorized(.crypto):
                 R.string.localizable.perps_category_crypto()
-            case .subset(.stocks):
+            case .categorized(.stocks):
                 R.string.localizable.perps_category_stocks()
-            case .subset(.indices):
+            case .categorized(.indices):
                 R.string.localizable.perps_category_indices()
-            case .subset(.commodities):
+            case .categorized(.commodities):
                 R.string.localizable.perps_category_commodities()
-            case .subset(.forex):
+            case .categorized(.forex):
                 R.string.localizable.perps_category_forex()
-            case .subset(.memes):
+            case .categorized(.memes):
                 R.string.localizable.perps_category_meme()
             }
             cell.badgeView.isHidden = true

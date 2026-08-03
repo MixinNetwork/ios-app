@@ -58,55 +58,56 @@
                                 <action selector="sortByMarketCap:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Zih-0k-FkB"/>
                             </connections>
                         </button>
-                        <stackView opaque="NO" contentMode="scaleToFill" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="SBU-Uo-CVg">
-                            <rect key="frame" x="160.33333333333337" y="0.0" width="153.66666666666663" height="42"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k6E-9M-NO3">
-                                    <rect key="frame" x="0.0" y="0.0" width="70.333333333333329" height="42"/>
-                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                    <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
-                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                    <state key="normal" title="Price">
-                                        <color key="titleColor" name="text_tertiary"/>
-                                    </state>
-                                    <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="Price" imagePadding="4">
-                                        <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
-                                        <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="10"/>
-                                        <color key="baseForegroundColor" name="text_tertiary"/>
-                                    </buttonConfiguration>
-                                    <connections>
-                                        <action selector="sortByPrice:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="tQh-UR-ov7"/>
-                                    </connections>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="twI-2A-HMh">
-                                    <rect key="frame" x="83.333333333333314" y="0.0" width="70.333333333333314" height="42"/>
-                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                    <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
-                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                    <state key="normal" title="7D %">
-                                        <color key="titleColor" name="text_tertiary"/>
-                                    </state>
-                                    <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="7D %" imagePadding="4">
-                                        <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
-                                        <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="10"/>
-                                        <color key="baseForegroundColor" name="text_tertiary"/>
-                                    </buttonConfiguration>
-                                    <connections>
-                                        <action selector="sortByChange:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Aq0-pp-9Vx"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                        </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k6E-9M-NO3">
+                            <rect key="frame" x="171" y="0.0" width="69" height="42"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                            <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Price">
+                                <color key="titleColor" name="text_tertiary"/>
+                            </state>
+                            <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="Price" imagePadding="4">
+                                <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
+                                <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="10"/>
+                                <color key="baseForegroundColor" name="text_tertiary"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="sortByPrice:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="tQh-UR-ov7"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="twI-2A-HMh">
+                            <rect key="frame" x="240" y="0.0" width="80" height="42"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="80" id="xe6-U9-CBu"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                            <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="7D %">
+                                <color key="titleColor" name="text_tertiary"/>
+                            </state>
+                            <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="7D %" imagePadding="4">
+                                <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
+                                <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="16"/>
+                                <color key="baseForegroundColor" name="text_tertiary"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="sortByChange:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Aq0-pp-9Vx"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
+                        <constraint firstAttribute="bottom" secondItem="twI-2A-HMh" secondAttribute="bottom" id="2Eh-hL-aUa"/>
                         <constraint firstItem="grx-au-zqa" firstAttribute="leading" secondItem="fWI-Pt-Efg" secondAttribute="trailing" constant="2" id="4B6-cz-ByF"/>
                         <constraint firstItem="fWI-Pt-Efg" firstAttribute="leading" secondItem="vOW-ZR-l40" secondAttribute="leading" constant="6" id="7HV-Bt-Nvc"/>
-                        <constraint firstAttribute="trailing" secondItem="SBU-Uo-CVg" secondAttribute="trailing" constant="6" id="JFI-Lk-FZv"/>
-                        <constraint firstAttribute="bottom" secondItem="SBU-Uo-CVg" secondAttribute="bottom" id="Qu6-ld-XLN"/>
-                        <constraint firstItem="SBU-Uo-CVg" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="Tfe-P8-2gG"/>
+                        <constraint firstItem="twI-2A-HMh" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="9Rl-Ng-yJb"/>
+                        <constraint firstAttribute="bottom" secondItem="k6E-9M-NO3" secondAttribute="bottom" id="MSp-OA-wc4"/>
+                        <constraint firstItem="k6E-9M-NO3" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="Mdl-6z-nQp"/>
+                        <constraint firstItem="twI-2A-HMh" firstAttribute="leading" secondItem="k6E-9M-NO3" secondAttribute="trailing" id="NDI-0P-4sa"/>
                         <constraint firstItem="grx-au-zqa" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="bG2-A9-wCr"/>
                         <constraint firstItem="fWI-Pt-Efg" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="mTW-bA-jac"/>
+                        <constraint firstAttribute="trailing" secondItem="twI-2A-HMh" secondAttribute="trailing" id="nLP-MD-eTm"/>
                         <constraint firstAttribute="bottom" secondItem="fWI-Pt-Efg" secondAttribute="bottom" id="su3-Do-ewl"/>
                         <constraint firstAttribute="bottom" secondItem="grx-au-zqa" secondAttribute="bottom" id="yFS-2Q-5g6"/>
                     </constraints>

@@ -297,14 +297,17 @@ final class TradePerpetualViewController: UIViewController {
             selectedCategory: .all,
             ordering: nil,
         )
-        selector.onSelected = { [wallet, weak self] (viewModel) in
+        selector.onSelected = { [wallet, weak self] (market) in
             guard let self else {
                 return
             }
             let alreadyOpened = self.openPositions.contains { position in
-                position.marketID == viewModel.market.marketID
+                position.marketID == market.marketID
             }
             self.dismiss(animated: true) {
+                guard let viewModel = PerpetualMarketViewModel(market: market) else {
+                    return
+                }
                 if alreadyOpened {
                     let market = PerpetualMarketViewController(
                         wallet: self.wallet,
@@ -688,20 +691,23 @@ extension TradePerpetualViewController {
             )
         case .stocks:
             PerpetualMarketSelectorViewController(
-                selectedCategory: .subset(.stocks),
+                selectedCategory: .categorized(.stocks),
                 ordering: ordering
             )
         case .commodities:
             PerpetualMarketSelectorViewController(
-                selectedCategory: .subset(.commodities),
+                selectedCategory: .categorized(.commodities),
                 ordering: ordering
             )
         }
-        selector.onSelected = { [wallet, weak self] (viewModel) in
+        selector.onSelected = { [wallet, weak self] (market) in
             guard let self else {
                 return
             }
             self.dismiss(animated: true) {
+                guard let viewModel = PerpetualMarketViewModel(market: market) else {
+                    return
+                }
                 let market = PerpetualMarketViewController(
                     wallet: wallet,
                     viewModel: viewModel,

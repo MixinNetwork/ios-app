@@ -49,10 +49,10 @@
                         </constraints>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1Ml-AP-ePn">
-                        <rect key="frame" x="88" y="0.0" width="267" height="50"/>
+                        <rect key="frame" x="88" y="0.0" width="271" height="50"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="5sZ-tb-pgn">
-                                <rect key="frame" x="0.0" y="8.6666666666666679" width="106.66666666666667" height="32.666666666666657"/>
+                                <rect key="frame" x="0.0" y="8.6666666666666679" width="151" height="32.666666666666657"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Gns-u4-aF5">
                                         <rect key="frame" x="0.0" y="0.0" width="92.333333333333329" height="14.333333333333334"/>
@@ -88,29 +88,24 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="200" horizontalCompressionResistancePriority="250" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Nyn-l2-oaW">
-                                <rect key="frame" x="106.66666666666664" y="16.666666666666668" width="160.33333333333337" height="17.000000000000004"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="$70,836" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QuQ-a9-BOB">
-                                        <rect key="frame" x="0.0" y="0.0" width="80.333333333333329" height="17"/>
-                                        <color key="backgroundColor" name="background"/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
-                                        <color key="textColor" name="text"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="-0.09%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yH7-aR-7pp" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="80.333333333333343" y="0.0" width="80" height="17"/>
-                                        <color key="backgroundColor" name="background"/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="$70,836" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QuQ-a9-BOB">
+                                <rect key="frame" x="151" y="16.666666666666668" width="56" height="17.000000000000004"/>
+                                <color key="backgroundColor" name="background"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="-0.09%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="yH7-aR-7pp" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="207" y="16.666666666666668" width="64" height="17.000000000000004"/>
+                                <color key="backgroundColor" name="background"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="64" id="5gu-3i-gOQ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
-                        <constraints>
-                            <constraint firstItem="5sZ-tb-pgn" firstAttribute="width" secondItem="1Ml-AP-ePn" secondAttribute="width" multiplier="0.4" id="mum-nK-oEN"/>
-                        </constraints>
                     </stackView>
                 </subviews>
                 <color key="backgroundColor" name="background"/>
@@ -122,7 +117,7 @@
                     <constraint firstItem="1Ml-AP-ePn" firstAttribute="leading" secondItem="r1h-v0-vS9" secondAttribute="trailing" constant="10" id="Sb8-KS-usV"/>
                     <constraint firstAttribute="bottom" secondItem="1Ml-AP-ePn" secondAttribute="bottom" id="cay-eC-Mmd"/>
                     <constraint firstItem="r1h-v0-vS9" firstAttribute="leading" secondItem="LpP-m3-C03" secondAttribute="trailing" id="ed5-5a-4u1"/>
-                    <constraint firstAttribute="trailing" secondItem="1Ml-AP-ePn" secondAttribute="trailing" constant="20" id="jhh-65-bcj"/>
+                    <constraint firstAttribute="trailing" secondItem="1Ml-AP-ePn" secondAttribute="trailing" constant="16" id="jhh-65-bcj"/>
                     <constraint firstItem="r1h-v0-vS9" firstAttribute="centerY" secondItem="YYa-Ex-ymC" secondAttribute="centerY" id="wGn-SU-7sS"/>
                 </constraints>
             </collectionViewCellContentView>

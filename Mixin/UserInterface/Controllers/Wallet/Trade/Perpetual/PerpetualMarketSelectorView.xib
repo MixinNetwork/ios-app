@@ -66,11 +66,11 @@
                     <rect key="frame" x="0.0" y="233" width="393" height="36"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FRq-cW-3wt">
-                            <rect key="frame" x="12" y="0.0" width="83.333333333333329" height="36"/>
+                            <rect key="frame" x="0.0" y="0.0" width="69.666666666666671" height="36"/>
                             <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="24h VOL" imagePadding="4">
+                            <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="Vol" imagePadding="4">
                                 <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
-                                <directionalEdgeInsets key="contentInsets" top="10" leading="8" bottom="10" trailing="6"/>
+                                <directionalEdgeInsets key="contentInsets" top="10" leading="16" bottom="10" trailing="16"/>
                                 <color key="baseForegroundColor" name="text_tertiary"/>
                             </buttonConfiguration>
                             <connections>
@@ -78,31 +78,26 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WHQ-nu-9DT">
-                            <rect key="frame" x="244.66666666666663" y="0.0" width="63" height="36"/>
+                            <rect key="frame" x="256" y="0.0" width="57" height="36"/>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="Price" imagePadding="4">
                                 <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
-                                <directionalEdgeInsets key="contentInsets" top="10" leading="8" bottom="10" trailing="6"/>
+                                <directionalEdgeInsets key="contentInsets" top="10" leading="8" bottom="10" trailing="0.0"/>
                                 <color key="baseForegroundColor" name="text_tertiary"/>
                             </buttonConfiguration>
                             <connections>
                                 <action selector="orderByPrice:" destination="-1" eventType="touchUpInside" id="AYf-ER-FjV"/>
                             </connections>
                         </button>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RuJ-Ke-zjn">
-                            <rect key="frame" x="307.66666666666669" y="12" width="1" height="12"/>
-                            <color key="backgroundColor" name="line"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="1" id="AMK-Yd-srY"/>
-                                <constraint firstAttribute="height" constant="12" id="g2b-uy-lhS"/>
-                            </constraints>
-                        </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kOF-cZ-baC">
-                            <rect key="frame" x="308.66666666666669" y="0.0" width="70.333333333333314" height="36"/>
+                            <rect key="frame" x="313" y="0.0" width="80" height="36"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="80" id="rfn-Ru-blw"/>
+                            </constraints>
                             <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="24h %" imagePadding="4">
+                            <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="24H" imagePadding="4">
                                 <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
-                                <directionalEdgeInsets key="contentInsets" top="10" leading="8" bottom="10" trailing="6"/>
+                                <directionalEdgeInsets key="contentInsets" top="10" leading="0.0" bottom="10" trailing="0.0"/>
                                 <color key="baseForegroundColor" name="text_tertiary"/>
                             </buttonConfiguration>
                             <connections>
@@ -112,18 +107,15 @@
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
-                        <constraint firstItem="WHQ-nu-9DT" firstAttribute="top" secondItem="fMa-tz-r2s" secondAttribute="top" id="2bH-cu-9dH"/>
-                        <constraint firstItem="FRq-cW-3wt" firstAttribute="leading" secondItem="fMa-tz-r2s" secondAttribute="leading" constant="12" id="6eu-bl-2vF"/>
-                        <constraint firstItem="kOF-cZ-baC" firstAttribute="leading" secondItem="RuJ-Ke-zjn" secondAttribute="trailing" id="8jt-4k-5xj"/>
+                        <constraint firstItem="FRq-cW-3wt" firstAttribute="leading" secondItem="fMa-tz-r2s" secondAttribute="leading" id="6eu-bl-2vF"/>
                         <constraint firstItem="FRq-cW-3wt" firstAttribute="top" secondItem="fMa-tz-r2s" secondAttribute="top" id="9ru-Sa-npv"/>
-                        <constraint firstItem="kOF-cZ-baC" firstAttribute="top" secondItem="fMa-tz-r2s" secondAttribute="top" id="TKp-hr-7eC"/>
-                        <constraint firstAttribute="bottom" secondItem="kOF-cZ-baC" secondAttribute="bottom" id="aPQ-Gn-e1V"/>
+                        <constraint firstAttribute="bottom" secondItem="WHQ-nu-9DT" secondAttribute="bottom" id="ES8-rd-Geq"/>
+                        <constraint firstItem="WHQ-nu-9DT" firstAttribute="top" secondItem="fMa-tz-r2s" secondAttribute="top" id="HhP-BF-rtx"/>
+                        <constraint firstItem="kOF-cZ-baC" firstAttribute="top" secondItem="fMa-tz-r2s" secondAttribute="top" id="aFa-d1-89p"/>
                         <constraint firstAttribute="bottom" secondItem="FRq-cW-3wt" secondAttribute="bottom" id="aZV-mW-dfV"/>
-                        <constraint firstItem="RuJ-Ke-zjn" firstAttribute="leading" secondItem="WHQ-nu-9DT" secondAttribute="trailing" id="bKg-Cw-9wN"/>
-                        <constraint firstItem="WHQ-nu-9DT" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="FRq-cW-3wt" secondAttribute="trailing" id="hrj-PM-LFx"/>
-                        <constraint firstAttribute="bottom" secondItem="WHQ-nu-9DT" secondAttribute="bottom" id="j33-DG-aXk"/>
-                        <constraint firstItem="RuJ-Ke-zjn" firstAttribute="centerY" secondItem="fMa-tz-r2s" secondAttribute="centerY" id="teB-WF-yBO"/>
-                        <constraint firstAttribute="trailing" secondItem="kOF-cZ-baC" secondAttribute="trailing" constant="14" id="xJR-mH-SMh"/>
+                        <constraint firstAttribute="bottom" secondItem="kOF-cZ-baC" secondAttribute="bottom" id="kRR-nb-gB0"/>
+                        <constraint firstAttribute="trailing" secondItem="kOF-cZ-baC" secondAttribute="trailing" id="nli-UJ-EIa"/>
+                        <constraint firstItem="kOF-cZ-baC" firstAttribute="leading" secondItem="WHQ-nu-9DT" secondAttribute="trailing" id="rhM-K0-KHW"/>
                     </constraints>
                 </view>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="onDrag" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="eiS-Uq-oDT">
@@ -163,9 +155,6 @@
         <image name="order_none" width="16" height="16"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="line">
-            <color red="0.89803921568627454" green="0.90588235294117647" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
             <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

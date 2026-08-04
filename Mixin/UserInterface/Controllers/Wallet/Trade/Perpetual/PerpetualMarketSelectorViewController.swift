@@ -11,12 +11,6 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     @IBOutlet weak var categorySelectorLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var categorySelectorHeightConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var volumeOrderingButton: UIButton!
-    @IBOutlet weak var priceOrderingButton: UIButton!
-    @IBOutlet weak var changeOrderingButton: UIButton!
-    
-    @IBOutlet weak var marketsCollectionView: UICollectionView!
-    
     var onSelected: ((FavorablePerpetualMarket) -> Void)?
     
     private var categorySelectorSizeObserver: NSKeyValueObservation?
@@ -28,7 +22,11 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     
     private var selectedCategory: DisplayCategory
     private var markets: [DisplayCategory: [FavorablePerpetualMarket]] = [:]
+    private var displayFavoritesAsRecommendations = false
     private var ordering: MarketOrdering?
+    
+    private weak var marketsCollectionView: UICollectionView!
+    private weak var addToWatchlistButton: UIButton?
     
     private var trimmedKeyword: String {
         (searchBoxView.textField.text ?? "")
@@ -38,6 +36,12 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     
     private var marketsForSelectedCategory: [FavorablePerpetualMarket] {
         markets[selectedCategory] ?? []
+    }
+    
+    private var isShowingRecommendations: Bool {
+        searchResults == nil
+        && selectedCategory == .favorite
+        && displayFavoritesAsRecommendations
     }
     
     init(selectedCategory: DisplayCategory, ordering: MarketOrdering?) {
@@ -96,44 +100,81 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         categorySelectorCollectionView.reloadData()
         categorySelectorController.select(category: selectedCategory)
         
-        let orderingAttributes = {
-            var attributes = AttributeContainer()
-            attributes.font = UIFont.preferredFont(forTextStyle: .caption1)
-            return attributes
-        }()
-        volumeOrderingButton.configuration?.attributedTitle = AttributedString(
-            R.string.localizable.market_volume_short(),
-            attributes: orderingAttributes
-        )
-        volumeOrderingButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        priceOrderingButton.configuration?.attributedTitle = AttributedString(
-            R.string.localizable.price(),
-            attributes: orderingAttributes
-        )
-        priceOrderingButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        changeOrderingButton.configuration?.attributedTitle = AttributedString(
-            R.string.localizable.hours_count_short(24),
-            attributes: orderingAttributes
-        )
-        changeOrderingButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        updateOrderingButtonsImage(ordering: ordering)
-        
-        marketsCollectionView.register(R.nib.favorablePerpsMarketCell)
-        marketsCollectionView.collectionViewLayout = UICollectionViewCompositionalLayout { (_, _) in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
-            let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = 20
-            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0)
-            return section
+        let layout = UICollectionViewCompositionalLayout { [weak self] (_, _) in
+            guard let self else {
+                return nil
+            }
+            if self.isShowingRecommendations {
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .fractionalHeight(1)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(60)
+                )
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
+                group.interItemSpacing = .fixed(10)
+                group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                let footer = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .estimated(82)
+                    ),
+                    elementKind: UICollectionView.elementKindSectionFooter,
+                    alignment: .bottom
+                )
+                let section = NSCollectionLayoutSection(group: group)
+                section.interGroupSpacing = 10
+                section.boundarySupplementaryItems = [footer]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 0)
+                return section
+            } else {
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(50)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
+                let header = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(42)),
+                    elementKind: UICollectionView.elementKindSectionHeader,
+                    alignment: .top
+                )
+                header.pinToVisibleBounds = true
+                let section = NSCollectionLayoutSection(group: group)
+                section.boundarySupplementaryItems = [header]
+                section.interGroupSpacing = 20
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0)
+                return section
+            }
         }
+        let marketsCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        view.addSubview(marketsCollectionView)
+        marketsCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(categorySelectorCollectionView.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        self.marketsCollectionView = marketsCollectionView
+        marketsCollectionView.backgroundColor = R.color.background()
+        marketsCollectionView.register(R.nib.favorablePerpsMarketCell)
+        marketsCollectionView.register(R.nib.watchlistRecommendationItemCell)
+        marketsCollectionView.register(R.nib.marketLoadingCell)
+        marketsCollectionView.register(
+            R.nib.perpsMarketOrderingHeaderView,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader
+        )
+        marketsCollectionView.register(
+            R.nib.watchlistRecommendationFooterView,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter
+        )
         marketsCollectionView.allowsMultipleSelection = false
         marketsCollectionView.dataSource = self
         marketsCollectionView.delegate = self
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(reloadData),
+            selector: #selector(reloadDataIfNotShowingRecommendations(_:)),
             name: PerpsMarketDAO.marketsDidUpdateNotification,
             object: nil
         )
@@ -144,24 +185,14 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         presentingViewController?.dismiss(animated: true)
     }
     
-    @IBAction func orderByVolume(_ sender: UIButton) {
-        updateOrdering(field: .volume)
-    }
-    
-    @IBAction func orderByPrice(_ sender: UIButton) {
-        updateOrdering(field: .price)
-    }
-    
-    @IBAction func orderByChange(_ sender: UIButton) {
-        updateOrdering(field: .change(period: .twentyFourHours))
-    }
-    
     @objc private func prepareForSearch(_ textField: UITextField) {
         let keyword = self.trimmedKeyword
         if keyword.isEmpty {
             searchResultsKeyword = nil
             searchResults = nil
             marketsCollectionView.reloadData()
+            marketsCollectionView.allowsMultipleSelection = isShowingRecommendations
+            selectAllRecommendations()
             marketsCollectionView.checkEmpty(
                 dataCount: markets.count,
                 text: R.string.localizable.dont_have_assets(),
@@ -173,7 +204,14 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         }
     }
     
-    @objc private func reloadData() {
+    @objc private func reloadDataIfNotShowingRecommendations(_ notification: Notification) {
+        // Prevent the selection from messing up
+        if !isShowingRecommendations {
+            reloadData()
+        }
+    }
+    
+    private func reloadData() {
         assert(Thread.isMainThread)
         let ordering = self.ordering
         DispatchQueue.global().async { [weak self] in
@@ -184,8 +222,22 @@ final class PerpetualMarketSelectorViewController: UIViewController {
             )
             var results: [DisplayCategory: [FavorablePerpetualMarket]] = [
                 .all: markets,
-                .favorite: markets.filter(\.isFavorite),
             ]
+            let displayFavoritesAsRecommendations: Bool
+            let favorites = markets.filter(\.isFavorite)
+            if favorites.isEmpty {
+                let recommendations = PerpsMarketDAO.shared.watchlistRecommendations()
+                if recommendations.isEmpty {
+                    results[.favorite] = []
+                    displayFavoritesAsRecommendations = false
+                } else {
+                    results[.favorite] = recommendations
+                    displayFavoritesAsRecommendations = true
+                }
+            } else {
+                results[.favorite] = favorites
+                displayFavoritesAsRecommendations = false
+            }
             for market in markets {
                 guard let marketCategory = market.category.knownCase else {
                     continue
@@ -202,11 +254,13 @@ final class PerpetualMarketSelectorViewController: UIViewController {
                     return
                 }
                 self.markets = results
+                self.displayFavoritesAsRecommendations = displayFavoritesAsRecommendations
                 UIView.performWithoutAnimation {
                     if let keyword = self.searchResultsKeyword {
                         self.search(lowercasedKeyword: keyword)
                     } else {
                         self.marketsCollectionView.reloadData()
+                        self.marketsCollectionView.allowsMultipleSelection = self.isShowingRecommendations
                         self.marketsCollectionView.checkEmpty(
                             dataCount: self.marketsForSelectedCategory.count,
                             text: R.string.localizable.no_results(),
@@ -231,6 +285,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         self.searchResultsKeyword = lowercasedKeyword
         self.searchResults = searchResults
         marketsCollectionView.reloadData()
+        marketsCollectionView.allowsMultipleSelection = false
         marketsCollectionView.checkEmpty(
             dataCount: searchResults.count,
             text: R.string.localizable.no_results(),
@@ -239,64 +294,23 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         searchBoxView.isBusy = false
     }
     
-    private func updateOrderingButtonsImage(ordering: MarketOrdering?) {
-        if let ordering {
-            switch ordering.field {
-            case .marketCap, .volume:
-                volumeOrderingButton.configuration?.image = switch ordering.direction {
-                case .ascending:
-                    R.image.order_ascending()
-                case .descending:
-                    R.image.order_descending()
-                }
-                priceOrderingButton.configuration?.image = R.image.order_none()
-                changeOrderingButton.configuration?.image = R.image.order_none()
-            case .price:
-                volumeOrderingButton.configuration?.image = R.image.order_none()
-                priceOrderingButton.configuration?.image = switch ordering.direction {
-                case .ascending:
-                    R.image.order_ascending()
-                case .descending:
-                    R.image.order_descending()
-                }
-                changeOrderingButton.configuration?.image = R.image.order_none()
-            case .change:
-                volumeOrderingButton.configuration?.image = R.image.order_none()
-                priceOrderingButton.configuration?.image = R.image.order_none()
-                changeOrderingButton.configuration?.image = switch ordering.direction {
-                case .ascending:
-                    R.image.order_ascending()
-                case .descending:
-                    R.image.order_descending()
-                }
-            }
-        } else {
-            volumeOrderingButton.configuration?.image = R.image.order_none()
-            priceOrderingButton.configuration?.image = R.image.order_none()
-            changeOrderingButton.configuration?.image = R.image.order_none()
-        }
-    }
-    
-    private func updateOrdering(field: MarketOrdering.Field) {
-        ordering = if let ordering, ordering.field == field {
-            switch ordering.direction {
-            case .ascending:
-                    .none
-            case .descending:
-                    .init(field: field, direction: .ascending)
-            }
-        } else {
-            .init(field: field, direction: .descending)
-        }
-        updateOrderingButtonsImage(ordering: ordering)
-        reloadData()
-    }
-    
     private func market(at indexPath: IndexPath) -> FavorablePerpetualMarket {
         if let searchResults {
             searchResults[indexPath.item]
         } else {
             marketsForSelectedCategory[indexPath.item]
+        }
+    }
+    
+    private func selectAllRecommendations() {
+        guard isShowingRecommendations, let favorites = markets[.favorite] else {
+            return
+        }
+        let indexPaths = (0..<favorites.count).map { item in
+            IndexPath(item: item, section: 0)
+        }
+        for indexPath in indexPaths {
+            marketsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
         }
     }
     
@@ -318,11 +332,40 @@ extension PerpetualMarketSelectorViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.favorable_perps_market, for: indexPath)!
         let market = market(at: indexPath)
-        cell.reloadData(market: market)
-        cell.delegate = self
-        return cell
+        if isShowingRecommendations {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.watchlist_recommendation_item, for: indexPath)!
+            cell.loadPerps(market: market)
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.favorable_perps_market, for: indexPath)!
+            cell.reloadData(market: market)
+            cell.delegate = self
+            return cell
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            let header = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: R.reuseIdentifier.perps_market_ordering_header,
+                for: indexPath
+            )!
+            header.order = ordering
+            header.delegate = self
+            return header
+        default:
+            let footer = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: R.reuseIdentifier.watchlist_recommendation_action,
+                for: indexPath
+            )!
+            footer.delegate = self
+            self.addToWatchlistButton = footer.actionButton
+            return footer
+        }
     }
     
 }
@@ -330,8 +373,16 @@ extension PerpetualMarketSelectorViewController: UICollectionViewDataSource {
 extension PerpetualMarketSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let market = market(at: indexPath)
-        onSelected?(market)
+        if isShowingRecommendations {
+            addToWatchlistButton?.isEnabled = !(collectionView.indexPathsForSelectedItems?.isEmpty ?? true)
+        } else {
+            let market = market(at: indexPath)
+            onSelected?(market)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        addToWatchlistButton?.isEnabled = !(collectionView.indexPathsForSelectedItems?.isEmpty ?? true)
     }
     
 }
@@ -347,12 +398,23 @@ extension PerpetualMarketSelectorViewController: PerpetualMarketSelectorViewCont
             search(lowercasedKeyword: searchResultsKeyword)
         } else {
             marketsCollectionView.reloadData()
+            marketsCollectionView.allowsMultipleSelection = isShowingRecommendations
+            selectAllRecommendations()
             marketsCollectionView.checkEmpty(
                 dataCount: marketsForSelectedCategory.count,
                 text: R.string.localizable.no_results(),
                 photo: R.image.emptyIndicator.ic_search_result()!
             )
         }
+    }
+    
+}
+
+extension PerpetualMarketSelectorViewController: PerpsMarketOrderingHeaderView.Delegate {
+    
+    func perpsMarketOrderingHeaderView(_ view: PerpsMarketOrderingHeaderView, didSwitchToOrdering order: MarketOrdering?) {
+        self.ordering = order
+        reloadData()
     }
     
 }
@@ -394,6 +456,48 @@ extension PerpetualMarketSelectorViewController: FavorablePerpsMarketCell.Delega
                     market.isFavorite = true
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(market.displaySymbol))
                 case .failure(let error):
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+}
+
+extension PerpetualMarketSelectorViewController: WatchlistRecommendationFooterView.Delegate {
+    
+    func watchlistRecommendationFooterViewDidInvokeAction(_ cell: WatchlistRecommendationFooterView) {
+        guard
+            let indexPaths = marketsCollectionView.indexPathsForSelectedItems,
+            !indexPaths.isEmpty,
+            let favorites = markets[.favorite]
+        else {
+            return
+        }
+        let selectedMarketIDs = indexPaths.map { indexPath in
+            favorites[indexPath.item].marketID
+        }
+        guard !selectedMarketIDs.isEmpty else {
+            return
+        }
+        marketsCollectionView.isUserInteractionEnabled = false
+        cell.actionButton.isBusy = true
+        RouteAPI.favoritePerpsMarkets(marketIDs: selectedMarketIDs) { [weak self] result in
+            cell.actionButton.isBusy = false
+            switch result {
+            case .success:
+                DispatchQueue.global().async {
+                    PerpsMarketDAO.shared.favorite(marketIDs: selectedMarketIDs) {
+                        guard let self else {
+                            return
+                        }
+                        self.marketsCollectionView.isUserInteractionEnabled = true
+                        self.reloadData()
+                    }
+                }
+            case .failure(let error):
+                if let self {
+                    self.marketsCollectionView.isUserInteractionEnabled = true
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }

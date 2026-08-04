@@ -1,9 +1,9 @@
 import UIKit
 
-final class WatchlistRecommendationActionCell: UICollectionViewCell {
+final class WatchlistRecommendationFooterView: UICollectionReusableView {
     
     protocol Delegate: AnyObject {
-        func watchlistRecommendationActionCellDidInvokeAction(_ cell: WatchlistRecommendationActionCell)
+        func watchlistRecommendationFooterViewDidInvokeAction(_ cell: WatchlistRecommendationFooterView)
     }
     
     @IBOutlet weak var actionButton: ConfigurationBasedBusyButton!
@@ -19,7 +19,7 @@ final class WatchlistRecommendationActionCell: UICollectionViewCell {
     }
     
     @IBAction func invokeAction(_ sender: Any) {
-        delegate?.watchlistRecommendationActionCellDidInvokeAction(self)
+        delegate?.watchlistRecommendationFooterViewDidInvokeAction(self)
     }
     
 }

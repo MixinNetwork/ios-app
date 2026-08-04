@@ -166,23 +166,22 @@ final class MarketDashboardViewController: UIViewController {
                     alignment: .top
                 )
                 header.pinToVisibleBounds = true
+                let footer = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(82)),
+                    elementKind: UICollectionView.elementKindSectionFooter,
+                    alignment: .bottom
+                )
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0) // Adds 20pt gap below header
                 section.interGroupSpacing = 10
-                section.boundarySupplementaryItems = [header]
+                section.boundarySupplementaryItems = [header, footer]
                 return section
-            case .recommendationAction:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(362))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
-                return NSCollectionLayoutSection(group: group)
             }
         }
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.register(R.nib.favorableMarketCell)
         collectionView.register(R.nib.favorablePerpsMarketCell)
         collectionView.register(R.nib.watchlistRecommendationItemCell)
-        collectionView.register(R.nib.watchlistRecommendationActionCell)
         collectionView.register(R.nib.marketIndicatorCell)
         collectionView.register(R.nib.marketLoadingCell)
         collectionView.register(
@@ -192,6 +191,10 @@ final class MarketDashboardViewController: UIViewController {
         collectionView.register(
             R.nib.marketOrderingHeaderView,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader
+        )
+        collectionView.register(
+            R.nib.watchlistRecommendationFooterView,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter
         )
         collectionView.backgroundColor = R.color.background()
         collectionView.contentInset.bottom = 20
@@ -233,11 +236,6 @@ final class MarketDashboardViewController: UIViewController {
                         cell.loadPerps(market: market)
                     }
                 }
-                return cell
-            case .recommendationAction:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.watchlist_recommendation_action, for: indexPath)!
-                cell.delegate = self
-                self?.addToWatchlistButton = cell.actionButton
                 return cell
             case let .marketIndicator(indicator):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.market_indicator, for: indexPath)!
@@ -285,7 +283,40 @@ final class MarketDashboardViewController: UIViewController {
                 header.order = self.order
                 header.delegate = self
                 return header
-            case .recommendationItem, .busyIndicator:
+            case .recommendationItem:
+                switch elementKind {
+                case UICollectionView.elementKindSectionHeader:
+                    let header = collectionView.dequeueReusableSupplementaryView(
+                        ofKind: UICollectionView.elementKindSectionHeader,
+                        withReuseIdentifier: R.reuseIdentifier.market_header,
+                        for: indexPath
+                    )!
+                    switch self.category {
+                    case .watchlist:
+                        header.subCategories = WatchlistSubCategory.allCases.map(\.displayTitle)
+                    case .crypto:
+                        header.subCategories = Market.SubCategory.allCases.map(\.displayTitle)
+                    case .perps:
+                        header.subCategories = PerpetualMarket.SubCategory.allCases.map(\.displayTitle)
+                    case .indicator:
+                        return nil
+                    }
+                    header.selectSubCategory(at: self.subCategoryIndex)
+                    header.delegate = self
+                    return header
+                case UICollectionView.elementKindSectionFooter:
+                    let footer = collectionView.dequeueReusableSupplementaryView(
+                        ofKind: UICollectionView.elementKindSectionFooter,
+                        withReuseIdentifier: R.reuseIdentifier.watchlist_recommendation_action,
+                        for: indexPath
+                    )!
+                    footer.delegate = self
+                    self.addToWatchlistButton = footer.actionButton
+                    return footer
+                default:
+                    return nil
+                }
+            case .busyIndicator:
                 let header = collectionView.dequeueReusableSupplementaryView(
                     ofKind: UICollectionView.elementKindSectionHeader,
                     withReuseIdentifier: R.reuseIdentifier.market_header,
@@ -304,7 +335,7 @@ final class MarketDashboardViewController: UIViewController {
                 header.selectSubCategory(at: self.subCategoryIndex)
                 header.delegate = self
                 return header
-            case .marketIndicator, .recommendationAction:
+            case .marketIndicator:
                 return nil
             }
         }
@@ -610,7 +641,7 @@ extension MarketDashboardViewController: UICollectionViewDelegate {
             }
         case .recommendation:
             addToWatchlistButton?.isEnabled = !(collectionView.indexPathsForSelectedItems?.isEmpty ?? true)
-        case .busyIndicator, .marketIndicator, .recommendationAction:
+        case .busyIndicator, .marketIndicator:
             break
         }
     }
@@ -775,9 +806,9 @@ extension MarketDashboardViewController: FavorablePerpsMarketCell.Delegate {
 }
 
 // MARK: - WatchlistRecommendationActionCell.Delegate
-extension MarketDashboardViewController: WatchlistRecommendationActionCell.Delegate {
+extension MarketDashboardViewController: WatchlistRecommendationFooterView.Delegate {
     
-    func watchlistRecommendationActionCellDidInvokeAction(_ cell: WatchlistRecommendationActionCell) {
+    func watchlistRecommendationFooterViewDidInvokeAction(_ cell: WatchlistRecommendationFooterView) {
         guard let indexPaths = collectionView.indexPathsForSelectedItems, !indexPaths.isEmpty else {
             return
         }
@@ -915,29 +946,12 @@ extension MarketDashboardViewController {
         
     }
     
-    enum WatchlistSubCategory: String, CaseIterable {
-        
-        case crypto
-        case perps
-        
-        var displayTitle: String {
-            switch self {
-            case .crypto:
-                R.string.localizable.crypto()
-            case .perps:
-                R.string.localizable.perpetual()
-            }
-        }
-        
-    }
-    
     enum Section {
         case market
         case perps
         case marketIndicator
         case busyIndicator
         case recommendationItem
-        case recommendationAction
     }
     
     enum Item: Hashable {
@@ -946,7 +960,6 @@ extension MarketDashboardViewController {
         case busyIndicator
         case marketIndicator(MarketIndicator)
         case recommendation(subCategory: WatchlistSubCategory, id: String)
-        case recommendationAction
     }
     
     typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, Item>
@@ -1048,8 +1061,6 @@ extension MarketDashboardViewController {
                     snapshot.appendItems(recommendations.map { recommendation in
                         Item.recommendation(subCategory: .crypto, id: recommendation.coinID)
                     })
-                    snapshot.appendSections([.recommendationAction])
-                    snapshot.appendItems([.recommendationAction])
                 }
                 marketViewModels = recommendations.reduce(into: [:]) { result, market in
                     result[market.coinID] = market
@@ -1118,8 +1129,6 @@ extension MarketDashboardViewController {
                     snapshot.appendItems(recommendations.map { recommendation in
                         Item.recommendation(subCategory: .perps, id: recommendation.marketID)
                     })
-                    snapshot.appendSections([.recommendationAction])
-                    snapshot.appendItems([.recommendationAction])
                 }
                 marketViewModels = recommendations.reduce(into: [:]) { result, market in
                     result[market.marketID] = market
@@ -1358,81 +1367,6 @@ extension MarketDashboardViewController {
                         }
                         viewController.perpsMarketLoader = requester
                         requester.start()
-                    }
-                }
-            }
-        }
-        
-    }
-    
-    private final class ReloadWatchlistRecommendationJob: AsynchronousJob, @unchecked Sendable {
-        
-        private static var lastReloadingDate: [WatchlistSubCategory: Date] = [:]
-        
-        private let category: WatchlistSubCategory
-        private let refreshInterval: TimeInterval = .hour
-        
-        init(category: WatchlistSubCategory) {
-            self.category = category
-        }
-        
-        override func getJobId() -> String {
-            "ReloadWatchlistRcmd-" + category.rawValue
-        }
-        
-        override func execute() -> Bool {
-            reload()
-            return true
-        }
-        
-        private func reload() {
-            guard LoginManager.shared.isLoggedIn, !isCancelled else {
-                finishJob()
-                return
-            }
-            let reloadingDate = Queue.main.autoSync {
-                Self.lastReloadingDate[category] ?? .distantPast
-            }
-            let nextReloadingDate = reloadingDate.addingTimeInterval(refreshInterval)
-            guard nextReloadingDate.timeIntervalSinceNow <= 0 else {
-                Logger.general.debug(category: "ReloadWatchlistRcmd", message: "Not reloading \(category.rawValue) before \(nextReloadingDate)")
-                finishJob()
-                return
-            }
-            Logger.general.debug(category: "ReloadWatchlistRcmd", message: "Reload \(category.rawValue)")
-            switch category {
-            case .crypto:
-                RouteAPI.markets(category: .featured, queue: .global(), limit: nil) { result in
-                    switch result {
-                    case let .success(markets):
-                        MarketDAO.shared.save(
-                            markets: markets,
-                            replaceRanks: false,
-                            updatingCategory: .featured
-                        )
-                        DispatchQueue.main.async {
-                            Self.lastReloadingDate[.crypto] = Date()
-                        }
-                        Logger.general.debug(category: "ReloadWatchlistRcmd", message: "Updated for cryptos")
-                        self.finishJob()
-                    case let .failure(error):
-                        Logger.general.debug(category: "ReloadWatchlistRcmd", message: "\(error)")
-                        DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: self.reload)
-                    }
-                }
-            case .perps:
-                RouteAPI.perpsMarkets(category: .featured, queue: .global()) { result in
-                    switch result {
-                    case let .success(markets):
-                        PerpsMarketDAO.shared.save(markets: markets, updatingMetadata: .category(.featured))
-                        DispatchQueue.main.async {
-                            Self.lastReloadingDate[.perps] = Date()
-                        }
-                        Logger.general.debug(category: "ReloadWatchlistRcmd", message: "Updated for perps")
-                        self.finishJob()
-                    case let .failure(error):
-                        Logger.general.debug(category: "ReloadWatchlistRcmd", message: "\(error)")
-                        DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: self.reload)
                     }
                 }
             }

@@ -72,10 +72,7 @@ final class PerpetualMarketLoader {
                         case .featured:
                             PerpsMarketDAO.shared.save(markets: markets, updatingMetadata: .category(.featured))
                         }
-                        DispatchQueue.main.async {
-                            guard let self else {
-                                return
-                            }
+                        if let self {
                             self.delegate?.perpetualMarketLoader(
                                 self,
                                 didLoadMultipleMarketsIn: category,

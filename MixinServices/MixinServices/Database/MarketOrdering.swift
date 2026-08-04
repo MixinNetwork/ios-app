@@ -38,3 +38,32 @@ public struct MarketOrdering: Equatable {
     }
     
 }
+
+extension MarketOrdering: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        var description = switch field {
+        case .marketCap:
+            "MarketCap"
+        case .volume:
+            "Volume"
+        case .price:
+            "Price"
+        case .change(let period):
+            switch period {
+            case .twentyFourHours:
+                "24H%"
+            case .sevenDays:
+                "7D%"
+            }
+        }
+        switch direction {
+        case .ascending:
+            description += " ↑"
+        case .descending:
+            description += " ↓"
+        }
+        return description
+    }
+    
+}

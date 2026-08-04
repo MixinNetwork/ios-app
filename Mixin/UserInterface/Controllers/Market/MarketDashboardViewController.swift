@@ -27,13 +27,6 @@ final class MarketDashboardViewController: UIViewController {
     private var marketIndicator: MarketIndicator?
     private var reloadDataOnViewAppear = false
     
-    // Tracks whether an initial remote fetch for favorite markets is needed.
-    // When the app is reinstalled, local database tables for favorites are empty.
-    // To prevent showing recommendations immediately before checking remote favorites,
-    // the UI displays a busy indicator until an initial remote request completes.
-    private var needsFetchCryptoWatchlistFromRemote = true
-    private var needsFetchPerpsWatchlistFromRemote = true
-    
     private var marketLoader: MarketPeriodicRequester?
     private var perpsMarketLoader: PerpetualMarketLoader?
     
@@ -319,13 +312,13 @@ final class MarketDashboardViewController: UIViewController {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(reloadDataWithCurrentSettings),
+            selector: #selector(reloadDataOnDatabaseUpdate),
             name: MarketDAO.didUpdateNotification,
             object: nil
         )
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(reloadDataWithCurrentSettings),
+            selector: #selector(reloadDataOnDatabaseUpdate),
             name: PerpsMarketDAO.marketsDidUpdateNotification,
             object: nil
         )
@@ -345,7 +338,8 @@ final class MarketDashboardViewController: UIViewController {
             category: category,
             subCategoryIndex: subCategoryIndex,
             order: nil,
-            scheduleRemoteLoader: true
+            scheduleRemoteLoader: true,
+            debugReason: "Initial",
         )
         ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
     }
@@ -366,7 +360,7 @@ final class MarketDashboardViewController: UIViewController {
         )
         if reloadDataOnViewAppear {
             reloadDataOnViewAppear = false
-            reloadDataWithCurrentSettings()
+            reloadDataWithCurrentSettings(debugReason: "ViewAppear")
         }
     }
     
@@ -415,7 +409,9 @@ final class MarketDashboardViewController: UIViewController {
         subCategoryIndex: Int,
         order: MarketOrdering?, // nil to use derived order
         scheduleRemoteLoader: Bool,
+        debugReason: StaticString,
     ) {
+        Logger.general.debug(category: "MarketDashboard", message: "\(debugReason): Reload \(category.rawValue), subCategory: \(subCategoryIndex), order: \(order?.debugDescription ?? "(null)"), loadFromRemote: \(scheduleRemoteLoader)")
         queue.cancelAllOperations()
         if scheduleRemoteLoader {
             marketLoader?.pause()
@@ -498,6 +494,16 @@ final class MarketDashboardViewController: UIViewController {
         }
     }
     
+    private func reloadDataWithCurrentSettings(debugReason: StaticString) {
+        reloadData(
+            category: category,
+            subCategoryIndex: subCategoryIndex,
+            order: order,
+            scheduleRemoteLoader: false,
+            debugReason: debugReason,
+        )
+    }
+    
 }
 
 // MARK: - Actions
@@ -541,13 +547,8 @@ extension MarketDashboardViewController {
         reloadGlobalMarket(overwrites: true)
     }
     
-    @objc private func reloadDataWithCurrentSettings() {
-        reloadData(
-            category: category,
-            subCategoryIndex: subCategoryIndex,
-            order: order,
-            scheduleRemoteLoader: false
-        )
+    @objc private func reloadDataOnDatabaseUpdate(_ notification: Notification) {
+        reloadDataWithCurrentSettings(debugReason: "DBUpdate")
     }
     
     @objc private func scheduleReloadDataOnViewAppear(_ notification: Notification) {
@@ -564,7 +565,8 @@ extension MarketDashboardViewController {
                 category: category,
                 subCategoryIndex: subCategoryIndex,
                 order: order,
-                scheduleRemoteLoader: false
+                scheduleRemoteLoader: false,
+                debugReason: "ChangePeriodUpdate",
             )
         } else {
             var snapshot = dataSource.snapshot()
@@ -623,7 +625,13 @@ extension MarketDashboardViewController: UICollectionViewDelegate {
 extension MarketDashboardViewController: MarketHeaderView.Delegate {
     
     func marketHeaderView(_ view: MarketHeaderView, didSelectSubCategoryAt index: Int) {
-        reloadData(category: category, subCategoryIndex: index, order: nil, scheduleRemoteLoader: true)
+        reloadData(
+            category: category,
+            subCategoryIndex: index,
+            order: nil,
+            scheduleRemoteLoader: true,
+            debugReason: "SubCategorySwitch",
+        )
         AppGroupUserDefaults.User.marketSubCategoryIndices[category.rawValue] = index
     }
     
@@ -653,7 +661,13 @@ extension MarketDashboardViewController: MarketOrderingHeaderView.Delegate {
     }
     
     func marketOrderingHeaderView(_ view: MarketOrderingHeaderView, didSwitchToOrdering order: MarketOrdering) {
-        reloadData(category: category, subCategoryIndex: subCategoryIndex, order: order, scheduleRemoteLoader: false)
+        reloadData(
+            category: category,
+            subCategoryIndex: subCategoryIndex,
+            order: order,
+            scheduleRemoteLoader: false,
+            debugReason: "OrderSwitch",
+        )
     }
     
 }
@@ -796,7 +810,7 @@ extension MarketDashboardViewController: WatchlistRecommendationActionCell.Deleg
                                 return
                             }
                             self.collectionView.isUserInteractionEnabled = true
-                            self.reloadDataWithCurrentSettings()
+                            self.reloadDataWithCurrentSettings(debugReason: "ApplyRcmd")
                         }
                     }
                 case .failure(let error):
@@ -819,7 +833,7 @@ extension MarketDashboardViewController: WatchlistRecommendationActionCell.Deleg
                                 return
                             }
                             self.collectionView.isUserInteractionEnabled = true
-                            self.reloadDataWithCurrentSettings()
+                            self.reloadDataWithCurrentSettings(debugReason: "ApplyRcmd")
                         }
                     }
                 case .failure(let error):
@@ -842,11 +856,8 @@ extension MarketDashboardViewController: MarketPeriodicRequester.Delegate {
         didLoadMarketsIn category: Market.RequestCategory,
         markets: [Market]
     ) {
-        if category == .favorite {
-            needsFetchCryptoWatchlistFromRemote = false
-            if markets.isEmpty {
-                reloadDataWithCurrentSettings()
-            }
+        if category == .favorite && markets.isEmpty {
+            DispatchQueue.main.async(execute: requester.pause)
         }
     }
     
@@ -860,11 +871,8 @@ extension MarketDashboardViewController: PerpetualMarketLoader.Delegate {
         didLoadMultipleMarketsIn category: PerpetualMarket.RequestCategory,
         markets: [PerpetualMarket]
     ) {
-        if category == .favorite {
-            needsFetchPerpsWatchlistFromRemote = false
-            if markets.isEmpty {
-                reloadDataWithCurrentSettings()
-            }
+        if category == .favorite && markets.isEmpty {
+            DispatchQueue.main.async(execute: loader.stop)
         }
     }
     
@@ -1003,6 +1011,7 @@ extension MarketDashboardViewController {
                 subCategoryIndex: category.defaultSubCategoryIndex,
                 order: nil,
                 scheduleRemoteLoader: true,
+                debugReason: "CategorySwitch",
             )
         }
         
@@ -1027,13 +1036,7 @@ extension MarketDashboardViewController {
         ) {
             var snapshot = DataSourceSnapshot()
             let markets = MarketDAO.shared.markets(subCategory: .watchlist, order: order)
-            let needsFetchFromRemote = DispatchQueue.main.sync {
-                if !markets.isEmpty {
-                    viewController?.needsFetchCryptoWatchlistFromRemote = false
-                }
-                return viewController?.needsFetchCryptoWatchlistFromRemote ?? true
-            }
-            let showsRecommendations = markets.isEmpty && !needsFetchFromRemote
+            let showsRecommendations = markets.isEmpty
             let marketViewModels: [String: FavorableMarket]
             if showsRecommendations {
                 let recommendations = MarketDAO.shared.watchlistRecommendations()
@@ -1051,10 +1054,6 @@ extension MarketDashboardViewController {
                 marketViewModels = recommendations.reduce(into: [:]) { result, market in
                     result[market.coinID] = market
                 }
-            } else if markets.isEmpty {
-                snapshot.appendSections([.busyIndicator])
-                snapshot.appendItems([.busyIndicator])
-                marketViewModels = [:]
             } else {
                 snapshot.appendSections([.market])
                 snapshot.appendItems(markets.map { market in
@@ -1082,18 +1081,18 @@ extension MarketDashboardViewController {
                     viewController.dataSource.applySnapshotUsingReloadData(snapshot)
                 }
                 if scheduleRemoteLoader {
+                    let requester = MarketPeriodicRequester(
+                        category: .favorite,
+                        limit: 500
+                    )
+                    viewController.marketLoader = requester
+                    requester.delegate = viewController
+                    requester.start()
+                    
                     if showsRecommendations {
                         ConcurrentJobQueue.shared.addJob(
                             job: ReloadWatchlistRecommendationJob(category: .crypto)
                         )
-                    } else {
-                        let requester = MarketPeriodicRequester(
-                            category: .favorite,
-                            limit: 500
-                        )
-                        requester.delegate = viewController
-                        viewController.marketLoader = requester
-                        requester.start()
                     }
                 }
             }
@@ -1107,13 +1106,7 @@ extension MarketDashboardViewController {
         ) {
             var snapshot = DataSourceSnapshot()
             let markets = PerpsMarketDAO.shared.availableMarkets(subCategory: .watchlist, ordering: order)
-            let needsFetchFromRemote = DispatchQueue.main.sync {
-                if !markets.isEmpty {
-                    viewController?.needsFetchPerpsWatchlistFromRemote = false
-                }
-                return viewController?.needsFetchPerpsWatchlistFromRemote ?? true
-            }
-            let showsRecommendations = markets.isEmpty && !needsFetchFromRemote
+            let showsRecommendations = markets.isEmpty
             let marketViewModels: [String: FavorablePerpetualMarket]
             if showsRecommendations {
                 let recommendations = PerpsMarketDAO.shared.watchlistRecommendations()
@@ -1131,10 +1124,6 @@ extension MarketDashboardViewController {
                 marketViewModels = recommendations.reduce(into: [:]) { result, market in
                     result[market.marketID] = market
                 }
-            } else if markets.isEmpty {
-                snapshot.appendSections([.busyIndicator])
-                snapshot.appendItems([.busyIndicator])
-                marketViewModels = [:]
             } else {
                 snapshot.appendSections([.perps])
                 snapshot.appendItems(markets.map { market in
@@ -1162,18 +1151,18 @@ extension MarketDashboardViewController {
                     viewController.dataSource.applySnapshotUsingReloadData(snapshot)
                 }
                 if scheduleRemoteLoader {
+                    let requester = PerpetualMarketLoader(
+                        request: .multiple(.favorite),
+                        timeInterval: 30
+                    )
+                    viewController.perpsMarketLoader = requester
+                    requester.delegate = viewController
+                    requester.start()
+                    
                     if showsRecommendations {
                         ConcurrentJobQueue.shared.addJob(
                             job: ReloadWatchlistRecommendationJob(category: .perps)
                         )
-                    } else {
-                        let requester = PerpetualMarketLoader(
-                            request: .multiple(.favorite),
-                            timeInterval: 30
-                        )
-                        requester.delegate = viewController
-                        viewController.perpsMarketLoader = requester
-                        requester.start()
                     }
                 }
             }
@@ -1410,6 +1399,7 @@ extension MarketDashboardViewController {
                 finishJob()
                 return
             }
+            Logger.general.debug(category: "ReloadWatchlistRcmd", message: "Reload \(category.rawValue)")
             switch category {
             case .crypto:
                 RouteAPI.markets(category: .featured, queue: .global(), limit: nil) { result in

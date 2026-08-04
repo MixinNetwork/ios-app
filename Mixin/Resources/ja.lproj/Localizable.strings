@@ -277,8 +277,6 @@
 "change_name" = "名前を変更";
 "change_number" = "電話番号を変更";
 "change_number_instead" = "電話番号を変更";
-"change_percent_period_day" = "%dD %%";
-"change_percent_period_hour" = "%dh %%";
 "change_phone_desc" = "携帯電話番号を使用してアカウントにログインできます。現在の携帯電話番号 (%1$@) は、MPC ウォレットのキー シャードにリンクされています。完全なキーは、このデバイスの TEE セキュリティ環境にのみ存在します。 %2$@ の詳細については、ドキュメントを参照してください。";
 "change_phone_number" = "電話番号を変更";
 "change_pin" = "PINコードを変更";
@@ -2028,8 +2026,6 @@
 "watchlist" = "ウォッチリスト";
 "watchlist_add_desc" = "%@ がウォッチリストに追加されました";
 "watchlist_empty" = "ウォッチリストは空です";
-"watchlist_remove_alert_prompt" = "Removed from your watchlist. Also delete the related price alerts?";
-"watchlist_remove_desc" = "%@ has been removed from your watchlist";
 "web_cannot_reached_desc" = "%@ 接続に時間がかかり過ぎています、ネットワーク設定を確認してページをリロードしてください。";
 "web_cannot_reached_title" = "アクセスできません";
 "web_suspicious_link_tips" = "リンクは対応するリソースパターンにありません。";

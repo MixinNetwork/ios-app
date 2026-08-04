@@ -50,9 +50,9 @@ extension MarketChangePeriod {
     public var displayTitle: String {
         switch self {
         case .twentyFourHours:
-            R.string.localizable.change_percent_period_hour(24)
+            R.string.localizable.hours_count_short(24)
         case .sevenDays:
-            R.string.localizable.change_percent_period_day(7)
+            R.string.localizable.days_count_short(7)
         }
     }
     

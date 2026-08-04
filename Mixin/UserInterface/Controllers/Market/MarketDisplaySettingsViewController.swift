@@ -81,7 +81,12 @@ extension MarketDisplaySettingsViewController: UITableViewDataSource {
         case .priceChange:
             let selected = AppGroupUserDefaults.User.cryptoMarketChangePeriod
             cell.titleLabel.text = R.string.localizable.example_price_change()
-            cell.subtitleLabel.text = selected.displayTitle
+            cell.subtitleLabel.text = switch selected {
+            case .twentyFourHours:
+                R.string.localizable.hour_count(24)
+            case .sevenDays:
+                R.string.localizable.days_count(24)
+            }
             cell.actionButton.menu = UIMenu(children: MarketChangePeriod.allCases.map { period in
                 UIAction(
                     title: period.displayTitle,

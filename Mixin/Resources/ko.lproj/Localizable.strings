@@ -277,8 +277,6 @@
 "change_name" = "이름 변경";
 "change_number" = "번호 변경";
 "change_number_instead" = "대신 번호 변경";
-"change_percent_period_day" = "%dD %%";
-"change_percent_period_hour" = "%dh %%";
 "change_phone_desc" = "휴대폰번호로 계정에 로그인할 수 있습니다. 현재 휴대폰 번호(%1$@)가 MPC 지갑의 키 샤드에 연결되어 있습니다. 전체 키는 이 장치의 TEE 보안 환경에만 존재합니다. %2$@에 대해 자세히 알아보려면 문서를 읽어보세요.";
 "change_phone_number" = "휴대폰번호 변경";
 "change_pin" = "PIN 변경";
@@ -2028,8 +2026,6 @@
 "watchlist" = "관심 목록";
 "watchlist_add_desc" = "%@이(가) 관심 목록에 있습니다.";
 "watchlist_empty" = "관심 목록이 비어 있습니다.";
-"watchlist_remove_alert_prompt" = "Removed from your watchlist. Also delete the related price alerts?";
-"watchlist_remove_desc" = "%@ has been removed from your watchlist";
 "web_cannot_reached_desc" = "%@ 응답하는 데 너무 오랜 시간이 걸렸습니다. 네트워크를 확인하고 4G, Wi-Fi 또는 VPN을 전환하여 페이지를 새로고침해 보세요.";
 "web_cannot_reached_title" = "이 웹페이지에 접속할 수 없습니다";
 "web_suspicious_link_tips" = "링크가 해당 리소스 패턴에 없습니다.";

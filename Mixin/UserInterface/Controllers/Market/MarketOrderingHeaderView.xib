@@ -76,9 +76,9 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="twI-2A-HMh">
-                            <rect key="frame" x="240" y="0.0" width="80" height="42"/>
+                            <rect key="frame" x="240" y="0.0" width="74" height="42"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="80" id="xe6-U9-CBu"/>
+                                <constraint firstAttribute="width" constant="74" id="xe6-U9-CBu"/>
                             </constraints>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                             <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
@@ -86,9 +86,9 @@
                             <state key="normal" title="7D %">
                                 <color key="titleColor" name="text_tertiary"/>
                             </state>
-                            <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="7D %" imagePadding="4">
+                            <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="24H" imagePadding="4">
                                 <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
-                                <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="16"/>
+                                <directionalEdgeInsets key="contentInsets" top="10" leading="0.0" bottom="10" trailing="0.0"/>
                                 <color key="baseForegroundColor" name="text_tertiary"/>
                             </buttonConfiguration>
                             <connections>
@@ -107,7 +107,7 @@
                         <constraint firstItem="twI-2A-HMh" firstAttribute="leading" secondItem="k6E-9M-NO3" secondAttribute="trailing" id="NDI-0P-4sa"/>
                         <constraint firstItem="grx-au-zqa" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="bG2-A9-wCr"/>
                         <constraint firstItem="fWI-Pt-Efg" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="mTW-bA-jac"/>
-                        <constraint firstAttribute="trailing" secondItem="twI-2A-HMh" secondAttribute="trailing" id="nLP-MD-eTm"/>
+                        <constraint firstAttribute="trailing" secondItem="twI-2A-HMh" secondAttribute="trailing" constant="6" id="nLP-MD-eTm"/>
                         <constraint firstAttribute="bottom" secondItem="fWI-Pt-Efg" secondAttribute="bottom" id="su3-Do-ewl"/>
                         <constraint firstAttribute="bottom" secondItem="grx-au-zqa" secondAttribute="bottom" id="yFS-2Q-5g6"/>
                     </constraints>
@@ -142,7 +142,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

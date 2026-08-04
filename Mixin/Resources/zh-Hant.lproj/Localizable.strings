@@ -277,8 +277,6 @@
 "change_name" = "修改名稱";
 "change_number" = "修改手機號";
 "change_number_instead" = "僅修改手機號碼";
-"change_percent_period_day" = "%d天 %%";
-"change_percent_period_hour" = "%dh %%";
 "change_phone_desc" = "您可以通過手機號碼登入您的帳戶。當前手機號碼（%1$@）已與 MPC 錢包的金鑰片段關聯。完整的金鑰僅存在於當前裝置的 TEE 安全環境中。閱讀檔案以瞭解%2$@。";
 "change_phone_number" = "修改手機號";
 "change_pin" = "修改 PIN";
@@ -2028,8 +2026,6 @@
 "watchlist" = "自選";
 "watchlist_add_desc" = "%@ 已經加入自選";
 "watchlist_empty" = "您的自選列表為空";
-"watchlist_remove_alert_prompt" = "自選已刪除，是否同時刪除相應的到價提醒？";
-"watchlist_remove_desc" = "%@ 已從自選移除";
 "web_cannot_reached_desc" = "無法訪問 %@，請檢查你的網路並嘗試切換 4G、Wi-Fi 或 VPN 後重新載入頁面。";
 "web_cannot_reached_title" = "無法訪問此網頁";
 "web_suspicious_link_tips" = "該連結不在對應的機器人域名白名單內。";

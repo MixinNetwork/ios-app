@@ -149,7 +149,17 @@ final class MarketDashboardViewController: UIViewController {
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(149))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
-                return NSCollectionLayoutSection(group: group)
+                let section = NSCollectionLayoutSection(group: group)
+                if self?.category != .indicator {
+                    let header = NSCollectionLayoutBoundarySupplementaryItem(
+                        layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(25)),
+                        elementKind: UICollectionView.elementKindSectionHeader,
+                        alignment: .top
+                    )
+                    header.pinToVisibleBounds = true
+                    section.boundarySupplementaryItems = [header]
+                }
+                return section
             case .recommendationItem:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -249,7 +259,7 @@ final class MarketDashboardViewController: UIViewController {
                 return nil
             }
             switch section {
-            case .market, .perps, .busyIndicator:
+            case .market, .perps:
                 let header = collectionView.dequeueReusableSupplementaryView(
                     ofKind: UICollectionView.elementKindSectionHeader,
                     withReuseIdentifier: R.reuseIdentifier.market_ordering_header,
@@ -282,7 +292,7 @@ final class MarketDashboardViewController: UIViewController {
                 header.order = self.order
                 header.delegate = self
                 return header
-            case .recommendationItem:
+            case .recommendationItem, .busyIndicator:
                 let header = collectionView.dequeueReusableSupplementaryView(
                     ofKind: UICollectionView.elementKindSectionHeader,
                     withReuseIdentifier: R.reuseIdentifier.market_header,
@@ -439,6 +449,8 @@ final class MarketDashboardViewController: UIViewController {
             )
             queue.addOperation(op)
         case .indicator:
+            self.category = .indicator
+            self.subCategoryIndex = 0
             var snapshot = DataSourceSnapshot()
             if let marketIndicator {
                 snapshot.appendSections([.marketIndicator])
@@ -488,6 +500,7 @@ final class MarketDashboardViewController: UIViewController {
     
 }
 
+// MARK: - Actions
 extension MarketDashboardViewController {
     
     @objc private func searchCoins(_ sender: Any) {
@@ -569,6 +582,7 @@ extension MarketDashboardViewController {
     
 }
 
+// MARK: - UICollectionViewDelegate
 extension MarketDashboardViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -605,6 +619,7 @@ extension MarketDashboardViewController: UICollectionViewDelegate {
     
 }
 
+// MARK: - MarketHeaderView.Delegate
 extension MarketDashboardViewController: MarketHeaderView.Delegate {
     
     func marketHeaderView(_ view: MarketHeaderView, didSelectSubCategoryAt index: Int) {
@@ -614,6 +629,7 @@ extension MarketDashboardViewController: MarketHeaderView.Delegate {
     
 }
 
+// MARK: - MarketOrderingHeaderView.Delegate
 extension MarketDashboardViewController: MarketOrderingHeaderView.Delegate {
     
     func marketOrderingHeaderViewDidSelectSetting(_ view: MarketOrderingHeaderView) {
@@ -642,6 +658,7 @@ extension MarketDashboardViewController: MarketOrderingHeaderView.Delegate {
     
 }
 
+// MARK: - FavorableMarketCell.Delegate
 extension MarketDashboardViewController: FavorableMarketCell.Delegate {
     
     func favorableMarketCellWantsToggleFavorite(_ cell: FavorableMarketCell) {
@@ -692,6 +709,7 @@ extension MarketDashboardViewController: FavorableMarketCell.Delegate {
     
 }
 
+// MARK: - FavorablePerpsMarketCell.Delegate
 extension MarketDashboardViewController: FavorablePerpsMarketCell.Delegate {
     
     func favorablePerpsMarketCellWantsToggleFavorite(_ cell: FavorablePerpsMarketCell) {
@@ -742,6 +760,7 @@ extension MarketDashboardViewController: FavorablePerpsMarketCell.Delegate {
     
 }
 
+// MARK: - WatchlistRecommendationActionCell.Delegate
 extension MarketDashboardViewController: WatchlistRecommendationActionCell.Delegate {
     
     func watchlistRecommendationActionCellDidInvokeAction(_ cell: WatchlistRecommendationActionCell) {
@@ -815,6 +834,7 @@ extension MarketDashboardViewController: WatchlistRecommendationActionCell.Deleg
     
 }
 
+// MARK: - MarketPeriodicRequester.Delegate
 extension MarketDashboardViewController: MarketPeriodicRequester.Delegate {
     
     func marketPeriodicRequester(
@@ -832,6 +852,7 @@ extension MarketDashboardViewController: MarketPeriodicRequester.Delegate {
     
 }
 
+// MARK: - PerpetualMarketLoader.Delegate
 extension MarketDashboardViewController: PerpetualMarketLoader.Delegate {
     
     func perpetualMarketLoader(

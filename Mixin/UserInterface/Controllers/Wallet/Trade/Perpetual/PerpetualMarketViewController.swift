@@ -52,7 +52,7 @@ final class PerpetualMarketViewController: UIViewController {
     }()
     private var charts: [PerpetualTimeFrame: PerpetualMarketPriceCell.Chart] = [:]
     
-    private weak var favoriteBarButtonItem: UIBarButtonItem!
+    private weak var favoriteButton: FavoriteButton!
     private weak var collectionView: UICollectionView!
     private weak var actionWrapperView: UIView!
     private weak var actionView: UIView?
@@ -261,21 +261,23 @@ final class PerpetualMarketViewController: UIViewController {
         reloadPositions()
         
         let marketID = viewModel.market.marketID
-        let favoriteBarButtonItem: UIBarButtonItem = .tintedIcon(
-            image: nil,
-            target: self,
-            action: #selector(toggleFavorite(_:))
+        let favoriteButton = FavoriteButton()
+        favoriteButton.addTarget(
+            self,
+            action: #selector(toggleFavorite(_:)),
+            for: .touchUpInside
         )
+        let favoriteItem = UIBarButtonItem(customView: favoriteButton)
         DispatchQueue.global().async { [weak self] in
             let isFavorite = PerpsMarketDAO.shared.isFavorite(marketID: marketID)
             DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
+                favoriteButton.setFavorite(isFavorite, animated: false)
                 self.isFavorite = isFavorite
-                self.favoriteBarButtonItem = favoriteBarButtonItem
-                self.navigationItem.rightBarButtonItems?.append(favoriteBarButtonItem)
-                self.updateFavoriteButtonImage()
+                self.favoriteButton = favoriteButton
+                self.navigationItem.rightBarButtonItems?.append(favoriteItem)
             }
         }
     }
@@ -304,7 +306,7 @@ final class PerpetualMarketViewController: UIViewController {
         let marketID = viewModel.market.marketID
         if isFavorite {
             isFavorite = false
-            updateFavoriteButtonImage()
+            favoriteButton.setFavorite(false, animated: true)
             RouteAPI.unfavoritePerpsMarket(marketID: marketID) { [weak self] result in
                 switch result {
                 case .success:
@@ -315,13 +317,13 @@ final class PerpetualMarketViewController: UIViewController {
                     if let self {
                         showAutoHiddenHud(style: .error, text: error.localizedDescription)
                         self.isFavorite = true
-                        self.updateFavoriteButtonImage()
+                        self.favoriteButton.setFavorite(true, animated: false)
                     }
                 }
             }
         } else {
             isFavorite = true
-            updateFavoriteButtonImage()
+            favoriteButton.setFavorite(true, animated: true)
             RouteAPI.favoritePerpsMarket(marketID: marketID) { [weak self] result in
                 switch result {
                 case .success:
@@ -332,7 +334,7 @@ final class PerpetualMarketViewController: UIViewController {
                     if let self {
                         showAutoHiddenHud(style: .error, text: error.localizedDescription)
                         self.isFavorite = false
-                        self.updateFavoriteButtonImage()
+                        self.favoriteButton.setFavorite(false, animated: false)
                     }
                 }
             }
@@ -431,19 +433,6 @@ final class PerpetualMarketViewController: UIViewController {
                     activities: activities
                 )
             }
-        }
-    }
-    
-    private func updateFavoriteButtonImage() {
-        guard let item = favoriteBarButtonItem else {
-            return
-        }
-        if isFavorite {
-            item.image = R.image.market_favorite_solid()?.withRenderingMode(.alwaysTemplate)
-            item.tintColor = R.color.theme()
-        } else {
-            item.image = R.image.market_favorite_hollow()?.withRenderingMode(.alwaysTemplate)
-            item.tintColor = R.color.icon_tint()
         }
     }
     

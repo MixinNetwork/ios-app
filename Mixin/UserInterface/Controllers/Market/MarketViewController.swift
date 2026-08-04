@@ -7,7 +7,7 @@ final class MarketViewController: UIViewController {
     
     private weak var tableView: UITableView!
     private weak var actionView: MarketActionView!
-    private weak var favoriteBarButtonItem: UIBarButtonItem!
+    private weak var favoriteButton: FavoriteButton!
     
     private let id: Identifier
     private let isMalicious: Bool
@@ -74,16 +74,17 @@ final class MarketViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let favoriteBarButtonItem: UIBarButtonItem = .tintedIcon(
-            image: nil,
-            target: self,
-            action: #selector(toggleFavorite(_:))
+        let favoriteButton = FavoriteButton()
+        favoriteButton.addTarget(
+            self,
+            action: #selector(toggleFavorite(_:)),
+            for: .touchUpInside
         )
         navigationItem.rightBarButtonItems = [
             .tintedIcon(image: R.image.ic_share(), target: self, action: #selector(shareMarket(_:))),
-            favoriteBarButtonItem,
+            UIBarButtonItem(customView: favoriteButton),
         ]
-        self.favoriteBarButtonItem = favoriteBarButtonItem
+        self.favoriteButton = favoriteButton
         
         view.backgroundColor = R.color.background_secondary()
         
@@ -148,7 +149,7 @@ final class MarketViewController: UIViewController {
         if let market {
             viewModel.update(market: market, tokens: [])
             tableView.reloadData()
-            updateFavoriteButtonImage()
+            favoriteButton.setFavorite(market.isFavorite, animated: false)
         }
         reloadFromLocal()
         NotificationCenter.default.addObserver(
@@ -164,7 +165,7 @@ final class MarketViewController: UIViewController {
             self.market = nil
             self.viewModel.updateWithMarketNotFound()
             self.tableView.reloadData()
-            self.updateFavoriteButtonImage()
+            self.favoriteButton.setFavorite(nil, animated: false)
         })
         
         reporter.report(event: .marketDetail)
@@ -195,7 +196,7 @@ final class MarketViewController: UIViewController {
         }
         if market.isFavorite {
             market.isFavorite = false
-            updateFavoriteButtonImage()
+            favoriteButton.setFavorite(false, animated: true)
             RouteAPI.unfavoriteMarket(coinID: market.coinID) { [weak self] result in
                 switch result {
                 case .success:
@@ -206,14 +207,14 @@ final class MarketViewController: UIViewController {
                     if let self {
                         showAutoHiddenHud(style: .error, text: error.localizedDescription)
                         market.isFavorite = true
-                        self.updateFavoriteButtonImage()
+                        self.favoriteButton.setFavorite(true, animated: false)
                     }
                 }
             }
         } else {
             reporter.report(event: .marketFavoriteAdd, tags: ["source": analyticSource.rawValue])
             market.isFavorite = true
-            updateFavoriteButtonImage()
+            favoriteButton.setFavorite(true, animated: true)
             RouteAPI.favoriteMarket(coinID: market.coinID) { [weak self] result in
                 switch result {
                 case .success:
@@ -224,7 +225,7 @@ final class MarketViewController: UIViewController {
                     if let self {
                         showAutoHiddenHud(style: .error, text: error.localizedDescription)
                         market.isFavorite = false
-                        self.updateFavoriteButtonImage()
+                        self.favoriteButton.setFavorite(false, animated: false)
                     }
                 }
             }
@@ -315,7 +316,7 @@ final class MarketViewController: UIViewController {
                 self.viewModel.update(market: market, tokens: [])
                 self.tableView.reloadData()
                 self.reloadTokens(market: market)
-                self.updateFavoriteButtonImage()
+                self.favoriteButton.setFavorite(market.isFavorite, animated: false)
                 self.actionView.hasAlert = hasAlert
             }
         }
@@ -330,23 +331,6 @@ final class MarketViewController: UIViewController {
             DispatchQueue.main.sync {
                 self?.actionView.hasAlert = hasAlert
             }
-        }
-    }
-    
-    private func updateFavoriteButtonImage() {
-        guard let item = favoriteBarButtonItem else {
-            return
-        }
-        if let market {
-            if market.isFavorite {
-                item.image = R.image.market_favorite_solid()?.withRenderingMode(.alwaysTemplate)
-                item.tintColor = R.color.theme()
-            } else {
-                item.image = R.image.market_favorite_hollow()?.withRenderingMode(.alwaysTemplate)
-                item.tintColor = R.color.icon_tint()
-            }
-        } else {
-            item.image = nil
         }
     }
     

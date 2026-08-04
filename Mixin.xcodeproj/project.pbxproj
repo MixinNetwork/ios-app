@@ -1537,6 +1537,7 @@
 		94D4EA502EE015D5006BC2DC /* Wallet+TradingWalletID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D4EA4F2EE015CC006BC2DC /* Wallet+TradingWalletID.swift */; };
 		94D5C0EE2D5C911D0046C20E /* WalletSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */; };
 		94D5C0EF2D5C911D0046C20E /* WalletSummaryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */; };
+		94D635D43020A069006F2C4F /* favorite.png in Resources */ = {isa = PBXBuildFile; fileRef = 94D635D13020A069006F2C4F /* favorite.png */; };
 		94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */; };
 		94D72C1F27A293CE00E328F0 /* PINAPITestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D72C1E27A293CE00E328F0 /* PINAPITestView.swift */; };
 		94D72C2127A2944600E328F0 /* PINAPITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D72C2027A2944600E328F0 /* PINAPITest.swift */; };
@@ -1613,6 +1614,7 @@
 		94E2075C2F4EE56B00D65D98 /* PerpetualOrderSide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E207582F4EE56100D65D98 /* PerpetualOrderSide.swift */; };
 		94E207672F4EE5A600D65D98 /* OpenPerpetualOrderResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E207662F4EE5A300D65D98 /* OpenPerpetualOrderResponse.swift */; };
 		94E207722F4EE78300D65D98 /* ClosePerpetualOrderResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E207712F4EE77F00D65D98 /* ClosePerpetualOrderResponse.swift */; };
+		94E2A67430207F6A00A96B1D /* FavoriteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E2A67330207F6900A96B1D /* FavoriteButton.swift */; };
 		94E34123261D829200E2F9D3 /* code.css in Resources */ = {isa = PBXBuildFile; fileRef = 94E34120261D829200E2F9D3 /* code.css */; };
 		94E34124261D829200E2F9D3 /* highlight.js in Resources */ = {isa = PBXBuildFile; fileRef = 94E34121261D829200E2F9D3 /* highlight.js */; };
 		94E35CA3298B836300ADB40D /* WalletConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E35CA2298B836300ADB40D /* WalletConnectService.swift */; };
@@ -3550,6 +3552,7 @@
 		94D4EA4F2EE015CC006BC2DC /* Wallet+TradingWalletID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Wallet+TradingWalletID.swift"; sourceTree = "<group>"; };
 		94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSummaryViewController.swift; sourceTree = "<group>"; };
 		94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletSummaryView.xib; sourceTree = "<group>"; };
+		94D635D13020A069006F2C4F /* favorite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorite.png; sourceTree = "<group>"; };
 		94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelFactory.swift; sourceTree = "<group>"; };
 		94D72C1E27A293CE00E328F0 /* PINAPITestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINAPITestView.swift; sourceTree = "<group>"; };
 		94D72C2027A2944600E328F0 /* PINAPITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINAPITest.swift; sourceTree = "<group>"; };
@@ -3625,6 +3628,7 @@
 		94E207582F4EE56100D65D98 /* PerpetualOrderSide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualOrderSide.swift; sourceTree = "<group>"; };
 		94E207662F4EE5A300D65D98 /* OpenPerpetualOrderResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenPerpetualOrderResponse.swift; sourceTree = "<group>"; };
 		94E207712F4EE77F00D65D98 /* ClosePerpetualOrderResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosePerpetualOrderResponse.swift; sourceTree = "<group>"; };
+		94E2A67330207F6900A96B1D /* FavoriteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteButton.swift; sourceTree = "<group>"; };
 		94E34120261D829200E2F9D3 /* code.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = code.css; sourceTree = "<group>"; };
 		94E34121261D829200E2F9D3 /* highlight.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = highlight.js; sourceTree = "<group>"; };
 		94E35CA2298B836300ADB40D /* WalletConnectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectService.swift; sourceTree = "<group>"; };
@@ -4600,6 +4604,7 @@
 				94C67F402F63C25500CB11DC /* ManualScrollView.swift */,
 				94B7FF242FC2E13D00FAE569 /* PopupShareView.xib */,
 				94B7FF232FC2E13D00FAE569 /* PopupShareViewController.swift */,
+				94E2A67330207F6900A96B1D /* FavoriteButton.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -6273,6 +6278,7 @@
 				94F2FA922DF039A80013B820 /* user_membership_prosperity_large.json */,
 				940EADA02EAA12AC009B3DAA /* referral@2x.json */,
 				940EADA12EAA12AC009B3DAA /* referral@3x.json */,
+				94D635D13020A069006F2C4F /* favorite.png */,
 				949A3685261D9C5C004251B2 /* post.css */,
 				94EC81FB2BC5A61F00770DCE /* mixin-min.js */,
 			);
@@ -7579,6 +7585,7 @@
 				9447315A2E71867200ACC49B /* HomeNavigationTitleView.xib in Resources */,
 				944731702E71A2AD00ACC49B /* SearchMarketView.xib in Resources */,
 				94F0A1A72E3BB0AD001732B8 /* AuthenticationPreviewWalletCell.xib in Resources */,
+				94D635D43020A069006F2C4F /* favorite.png in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */,
 				DFC2646E24E585CE00BF954D /* DuplicateConfirmationWindow.xib in Resources */,
@@ -8806,6 +8813,7 @@
 				942FD9302D3A6F66004DCC4C /* TradeOrderViewController.swift in Sources */,
 				94C578CD2F0FDCCE0000561B /* Web3DisplayFee.swift in Sources */,
 				9404AD502F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift in Sources */,
+				94E2A67430207F6A00A96B1D /* FavoriteButton.swift in Sources */,
 				9419C1912E66E7E100BEAB42 /* DepositTaggingEntryFooterView.swift in Sources */,
 				DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */,
 				7B2C8B312524D6C100347AC3 /* ClipThumbnailCell.swift in Sources */,

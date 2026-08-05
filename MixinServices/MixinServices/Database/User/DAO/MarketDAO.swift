@@ -368,7 +368,7 @@ public final class MarketDAO: UserDatabaseDAO {
         db.save(history)
     }
     
-    public func favorableMarket(markets: [Market]) -> [FavorableMarket] {
+    public func favorableMarket(markets: any Sequence<Market>) -> [FavorableMarket] {
         let favoriteCoinIDs: Set<String> = db.selectSet(
             with: "SELECT coin_id FROM market_favored WHERE is_favored"
         )

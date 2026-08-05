@@ -525,11 +525,19 @@ extension PerpetualMarketSelectorViewController {
         weak var delegate: CategorySelectorControllerDelegate?
         
         private let collectionView: UICollectionView
-        private let categories: [DisplayCategory]
+        private let categories: [DisplayCategory] = [
+            .all,
+            .favorite,
+            .categorized(.crypto),
+            .categorized(.stocks),
+            .categorized(.memes),
+            .categorized(.indices),
+            .categorized(.commodities),
+            .categorized(.forex),
+        ]
         
         init(collectionView: UICollectionView) {
             self.collectionView = collectionView
-            self.categories = [.all, .favorite] + PerpetualMarket.Category.allCases.map { .categorized($0) }
             super.init()
         }
         

@@ -15,7 +15,7 @@ final class MarketDashboardViewController: UIViewController {
     
     private var category: Category
     private var subCategoryIndex: Int
-    private var order: MarketOrdering?
+    private var order: MarketOrdering
     
     private var collectionView: UICollectionView!
     private var dataSource: DiffableDataSource!
@@ -258,7 +258,7 @@ final class MarketDashboardViewController: UIViewController {
                 switch self.category {
                 case .watchlist:
                     header.subCategories = WatchlistSubCategory.allCases.map(\.displayTitle)
-                    header.leftOrderButton.alpha = 0
+                    header.leftOrderingField = .volume
                     switch WatchlistSubCategory.allCases[self.subCategoryIndex] {
                     case .crypto:
                         header.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
@@ -267,12 +267,10 @@ final class MarketDashboardViewController: UIViewController {
                     }
                 case .crypto:
                     header.subCategories = Market.SubCategory.allCases.map(\.displayTitle)
-                    header.leftOrderButton.alpha = 1
                     header.leftOrderingField = Market.SubCategory.allCases[self.subCategoryIndex] == .all ? .marketCap : .volume
                     header.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
                 case .perps:
                     header.subCategories = PerpetualMarket.SubCategory.allCases.map(\.displayTitle)
-                    header.leftOrderButton.alpha = 1
                     header.leftOrderingField = .volume
                     header.changePeriod = .twentyFourHours
                 case .indicator:
@@ -593,7 +591,19 @@ extension MarketDashboardViewController {
     }
     
     @objc private func updateMarketChangePeriod(_ notification: Notification) {
-        if let order, case .change = order.field {
+        switch order.field {
+        case .marketCap, .volume, .price:
+            var snapshot = dataSource.snapshot()
+            snapshot.reconfigureItems(snapshot.itemIdentifiers)
+            dataSource.apply(snapshot) {
+                if let headerView = self.collectionView.supplementaryView(
+                    forElementKind: UICollectionView.elementKindSectionHeader,
+                    at: IndexPath(item: 0, section: 0)
+                ) as? MarketOrderingHeaderView {
+                    headerView.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
+                }
+            }
+        case .change:
             let order = MarketOrdering(
                 field: .change(period: AppGroupUserDefaults.User.cryptoMarketChangePeriod),
                 direction: order.direction
@@ -605,17 +615,6 @@ extension MarketDashboardViewController {
                 scheduleRemoteLoader: false,
                 debugReason: "ChangePeriodUpdate",
             )
-        } else {
-            var snapshot = dataSource.snapshot()
-            snapshot.reconfigureItems(snapshot.itemIdentifiers)
-            dataSource.apply(snapshot) {
-                if let headerView = self.collectionView.supplementaryView(
-                    forElementKind: UICollectionView.elementKindSectionHeader,
-                    at: IndexPath(item: 0, section: 0)
-                ) as? MarketOrderingHeaderView {
-                    headerView.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
-                }
-            }
         }
     }
     
@@ -1049,7 +1048,7 @@ extension MarketDashboardViewController {
         }
         
         func reloadCryptoWatchlist(
-            order: MarketOrdering?,
+            order: MarketOrdering,
             displayCategory: Category,
             displaySubCategoryIndex: Int,
             scheduleRemoteLoader: Bool,
@@ -1117,7 +1116,7 @@ extension MarketDashboardViewController {
         }
         
         func reloadPerpsWatchlist(
-            order: MarketOrdering?,
+            order: MarketOrdering,
             displayCategory: Category,
             displaySubCategoryIndex: Int,
             scheduleRemoteLoader: Bool,
@@ -1189,7 +1188,7 @@ extension MarketDashboardViewController {
     private class ReloadWatchlistOperation: ReloadDataOperation, @unchecked Sendable {
         
         private let subCategoryIndex: Int
-        private let order: MarketOrdering?
+        private let order: MarketOrdering
         private let scheduleRemoteLoader: Bool
         
         init(
@@ -1231,7 +1230,7 @@ extension MarketDashboardViewController {
     private final class ReloadMarketsOperation: ReloadDataOperation, @unchecked Sendable {
         
         private let subCategoryIndex: Int
-        private let order: MarketOrdering?
+        private let order: MarketOrdering
         private let scheduleRemoteLoader: Bool
         
         init(
@@ -1302,7 +1301,7 @@ extension MarketDashboardViewController {
     private final class ReloadPerpsMarketOperation: ReloadDataOperation, @unchecked Sendable {
         
         private let subCategoryIndex: Int
-        private let order: MarketOrdering?
+        private let order: MarketOrdering
         private let scheduleRemoteLoader: Bool
         
         init(

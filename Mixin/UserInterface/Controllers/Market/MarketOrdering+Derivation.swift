@@ -6,15 +6,13 @@ extension MarketOrdering {
     static func derived(
         category: MarketDashboardViewController.Category,
         subCategoryIndex: Int
-    ) -> MarketOrdering? {
+    ) -> MarketOrdering {
         switch category {
         case .watchlist:
-            nil
+            MarketOrdering(field: .volume, direction: .descending)
         case .crypto:
             switch Market.SubCategory.allCases[subCategoryIndex] {
-            case .watchlist:
-                nil
-            case .trending:
+            case .watchlist, .trending:
                 MarketOrdering(field: .volume, direction: .descending)
             case .topGainer:
                 MarketOrdering(
@@ -31,9 +29,7 @@ extension MarketOrdering {
             }
         case .perps:
             switch PerpetualMarket.SubCategory.allCases[subCategoryIndex] {
-            case .watchlist:
-                nil
-            case .trending, .memes, .indices, .commodities, .forex:
+            case .watchlist, .trending, .memes, .indices, .commodities, .forex:
                 MarketOrdering(field: .volume, direction: .descending)
             case .topGainers:
                 MarketOrdering(
@@ -47,7 +43,7 @@ extension MarketOrdering {
                 )
             }
         case .indicator:
-            nil
+            MarketOrdering(field: .volume, direction: .descending)
         }
     }
     

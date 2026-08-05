@@ -52,15 +52,15 @@
                         <rect key="frame" x="88" y="0.0" width="271" height="50"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="5sZ-tb-pgn">
-                                <rect key="frame" x="0.0" y="8.6666666666666679" width="141" height="32.666666666666657"/>
+                                <rect key="frame" x="0.0" y="7.3333333333333321" width="141" height="35.333333333333343"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Gns-u4-aF5">
-                                        <rect key="frame" x="0.0" y="0.0" width="92.333333333333329" height="14.333333333333334"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="57.666666666666664" height="17"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="BTC-USDT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gZx-4P-8AO">
-                                                <rect key="frame" x="0.0" y="0.0" width="62" height="14.333333333333334"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gZx-4P-8AO">
+                                                <rect key="frame" x="0.0" y="0.0" width="27.333333333333332" height="17"/>
                                                 <color key="backgroundColor" name="background"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" name="text"/>
                                                 <nil key="highlightedColor"/>
                                                 <userDefinedRuntimeAttributes>
@@ -68,7 +68,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Perp" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tHM-hL-Tqe" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                                <rect key="frame" x="66" y="0.0" width="26.333333333333329" height="14.333333333333334"/>
+                                                <rect key="frame" x="31.333333333333329" y="0.0" width="26.333333333333329" height="17"/>
                                                 <color key="backgroundColor" name="tag_background"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" secondItem="tHM-hL-Tqe" secondAttribute="height" id="WAI-H2-CgY"/>
@@ -80,7 +80,7 @@
                                         </subviews>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VOL: $410.23M" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="scc-SG-u6n">
-                                        <rect key="frame" x="0.0" y="18.333333333333336" width="87.333333333333329" height="14.333333333333336"/>
+                                        <rect key="frame" x="0.0" y="21" width="87.333333333333329" height="14.333333333333336"/>
                                         <color key="backgroundColor" name="background"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                         <color key="textColor" name="text_tertiary"/>
@@ -150,7 +150,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

@@ -120,7 +120,7 @@ final class MarketDashboardViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
                 let header = NSCollectionLayoutBoundarySupplementaryItem(
-                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(67)),
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(73)),
                     elementKind: UICollectionView.elementKindSectionHeader,
                     alignment: .top
                 )

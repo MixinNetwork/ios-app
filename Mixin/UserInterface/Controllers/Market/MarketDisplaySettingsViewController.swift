@@ -85,7 +85,7 @@ extension MarketDisplaySettingsViewController: UITableViewDataSource {
             case .twentyFourHours:
                 R.string.localizable.hour_count(24)
             case .sevenDays:
-                R.string.localizable.days_count(24)
+                R.string.localizable.days_count(7)
             }
             cell.actionButton.menu = UIMenu(children: MarketChangePeriod.allCases.map { period in
                 UIAction(

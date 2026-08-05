@@ -32,6 +32,10 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        symbolLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
         tagLabel.contentInset = UIEdgeInsets(top: 1, left: 3, bottom: 1, right: 3)
         tagLabel.text = R.string.localizable.perp()
         tagLabel.layer.cornerRadius = 4

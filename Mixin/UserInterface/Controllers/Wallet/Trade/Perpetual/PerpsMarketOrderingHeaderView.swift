@@ -4,7 +4,7 @@ import MixinServices
 final class PerpsMarketOrderingHeaderView: UICollectionReusableView {
     
     protocol Delegate: AnyObject {
-        func perpsMarketOrderingHeaderView(_ view: PerpsMarketOrderingHeaderView, didSwitchToOrdering order: MarketOrdering?)
+        func perpsMarketOrderingHeaderView(_ view: PerpsMarketOrderingHeaderView, didSwitchToOrdering order: MarketOrdering)
     }
     
     @IBOutlet weak var volumeButton: UIButton!
@@ -57,47 +57,35 @@ final class PerpsMarketOrderingHeaderView: UICollectionReusableView {
     }
     
     @IBAction func sortByMarketCap(_ sender: Any) {
-        self.order = if let order, order.field == .volume {
-            switch order.direction {
-            case .ascending:
-                nil
-            case .descending:
-                order.directionToggled()
-            }
+        let order = if let order, order.field == .volume {
+            order.directionToggled()
         } else {
             MarketOrdering(field: .volume, direction: .descending)
         }
+        self.order = order
         delegate?.perpsMarketOrderingHeaderView(self, didSwitchToOrdering: order)
     }
     
     @IBAction func sortByPrice(_ sender: Any) {
-        self.order = if let order, order.field == .price {
-            switch order.direction {
-            case .ascending:
-                nil
-            case .descending:
-                order.directionToggled()
-            }
+        let order = if let order, order.field == .price {
+            order.directionToggled()
         } else {
             MarketOrdering(field: .price, direction: .descending)
         }
+        self.order = order
         delegate?.perpsMarketOrderingHeaderView(self, didSwitchToOrdering: order)
     }
     
     @IBAction func sortByChange(_ sender: Any) {
-        self.order = if let order, case .change = order.field {
-            switch order.direction {
-            case .ascending:
-                nil
-            case .descending:
-                order.directionToggled()
-            }
+        let order = if let order, case .change = order.field {
+            order.directionToggled()
         } else {
             MarketOrdering(
                 field: .change(period: .twentyFourHours),
                 direction: .descending
             )
         }
+        self.order = order
         delegate?.perpsMarketOrderingHeaderView(self, didSwitchToOrdering: order)
     }
     

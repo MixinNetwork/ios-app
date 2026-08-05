@@ -23,7 +23,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     private var selectedCategory: DisplayCategory
     private var markets: [DisplayCategory: [FavorablePerpetualMarket]] = [:]
     private var displayFavoritesAsRecommendations = false
-    private var ordering: MarketOrdering?
+    private var ordering: MarketOrdering
     
     private weak var marketsCollectionView: UICollectionView!
     private weak var addToWatchlistButton: UIButton?
@@ -46,7 +46,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     
     init(selectedCategory: DisplayCategory, ordering: MarketOrdering?) {
         self.selectedCategory = selectedCategory
-        self.ordering = ordering
+        self.ordering = ordering ?? MarketOrdering(field: .volume, direction: .descending)
         let nib = R.nib.perpetualMarketSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -412,7 +412,7 @@ extension PerpetualMarketSelectorViewController: PerpetualMarketSelectorViewCont
 
 extension PerpetualMarketSelectorViewController: PerpsMarketOrderingHeaderView.Delegate {
     
-    func perpsMarketOrderingHeaderView(_ view: PerpsMarketOrderingHeaderView, didSwitchToOrdering order: MarketOrdering?) {
+    func perpsMarketOrderingHeaderView(_ view: PerpsMarketOrderingHeaderView, didSwitchToOrdering order: MarketOrdering) {
         self.ordering = order
         reloadData()
     }
@@ -526,16 +526,11 @@ extension PerpetualMarketSelectorViewController {
         weak var delegate: CategorySelectorControllerDelegate?
         
         private let collectionView: UICollectionView
-        private let categories: [DisplayCategory] = [
-            .all,
-            .favorite,
-            .categorized(.crypto),
-            .categorized(.stocks),
-            .categorized(.indices)
-        ]
+        private let categories: [DisplayCategory]
         
         init(collectionView: UICollectionView) {
             self.collectionView = collectionView
+            self.categories = [.all, .favorite] + PerpetualMarket.Category.allCases.map { .categorized($0) }
             super.init()
         }
         

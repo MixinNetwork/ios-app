@@ -5,12 +5,12 @@ enum WatchlistSubCategory: String, CaseIterable {
     case crypto
     case perps
     
-    var displayTitle: String {
+    var subCategoryDisplay: MarketSubCategoryDisplay {
         switch self {
         case .crypto:
-            R.string.localizable.crypto()
+                .text(R.string.localizable.crypto())
         case .perps:
-            R.string.localizable.perpetual()
+                .text(R.string.localizable.perpetual())
         }
     }
     

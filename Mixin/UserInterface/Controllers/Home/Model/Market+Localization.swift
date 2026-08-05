@@ -3,18 +3,18 @@ import MixinServices
 
 extension Market.SubCategory {
     
-    var displayTitle: String {
+    var subCategoryDisplay: MarketSubCategoryDisplay {
         switch self {
         case .watchlist:
-            "☆"
+                .favorite
         case .trending:
-            R.string.localizable.trending()
+                .text(R.string.localizable.trending())
         case .topGainer:
-            R.string.localizable.top_gainers()
+                .text(R.string.localizable.top_gainers())
         case .topLoser:
-            R.string.localizable.top_losers()
+                .text(R.string.localizable.top_losers())
         case .all:
-            R.string.localizable.all()
+                .text(R.string.localizable.all())
         }
     }
     
@@ -22,24 +22,24 @@ extension Market.SubCategory {
 
 extension PerpetualMarket.SubCategory {
     
-    var displayTitle: String {
+    var subCategoryDisplay: MarketSubCategoryDisplay {
         switch self {
         case .watchlist:
-            "☆"
+                .favorite
         case .trending:
-            R.string.localizable.trending()
+                .text(R.string.localizable.trending())
         case .topGainers:
-            R.string.localizable.top_gainers()
+                .text(R.string.localizable.top_gainers())
         case .topLosers:
-            R.string.localizable.top_losers()
+                .text(R.string.localizable.top_losers())
         case .memes:
-            R.string.localizable.perps_category_meme()
+                .text(R.string.localizable.perps_category_meme())
         case .indices:
-            R.string.localizable.perps_category_indices()
+                .text(R.string.localizable.perps_category_indices())
         case .commodities:
-            R.string.localizable.perps_category_commodities()
+                .text(R.string.localizable.perps_category_commodities())
         case .forex:
-            R.string.localizable.perps_category_forex()
+                .text(R.string.localizable.perps_category_forex())
         }
     }
     

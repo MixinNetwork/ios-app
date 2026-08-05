@@ -257,7 +257,7 @@ final class MarketDashboardViewController: UIViewController {
                 )!
                 switch self.category {
                 case .watchlist:
-                    header.subCategories = WatchlistSubCategory.allCases.map(\.displayTitle)
+                    header.subCategories = WatchlistSubCategory.allCases.map(\.subCategoryDisplay)
                     header.leftOrderingField = .volume
                     switch WatchlistSubCategory.allCases[self.subCategoryIndex] {
                     case .crypto:
@@ -266,11 +266,11 @@ final class MarketDashboardViewController: UIViewController {
                         header.changePeriod = .twentyFourHours
                     }
                 case .crypto:
-                    header.subCategories = Market.SubCategory.allCases.map(\.displayTitle)
+                    header.subCategories = Market.SubCategory.allCases.map(\.subCategoryDisplay)
                     header.leftOrderingField = Market.SubCategory.allCases[self.subCategoryIndex] == .all ? .marketCap : .volume
                     header.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
                 case .perps:
-                    header.subCategories = PerpetualMarket.SubCategory.allCases.map(\.displayTitle)
+                    header.subCategories = PerpetualMarket.SubCategory.allCases.map(\.subCategoryDisplay)
                     header.leftOrderingField = .volume
                     header.changePeriod = .twentyFourHours
                 case .indicator:
@@ -290,11 +290,11 @@ final class MarketDashboardViewController: UIViewController {
                     )!
                     switch self.category {
                     case .watchlist:
-                        header.subCategories = WatchlistSubCategory.allCases.map(\.displayTitle)
+                        header.subCategories = WatchlistSubCategory.allCases.map(\.subCategoryDisplay)
                     case .crypto:
-                        header.subCategories = Market.SubCategory.allCases.map(\.displayTitle)
+                        header.subCategories = Market.SubCategory.allCases.map(\.subCategoryDisplay)
                     case .perps:
-                        header.subCategories = PerpetualMarket.SubCategory.allCases.map(\.displayTitle)
+                        header.subCategories = PerpetualMarket.SubCategory.allCases.map(\.subCategoryDisplay)
                     case .indicator:
                         return nil
                     }
@@ -321,11 +321,11 @@ final class MarketDashboardViewController: UIViewController {
                 )!
                 switch self.category {
                 case .watchlist:
-                    header.subCategories = WatchlistSubCategory.allCases.map(\.displayTitle)
+                    header.subCategories = WatchlistSubCategory.allCases.map(\.subCategoryDisplay)
                 case .crypto:
-                    header.subCategories = Market.SubCategory.allCases.map(\.displayTitle)
+                    header.subCategories = Market.SubCategory.allCases.map(\.subCategoryDisplay)
                 case .perps:
-                    header.subCategories = PerpetualMarket.SubCategory.allCases.map(\.displayTitle)
+                    header.subCategories = PerpetualMarket.SubCategory.allCases.map(\.subCategoryDisplay)
                 case .indicator:
                     return nil
                 }

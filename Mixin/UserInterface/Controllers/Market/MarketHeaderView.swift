@@ -12,7 +12,7 @@ class MarketHeaderView: UICollectionReusableView {
     
     weak var delegate: Delegate?
     
-    var subCategories: [String] = [] {
+    var subCategories: [MarketSubCategoryDisplay] = [] {
         didSet {
             collectionView.reloadData()
         }
@@ -46,7 +46,7 @@ extension MarketHeaderView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.market_sub_category, for: indexPath)!
-        cell.label.text = subCategories[indexPath.item]
+        cell.category = subCategories[indexPath.item]
         return cell
     }
     

@@ -3,10 +3,34 @@ import UIKit
 final class MarketSubCategoryCell: UICollectionViewCell {
     
     @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var imageView: UIImageView!
+    
+    var category: MarketSubCategoryDisplay? {
+        didSet {
+            switch category {
+            case .favorite:
+                label.text = nil
+                imageView.image = R.image.market_unfavorited()!
+                    .withRenderingMode(.alwaysTemplate)
+            case .text(let text):
+                label.text = text
+                imageView.image = nil
+            case nil:
+                label.text = nil
+                imageView.image = nil
+            }
+        }
+    }
     
     override var isSelected: Bool {
         didSet {
-            label.textColor = isSelected ? R.color.theme() : R.color.text_tertiary()
+            if isSelected {
+                label.textColor = R.color.theme()
+                imageView.tintColor = R.color.theme()
+            } else {
+                label.textColor = R.color.text_tertiary()
+                imageView.tintColor = R.color.icon_tint()
+            }
         }
     }
     

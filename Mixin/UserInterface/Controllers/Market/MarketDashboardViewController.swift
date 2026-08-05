@@ -815,7 +815,7 @@ extension MarketDashboardViewController: FavorablePerpsMarketCell.Delegate {
 // MARK: - WatchlistRecommendationActionCell.Delegate
 extension MarketDashboardViewController: WatchlistRecommendationFooterView.Delegate {
     
-    func watchlistRecommendationFooterViewDidInvokeAction(_ cell: WatchlistRecommendationFooterView) {
+    func watchlistRecommendationFooterViewDidInvokeAction(_ footerView: WatchlistRecommendationFooterView) {
         guard let indexPaths = collectionView.indexPathsForSelectedItems, !indexPaths.isEmpty else {
             return
         }
@@ -837,9 +837,9 @@ extension MarketDashboardViewController: WatchlistRecommendationFooterView.Deleg
         }
         if !marketCoinIDs.isEmpty {
             collectionView.isUserInteractionEnabled = false
-            cell.actionButton.isBusy = true
+            footerView.actionButton.isBusy = true
             RouteAPI.favoriteMarkets(coinIDs: marketCoinIDs) { [weak self] result in
-                cell.actionButton.isBusy = false
+                footerView.actionButton.isBusy = false
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
@@ -860,9 +860,9 @@ extension MarketDashboardViewController: WatchlistRecommendationFooterView.Deleg
             }
         } else if !perpsMarketIDs.isEmpty {
             collectionView.isUserInteractionEnabled = false
-            cell.actionButton.isBusy = true
+            footerView.actionButton.isBusy = true
             RouteAPI.favoritePerpsMarkets(marketIDs: perpsMarketIDs) { [weak self] result in
-                cell.actionButton.isBusy = false
+                footerView.actionButton.isBusy = false
                 switch result {
                 case .success:
                     DispatchQueue.global().async {

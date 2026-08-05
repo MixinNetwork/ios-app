@@ -3,7 +3,7 @@ import UIKit
 final class WatchlistRecommendationFooterView: UICollectionReusableView {
     
     protocol Delegate: AnyObject {
-        func watchlistRecommendationFooterViewDidInvokeAction(_ cell: WatchlistRecommendationFooterView)
+        func watchlistRecommendationFooterViewDidInvokeAction(_ footerView: WatchlistRecommendationFooterView)
     }
     
     @IBOutlet weak var actionButton: ConfigurationBasedBusyButton!

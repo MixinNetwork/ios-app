@@ -466,7 +466,7 @@ extension PerpetualMarketSelectorViewController: FavorablePerpsMarketCell.Delega
 
 extension PerpetualMarketSelectorViewController: WatchlistRecommendationFooterView.Delegate {
     
-    func watchlistRecommendationFooterViewDidInvokeAction(_ cell: WatchlistRecommendationFooterView) {
+    func watchlistRecommendationFooterViewDidInvokeAction(_ footerView: WatchlistRecommendationFooterView) {
         guard
             let indexPaths = marketsCollectionView.indexPathsForSelectedItems,
             !indexPaths.isEmpty,
@@ -481,9 +481,9 @@ extension PerpetualMarketSelectorViewController: WatchlistRecommendationFooterVi
             return
         }
         marketsCollectionView.isUserInteractionEnabled = false
-        cell.actionButton.isBusy = true
+        footerView.actionButton.isBusy = true
         RouteAPI.favoritePerpsMarkets(marketIDs: selectedMarketIDs) { [weak self] result in
-            cell.actionButton.isBusy = false
+            footerView.actionButton.isBusy = false
             switch result {
             case .success:
                 DispatchQueue.global().async {

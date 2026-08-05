@@ -11,11 +11,7 @@ final class MarketDashboardViewController: UIViewController {
     private var categoryController: CategoryController!
     private var categorySelectorHeightConstraint: NSLayoutConstraint!
     
-    private var category: Category {
-        didSet {
-            AppGroupUserDefaults.User.marketCategory = category.rawValue
-        }
-    }
+    private var category: Category
     private var subCategoryIndex: Int
     private var order: MarketOrdering?
     
@@ -237,9 +233,11 @@ final class MarketDashboardViewController: UIViewController {
                     }
                 }
                 return cell
-            case let .marketIndicator(indicator):
+            case .marketIndicator:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.market_indicator, for: indexPath)!
-                cell.load(indicator: indicator)
+                if let indicator = self?.marketIndicator {
+                    cell.load(indicator: indicator)
+                }
                 return cell
             case .busyIndicator:
                 return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.market_loading, for: indexPath)!
@@ -372,7 +370,6 @@ final class MarketDashboardViewController: UIViewController {
             scheduleRemoteLoader: true,
             debugReason: "Initial",
         )
-        ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -481,7 +478,7 @@ final class MarketDashboardViewController: UIViewController {
             var snapshot = DataSourceSnapshot()
             if let marketIndicator {
                 snapshot.appendSections([.marketIndicator])
-                snapshot.appendItems([.marketIndicator(marketIndicator)], toSection: .marketIndicator)
+                snapshot.appendItems([.marketIndicator], toSection: .marketIndicator)
             } else {
                 snapshot.appendSections([.busyIndicator])
                 snapshot.appendItems([.busyIndicator], toSection: .busyIndicator)
@@ -491,24 +488,21 @@ final class MarketDashboardViewController: UIViewController {
         }
     }
     
-    private func reloadGlobalMarket(overwrites: Bool) {
-        DispatchQueue.global().async { [weak self] in
-            guard let market: GlobalMarket = PropertiesDAO.shared.value(forKey: .globalMarket) else {
-                return
-            }
-            let indicator = MarketIndicator(market: market)
-            DispatchQueue.main.async {
-                guard let self, self.marketIndicator == nil || overwrites else {
-                    return
-                }
-                self.marketIndicator = indicator
-                var snapshot = self.dataSource.snapshot()
-                if snapshot.sectionIdentifiers.contains(.marketIndicator) {
-                    snapshot.deleteAllItems()
-                    snapshot.appendItems([.marketIndicator(indicator)], toSection: .marketIndicator)
-                    self.dataSource.applySnapshotUsingReloadData(snapshot)
-                }
-            }
+    private func reloadGlobalMarket(_ market: GlobalMarket) {
+        let indicator = MarketIndicator(market: market)
+        self.marketIndicator = indicator
+        guard category == .indicator else {
+            return
+        }
+        var snapshot = dataSource.snapshot()
+        if snapshot.sectionIdentifiers.contains(.marketIndicator) {
+            snapshot.reconfigureItems([.marketIndicator])
+            dataSource.apply(snapshot)
+        } else {
+            var snapshot = DataSourceSnapshot()
+            snapshot.appendSections([.marketIndicator])
+            snapshot.appendItems([.marketIndicator])
+            dataSource.applySnapshotUsingReloadData(snapshot)
         }
     }
     
@@ -572,10 +566,15 @@ extension MarketDashboardViewController {
     }
     
     @objc private func updateMarketIndicator(_ notification: Notification) {
-        guard notification.userInfo?[PropertiesDAO.Key.globalMarket] != nil else {
+        guard
+            let change = notification.userInfo?[PropertiesDAO.Key.globalMarket],
+            let change = change as? PropertiesDAO.Change,
+            case let .saved(market) = change,
+            let market = market as? GlobalMarket
+        else {
             return
         }
-        reloadGlobalMarket(overwrites: true)
+        reloadGlobalMarket(market)
     }
     
     @objc private func reloadDataOnDatabaseUpdate(_ notification: Notification) {
@@ -946,7 +945,7 @@ extension MarketDashboardViewController {
         
     }
     
-    enum Section {
+    private enum Section {
         case market
         case perps
         case marketIndicator
@@ -954,16 +953,16 @@ extension MarketDashboardViewController {
         case recommendationItem
     }
     
-    enum Item: Hashable {
+    private enum Item: Hashable {
         case market(id: String)
         case perps(id: String)
         case busyIndicator
-        case marketIndicator(MarketIndicator)
+        case marketIndicator
         case recommendation(subCategory: WatchlistSubCategory, id: String)
     }
     
-    typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, Item>
-    typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Item>
+    private typealias DiffableDataSource = UICollectionViewDiffableDataSource<Section, Item>
+    private typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Item>
     
     private final class CategoryController: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
         
@@ -1026,6 +1025,7 @@ extension MarketDashboardViewController {
                 scheduleRemoteLoader: true,
                 debugReason: "CategorySwitch",
             )
+            AppGroupUserDefaults.User.marketCategory = category.rawValue
         }
         
     }

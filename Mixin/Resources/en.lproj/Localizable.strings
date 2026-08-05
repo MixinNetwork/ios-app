@@ -482,7 +482,7 @@
 "date_format_month" = "E, d MMM";
 "date_format_week_date" = "E, d MMM yyyy";
 "days_count" = "%d Days";
-"days_count_short" = "%dD";
+"days_count_short" = "%dd";
 "declined" = "Declined";
 "decode_transaction_failed" = "Unable to estimate balance changes. Be cautious and only sign transactions for apps you trust.";
 "delete" = "Delete";
@@ -766,7 +766,7 @@
 "hold_to_record_audio" = "Hold to record, release to send.";
 "hour" = "%d Hour";
 "hour_count" = "%d Hours";
-"hours_count_short" = "%dH";
+"hours_count_short" = "%dh";
 "how_are_you" = "Hi, how are you?";
 "how_perps_works" = "How perpetual futures works?";
 "i_am_good" = "I’m good.";
@@ -837,7 +837,6 @@
 "is_it_safe_to_import_into_mixin" = "Is it safe to import into Mixin?";
 "join_group" = "Join Group";
 "joined_in" = "Joined on %@";
-"keep" = "Keep";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "keep_waiting" = "Keep Waiting";
 "label" = "Label";

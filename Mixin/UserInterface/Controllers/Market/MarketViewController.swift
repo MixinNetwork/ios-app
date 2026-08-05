@@ -1002,7 +1002,7 @@ extension MarketViewController {
             self.stats = nil
             self.balance = Balance(
                 balance: token.localizedBalanceWithSymbol,
-                period: R.string.localizable.hours_count_short(24),
+                period: R.string.localizable.hours_count_short(24).uppercased(),
                 value: token.estimatedFiatMoneyBalance,
                 change: "",
                 changeColor: .arbitrary(.clear)
@@ -1073,7 +1073,7 @@ extension MarketViewController {
                         sign: .never,
                         symbol: .custom(symbol)
                     ),
-                    period: R.string.localizable.hours_count_short(24),
+                    period: R.string.localizable.hours_count_short(24).uppercased(),
                     value: "≈ " + CurrencyFormatter.localizedString(
                         from: balance * market.decimalPrice * Currency.current.decimalRate,
                         format: .fiatMoneyPrecision,

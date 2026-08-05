@@ -837,7 +837,6 @@
 "is_it_safe_to_import_into_mixin" = "匯入到 Mixin 安全嗎？";
 "join_group" = "加入群組";
 "joined_in" = "加入於 %@";
-"keep" = "保留";
 "keep_running_foreground" = "不要關閉螢幕並保持 Mixin 在前臺執行";
 "keep_waiting" = "繼續等待";
 "label" = "標題";

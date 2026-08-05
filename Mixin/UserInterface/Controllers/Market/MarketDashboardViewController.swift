@@ -6,6 +6,8 @@ final class MarketDashboardViewController: UIViewController {
     private let queue = OperationQueue()
     private let hiddenSearchTopMargin: CGFloat = -28
     
+    private var isViewAppearing = false
+    
     private var categorySelectorCollectionView: UICollectionView!
     private var categorySelectorSizeObserver: NSKeyValueObservation?
     private var categoryController: CategoryController!
@@ -374,6 +376,7 @@ final class MarketDashboardViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        isViewAppearing = true
         marketLoader?.start()
         perpsMarketLoader?.start()
         NotificationCenter.default.removeObserver(
@@ -394,6 +397,7 @@ final class MarketDashboardViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        isViewAppearing = false
         marketLoader?.pause()
         perpsMarketLoader?.stop()
         NotificationCenter.default.addObserver(
@@ -476,12 +480,12 @@ final class MarketDashboardViewController: UIViewController {
             self.category = .indicator
             self.subCategoryIndex = 0
             var snapshot = DataSourceSnapshot()
-            if let marketIndicator {
-                snapshot.appendSections([.marketIndicator])
-                snapshot.appendItems([.marketIndicator], toSection: .marketIndicator)
-            } else {
+            if marketIndicator == nil {
                 snapshot.appendSections([.busyIndicator])
                 snapshot.appendItems([.busyIndicator], toSection: .busyIndicator)
+            } else {
+                snapshot.appendSections([.marketIndicator])
+                snapshot.appendItems([.marketIndicator], toSection: .marketIndicator)
             }
             dataSource.applySnapshotUsingReloadData(snapshot)
             ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
@@ -578,7 +582,11 @@ extension MarketDashboardViewController {
     }
     
     @objc private func reloadDataOnDatabaseUpdate(_ notification: Notification) {
-        reloadDataWithCurrentSettings(debugReason: "DBUpdate")
+        if isViewAppearing {
+            reloadDataWithCurrentSettings(debugReason: "DBUpdate")
+        } else {
+            reloadDataOnViewAppear = true
+        }
     }
     
     @objc private func scheduleReloadDataOnViewAppear(_ notification: Notification) {

@@ -31,9 +31,6 @@ final class WatchlistRecommendationItemCell: UICollectionViewCell {
         symbolLabel.text = market.symbol
         tagLabel.isHidden = true
         infoLabel.text = market.localizedMarketCap
-        infoLabel.font = UIFontMetrics.default.scaledFont(
-            for: .systemFont(ofSize: 12)
-        )
         infoLabel.textColor = R.color.text_tertiary()
     }
     
@@ -43,9 +40,6 @@ final class WatchlistRecommendationItemCell: UICollectionViewCell {
         tagLabel.isHidden = false
         tagLabel.text = R.string.localizable.perp()
         infoLabel.text = market.changePercentage
-        infoLabel.font = UIFontMetrics.default.scaledFont(
-            for: .systemFont(ofSize: 12, weight: .medium)
-        )
         infoLabel.marketColor = .byValue(market.decimalChange)
     }
     

@@ -82,7 +82,6 @@ final class PerpetualMarketSelectorViewController: UIViewController {
             }
         cancelButton.setTitle(R.string.localizable.cancel(), for: .normal)
         
-        categorySelectorLayout.itemSize = UICollectionViewFlowLayout.automaticSize
         categorySelectorController = CategorySelectorController(
             collectionView: categorySelectorCollectionView
         )

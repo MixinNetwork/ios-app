@@ -18,21 +18,8 @@ class MarketHeaderView: UICollectionReusableView {
         }
     }
     
-    private var collectionViewSizeObserver: NSKeyValueObservation?
-    
     override func awakeFromNib() {
         super.awakeFromNib()
-        collectionViewSizeObserver = collectionView.observe(
-            \.contentSize,
-             options: [.new]
-        ) { [weak self] (_, change) in
-            guard let newValue = change.newValue, let self else {
-                return
-            }
-            self.collectionViewHeightConstraint.constant = newValue.height
-            self.layoutIfNeeded()
-        }
-        collectionViewLayout.itemSize = UICollectionViewFlowLayout.automaticSize
         collectionViewLayout.sectionInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
         collectionView.register(R.nib.marketSubCategoryCell)
         collectionView.dataSource = self

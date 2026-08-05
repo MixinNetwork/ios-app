@@ -72,8 +72,7 @@ final class MarketDashboardViewController: UIViewController {
         
         let categorySelectorLayout = UICollectionViewFlowLayout()
         categorySelectorLayout.scrollDirection = .horizontal
-        categorySelectorLayout.itemSize = UICollectionViewFlowLayout.automaticSize
-        categorySelectorLayout.estimatedItemSize = CGSize(width: 90, height: 38)
+        categorySelectorLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         categorySelectorLayout.sectionInset = UIEdgeInsets(top: 3, left: 15, bottom: 3, right: 15)
         categorySelectorLayout.minimumInteritemSpacing = 0
         categorySelectorLayout.minimumLineSpacing = 0
@@ -143,7 +142,7 @@ final class MarketDashboardViewController: UIViewController {
                 let section = NSCollectionLayoutSection(group: group)
                 if self?.category != .indicator {
                     let header = NSCollectionLayoutBoundarySupplementaryItem(
-                        layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(25)),
+                        layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(31)),
                         elementKind: UICollectionView.elementKindSectionHeader,
                         alignment: .top
                     )
@@ -159,7 +158,7 @@ final class MarketDashboardViewController: UIViewController {
                 group.interItemSpacing = .fixed(10)
                 group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                 let header = NSCollectionLayoutBoundarySupplementaryItem(
-                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(25)),
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(31)),
                     elementKind: UICollectionView.elementKindSectionHeader,
                     alignment: .top
                 )
@@ -170,7 +169,7 @@ final class MarketDashboardViewController: UIViewController {
                     alignment: .bottom
                 )
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0) // Adds 20pt gap below header
+                section.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 0, bottom: 0, trailing: 0) // Adds 20pt gap below header
                 section.interGroupSpacing = 10
                 section.boundarySupplementaryItems = [header, footer]
                 return section

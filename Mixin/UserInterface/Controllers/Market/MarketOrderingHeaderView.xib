@@ -15,10 +15,10 @@
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="dp8-YX-hP5">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="25"/>
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="31"/>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="25" id="vsd-Lf-oJe"/>
+                        <constraint firstAttribute="height" constant="31" id="vsd-Lf-oJe"/>
                     </constraints>
                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="CH0-sG-u9J">
                         <size key="itemSize" width="128" height="128"/>
@@ -120,7 +120,7 @@
                 <constraint firstItem="dp8-YX-hP5" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" id="T77-p5-QHT"/>
                 <constraint firstItem="dp8-YX-hP5" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" id="YT6-vd-7US"/>
                 <constraint firstAttribute="trailing" secondItem="vOW-ZR-l40" secondAttribute="trailing" id="ZZd-7u-127"/>
-                <constraint firstItem="vOW-ZR-l40" firstAttribute="top" secondItem="dp8-YX-hP5" secondAttribute="bottom" constant="6" id="bNp-hx-Jbv"/>
+                <constraint firstItem="vOW-ZR-l40" firstAttribute="top" secondItem="dp8-YX-hP5" secondAttribute="bottom" id="bNp-hx-Jbv"/>
                 <constraint firstAttribute="trailing" secondItem="dp8-YX-hP5" secondAttribute="trailing" id="gwP-vm-Oia"/>
             </constraints>
             <connections>

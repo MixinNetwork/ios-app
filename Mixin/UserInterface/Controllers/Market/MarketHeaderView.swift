@@ -33,7 +33,7 @@ class MarketHeaderView: UICollectionReusableView {
             self.layoutIfNeeded()
         }
         collectionViewLayout.itemSize = UICollectionViewFlowLayout.automaticSize
-        collectionViewLayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        collectionViewLayout.sectionInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
         collectionView.register(R.nib.marketSubCategoryCell)
         collectionView.dataSource = self
         collectionView.delegate = self

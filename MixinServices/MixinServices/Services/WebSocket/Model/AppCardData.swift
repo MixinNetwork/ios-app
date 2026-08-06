@@ -234,6 +234,7 @@ extension AppCardData {
         public let cover: Cover?
         public let title: String?
         public let description: String?
+        public let descriptionLinks: [NSRange: URL]
         public let actions: [Action]
         public let updatedAt: String?
         public let isShareable: Bool
@@ -257,6 +258,11 @@ extension AppCardData {
             self.cover = cover
             self.title = title
             self.description = description
+            self.descriptionLinks = if let description {
+                AppIdentityNumberDetector.detect(in: description)
+            } else {
+                [:]
+            }
             self.actions = actions
             self.updatedAt = updatedAt
             self.isShareable = isShareable
@@ -264,6 +270,8 @@ extension AppCardData {
         
         public init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
+            let description = try container.decodeIfPresent(String.self, forKey: .description)
+            
             self.appID = try container.decode(String.self, forKey: .appID)
             if let cover = try container.decodeIfPresent(RichCover.self, forKey: .cover), cover.url != nil {
                 self.cover = .rich(cover)
@@ -273,7 +281,12 @@ extension AppCardData {
                 self.cover = nil
             }
             self.title = try container.decodeIfPresent(String.self, forKey: .title)
-            self.description = try container.decodeIfPresent(String.self, forKey: .description)
+            self.description = description
+            self.descriptionLinks = if let description {
+                AppIdentityNumberDetector.detect(in: description)
+            } else {
+                [:]
+            }
             self.actions = try container.decodeIfPresent([Action].self, forKey: .actions) ?? []
             self.updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
             self.isShareable = try container.decode(Bool.self, forKey: .shareable)

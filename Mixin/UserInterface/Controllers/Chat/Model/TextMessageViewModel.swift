@@ -15,7 +15,6 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         return .chatText
     }
     
-    private static let appIdentityNumberRegex = try? NSRegularExpression(pattern: #"(?<=^|\D)7000\d{6}(?=$|\D)"#, options: [])
     private static let phoneNumberDetector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.phoneNumber.rawValue)
     
     var content: CoreTextLabel.Content?
@@ -355,22 +354,12 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
             ranges.append(range)
         })
         
-        Self.appIdentityNumberRegex?.enumerateMatches(in: string, options: [], range: fullRange) { result, _, _ in
-            guard let range = result?.range else {
-                return
-            }
-            guard range.location != NSNotFound else {
-                return
-            }
+        for (range, url) in AppIdentityNumberDetector.detect(in: string, range: fullRange) {
             guard !ranges.contains(where: { $0.range.intersection(range) != nil }) else {
-                return
+                continue
             }
-            let identityNumber = nsString.substring(with: range)
-            guard let url = MixinInternalURL.identityNumber(identityNumber).url else {
-                return
-            }
-            let linkRange = Link.Range(range: range, url: url)
-            ranges.append(linkRange)
+            let range = Link.Range(range: range, url: url)
+            ranges.append(range)
         }
         
         Self.phoneNumberDetector?.enumerateMatches(in: string, options: [], range: fullRange) { result, _, _ in

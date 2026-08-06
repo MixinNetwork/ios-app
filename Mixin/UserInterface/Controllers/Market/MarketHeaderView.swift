@@ -20,7 +20,7 @@ class MarketHeaderView: UICollectionReusableView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        collectionViewLayout.sectionInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+        collectionViewLayout.sectionInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
         collectionView.register(R.nib.marketSubCategoryCell)
         collectionView.dataSource = self
         collectionView.delegate = self

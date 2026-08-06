@@ -8,7 +8,7 @@ import FirebaseCrashlytics
 import AppsFlyerLib
 import SDWebImage
 import SDWebImageLottieCoder
-import SDWebImageSVGKitPlugin
+import SDWebImageSVGCoder
 import MixinServices
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -370,7 +370,7 @@ extension AppDelegate {
         SDImageCacheConfig.default.diskCacheExpireType = .accessDate
         SDImageCodersManager.shared.addCoder(WebPImageDecoder.shared)
         SDImageCodersManager.shared.addCoder(SDImageLottieCoder.shared)
-        SDImageCodersManager.shared.addCoder(SDImageSVGKCoder.shared)
+        SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
     }
     
 }

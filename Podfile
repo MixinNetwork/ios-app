@@ -21,8 +21,7 @@ target 'Mixin' do
   pod 'PhoneNumberKit', :git => 'https://github.com/marmelroy/PhoneNumberKit'
   pod 'libwebp'
   pod 'SDWebImageLottieCoder'
-  pod 'SVGKit', :git => 'https://github.com/SVGKit/SVGKit'
-  pod 'SDWebImageSVGKitPlugin'
+  pod 'SDWebImageSVGCoder'
   mixin_services
 
   target 'MixinTests' do

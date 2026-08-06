@@ -2,6 +2,11 @@ import UIKit
 
 class MarketHeaderView: UICollectionReusableView {
     
+    enum CategoriesMargin {
+        case large
+        case medium
+    }
+    
     protocol Delegate: AnyObject {
         func marketHeaderView(_ view: MarketHeaderView, didSelectSubCategoryAt index: Int)
     }
@@ -11,6 +16,17 @@ class MarketHeaderView: UICollectionReusableView {
     @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
     
     weak var delegate: Delegate?
+    
+    var categoriesMargin: CategoriesMargin = .medium {
+        didSet {
+            collectionViewLayout.sectionInset = switch categoriesMargin {
+            case .large:
+                UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+            case .medium:
+                UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+            }
+        }
+    }
     
     var subCategories: [MarketSubCategoryDisplay] = [] {
         didSet {

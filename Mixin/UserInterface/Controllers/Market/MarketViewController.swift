@@ -165,7 +165,7 @@ final class MarketViewController: UIViewController {
             self.market = nil
             self.viewModel.updateWithMarketNotFound()
             self.tableView.reloadData()
-            self.favoriteButton.setFavorite(nil, animated: false)
+            self.favoriteButton.isHidden = true
         })
         
         reporter.report(event: .marketDetail)

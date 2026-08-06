@@ -4,6 +4,62 @@ import SnapKit
 
 final class FavoriteButton: UIButton {
     
+    override var intrinsicContentSize: CGSize {
+        CGSize(width: 44, height: 44)
+    }
+    
+    private let config: Config
+    
+    private var isFavorite: Bool?
+    
+    private weak var animationImageView: UIView?
+    
+    init(config: Config) {
+        self.config = config
+        super.init(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+    }
+    
+    required init?(coder: NSCoder) {
+        self.config = .medium
+        super.init(coder: coder)
+    }
+    
+    func setFavorite(_ favorite: Bool, animated: Bool) {
+        self.isFavorite = favorite
+        animationImageView?.removeFromSuperview()
+        if favorite {
+            setImage(config.favoriteImage, for: .normal)
+            if animated, let animationImage = config.animationImage {
+                tintColor = .clear
+                let animationImageView = SDAnimatedImageView(image: animationImage)
+                animationImageView.contentMode = .scaleToFill
+                animationImageView.shouldCustomLoopCount = true
+                animationImageView.animationRepeatCount = 1
+                addSubview(animationImageView)
+                animationImageView.snp.makeConstraints { make in
+                    make.size.equalTo(config.animationSize)
+                    make.center.equalToSuperview()
+                }
+                self.animationImageView = animationImageView
+                DispatchQueue.main.asyncAfter(deadline: .now() + config.duration) {
+                    animationImageView.removeFromSuperview()
+                    if self.isFavorite == favorite {
+                        self.tintColor = UIColor(displayP3RgbValue: 0x4b7cdd)
+                    }
+                }
+            } else {
+                tintColor = UIColor(displayP3RgbValue: 0x4b7cdd)
+            }
+        } else {
+            setImage(config.notFavoriteImage, for: .normal)
+            tintColor = R.color.icon_tint()
+        }
+    }
+    
+}
+
+extension FavoriteButton {
+    
     struct Config {
         
         static let large = Config(
@@ -44,58 +100,6 @@ final class FavoriteButton: UIButton {
         let animationSize: CGSize
         let duration: TimeInterval
         
-    }
-    
-    private let config: Config
-    
-    private var isFavorite: Bool?
-    
-    private weak var animationImageView: UIView?
-    
-    init(config: Config) {
-        self.config = config
-        super.init(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
-    }
-    
-    required init?(coder: NSCoder) {
-        self.config = .medium
-        super.init(coder: coder)
-    }
-    
-    func setFavorite(_ favorite: Bool?, animated: Bool) {
-        self.isFavorite = favorite
-        animationImageView?.removeFromSuperview()
-        guard let favorite else {
-            setImage(nil, for: .normal)
-            return
-        }
-        if favorite {
-            setImage(config.favoriteImage, for: .normal)
-            if animated, let animationImage = config.animationImage {
-                tintColor = .clear
-                let animationImageView = SDAnimatedImageView(image: animationImage)
-                animationImageView.contentMode = .scaleToFill
-                animationImageView.shouldCustomLoopCount = true
-                animationImageView.animationRepeatCount = 1
-                addSubview(animationImageView)
-                animationImageView.snp.makeConstraints { make in
-                    make.size.equalTo(config.animationSize)
-                    make.center.equalToSuperview()
-                }
-                self.animationImageView = animationImageView
-                DispatchQueue.main.asyncAfter(deadline: .now() + config.duration) {
-                    animationImageView.removeFromSuperview()
-                    if self.isFavorite == favorite {
-                        self.tintColor = UIColor(displayP3RgbValue: 0x4b7cdd)
-                    }
-                }
-            } else {
-                tintColor = UIColor(displayP3RgbValue: 0x4b7cdd)
-            }
-        } else {
-            setImage(config.notFavoriteImage, for: .normal)
-            tintColor = R.color.icon_tint()
-        }
     }
     
 }

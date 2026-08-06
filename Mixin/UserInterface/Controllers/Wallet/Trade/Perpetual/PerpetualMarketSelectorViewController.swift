@@ -13,7 +13,6 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     
     var onSelected: ((FavorablePerpetualMarket) -> Void)?
     
-    private var categorySelectorSizeObserver: NSKeyValueObservation?
     private var categorySelectorController: CategorySelectorController!
     
     private var searchObserver: AnyCancellable?
@@ -85,17 +84,10 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         categorySelectorController = CategorySelectorController(
             collectionView: categorySelectorCollectionView
         )
-        categorySelectorCollectionView.register(R.nib.exploreSegmentCell)
+        categorySelectorCollectionView.register(R.nib.perpsMarketSelectorCategoryCell)
         categorySelectorCollectionView.dataSource = categorySelectorController
         categorySelectorCollectionView.delegate = categorySelectorController
         categorySelectorController.delegate = self
-        categorySelectorSizeObserver = categorySelectorCollectionView.observe(\.contentSize, options: [.new]) { [weak self] (_, change) in
-            guard let newValue = change.newValue, let self else {
-                return
-            }
-            self.categorySelectorHeightConstraint.constant = newValue.height
-            self.view.layoutIfNeeded()
-        }
         categorySelectorCollectionView.reloadData()
         categorySelectorController.select(category: selectedCategory)
         
@@ -553,27 +545,26 @@ extension PerpetualMarketSelectorViewController {
         }
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_selector_category, for: indexPath)!
             let category = categories[indexPath.item]
-            cell.label.text = switch category {
+            cell.category = switch category {
             case .all:
-                R.string.localizable.perps_category_all()
+                    .text(R.string.localizable.perps_category_all())
             case .favorite:
-                "☆"
+                    .favorite
             case .categorized(.crypto):
-                R.string.localizable.perps_category_crypto()
+                    .text(R.string.localizable.perps_category_crypto())
             case .categorized(.stocks):
-                R.string.localizable.perps_category_stocks()
+                    .text(R.string.localizable.perps_category_stocks())
             case .categorized(.indices):
-                R.string.localizable.perps_category_indices()
+                    .text(R.string.localizable.perps_category_indices())
             case .categorized(.commodities):
-                R.string.localizable.perps_category_commodities()
+                    .text(R.string.localizable.perps_category_commodities())
             case .categorized(.forex):
-                R.string.localizable.perps_category_forex()
+                    .text(R.string.localizable.perps_category_forex())
             case .categorized(.memes):
-                R.string.localizable.perps_category_meme()
+                    .text(R.string.localizable.perps_category_meme())
             }
-            cell.badgeView.isHidden = true
             return cell
         }
         

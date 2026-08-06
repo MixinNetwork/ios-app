@@ -1179,6 +1179,8 @@
 		946B9FBC2B0493E800DB4DC1 /* WalletHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946B9FBA2B0493E800DB4DC1 /* WalletHintView.xib */; };
 		946BBA473023840E0080D43D /* MarketSubCategoryDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946BBA46302384090080D43D /* MarketSubCategoryDisplay.swift */; };
 		946BBA8830244FA70080D43D /* MarketLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946BBA8730244FA40080D43D /* MarketLayout.swift */; };
+		946BBCDC302486710080D43D /* PerpsMarketSelectorCategoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946BBCDB302486710080D43D /* PerpsMarketSelectorCategoryCell.xib */; };
+		946BBCDD302486710080D43D /* PerpsMarketSelectorCategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946BBCDA302486710080D43D /* PerpsMarketSelectorCategoryCell.swift */; };
 		946BBCF430248B710080D43D /* favorite_medium.png in Resources */ = {isa = PBXBuildFile; fileRef = 946BBCF330248B710080D43D /* favorite_medium.png */; };
 		946C50982E95651800A0EA6A /* TradeMixinTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946C50972E95651800A0EA6A /* TradeMixinTokenSelectorViewController.swift */; };
 		946C50EE2E959F2500A0EA6A /* TokenComparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946C50ED2E959F2100A0EA6A /* TokenComparator.swift */; };
@@ -3206,6 +3208,8 @@
 		946B9FBA2B0493E800DB4DC1 /* WalletHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletHintView.xib; sourceTree = "<group>"; };
 		946BBA46302384090080D43D /* MarketSubCategoryDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketSubCategoryDisplay.swift; sourceTree = "<group>"; };
 		946BBA8730244FA40080D43D /* MarketLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketLayout.swift; sourceTree = "<group>"; };
+		946BBCDA302486710080D43D /* PerpsMarketSelectorCategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsMarketSelectorCategoryCell.swift; sourceTree = "<group>"; };
+		946BBCDB302486710080D43D /* PerpsMarketSelectorCategoryCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpsMarketSelectorCategoryCell.xib; sourceTree = "<group>"; };
 		946BBCF330248B710080D43D /* favorite_medium.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorite_medium.png; sourceTree = "<group>"; };
 		946C50972E95651800A0EA6A /* TradeMixinTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeMixinTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		946C50ED2E959F2100A0EA6A /* TokenComparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenComparator.swift; sourceTree = "<group>"; };
@@ -4902,6 +4906,8 @@
 				94E206EC2F4EB61100D65D98 /* PerpetualPositionValueCell.swift */,
 				94FB2E082F504D9200F85AB4 /* PerpetualPlaceholderCell.xib */,
 				94FB2E072F504D9200F85AB4 /* PerpetualPlaceholderCell.swift */,
+				946BBCDB302486710080D43D /* PerpsMarketSelectorCategoryCell.xib */,
+				946BBCDA302486710080D43D /* PerpsMarketSelectorCategoryCell.swift */,
 				9440FF02301739AD009AF6FA /* PerpsMarketOrderingHeaderView.xib */,
 				9440FF01301739AD009AF6FA /* PerpsMarketOrderingHeaderView.swift */,
 				94FD6B5A2F9F356F00DFCDCA /* PerpetualMarketSelectorView.xib */,
@@ -7277,6 +7283,7 @@
 				9484BA3A2FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib in Resources */,
 				940D10A52C5C91630071E36D /* InsetGroupedTitleCell.xib in Resources */,
 				94E206EF2F4EB61100D65D98 /* PerpetualPositionValueCell.xib in Resources */,
+				946BBCDC302486710080D43D /* PerpsMarketSelectorCategoryCell.xib in Resources */,
 				94834ACD2FE949E000A0AADF /* LogCell.xib in Resources */,
 				940CA1912F59593500914435 /* PerpetualMarketInfoCell.xib in Resources */,
 				94327CF72D53662700DEE36D /* AddressInfoInputHeaderView.xib in Resources */,
@@ -7585,6 +7592,7 @@
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
 				94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */,
 				94AA26532EE188980047E04B /* AddWalletGuideCell.xib in Resources */,
+				946BBCF430248B710080D43D /* favorite_medium.png in Resources */,
 				94062C5D2AE8CA7600ADAE87 /* SnapshotColumnCell.xib in Resources */,
 				944C61F82B6BFAA100C7DF06 /* PaymentUserItemView.xib in Resources */,
 				94ADE11A2CD809280040A426 /* RecoveryContactView.xib in Resources */,
@@ -8061,6 +8069,7 @@
 				9468E0562E30E10400EB79C0 /* CreateWalletRequest.swift in Sources */,
 				7C66E7B82743988500FF24C1 /* ProfileDescriptionLabel.swift in Sources */,
 				94682F2A2E029B2700B1C6D3 /* CompactComboBoxView.swift in Sources */,
+				946BBCDD302486710080D43D /* PerpsMarketSelectorCategoryCell.swift in Sources */,
 				9497AEE92C5E264600966946 /* MixinTransactionHistoryViewController.swift in Sources */,
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
 				94510FBB2C85673C00ACD972 /* ReloadGlobalMarketJob.swift in Sources */,

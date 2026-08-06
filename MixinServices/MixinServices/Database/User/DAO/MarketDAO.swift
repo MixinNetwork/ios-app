@@ -339,21 +339,20 @@ public final class MarketDAO: UserDatabaseDAO {
         }
     }
     
-    public func replaceFavoriteMarkets(markets: [Market]) {
+    public func replace(favoriteMarkets: [Market]) {
         db.write { db in
-            try markets.insert(db, onConflict: .replace)
-            
-            let distantPast = Date.distantPast.toUTCString()
-            let favoredMarkets = try markets.map { market in
-                let createdAt = try String.fetchOne(
-                    db,
-                    sql: "SELECT created_at FROM market_favored WHERE coin_id = ?",
-                    arguments: [market.coinID]
-                ) ?? distantPast
-                return FavoredMarket(coinID: market.coinID, isFavored: true, createdAt: createdAt)
+            let now = Date().toUTCString()
+            let favoritesStorage = favoriteMarkets.map { market in
+                Market.FavoriteStorage(
+                    coinID: market.coinID,
+                    isFavored: true,
+                    createdAt: now
+                )
             }
+            
+            try favoriteMarkets.save(db)
             try db.execute(sql: "DELETE FROM market_favored")
-            try favoredMarkets.save(db)
+            try favoritesStorage.save(db)
             
             db.afterNextTransaction { _ in
                 NotificationCenter.default.postAsynchornously(
@@ -378,10 +377,15 @@ public final class MarketDAO: UserDatabaseDAO {
     }
     
     public func favorite(coinIDs: [String], completion: (() -> Void)? = nil) {
-        let markets = coinIDs.map { coinID in
-            FavoredMarket(coinID: coinID, isFavored: true, createdAt: Date().toUTCString())
+        let now = Date().toUTCString()
+        let favorites = coinIDs.map { coinID in
+            Market.FavoriteStorage(
+                coinID: coinID,
+                isFavored: true,
+                createdAt: now
+            )
         }
-        db.save(markets) { _ in
+        db.save(favorites) { _ in
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
                     name: Self.favoriteNotification,

@@ -76,7 +76,7 @@ final class MarketPeriodicRequester {
                 case .all:
                     MarketDAO.shared.save(markets: markets, replaceRanks: true, updatingCategory: nil)
                 case .favorite:
-                    MarketDAO.shared.replaceFavoriteMarkets(markets: markets)
+                    MarketDAO.shared.replace(favoriteMarkets: markets)
                 case .trending:
                     MarketDAO.shared.save(markets: markets, replaceRanks: false, updatingCategory: .trending)
                 case .stocks:

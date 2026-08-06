@@ -342,6 +342,32 @@ extension Market {
 
 extension Market {
     
+    struct FavoriteStorage: Codable, MixinEncodableRecord, TableRecord, PersistableRecord {
+        
+        enum CodingKeys: String, CodingKey {
+            case coinID = "coin_id"
+            case isFavored = "is_favored"
+            case createdAt = "created_at"
+        }
+        
+        static let databaseTableName = "market_favored"
+        
+        let coinID: String
+        let isFavored: Bool
+        let createdAt: String
+        
+        init(coinID: String, isFavored: Bool, createdAt: String) {
+            self.coinID = coinID
+            self.isFavored = isFavored
+            self.createdAt = createdAt
+        }
+        
+    }
+    
+}
+
+extension Market {
+    
     private enum ShortPriceFormatter {
         
         static func string(usdPrice: Decimal) -> String {

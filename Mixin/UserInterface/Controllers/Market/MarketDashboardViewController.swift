@@ -73,7 +73,7 @@ final class MarketDashboardViewController: UIViewController {
         let categorySelectorLayout = UICollectionViewFlowLayout()
         categorySelectorLayout.scrollDirection = .horizontal
         categorySelectorLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        categorySelectorLayout.sectionInset = UIEdgeInsets(top: 3, left: 15, bottom: 3, right: 15)
+        categorySelectorLayout.sectionInset = UIEdgeInsets(top: 3, left: 11, bottom: 3, right: 11)
         categorySelectorLayout.minimumInteritemSpacing = 0
         categorySelectorLayout.minimumLineSpacing = 0
         let categorySelectorCollectionView = UICollectionView(
@@ -119,7 +119,7 @@ final class MarketDashboardViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
                 let header = NSCollectionLayoutBoundarySupplementaryItem(
-                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(73)),
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(76)),
                     elementKind: UICollectionView.elementKindSectionHeader,
                     alignment: .top
                 )

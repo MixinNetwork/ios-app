@@ -1178,6 +1178,7 @@
 		946B9FBB2B0493E800DB4DC1 /* WalletHintViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B9FB92B0493E800DB4DC1 /* WalletHintViewController.swift */; };
 		946B9FBC2B0493E800DB4DC1 /* WalletHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946B9FBA2B0493E800DB4DC1 /* WalletHintView.xib */; };
 		946BBA473023840E0080D43D /* MarketSubCategoryDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946BBA46302384090080D43D /* MarketSubCategoryDisplay.swift */; };
+		946BBA8830244FA70080D43D /* MarketLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946BBA8730244FA40080D43D /* MarketLayout.swift */; };
 		946C50982E95651800A0EA6A /* TradeMixinTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946C50972E95651800A0EA6A /* TradeMixinTokenSelectorViewController.swift */; };
 		946C50EE2E959F2500A0EA6A /* TokenComparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946C50ED2E959F2100A0EA6A /* TokenComparator.swift */; };
 		946CB9B62E9F69650099FFCB /* LoadContactCommonWalletAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946CB9B52E9F69650099FFCB /* LoadContactCommonWalletAddressViewController.swift */; };
@@ -3203,6 +3204,7 @@
 		946B9FB92B0493E800DB4DC1 /* WalletHintViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHintViewController.swift; sourceTree = "<group>"; };
 		946B9FBA2B0493E800DB4DC1 /* WalletHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletHintView.xib; sourceTree = "<group>"; };
 		946BBA46302384090080D43D /* MarketSubCategoryDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketSubCategoryDisplay.swift; sourceTree = "<group>"; };
+		946BBA8730244FA40080D43D /* MarketLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketLayout.swift; sourceTree = "<group>"; };
 		946C50972E95651800A0EA6A /* TradeMixinTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeMixinTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		946C50ED2E959F2100A0EA6A /* TokenComparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenComparator.swift; sourceTree = "<group>"; };
 		946CB9B52E9F69650099FFCB /* LoadContactCommonWalletAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadContactCommonWalletAddressViewController.swift; sourceTree = "<group>"; };
@@ -5087,6 +5089,7 @@
 		9429C0E82E059B3400206DAA /* Market */ = {
 			isa = PBXGroup;
 			children = (
+				946BBA8730244FA40080D43D /* MarketLayout.swift */,
 				94F896FB3021FD7A00897E4F /* WatchlistSubCategory.swift */,
 				946BBA46302384090080D43D /* MarketSubCategoryDisplay.swift */,
 				94F897093021FD9F00897E4F /* ReloadWatchlistRecommendationJob.swift */,
@@ -9040,6 +9043,7 @@
 				7B70D8512457F4EC00E01239 /* AnnouncementBadgeContentView.swift in Sources */,
 				94AC15602C3D77CD0029E1AB /* AppButtonGroupView.swift in Sources */,
 				94ECE1BF2FFF9D80000F434E /* SignInWithBIP39MnemonicsViewController.swift in Sources */,
+				946BBA8830244FA70080D43D /* MarketLayout.swift in Sources */,
 				7B441ADC24CAE1B80067231A /* StreamId.swift in Sources */,
 				9458A0762CC8EA2F00A51154 /* PopupTitledWebViewController.swift in Sources */,
 				E0E3301F23962B2100276746 /* EditFavoriteAppsHeaderView.swift in Sources */,

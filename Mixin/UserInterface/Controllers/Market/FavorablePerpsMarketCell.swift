@@ -7,7 +7,6 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
         func favorablePerpsMarketCellWantsToggleFavorite(_ cell: FavorablePerpsMarketCell)
     }
     
-    @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var favoriteButton: UIButton!
     @IBOutlet weak var favoriteActivityIndicatorView: ActivityIndicatorView!
     @IBOutlet weak var iconView: PlainTokenIconView!
@@ -16,6 +15,12 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
     @IBOutlet weak var marketCapLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
+    
+    @IBOutlet weak var mainItemLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var priceWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var priceTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var changeWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var changeTrailingConstraint: NSLayoutConstraint!
     
     weak var delegate: Delegate?
     
@@ -32,6 +37,11 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        mainItemLeadingConstraint.constant = MarketLayout.mainItemLeadingMargin
+        priceWidthConstraint.constant = MarketLayout.priceItemWidth
+        priceTrailingConstraint.constant = MarketLayout.priceItemTrailingMargin
+        changeWidthConstraint.constant = MarketLayout.changeItemWidth
+        changeTrailingConstraint.constant = MarketLayout.changeItemTrailingMargin
         symbolLabel.setFont(
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true

@@ -19,13 +19,16 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LpP-m3-C03">
-                        <rect key="frame" x="2" y="3" width="44" height="44"/>
+                        <rect key="frame" x="4" y="3" width="40" height="44"/>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="44" id="I6N-VX-Mmw"/>
-                            <constraint firstAttribute="width" constant="44" id="M7C-fR-9sh"/>
+                            <constraint firstAttribute="width" constant="40" id="M7C-fR-9sh"/>
                         </constraints>
                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <buttonConfiguration key="configuration" style="plain">
+                            <directionalEdgeInsets key="contentInsets" top="0.0" leading="0.0" bottom="0.0" trailing="0.0"/>
+                        </buttonConfiguration>
                         <connections>
                             <action selector="toggleFavorite:" destination="hlu-eX-jqO" eventType="touchUpInside" id="QPS-ax-3d6"/>
                         </connections>
@@ -40,19 +43,19 @@
                             <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="NO"/>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r1h-v0-vS9" customClass="PlainTokenIconView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="46" y="9" width="32" height="32"/>
-                        <color key="backgroundColor" name="background"/>
-                        <constraints>
-                            <constraint firstAttribute="width" secondItem="r1h-v0-vS9" secondAttribute="height" id="EWJ-Fm-MJ6"/>
-                            <constraint firstAttribute="width" constant="32" id="ufx-Vt-dBe"/>
-                        </constraints>
-                    </view>
-                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1Ml-AP-ePn">
-                        <rect key="frame" x="88" y="0.0" width="271" height="50"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="1Ml-AP-ePn">
+                        <rect key="frame" x="44" y="6" width="145" height="38"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r1h-v0-vS9" customClass="PlainTokenIconView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="3" width="32" height="32"/>
+                                <color key="backgroundColor" name="background"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="r1h-v0-vS9" secondAttribute="height" id="EWJ-Fm-MJ6"/>
+                                    <constraint firstAttribute="width" constant="32" id="ufx-Vt-dBe"/>
+                                </constraints>
+                            </view>
                             <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="5sZ-tb-pgn">
-                                <rect key="frame" x="0.0" y="7.3333333333333321" width="141" height="35.333333333333343"/>
+                                <rect key="frame" x="42" y="1.3333333333333321" width="103" height="35.333333333333343"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Gns-u4-aF5">
                                         <rect key="frame" x="0.0" y="0.0" width="57.666666666666664" height="17"/>
@@ -88,48 +91,56 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="$70,836" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QuQ-a9-BOB">
-                                <rect key="frame" x="141" y="16.666666666666668" width="56" height="17.000000000000004"/>
-                                <color key="backgroundColor" name="background"/>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
-                                <color key="textColor" name="text"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="-0.09%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="yH7-aR-7pp" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="197" y="16.666666666666668" width="74" height="17.000000000000004"/>
-                                <color key="backgroundColor" name="background"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="74" id="5gu-3i-gOQ"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                     </stackView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="$70,836" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="QuQ-a9-BOB">
+                        <rect key="frame" x="189" y="16.666666666666668" width="90" height="17.000000000000004"/>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="90" id="qO7-fh-O0C"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                        <color key="textColor" name="text"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="-0.09%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="yH7-aR-7pp" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="299" y="16.666666666666668" width="60" height="17.000000000000004"/>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="60" id="5gu-3i-gOQ"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
-                    <constraint firstItem="LpP-m3-C03" firstAttribute="top" secondItem="YYa-Ex-ymC" secondAttribute="top" constant="3" id="5Gb-7q-JUs"/>
-                    <constraint firstAttribute="bottom" secondItem="LpP-m3-C03" secondAttribute="bottom" constant="3" id="9F3-hE-EVu"/>
-                    <constraint firstItem="1Ml-AP-ePn" firstAttribute="top" secondItem="YYa-Ex-ymC" secondAttribute="top" id="E0r-qX-ls4"/>
-                    <constraint firstItem="LpP-m3-C03" firstAttribute="leading" secondItem="YYa-Ex-ymC" secondAttribute="leading" constant="2" id="OgB-dN-EXw"/>
-                    <constraint firstItem="1Ml-AP-ePn" firstAttribute="leading" secondItem="r1h-v0-vS9" secondAttribute="trailing" constant="10" id="Sb8-KS-usV"/>
-                    <constraint firstAttribute="bottom" secondItem="1Ml-AP-ePn" secondAttribute="bottom" id="cay-eC-Mmd"/>
-                    <constraint firstItem="r1h-v0-vS9" firstAttribute="leading" secondItem="LpP-m3-C03" secondAttribute="trailing" id="ed5-5a-4u1"/>
-                    <constraint firstAttribute="trailing" secondItem="1Ml-AP-ePn" secondAttribute="trailing" constant="16" id="jhh-65-bcj"/>
-                    <constraint firstItem="r1h-v0-vS9" firstAttribute="centerY" secondItem="YYa-Ex-ymC" secondAttribute="centerY" id="wGn-SU-7sS"/>
+                    <constraint firstItem="QuQ-a9-BOB" firstAttribute="leading" secondItem="1Ml-AP-ePn" secondAttribute="trailing" id="181-AX-Ici"/>
+                    <constraint firstItem="1Ml-AP-ePn" firstAttribute="leading" secondItem="YYa-Ex-ymC" secondAttribute="leading" constant="44" id="7pI-I1-Xkt"/>
+                    <constraint firstItem="1Ml-AP-ePn" firstAttribute="top" secondItem="YYa-Ex-ymC" secondAttribute="top" constant="6" id="CYe-1m-Bzc"/>
+                    <constraint firstItem="QuQ-a9-BOB" firstAttribute="centerY" secondItem="YYa-Ex-ymC" secondAttribute="centerY" id="IU9-XY-gi1"/>
+                    <constraint firstItem="yH7-aR-7pp" firstAttribute="centerY" secondItem="YYa-Ex-ymC" secondAttribute="centerY" id="K5i-vs-nnc"/>
+                    <constraint firstItem="1Ml-AP-ePn" firstAttribute="leading" secondItem="LpP-m3-C03" secondAttribute="trailing" id="PgK-Cz-zZs"/>
+                    <constraint firstAttribute="bottom" secondItem="1Ml-AP-ePn" secondAttribute="bottom" constant="6" id="aai-FN-Jom"/>
+                    <constraint firstItem="yH7-aR-7pp" firstAttribute="leading" secondItem="QuQ-a9-BOB" secondAttribute="trailing" constant="20" id="rZd-Ih-O1k"/>
+                    <constraint firstItem="LpP-m3-C03" firstAttribute="centerY" secondItem="YYa-Ex-ymC" secondAttribute="centerY" id="way-ZD-BGc"/>
+                    <constraint firstAttribute="trailing" secondItem="yH7-aR-7pp" secondAttribute="trailing" constant="16" id="ys1-xd-Xj7"/>
                 </constraints>
             </collectionViewCellContentView>
             <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="changeLabel" destination="yH7-aR-7pp" id="Sgk-HJ-EEB"/>
-                <outlet property="contentStackView" destination="1Ml-AP-ePn" id="wBJ-qm-xvX"/>
+                <outlet property="changeTrailingConstraint" destination="ys1-xd-Xj7" id="Xov-3Z-eap"/>
+                <outlet property="changeWidthConstraint" destination="5gu-3i-gOQ" id="PO2-IS-d8I"/>
                 <outlet property="favoriteActivityIndicatorView" destination="WCV-NQ-g5x" id="LRE-67-uJN"/>
                 <outlet property="favoriteButton" destination="LpP-m3-C03" id="8Gk-jF-JWV"/>
                 <outlet property="iconView" destination="r1h-v0-vS9" id="rTs-jg-Yey"/>
+                <outlet property="mainItemLeadingConstraint" destination="7pI-I1-Xkt" id="KN8-gN-MIi"/>
                 <outlet property="marketCapLabel" destination="scc-SG-u6n" id="3wD-jG-Ys9"/>
                 <outlet property="priceLabel" destination="QuQ-a9-BOB" id="HXW-Xk-UJe"/>
+                <outlet property="priceTrailingConstraint" destination="rZd-Ih-O1k" id="tyX-dR-kdY"/>
+                <outlet property="priceWidthConstraint" destination="qO7-fh-O0C" id="xMp-PA-JlK"/>
                 <outlet property="symbolLabel" destination="gZx-4P-8AO" id="utr-EA-88s"/>
                 <outlet property="tagLabel" destination="tHM-hL-Tqe" id="H5x-md-ity"/>
             </connections>

@@ -7,7 +7,6 @@ final class FavorableMarketCell: UICollectionViewCell {
         func favorableMarketCellWantsToggleFavorite(_ cell: FavorableMarketCell)
     }
     
-    @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var favoriteButton: UIButton!
     @IBOutlet weak var favoriteActivityIndicatorView: ActivityIndicatorView!
     @IBOutlet weak var iconView: PlainTokenIconView!
@@ -17,6 +16,12 @@ final class FavorableMarketCell: UICollectionViewCell {
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var chartImageView: MarketColorTintedImageView!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
+    
+    @IBOutlet weak var mainItemLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var priceWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var priceTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var chartWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var chartTrailingConstraint: NSLayoutConstraint!
     
     weak var delegate: Delegate?
     
@@ -33,19 +38,21 @@ final class FavorableMarketCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        contentStackView.setCustomSpacing(10, after: iconView)
-        switch ScreenWidth.current {
-        case .long:
-            contentStackView.setCustomSpacing(40, after: priceLabel)
-        case .medium:
-            contentStackView.setCustomSpacing(20, after: priceLabel)
-        case .short:
-            contentStackView.setCustomSpacing(10, after: priceLabel)
-        }
+        mainItemLeadingConstraint.constant = MarketLayout.mainItemLeadingMargin
+        priceWidthConstraint.constant = MarketLayout.priceItemWidth
+        priceTrailingConstraint.constant = MarketLayout.priceItemTrailingMargin
+        chartWidthConstraint.constant = MarketLayout.changeItemWidth
+        chartTrailingConstraint.constant = MarketLayout.changeItemTrailingMargin
+        symbolLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
         rankLabel.font = .condensed(size: 12)
-        rankLabel.contentInset = UIEdgeInsets(top: 2, left: 4, bottom: 0, right: 4)
-        priceLabel.setFont(scaledFor: .systemFont(ofSize: 14, weight: .medium),
-                           adjustForContentSize: true)
+        rankLabel.contentInset = UIEdgeInsets(top: 2, left: 3, bottom: 0, right: 3)
+        priceLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14, weight: .medium),
+            adjustForContentSize: true
+        )
         favoriteActivityIndicatorView.style = .custom(diameter: 14, lineWidth: 2)
     }
     

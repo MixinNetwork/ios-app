@@ -32,18 +32,18 @@
                     <rect key="frame" x="0.0" y="31" width="320" height="42"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fWI-Pt-Efg">
-                            <rect key="frame" x="6" y="0.0" width="36" height="42"/>
+                            <rect key="frame" x="9" y="0.0" width="35" height="42"/>
                             <color key="tintColor" name="text_tertiary"/>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="plain" image="setting_compact">
-                                <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="10"/>
+                                <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="9"/>
                             </buttonConfiguration>
                             <connections>
                                 <action selector="invokeSetting:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="HDz-b0-bY6"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="grx-au-zqa">
-                            <rect key="frame" x="44" y="0.0" width="57.666666666666657" height="42"/>
+                            <rect key="frame" x="44" y="0.0" width="44.666666666666657" height="42"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Watchlist" image="order_descending">
@@ -51,15 +51,18 @@
                             </state>
                             <buttonConfiguration key="configuration" style="plain" image="order_descending" imagePlacement="trailing" title="Vol" imagePadding="4">
                                 <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
-                                <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="10"/>
+                                <directionalEdgeInsets key="contentInsets" top="10" leading="3" bottom="10" trailing="10"/>
                                 <color key="baseForegroundColor" name="text_tertiary"/>
                             </buttonConfiguration>
                             <connections>
                                 <action selector="sortByMarketCap:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Zih-0k-FkB"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k6E-9M-NO3">
-                            <rect key="frame" x="171" y="0.0" width="69" height="42"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k6E-9M-NO3">
+                            <rect key="frame" x="177" y="0.0" width="69" height="42"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="69" id="RGh-4a-nrV"/>
+                            </constraints>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                             <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -68,15 +71,15 @@
                             </state>
                             <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="Price" imagePadding="4">
                                 <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
-                                <directionalEdgeInsets key="contentInsets" top="10" leading="10" bottom="10" trailing="10"/>
+                                <directionalEdgeInsets key="contentInsets" top="10" leading="0.0" bottom="10" trailing="0.0"/>
                                 <color key="baseForegroundColor" name="text_tertiary"/>
                             </buttonConfiguration>
                             <connections>
                                 <action selector="sortByPrice:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="tQh-UR-ov7"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="twI-2A-HMh">
-                            <rect key="frame" x="240" y="0.0" width="74" height="42"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="twI-2A-HMh">
+                            <rect key="frame" x="246" y="0.0" width="74" height="42"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="74" id="xe6-U9-CBu"/>
                             </constraints>
@@ -99,15 +102,15 @@
                     <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="twI-2A-HMh" secondAttribute="bottom" id="2Eh-hL-aUa"/>
-                        <constraint firstItem="grx-au-zqa" firstAttribute="leading" secondItem="fWI-Pt-Efg" secondAttribute="trailing" constant="2" id="4B6-cz-ByF"/>
-                        <constraint firstItem="fWI-Pt-Efg" firstAttribute="leading" secondItem="vOW-ZR-l40" secondAttribute="leading" constant="6" id="7HV-Bt-Nvc"/>
+                        <constraint firstItem="grx-au-zqa" firstAttribute="leading" secondItem="fWI-Pt-Efg" secondAttribute="trailing" id="4B6-cz-ByF"/>
                         <constraint firstItem="twI-2A-HMh" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="9Rl-Ng-yJb"/>
                         <constraint firstAttribute="bottom" secondItem="k6E-9M-NO3" secondAttribute="bottom" id="MSp-OA-wc4"/>
                         <constraint firstItem="k6E-9M-NO3" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="Mdl-6z-nQp"/>
                         <constraint firstItem="twI-2A-HMh" firstAttribute="leading" secondItem="k6E-9M-NO3" secondAttribute="trailing" id="NDI-0P-4sa"/>
+                        <constraint firstItem="grx-au-zqa" firstAttribute="leading" secondItem="vOW-ZR-l40" secondAttribute="leading" constant="44" id="ZtT-Jn-9Tj"/>
                         <constraint firstItem="grx-au-zqa" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="bG2-A9-wCr"/>
                         <constraint firstItem="fWI-Pt-Efg" firstAttribute="top" secondItem="vOW-ZR-l40" secondAttribute="top" id="mTW-bA-jac"/>
-                        <constraint firstAttribute="trailing" secondItem="twI-2A-HMh" secondAttribute="trailing" constant="6" id="nLP-MD-eTm"/>
+                        <constraint firstAttribute="trailing" secondItem="twI-2A-HMh" secondAttribute="trailing" id="nLP-MD-eTm"/>
                         <constraint firstAttribute="bottom" secondItem="fWI-Pt-Efg" secondAttribute="bottom" id="su3-Do-ewl"/>
                         <constraint firstAttribute="bottom" secondItem="grx-au-zqa" secondAttribute="bottom" id="yFS-2Q-5g6"/>
                     </constraints>
@@ -128,15 +131,18 @@
                 <outlet property="collectionViewHeightConstraint" destination="vsd-Lf-oJe" id="xqx-xo-l9w"/>
                 <outlet property="collectionViewLayout" destination="CH0-sG-u9J" id="ohP-IB-i0N"/>
                 <outlet property="leftOrderButton" destination="grx-au-zqa" id="vXn-Xw-Wcq"/>
+                <outlet property="leftOrderLeadingConstraint" destination="ZtT-Jn-9Tj" id="lJC-wc-IFi"/>
                 <outlet property="periodButton" destination="twI-2A-HMh" id="7ma-nD-hyc"/>
+                <outlet property="periodWidthConstraint" destination="xe6-U9-CBu" id="1Ai-8r-xee"/>
                 <outlet property="priceButton" destination="k6E-9M-NO3" id="axa-LJ-32t"/>
+                <outlet property="priceWidthConstraint" destination="RGh-4a-nrV" id="ufb-Jh-TH2"/>
             </connections>
             <point key="canvasLocation" x="138.93129770992365" y="153.16901408450704"/>
         </collectionReusableView>
     </objects>
     <resources>
-        <image name="order_descending" width="16" height="16"/>
-        <image name="order_none" width="16" height="16"/>
+        <image name="order_descending" width="10" height="16"/>
+        <image name="order_none" width="10" height="16"/>
         <image name="setting_compact" width="16" height="16"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

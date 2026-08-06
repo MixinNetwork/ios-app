@@ -11,6 +11,10 @@ final class PerpsMarketOrderingHeaderView: UICollectionReusableView {
     @IBOutlet weak var priceButton: UIButton!
     @IBOutlet weak var periodButton: UIButton!
     
+    @IBOutlet weak var leftOrderLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var priceWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var periodWidthConstraint: NSLayoutConstraint!
+    
     weak var delegate: Delegate?
     
     var order: MarketOrdering? {
@@ -35,24 +39,38 @@ final class PerpsMarketOrderingHeaderView: UICollectionReusableView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         let orderButtonTitleTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
             outgoing.font = UIFont.preferredFont(forTextStyle: .caption1)
             return outgoing
         }
+        
         if var config = volumeButton.configuration {
             config.titleTextAttributesTransformer = orderButtonTitleTransformer
             config.title = R.string.localizable.market_volume_short()
             volumeButton.configuration = config
         }
         volumeButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        
         if var config = priceButton.configuration {
+            priceWidthConstraint.constant = MarketLayout.priceItemWidth
+                + MarketLayout.priceItemTrailingMargin / 2
+            config.contentInsets.trailing = MarketLayout.priceItemTrailingMargin / 2
             config.titleTextAttributesTransformer = orderButtonTitleTransformer
             config.title = R.string.localizable.price()
             priceButton.configuration = config
         }
         priceButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        periodButton.configuration?.titleTextAttributesTransformer = orderButtonTitleTransformer
+        
+        if var config = periodButton.configuration {
+            periodWidthConstraint.constant = MarketLayout.priceItemTrailingMargin / 2
+                + MarketLayout.changeItemWidth
+                + MarketLayout.changeItemTrailingMargin
+            config.contentInsets.trailing = MarketLayout.changeItemTrailingMargin
+            config.titleTextAttributesTransformer = orderButtonTitleTransformer
+            periodButton.configuration = config
+        }
         periodButton.titleLabel?.adjustsFontForContentSizeCategory = true
     }
     

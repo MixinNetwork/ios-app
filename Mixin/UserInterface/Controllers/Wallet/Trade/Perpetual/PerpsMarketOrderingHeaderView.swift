@@ -69,6 +69,7 @@ final class PerpsMarketOrderingHeaderView: UICollectionReusableView {
                 + MarketLayout.changeItemTrailingMargin
             config.contentInsets.trailing = MarketLayout.changeItemTrailingMargin
             config.titleTextAttributesTransformer = orderButtonTitleTransformer
+            config.title = R.string.localizable.hours_count_short(24)
             periodButton.configuration = config
         }
         periodButton.titleLabel?.adjustsFontForContentSizeCategory = true

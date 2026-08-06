@@ -741,6 +741,7 @@ extension MarketDashboardViewController: FavorableMarketCell.Delegate {
                         MarketDAO.shared.unfavorite(coinIDs: [market.coinID])
                     }
                     market.isFavorite = false
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_remove_desc(market.symbol))
                 case .failure(let error):
                     cell.favoriteButton.setFavorite(true, animated: false)
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
@@ -791,6 +792,7 @@ extension MarketDashboardViewController: FavorablePerpsMarketCell.Delegate {
                         PerpsMarketDAO.shared.unfavorite(marketIDs: [market.marketID])
                     }
                     market.isFavorite = false
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_remove_desc(market.displaySymbol))
                 case .failure(let error):
                     cell.favoriteButton.setFavorite(true, animated: false)
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)

@@ -2025,6 +2025,7 @@
 "watchlist" = "自选";
 "watchlist_add_desc" = "%@ 已经加入自选";
 "watchlist_empty" = "您的自选列表为空";
+"watchlist_remove_desc" = "%@ 已从自选移除";
 "web_cannot_reached_desc" = "无法访问 %@，请检查你的网络并尝试切换 4G、Wi-Fi 或 VPN 后重新载入页面。";
 "web_cannot_reached_title" = "无法访问此网页";
 "web_suspicious_link_tips" = "该链接不在对应的机器人域名白名单内。";

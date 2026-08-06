@@ -2025,6 +2025,7 @@
 "watchlist" = "Lista de seguimiento";
 "watchlist_add_desc" = "%@ ahora está en tu lista de seguimiento";
 "watchlist_empty" = "Tu lista de seguimiento está vacía";
+"watchlist_remove_desc" = "%@ se ha eliminado de tu lista de seguimiento";
 "web_cannot_reached_desc" = "%@ ha tardado demasiado en responder. Verifica tu red e intenta cambiar 4G, Wi-Fi o VPN para recargar la página.";
 "web_cannot_reached_title" = "No se puede acceder a esta página web";
 "web_suspicious_link_tips" = "El enlace no está en los patrones de recursos correspondientes.";

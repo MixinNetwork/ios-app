@@ -2025,6 +2025,7 @@
 "watchlist" = "관심 목록";
 "watchlist_add_desc" = "%@이(가) 관심 목록에 있습니다.";
 "watchlist_empty" = "관심 목록이 비어 있습니다.";
+"watchlist_remove_desc" = "%@이(가) 관심 목록에서 제거되었습니다";
 "web_cannot_reached_desc" = "%@ 응답하는 데 너무 오랜 시간이 걸렸습니다. 네트워크를 확인하고 4G, Wi-Fi 또는 VPN을 전환하여 페이지를 새로고침해 보세요.";
 "web_cannot_reached_title" = "이 웹페이지에 접속할 수 없습니다";
 "web_suspicious_link_tips" = "링크가 해당 리소스 패턴에 없습니다.";

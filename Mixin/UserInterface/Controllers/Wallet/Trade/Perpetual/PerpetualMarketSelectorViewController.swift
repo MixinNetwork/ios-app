@@ -441,6 +441,7 @@ extension PerpetualMarketSelectorViewController: FavorablePerpsMarketCell.Delega
                         }
                     }
                     market.isFavorite = false
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_remove_desc(market.displaySymbol))
                 case .failure(let error):
                     cell.favoriteButton.setFavorite(true, animated: false)
                     self?.unlockForFavoriteUpdate()

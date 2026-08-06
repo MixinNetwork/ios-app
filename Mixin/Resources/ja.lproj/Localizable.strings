@@ -2025,6 +2025,7 @@
 "watchlist" = "ウォッチリスト";
 "watchlist_add_desc" = "%@ がウォッチリストに追加されました";
 "watchlist_empty" = "ウォッチリストは空です";
+"watchlist_remove_desc" = "%@ がウォッチリストから削除されました";
 "web_cannot_reached_desc" = "%@ 接続に時間がかかり過ぎています、ネットワーク設定を確認してページをリロードしてください。";
 "web_cannot_reached_title" = "アクセスできません";
 "web_suspicious_link_tips" = "リンクは対応するリソースパターンにありません。";

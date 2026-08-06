@@ -74,7 +74,7 @@ final class MarketViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let favoriteButton = FavoriteButton()
+        let favoriteButton = FavoriteButton(config: .large)
         favoriteButton.addTarget(
             self,
             action: #selector(toggleFavorite(_:)),

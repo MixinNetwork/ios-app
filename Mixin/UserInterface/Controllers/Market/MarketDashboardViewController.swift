@@ -722,35 +722,34 @@ extension MarketDashboardViewController: FavorableMarketCell.Delegate {
             return
         }
         collectionView.isUserInteractionEnabled = false
-        cell.favoriteActivityIndicatorView.startAnimating()
         if market.isFavorite {
+            cell.favoriteButton.setFavorite(false, animated: true)
             RouteAPI.unfavoriteMarket(coinID: market.coinID) { [weak self] result in
-                cell.favoriteActivityIndicatorView.stopAnimating()
                 self?.collectionView.isUserInteractionEnabled = true
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
                         MarketDAO.shared.unfavorite(coinIDs: [market.coinID])
                     }
-                    cell.isFavorited = false
                     market.isFavorite = false
                 case .failure(let error):
+                    cell.favoriteButton.setFavorite(true, animated: false)
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
         } else {
+            cell.favoriteButton.setFavorite(true, animated: true)
             RouteAPI.favoriteMarket(coinID: market.coinID) { [weak self] result in
-                cell.favoriteActivityIndicatorView.stopAnimating()
                 self?.collectionView.isUserInteractionEnabled = true
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
                         MarketDAO.shared.favorite(coinIDs: [market.coinID])
                     }
-                    cell.isFavorited = true
                     market.isFavorite = true
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(market.symbol))
                 case .failure(let error):
+                    cell.favoriteButton.setFavorite(false, animated: false)
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
@@ -773,35 +772,34 @@ extension MarketDashboardViewController: FavorablePerpsMarketCell.Delegate {
             return
         }
         collectionView.isUserInteractionEnabled = false
-        cell.favoriteActivityIndicatorView.startAnimating()
         if market.isFavorite {
+            cell.favoriteButton.setFavorite(false, animated: true)
             RouteAPI.unfavoritePerpsMarket(marketID: market.marketID) { [weak self] result in
-                cell.favoriteActivityIndicatorView.stopAnimating()
                 self?.collectionView.isUserInteractionEnabled = true
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
                         PerpsMarketDAO.shared.unfavorite(marketIDs: [market.marketID])
                     }
-                    cell.isFavorited = false
                     market.isFavorite = false
                 case .failure(let error):
+                    cell.favoriteButton.setFavorite(true, animated: false)
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
         } else {
+            cell.favoriteButton.setFavorite(true, animated: true)
             RouteAPI.favoritePerpsMarket(marketID: market.marketID) { [weak self] result in
-                cell.favoriteActivityIndicatorView.stopAnimating()
                 self?.collectionView.isUserInteractionEnabled = true
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
                         PerpsMarketDAO.shared.favorite(marketIDs: [market.marketID])
                     }
-                    cell.isFavorited = true
                     market.isFavorite = true
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(market.displaySymbol))
                 case .failure(let error):
+                    cell.favoriteButton.setFavorite(false, animated: false)
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }

@@ -7,8 +7,7 @@ final class FavorableMarketCell: UICollectionViewCell {
         func favorableMarketCellWantsToggleFavorite(_ cell: FavorableMarketCell)
     }
     
-    @IBOutlet weak var favoriteButton: UIButton!
-    @IBOutlet weak var favoriteActivityIndicatorView: ActivityIndicatorView!
+    @IBOutlet weak var favoriteButton: FavoriteButton!
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var rankLabel: InsetLabel!
@@ -24,17 +23,6 @@ final class FavorableMarketCell: UICollectionViewCell {
     @IBOutlet weak var chartTrailingConstraint: NSLayoutConstraint!
     
     weak var delegate: Delegate?
-    
-    var isFavorited = false {
-        didSet {
-            let image = if isFavorited {
-                R.image.market_favorited()
-            } else {
-                R.image.market_unfavorited()
-            }
-            favoriteButton.setImage(image, for: .normal)
-        }
-    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -53,7 +41,6 @@ final class FavorableMarketCell: UICollectionViewCell {
             scaledFor: .systemFont(ofSize: 14, weight: .medium),
             adjustForContentSize: true
         )
-        favoriteActivityIndicatorView.style = .custom(diameter: 14, lineWidth: 2)
     }
     
     @IBAction func toggleFavorite(_ sender: Any) {
@@ -61,6 +48,7 @@ final class FavorableMarketCell: UICollectionViewCell {
     }
     
     func reloadData(market: FavorableMarket) {
+        favoriteButton.setFavorite(market.isFavorite, animated: false)
         iconView.setIcon(tokenIconURL: URL(string: market.iconURL))
         symbolLabel.text = market.symbol
         rankLabel.text = market.marketCapRank
@@ -90,7 +78,6 @@ final class FavorableMarketCell: UICollectionViewCell {
             changeLabel.marketColor = color
             chartImageView.marketColor = color
         }
-        isFavorited = market.isFavorite
     }
     
 }

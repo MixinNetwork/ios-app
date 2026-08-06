@@ -261,7 +261,7 @@ final class PerpetualMarketViewController: UIViewController {
         reloadPositions()
         
         let marketID = viewModel.market.marketID
-        let favoriteButton = FavoriteButton()
+        let favoriteButton = FavoriteButton(config: .large)
         favoriteButton.addTarget(
             self,
             action: #selector(toggleFavorite(_:)),

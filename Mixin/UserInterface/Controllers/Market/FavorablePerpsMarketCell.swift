@@ -7,8 +7,7 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
         func favorablePerpsMarketCellWantsToggleFavorite(_ cell: FavorablePerpsMarketCell)
     }
     
-    @IBOutlet weak var favoriteButton: UIButton!
-    @IBOutlet weak var favoriteActivityIndicatorView: ActivityIndicatorView!
+    @IBOutlet weak var favoriteButton: FavoriteButton!
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var tagLabel: InsetLabel!
@@ -23,17 +22,6 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
     @IBOutlet weak var changeTrailingConstraint: NSLayoutConstraint!
     
     weak var delegate: Delegate?
-    
-    var isFavorited = false {
-        didSet {
-            let image = if isFavorited {
-                R.image.market_favorited()
-            } else {
-                R.image.market_unfavorited()
-            }
-            favoriteButton.setImage(image, for: .normal)
-        }
-    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -58,7 +46,6 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
             scaledFor: .systemFont(ofSize: 14, weight: .medium),
             adjustForContentSize: true
         )
-        favoriteActivityIndicatorView.style = .custom(diameter: 14, lineWidth: 2)
     }
     
     @IBAction func toggleFavorite(_ sender: Any) {
@@ -66,13 +53,13 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
     }
     
     func reloadData(market: FavorablePerpetualMarket) {
+        favoriteButton.setFavorite(market.isFavorite, animated: false)
         symbolLabel.text = market.tokenSymbol
         iconView.setIcon(tokenIconURL: URL(string: market.iconURL))
         marketCapLabel.text = market.prettyVolume
         priceLabel.text = market.localizedPrice
         changeLabel.text = market.changePercentage
         changeLabel.marketColor = .byValue(market.decimalChange)
-        isFavorited = market.isFavorite
     }
     
 }

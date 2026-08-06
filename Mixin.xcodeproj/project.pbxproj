@@ -1179,6 +1179,7 @@
 		946B9FBC2B0493E800DB4DC1 /* WalletHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946B9FBA2B0493E800DB4DC1 /* WalletHintView.xib */; };
 		946BBA473023840E0080D43D /* MarketSubCategoryDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946BBA46302384090080D43D /* MarketSubCategoryDisplay.swift */; };
 		946BBA8830244FA70080D43D /* MarketLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946BBA8730244FA40080D43D /* MarketLayout.swift */; };
+		946BBCF430248B710080D43D /* favorite_medium.png in Resources */ = {isa = PBXBuildFile; fileRef = 946BBCF330248B710080D43D /* favorite_medium.png */; };
 		946C50982E95651800A0EA6A /* TradeMixinTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946C50972E95651800A0EA6A /* TradeMixinTokenSelectorViewController.swift */; };
 		946C50EE2E959F2500A0EA6A /* TokenComparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946C50ED2E959F2100A0EA6A /* TokenComparator.swift */; };
 		946CB9B62E9F69650099FFCB /* LoadContactCommonWalletAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946CB9B52E9F69650099FFCB /* LoadContactCommonWalletAddressViewController.swift */; };
@@ -1541,7 +1542,7 @@
 		94D4EA502EE015D5006BC2DC /* Wallet+TradingWalletID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D4EA4F2EE015CC006BC2DC /* Wallet+TradingWalletID.swift */; };
 		94D5C0EE2D5C911D0046C20E /* WalletSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */; };
 		94D5C0EF2D5C911D0046C20E /* WalletSummaryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */; };
-		94D635D43020A069006F2C4F /* favorite.png in Resources */ = {isa = PBXBuildFile; fileRef = 94D635D13020A069006F2C4F /* favorite.png */; };
+		94D635D43020A069006F2C4F /* favorite_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 94D635D13020A069006F2C4F /* favorite_large.png */; };
 		94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */; };
 		94D72C1F27A293CE00E328F0 /* PINAPITestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D72C1E27A293CE00E328F0 /* PINAPITestView.swift */; };
 		94D72C2127A2944600E328F0 /* PINAPITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D72C2027A2944600E328F0 /* PINAPITest.swift */; };
@@ -3205,6 +3206,7 @@
 		946B9FBA2B0493E800DB4DC1 /* WalletHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletHintView.xib; sourceTree = "<group>"; };
 		946BBA46302384090080D43D /* MarketSubCategoryDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketSubCategoryDisplay.swift; sourceTree = "<group>"; };
 		946BBA8730244FA40080D43D /* MarketLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketLayout.swift; sourceTree = "<group>"; };
+		946BBCF330248B710080D43D /* favorite_medium.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorite_medium.png; sourceTree = "<group>"; };
 		946C50972E95651800A0EA6A /* TradeMixinTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeMixinTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		946C50ED2E959F2100A0EA6A /* TokenComparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenComparator.swift; sourceTree = "<group>"; };
 		946CB9B52E9F69650099FFCB /* LoadContactCommonWalletAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadContactCommonWalletAddressViewController.swift; sourceTree = "<group>"; };
@@ -3562,7 +3564,7 @@
 		94D4EA4F2EE015CC006BC2DC /* Wallet+TradingWalletID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Wallet+TradingWalletID.swift"; sourceTree = "<group>"; };
 		94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSummaryViewController.swift; sourceTree = "<group>"; };
 		94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletSummaryView.xib; sourceTree = "<group>"; };
-		94D635D13020A069006F2C4F /* favorite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorite.png; sourceTree = "<group>"; };
+		94D635D13020A069006F2C4F /* favorite_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = favorite_large.png; sourceTree = "<group>"; };
 		94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelFactory.swift; sourceTree = "<group>"; };
 		94D72C1E27A293CE00E328F0 /* PINAPITestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINAPITestView.swift; sourceTree = "<group>"; };
 		94D72C2027A2944600E328F0 /* PINAPITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINAPITest.swift; sourceTree = "<group>"; };
@@ -6296,7 +6298,8 @@
 				94F2FA922DF039A80013B820 /* user_membership_prosperity_large.json */,
 				940EADA02EAA12AC009B3DAA /* referral@2x.json */,
 				940EADA12EAA12AC009B3DAA /* referral@3x.json */,
-				94D635D13020A069006F2C4F /* favorite.png */,
+				94D635D13020A069006F2C4F /* favorite_large.png */,
+				946BBCF330248B710080D43D /* favorite_medium.png */,
 				949A3685261D9C5C004251B2 /* post.css */,
 				94EC81FB2BC5A61F00770DCE /* mixin-min.js */,
 			);
@@ -7604,7 +7607,7 @@
 				9447315A2E71867200ACC49B /* HomeNavigationTitleView.xib in Resources */,
 				944731702E71A2AD00ACC49B /* SearchMarketView.xib in Resources */,
 				94F0A1A72E3BB0AD001732B8 /* AuthenticationPreviewWalletCell.xib in Resources */,
-				94D635D43020A069006F2C4F /* favorite.png in Resources */,
+				94D635D43020A069006F2C4F /* favorite_large.png in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */,
 				DFC2646E24E585CE00BF954D /* DuplicateConfirmationWindow.xib in Resources */,

@@ -18,7 +18,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7d4-zR-2S9">
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7d4-zR-2S9" customClass="FavoriteButton" customModule="Mixin" customModuleProvider="target">
                         <rect key="frame" x="4" y="3" width="40" height="44"/>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
@@ -30,16 +30,6 @@
                             <action selector="toggleFavorite:" destination="0YI-yN-7Wr" eventType="touchUpInside" id="26h-55-pf8"/>
                         </connections>
                     </button>
-                    <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hns-hd-q1n" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="2" y="3" width="44" height="44"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" name="background"/>
-                        <color key="tintColor" name="chat_pin_count_background"/>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
-                            <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="NO"/>
-                        </userDefinedRuntimeAttributes>
-                    </view>
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="wJ4-kE-HZF">
                         <rect key="frame" x="44" y="6" width="145" height="38"/>
                         <subviews>
@@ -146,7 +136,6 @@
                 <outlet property="chartImageView" destination="b3S-uO-F3V" id="R9l-Hd-3W5"/>
                 <outlet property="chartTrailingConstraint" destination="Pyi-jv-dSb" id="9Ob-XT-t4g"/>
                 <outlet property="chartWidthConstraint" destination="AmZ-lo-iMF" id="spC-eX-pWU"/>
-                <outlet property="favoriteActivityIndicatorView" destination="hns-hd-q1n" id="r6g-bJ-GeN"/>
                 <outlet property="favoriteButton" destination="7d4-zR-2S9" id="lmM-QD-mZp"/>
                 <outlet property="iconView" destination="49X-rf-uZb" id="N6Z-W2-U7J"/>
                 <outlet property="mainItemLeadingConstraint" destination="1KK-tM-WoF" id="iIZ-9X-TAJ"/>
@@ -163,9 +152,6 @@
     <resources>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="chat_pin_count_background">
-            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

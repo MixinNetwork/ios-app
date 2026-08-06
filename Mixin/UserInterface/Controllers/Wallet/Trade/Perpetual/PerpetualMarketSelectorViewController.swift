@@ -426,35 +426,34 @@ extension PerpetualMarketSelectorViewController: FavorablePerpsMarketCell.Delega
         }
         let market = market(at: indexPath)
         marketsCollectionView.isUserInteractionEnabled = false
-        cell.favoriteActivityIndicatorView.startAnimating()
         if market.isFavorite {
+            cell.favoriteButton.setFavorite(false, animated: true)
             RouteAPI.unfavoritePerpsMarket(marketID: market.marketID) { [weak self] result in
-                cell.favoriteActivityIndicatorView.stopAnimating()
                 self?.marketsCollectionView.isUserInteractionEnabled = true
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
                         PerpsMarketDAO.shared.unfavorite(marketIDs: [market.marketID])
                     }
-                    cell.isFavorited = false
                     market.isFavorite = false
                 case .failure(let error):
+                    cell.favoriteButton.setFavorite(true, animated: false)
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
         } else {
+            cell.favoriteButton.setFavorite(true, animated: true)
             RouteAPI.favoritePerpsMarket(marketID: market.marketID) { [weak self] result in
-                cell.favoriteActivityIndicatorView.stopAnimating()
                 self?.marketsCollectionView.isUserInteractionEnabled = true
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
                         PerpsMarketDAO.shared.favorite(marketIDs: [market.marketID])
                     }
-                    cell.isFavorited = true
                     market.isFavorite = true
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(market.displaySymbol))
                 case .failure(let error):
+                    cell.favoriteButton.setFavorite(false, animated: false)
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }

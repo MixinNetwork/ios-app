@@ -21,8 +21,9 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     
     private var selectedCategory: DisplayCategory
     private var markets: [DisplayCategory: [FavorablePerpetualMarket]] = [:]
-    private var displayFavoritesAsRecommendations = false
     private var ordering: MarketOrdering
+    private var displayFavoritesAsRecommendations = false
+    private var isUpdatingFavorites = false
     
     private weak var marketsCollectionView: UICollectionView!
     private weak var addToWatchlistButton: UIButton?
@@ -165,7 +166,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         marketsCollectionView.delegate = self
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(reloadDataIfNotShowingRecommendations(_:)),
+            selector: #selector(reloadDataIfAvailable(_:)),
             name: PerpsMarketDAO.marketsDidUpdateNotification,
             object: nil
         )
@@ -195,9 +196,10 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         }
     }
     
-    @objc private func reloadDataIfNotShowingRecommendations(_ notification: Notification) {
-        // Prevent the selection from messing up
-        if !isShowingRecommendations {
+    @objc private func reloadDataIfAvailable(_ notification: Notification) {
+        let available = !isShowingRecommendations // Do not mess up selection
+            && !isUpdatingFavorites // Do not revert favorites
+        if available {
             reloadData()
         }
     }
@@ -303,6 +305,16 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         for indexPath in indexPaths {
             marketsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
         }
+    }
+    
+    private func lockForFavoriteUpdate() {
+        marketsCollectionView.isUserInteractionEnabled = false
+        isUpdatingFavorites = true
+    }
+    
+    private func unlockForFavoriteUpdate() {
+        marketsCollectionView.isUserInteractionEnabled = true
+        isUpdatingFavorites = false
     }
     
 }
@@ -416,36 +428,40 @@ extension PerpetualMarketSelectorViewController: FavorablePerpsMarketCell.Delega
         guard let indexPath = marketsCollectionView.indexPath(for: cell) else {
             return
         }
+        lockForFavoriteUpdate()
         let market = market(at: indexPath)
-        marketsCollectionView.isUserInteractionEnabled = false
         if market.isFavorite {
             cell.favoriteButton.setFavorite(false, animated: true)
             RouteAPI.unfavoritePerpsMarket(marketID: market.marketID) { [weak self] result in
-                self?.marketsCollectionView.isUserInteractionEnabled = true
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
-                        PerpsMarketDAO.shared.unfavorite(marketIDs: [market.marketID])
+                        PerpsMarketDAO.shared.unfavorite(marketIDs: [market.marketID]) {
+                            self?.unlockForFavoriteUpdate()
+                        }
                     }
                     market.isFavorite = false
                 case .failure(let error):
                     cell.favoriteButton.setFavorite(true, animated: false)
+                    self?.unlockForFavoriteUpdate()
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
         } else {
             cell.favoriteButton.setFavorite(true, animated: true)
             RouteAPI.favoritePerpsMarket(marketID: market.marketID) { [weak self] result in
-                self?.marketsCollectionView.isUserInteractionEnabled = true
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
-                        PerpsMarketDAO.shared.favorite(marketIDs: [market.marketID])
+                        PerpsMarketDAO.shared.favorite(marketIDs: [market.marketID]) {
+                            self?.unlockForFavoriteUpdate()
+                        }
                     }
                     market.isFavorite = true
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(market.displaySymbol))
                 case .failure(let error):
                     cell.favoriteButton.setFavorite(false, animated: false)
+                    self?.unlockForFavoriteUpdate()
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }

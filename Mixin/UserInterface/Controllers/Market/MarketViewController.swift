@@ -16,6 +16,7 @@ final class MarketViewController: UIViewController {
     
     private var market: FavorableMarket?
     private var tokens: [MixinTokenItem]?
+    private var tradingToken: MixinTokenItem?
     private var viewModel: MarketViewModel
     private var chartPoints: [ChartView.Point]?
     private var chartPeriod: PriceHistoryPeriod = {
@@ -274,7 +275,7 @@ final class MarketViewController: UIViewController {
     }
     
     @objc private func trade(_ sender: Any) {
-        if let token = tokens?.first {
+        if let token = tradingToken ?? tokens?.first {
             UserOperationAnalytics.tradeSource = .spotMarketDetail
             if let trade = pushingViewController as? TradeMixinSpotViewController {
                 trade.buy(assetID: token.assetID)
@@ -384,23 +385,21 @@ final class MarketViewController: UIViewController {
             return
         }
         DispatchQueue.global().async { [weak self] in
-            func update(with tokens: [MixinTokenItem]) {
-                DispatchQueue.main.sync {
-                    guard let self else {
-                        return
-                    }
-                    self.tokens = tokens
-                    self.viewModel.update(market: market, tokens: tokens)
-                    self.tableView.reloadData()
-                }
-            }
-            
             let uniqueIDs = Set(ids)
             let tokens = TokenDAO.shared.tokenItems(with: uniqueIDs)
                 .sorted { one, another in
                     one.decimalBalance > another.decimalBalance
                 }
-            update(with: tokens)
+            let tradingAssetID = ids.first
+            var tradingToken: MixinTokenItem?
+            if let id = tradingAssetID {
+                tradingToken = tokens.first { token in
+                    token.assetID == id
+                }
+            }
+            DispatchQueue.main.async {
+                self?.update(market: market, tokens: tokens, tradingToken: tradingToken)
+            }
             if tokens.count != uniqueIDs.count {
                 let missingAssetIDs = uniqueIDs.subtracting(tokens.map(\.assetID))
                 Logger.general.debug(category: "MarketView", message: "Load missing asset: \(missingAssetIDs)")
@@ -410,12 +409,31 @@ final class MarketViewController: UIViewController {
                         let chain = ChainDAO.shared.chain(chainId: token.chainID)
                         return MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                     }
-                    update(with: tokens + missingTokenItems)
+                    let allTokens = tokens + missingTokenItems
+                    if let id = tradingAssetID {
+                        tradingToken = allTokens.first { token in
+                            token.assetID == id
+                        }
+                    }
+                    DispatchQueue.main.async {
+                        self?.update(market: market, tokens: allTokens, tradingToken: tradingToken)
+                    }
                 case .failure(let error):
                     Logger.general.debug(category: "MarketView", message: "\(error)")
                 }
             }
         }
+    }
+    
+    private func update(
+        market: Market,
+        tokens: [MixinTokenItem],
+        tradingToken: MixinTokenItem?,
+    ) {
+        self.tokens = tokens
+        self.tradingToken = tradingToken
+        viewModel.update(market: market, tokens: tokens)
+        tableView.reloadData()
     }
     
     // `completion` is not called on failure

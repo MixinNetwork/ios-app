@@ -50,7 +50,7 @@ final class TokenPriceChartCell: UITableViewCell {
             button.tag = i
             let title = switch period {
             case .day:
-                R.string.localizable.days_count_short(1)
+                R.string.localizable.days_count_short(1).uppercased()
             case .week:
                 R.string.localizable.weeks_count_short(1)
             case .month:

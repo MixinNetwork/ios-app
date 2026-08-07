@@ -39,6 +39,7 @@ final class PerpetualMarketViewController: UIViewController {
     private let autoClosingIntroductionDetectInterval: TimeInterval = 14 * .day
     
     private var viewModel: PerpetualMarketViewModel
+    private var isFavorite: Bool = false
     private var sections: [Section] = [.price, .info]
     private var selectedTimeFrame: PerpetualTimeFrame = {
         if let value = AppGroupUserDefaults.Wallet.perpsChartTimeFrame,
@@ -51,6 +52,7 @@ final class PerpetualMarketViewController: UIViewController {
     }()
     private var charts: [PerpetualTimeFrame: PerpetualMarketPriceCell.Chart] = [:]
     
+    private weak var favoriteButton: FavoriteButton!
     private weak var collectionView: UICollectionView!
     private weak var actionWrapperView: UIView!
     private weak var actionView: UIView?
@@ -83,7 +85,8 @@ final class PerpetualMarketViewController: UIViewController {
             walletID: wallet.tradingWalletID
         )
         self.marketLoader = PerpetualMarketLoader(
-            marketID: viewModel.market.marketID
+            request: .single(marketID: viewModel.market.marketID),
+            timeInterval: 3,
         )
         self.candleLoader = PerpetualCandleLoader(
             marketID: viewModel.market.marketID
@@ -256,6 +259,27 @@ final class PerpetualMarketViewController: UIViewController {
             object: nil
         )
         reloadPositions()
+        
+        let marketID = viewModel.market.marketID
+        let favoriteButton = FavoriteButton(config: .large)
+        favoriteButton.addTarget(
+            self,
+            action: #selector(toggleFavorite(_:)),
+            for: .touchUpInside
+        )
+        let favoriteItem = UIBarButtonItem(customView: favoriteButton)
+        DispatchQueue.global().async { [weak self] in
+            let isFavorite = PerpsMarketDAO.shared.isFavorite(marketID: marketID)
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                favoriteButton.setFavorite(isFavorite, animated: false)
+                self.isFavorite = isFavorite
+                self.favoriteButton = favoriteButton
+                self.navigationItem.rightBarButtonItems?.append(favoriteItem)
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -276,6 +300,45 @@ final class PerpetualMarketViewController: UIViewController {
         positionsLoader.stop()
         marketLoader.stop()
         candleLoader.stop()
+    }
+    
+    @objc private func toggleFavorite(_ sender: Any) {
+        let marketID = viewModel.market.marketID
+        if isFavorite {
+            isFavorite = false
+            favoriteButton.setFavorite(false, animated: true)
+            RouteAPI.unfavoritePerpsMarket(marketID: marketID) { [weak self] result in
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        PerpsMarketDAO.shared.unfavorite(marketIDs: [marketID])
+                    }
+                case .failure(let error):
+                    if let self {
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        self.isFavorite = true
+                        self.favoriteButton.setFavorite(true, animated: false)
+                    }
+                }
+            }
+        } else {
+            isFavorite = true
+            favoriteButton.setFavorite(true, animated: true)
+            RouteAPI.favoritePerpsMarket(marketID: marketID) { [weak self] result in
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        PerpsMarketDAO.shared.favorite(marketIDs: [marketID])
+                    }
+                case .failure(let error):
+                    if let self {
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        self.isFavorite = false
+                        self.favoriteButton.setFavorite(false, animated: false)
+                    }
+                }
+            }
+        }
     }
     
     @objc private func presentCustomerService(_ sender: Any) {

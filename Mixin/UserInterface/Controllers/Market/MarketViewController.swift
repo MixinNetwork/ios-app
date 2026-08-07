@@ -7,7 +7,7 @@ final class MarketViewController: UIViewController {
     
     private weak var tableView: UITableView!
     private weak var actionView: MarketActionView!
-    private weak var favoriteBarButtonItem: UIBarButtonItem!
+    private weak var favoriteButton: FavoriteButton!
     
     private let id: Identifier
     private let isMalicious: Bool
@@ -16,6 +16,7 @@ final class MarketViewController: UIViewController {
     
     private var market: FavorableMarket?
     private var tokens: [MixinTokenItem]?
+    private var tradingToken: MixinTokenItem?
     private var viewModel: MarketViewModel
     private var chartPoints: [ChartView.Point]?
     private var chartPeriod: PriceHistoryPeriod = {
@@ -74,16 +75,17 @@ final class MarketViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let favoriteBarButtonItem: UIBarButtonItem = .tintedIcon(
-            image: nil,
-            target: self,
-            action: #selector(toggleFavorite(_:))
+        let favoriteButton = FavoriteButton(config: .large)
+        favoriteButton.addTarget(
+            self,
+            action: #selector(toggleFavorite(_:)),
+            for: .touchUpInside
         )
         navigationItem.rightBarButtonItems = [
             .tintedIcon(image: R.image.ic_share(), target: self, action: #selector(shareMarket(_:))),
-            favoriteBarButtonItem,
+            UIBarButtonItem(customView: favoriteButton),
         ]
-        self.favoriteBarButtonItem = favoriteBarButtonItem
+        self.favoriteButton = favoriteButton
         
         view.backgroundColor = R.color.background_secondary()
         
@@ -148,7 +150,7 @@ final class MarketViewController: UIViewController {
         if let market {
             viewModel.update(market: market, tokens: [])
             tableView.reloadData()
-            updateFavoriteButtonImage()
+            favoriteButton.setFavorite(market.isFavorite, animated: false)
         }
         reloadFromLocal()
         NotificationCenter.default.addObserver(
@@ -164,7 +166,7 @@ final class MarketViewController: UIViewController {
             self.market = nil
             self.viewModel.updateWithMarketNotFound()
             self.tableView.reloadData()
-            self.updateFavoriteButtonImage()
+            self.favoriteButton.isHidden = true
         })
         
         reporter.report(event: .marketDetail)
@@ -172,7 +174,6 @@ final class MarketViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
         requester.start()
     }
     
@@ -196,36 +197,36 @@ final class MarketViewController: UIViewController {
         }
         if market.isFavorite {
             market.isFavorite = false
-            updateFavoriteButtonImage()
+            favoriteButton.setFavorite(false, animated: true)
             RouteAPI.unfavoriteMarket(coinID: market.coinID) { [weak self] result in
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
-                        MarketDAO.shared.unfavorite(coinID: market.coinID, sendNotification: true)
+                        MarketDAO.shared.unfavorite(coinIDs: [market.coinID])
                     }
                 case .failure(let error):
                     if let self {
                         showAutoHiddenHud(style: .error, text: error.localizedDescription)
                         market.isFavorite = true
-                        self.updateFavoriteButtonImage()
+                        self.favoriteButton.setFavorite(true, animated: false)
                     }
                 }
             }
         } else {
             reporter.report(event: .marketFavoriteAdd, tags: ["source": analyticSource.rawValue])
             market.isFavorite = true
-            updateFavoriteButtonImage()
+            favoriteButton.setFavorite(true, animated: true)
             RouteAPI.favoriteMarket(coinID: market.coinID) { [weak self] result in
                 switch result {
                 case .success:
                     DispatchQueue.global().async {
-                        MarketDAO.shared.favorite(coinID: market.coinID, sendNotification: true)
+                        MarketDAO.shared.favorite(coinIDs: [market.coinID])
                     }
                 case .failure(let error):
                     if let self {
                         showAutoHiddenHud(style: .error, text: error.localizedDescription)
                         market.isFavorite = false
-                        self.updateFavoriteButtonImage()
+                        self.favoriteButton.setFavorite(false, animated: false)
                     }
                 }
             }
@@ -274,7 +275,7 @@ final class MarketViewController: UIViewController {
     }
     
     @objc private func trade(_ sender: Any) {
-        if let token = tokens?.first {
+        if let token = tradingToken ?? tokens?.first {
             UserOperationAnalytics.tradeSource = .spotMarketDetail
             if let trade = pushingViewController as? TradeMixinSpotViewController {
                 trade.buy(assetID: token.assetID)
@@ -316,7 +317,7 @@ final class MarketViewController: UIViewController {
                 self.viewModel.update(market: market, tokens: [])
                 self.tableView.reloadData()
                 self.reloadTokens(market: market)
-                self.updateFavoriteButtonImage()
+                self.favoriteButton.setFavorite(market.isFavorite, animated: false)
                 self.actionView.hasAlert = hasAlert
             }
         }
@@ -331,23 +332,6 @@ final class MarketViewController: UIViewController {
             DispatchQueue.main.sync {
                 self?.actionView.hasAlert = hasAlert
             }
-        }
-    }
-    
-    private func updateFavoriteButtonImage() {
-        guard let item = favoriteBarButtonItem else {
-            return
-        }
-        if let market {
-            if market.isFavorite {
-                item.image = R.image.market_favorite_solid()?.withRenderingMode(.alwaysTemplate)
-                item.tintColor = R.color.theme()
-            } else {
-                item.image = R.image.market_favorite_hollow()?.withRenderingMode(.alwaysTemplate)
-                item.tintColor = R.color.icon_tint()
-            }
-        } else {
-            item.image = nil
         }
     }
     
@@ -401,23 +385,21 @@ final class MarketViewController: UIViewController {
             return
         }
         DispatchQueue.global().async { [weak self] in
-            func update(with tokens: [MixinTokenItem]) {
-                DispatchQueue.main.sync {
-                    guard let self else {
-                        return
-                    }
-                    self.tokens = tokens
-                    self.viewModel.update(market: market, tokens: tokens)
-                    self.tableView.reloadData()
-                }
-            }
-            
             let uniqueIDs = Set(ids)
             let tokens = TokenDAO.shared.tokenItems(with: uniqueIDs)
                 .sorted { one, another in
                     one.decimalBalance > another.decimalBalance
                 }
-            update(with: tokens)
+            let tradingAssetID = ids.first
+            var tradingToken: MixinTokenItem?
+            if let id = tradingAssetID {
+                tradingToken = tokens.first { token in
+                    token.assetID == id
+                }
+            }
+            DispatchQueue.main.async {
+                self?.update(market: market, tokens: tokens, tradingToken: tradingToken)
+            }
             if tokens.count != uniqueIDs.count {
                 let missingAssetIDs = uniqueIDs.subtracting(tokens.map(\.assetID))
                 Logger.general.debug(category: "MarketView", message: "Load missing asset: \(missingAssetIDs)")
@@ -427,12 +409,31 @@ final class MarketViewController: UIViewController {
                         let chain = ChainDAO.shared.chain(chainId: token.chainID)
                         return MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                     }
-                    update(with: tokens + missingTokenItems)
+                    let allTokens = tokens + missingTokenItems
+                    if let id = tradingAssetID {
+                        tradingToken = allTokens.first { token in
+                            token.assetID == id
+                        }
+                    }
+                    DispatchQueue.main.async {
+                        self?.update(market: market, tokens: allTokens, tradingToken: tradingToken)
+                    }
                 case .failure(let error):
                     Logger.general.debug(category: "MarketView", message: "\(error)")
                 }
             }
         }
+    }
+    
+    private func update(
+        market: Market,
+        tokens: [MixinTokenItem],
+        tradingToken: MixinTokenItem?,
+    ) {
+        self.tokens = tokens
+        self.tradingToken = tradingToken
+        viewModel.update(market: market, tokens: tokens)
+        tableView.reloadData()
     }
     
     // `completion` is not called on failure
@@ -1019,7 +1020,7 @@ extension MarketViewController {
             self.stats = nil
             self.balance = Balance(
                 balance: token.localizedBalanceWithSymbol,
-                period: R.string.localizable.hours_count_short(24),
+                period: R.string.localizable.hours_count_short(24).uppercased(),
                 value: token.estimatedFiatMoneyBalance,
                 change: "",
                 changeColor: .arbitrary(.clear)
@@ -1090,7 +1091,7 @@ extension MarketViewController {
                         sign: .never,
                         symbol: .custom(symbol)
                     ),
-                    period: R.string.localizable.hours_count_short(24),
+                    period: R.string.localizable.hours_count_short(24).uppercased(),
                     value: "≈ " + CurrencyFormatter.localizedString(
                         from: balance * market.decimalPrice * Currency.current.decimalRate,
                         format: .fiatMoneyPrecision,

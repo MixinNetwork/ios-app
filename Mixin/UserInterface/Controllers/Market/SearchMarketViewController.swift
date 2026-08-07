@@ -100,7 +100,7 @@ final class SearchMarketViewController: UIViewController {
                 case .failure:
                     break
                 case .success(let markets):
-                    MarketDAO.shared.save(markets: markets)
+                    MarketDAO.shared.save(markets: markets, replaceRanks: false, updatingCategory: nil)
                     var remoteMarkets = markets.reduce(into: [:]) { results, market in
                         results[market.coinID] = market
                     }

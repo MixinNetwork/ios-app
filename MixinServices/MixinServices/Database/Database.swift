@@ -128,6 +128,20 @@ open class Database {
         }
     }
     
+    @discardableResult
+    public func execute(
+        query: GRDB.SQL,
+        completion: Completion? = nil
+    ) -> Bool {
+        write { (db) in
+            let (sql, arguments) = try query.build(db)
+            try db.execute(sql: sql, arguments: arguments)
+            if let completion = completion {
+                db.afterNextTransaction(onCommit: completion)
+            }
+        }
+    }
+    
     // Only use for migration. See comments in *ColumnMigratableTableDefinition*
     internal func migrateTable(
         with table: ColumnMigratable,

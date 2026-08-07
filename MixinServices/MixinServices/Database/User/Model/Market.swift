@@ -84,6 +84,8 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
         }
     }()
     
+    public private(set) lazy var decimalVolume = Decimal(string: totalVolume, locale: .enUSPOSIX) ?? 0
+    
     public private(set) lazy var localizedUSDPrice = CurrencyFormatter.localizedString(
         from: decimalPrice,
         format: .fiatMoneyPrice,
@@ -223,77 +225,70 @@ extension Market {
 
 extension Market {
     
-    public enum OrderingExpression: Equatable {
-        
-        case marketCap(Ordering)
-        case price(Ordering)
-        case change(period: ChangePeriod, ordering: Ordering)
-        
-        public var ordering: Ordering {
-            switch self {
-            case let .marketCap(ordering):
-                ordering
-            case let .price(ordering):
-                ordering
-            case let .change(_, ordering):
-                ordering
-            }
-        }
-        
-    }
-    
-    public enum Ordering {
-        
-        case ascending
-        case descending
-        
-        public func toggled() -> Ordering {
-            switch self {
-            case .ascending:
-                    .descending
-            case .descending:
-                    .ascending
-            }
-        }
-        
-    }
-    
-    public enum Limit: CaseIterable {
-        
-        case top100
-        case top200
-        case top500
-        
-        public var count: Int {
-            switch self {
-            case .top100:
-                100
-            case .top200:
-                200
-            case .top500:
-                500
-            }
-        }
-        
-    }
-    
-    public enum DashboardCategory: String {
+    public enum SubCategory: CaseIterable {
+        case watchlist
+        case trending
+        case topGainer
+        case topLoser
         case all
-        case favorite
     }
     
     public enum RequestCategory: String {
+        
         case all
         case favorite
         case trending
         case stocks
         case topGainers = "top_gainers"
         case topLosers = "top_losers"
+        case featured = "featured"
+        
+        public init(subCategory: SubCategory) {
+            self = switch subCategory {
+            case .watchlist:
+                    .favorite
+            case .trending:
+                    .trending
+            case .topGainer:
+                    .topGainers
+            case .topLoser:
+                    .topLosers
+            case .all:
+                    .all
+            }
+        }
+        
     }
     
-    public enum ChangePeriod: Int, CaseIterable {
-        case twentyFourHours    = 0
-        case sevenDays          = 1
+}
+
+extension Market {
+    
+    public enum DatabaseCategory: Int {
+        case trending   = 1
+        case topGainer  = 2
+        case topLoser   = 3
+        case stock      = 4
+        case featured   = 5
+    }
+    
+    struct CategoryStorage: Encodable, MixinEncodableRecord, PersistableRecord {
+        
+        enum CodingKeys: String, CodingKey {
+            case coinID = "coin_id"
+            case category = "category"
+        }
+        
+        static let databaseTableName = "market_categories"
+        
+        let coinID: String
+        let category: Int
+        
+        init(coinID: String, category: DatabaseCategory) {
+            self.coinID = coinID
+            self.category = category.rawValue
+        }
+        
     }
     
 }
@@ -322,6 +317,32 @@ extension Market {
             marketCapRank: marketCapRank,
             updatedAt: updatedAt
         )
+    }
+    
+}
+
+extension Market {
+    
+    struct FavoriteStorage: Codable, MixinEncodableRecord, TableRecord, PersistableRecord {
+        
+        enum CodingKeys: String, CodingKey {
+            case coinID = "coin_id"
+            case isFavored = "is_favored"
+            case createdAt = "created_at"
+        }
+        
+        static let databaseTableName = "market_favored"
+        
+        let coinID: String
+        let isFavored: Bool
+        let createdAt: String
+        
+        init(coinID: String, isFavored: Bool, createdAt: String) {
+            self.coinID = coinID
+            self.isFavored = isFavored
+            self.createdAt = createdAt
+        }
+        
     }
     
 }

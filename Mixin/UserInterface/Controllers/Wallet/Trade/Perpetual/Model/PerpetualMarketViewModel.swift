@@ -17,13 +17,7 @@ struct PerpetualMarketViewModel {
     let description: String?
     
     init?(market m: PerpetualMarket) {
-        guard
-            let decimalPrice = Decimal(string: m.last, locale: .enUSPOSIX),
-            let change = Decimal(string: m.change, locale: .enUSPOSIX),
-            let changePercentage = NumberFormatter.percentage.string(decimal: change),
-            let decimalVolume = Decimal(string: m.volume, locale: .enUSPOSIX),
-            let decimalFundingRate = Decimal(string: m.fundingRate, locale: .enUSPOSIX)
-        else {
+        guard let decimalFundingRate = Decimal(string: m.fundingRate, locale: .enUSPOSIX) else {
             return nil
         }
         let userDisplayPriceFormatStyle = PerpetualMarket.userDisplayPriceFormatStyle(scale: m.priceScale)
@@ -32,19 +26,16 @@ struct PerpetualMarketViewModel {
         self.iconURL = URL(string: m.iconURL)
         self.maxLeverageMultiplier = Decimal(m.leverage)
         self.leverage = PerpetualLeverage.stringRepresentation(multiplier: m.leverage)
-        self.decimalPrice = decimalPrice
-        self.price = decimalPrice.formatted(userDisplayPriceFormatStyle)
-        self.volume = NamedLargeNumberFormatter.string(
-            number: decimalVolume,
-            currencyPrefix: .usd
-        ) ?? m.volume
+        self.decimalPrice = m.decimalPrice
+        self.price = m.localizedPrice
+        self.volume = m.prettyVolume
         self.fundingRate = PercentageFormatter.string(
             from: decimalFundingRate,
             format: .precision,
             sign: .whenNegative
         )
-        self.change = changePercentage
-        self.changeColor = change >= 0 ? .rising : .falling
+        self.change = m.changePercentage
+        self.changeColor = m.decimalChange >= 0 ? .rising : .falling
         self.userDisplayPriceFormatStyle = userDisplayPriceFormatStyle
         if let description = m.descriptions?[Market.languageIdentifier],
            !description.isEmpty

@@ -46,6 +46,9 @@ final class DiagnoseViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: "Membership", accessory: .disclosure),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Delete Markets"),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -163,6 +166,11 @@ extension DiagnoseViewController: UITableViewDelegate {
             showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
         case (13, 0):
             navigationController?.pushViewController(MembershipDiagnoseViewController(), animated: true)
+        case (14, 0):
+            MarketDAO.shared.deleteAll()
+            PerpsMarketDAO.shared.deleteAll()
+            PropertiesDAO.shared.removeValue(forKey: .globalMarket)
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
 #if DEBUG
         default:
             navigationController?.pushViewController(TIPDiagnosticViewController(), animated: true)

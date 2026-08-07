@@ -21,4 +21,10 @@ extension AttributedString {
         self.init(string, attributes: container)
     }
     
+    init(string: String, textStyle: UIFont.TextStyle) {
+        var container = AttributeContainer()
+        container.font = UIFont.preferredFont(forTextStyle: textStyle)
+        self.init(string, attributes: container)
+    }
+    
 }

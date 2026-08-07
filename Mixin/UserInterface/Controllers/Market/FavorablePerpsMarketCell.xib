@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="favorable_perps_market" id="hlu-eX-jqO" customClass="FavorablePerpsMarketCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="YYa-Ex-ymC">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LpP-m3-C03" customClass="FavoriteButton" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="4" y="3" width="40" height="44"/>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="44" id="I6N-VX-Mmw"/>
+                            <constraint firstAttribute="width" constant="40" id="M7C-fR-9sh"/>
+                        </constraints>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <buttonConfiguration key="configuration" style="plain">
+                            <directionalEdgeInsets key="contentInsets" top="0.0" leading="0.0" bottom="0.0" trailing="0.0"/>
+                        </buttonConfiguration>
+                        <connections>
+                            <action selector="toggleFavorite:" destination="hlu-eX-jqO" eventType="touchUpInside" id="QPS-ax-3d6"/>
+                        </connections>
+                    </button>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="1Ml-AP-ePn">
+                        <rect key="frame" x="44" y="6" width="145" height="38"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r1h-v0-vS9" customClass="PlainTokenIconView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="3" width="32" height="32"/>
+                                <color key="backgroundColor" name="background"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="r1h-v0-vS9" secondAttribute="height" id="EWJ-Fm-MJ6"/>
+                                    <constraint firstAttribute="width" constant="32" id="ufx-Vt-dBe"/>
+                                </constraints>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="5sZ-tb-pgn">
+                                <rect key="frame" x="42" y="1.3333333333333321" width="103" height="35.333333333333343"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Gns-u4-aF5">
+                                        <rect key="frame" x="0.0" y="0.0" width="57.666666666666664" height="17"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="BTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gZx-4P-8AO">
+                                                <rect key="frame" x="0.0" y="0.0" width="27.333333333333332" height="17"/>
+                                                <color key="backgroundColor" name="background"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <color key="textColor" name="text"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Perp" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tHM-hL-Tqe" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                                <rect key="frame" x="31.333333333333329" y="0.0" width="26.333333333333329" height="17"/>
+                                                <color key="backgroundColor" name="tag_background"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" secondItem="tHM-hL-Tqe" secondAttribute="height" id="WAI-H2-CgY"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <color key="textColor" name="text_tertiary"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="VOL: $410.23M" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="scc-SG-u6n">
+                                        <rect key="frame" x="0.0" y="21" width="87.333333333333329" height="14.333333333333336"/>
+                                        <color key="backgroundColor" name="background"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                        <color key="textColor" name="text_tertiary"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                    </stackView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="$70,836" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="QuQ-a9-BOB">
+                        <rect key="frame" x="189" y="16.666666666666668" width="90" height="17.000000000000004"/>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="90" id="qO7-fh-O0C"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                        <color key="textColor" name="text"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="200" verticalHuggingPriority="251" text="-0.09%" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="yH7-aR-7pp" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="299" y="16.666666666666668" width="60" height="17.000000000000004"/>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="60" id="5gu-3i-gOQ"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstItem="QuQ-a9-BOB" firstAttribute="leading" secondItem="1Ml-AP-ePn" secondAttribute="trailing" id="181-AX-Ici"/>
+                    <constraint firstItem="1Ml-AP-ePn" firstAttribute="leading" secondItem="YYa-Ex-ymC" secondAttribute="leading" constant="44" id="7pI-I1-Xkt"/>
+                    <constraint firstItem="1Ml-AP-ePn" firstAttribute="top" secondItem="YYa-Ex-ymC" secondAttribute="top" constant="6" id="CYe-1m-Bzc"/>
+                    <constraint firstItem="QuQ-a9-BOB" firstAttribute="centerY" secondItem="YYa-Ex-ymC" secondAttribute="centerY" id="IU9-XY-gi1"/>
+                    <constraint firstItem="yH7-aR-7pp" firstAttribute="centerY" secondItem="YYa-Ex-ymC" secondAttribute="centerY" id="K5i-vs-nnc"/>
+                    <constraint firstItem="1Ml-AP-ePn" firstAttribute="leading" secondItem="LpP-m3-C03" secondAttribute="trailing" id="PgK-Cz-zZs"/>
+                    <constraint firstAttribute="bottom" secondItem="1Ml-AP-ePn" secondAttribute="bottom" constant="6" id="aai-FN-Jom"/>
+                    <constraint firstItem="yH7-aR-7pp" firstAttribute="leading" secondItem="QuQ-a9-BOB" secondAttribute="trailing" constant="20" id="rZd-Ih-O1k"/>
+                    <constraint firstItem="LpP-m3-C03" firstAttribute="centerY" secondItem="YYa-Ex-ymC" secondAttribute="centerY" id="way-ZD-BGc"/>
+                    <constraint firstAttribute="trailing" secondItem="yH7-aR-7pp" secondAttribute="trailing" constant="16" id="ys1-xd-Xj7"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <color key="backgroundColor" name="background"/>
+            <connections>
+                <outlet property="changeLabel" destination="yH7-aR-7pp" id="Sgk-HJ-EEB"/>
+                <outlet property="changeTrailingConstraint" destination="ys1-xd-Xj7" id="Xov-3Z-eap"/>
+                <outlet property="changeWidthConstraint" destination="5gu-3i-gOQ" id="PO2-IS-d8I"/>
+                <outlet property="favoriteButton" destination="LpP-m3-C03" id="8Gk-jF-JWV"/>
+                <outlet property="iconView" destination="r1h-v0-vS9" id="rTs-jg-Yey"/>
+                <outlet property="mainItemLeadingConstraint" destination="7pI-I1-Xkt" id="KN8-gN-MIi"/>
+                <outlet property="marketCapLabel" destination="scc-SG-u6n" id="3wD-jG-Ys9"/>
+                <outlet property="priceLabel" destination="QuQ-a9-BOB" id="HXW-Xk-UJe"/>
+                <outlet property="priceTrailingConstraint" destination="rZd-Ih-O1k" id="tyX-dR-kdY"/>
+                <outlet property="priceWidthConstraint" destination="qO7-fh-O0C" id="xMp-PA-JlK"/>
+                <outlet property="symbolLabel" destination="gZx-4P-8AO" id="utr-EA-88s"/>
+                <outlet property="tagLabel" destination="tHM-hL-Tqe" id="H5x-md-ity"/>
+            </connections>
+            <point key="canvasLocation" x="64" y="42"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="tag_background">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

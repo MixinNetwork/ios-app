@@ -150,6 +150,30 @@ public final class PerpsDatabase: Database {
             }
         }
         
+        migrator.registerMigration("market_favorite") { db in
+            let sqls = [
+                """
+                CREATE TABLE IF NOT EXISTS `favorites` (
+                    `market_id`     TEXT NOT NULL,
+                    `is_favored`    INTEGER NOT NULL,
+                    `created_at`    TEXT NOT NULL,
+                    PRIMARY KEY(`market_id`)
+                )
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS `market_categories` (
+                    `market_id` TEXT NOT NULL,
+                    `category`  INTEGER NOT NULL,
+                    PRIMARY KEY(`market_id`, `category`)
+                )
+                """,
+                "CREATE INDEX IF NOT EXISTS index_market_categories_category ON market_categories(category)",
+            ]
+            for sql in sqls {
+                try db.execute(sql: sql)
+            }
+        }
+        
         return migrator
     }
     

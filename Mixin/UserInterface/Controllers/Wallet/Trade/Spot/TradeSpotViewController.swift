@@ -1106,12 +1106,13 @@ extension TradeSpotViewController: MarketPeriodicRequester.Delegate {
         didLoadMarketsIn category: Market.RequestCategory,
         markets: [Market]
     ) {
-        if markets.count == marketCount {
+        if markets.count >= marketCount {
+            let displayMarkets = markets.prefix(marketCount)
             switch category {
-            case .all, .favorite:
+            case .all, .favorite, .featured:
                 assertionFailure()
             case .trending:
-                let trendings = MarketDAO.shared.favorableMarket(markets: markets)
+                let trendings = MarketDAO.shared.favorableMarket(markets: displayMarkets)
                 let viewModels = trendings.reduce(
                     into: OrderedDictionary<String, FavorableMarket>()
                 ) { results, market in
@@ -1121,7 +1122,7 @@ extension TradeSpotViewController: MarketPeriodicRequester.Delegate {
                     self.showMarketSection(.trending, markets: viewModels)
                 }
             case .stocks:
-                let stocks = MarketDAO.shared.favorableMarket(markets: markets)
+                let stocks = MarketDAO.shared.favorableMarket(markets: displayMarkets)
                 let viewModels = stocks.reduce(
                     into: OrderedDictionary<String, FavorableMarket>()
                 ) { results, market in
@@ -1131,7 +1132,7 @@ extension TradeSpotViewController: MarketPeriodicRequester.Delegate {
                     self.showMarketSection(.stocks, markets: viewModels)
                 }
             case .topGainers:
-                let topGainers = MarketDAO.shared.favorableMarket(markets: markets)
+                let topGainers = MarketDAO.shared.favorableMarket(markets: displayMarkets)
                 let viewModels = topGainers.reduce(
                     into: OrderedDictionary<String, FavorableMarket>()
                 ) { results, market in
@@ -1141,7 +1142,7 @@ extension TradeSpotViewController: MarketPeriodicRequester.Delegate {
                     self.showMarketSection(.topGainers, markets: viewModels)
                 }
             case .topLosers:
-                let topLosers = MarketDAO.shared.favorableMarket(markets: markets)
+                let topLosers = MarketDAO.shared.favorableMarket(markets: displayMarkets)
                 let viewModels = topLosers.reduce(
                     into: OrderedDictionary<String, FavorableMarket>()
                 ) { results, market in
@@ -1153,7 +1154,7 @@ extension TradeSpotViewController: MarketPeriodicRequester.Delegate {
             }
         } else {
             switch category {
-            case .all, .favorite:
+            case .all, .favorite, .featured:
                 assertionFailure()
             case .trending:
                 DispatchQueue.main.async {
@@ -1579,7 +1580,7 @@ extension TradeSpotViewController {
         RouteAPI.markets(ids: ids, queue: .global()) { result in
             switch result {
             case let .success(markets):
-                MarketDAO.shared.save(markets: markets)
+                MarketDAO.shared.save(markets: markets, replaceRanks: false, updatingCategory: nil)
                 Logger.general.debug(category: "MarketRequester", message: "Saved")
             case .failure:
                 break

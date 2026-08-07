@@ -1112,7 +1112,7 @@ extension MarketDashboardViewController {
                 if scheduleRemoteLoader {
                     let requester = MarketPeriodicRequester(
                         category: .favorite,
-                        limit: 500
+                        limit: nil
                     )
                     viewController.marketLoader = requester
                     requester.delegate = viewController
@@ -1297,9 +1297,17 @@ extension MarketDashboardViewController {
                     viewController.collectionView.allowsMultipleSelection = false
                     viewController.dataSource.applySnapshotUsingReloadData(snapshot)
                     if scheduleRemoteLoader {
+                        let limit: Int? = switch subCategory {
+                        case .watchlist:
+                            nil
+                        case .all, .trending:
+                            500
+                        case .topGainer, .topLoser:
+                            100
+                        }
                         let requester = MarketPeriodicRequester(
                             category: Market.RequestCategory(subCategory: subCategory),
-                            limit: 500
+                            limit: limit
                         )
                         viewController.marketLoader = requester
                         requester.start()

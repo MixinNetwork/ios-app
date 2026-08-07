@@ -225,25 +225,6 @@ extension Market {
 
 extension Market {
     
-    public enum Limit: CaseIterable {
-        
-        case top100
-        case top200
-        case top500
-        
-        public var count: Int {
-            switch self {
-            case .top100:
-                100
-            case .top200:
-                200
-            case .top500:
-                500
-            }
-        }
-        
-    }
-    
     public enum SubCategory: CaseIterable {
         case watchlist
         case trending

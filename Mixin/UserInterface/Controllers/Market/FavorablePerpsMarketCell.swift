@@ -48,6 +48,11 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
         )
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        iconView.prepareForReuse()
+    }
+    
     @IBAction func toggleFavorite(_ sender: Any) {
         delegate?.favorablePerpsMarketCellWantsToggleFavorite(self)
     }

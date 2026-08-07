@@ -14,7 +14,7 @@ final class MarketPeriodicRequester {
     weak var delegate: Delegate?
     
     private let category: Market.RequestCategory
-    private let limit: Int
+    private let limit: Int?
     private let modelName: String
     private let refreshInterval: TimeInterval = 30
     
@@ -23,7 +23,7 @@ final class MarketPeriodicRequester {
     
     private weak var timer: Timer?
     
-    init(category: Market.RequestCategory, limit: Int) {
+    init(category: Market.RequestCategory, limit: Int?) {
         self.category = category
         self.limit = limit
         self.modelName = switch category {

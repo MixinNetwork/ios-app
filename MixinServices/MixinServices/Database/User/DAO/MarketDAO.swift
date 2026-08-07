@@ -15,7 +15,6 @@ public final class MarketDAO: UserDatabaseDAO {
     public func markets(
         subCategory: Market.SubCategory,
         order: MarketOrdering?,
-        limit: Market.Limit? = .top500,
     ) -> [FavorableMarket] {
         let marketColumns: [String] = Market.CodingKeys.allCases.compactMap { key in
             if key == .marketCapRank {
@@ -69,9 +68,6 @@ public final class MarketDAO: UserDatabaseDAO {
             break
         }
         sql.append("\nORDER BY CAST(ifnull(mcr.market_cap_rank, m.market_cap_rank) AS REAL) ASC")
-        if let count = limit?.count {
-            sql.append("\nLIMIT \(count)")
-        }
         var results: [FavorableMarket] = db.select(with: sql)
         
         if let order {

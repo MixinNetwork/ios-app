@@ -43,6 +43,12 @@ final class FavorableMarketCell: UICollectionViewCell {
         )
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        chartImageView.sd_cancelCurrentImageLoad()
+        chartImageView.image = nil
+    }
+    
     @IBAction func toggleFavorite(_ sender: Any) {
         delegate?.favorableMarketCellWantsToggleFavorite(self)
     }

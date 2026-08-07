@@ -441,6 +441,12 @@ extension PerpetualMarketSelectorViewController: FavorablePerpsMarketCell.Delega
                         }
                     }
                     market.isFavorite = false
+                    if let self,
+                       self.selectedCategory != .favorite,
+                       let all = self.markets[.all]
+                    {
+                        self.markets[.favorite] = all.filter(\.isFavorite)
+                    }
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_remove_desc(market.displaySymbol))
                 case .failure(let error):
                     cell.favoriteButton.setFavorite(true, animated: false)
@@ -459,6 +465,12 @@ extension PerpetualMarketSelectorViewController: FavorablePerpsMarketCell.Delega
                         }
                     }
                     market.isFavorite = true
+                    if let self,
+                       self.selectedCategory != .favorite,
+                       let all = self.markets[.all]
+                    {
+                        self.markets[.favorite] = all.filter(\.isFavorite)
+                    }
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(market.displaySymbol))
                 case .failure(let error):
                     cell.favoriteButton.setFavorite(false, animated: false)

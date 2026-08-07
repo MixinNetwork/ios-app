@@ -273,6 +273,11 @@ public final class MarketDAO: UserDatabaseDAO {
     public func save(market: Market) -> FavorableMarket? {
         try? db.writeAndReturnError { db in
             try market.save(db)
+            
+            try db.execute(
+                sql: "DELETE FROM market_ids WHERE coin_id = ?",
+                arguments: [market.coinID]
+            )
             if let assetIDs = market.assetIDs, !assetIDs.isEmpty {
                 let now = Date().toUTCString()
                 let ids: [MarketID] = assetIDs.reduce(into: []) { result, assetID in
@@ -314,12 +319,18 @@ public final class MarketDAO: UserDatabaseDAO {
         }
         db.write { db in
             try markets.save(db)
+            
+            try db.execute(
+                literal: "DELETE FROM market_ids WHERE coin_id IN \(markets.map(\.coinID))"
+            )
             try ids.save(db)
+            
             if replaceRanks {
                 try db.execute(sql: "DELETE FROM market_cap_ranks")
                 let rankStorages = markets.compactMap(\.rankStorage)
                 try rankStorages.save(db)
             }
+            
             if let category = updatingCategory {
                 try db.execute(
                     sql: "DELETE FROM market_categories WHERE category = ?",
@@ -330,6 +341,18 @@ public final class MarketDAO: UserDatabaseDAO {
                 }
                 try categoriesStorage.save(db)
             }
+            
+            try db.execute(sql: """
+            DELETE FROM markets
+            WHERE coin_id NOT IN (SELECT coin_id FROM market_cap_ranks)
+                AND coin_id NOT IN (SELECT coin_id FROM market_categories)
+                AND NOT EXISTS (
+                    SELECT 1 
+                    FROM market_favored 
+                    WHERE market_favored.coin_id = markets.coin_id AND is_favored = TRUE
+                )
+            """)
+            
             db.afterNextTransaction { _ in
                 NotificationCenter.default.postAsynchornously(
                     onMainThread: Self.didUpdateNotification,

@@ -91,7 +91,7 @@ extension FavoriteButton {
                 }
             }(),
             animationSize: CGSize(width: 20, height: 20),
-            duration: 1.7
+            duration: 1.15
         )
         
         let favoriteImage: UIImage

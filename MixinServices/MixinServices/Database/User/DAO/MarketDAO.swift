@@ -342,17 +342,6 @@ public final class MarketDAO: UserDatabaseDAO {
                 try categoriesStorage.save(db)
             }
             
-            try db.execute(sql: """
-            DELETE FROM markets
-            WHERE coin_id NOT IN (SELECT coin_id FROM market_cap_ranks)
-                AND coin_id NOT IN (SELECT coin_id FROM market_categories)
-                AND NOT EXISTS (
-                    SELECT 1 
-                    FROM market_favored 
-                    WHERE market_favored.coin_id = markets.coin_id AND is_favored = TRUE
-                )
-            """)
-            
             db.afterNextTransaction { _ in
                 NotificationCenter.default.postAsynchornously(
                     onMainThread: Self.didUpdateNotification,
@@ -432,6 +421,19 @@ public final class MarketDAO: UserDatabaseDAO {
                 completion?()
             }
         }
+    }
+    
+    public func deleteOrphanRecords() {
+        db.execute(sql: """
+        DELETE FROM markets
+        WHERE coin_id NOT IN (SELECT coin_id FROM market_cap_ranks)
+            AND coin_id NOT IN (SELECT DISTINCT coin_id FROM market_categories)
+            AND NOT EXISTS (
+                SELECT 1 
+                FROM market_favored 
+                WHERE market_favored.coin_id = markets.coin_id AND is_favored = TRUE
+            )
+        """)
     }
     
     public func deleteAll() {

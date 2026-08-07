@@ -378,6 +378,9 @@ final class MarketDashboardViewController: UIViewController {
             scheduleRemoteLoader: true,
             debugReason: "Initial",
         )
+        DispatchQueue.global(qos: .background).async {
+            MarketDAO.shared.deleteOrphanRecords()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

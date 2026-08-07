@@ -492,12 +492,22 @@ final class MarketDashboardViewController: UIViewController {
             if marketIndicator == nil {
                 snapshot.appendSections([.busyIndicator])
                 snapshot.appendItems([.busyIndicator], toSection: .busyIndicator)
+                DispatchQueue.global().async { [weak self] in
+                    let market = PropertiesDAO.shared.jsonObject(forKey: .globalMarket, type: GlobalMarket.self)
+                    guard let market else {
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        self?.reloadGlobalMarket(market)
+                        ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
+                    }
+                }
             } else {
                 snapshot.appendSections([.marketIndicator])
                 snapshot.appendItems([.marketIndicator], toSection: .marketIndicator)
+                ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
             }
             dataSource.applySnapshotUsingReloadData(snapshot)
-            ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
         }
     }
     

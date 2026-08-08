@@ -1976,7 +1976,7 @@
 "wallet_home_common_wallet_reason_1" = "連線任意應用，暢玩 DeFi 與 SocialFi";
 "wallet_home_common_wallet_reason_2" = "支援 Solana、以太坊等多鏈跨鏈交易";
 "wallet_home_common_wallet_reason_3" = "可匯入其他錢包，一站管理鏈上資產";
-"wallet_home_common_wallet_reason_title" = "什麼需要普通錢包？";
+"wallet_home_common_wallet_reason_title" = "為什麼需要普通錢包？";
 "wallet_home_contact_us" = "聯絡我們";
 "wallet_home_empty_desc" = "立即充值，開始交易並賺取收益";
 "wallet_home_empty_title" = "新增資金";

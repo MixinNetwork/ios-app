@@ -170,7 +170,7 @@ extension PerpetualMarket {
         case forex
     }
     
-    public enum RequestCategory: String {
+    public enum RequestCategory: String, CaseIterable {
         case all
         case favorite
         case featured

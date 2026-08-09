@@ -6,11 +6,7 @@ public final class PerpsMarketDAO: PerpsDAO {
     public enum UserInfoKey {
         public static let market = "m"
         public static let marketIDs = "mids"
-    }
-    
-    public enum Metadata {
-        case favorite
-        case category(Market.DatabaseCategory)
+        public static let dataSource = "ds"
     }
     
     public static let shared = PerpsMarketDAO()
@@ -166,14 +162,16 @@ public final class PerpsMarketDAO: PerpsDAO {
     
     public func save(
         markets: [PerpetualMarket],
-        updatingMetadata: Metadata?,
+        dataSource: PerpetualMarket.RequestCategory?,
     ) {
         guard !markets.isEmpty else {
             return
         }
         db.write { db in
             try markets.save(db)
-            switch updatingMetadata {
+            switch dataSource {
+            case .all, .none:
+                break
             case .favorite:
                 try db.execute(literal: "DELETE FROM favorites WHERE market_id NOT IN \(markets.map(\.marketID))")
                 for market in markets {
@@ -184,25 +182,18 @@ public final class PerpsMarketDAO: PerpsDAO {
                     )
                     try favorite.save(db, onConflict: .ignore)
                 }
-            case .category(let category):
-                switch category {
-                case .featured:
-                    try db.execute(literal: "DELETE FROM market_categories WHERE category = \(Market.DatabaseCategory.featured.rawValue)")
-                    let categories = markets.map { market in
-                        PerpetualMarketCategory(marketID: market.marketID, category: .featured)
-                    }
-                    try categories.save(db)
-                default:
-                    // Not available for now
-                    break
+            case .featured:
+                try db.execute(literal: "DELETE FROM market_categories WHERE category = \(Market.DatabaseCategory.featured.rawValue)")
+                let categories = markets.map { market in
+                    PerpetualMarketCategory(marketID: market.marketID, category: .featured)
                 }
-            case .none:
-                break
+                try categories.save(db)
             }
             db.afterNextTransaction { _ in
                 NotificationCenter.default.postAsynchornously(
                     onMainThread: Self.marketsDidUpdateNotification,
-                    object: self
+                    object: self,
+                    userInfo: [UserInfoKey.dataSource: dataSource]
                 )
             }
         }

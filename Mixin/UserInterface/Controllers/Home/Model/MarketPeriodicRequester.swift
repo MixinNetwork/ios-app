@@ -4,11 +4,18 @@ import MixinServices
 final class MarketPeriodicRequester {
     
     protocol Delegate: AnyObject {
+        
         func marketPeriodicRequester(
             _ requester: MarketPeriodicRequester,
-            didLoadMarketsIn category: Market.RequestCategory,
+            decideNextRequestAfterLoadingMarketsIn category: Market.RequestCategory,
             markets: [Market]
-        )
+        ) -> NextRequestDecision
+        
+    }
+    
+    enum NextRequestDecision {
+        case allow
+        case cancel
     }
     
     weak var delegate: Delegate?
@@ -23,9 +30,16 @@ final class MarketPeriodicRequester {
     
     private weak var timer: Timer?
     
-    init(category: Market.RequestCategory, limit: Int?) {
+    init(category: Market.RequestCategory) {
         self.category = category
-        self.limit = limit
+        self.limit = switch category {
+        case .all, .trending:
+            500
+        case .favorite, .featured:
+            nil
+        case .stocks, .topGainers, .topLosers:
+            100
+        }
         self.modelName = switch category {
         case .all:
             "markets"
@@ -74,28 +88,41 @@ final class MarketPeriodicRequester {
                 Logger.general.debug(category: "MarketPeriodicRequester", message: "Loaded \(markets.count) \(modelName)")
                 switch category {
                 case .all:
-                    MarketDAO.shared.save(markets: markets, replaceRanks: true, updatingCategory: nil)
+                    MarketDAO.shared.save(markets: markets, dataSource: .all)
                 case .favorite:
-                    MarketDAO.shared.replace(favoriteMarkets: markets)
+                    MarketDAO.shared.save(markets: markets, dataSource: .favorite)
                 case .trending:
-                    MarketDAO.shared.save(markets: markets, replaceRanks: false, updatingCategory: .trending)
+                    MarketDAO.shared.save(markets: markets, dataSource: .categorized(.trending))
                 case .stocks:
-                    MarketDAO.shared.save(markets: markets, replaceRanks: false, updatingCategory: .stock)
+                    MarketDAO.shared.save(markets: markets, dataSource: .categorized(.stock))
                 case .topGainers:
-                    MarketDAO.shared.save(markets: markets, replaceRanks: false, updatingCategory: .topGainer)
+                    MarketDAO.shared.save(markets: markets, dataSource: .categorized(.topGainer))
                 case .topLosers:
-                    MarketDAO.shared.save(markets: markets, replaceRanks: false, updatingCategory: .topLoser)
+                    MarketDAO.shared.save(markets: markets, dataSource: .categorized(.topLoser))
                 case .featured:
-                    MarketDAO.shared.save(markets: markets, replaceRanks: false, updatingCategory: .featured)
+                    MarketDAO.shared.save(markets: markets, dataSource: .categorized(.featured))
                 }
-                if let self {
-                    self.delegate?.marketPeriodicRequester(self, didLoadMarketsIn: category, markets: markets)
+                let decision: NextRequestDecision = if let self, let delegate = self.delegate {
+                    delegate.marketPeriodicRequester(
+                        self,
+                        decideNextRequestAfterLoadingMarketsIn: category,
+                        markets: markets
+                    )
+                } else {
+                    .allow
                 }
                 DispatchQueue.main.async {
-                    Logger.general.debug(category: "MarketPeriodicRequester", message: "Reload \(modelName) after \(refreshInterval)s")
-                    if let self {
-                        self.lastReloadingDate = Date()
+                    guard let self else {
+                        Logger.general.debug(category: "MarketPeriodicRequester", message: "Not reloading after deinit")
+                        return
+                    }
+                    self.lastReloadingDate = Date()
+                    switch decision {
+                    case .allow:
+                        Logger.general.debug(category: "MarketPeriodicRequester", message: "Reload \(modelName) after \(refreshInterval)s")
                         self.scheduleNextRequestIfRunning(timeInterval: refreshInterval)
+                    case .cancel:
+                        Logger.general.debug(category: "MarketPeriodicRequester", message: "Reloading cancelled")
                     }
                 }
             case let .failure(error):

@@ -1103,14 +1103,15 @@ extension TradeSpotViewController: MarketPeriodicRequester.Delegate {
     
     func marketPeriodicRequester(
         _ requester: MarketPeriodicRequester,
-        didLoadMarketsIn category: Market.RequestCategory,
+        decideNextRequestAfterLoadingMarketsIn category: Market.RequestCategory,
         markets: [Market]
-    ) {
+    ) -> MarketPeriodicRequester.NextRequestDecision {
         if markets.count >= marketCount {
             let displayMarkets = markets.prefix(marketCount)
             switch category {
             case .all, .favorite, .featured:
                 assertionFailure()
+                return .cancel
             case .trending:
                 let trendings = MarketDAO.shared.favorableMarket(markets: displayMarkets)
                 let viewModels = trendings.reduce(
@@ -1152,6 +1153,7 @@ extension TradeSpotViewController: MarketPeriodicRequester.Delegate {
                     self.showMarketSection(.topLosers, markets: viewModels)
                 }
             }
+            return .allow
         } else {
             switch category {
             case .all, .favorite, .featured:
@@ -1173,6 +1175,7 @@ extension TradeSpotViewController: MarketPeriodicRequester.Delegate {
                     self.deleteMarketSection(.topLosers)
                 }
             }
+            return .cancel
         }
     }
     
@@ -1580,7 +1583,7 @@ extension TradeSpotViewController {
         RouteAPI.markets(ids: ids, queue: .global()) { result in
             switch result {
             case let .success(markets):
-                MarketDAO.shared.save(markets: markets, replaceRanks: false, updatingCategory: nil)
+                MarketDAO.shared.save(markets: markets, dataSource: .other)
                 Logger.general.debug(category: "MarketRequester", message: "Saved")
             case .failure:
                 break

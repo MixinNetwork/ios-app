@@ -233,7 +233,7 @@ extension Market {
         case all
     }
     
-    public enum RequestCategory: String {
+    public enum RequestCategory: String, CaseIterable {
         
         case all
         case favorite

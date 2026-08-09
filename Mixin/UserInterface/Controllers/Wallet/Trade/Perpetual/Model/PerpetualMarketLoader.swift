@@ -4,11 +4,18 @@ import MixinServices
 final class PerpetualMarketLoader {
     
     protocol Delegate: AnyObject {
+        
         func perpetualMarketLoader(
             _ loader: PerpetualMarketLoader,
-            didLoadMultipleMarketsIn category: PerpetualMarket.RequestCategory,
+            decideNextRequestAfterLoadingMultipleMarketsIn category: PerpetualMarket.RequestCategory,
             markets: [PerpetualMarket]
-        )
+        ) -> NextRequestDecision
+        
+    }
+    
+    enum NextRequestDecision {
+        case allow
+        case cancel
     }
     
     enum Request {
@@ -64,20 +71,21 @@ final class PerpetualMarketLoader {
                 RouteAPI.perpsMarkets(category: category, queue: .global()) { result in
                     switch result {
                     case .success(let markets):
-                        switch category {
-                        case .all:
-                            PerpsMarketDAO.shared.save(markets: markets, updatingMetadata: nil)
-                        case .favorite:
-                            PerpsMarketDAO.shared.save(markets: markets, updatingMetadata: .favorite)
-                        case .featured:
-                            PerpsMarketDAO.shared.save(markets: markets, updatingMetadata: .category(.featured))
-                        }
-                        if let self {
-                            self.delegate?.perpetualMarketLoader(
+                        PerpsMarketDAO.shared.save(markets: markets, dataSource: category)
+                        let decision: NextRequestDecision = if let self, let delegate = self.delegate {
+                            delegate.perpetualMarketLoader(
                                 self,
-                                didLoadMultipleMarketsIn: category,
+                                decideNextRequestAfterLoadingMultipleMarketsIn: category,
                                 markets: markets
                             )
+                        } else {
+                            .allow
+                        }
+                        switch decision {
+                        case .allow:
+                            break
+                        case .cancel:
+                            DispatchQueue.main.async(execute: timer.invalidate)
                         }
                     case .failure(let error):
                         Logger.general.debug(category: "PerpMarketLoader", message: "\(error)")

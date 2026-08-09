@@ -3,14 +3,24 @@ import GRDB
 
 public final class MarketDAO: UserDatabaseDAO {
     
+    public enum DataSource {
+        case all
+        case favorite
+        case categorized(Market.DatabaseCategory)
+        case other
+    }
+    
+    public enum UserInfoKey {
+        public static let coinID = "cid"
+        public static let coinIDs = "cids"
+        public static let dataSource = "ds"
+    }
+    
     public static let shared = MarketDAO()
     
     public static let favoriteNotification = Notification.Name("one.mixin.service.MarketDAO.Favorite")
     public static let unfavoriteNotification = Notification.Name("one.mixin.service.MarketDAO.Unfavorite")
     public static let didUpdateNotification = Notification.Name("one.mixin.service.MarketDAO.Update")
-    
-    public static let coinIDUserInfoKey = "cid"
-    public static let coinIDsUserInfoKey = "cids"
     
     public func markets(
         subCategory: Market.SubCategory,
@@ -287,7 +297,7 @@ public final class MarketDAO: UserDatabaseDAO {
                 NotificationCenter.default.postAsynchornously(
                     onMainThread: Self.didUpdateNotification,
                     object: self,
-                    userInfo: [Self.coinIDUserInfoKey: market.coinID]
+                    userInfo: [Self.UserInfoKey.coinID: market.coinID]
                 )
             }
             let sql = """
@@ -304,8 +314,7 @@ public final class MarketDAO: UserDatabaseDAO {
     
     public func save(
         markets: [Market],
-        replaceRanks: Bool,
-        updatingCategory: Market.DatabaseCategory?,
+        dataSource: DataSource,
     ) {
         let now = Date().toUTCString()
         let ids: [MarketID] = markets.flatMap { market in
@@ -321,13 +330,22 @@ public final class MarketDAO: UserDatabaseDAO {
             )
             try ids.save(db)
             
-            if replaceRanks {
+            switch dataSource {
+            case .all:
                 try db.execute(sql: "DELETE FROM market_cap_ranks")
                 let rankStorages = markets.compactMap(\.rankStorage)
                 try rankStorages.save(db)
-            }
-            
-            if let category = updatingCategory {
+            case .favorite:
+                let favoritesStorage = markets.map { market in
+                    Market.FavoriteStorage(
+                        coinID: market.coinID,
+                        isFavored: true,
+                        createdAt: now
+                    )
+                }
+                try db.execute(sql: "DELETE FROM market_favored")
+                try favoritesStorage.save(db)
+            case .categorized(let category):
                 try db.execute(
                     sql: "DELETE FROM market_categories WHERE category = ?",
                     arguments: [category.rawValue]
@@ -336,36 +354,15 @@ public final class MarketDAO: UserDatabaseDAO {
                     Market.CategoryStorage(coinID: market.coinID, category: category)
                 }
                 try categoriesStorage.save(db)
+            case .other:
+                break
             }
             
             db.afterNextTransaction { _ in
                 NotificationCenter.default.postAsynchornously(
                     onMainThread: Self.didUpdateNotification,
-                    object: self
-                )
-            }
-        }
-    }
-    
-    public func replace(favoriteMarkets: [Market]) {
-        db.write { db in
-            let now = Date().toUTCString()
-            let favoritesStorage = favoriteMarkets.map { market in
-                Market.FavoriteStorage(
-                    coinID: market.coinID,
-                    isFavored: true,
-                    createdAt: now
-                )
-            }
-            
-            try favoriteMarkets.save(db)
-            try db.execute(sql: "DELETE FROM market_favored")
-            try favoritesStorage.save(db)
-            
-            db.afterNextTransaction { _ in
-                NotificationCenter.default.postAsynchornously(
-                    onMainThread: Self.didUpdateNotification,
-                    object: self
+                    object: self,
+                    userInfo: [UserInfoKey.dataSource: dataSource]
                 )
             }
         }
@@ -398,7 +395,7 @@ public final class MarketDAO: UserDatabaseDAO {
                 NotificationCenter.default.post(
                     name: Self.favoriteNotification,
                     object: self,
-                    userInfo: [Self.coinIDsUserInfoKey: coinIDs]
+                    userInfo: [UserInfoKey.coinIDs: coinIDs]
                 )
                 completion?()
             }
@@ -412,7 +409,7 @@ public final class MarketDAO: UserDatabaseDAO {
                 NotificationCenter.default.post(
                     name: Self.unfavoriteNotification,
                     object: self,
-                    userInfo: [Self.coinIDsUserInfoKey: coinIDs]
+                    userInfo: [UserInfoKey.coinIDs: coinIDs]
                 )
                 completion?()
             }

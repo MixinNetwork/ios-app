@@ -41,11 +41,7 @@ final class ReloadWatchlistRecommendationJob: AsynchronousJob, @unchecked Sendab
             RouteAPI.markets(category: .featured, queue: .global(), limit: nil) { result in
                 switch result {
                 case let .success(markets):
-                    MarketDAO.shared.save(
-                        markets: markets,
-                        replaceRanks: false,
-                        updatingCategory: .featured
-                    )
+                    MarketDAO.shared.save(markets: markets, dataSource: .categorized(.featured))
                     DispatchQueue.main.async {
                         Self.lastReloadingDate[.crypto] = Date()
                     }
@@ -60,7 +56,7 @@ final class ReloadWatchlistRecommendationJob: AsynchronousJob, @unchecked Sendab
             RouteAPI.perpsMarkets(category: .featured, queue: .global()) { result in
                 switch result {
                 case let .success(markets):
-                    PerpsMarketDAO.shared.save(markets: markets, updatingMetadata: .category(.featured))
+                    PerpsMarketDAO.shared.save(markets: markets, dataSource: .featured)
                     DispatchQueue.main.async {
                         Self.lastReloadingDate[.perps] = Date()
                     }

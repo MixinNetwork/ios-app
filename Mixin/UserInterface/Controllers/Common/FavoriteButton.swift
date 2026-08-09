@@ -20,7 +20,7 @@ final class FavoriteButton: UIButton {
     }
     
     required init?(coder: NSCoder) {
-        self.config = .medium
+        self.config = .listCell
         super.init(coder: coder)
     }
     
@@ -52,7 +52,7 @@ final class FavoriteButton: UIButton {
             }
         } else {
             setImage(config.notFavoriteImage, for: .normal)
-            tintColor = R.color.icon_tint()
+            tintColor = config.notFavoriteTintColor
         }
     }
     
@@ -62,11 +62,12 @@ extension FavoriteButton {
     
     struct Config {
         
-        static let large = Config(
+        static let barButton = Config(
             favoriteImage: R.image.market_favorite_solid()!
                 .withRenderingMode(.alwaysTemplate),
             notFavoriteImage: R.image.market_favorite_hollow()!
                 .withRenderingMode(.alwaysTemplate),
+            notFavoriteTintColor: R.color.icon_tint()!,
             animationImage: {
                 if let data = try? Data(contentsOf: R.file.favorite_largePng()!) {
                     SDAnimatedImage(data: data)
@@ -78,11 +79,12 @@ extension FavoriteButton {
             duration: 1.25
         )
         
-        static let medium = Config(
+        static let listCell = Config(
             favoriteImage: R.image.market_favorited()!
                 .withRenderingMode(.alwaysTemplate),
             notFavoriteImage: R.image.market_unfavorited()!
                 .withRenderingMode(.alwaysTemplate),
+            notFavoriteTintColor: R.color.text_tertiary()!,
             animationImage: {
                 if let data = try? Data(contentsOf: R.file.favorite_mediumPng()!) {
                     SDAnimatedImage(data: data)
@@ -96,6 +98,7 @@ extension FavoriteButton {
         
         let favoriteImage: UIImage
         let notFavoriteImage: UIImage
+        let notFavoriteTintColor: UIColor
         let animationImage: SDAnimatedImage?
         let animationSize: CGSize
         let duration: TimeInterval

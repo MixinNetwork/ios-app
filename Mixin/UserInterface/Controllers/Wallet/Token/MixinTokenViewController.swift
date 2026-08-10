@@ -64,6 +64,10 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
         let market = MarketViewController(token: token)
         market.pushingViewController = self
         navigationController?.pushViewController(market, animated: true)
+        reporter.report(
+            event: .marketDetail,
+            tags: ["type": "spot", "source": "token_detail"]
+        )
     }
     
     override func view(transaction: SafeSnapshotItem) {

@@ -4,9 +4,6 @@ PODS:
     - AppsFlyerFramework/Main (= 6.18.0)
   - AppsFlyerFramework/Main (6.18.0)
   - Bugsnag (6.36.0)
-  - CocoaLumberjack (3.9.1):
-    - CocoaLumberjack/Core (= 3.9.1)
-  - CocoaLumberjack/Core (3.9.1)
   - Firebase/Analytics (12.13.0):
     - Firebase/Core
   - Firebase/Core (12.13.0):
@@ -203,14 +200,11 @@ PODS:
   - SDWebImageLottieCoder (0.2.0):
     - librlottie (~> 0.2)
     - SDWebImage (~> 5.10)
-  - SDWebImageSVGKitPlugin (1.4.0):
-    - SDWebImage/Core (~> 5.10)
-    - SVGKit (~> 3.0)
+  - SDWebImageSVGCoder (1.8.0):
+    - SDWebImage/Core (~> 5.6)
   - SnapKit (5.7.1)
   - SocketRocket (0.7.1)
   - Sodium (0.9.1)
-  - SVGKit (3.1.1):
-    - CocoaLumberjack (~> 3.0)
   - Zip (2.1.2)
 
 DEPENDENCIES:
@@ -225,16 +219,14 @@ DEPENDENCIES:
   - MixinServices/Tests (from `./MixinServices`)
   - PhoneNumberKit (from `https://github.com/marmelroy/PhoneNumberKit`)
   - SDWebImageLottieCoder
-  - SDWebImageSVGKitPlugin
+  - SDWebImageSVGCoder
   - SnapKit
-  - SVGKit (from `https://github.com/SVGKit/SVGKit`)
 
 SPEC REPOS:
   trunk:
     - Alamofire
     - AppsFlyerFramework
     - Bugsnag
-    - CocoaLumberjack
     - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
@@ -260,7 +252,7 @@ SPEC REPOS:
     - PromisesSwift
     - SDWebImage
     - SDWebImageLottieCoder
-    - SDWebImageSVGKitPlugin
+    - SDWebImageSVGCoder
     - SnapKit
     - SocketRocket
     - Sodium
@@ -273,8 +265,6 @@ EXTERNAL SOURCES:
     :path: "./MixinServices"
   PhoneNumberKit:
     :git: https://github.com/marmelroy/PhoneNumberKit
-  SVGKit:
-    :git: https://github.com/SVGKit/SVGKit
 
 CHECKOUT OPTIONS:
   libsignal-protocol-c:
@@ -283,15 +273,11 @@ CHECKOUT OPTIONS:
   PhoneNumberKit:
     :commit: 2d547ffe38f61009219e34e5378d2aa4c13b6e51
     :git: https://github.com/marmelroy/PhoneNumberKit
-  SVGKit:
-    :commit: f835442588b60654f977bf5b47ebd9314824dae8
-    :git: https://github.com/SVGKit/SVGKit
 
 SPEC CHECKSUMS:
   Alamofire: 400275dd1c6d87d95a041861d2a59da4b520a203
   AppsFlyerFramework: c1e1e4cd3b98ffdca2fe32b17ae93909e409b6ab
   Bugsnag: 1c12a922ec4027ea1ac93e24e27383a54c588589
-  CocoaLumberjack: e4ba3b414dfca8c1916c6303d37f63b3a95134c6
   Firebase: 7d62445aeabdaea36f7d372f33052fed9a72514f
   FirebaseABTesting: a308446df8bd5fd29d2535ddfb124a7011dadbc2
   FirebaseAnalytics: 853fa849aca9e418f163c2de5ed0a867efa4fddf
@@ -320,13 +306,12 @@ SPEC CHECKSUMS:
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
   SDWebImageLottieCoder: 827c9c82bbaae89627391b4d6fdf39bb89be3336
-  SDWebImageSVGKitPlugin: 7542dd07c344ec3415ded0461a1161a6f087e0c9
+  SDWebImageSVGCoder: 8e10c8f6cc879c7dfb317b284e13dd589379f01c
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Sodium: 23d11554ecd556196d313cf6130d406dfe7ac6da
-  SVGKit: 24cad5f1d451c3d546768d79c5061e01fd7421ea
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: 62361dd7a62f6383f144dc7bd171740799ec404b
+PODFILE CHECKSUM: 6405cd1530268368186a48256f1bbcb288a35972
 
 COCOAPODS: 1.16.2

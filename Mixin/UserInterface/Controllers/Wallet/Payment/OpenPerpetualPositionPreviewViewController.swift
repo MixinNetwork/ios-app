@@ -238,6 +238,10 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                                 wallet: context.wallet,
                                 viewModel: context.viewModel,
                             )
+                            reporter.report(
+                                event: .marketDetail,
+                                tags: ["type": "perps", "source": "open_position"]
+                            )
                             viewControllers.append(market)
                         }
                         navigationController.setViewControllers(viewControllers, animated: false)

@@ -44,6 +44,7 @@
 "add_stickers" = "Add Stickers";
 "add_tag" = "Add Tag";
 "add_to_stickers" = "Add to Stickers";
+"add_to_watchlist" = "Add to Watchlist";
 "add_token" = "Add %@";
 "add_wallet" = "Add Wallet";
 "add_wallet_instruction_delete_unsupported" = "This wallet cannot be deleted once created.";
@@ -211,6 +212,7 @@
 "balance_max" = "MAX";
 "batch_transfer_confirmation" = "Batch Transfer Confirmation";
 "before_you_proceed" = "Before you proceed";
+"bitcoin_dominance" = "Bitcoin Dominance";
 "bitcoin_private_key_hint" = "Enter WIF or 32-byte HEX private key. Example: Kx45...9Ab or 0x1a2b...cdef";
 "block" = "Block";
 "block_confirmations" = "Block Confirmations";
@@ -275,8 +277,6 @@
 "change_name" = "Change name";
 "change_number" = "Change Number";
 "change_number_instead" = "Change Number Instead";
-"change_percent_period_day" = "%dD %%";
-"change_percent_period_hour" = "%dh %%";
 "change_phone_desc" = "You can log in to your account with your mobile number. Your current mobile number (%1$@) is linked to a key shard of your MPC wallet. The full key exists only in the TEE security environment on this device. Read the documentation to learn more about %2$@.";
 "change_phone_number" = "Change Mobile Number";
 "change_pin" = "Change PIN";
@@ -458,6 +458,7 @@
 "created_this_group" = "%@ created this group";
 "creating_wallet_terminated_unexpectedly" = "Creating wallet terminated unexpectedly, click \"Continue\" to complete the creation";
 "creating_your_account" = "Creating your account...";
+"crypto" = "Crypto";
 "currency" = "Currency";
 "currency_code" = "Code";
 "current_language" = "English";
@@ -481,7 +482,7 @@
 "date_format_month" = "E, d MMM";
 "date_format_week_date" = "E, d MMM yyyy";
 "days_count" = "%d Days";
-"days_count_short" = "%dD";
+"days_count_short" = "%dd";
 "declined" = "Declined";
 "decode_transaction_failed" = "Unable to estimate balance changes. Be cautious and only sign transactions for apps you trust.";
 "delete" = "Delete";
@@ -558,7 +559,6 @@
 "disconnected" = "Disconnected";
 "disconnecting" = "Disconnecting";
 "dismiss_as_admin" = "Dismiss as Admin";
-"dominance" = "Dominance";
 "done" = "Done";
 "dont_have_assets" = "No assets";
 "duplicate_transfer_confirmation" = "Duplicate Transfer Confirmation";
@@ -766,7 +766,7 @@
 "hold_to_record_audio" = "Hold to record, release to send.";
 "hour" = "%d Hour";
 "hour_count" = "%d Hours";
-"hours_count_short" = "%dH";
+"hours_count_short" = "%dh";
 "how_are_you" = "Hi, how are you?";
 "how_perps_works" = "How perpetual futures works?";
 "i_am_good" = "I’m good.";
@@ -796,6 +796,7 @@
 "include_files" = "Include Files";
 "include_videos" = "Include Videos";
 "incoming_voice_call" = "Incoming voice call";
+"indicator" = "Indicator";
 "info" = "Info";
 "initializing" = "Initializing...";
 "input_referral_code_hint" = "Invited by a friend?";
@@ -924,12 +925,16 @@
 "margin_isolated" = "Margin (Isolated)";
 "market" = "Market";
 "market_cap" = "Market Cap";
+"market_change_short" = "Change";
+"market_display" = "Market Display";
 "market_share_card_asset" = "🔥 %1$@ (%2$@)";
 "market_share_card_market_button" = "Market";
 "market_share_card_market_cap" = "📈 Market Cap: %@";
 "market_share_card_price" = "🏷️ Price: %@";
 "market_share_card_price_change" = "💰 24h Price Change: %@";
 "market_share_card_title" = "Trade %@";
+"market_stock" = "Stock";
+"market_volume_short" = "Vol";
 "markets" = "Markets";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
@@ -1179,6 +1184,7 @@
 "permission_denied_photos" = "Adding Photo Denied";
 "permission_denied_photos_hint" = "Mixin doesn't have permission to add photos to your library. Tap Settings to authorize.";
 "permissions" = "Permissions";
+"perp" = "Perp";
 "perp_state_opening" = "Opening";
 "perpetual" = "Perpetual";
 "perpetual_futures" = "Perpetual Futures";
@@ -1189,6 +1195,7 @@
 "perps_category_crypto" = "Crypto";
 "perps_category_forex" = "Forex";
 "perps_category_indices" = "Indices";
+"perps_category_meme" = "Memes";
 "perps_category_stocks" = "Stocks";
 "perps_current_price" = "Current Price";
 "perps_funding_frequency" = "Frequency";
@@ -1434,6 +1441,7 @@
 "remove_emergency_contact" = "Remove recovery contact";
 "remove_emergency_contact_for_sure" = "Remove recovery contact for sure?";
 "remove_from_group" = "Remove from Group";
+"remove_from_watchlist" = "Remove from Watchlist";
 "remove_stickers" = "Remove Stickers";
 "rename_wallet" = "Rename Wallet";
 "renew_plan" = "Renew Plan";
@@ -2017,6 +2025,7 @@
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";
+"watchlist_remove_desc" = "%@ has been removed from your watchlist";
 "web_cannot_reached_desc" = "%@ took too long to respond. Please check your network and try to switch 4G, Wi-Fi or VPN to reload the page.";
 "web_cannot_reached_title" = "This webpage can't be reached";
 "web_suspicious_link_tips" = "The link is not in the corresponding resource patterns.";

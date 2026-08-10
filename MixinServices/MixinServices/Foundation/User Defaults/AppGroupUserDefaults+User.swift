@@ -70,7 +70,8 @@ extension AppGroupUserDefaults {
             case collectibleContent = "collectible_content"
             case collectibleOrdering = "collectible_order"
             case marketCategory = "market_category"
-            case marketChangePeriod = "market_change_period"
+            case marketSubCategory = "market_sub_category"
+            case cryptoMarketChangePeriod = "market_change_period"
             case marketColorAppearance = "color_appearance"
         }
         
@@ -84,6 +85,7 @@ extension AppGroupUserDefaults {
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
         public static let hasNewStickersDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.hasNewStickersDidChangeNotification")
+        public static let marketChangePeriodDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.MarketChangePeriodChange")
         public static let marketColorAppearanceDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.MarketColorAppearanceChange")
         public static let recentSearchesDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.RecentSearchesChange")
         
@@ -277,11 +279,18 @@ extension AppGroupUserDefaults {
         @RawRepresentableDefault(namespace: .user, key: Key.collectibleOrdering, defaultValue: .recent)
         public static var collectibleOrdering: CollectibleDisplayOrdering
         
-        @RawRepresentableDefault(namespace: .user, key: Key.marketCategory, defaultValue: .all)
-        public static var marketCategory: Market.DashboardCategory
+        @Default(namespace: .user, key: Key.marketCategory, defaultValue: nil)
+        public static var marketCategory: String?
         
-        @RawRepresentableDefault(namespace: .user, key: Key.marketChangePeriod, defaultValue: .sevenDays)
-        public static var marketChangePeriod: Market.ChangePeriod
+        @Default(namespace: .user, key: Key.marketSubCategory, defaultValue: [:])
+        public static var marketSubCategoryIndices: [String: Int]
+        
+        @RawRepresentableDefault(namespace: .user, key: Key.cryptoMarketChangePeriod, defaultValue: .sevenDays)
+        public static var cryptoMarketChangePeriod: MarketChangePeriod {
+            didSet {
+                NotificationCenter.default.post(name: Self.marketChangePeriodDidChangeNotification, object: nil)
+            }
+        }
         
         @RawRepresentableDefault(namespace: .user, key: Key.marketColorAppearance, defaultValue: .greenUpRedDown)
         public static var marketColorAppearance: MarketColorAppearance {

@@ -44,6 +44,7 @@
 "add_stickers" = "添加贴纸";
 "add_tag" = "点击添加 Tag（标签）";
 "add_to_stickers" = "添加贴纸";
+"add_to_watchlist" = "添加到自选";
 "add_token" = "补充 %@";
 "add_wallet" = "添加钱包";
 "add_wallet_instruction_delete_unsupported" = "该钱包创建后无法删除。";
@@ -211,6 +212,7 @@
 "balance_max" = "最大";
 "batch_transfer_confirmation" = "批量转账确认";
 "before_you_proceed" = "请在继续之前";
+"bitcoin_dominance" = "比特币市占率";
 "bitcoin_private_key_hint" = "输入 WIF 或 32 字节 HEX 格式私钥，例如 Kx45...9Ab 或 0x1a2b...cdef";
 "block" = "屏蔽用户";
 "block_confirmations" = "到账确认区块数";
@@ -275,8 +277,6 @@
 "change_name" = "修改名称";
 "change_number" = "修改手机号";
 "change_number_instead" = "仅修改手机号码";
-"change_percent_period_day" = "%d天 %%";
-"change_percent_period_hour" = "%d小时 %%";
 "change_phone_desc" = "您可以通过手机号码登录您的帐户。当前手机号码（%1$@）已与 MPC 钱包的密钥片段关联。完整的密钥仅存在于当前设备的 TEE 安全环境中。阅读文档以了解%2$@。";
 "change_phone_number" = "修改手机号";
 "change_pin" = "修改 PIN";
@@ -458,6 +458,7 @@
 "created_this_group" = "%@创建了这个群组";
 "creating_wallet_terminated_unexpectedly" = "创建钱包意外中止，点继续完成钱包创建";
 "creating_your_account" = "正在创建账号...";
+"crypto" = "现货";
 "currency" = "货币";
 "currency_code" = "货币代码";
 "current_language" = "中文";
@@ -558,7 +559,6 @@
 "disconnected" = "已断开";
 "disconnecting" = "正在断开";
 "dismiss_as_admin" = "撤销管理员身份";
-"dominance" = "市占率";
 "done" = "完成";
 "dont_have_assets" = "没有资产";
 "duplicate_transfer_confirmation" = "重复转账确认";
@@ -796,6 +796,7 @@
 "include_files" = "包含文件";
 "include_videos" = "包括视频";
 "incoming_voice_call" = "语音通话来电";
+"indicator" = "指标";
 "info" = "信息";
 "initializing" = "初始化...";
 "input_referral_code_hint" = "输入邀请码";
@@ -924,12 +925,16 @@
 "margin_isolated" = "保证金（逐仓）";
 "market" = "行情";
 "market_cap" = "市值";
+"market_change_short" = "涨跌幅";
+"market_display" = "行情显示";
 "market_share_card_asset" = "🔥 %1$@（%2$@）";
 "market_share_card_market_button" = "行情";
 "market_share_card_market_cap" = "📈 市值：%@";
 "market_share_card_price" = "🏷️ 价格：%@";
 "market_share_card_price_change" = "💰 24小时价格变化：%@";
 "market_share_card_title" = "交易 %@";
+"market_stock" = "股票";
+"market_volume_short" = "交易量";
 "markets" = "行情";
 "max" = "最大值";
 "max_favorite_bots_description" = "最多可以添加 5 个喜欢的机器人，注意其他人可以在你的个人信息弹窗里查看这些你喜欢的机器人。";
@@ -1179,6 +1184,7 @@
 "permission_denied_photos" = "授权写入相册";
 "permission_denied_photos_hint" = "Mixin 需要写入相册权限，请点击'设置'并调整授权。";
 "permissions" = "权限列表";
+"perp" = "合约";
 "perp_state_opening" = "正在处理";
 "perpetual" = "永续合约";
 "perpetual_futures" = "永续合约";
@@ -1189,6 +1195,7 @@
 "perps_category_crypto" = "加密货币";
 "perps_category_forex" = "外汇";
 "perps_category_indices" = "指数";
+"perps_category_meme" = "Memes";
 "perps_category_stocks" = "股票";
 "perps_current_price" = "最新价格";
 "perps_funding_frequency" = "频率";
@@ -1434,6 +1441,7 @@
 "remove_emergency_contact" = "移除恢复联系人";
 "remove_emergency_contact_for_sure" = "确定删除恢复联系人？";
 "remove_from_group" = "从群组中移除";
+"remove_from_watchlist" = "从自选中移除";
 "remove_stickers" = "移除所有表情";
 "rename_wallet" = "重命名钱包";
 "renew_plan" = "续订会员";
@@ -2017,6 +2025,7 @@
 "watchlist" = "自选";
 "watchlist_add_desc" = "%@ 已经加入自选";
 "watchlist_empty" = "您的自选列表为空";
+"watchlist_remove_desc" = "%@ 已从自选移除";
 "web_cannot_reached_desc" = "无法访问 %@，请检查你的网络并尝试切换 4G、Wi-Fi 或 VPN 后重新载入页面。";
 "web_cannot_reached_title" = "无法访问此网页";
 "web_suspicious_link_tips" = "该链接不在对应的机器人域名白名单内。";

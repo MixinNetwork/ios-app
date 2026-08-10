@@ -44,6 +44,7 @@
 "add_stickers" = "Añadir pegatinas";
 "add_tag" = "Añadir etiqueta";
 "add_to_stickers" = "Añadir a pegatinas";
+"add_to_watchlist" = "Añadir a la lista de seguimiento";
 "add_token" = "Agregar %@";
 "add_wallet" = "Agregar billetera";
 "add_wallet_instruction_delete_unsupported" = "Esta billetera no se puede eliminar una vez creada.";
@@ -211,6 +212,7 @@
 "balance_max" = "MÁX.";
 "batch_transfer_confirmation" = "Confirmación de transferencia por lotes";
 "before_you_proceed" = "Antes de continuar";
+"bitcoin_dominance" = "Dominancia de Bitcoin";
 "bitcoin_private_key_hint" = "Ingrese WIF o clave privada HEX de 32 bytes. Ejemplo: Kx45...9Ab o 0x1a2b...cdef";
 "block" = "Bloquear";
 "block_confirmations" = "Confirmaciones de bloque";
@@ -275,8 +277,6 @@
 "change_name" = "Cambiar nombre";
 "change_number" = "Cambiar número";
 "change_number_instead" = "Cambiar número";
-"change_percent_period_day" = "%dD %%";
-"change_percent_period_hour" = "%dh %%";
 "change_phone_desc" = "Puedes iniciar sesión en tu cuenta con tu número de móvil. Tu número de móvil actual (%1$@) está vinculado a un fragmento de clave de tu billetera MPC. La clave completa existe solo en el entorno de seguridad TEE de este dispositivo. Lea la documentación para obtener más información sobre %2$@.";
 "change_phone_number" = "Cambiar número de teléfono";
 "change_pin" = "Cambiar PIN";
@@ -458,6 +458,7 @@
 "created_this_group" = "%@ ha creado este grupo";
 "creating_wallet_terminated_unexpectedly" = "La creación de la artera ha finalizado inesperadamente, haz clic en Continuar para completar la creación";
 "creating_your_account" = "Creando tu cuenta...";
+"crypto" = "Spot";
 "currency" = "Divisa";
 "currency_code" = "Código";
 "current_language" = "Inglés";
@@ -481,7 +482,7 @@
 "date_format_month" = "E, D MMM";
 "date_format_week_date" = "E, d MMM aaaa";
 "days_count" = "%d Días";
-"days_count_short" = "%dD";
+"days_count_short" = "%dd";
 "declined" = "Rechazado";
 "decode_transaction_failed" = "No se pueden estimar los cambios de saldo. Tenga cuidado y firme transacciones únicamente para aplicaciones en las que confíe.";
 "delete" = "Borrar";
@@ -558,7 +559,6 @@
 "disconnected" = "Desconectado";
 "disconnecting" = "Desconectando";
 "dismiss_as_admin" = "Quitar como administrador";
-"dominance" = "Dominancia";
 "done" = "Hecho";
 "dont_have_assets" = "¿No tienes activos?";
 "duplicate_transfer_confirmation" = "Confirmación de transferencia duplicada";
@@ -766,11 +766,11 @@
 "hold_to_record_audio" = "Sostén para grabar, suelta para enviar";
 "hour" = "%d Hora";
 "hour_count" = "%d Horas";
-"hours_count_short" = "%dH";
+"hours_count_short" = "%dh";
 "how_are_you" = "Hola, ¿cómo estás?";
 "how_perps_works" = "¿Cómo funcionan los futuros perpetuos?";
 "i_am_good" = "Estoy bien.";
-"id" = "identificación";
+"id" = "ID";
 "im_ready" = "Estoy listo";
 "image" = "imagen";
 "immediately" = "Inmediatamente";
@@ -796,6 +796,7 @@
 "include_files" = "Incluir archivos";
 "include_videos" = "Incluir vídeos";
 "incoming_voice_call" = "Llamada de voz entrante";
+"indicator" = "Indicadores";
 "info" = "Información";
 "initializing" = "Inicializando...";
 "input_referral_code_hint" = "¿Invitado por un amigo?";
@@ -924,12 +925,16 @@
 "margin_isolated" = "Margen (aislado)";
 "market" = "Mercado";
 "market_cap" = "Capitalización de mercado";
+"market_change_short" = "Cambio";
+"market_display" = "Visualización del mercado";
 "market_share_card_asset" = "🔥 %1$@ (%2$@)";
 "market_share_card_market_button" = "Mercado";
 "market_share_card_market_cap" = "📈 Capitalización de mercado: %@";
 "market_share_card_price" = "🏷️ Precio: %@";
 "market_share_card_price_change" = "💰 Cambio de precio las 24 horas: %@";
 "market_share_card_title" = "Negociar %@";
+"market_stock" = "Acciones";
+"market_volume_short" = "Vol";
 "markets" = "Mercados";
 "max" = "Máx.";
 "max_favorite_bots_description" = "Puedes agregar un máximo de 5 bots favoritos. Tenga en cuenta que otras personas pueden ver estos bots en su perfil.";
@@ -1179,6 +1184,7 @@
 "permission_denied_photos" = "Adición de foto denegada";
 "permission_denied_photos_hint" = "Mixin no tiene permiso para agregar fotos a tu biblioteca. Toque Configuración para autorizar.";
 "permissions" = "Permisos";
+"perp" = "Perp";
 "perp_state_opening" = "Apertura";
 "perpetual" = "Perpetuo";
 "perpetual_futures" = "Futuros perpetuos";
@@ -1189,6 +1195,7 @@
 "perps_category_crypto" = "Criptomonedas";
 "perps_category_forex" = "Forex";
 "perps_category_indices" = "Índices";
+"perps_category_meme" = "Memes";
 "perps_category_stocks" = "Acciones";
 "perps_current_price" = "Precio actual";
 "perps_funding_frequency" = "Frecuencia";
@@ -1434,6 +1441,7 @@
 "remove_emergency_contact" = "Eliminar contacto de recuperación";
 "remove_emergency_contact_for_sure" = "¿Quitar el contacto de recuperación con seguridad?";
 "remove_from_group" = "Eliminar del grupo";
+"remove_from_watchlist" = "Quitar de la lista de seguimiento";
 "remove_stickers" = "Eliminar pegatinas";
 "rename_wallet" = "Cambiar nombre de billetera";
 "renew_plan" = "Renovar plan";
@@ -2017,6 +2025,7 @@
 "watchlist" = "Lista de seguimiento";
 "watchlist_add_desc" = "%@ ahora está en tu lista de seguimiento";
 "watchlist_empty" = "Tu lista de seguimiento está vacía";
+"watchlist_remove_desc" = "%@ se ha eliminado de tu lista de seguimiento";
 "web_cannot_reached_desc" = "%@ ha tardado demasiado en responder. Verifica tu red e intenta cambiar 4G, Wi-Fi o VPN para recargar la página.";
 "web_cannot_reached_title" = "No se puede acceder a esta página web";
 "web_suspicious_link_tips" = "El enlace no está en los patrones de recursos correspondientes.";

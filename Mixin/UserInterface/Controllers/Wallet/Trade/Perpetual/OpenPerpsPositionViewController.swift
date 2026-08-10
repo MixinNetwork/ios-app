@@ -93,7 +93,10 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         
         self.wallet = wallet
         self.side = side
-        self.marketLoader = PerpetualMarketLoader(marketID: viewModel.market.marketID)
+        self.marketLoader = PerpetualMarketLoader(
+            request: .single(marketID: viewModel.market.marketID),
+            timeInterval: 3,
+        )
         self.amountValidator = AmountValidator(market: viewModel.market)
         self.multipliers = [
             .fixed(5),

@@ -3,12 +3,36 @@ import MixinServices
 
 final class PerpetualMarketLoader {
     
-    private let marketID: String?
+    protocol Delegate: AnyObject {
+        
+        func perpetualMarketLoader(
+            _ loader: PerpetualMarketLoader,
+            decideNextRequestAfterLoadingMultipleMarketsIn category: PerpetualMarket.RequestCategory,
+            markets: [PerpetualMarket]
+        ) -> NextRequestDecision
+        
+    }
+    
+    enum NextRequestDecision {
+        case allow
+        case cancel
+    }
+    
+    enum Request {
+        case single(marketID: String)
+        case multiple(PerpetualMarket.RequestCategory)
+    }
+    
+    weak var delegate: Delegate?
+    
+    private let request: Request
+    private let timeInterval: TimeInterval
     
     private weak var timer: Timer?
     
-    init(marketID: String?) {
-        self.marketID = marketID
+    init(request: Request, timeInterval: TimeInterval) {
+        self.request = request
+        self.timeInterval = timeInterval
     }
     
     deinit {
@@ -19,9 +43,11 @@ final class PerpetualMarketLoader {
         guard timer == nil else {
             return
         }
-        let timer: Timer = if let marketID {
-            .scheduledTimer(
-                withTimeInterval: 3,
+        let timer: Timer
+        switch request {
+        case .single(let marketID):
+            timer = .scheduledTimer(
+                withTimeInterval: timeInterval,
                 repeats: true
             ) { (timer) in
                 RouteAPI.perpsMarket(marketID: marketID, queue: .global()) { result in
@@ -37,15 +63,30 @@ final class PerpetualMarketLoader {
                     }
                 }
             }
-        } else {
-            .scheduledTimer(
-                withTimeInterval: 3,
+        case .multiple(let category):
+            timer = .scheduledTimer(
+                withTimeInterval: timeInterval,
                 repeats: true
-            ) { (timer) in
-                RouteAPI.perpsMarkets(queue: .global()) { result in
+            ) { [weak self] (timer) in
+                RouteAPI.perpsMarkets(category: category, queue: .global()) { result in
                     switch result {
                     case .success(let markets):
-                        PerpsMarketDAO.shared.save(markets: markets)
+                        PerpsMarketDAO.shared.save(markets: markets, dataSource: category)
+                        let decision: NextRequestDecision = if let self, let delegate = self.delegate {
+                            delegate.perpetualMarketLoader(
+                                self,
+                                decideNextRequestAfterLoadingMultipleMarketsIn: category,
+                                markets: markets
+                            )
+                        } else {
+                            .allow
+                        }
+                        switch decision {
+                        case .allow:
+                            break
+                        case .cancel:
+                            DispatchQueue.main.async(execute: timer.invalidate)
+                        }
                     case .failure(let error):
                         Logger.general.debug(category: "PerpMarketLoader", message: "\(error)")
                     }

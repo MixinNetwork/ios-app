@@ -392,7 +392,10 @@ final class PrivacyWalletViewController: WalletViewController {
                     if let loader = self.perpsTopMoverLoader {
                         topMoverLoader = loader
                     } else {
-                        topMoverLoader = PerpetualMarketLoader(marketID: nil)
+                        topMoverLoader = PerpetualMarketLoader(
+                            request: .multiple(.all),
+                            timeInterval: 3
+                        )
                         self.perpsTopMoverLoader = topMoverLoader
                     }
                     if self.isViewAppearing {
@@ -581,6 +584,10 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
                     wallet: .privacy,
                     viewModel: viewModel,
                 )
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "perps", "source": "wallet_home"]
+                )
                 navigationController?.pushViewController(market, animated: true)
             }
         case .token(let assetID):
@@ -601,6 +608,10 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
                 let market = PerpetualMarketViewController(
                     wallet: .privacy,
                     viewModel: viewModel,
+                )
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "perps", "source": "wallet_home"]
                 )
                 navigationController?.pushViewController(market, animated: true)
             }

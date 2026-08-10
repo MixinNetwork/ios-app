@@ -184,27 +184,12 @@ extension AppearanceSettingsViewController {
         )
         let section = SettingsSection(rows: [row])
         dataSource.replaceSection(at: 4, with: section, animation: .none)
-    }
-    
-}
-
-extension MarketColorAppearance {
-    
-    var description: String {
-        switch self {
+        
+        switch appearance {
         case .greenUpRedDown:
-            R.string.localizable.green_up_red_down()
+            reporter.report(event: .marketsQuoteColorSwitch, tags: ["color_scheme": "green_up_red_down"])
         case .redUpGreenDown:
-            R.string.localizable.red_up_green_down()
-        }
-    }
-    
-    var image: UIImage {
-        switch self {
-        case .greenUpRedDown:
-            R.image.green_up()!
-        case .redUpGreenDown:
-            R.image.red_up()!
+            reporter.report(event: .marketsQuoteColorSwitch, tags: ["color_scheme": "red_up_green_down"])
         }
     }
     

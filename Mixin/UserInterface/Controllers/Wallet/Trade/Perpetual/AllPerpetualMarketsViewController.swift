@@ -4,7 +4,7 @@ import MixinServices
 final class AllPerpetualMarketsViewController: UIViewController {
     
     private let wallet: Wallet
-    private let marketLoader = PerpetualMarketLoader(marketID: nil)
+    private let marketLoader = PerpetualMarketLoader(request: .multiple(.all), timeInterval: 3)
     
     private var viewModels: [PerpetualMarketViewModel]
     
@@ -135,6 +135,10 @@ extension AllPerpetualMarketsViewController: UICollectionViewDelegate {
         let market = PerpetualMarketViewController(
             wallet: wallet,
             viewModel: viewModel,
+        )
+        reporter.report(
+            event: .marketDetail,
+            tags: ["type": "perps", "source": "all_perps_markets"]
         )
         navigationController?.pushViewController(market, animated: true)
     }

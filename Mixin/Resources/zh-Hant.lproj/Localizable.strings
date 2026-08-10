@@ -44,6 +44,7 @@
 "add_stickers" = "新增貼紙";
 "add_tag" = "點選新增 Tag（標籤）";
 "add_to_stickers" = "新增貼紙";
+"add_to_watchlist" = "新增到自選";
 "add_token" = "補充 %@";
 "add_wallet" = "新增錢包";
 "add_wallet_instruction_delete_unsupported" = "該錢包建立後無法刪除。";
@@ -211,6 +212,7 @@
 "balance_max" = "最大";
 "batch_transfer_confirmation" = "批次轉賬確認";
 "before_you_proceed" = "請在繼續之前";
+"bitcoin_dominance" = "比特幣市佔率";
 "bitcoin_private_key_hint" = "輸入 WIF 或 32 位元組 HEX 格式私鑰，例如 Kx45...9Ab 或 0x1a2b...cdef";
 "block" = "封鎖使用者";
 "block_confirmations" = "到賬確認區塊數";
@@ -275,8 +277,6 @@
 "change_name" = "修改名稱";
 "change_number" = "修改手機號";
 "change_number_instead" = "僅修改手機號碼";
-"change_percent_period_day" = "%d天 %%";
-"change_percent_period_hour" = "%d小時 %%";
 "change_phone_desc" = "您可以通過手機號碼登入您的帳戶。當前手機號碼（%1$@）已與 MPC 錢包的金鑰片段關聯。完整的金鑰僅存在於當前裝置的 TEE 安全環境中。閱讀檔案以瞭解%2$@。";
 "change_phone_number" = "修改手機號";
 "change_pin" = "修改 PIN";
@@ -458,6 +458,7 @@
 "created_this_group" = "%@建立了這個群組";
 "creating_wallet_terminated_unexpectedly" = "建立錢包意外中止，點繼續完成錢包建立";
 "creating_your_account" = "正在建立賬號...";
+"crypto" = "現貨";
 "currency" = "貨幣";
 "currency_code" = "貨幣代碼";
 "current_language" = "繁體中文";
@@ -558,7 +559,6 @@
 "disconnected" = "已斷開";
 "disconnecting" = "正在斷開";
 "dismiss_as_admin" = "撤銷管理員身份";
-"dominance" = "市佔率";
 "done" = "完成";
 "dont_have_assets" = "沒有資產";
 "duplicate_transfer_confirmation" = "重複轉賬確認";
@@ -796,6 +796,7 @@
 "include_files" = "包含檔案";
 "include_videos" = "包括影片";
 "incoming_voice_call" = "語音通話來電";
+"indicator" = "指標";
 "info" = "資訊";
 "initializing" = "初始化...";
 "input_referral_code_hint" = "輸入邀請碼";
@@ -924,12 +925,16 @@
 "margin_isolated" = "保證金（逐倉）";
 "market" = "行情";
 "market_cap" = "市值";
+"market_change_short" = "漲跌幅";
+"market_display" = "行情顯示";
 "market_share_card_asset" = "🔥 %1$@（%2$@）";
 "market_share_card_market_button" = "行情";
 "market_share_card_market_cap" = "📈 市值：%@";
 "market_share_card_price" = "🏷️ 價格：%@";
 "market_share_card_price_change" = "💰 24小時價格變化：%@";
 "market_share_card_title" = "交易 %@";
+"market_stock" = "股票";
+"market_volume_short" = "交易量";
 "markets" = "行情";
 "max" = "最大值";
 "max_favorite_bots_description" = "最多可以新增 5 個喜歡的機器人，注意其他人可以在你的個人資訊彈窗裡檢視這些你喜歡的機器人。";
@@ -1179,6 +1184,7 @@
 "permission_denied_photos" = "授權寫入相簿";
 "permission_denied_photos_hint" = "Mixin 需要寫入相簿許可權，請點選'設定'並調整授權。";
 "permissions" = "許可權列表";
+"perp" = "合約";
 "perp_state_opening" = "正在處理";
 "perpetual" = "永續合約";
 "perpetual_futures" = "永續合約";
@@ -1189,6 +1195,7 @@
 "perps_category_crypto" = "加密貨幣";
 "perps_category_forex" = "外匯";
 "perps_category_indices" = "指數";
+"perps_category_meme" = "Memes";
 "perps_category_stocks" = "股票";
 "perps_current_price" = "最新價格";
 "perps_funding_frequency" = "頻率";
@@ -1434,6 +1441,7 @@
 "remove_emergency_contact" = "移除恢復聯絡人";
 "remove_emergency_contact_for_sure" = "確定刪除恢復聯絡人？";
 "remove_from_group" = "從群組中移除";
+"remove_from_watchlist" = "從自選中移除";
 "remove_stickers" = "移除所有表情";
 "rename_wallet" = "重新命名錢包";
 "renew_plan" = "續訂會員";
@@ -2017,6 +2025,7 @@
 "watchlist" = "自選";
 "watchlist_add_desc" = "%@ 已經加入自選";
 "watchlist_empty" = "您的自選列表為空";
+"watchlist_remove_desc" = "%@ 已從自選移除";
 "web_cannot_reached_desc" = "無法訪問 %@，請檢查你的網路並嘗試切換 4G、Wi-Fi 或 VPN 後重新載入頁面。";
 "web_cannot_reached_title" = "無法訪問此網頁";
 "web_suspicious_link_tips" = "該連結不在對應的機器人域名白名單內。";

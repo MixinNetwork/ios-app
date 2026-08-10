@@ -4,17 +4,24 @@ import MixinServices
 final class MarketPeriodicRequester {
     
     protocol Delegate: AnyObject {
+        
         func marketPeriodicRequester(
             _ requester: MarketPeriodicRequester,
-            didLoadMarketsIn category: Market.RequestCategory,
+            decideNextRequestAfterLoadingMarketsIn category: Market.RequestCategory,
             markets: [Market]
-        )
+        ) -> NextRequestDecision
+        
+    }
+    
+    enum NextRequestDecision {
+        case allow
+        case cancel
     }
     
     weak var delegate: Delegate?
     
     private let category: Market.RequestCategory
-    private let limit: Int
+    private let limit: Int?
     private let modelName: String
     private let refreshInterval: TimeInterval = 30
     
@@ -23,9 +30,16 @@ final class MarketPeriodicRequester {
     
     private weak var timer: Timer?
     
-    init(category: Market.RequestCategory, limit: Int) {
+    init(category: Market.RequestCategory) {
         self.category = category
-        self.limit = limit
+        self.limit = switch category {
+        case .all, .trending:
+            500
+        case .favorite, .featured:
+            nil
+        case .stocks, .topGainers, .topLosers:
+            100
+        }
         self.modelName = switch category {
         case .all:
             "markets"
@@ -42,17 +56,17 @@ final class MarketPeriodicRequester {
         isRunning = true
         let delay = lastReloadingDate.addingTimeInterval(refreshInterval).timeIntervalSinceNow
         if delay <= 0 {
-            Logger.general.debug(category: "ExploreMarketRequester", message: "Load \(modelName) now")
+            Logger.general.debug(category: "MarketPeriodicRequester", message: "Load \(modelName) now")
             requestData()
         } else {
-            Logger.general.debug(category: "ExploreMarketRequester", message: "Load \(modelName) after \(delay)s")
+            Logger.general.debug(category: "MarketPeriodicRequester", message: "Load \(modelName) after \(delay)s")
             scheduleNextRequestIfRunning(timeInterval: delay)
         }
     }
     
     func pause() {
         assert(Thread.isMainThread)
-        Logger.general.debug(category: "ExploreMarketRequester", message: "Pause loading \(modelName)")
+        Logger.general.debug(category: "MarketPeriodicRequester", message: "Pause loading \(modelName)")
         isRunning = false
         timer?.invalidate()
     }
@@ -60,7 +74,7 @@ final class MarketPeriodicRequester {
     private func requestData() {
         assert(Thread.isMainThread)
         timer?.invalidate()
-        Logger.general.debug(category: "ExploreMarketRequester", message: "Request \(modelName)")
+        Logger.general.debug(category: "MarketPeriodicRequester", message: "Request \(modelName)")
         guard LoginManager.shared.isLoggedIn else {
             return
         }
@@ -71,27 +85,48 @@ final class MarketPeriodicRequester {
         ) { [weak self, refreshInterval, category, modelName] result in
             switch result {
             case let .success(markets):
-                Logger.general.debug(category: "ExploreMarketRequester", message: "Loaded \(markets.count) \(modelName)")
+                Logger.general.debug(category: "MarketPeriodicRequester", message: "Loaded \(markets.count) \(modelName)")
                 switch category {
                 case .all:
-                    MarketDAO.shared.saveMarketsAndReplaceRanks(markets: markets)
+                    MarketDAO.shared.save(markets: markets, dataSource: .all)
                 case .favorite:
-                    MarketDAO.shared.replaceFavoriteMarkets(markets: markets)
-                case .trending, .stocks, .topGainers, .topLosers:
-                    break
+                    MarketDAO.shared.save(markets: markets, dataSource: .favorite)
+                case .trending:
+                    MarketDAO.shared.save(markets: markets, dataSource: .categorized(.trending))
+                case .stocks:
+                    MarketDAO.shared.save(markets: markets, dataSource: .categorized(.stock))
+                case .topGainers:
+                    MarketDAO.shared.save(markets: markets, dataSource: .categorized(.topGainer))
+                case .topLosers:
+                    MarketDAO.shared.save(markets: markets, dataSource: .categorized(.topLoser))
+                case .featured:
+                    MarketDAO.shared.save(markets: markets, dataSource: .categorized(.featured))
                 }
-                if let self {
-                    self.delegate?.marketPeriodicRequester(self, didLoadMarketsIn: category, markets: markets)
+                let decision: NextRequestDecision = if let self, let delegate = self.delegate {
+                    delegate.marketPeriodicRequester(
+                        self,
+                        decideNextRequestAfterLoadingMarketsIn: category,
+                        markets: markets
+                    )
+                } else {
+                    .allow
                 }
                 DispatchQueue.main.async {
-                    Logger.general.debug(category: "ExploreMarketRequester", message: "Reload \(modelName) after \(refreshInterval)s")
-                    if let self {
-                        self.lastReloadingDate = Date()
+                    guard let self else {
+                        Logger.general.debug(category: "MarketPeriodicRequester", message: "Not reloading after deinit")
+                        return
+                    }
+                    self.lastReloadingDate = Date()
+                    switch decision {
+                    case .allow:
+                        Logger.general.debug(category: "MarketPeriodicRequester", message: "Reload \(modelName) after \(refreshInterval)s")
                         self.scheduleNextRequestIfRunning(timeInterval: refreshInterval)
+                    case .cancel:
+                        Logger.general.debug(category: "MarketPeriodicRequester", message: "Reloading cancelled")
                     }
                 }
             case let .failure(error):
-                Logger.general.debug(category: "ExploreMarketRequester", message: "Load \(modelName): \(error)")
+                Logger.general.debug(category: "MarketPeriodicRequester", message: "Load \(modelName): \(error)")
                 DispatchQueue.main.async {
                     self?.scheduleNextRequestIfRunning(timeInterval: 3)
                 }

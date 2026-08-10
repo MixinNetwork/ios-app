@@ -12,7 +12,7 @@ final class TradePerpetualViewController: UIViewController {
     
     private let wallet: Wallet
     private let positionsLoader: PerpetualPositionLoader
-    private let marketLoader = PerpetualMarketLoader(marketID: nil)
+    private let marketLoader = PerpetualMarketLoader(request: .multiple(.all), timeInterval: 3)
     private let maxItemCount = 3
     private let topMoversCount = 4
     
@@ -297,18 +297,25 @@ final class TradePerpetualViewController: UIViewController {
             selectedCategory: .all,
             ordering: nil,
         )
-        selector.onSelected = { [wallet, weak self] (viewModel) in
+        selector.onSelected = { [wallet, weak self] (market) in
             guard let self else {
                 return
             }
             let alreadyOpened = self.openPositions.contains { position in
-                position.marketID == viewModel.market.marketID
+                position.marketID == market.marketID
             }
             self.dismiss(animated: true) {
+                guard let viewModel = PerpetualMarketViewModel(market: market) else {
+                    return
+                }
                 if alreadyOpened {
                     let market = PerpetualMarketViewController(
                         wallet: self.wallet,
                         viewModel: viewModel
+                    )
+                    reporter.report(
+                        event: .marketDetail,
+                        tags: ["type": "perps", "source": "perps_selector"]
                     )
                     self.navigationController?.pushViewController(market, animated: true)
                 } else {
@@ -465,7 +472,10 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewAllMarkets(
                         category: .all,
-                        ordering: .init(field: .change, direction: .descending)
+                        ordering: MarketOrdering(
+                            field: .change(period: .twentyFourHours),
+                            direction: .descending
+                        )
                     )
                 }
             case .markets(let category):
@@ -540,6 +550,10 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
                     wallet: wallet,
                     viewModel: viewModel,
                 )
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "perps", "source": "trade_perps"]
+                )
                 navigationController?.pushViewController(market, animated: true)
             }
         case .topMovers:
@@ -551,6 +565,10 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
                 wallet: wallet,
                 viewModel: viewModel,
             )
+            reporter.report(
+                event: .marketDetail,
+                tags: ["type": "perps", "source": "trade_perps"]
+            )
             navigationController?.pushViewController(market, animated: true)
         case .markets(let category):
             let items = marketItems(category: category)
@@ -561,6 +579,10 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
             let market = PerpetualMarketViewController(
                 wallet: wallet,
                 viewModel: viewModel,
+            )
+            reporter.report(
+                event: .marketDetail,
+                tags: ["type": "perps", "source": "trade_perps"]
             )
             navigationController?.pushViewController(market, animated: true)
         case .activity:
@@ -675,24 +697,40 @@ extension TradePerpetualViewController {
     
     private func viewAllMarkets(
         category: MarketCategory,
-        ordering: PerpsMarketDAO.Ordering?
+        ordering: MarketOrdering?
     ) {
         let selector = switch category {
         case .all:
-            PerpetualMarketSelectorViewController(selectedCategory: .all, ordering: ordering)
+            PerpetualMarketSelectorViewController(
+                selectedCategory: .all,
+                ordering: ordering
+            )
         case .stocks:
-            PerpetualMarketSelectorViewController(selectedCategory: .stocks, ordering: ordering)
+            PerpetualMarketSelectorViewController(
+                selectedCategory: .categorized(.stocks),
+                ordering: ordering
+            )
         case .commodities:
-            PerpetualMarketSelectorViewController(selectedCategory: .commodities, ordering: ordering)
+            PerpetualMarketSelectorViewController(
+                selectedCategory: .categorized(.commodities),
+                ordering: ordering
+            )
         }
-        selector.onSelected = { [wallet, weak self] (viewModel) in
+        selector.onSelected = { [wallet, weak self] (market) in
             guard let self else {
                 return
             }
             self.dismiss(animated: true) {
+                guard let viewModel = PerpetualMarketViewModel(market: market) else {
+                    return
+                }
                 let market = PerpetualMarketViewController(
                     wallet: wallet,
                     viewModel: viewModel,
+                )
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "perps", "source": "trade_perps"]
                 )
                 self.navigationController?.pushViewController(market, animated: true)
             }

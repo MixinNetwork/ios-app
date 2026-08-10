@@ -55,22 +55,22 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
         
         switch mode {
         case .simple:
-            let trendingRequester = MarketPeriodicRequester(category: .trending, limit: 8)
+            let trendingRequester = MarketPeriodicRequester(category: .trending)
             self.trendingRequester = trendingRequester
             trendingRequester.delegate = self
             trendingRequester.start()
             
-            let stocksRequester = MarketPeriodicRequester(category: .stocks, limit: 8)
+            let stocksRequester = MarketPeriodicRequester(category: .stocks)
             self.stocksRequester = stocksRequester
             stocksRequester.delegate = self
             stocksRequester.start()
             
-            let topGainersRequester = MarketPeriodicRequester(category: .topGainers, limit: 8)
+            let topGainersRequester = MarketPeriodicRequester(category: .topGainers)
             self.topGainersRequester = topGainersRequester
             topGainersRequester.delegate = self
             topGainersRequester.start()
             
-            let topLosersRequester = MarketPeriodicRequester(category: .topLosers, limit: 8)
+            let topLosersRequester = MarketPeriodicRequester(category: .topLosers)
             self.topLosersRequester = topLosersRequester
             topLosersRequester.delegate = self
             topLosersRequester.start()

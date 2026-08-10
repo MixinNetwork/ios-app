@@ -1,0 +1,1253 @@
+import UIKit
+import MixinServices
+
+final class MarketViewController: UIViewController {
+    
+    weak var pushingViewController: UIViewController?
+    
+    private weak var tableView: UITableView!
+    private weak var actionView: MarketActionView!
+    private weak var favoriteButton: FavoriteButton!
+    
+    private let id: Identifier
+    private let isMalicious: Bool
+    private let maliciousWarningReuseIdentifier = "m"
+    private let analyticSource: UserOperationAnalytics.TradeSource = .spotMarketDetail
+    
+    private var market: FavorableMarket?
+    private var tokens: [MixinTokenItem]?
+    private var tradingToken: MixinTokenItem?
+    private var viewModel: MarketViewModel
+    private var chartPoints: [ChartView.Point]?
+    private var chartPeriod: PriceHistoryPeriod = {
+        if let value = AppGroupUserDefaults.Wallet.marketChartPeriod,
+           let period = PriceHistoryPeriod(rawValue: value)
+        {
+            return period
+        } else {
+            return .day
+        }
+    }()
+    private var requester: MarketPeriodicRequester?
+    
+    private var tokenPriceChartCell: TokenPriceChartCell? {
+        let indexPath = IndexPath(row: 0, section: Section.chart.rawValue)
+        return tableView.cellForRow(at: indexPath) as? TokenPriceChartCell
+    }
+    
+    private var displayChange: TokenPriceChartCell.Change {
+        guard let market else {
+            return .deriveFromChart
+        }
+        return switch chartPeriod {
+        case .day:
+                .arbitrary(
+                    change: market.localizedPriceChangePercentage24H,
+                    color: .byValue(market.decimalPriceChangePercentage24H)
+                )
+        case .week:
+                .arbitrary(
+                    change: market.localizedPriceChangePercentage7D,
+                    color: .byValue(market.decimalPriceChangePercentage7D)
+                )
+        default:
+                .deriveFromChart
+        }
+    }
+    
+    init(token: MixinTokenItem) {
+        self.id = .asset(token.assetID)
+        self.isMalicious = token.isMalicious
+        self.market = nil
+        self.tokens = [token]
+        self.viewModel = MarketViewModel(token: token)
+        self.chartPoints = nil
+        super.init(nibName: nil, bundle: nil)
+        self.title = token.symbol
+    }
+    
+    init(token: Web3Token) {
+        self.id = .asset(token.assetID)
+        self.isMalicious = token.isMalicious
+        self.market = nil
+        self.tokens = nil
+        self.viewModel = MarketViewModel(token: token)
+        self.chartPoints = nil
+        super.init(nibName: nil, bundle: nil)
+        self.title = token.symbol
+    }
+    
+    init(market: FavorableMarket) {
+        self.id = .coin(market.coinID)
+        self.isMalicious = false
+        self.market = market
+        self.tokens = nil
+        self.viewModel = MarketViewModel(market: market)
+        self.chartPoints = nil
+        super.init(nibName: nil, bundle: nil)
+        self.title = market.symbol
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let favoriteButton = FavoriteButton(config: .barButton)
+        favoriteButton.addTarget(
+            self,
+            action: #selector(toggleFavorite(_:)),
+            for: .touchUpInside
+        )
+        navigationItem.rightBarButtonItems = [
+            .tintedIcon(image: R.image.ic_share(), target: self, action: #selector(shareMarket(_:))),
+            UIBarButtonItem(customView: favoriteButton),
+        ]
+        self.favoriteButton = favoriteButton
+        
+        view.backgroundColor = R.color.background_secondary()
+        
+        let tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+        tableView.backgroundColor = R.color.background_secondary()
+        tableView.alwaysBounceVertical = true
+        tableView.estimatedRowHeight = 110
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.separatorStyle = .none
+        tableView.register(
+            MaliciousTokenWarningCell.self,
+            forCellReuseIdentifier: maliciousWarningReuseIdentifier
+        )
+        tableView.register(R.nib.tokenPriceChartCell)
+        tableView.register(R.nib.insetGroupedTitleCell)
+        tableView.register(R.nib.tokenStatsCell)
+        tableView.register(R.nib.tokenMyBalanceCell)
+        tableView.register(R.nib.tokenInfoCell)
+        tableView.register(R.nib.marketDescriptionCell)
+        tableView.register(UITableViewCell.self,
+                           forCellReuseIdentifier: ReuseIdentifier.emptyCell)
+        tableView.register(UITableViewHeaderFooterView.self,
+                           forHeaderFooterViewReuseIdentifier: ReuseIdentifier.header)
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
+        self.tableView = tableView
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        let actionView = R.nib.marketActionView(withOwner: nil)!
+        view.addSubview(actionView)
+        actionView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(tableView.snp.bottom)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.height.equalTo(82)
+        }
+        self.actionView = actionView
+        actionView.alertButton.addTarget(
+            self,
+            action: #selector(alert(_:)),
+            for: .touchUpInside
+        )
+        actionView.tradeButton.addTarget(
+            self,
+            action: #selector(trade(_:)),
+            for: .touchUpInside
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadAlert),
+            name: MarketAlertDAO.didChangeNotification,
+            object: nil
+        )
+        
+        if chartPoints == nil {
+            reloadPriceChart(period: chartPeriod)
+        }
+        
+        if let market {
+            viewModel.update(market: market, tokens: [])
+            tableView.reloadData()
+            favoriteButton.setFavorite(market.isFavorite, animated: false)
+        }
+        reloadFromLocal()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadFromLocal),
+            name: MarketDAO.didUpdateNotification,
+            object: nil
+        )
+        requester = MarketPeriodicRequester(id: id.value, onNotFound: { [weak self] in
+            guard let self else {
+                return
+            }
+            self.market = nil
+            self.favoriteButton.isHidden = true
+            self.viewModel.updateWithMarketNotFound()
+            self.tableView.reloadData()
+            self.actionView.tradeButton.isEnabled = false
+            switch id {
+            case .coin(let coinID):
+                DispatchQueue.global().async {
+                    MarketDAO.shared.delete(coinID: coinID)
+                }
+            case .asset:
+                break
+            }
+        })
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        requester?.start()
+    }
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        if view.safeAreaInsets.bottom < 1 {
+            tableView.contentInset.bottom = 10
+        } else {
+            tableView.contentInset.bottom = 0
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        requester?.pause()
+    }
+    
+    @objc private func toggleFavorite(_ sender: Any) {
+        guard let market else {
+            return
+        }
+        if market.isFavorite {
+            market.isFavorite = false
+            favoriteButton.setFavorite(false, animated: true)
+            RouteAPI.unfavoriteMarket(coinID: market.coinID) { [weak self] result in
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        MarketDAO.shared.unfavorite(coinIDs: [market.coinID])
+                    }
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_remove_desc(market.symbol))
+                case .failure(let error):
+                    if let self {
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        market.isFavorite = true
+                        self.favoriteButton.setFavorite(true, animated: false)
+                    }
+                }
+            }
+            reporter.report(
+                event: .marketWatchlistRemove,
+                tags: ["type": "spot", "source": "market_detail"]
+            )
+        } else {
+            market.isFavorite = true
+            favoriteButton.setFavorite(true, animated: true)
+            RouteAPI.favoriteMarket(coinID: market.coinID) { [weak self] result in
+                switch result {
+                case .success:
+                    DispatchQueue.global().async {
+                        MarketDAO.shared.favorite(coinIDs: [market.coinID])
+                    }
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(market.symbol))
+                case .failure(let error):
+                    if let self {
+                        showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                        market.isFavorite = false
+                        self.favoriteButton.setFavorite(false, animated: false)
+                    }
+                }
+            }
+            reporter.report(
+                event: .marketWatchlistAdd,
+                tags: ["type": "spot", "source": "market_detail"]
+            )
+        }
+    }
+    
+    @objc private func shareMarket(_ sender: Any) {
+        guard let market, let chartPoints else {
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        Referral.loadAvailableCode { [weak self] code in
+            hud.hide()
+            let share = PopupShareViewController(
+                contentViewController: ShareMarketContentViewController(
+                    market: market,
+                    points: chartPoints,
+                    rebatingCode: code
+                ),
+                rebatingCode: code,
+            )
+            self?.present(share, animated: true)
+        }
+    }
+    
+    @objc private func alert(_ sender: Any) {
+        guard let market else {
+            return
+        }
+        NotificationManager.shared.getAuthorized { isAuthorized in
+            if isAuthorized {
+                if self.actionView.hasAlert {
+                    let coin = MarketAlertCoin(market: market)
+                    let alert = CoinMarketAlertsViewController(coin: coin)
+                    self.navigationController?.pushViewController(alert, animated: true)
+                } else {
+                    let coin = MarketAlertCoin(market: market)
+                    let addAlert = AddMarketAlertViewController(
+                        coin: coin,
+                        reportingSource: "market_detail",
+                    )
+                    self.navigationController?.pushViewController(addAlert, animated: true)
+                }
+            } else {
+                self.requestEnableNotifications()
+            }
+        }
+    }
+    
+    @objc private func trade(_ sender: Any) {
+        if let token = tradingToken ?? tokens?.first {
+            UserOperationAnalytics.tradeSource = .spotMarketDetail
+            if let trade = pushingViewController as? TradeMixinSpotViewController {
+                trade.buy(assetID: token.assetID)
+                navigationController?.popViewController(animated: true)
+            } else {
+                let trade = TradeViewController(
+                    wallet: .privacy,
+                    trading: .simpleSpot,
+                    sendAssetID: AssetID.erc20USDT,
+                    receiveAssetID: token.assetID,
+                    referral: nil
+                )
+                if let trade {
+                    navigationController?.pushViewController(trade, animated: true)
+                }
+            }
+        } else if let market {
+            alert(R.string.localizable.swap_not_supported(market.symbol))
+        }
+    }
+    
+    @objc private func reloadFromLocal() {
+        DispatchQueue.global().async { [weak self, id] in
+            let market = switch id {
+            case .coin(let coinID):
+                MarketDAO.shared.market(coinID: coinID)
+            case .asset(let assetID):
+                MarketDAO.shared.market(assetID: assetID)
+            }
+            guard let market else {
+                return
+            }
+            let hasAlert = MarketAlertDAO.shared.alertExists(coinID: market.coinID)
+            DispatchQueue.main.sync {
+                guard let self else {
+                    return
+                }
+                self.market = market
+                self.viewModel.update(market: market, tokens: [])
+                self.tableView.reloadData()
+                self.reloadTokens(market: market)
+                self.favoriteButton.setFavorite(market.isFavorite, animated: false)
+                self.actionView.hasAlert = hasAlert
+            }
+        }
+    }
+    
+    @objc private func reloadAlert() {
+        guard let market else {
+            return
+        }
+        DispatchQueue.global().async { [weak self] in
+            let hasAlert = MarketAlertDAO.shared.alertExists(coinID: market.coinID)
+            DispatchQueue.main.sync {
+                self?.actionView.hasAlert = hasAlert
+            }
+        }
+    }
+    
+    private func reloadPriceChart(period: PriceHistoryPeriod) {
+        DispatchQueue.global().async { [id, weak self] in
+            let storage = switch id {
+            case .coin(let id):
+                MarketDAO.shared.priceHistory(coinID: id, period: period)
+            case .asset(let id):
+                MarketDAO.shared.priceHistory(assetID: id, period: period)
+            }
+            if let storage, let points = PriceHistory(storage: storage)?.chartViewPoints() {
+                DispatchQueue.main.sync {
+                    self?.reloadPriceChart(period: period, points: points)
+                }
+            }
+            RouteAPI.priceHistory(id: id.value, period: period, queue: .global()) { result in
+                switch result {
+                case .success(let price):
+                    if let storage = price.asStorage() {
+                        MarketDAO.shared.savePriceHistory(storage)
+                    }
+                    let points = price.chartViewPoints()
+                    DispatchQueue.main.async {
+                        self?.reloadPriceChart(period: period, points: points)
+                    }
+                case .failure(let error):
+                    Logger.general.debug(category: "MarketView", message: "\(error)")
+                }
+            }
+        }
+    }
+    
+    private func reloadPriceChart(period: PriceHistoryPeriod, points: [ChartView.Point]) {
+        guard period == self.chartPeriod else {
+            return
+        }
+        self.chartPoints = points
+        if let cell = tokenPriceChartCell {
+            cell.updateChart(points: points)
+            if let market {
+                cell.updatePriceAndChangeByMarket(
+                    price: market.localizedPrice,
+                    change: displayChange,
+                    points: points
+                )
+            } else if let token = tokens?.first {
+                cell.updatePriceAndChangeByMarket(
+                    price: token.localizedFiatMoneyPrice,
+                    change: displayChange,
+                    points: points
+                )
+            }
+        }
+    }
+    
+    private func reloadTokens(market: Market) {
+        guard let ids = market.assetIDs, !ids.isEmpty else {
+            return
+        }
+        DispatchQueue.global().async { [weak self] in
+            let uniqueIDs = Set(ids)
+            let tokens = TokenDAO.shared.tokenItems(with: uniqueIDs)
+                .sorted { one, another in
+                    one.decimalBalance > another.decimalBalance
+                }
+            let tradingAssetID = ids.first
+            var tradingToken: MixinTokenItem?
+            if let id = tradingAssetID {
+                tradingToken = tokens.first { token in
+                    token.assetID == id
+                }
+            }
+            DispatchQueue.main.async {
+                self?.update(market: market, tokens: tokens, tradingToken: tradingToken)
+            }
+            if tokens.count != uniqueIDs.count {
+                let missingAssetIDs = uniqueIDs.subtracting(tokens.map(\.assetID))
+                Logger.general.debug(category: "MarketView", message: "Load missing asset: \(missingAssetIDs)")
+                switch SafeAPI.assets(ids: missingAssetIDs) {
+                case .success(let missingTokens):
+                    let missingTokenItems = missingTokens.map { token in
+                        let chain = ChainDAO.shared.chain(chainId: token.chainID)
+                        return MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    }
+                    let allTokens = tokens + missingTokenItems
+                    if let id = tradingAssetID {
+                        tradingToken = allTokens.first { token in
+                            token.assetID == id
+                        }
+                    }
+                    DispatchQueue.main.async {
+                        self?.update(market: market, tokens: allTokens, tradingToken: tradingToken)
+                    }
+                case .failure(let error):
+                    Logger.general.debug(category: "MarketView", message: "\(error)")
+                }
+            }
+        }
+    }
+    
+    private func update(
+        market: Market,
+        tokens: [MixinTokenItem],
+        tradingToken: MixinTokenItem?,
+    ) {
+        self.tokens = tokens
+        self.tradingToken = tradingToken
+        viewModel.update(market: market, tokens: tokens)
+        tableView.reloadData()
+    }
+    
+    // `completion` is not called on failure
+    private func pickSingleToken(completion: @escaping (MixinTokenItem) -> Void) {
+        guard let tokens else {
+            return
+        }
+        if tokens.count == 1 {
+            completion(tokens[0])
+        } else if tokens.count > 1, let name = market?.name {
+            let selector = MarketTokenSelectorViewController(name: name, tokens: tokens) { index in
+                completion(tokens[index])
+            }
+            present(selector, animated: true)
+        }
+    }
+    
+    private func requestEnableNotifications() {
+        let tip = PopupTipViewController(tip: .notification)
+        present(tip, animated: true)
+    }
+    
+    private func viewPerps(market: PerpetualMarket, openOnSide side: PerpetualOrderSide) {
+        guard let viewModel = PerpetualMarketViewModel(market: market) else {
+            return
+        }
+        let next: UIViewController
+        if PerpsPositionDAO.shared.hasPosition(marketID: viewModel.market.marketID) {
+            next = PerpetualMarketViewController(
+                wallet: .privacy,
+                viewModel: viewModel
+            )
+            reporter.report(
+                event: .marketDetail,
+                tags: ["type": "perps", "source": "market_detail"]
+            )
+        } else {
+            next = OpenPerpsPositionViewController(
+                wallet: .privacy,
+                side: side,
+                viewModel: viewModel
+            )
+            UserOperationAnalytics.tradeSource = analyticSource
+        }
+        navigationController?.pushViewController(next, animated: true)
+    }
+    
+}
+
+extension MarketViewController: NavigationBarStyling {
+    
+    var navigationBarStyle: NavigationBarStyle {
+        .secondaryBackground
+    }
+    
+}
+
+extension MarketViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        Section.allCases.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch Section(rawValue: section)! {
+        case .warning:
+            isMalicious ? 1 : 0
+        case .chart:
+            1
+        case .stats:
+            viewModel.stats == nil ? 0 : StatsRow.allCases.count
+        case .infos:
+            viewModel.infos.count + 2 // 2 for separators
+        case .myBalance:
+            viewModel.balance == nil ? 0 : MyBalanceRow.allCases.count
+        case .description:
+            viewModel.description == nil ? 0 : 1
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch Section(rawValue: indexPath.section)! {
+        case .warning:
+            return tableView.dequeueReusableCell(withIdentifier: maliciousWarningReuseIdentifier, for: indexPath)
+        case .chart:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_price_chart, for: indexPath)!
+            let isPerpsAvailable: Bool
+            if let market {
+                isPerpsAvailable = market.perpsMarketID != nil
+                cell.titleLabel.text = market.symbol
+                cell.rankLabel.text = market.numberedRank
+                cell.tokenIconView.setIcon(market: market)
+                cell.updatePriceAndChangeByMarket(
+                    price: market.localizedPrice,
+                    change: displayChange,
+                    points: chartPoints
+                )
+            } else if let token = tokens?.first {
+                isPerpsAvailable = false
+                cell.titleLabel.text = token.symbol
+                cell.rankLabel.text = nil
+                cell.tokenIconView.setIcon(token: token)
+                cell.updatePriceAndChangeByMarket(
+                    price: token.localizedFiatMoneyPrice,
+                    change: displayChange,
+                    points: chartPoints
+                )
+            } else {
+                isPerpsAvailable = false
+                cell.titleLabel.text = viewModel.symbol
+                cell.rankLabel.text = nil
+            }
+            cell.rankLabel.isHidden = cell.rankLabel.text == nil
+            cell.setPeriodSelection(period: chartPeriod)
+            cell.updateChart(points: chartPoints)
+            isPerpsAvailable ? cell.showPerpsActions() : cell.hidePerpsActions()
+            cell.delegate = self
+            cell.chartView.delegate = self
+            return cell
+        case .stats:
+            switch StatsRow(rawValue: indexPath.row)! {
+            case .title:
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
+                cell.label.text = if let market {
+                    market.name
+                } else if let token = tokens?.first {
+                    token.name
+                } else {
+                    nil
+                }
+                cell.disclosureIndicatorView.isHidden = true
+                return cell
+            case .marketCap:
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_stats, for: indexPath)!
+                cell.leftTitleLabel.text = R.string.localizable.market_cap().uppercased()
+                cell.setLeftContent(text: viewModel.stats?.marketCap)
+                cell.rightTitleLabel.text = R.string.localizable.vol_24h().uppercased()
+                cell.setRightContent(text: viewModel.stats?.fiatMoneyVolume24H)
+                return cell
+            case .price:
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_stats, for: indexPath)!
+                cell.leftTitleLabel.text = R.string.localizable.high_24h().uppercased()
+                cell.setLeftContent(text: viewModel.stats?.high24H)
+                cell.rightTitleLabel.text = R.string.localizable.low_24h().uppercased()
+                cell.setRightContent(text: viewModel.stats?.low24H)
+                return cell
+            case .bottomSeparator:
+                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)
+                cell.backgroundConfiguration = .groupedCell
+                cell.contentConfiguration = nil
+                return cell
+            }
+        case .infos:
+            let index = indexPath.row - 1
+            if index >= 0 && index < viewModel.infos.count {
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_info, for: indexPath)!
+                let row = viewModel.infos[index]
+                cell.titleLabel.text = row.title
+                cell.primaryContentLabel.text = row.primaryContent
+                cell.primaryContentLabel.textColor = row.primaryContentColor
+                if let content = row.secondaryContent {
+                    (cell.secondaryContentLabel.text, cell.secondaryContentLabel.textColor) = content
+                    cell.secondaryContentLabel.isHidden = false
+                } else {
+                    cell.secondaryContentLabel.isHidden = true
+                }
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)
+                cell.backgroundConfiguration = .groupedCell
+                cell.contentConfiguration = nil
+                return cell
+            }
+        case .myBalance:
+            switch MyBalanceRow(rawValue: indexPath.row)! {
+            case .title:
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
+                cell.label.text = R.string.localizable.my_balance()
+                cell.disclosureIndicatorView.isHidden = tokens?.isEmpty ?? true
+                return cell
+            case .content:
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_my_balance, for: indexPath)!
+                if let balance = viewModel.balance {
+                    cell.balanceLabel.text = balance.balance
+                    cell.periodLabel.text = balance.period
+                    cell.valueLabel.text = balance.value
+                    cell.changeLabel.text = balance.change
+                    switch balance.changeColor {
+                    case .market(let color):
+                        cell.changeLabel.marketColor = color
+                    case .arbitrary(let color):
+                        cell.changeLabel.textColor = color
+                    }
+                }
+                return cell
+            }
+        case .description:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.market_description, for: indexPath)!
+            cell.contentLabel.text = viewModel.description
+            cell.delegate = self
+            return cell
+        }
+    }
+    
+}
+
+extension MarketViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch Section(rawValue: indexPath.section)! {
+        case .warning, .chart:
+            return UITableView.automaticDimension
+        case .stats:
+            return switch StatsRow(rawValue: indexPath.row)! {
+            case .title, .price, .marketCap:
+                UITableView.automaticDimension
+            case .bottomSeparator:
+                10
+            }
+        case .infos:
+            let index = indexPath.row - 1
+            return if index >= 0 && index < viewModel.infos.count {
+                UITableView.automaticDimension
+            } else {
+                10
+            }
+        case .myBalance, .description:
+            return UITableView.automaticDimension
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        switch Section(rawValue: section)! {
+        case .warning:
+            isMalicious ? 10 : .leastNormalMagnitude
+        case .chart:
+            10
+        case .stats:
+            viewModel.stats == nil ? .leastNormalMagnitude : 10
+        case .infos:
+            10
+        case .myBalance:
+            viewModel.balance == nil ? .leastNormalMagnitude : 10
+        case .description:
+            viewModel.description == nil ? .leastNormalMagnitude : 10
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        .leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseIdentifier.header)!
+        view.contentView.backgroundColor = R.color.background_secondary()
+        return view
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        nil
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        switch Section(rawValue: indexPath.section)! {
+        case .myBalance:
+            let source = analyticSource.rawValue
+            pickSingleToken { [market] token in
+                let pushingToken = (self.pushingViewController as? MixinTokenViewController)?.token
+                if token.assetID == pushingToken?.assetID {
+                    self.navigationController?.popViewController(animated: true)
+                } else {
+                    let controller = MixinTokenViewController(token: token, market: market)
+                    self.navigationController?.pushViewController(controller, animated: true)
+                    reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": source])
+                }
+            }
+        default:
+            break
+        }
+    }
+    
+}
+
+extension MarketViewController: ChartView.Delegate {
+    
+    func chartView(_ view: ChartView, extremumAnnotationForPoint point: ChartView.Point) -> String {
+        CurrencyFormatter.localizedString(
+            from: point.value * Currency.current.decimalRate,
+            format: .fiatMoneyPrice,
+            sign: .never,
+            symbol: .currencySymbol
+        )
+    }
+    
+    func chartView(_ view: ChartView, inspectionAnnotationForPoint point: ChartView.Point) -> String {
+        switch chartPeriod {
+        case .day:
+            DateFormatter.shortTimeOnly.string(from: point.date)
+        case .week, .month, .year, .all:
+            DateFormatter.shortDateOnly.string(from: point.date)
+        }
+    }
+    
+    func chartView(_ view: ChartView, didSelectPoint point: ChartView.Point) {
+        guard let base = view.points.first else {
+            return
+        }
+        tokenPriceChartCell?.updatePriceAndChangeByChart(base: base, now: point)
+    }
+    
+    func chartViewDidCancelSelection(_ view: ChartView) {
+        guard let cell = tokenPriceChartCell else {
+            return
+        }
+        if let market {
+            cell.tokenIconView.setIcon(market: market)
+            cell.updatePriceAndChangeByMarket(
+                price: market.localizedPrice,
+                change: displayChange,
+                points: chartPoints
+            )
+        } else if let token = tokens?.first {
+            cell.tokenIconView.setIcon(token: token)
+            cell.updatePriceAndChangeByMarket(
+                price: token.localizedFiatMoneyPrice,
+                change: displayChange,
+                points: chartPoints
+            )
+        }
+    }
+    
+}
+
+extension MarketViewController: TokenPriceChartCell.Delegate {
+    
+    func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistoryPeriod) {
+        chartPoints = nil
+        self.chartPeriod = period
+        reloadPriceChart(period: period)
+        AppGroupUserDefaults.Wallet.marketChartPeriod = period.rawValue
+    }
+    
+    func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPerpsOn side: PerpetualOrderSide) {
+        guard let marketID = market?.perpsMarketID else {
+            return
+        }
+        if let market = PerpsMarketDAO.shared.market(marketID: marketID) {
+            viewPerps(market: market, openOnSide: side)
+        } else {
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            RouteAPI.perpsMarket(marketID: marketID) { [weak self] result in
+                switch result {
+                case .success(let market):
+                    DispatchQueue.global().async {
+                        PerpsMarketDAO.shared.save(market: market)
+                    }
+                    hud.hide()
+                    self?.viewPerps(market: market, openOnSide: side)
+                case .failure(let error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+            }
+        }
+    }
+    
+}
+
+extension MarketViewController: MarketDescriptionCell.Delegate {
+    
+    func marketDescriptionCellDidSelectMore(_ cell: MarketDescriptionCell) {
+        tableView.beginUpdates()
+        cell.isExpanded = true
+        tableView.endUpdates()
+        if let indexPath = tableView.indexPath(for: cell) {
+            tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+        }
+    }
+    
+}
+
+extension MarketViewController {
+    
+    private enum Identifier {
+        
+        case coin(String)
+        case asset(String)
+        
+        var value: String {
+            switch self {
+            case .coin(let id):
+                id
+            case .asset(let id):
+                id
+            }
+        }
+        
+    }
+    
+    private enum ReuseIdentifier {
+        static let header = "header"
+        static let emptyCell = "emtpy_cell"
+    }
+    
+    private enum Section: Int, CaseIterable {
+        case warning
+        case chart
+        case stats
+        case myBalance
+        case infos
+        case description
+    }
+    
+    private enum MyBalanceRow: Int, CaseIterable {
+        case title
+        case content
+    }
+    
+    private enum StatsRow: Int, CaseIterable {
+        case title
+        case marketCap
+        case price
+        case bottomSeparator
+    }
+    
+    private final class MarketViewModel {
+        
+        struct Info {
+            
+            let title: String
+            let primaryContent: String
+            let primaryContentColor: UIColor
+            let secondaryContent: (String, UIColor)?
+            
+            init(
+                title: String,
+                primaryContent: String,
+                primaryContentColor: UIColor = R.color.text()!,
+                secondaryContent: (String, UIColor)? = nil
+            ) {
+                self.title = title
+                self.primaryContent = primaryContent
+                self.primaryContentColor = primaryContentColor
+                self.secondaryContent = secondaryContent
+            }
+            
+            static func contentNotApplicable(title: String) -> Info {
+                Info(
+                    title: title,
+                    primaryContent: .notApplicable,
+                    primaryContentColor: R.color.text_tertiary()!
+                )
+            }
+            
+            static func marketInfos(market: Market) -> [Info] {
+                var infos: [Info] = []
+                if let marketCap = Decimal(string: market.marketCap, locale: .enUSPOSIX) {
+                    let title = R.string.localizable.market_cap().uppercased()
+                    switch marketCap {
+                    case 0:
+                        infos.append(Info.contentNotApplicable(title: title))
+                    default:
+                        let value = marketCap * Currency.current.decimalRate
+                        if let content = NamedLargeNumberFormatter.string(number: value, currencyPrefix: .current) {
+                            infos.append(Info(title: title, primaryContent: content))
+                        }
+                    }
+                }
+                if let circulatingSupply = Decimal(string: market.circulatingSupply, locale: .enUSPOSIX) {
+                    let title = R.string.localizable.circulation_supply().uppercased()
+                    switch circulatingSupply {
+                    case 0:
+                        infos.append(Info.contentNotApplicable(title: title))
+                    default:
+                        if let content = NamedLargeNumberFormatter.string(number: circulatingSupply, currencyPrefix: nil) {
+                            infos.append(Info(title: title, primaryContent: content + " " + market.symbol))
+                        }
+                    }
+                }
+                if let totalSupply = Decimal(string: market.totalSupply, locale: .enUSPOSIX) {
+                    let title = R.string.localizable.total_supply().uppercased()
+                    switch totalSupply {
+                    case 0:
+                        infos.append(Info.contentNotApplicable(title: title))
+                    default:
+                        if let content = NamedLargeNumberFormatter.string(number: totalSupply, currencyPrefix: nil) {
+                            infos.append(Info(title: title, primaryContent: content + " " + market.symbol))
+                        }
+                    }
+                }
+                if let ath = Decimal(string: market.ath, locale: .enUSPOSIX) {
+                    let title = R.string.localizable.all_time_high().uppercased()
+                    switch ath {
+                    case 0:
+                        infos.append(Info.contentNotApplicable(title: title))
+                    default:
+                        let price = CurrencyFormatter.localizedString(
+                            from: ath * Currency.current.decimalRate,
+                            format: .fiatMoneyPrice,
+                            sign: .never,
+                            symbol: .currencySymbol
+                        )
+                        let date = (
+                            DateFormatter.shortDateOnly.string(from: market.athDate.toUTCDate()),
+                            R.color.text_tertiary()!
+                        )
+                        infos.append(Info(title: title, primaryContent: price, secondaryContent: date))
+                    }
+                }
+                if let atl = Decimal(string: market.atl, locale: .enUSPOSIX) {
+                    let title = R.string.localizable.all_time_low().uppercased()
+                    switch atl {
+                    case 0:
+                        infos.append(Info.contentNotApplicable(title: title))
+                    default:
+                        let price = CurrencyFormatter.localizedString(
+                            from: atl * Currency.current.decimalRate,
+                            format: .fiatMoneyPrice,
+                            sign: .never,
+                            symbol: .currencySymbol
+                        )
+                        let date = (
+                            DateFormatter.shortDateOnly.string(from: market.atlDate.toUTCDate()),
+                            R.color.text_tertiary()!
+                        )
+                        infos.append(Info(title: title, primaryContent: price, secondaryContent: date))
+                    }
+                }
+                return infos
+            }
+            
+        }
+        
+        struct Balance {
+            
+            enum Color {
+                case market(MarketColor)
+                case arbitrary(UIColor)
+            }
+            
+            let balance: String
+            let period: String
+            let value: String
+            let change: String
+            let changeColor: Color
+            
+            init(balance: String, period: String, value: String, change: String, changeColor: Color) {
+                self.balance = balance
+                self.period = period
+                self.value = value
+                self.change = change
+                self.changeColor = changeColor
+            }
+            
+            func replacing(change: String, changeColor: Color) -> Balance {
+                Balance(
+                    balance: self.balance,
+                    period: self.period,
+                    value: self.value,
+                    change: change,
+                    changeColor: changeColor
+                )
+            }
+            
+        }
+        
+        let symbol: String
+        
+        private(set) var stats: MarketStatistics?
+        private(set) var balance: Balance?
+        private(set) var infos: [Info]
+        private(set) var description: String?
+        
+        private var basicInfos: [Info]
+        private var marketInfos: [Info]
+        
+        init(market: Market) {
+            let basicInfos = [
+                Info(title: R.string.localizable.name().uppercased(), primaryContent: market.name),
+                Info(title: R.string.localizable.symbol().uppercased(), primaryContent: market.symbol),
+            ]
+            let marketInfos = Info.marketInfos(market: market)
+            
+            self.stats = MarketStatistics(market: market)
+            self.balance = nil
+            self.infos = basicInfos + marketInfos
+            
+            self.symbol = market.symbol
+            
+            self.basicInfos = basicInfos
+            self.marketInfos = marketInfos
+            self.description = market.localizedDescription
+        }
+        
+        init(token: any ValuableToken) {
+            let basicInfos = [
+                Info(title: R.string.localizable.name().uppercased(), primaryContent: token.name),
+                Info(title: R.string.localizable.symbol().uppercased(), primaryContent: token.symbol),
+            ]
+            let marketInfos: [Info] = []
+            
+            self.stats = nil
+            self.balance = Balance(
+                balance: token.localizedBalanceWithSymbol,
+                period: R.string.localizable.hours_count_short(24).uppercased(),
+                value: token.estimatedFiatMoneyBalance,
+                change: "",
+                changeColor: .arbitrary(.clear)
+            )
+            self.infos = basicInfos
+            
+            self.symbol = token.symbol
+            
+            self.basicInfos = basicInfos
+            self.marketInfos = marketInfos
+            self.description = nil
+        }
+        
+        func updateWithMarketNotFound() {
+            self.stats = nil
+            if let balance {
+                self.balance = balance.replacing(change: .notApplicable, changeColor: .arbitrary(R.color.text_quaternary()!))
+            }
+            self.marketInfos = [
+                Info.contentNotApplicable(title: R.string.localizable.market_cap().uppercased()),
+                Info.contentNotApplicable(title: R.string.localizable.circulation_supply().uppercased()),
+                Info.contentNotApplicable(title: R.string.localizable.total_supply().uppercased()),
+                Info.contentNotApplicable(title: R.string.localizable.all_time_high().uppercased()),
+                Info.contentNotApplicable(title: R.string.localizable.all_time_low().uppercased()),
+            ]
+            self.infos = basicInfos + marketInfos
+        }
+        
+        func update(market: Market, tokens: [MixinTokenItem]) {
+            self.stats = MarketStatistics(market: market)
+            
+            self.balance = {
+                let balance: Decimal
+                if tokens.count == 1 {
+                    balance = tokens[0].decimalBalance
+                } else if tokens.count > 1 {
+                    balance = tokens.reduce(0) { result, item in
+                        result + item.decimalBalance
+                    }
+                } else {
+                    balance = 0
+                }
+                
+                var change: String
+                let changeColor: Balance.Color
+                if let priceChange24H = Decimal(string: market.priceChange24H, locale: .enUSPOSIX) {
+                    change = CurrencyFormatter.localizedString(
+                        from: priceChange24H * balance * Currency.current.decimalRate,
+                        format: .fiatMoneyPrice,
+                        sign: .always,
+                        symbol: .currencySymbol
+                    )
+                    if let priceChangePercentage24H = Decimal(string: market.priceChangePercentage24H, locale: .enUSPOSIX),
+                       let percent = NumberFormatter.percentage.string(decimal: priceChangePercentage24H / 100)
+                    {
+                        change += " (\(percent))"
+                    }
+                    changeColor = .market(.byValue(priceChange24H))
+                } else {
+                    change = ""
+                    changeColor = .arbitrary(.clear)
+                }
+                
+                return Balance(
+                    balance: CurrencyFormatter.localizedString(
+                        from: balance,
+                        format: .precision,
+                        sign: .never,
+                        symbol: .custom(symbol)
+                    ),
+                    period: R.string.localizable.hours_count_short(24).uppercased(),
+                    value: "≈ " + CurrencyFormatter.localizedString(
+                        from: balance * market.decimalPrice * Currency.current.decimalRate,
+                        format: .fiatMoneyPrecision,
+                        sign: .never,
+                        symbol: .currencySymbol
+                    ),
+                    change: change,
+                    changeColor: changeColor
+                )
+            }()
+            
+            self.marketInfos = Info.marketInfos(market: market)
+            self.infos = basicInfos + marketInfos
+            self.description = market.localizedDescription
+        }
+        
+    }
+    
+    private final class MarketPeriodicRequester {
+        
+        private let id: String
+        private let refreshInterval: TimeInterval = 30
+        private let onNotFound: () -> Void
+        
+        private var isRunning = false
+        private var lastReloadingDate: Date = .distantPast
+        
+        private weak var timer: Timer?
+        
+        init(id: String, onNotFound: @escaping () -> Void) {
+            self.id = id
+            self.onNotFound = onNotFound
+        }
+        
+        func start() {
+            assert(Thread.isMainThread)
+            guard !isRunning else {
+                return
+            }
+            isRunning = true
+            let delay = lastReloadingDate.addingTimeInterval(refreshInterval).timeIntervalSinceNow
+            if delay <= 0 {
+                Logger.general.debug(category: "MarketRequester", message: "Load now")
+                requestData()
+            } else {
+                Logger.general.debug(category: "MarketRequester", message: "Load after \(delay)s")
+                timer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
+                    self?.requestData()
+                }
+            }
+        }
+        
+        func pause() {
+            assert(Thread.isMainThread)
+            Logger.general.debug(category: "MarketRequester", message: "Pause loading")
+            isRunning = false
+            timer?.invalidate()
+        }
+        
+        private func requestData() {
+            assert(Thread.isMainThread)
+            timer?.invalidate()
+            Logger.general.debug(category: "MarketRequester", message: "Request data")
+            guard LoginManager.shared.isLoggedIn else {
+                return
+            }
+            RouteAPI.markets(id: id, queue: .global()) { [refreshInterval, onNotFound] result in
+                switch result {
+                case let .success(market):
+                    MarketDAO.shared.save(market: market)
+                    Logger.general.debug(category: "MarketRequester", message: "Saved")
+                    DispatchQueue.main.async {
+                        Logger.general.debug(category: "MarketRequester", message: "Reload after \(refreshInterval)s")
+                        self.lastReloadingDate = Date()
+                        self.timer = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: false) { [weak self] _ in
+                            self?.requestData()
+                        }
+                    }
+                case .failure(.response(.notFound)):
+                    DispatchQueue.main.async(execute: onNotFound)
+                case let .failure(error):
+                    Logger.general.debug(category: "MarketRequester", message: "\(error)")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        self.requestData()
+                    }
+                }
+            }
+        }
+        
+    }
+    
+}

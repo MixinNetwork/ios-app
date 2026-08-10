@@ -44,6 +44,7 @@
 "add_stickers" = "スタンプを追加";
 "add_tag" = "タグを追加";
 "add_to_stickers" = "スタンプを追加";
+"add_to_watchlist" = "ウォッチリストに追加";
 "add_token" = "%@ を追加します";
 "add_wallet" = "ウォレットを追加";
 "add_wallet_instruction_delete_unsupported" = "このウォレットは一度作成すると削除できません。";
@@ -211,6 +212,7 @@
 "balance_max" = "最大";
 "batch_transfer_confirmation" = "一括転送の確認";
 "before_you_proceed" = "次に進む前に";
+"bitcoin_dominance" = "ビットコインドミナンス";
 "bitcoin_private_key_hint" = "WIF または 32 バイトの 16 進秘密キーを入力します。例: Kx45...9Ab または 0x1a2b...cdef";
 "block" = "ブロック";
 "block_confirmations" = "ブロック確認";
@@ -275,8 +277,6 @@
 "change_name" = "名前を変更";
 "change_number" = "電話番号を変更";
 "change_number_instead" = "電話番号を変更";
-"change_percent_period_day" = "%dD %%";
-"change_percent_period_hour" = "%dh %%";
 "change_phone_desc" = "携帯電話番号を使用してアカウントにログインできます。現在の携帯電話番号 (%1$@) は、MPC ウォレットのキー シャードにリンクされています。完全なキーは、このデバイスの TEE セキュリティ環境にのみ存在します。 %2$@ の詳細については、ドキュメントを参照してください。";
 "change_phone_number" = "電話番号を変更";
 "change_pin" = "PINコードを変更";
@@ -458,6 +458,7 @@
 "created_this_group" = "%@がグループを作成しました";
 "creating_wallet_terminated_unexpectedly" = "ウォレットの作成が予期せず終了しました。[続行] をクリックして作成を完了します";
 "creating_your_account" = "アカウントを作成しています...";
+"crypto" = "現物";
 "currency" = "通貨";
 "currency_code" = "コード";
 "current_language" = "日本語";
@@ -481,7 +482,7 @@
 "date_format_month" = "M月d日（E）";
 "date_format_week_date" = "yyyy年MM月d日（E）";
 "days_count" = "%d 日";
-"days_count_short" = "%dD";
+"days_count_short" = "%dd";
 "declined" = "拒否";
 "decode_transaction_failed" = "残高の変化を推定できません。慎重になって、信頼できるアプリのトランザクションのみに署名してください。";
 "delete" = "削除";
@@ -558,7 +559,6 @@
 "disconnected" = "切断されました";
 "disconnecting" = "切断";
 "dismiss_as_admin" = "管理者権限を解除";
-"dominance" = "優位性";
 "done" = "完了";
 "dont_have_assets" = "アセットなし";
 "duplicate_transfer_confirmation" = "二重送金の確認";
@@ -766,7 +766,7 @@
 "hold_to_record_audio" = "長押しして録音、離して送信";
 "hour" = "%d時間";
 "hour_count" = "%d時間";
-"hours_count_short" = "%dH";
+"hours_count_short" = "%dh";
 "how_are_you" = "こんにちは、調子はどうですか";
 "how_perps_works" = "永久先物はどのように機能しますか?";
 "i_am_good" = "いい気分";
@@ -796,6 +796,7 @@
 "include_files" = "ファイルが含まれています";
 "include_videos" = "動画が含まれています";
 "incoming_voice_call" = "着信";
+"indicator" = "指標";
 "info" = "プロフィール";
 "initializing" = "初期化中...";
 "input_referral_code_hint" = "お友達に誘われましたか?";
@@ -924,12 +925,16 @@
 "margin_isolated" = "マージン (分離)";
 "market" = "市場";
 "market_cap" = "時価総額";
+"market_change_short" = "騰落率";
+"market_display" = "市場表示";
 "market_share_card_asset" = "🔥 %1$@ (%2$@)";
 "market_share_card_market_button" = "市場";
 "market_share_card_market_cap" = "📈 時価総額: %@";
 "market_share_card_price" = "🏷️ 価格: %@";
 "market_share_card_price_change" = "💰 24 時間の価格変更: %@";
 "market_share_card_title" = "トレード%@";
+"market_stock" = "株式";
+"market_volume_short" = "出来高";
 "markets" = "市場";
 "max" = "マックス";
 "max_favorite_bots_description" = "お気に入りのボットは最大 5 つまで追加できます。他の人があなたのプロフィールでこれらのボットを閲覧できることに注意してください。";
@@ -1179,6 +1184,7 @@
 "permission_denied_photos" = "写真の追加が拒否されました";
 "permission_denied_photos_hint" = "Mixin には、ライブラリに写真を追加する権限がありません。 「設定」をタップして承認します。";
 "permissions" = "許可";
+"perp" = "無期限";
 "perp_state_opening" = "オープニング";
 "perpetual" = "永久";
 "perpetual_futures" = "無期限先物";
@@ -1189,6 +1195,7 @@
 "perps_category_crypto" = "暗号";
 "perps_category_forex" = "外国為替";
 "perps_category_indices" = "インデックス";
+"perps_category_meme" = "ミーム";
 "perps_category_stocks" = "株式";
 "perps_current_price" = "現在の価格";
 "perps_funding_frequency" = "頻度";
@@ -1434,6 +1441,7 @@
 "remove_emergency_contact" = "回復連絡先を削除する";
 "remove_emergency_contact_for_sure" = "回復連絡先を削除しますか?";
 "remove_from_group" = "グループから退会させる";
+"remove_from_watchlist" = "ウォッチリストから削除";
 "remove_stickers" = "スタンプの削除";
 "rename_wallet" = "ウォレットの名前を変更";
 "renew_plan" = "プランを更新する";
@@ -2017,6 +2025,7 @@
 "watchlist" = "ウォッチリスト";
 "watchlist_add_desc" = "%@ がウォッチリストに追加されました";
 "watchlist_empty" = "ウォッチリストは空です";
+"watchlist_remove_desc" = "%@ がウォッチリストから削除されました";
 "web_cannot_reached_desc" = "%@ 接続に時間がかかり過ぎています、ネットワーク設定を確認してページをリロードしてください。";
 "web_cannot_reached_title" = "アクセスできません";
 "web_suspicious_link_tips" = "リンクは対応するリソースパターンにありません。";

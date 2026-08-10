@@ -85,6 +85,10 @@ class UrlWindow {
                                     wallet: .privacy,
                                     viewModel: viewModel,
                                 )
+                                reporter.report(
+                                    event: .marketDetail,
+                                    tags: ["type": "perps", "source": "schema"]
+                                )
                                 navigationController.pushViewController(market, animated: true)
                             }
                         case .failure(let error):
@@ -889,6 +893,10 @@ class UrlWindow {
         if let market {
             let viewController = MarketViewController(market: market)
             UIApplication.homeNavigationController?.pushMarketViewController(viewController, animated: true)
+            reporter.report(
+                event: .marketDetail,
+                tags: ["type": "spot", "source": "schema"]
+            )
             return
         }
         let hud = Hud()
@@ -901,6 +909,10 @@ class UrlWindow {
                         hud.hide()
                         let viewController = MarketViewController(market: market)
                         UIApplication.homeNavigationController?.pushMarketViewController(viewController, animated: true)
+                        reporter.report(
+                            event: .marketDetail,
+                            tags: ["type": "spot", "source": "schema"]
+                        )
                     }
                 } else {
                     DispatchQueue.main.async(execute: hud.hide)

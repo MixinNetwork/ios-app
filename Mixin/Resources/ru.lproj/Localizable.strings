@@ -44,6 +44,7 @@
 "add_stickers" = "Добавить стикеры";
 "add_tag" = "Добавить тега";
 "add_to_stickers" = "Добавить в стикеры";
+"add_to_watchlist" = "Добавить в список наблюдения";
 "add_token" = "Добавить %@";
 "add_wallet" = "Добавить кошелек";
 "add_wallet_instruction_delete_unsupported" = "Этот кошелек нельзя удалить после создания.";
@@ -211,6 +212,7 @@
 "balance_max" = "МАКС";
 "batch_transfer_confirmation" = "Подтверждение пакетной передачи";
 "before_you_proceed" = "Прежде чем продолжить";
+"bitcoin_dominance" = "Доминирование биткоина";
 "bitcoin_private_key_hint" = "Введите WIF или 32-байтовый HEX закрытый ключ. Пример: Kx45...9Ab или 0x1a2b...cdef.";
 "block" = "Блокировать";
 "block_confirmations" = "Подтверждения блока";
@@ -275,8 +277,6 @@
 "change_name" = "Изменить имя";
 "change_number" = "Изменить номер";
 "change_number_instead" = "Вместо этого изменить номер";
-"change_percent_period_day" = "%dD %%";
-"change_percent_period_hour" = "%dh %%";
 "change_phone_desc" = "Вы можете войти в свою учетную запись, используя номер своего мобильного телефона. Ваш текущий номер мобильного телефона (%1$@) привязан к ключевому фрагменту вашего кошелька MPC. Полный ключ существует только в среде безопасности TEE на этом устройстве. Прочтите документацию, чтобы узнать больше о %2$@.";
 "change_phone_number" = "Изменить номер телефона";
 "change_pin" = "Изменить PIN-код";
@@ -458,6 +458,7 @@
 "created_this_group" = "%@ создал эту группу";
 "creating_wallet_terminated_unexpectedly" = "Создание кошелька неожиданно прервано. Нажмите «Продолжить», чтобы завершить создание.";
 "creating_your_account" = "Создание учетной записи...";
+"crypto" = "Спот";
 "currency" = "Валюта";
 "currency_code" = "Код";
 "current_language" = "Английский";
@@ -481,7 +482,7 @@
 "date_format_month" = "EEE, d MMMM";
 "date_format_week_date" = "EEE, d MMMM yyyy";
 "days_count" = "%d Дней";
-"days_count_short" = "%dD";
+"days_count_short" = "%dd";
 "declined" = "Отклоненный";
 "decode_transaction_failed" = "Невозможно оценить изменения баланса. Будьте осторожны и подписывайте транзакции только для тех приложений, которым вы доверяете.";
 "delete" = "Удалить";
@@ -558,7 +559,6 @@
 "disconnected" = "Отключено";
 "disconnecting" = "Отключение";
 "dismiss_as_admin" = "Снять права администратора";
-"dominance" = "Доминирование";
 "done" = "Сделано";
 "dont_have_assets" = "Нет объектов";
 "duplicate_transfer_confirmation" = "Дубликат подтверждения перевода";
@@ -766,11 +766,11 @@
 "hold_to_record_audio" = "Удерживайте, чтобы записать, отпустите, чтобы отправить";
 "hour" = "%d час";
 "hour_count" = "%d часы";
-"hours_count_short" = "%dH";
+"hours_count_short" = "%dh";
 "how_are_you" = "Привет, как дела?";
 "how_perps_works" = "Как работают бессрочные фьючерсы?";
 "i_am_good" = "Я в порядке.";
-"id" = "Идентификатор";
+"id" = "ID";
 "im_ready" = "Я готов";
 "image" = "изображение";
 "immediately" = "Немедленно";
@@ -796,6 +796,7 @@
 "include_files" = "Включить файлы";
 "include_videos" = "Включить видео";
 "incoming_voice_call" = "Входящий голосовой вызов";
+"indicator" = "Индикаторы";
 "info" = "Информация";
 "initializing" = "Инициализация...";
 "input_referral_code_hint" = "Пригласил друг?";
@@ -924,12 +925,16 @@
 "margin_isolated" = "Маржа (изолированная)";
 "market" = "Рынок";
 "market_cap" = "Рыночная капитализация";
+"market_change_short" = "Изм.";
+"market_display" = "Отображение рынка";
 "market_share_card_asset" = "🔥 %1$@ (%2$@)";
 "market_share_card_market_button" = "Рынок";
 "market_share_card_market_cap" = "📈 Рыночная капитализация: %@";
 "market_share_card_price" = "🏷️ Цена: %@";
 "market_share_card_price_change" = "💰 Изменение цены за 24 часа: %@";
 "market_share_card_title" = "Торговля %@";
+"market_stock" = "Акции";
+"market_volume_short" = "Объем";
 "markets" = "Рынки";
 "max" = "Макс";
 "max_favorite_bots_description" = "Вы можете добавить максимум 5 любимых ботов. Имейте в виду, что другие могут просматривать этих ботов в вашем профиле.";
@@ -1179,6 +1184,7 @@
 "permission_denied_photos" = "Добавление фотографии отклонено";
 "permission_denied_photos_hint" = "Mixin не имеет разрешения на добавление фотографий в вашу библиотеку. Нажмите «Настройки», чтобы авторизоваться.";
 "permissions" = "Разрешения";
+"perp" = "Бесср.";
 "perp_state_opening" = "Открытие";
 "perpetual" = "Бессрочный";
 "perpetual_futures" = "Бессрочные фьючерсы";
@@ -1189,6 +1195,7 @@
 "perps_category_crypto" = "Криптовалюта";
 "perps_category_forex" = "Форекс";
 "perps_category_indices" = "Индексы";
+"perps_category_meme" = "Мемы";
 "perps_category_stocks" = "Акции";
 "perps_current_price" = "Текущая цена";
 "perps_funding_frequency" = "Частота";
@@ -1434,6 +1441,7 @@
 "remove_emergency_contact" = "Удалить контакт для восстановления";
 "remove_emergency_contact_for_sure" = "Наверняка удалить контакт для восстановления?";
 "remove_from_group" = "Удалить из группы";
+"remove_from_watchlist" = "Удалить из списка наблюдения";
 "remove_stickers" = "Удалить наклейки";
 "rename_wallet" = "Переименовать кошелек";
 "renew_plan" = "Обновить план";
@@ -2017,6 +2025,7 @@
 "watchlist" = "Список наблюдения";
 "watchlist_add_desc" = "%@ теперь в вашем списке наблюдения";
 "watchlist_empty" = "Ваш список наблюдения пуст";
+"watchlist_remove_desc" = "%@ больше не в вашем списке наблюдения";
 "web_cannot_reached_desc" = "%@ заняло слишком много времени для ответа. Пожалуйста, проверьте свою сеть и попробуйте переключить 4G, Wi-Fi или VPN, чтобы перезагрузить страницу.";
 "web_cannot_reached_title" = "Эта веб-страница недоступна";
 "web_suspicious_link_tips" = "Ссылки нет в соответствующих шаблонах ресурсов.";

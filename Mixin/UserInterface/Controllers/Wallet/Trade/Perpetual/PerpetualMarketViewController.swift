@@ -304,6 +304,7 @@ final class PerpetualMarketViewController: UIViewController {
     
     @objc private func toggleFavorite(_ sender: Any) {
         let marketID = viewModel.market.marketID
+        let symbol = viewModel.market.displaySymbol
         if isFavorite {
             isFavorite = false
             favoriteButton.setFavorite(false, animated: true)
@@ -313,6 +314,7 @@ final class PerpetualMarketViewController: UIViewController {
                     DispatchQueue.global().async {
                         PerpsMarketDAO.shared.unfavorite(marketIDs: [marketID])
                     }
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_remove_desc(symbol))
                 case .failure(let error):
                     if let self {
                         showAutoHiddenHud(style: .error, text: error.localizedDescription)
@@ -330,6 +332,7 @@ final class PerpetualMarketViewController: UIViewController {
                     DispatchQueue.global().async {
                         PerpsMarketDAO.shared.favorite(marketIDs: [marketID])
                     }
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(symbol))
                 case .failure(let error):
                     if let self {
                         showAutoHiddenHud(style: .error, text: error.localizedDescription)

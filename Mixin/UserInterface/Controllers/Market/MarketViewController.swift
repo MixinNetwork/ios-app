@@ -213,6 +213,7 @@ final class MarketViewController: UIViewController {
                     DispatchQueue.global().async {
                         MarketDAO.shared.unfavorite(coinIDs: [market.coinID])
                     }
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_remove_desc(market.symbol))
                 case .failure(let error):
                     if let self {
                         showAutoHiddenHud(style: .error, text: error.localizedDescription)
@@ -231,6 +232,7 @@ final class MarketViewController: UIViewController {
                     DispatchQueue.global().async {
                         MarketDAO.shared.favorite(coinIDs: [market.coinID])
                     }
+                    showAutoHiddenHud(style: .notification, text: R.string.localizable.watchlist_add_desc(market.symbol))
                 case .failure(let error):
                     if let self {
                         showAutoHiddenHud(style: .error, text: error.localizedDescription)

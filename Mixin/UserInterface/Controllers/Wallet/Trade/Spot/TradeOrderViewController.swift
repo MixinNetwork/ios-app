@@ -316,7 +316,7 @@ extension TradeOrderViewController: PillActionView.Delegate {
 
                     📈 \(R.string.localizable.market_cap()): \(market.localizedMarketCap ?? "")
                     🏷️ \(R.string.localizable.price()): \(market.localizedPrice)
-                    💰 \(R.string.localizable.price_change_24h()): \(market.localizedPriceChangePercentage24H ?? "")
+                    💰 \(R.string.localizable.price_change_24h()): \(market.localizedPriceChangePercentage24H)
                     """
                 case .failure:
                     """

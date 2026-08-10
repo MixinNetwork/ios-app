@@ -35,6 +35,26 @@ final class MarketViewController: UIViewController {
         return tableView.cellForRow(at: indexPath) as? TokenPriceChartCell
     }
     
+    private var displayChange: TokenPriceChartCell.Change {
+        guard let market else {
+            return .deriveFromChart
+        }
+        return switch chartPeriod {
+        case .day:
+                .arbitrary(
+                    change: market.localizedPriceChangePercentage24H,
+                    color: .byValue(market.decimalPriceChangePercentage24H)
+                )
+        case .week:
+                .arbitrary(
+                    change: market.localizedPriceChangePercentage7D,
+                    color: .byValue(market.decimalPriceChangePercentage7D)
+                )
+        default:
+                .deriveFromChart
+        }
+    }
+    
     init(token: MixinTokenItem) {
         self.id = .asset(token.assetID)
         self.isMalicious = token.isMalicious
@@ -384,9 +404,17 @@ final class MarketViewController: UIViewController {
         if let cell = tokenPriceChartCell {
             cell.updateChart(points: points)
             if let market {
-                cell.updatePriceAndChangeByMarket(price: market.localizedPrice, points: points)
+                cell.updatePriceAndChangeByMarket(
+                    price: market.localizedPrice,
+                    change: displayChange,
+                    points: points
+                )
             } else if let token = tokens?.first {
-                cell.updatePriceAndChangeByMarket(price: token.localizedFiatMoneyPrice, points: points)
+                cell.updatePriceAndChangeByMarket(
+                    price: token.localizedFiatMoneyPrice,
+                    change: displayChange,
+                    points: points
+                )
             }
         }
     }
@@ -533,13 +561,21 @@ extension MarketViewController: UITableViewDataSource {
                 cell.titleLabel.text = market.symbol
                 cell.rankLabel.text = market.numberedRank
                 cell.tokenIconView.setIcon(market: market)
-                cell.updatePriceAndChangeByMarket(price: market.localizedPrice, points: chartPoints)
+                cell.updatePriceAndChangeByMarket(
+                    price: market.localizedPrice,
+                    change: displayChange,
+                    points: chartPoints
+                )
             } else if let token = tokens?.first {
                 isPerpsAvailable = false
                 cell.titleLabel.text = token.symbol
                 cell.rankLabel.text = nil
                 cell.tokenIconView.setIcon(token: token)
-                cell.updatePriceAndChangeByMarket(price: token.localizedFiatMoneyPrice, points: chartPoints)
+                cell.updatePriceAndChangeByMarket(
+                    price: token.localizedFiatMoneyPrice,
+                    change: displayChange,
+                    points: chartPoints
+                )
             } else {
                 isPerpsAvailable = false
                 cell.titleLabel.text = viewModel.symbol
@@ -750,10 +786,18 @@ extension MarketViewController: ChartView.Delegate {
         }
         if let market {
             cell.tokenIconView.setIcon(market: market)
-            cell.updatePriceAndChangeByMarket(price: market.localizedPrice, points: chartPoints)
+            cell.updatePriceAndChangeByMarket(
+                price: market.localizedPrice,
+                change: displayChange,
+                points: chartPoints
+            )
         } else if let token = tokens?.first {
             cell.tokenIconView.setIcon(token: token)
-            cell.updatePriceAndChangeByMarket(price: token.localizedFiatMoneyPrice, points: chartPoints)
+            cell.updatePriceAndChangeByMarket(
+                price: token.localizedFiatMoneyPrice,
+                change: displayChange,
+                points: chartPoints
+            )
         }
     }
     

@@ -193,9 +193,7 @@ extension ShareMarketContentViewController: ModernShareContentViewController {
             description += R.string.localizable.market_share_card_market_cap(marketCap) + "\n"
         }
         description += R.string.localizable.market_share_card_price(market.localizedPrice) + "\n"
-        if let priceChange = market.localizedPriceChangePercentage24H {
-            description += R.string.localizable.market_share_card_price_change(priceChange)
-        }
+        description += R.string.localizable.market_share_card_price_change(market.localizedPriceChangePercentage24H)
         var actions: [AppCardData.V1Content.Action] = [
             .init(
                 action: "mixin://mixin.one/markets/\(market.coinID)",

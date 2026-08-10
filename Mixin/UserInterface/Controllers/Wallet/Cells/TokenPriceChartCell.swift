@@ -8,6 +8,11 @@ final class TokenPriceChartCell: UITableViewCell {
         func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPerpsOn side: PerpetualOrderSide)
     }
     
+    enum Change {
+        case arbitrary(change: String, color: MarketColor)
+        case deriveFromChart
+    }
+    
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var rankLabel: InsetLabel!
@@ -119,15 +124,28 @@ final class TokenPriceChartCell: UITableViewCell {
         }
     }
     
-    func updatePriceAndChangeByMarket(price: String?, points: [ChartView.Point]?) {
+    func updatePriceAndChangeByMarket(
+        price: String?,
+        change: Change,
+        points: [ChartView.Point]?,
+    ) {
         priceLabel.text = price
-        guard let points, points.count >= 2 else {
-            changeLabel.alpha = 0
-            return
+        switch change {
+        case let .arbitrary(change, color):
+            changeLabel.text = change
+            changeLabel.alpha = 1
+            changeLabel.marketColor = color
+        case .deriveFromChart:
+            if let points,
+               points.count >= 2,
+               let base = points.first,
+               let now = points.last
+            {
+                updateChange(base: base, now: now)
+            } else {
+                changeLabel.alpha = 0
+            }
         }
-        let base = points[0]
-        let now = points[points.count - 1]
-        updateChange(base: base, now: now)
     }
     
     func updatePriceAndChangeByChart(base: ChartView.Point, now: ChartView.Point) {

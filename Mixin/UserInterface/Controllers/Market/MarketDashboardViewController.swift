@@ -25,7 +25,7 @@ final class MarketDashboardViewController: UIViewController {
     private var marketIndicator: MarketIndicator?
     private var reloadDataOnViewAppear = false
     
-    private var initLoader: InitLoader
+    private var allDataLoader: AllDataLoader
     private var marketLoader: MarketPeriodicRequester?
     private var perpsMarketLoader: PerpetualMarketLoader?
     
@@ -49,7 +49,7 @@ final class MarketDashboardViewController: UIViewController {
             category: category,
             subCategoryIndex: subCategoryIndex
         )
-        self.initLoader = InitLoader(
+        self.allDataLoader = AllDataLoader(
             excludingCategory: category,
             excludingSubCategoryIndex: subCategoryIndex
         )
@@ -383,7 +383,7 @@ final class MarketDashboardViewController: UIViewController {
             scheduleRemoteLoader: true,
             debugReason: "Initial",
         )
-        initLoader.start()
+        allDataLoader.start()
         DispatchQueue.global(qos: .background).async {
             MarketDAO.shared.deleteOrphanRecords()
         }
@@ -683,6 +683,24 @@ extension MarketDashboardViewController {
                 scheduleRemoteLoader: false,
                 debugReason: "ChangePeriodUpdate",
             )
+        }
+    }
+    
+}
+
+// MARK: - HomeTabBarControllerChild
+extension MarketDashboardViewController: HomeTabBarControllerChild {
+    
+    func viewControllerDidSwitchToFront() {
+        if allDataLoader.isFinished() {
+            let loader = AllDataLoader(
+                excludingCategory: category,
+                excludingSubCategoryIndex: subCategoryIndex
+            )
+            self.allDataLoader = loader
+            loader.start()
+        } else {
+            Logger.general.debug(category: "MarketDashboard", message: "Skip all data reloading")
         }
     }
     
@@ -1447,23 +1465,20 @@ extension MarketDashboardViewController {
         
     }
     
-    private final class InitLoader: MarketPeriodicRequester.Delegate, PerpetualMarketLoader.Delegate {
+    private final class AllDataLoader: MarketPeriodicRequester.Delegate, PerpetualMarketLoader.Delegate {
         
-        private let excludingCategory: Category
-        private let excludingSubCategoryIndex: Int
+        private let debugDescription: String
         
-        private var cryptoRequesters: [MarketPeriodicRequester] = []
-        private var perpsLoaders: [PerpetualMarketLoader] = []
+        private var cryptoRequesters: [MarketPeriodicRequester]
+        private var cryptoRequestersFinishedCount = 0
+        private var perpsLoaders: [PerpetualMarketLoader]
+        private var perpsLoadersFinishedCount = 0
+        private var jobs: [AsynchronousJob]
         
         init(
             excludingCategory: Category,
             excludingSubCategoryIndex: Int,
         ) {
-            self.excludingCategory = excludingCategory
-            self.excludingSubCategoryIndex = excludingSubCategoryIndex
-        }
-        
-        func start() {
             var cryptoCategories = Set(Market.RequestCategory.allCases)
             cryptoCategories.remove(.featured) // Loaded with ReloadWatchlistRecommendationJob
             var perpsCategories = Set(PerpetualMarket.RequestCategory.allCases)
@@ -1492,22 +1507,42 @@ extension MarketDashboardViewController {
             case .indicator:
                 break
             }
-            Logger.general.debug(category: "MarketDashboard", message: "Init Crypto: \(cryptoCategories.map(\.rawValue)), Perps: \(perpsCategories.map(\.rawValue))")
-            for category in cryptoCategories {
-                let requester = MarketPeriodicRequester(category: category)
+            
+            self.debugDescription = "Init Crypto: \(cryptoCategories.map(\.rawValue)), Perps: \(perpsCategories.map(\.rawValue))"
+            self.cryptoRequesters = cryptoCategories.map(
+                MarketPeriodicRequester.init(category:)
+            )
+            self.perpsLoaders = perpsCategories.map { category in
+                PerpetualMarketLoader(request: .multiple(category), timeInterval: 30)
+            }
+            self.jobs = [
+                ReloadGlobalMarketJob(),
+                ReloadWatchlistRecommendationJob(category: .crypto),
+                ReloadWatchlistRecommendationJob(category: .perps),
+            ]
+        }
+        
+        func start() {
+            assert(Thread.isMainThread)
+            Logger.general.debug(category: "MarketDashboard", message: debugDescription)
+            for requester in cryptoRequesters {
                 requester.delegate = self
-                cryptoRequesters.append(requester)
                 requester.start()
             }
-            for category in perpsCategories {
-                let loader = PerpetualMarketLoader(request: .multiple(category), timeInterval: 30)
+            for loader in perpsLoaders {
                 loader.delegate = self
-                perpsLoaders.append(loader)
                 loader.start()
             }
-            ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
-            ConcurrentJobQueue.shared.addJob(job: ReloadWatchlistRecommendationJob(category: .crypto))
-            ConcurrentJobQueue.shared.addJob(job: ReloadWatchlistRecommendationJob(category: .perps))
+            for job in jobs {
+                ConcurrentJobQueue.shared.addJob(job: job)
+            }
+        }
+        
+        func isFinished() -> Bool {
+            assert(Thread.isMainThread)
+            return cryptoRequestersFinishedCount == cryptoRequesters.count
+            && perpsLoadersFinishedCount == perpsLoaders.count
+            && jobs.allSatisfy(\.isFinished)
         }
         
         func marketPeriodicRequester(
@@ -1515,7 +1550,10 @@ extension MarketDashboardViewController {
             decideNextRequestAfterLoadingMarketsIn category: Market.RequestCategory,
             markets: [Market]
         ) -> MarketPeriodicRequester.NextRequestDecision {
-            .cancel
+            DispatchQueue.main.async {
+                self.cryptoRequestersFinishedCount += 1
+            }
+            return .cancel
         }
         
         func perpetualMarketLoader(
@@ -1523,7 +1561,10 @@ extension MarketDashboardViewController {
             decideNextRequestAfterLoadingMultipleMarketsIn category: PerpetualMarket.RequestCategory,
             markets: [PerpetualMarket]
         ) -> PerpetualMarketLoader.NextRequestDecision {
-            .cancel
+            DispatchQueue.main.async {
+                self.perpsLoadersFinishedCount += 1
+            }
+            return .cancel
         }
         
     }

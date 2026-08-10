@@ -28,7 +28,7 @@ final class MarketViewController: UIViewController {
             return .day
         }
     }()
-    private var requester: MarketPeriodicRequester!
+    private var requester: MarketPeriodicRequester?
     
     private var tokenPriceChartCell: TokenPriceChartCell? {
         let indexPath = IndexPath(row: 0, section: Section.chart.rawValue)
@@ -164,9 +164,18 @@ final class MarketViewController: UIViewController {
                 return
             }
             self.market = nil
+            self.favoriteButton.isHidden = true
             self.viewModel.updateWithMarketNotFound()
             self.tableView.reloadData()
-            self.favoriteButton.isHidden = true
+            self.actionView.tradeButton.isEnabled = false
+            switch id {
+            case .coin(let coinID):
+                DispatchQueue.global().async {
+                    MarketDAO.shared.delete(coinID: coinID)
+                }
+            case .asset:
+                break
+            }
         })
         
         reporter.report(event: .marketDetail)
@@ -174,7 +183,7 @@ final class MarketViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        requester.start()
+        requester?.start()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -188,7 +197,7 @@ final class MarketViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        requester.pause()
+        requester?.pause()
     }
     
     @objc private func toggleFavorite(_ sender: Any) {

@@ -416,6 +416,31 @@ public final class MarketDAO: UserDatabaseDAO {
         }
     }
     
+    public func delete(coinID: String) {
+        db.write { db in
+            try db.execute(
+                sql: "DELETE FROM markets WHERE coin_id = ?",
+                arguments: [coinID]
+            )
+            try db.execute(
+                sql: "DELETE FROM market_ids WHERE coin_id = ?",
+                arguments: [coinID]
+            )
+            try db.execute(
+                sql: "DELETE FROM market_cap_ranks WHERE coin_id = ?",
+                arguments: [coinID]
+            )
+            try db.execute(
+                sql: "DELETE FROM market_favored WHERE coin_id = ?",
+                arguments: [coinID]
+            )
+            try db.execute(
+                sql: "DELETE FROM market_categories WHERE coin_id = ?",
+                arguments: [coinID]
+            )
+        }
+    }
+    
     public func deleteOrphanRecords() {
         db.execute(sql: """
         DELETE FROM markets

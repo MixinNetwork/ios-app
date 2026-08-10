@@ -75,8 +75,8 @@ extension FavoriteButton {
                     nil
                 }
             }(),
-            animationSize: CGSize(width: 32, height: 32),
-            duration: 1.25
+            animationSize: CGSize(width: 44, height: 44),
+            duration: 1.1
         )
         
         static let listCell = Config(
@@ -93,7 +93,7 @@ extension FavoriteButton {
                 }
             }(),
             animationSize: CGSize(width: 20, height: 20),
-            duration: 1.15
+            duration: 1.1
         )
         
         let favoriteImage: UIImage

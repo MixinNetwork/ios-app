@@ -145,6 +145,10 @@ final class PerpetualActivityViewController: UIViewController {
                 wallet: wallet,
                 viewModel: viewModel,
             )
+            reporter.report(
+                event: .marketDetail,
+                tags: ["type": "perps", "source": "perps_position"]
+            )
             var viewControllers = navigationController.viewControllers
             viewControllers.removeAll { controller in
                 controller is PerpetualMarketViewController

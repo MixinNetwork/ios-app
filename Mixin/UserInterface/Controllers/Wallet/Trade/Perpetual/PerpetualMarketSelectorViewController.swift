@@ -454,6 +454,10 @@ extension PerpetualMarketSelectorViewController: FavorablePerpsMarketCell.Delega
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
+            reporter.report(
+                event: .marketWatchlistRemove,
+                tags: ["type": "perps", "source": "perps_markets_dialog"]
+            )
         } else {
             cell.favoriteButton.setFavorite(true, animated: true)
             RouteAPI.favoritePerpsMarket(marketID: market.marketID) { [weak self] result in
@@ -478,6 +482,10 @@ extension PerpetualMarketSelectorViewController: FavorablePerpsMarketCell.Delega
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
+            reporter.report(
+                event: .marketWatchlistAdd,
+                tags: ["type": "perps", "source": "perps_markets_dialog"]
+            )
         }
     }
     
@@ -521,6 +529,10 @@ extension PerpetualMarketSelectorViewController: WatchlistRecommendationFooterVi
                 }
             }
         }
+        reporter.report(
+            event: .marketWatchlistAdd,
+            tags: ["type": "perps", "source": "perps_markets_dialog"]
+        )
     }
     
 }

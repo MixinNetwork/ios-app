@@ -584,6 +584,10 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
                     wallet: .privacy,
                     viewModel: viewModel,
                 )
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "perps", "source": "wallet_home"]
+                )
                 navigationController?.pushViewController(market, animated: true)
             }
         case .token(let assetID):
@@ -604,6 +608,10 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
                 let market = PerpetualMarketViewController(
                     wallet: .privacy,
                     viewModel: viewModel,
+                )
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "perps", "source": "wallet_home"]
                 )
                 navigationController?.pushViewController(market, animated: true)
             }

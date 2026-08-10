@@ -42,6 +42,7 @@ final class CoinMarketAlertsViewController: MarketAlertViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
         }
         addAlertButton.addTarget(self, action: #selector(addAlert(_:)), for: .touchUpInside)
+        reporter.report(event: .marketPriceAlerts, tags: ["type": "single"])
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -57,7 +58,10 @@ final class CoinMarketAlertsViewController: MarketAlertViewController {
     }
     
     @objc private func addAlert(_ sender: RoundedButton) {
-        let addAlert = AddMarketAlertViewController(coin: self.coin)
+        let addAlert = AddMarketAlertViewController(
+            coin: self.coin,
+            reportingSource: "price_alert_list",
+        )
         self.navigationController?.pushViewController(addAlert, animated: true)
     }
     

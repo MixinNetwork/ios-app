@@ -40,6 +40,7 @@ final class AllMarketAlertsViewController: MarketAlertViewController {
         assetFilterView.button.addTarget(self, action: #selector(pickTokens(_:)), for: .touchUpInside)
         addAlertButton.setTitle(R.string.localizable.add_alert(), for: .normal)
         addAlertButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14, weight: .medium), adjustForContentSize: true)
+        reporter.report(event: .marketPriceAlerts, tags: ["type": "all"])
     }
     
     override func reloadFromLocal() {
@@ -83,7 +84,10 @@ extension AllMarketAlertsViewController: MarketAlertCoinPickerViewController.Del
         didPickCoin coin: MarketAlertCoin
     ) {
         dismiss(animated: true) {
-            let addAlert = AddMarketAlertViewController(coin: coin)
+            let addAlert = AddMarketAlertViewController(
+                coin: coin,
+                reportingSource: "price_alert_list",
+            )
             self.navigationController?.pushViewController(addAlert, animated: true)
         }
     }

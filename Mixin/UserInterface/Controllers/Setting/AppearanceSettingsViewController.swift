@@ -184,6 +184,13 @@ extension AppearanceSettingsViewController {
         )
         let section = SettingsSection(rows: [row])
         dataSource.replaceSection(at: 4, with: section, animation: .none)
+        
+        switch appearance {
+        case .greenUpRedDown:
+            reporter.report(event: .marketsQuoteColorSwitch, tags: ["color_scheme": "green_up_red_down"])
+        case .redUpGreenDown:
+            reporter.report(event: .marketsQuoteColorSwitch, tags: ["color_scheme": "red_up_green_down"])
+        }
     }
     
 }

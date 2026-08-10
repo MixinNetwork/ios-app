@@ -55,6 +55,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         formatter.string(from: coin.decimalPrice as NSDecimalNumber)
     }
     
+    private let reportingSource: String?
     private let increasePrecentageLimitation = PercentageLimitation(min: 0.0001, max: 10)
     private let decreasePrecentageLimitation = PercentageLimitation(min: 0.0001, max: 0.9999)
     private let presetChangePercentages: [Decimal] = [
@@ -64,11 +65,13 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     init(
         coin: MarketAlertCoin,
         type: MarketAlert.AlertType = .priceReached,
-        frequency: MarketAlert.AlertFrequency = .every
+        frequency: MarketAlert.AlertFrequency = .every,
+        reportingSource: String?,
     ) {
         self.coin = coin
         self.alertType = type
         self.alertFrequency = frequency
+        self.reportingSource = reportingSource
         let nib = R.nib.addMarketAlertView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -204,6 +207,15 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
+        
+        var tags = [
+            "frequency": alertFrequency.rawValue,
+            "type": alertType.rawValue,
+        ]
+        if let source = reportingSource {
+            tags["source"] = source
+        }
+        reporter.report(event: .marketPriceAlertAdd, tags: tags)
     }
     
     func validateInput() {

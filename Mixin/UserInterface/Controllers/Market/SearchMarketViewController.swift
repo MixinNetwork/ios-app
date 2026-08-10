@@ -165,6 +165,10 @@ extension SearchMarketViewController: UITableViewDelegate {
         let market = searchResults[indexPath.row]
         let controller = MarketViewController(market: market)
         navigationController?.pushViewController(controller, animated: true)
+        reporter.report(
+            event: .marketDetail,
+            tags: ["type": "spot", "source": "markets_search"]
+        )
     }
     
 }

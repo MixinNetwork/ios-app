@@ -132,6 +132,10 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         let market = MarketViewController(token: token)
         market.pushingViewController = self
         navigationController?.pushViewController(market, animated: true)
+        reporter.report(
+            event: .marketDetail,
+            tags: ["type": "spot", "source": "token_detail"]
+        )
     }
     
     override func view(transaction: Web3Transaction) {

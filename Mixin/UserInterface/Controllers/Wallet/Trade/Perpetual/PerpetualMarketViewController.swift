@@ -323,6 +323,10 @@ final class PerpetualMarketViewController: UIViewController {
                     }
                 }
             }
+            reporter.report(
+                event: .marketWatchlistRemove,
+                tags: ["type": "perps", "source": "market_detail"]
+            )
         } else {
             isFavorite = true
             favoriteButton.setFavorite(true, animated: true)
@@ -341,6 +345,10 @@ final class PerpetualMarketViewController: UIViewController {
                     }
                 }
             }
+            reporter.report(
+                event: .marketWatchlistAdd,
+                tags: ["type": "perps", "source": "market_detail"]
+            )
         }
     }
     

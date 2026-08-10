@@ -904,24 +904,40 @@ extension TradeSpotViewController: UICollectionViewDelegate {
                 let viewController = MarketViewController(market: market)
                 viewController.pushingViewController = self
                 navigationController?.pushViewController(viewController, animated: true)
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "spot", "source": "trade"]
+                )
             }
         case .stock(let coinID):
             if let market = stocks[coinID] {
                 let viewController = MarketViewController(market: market)
                 viewController.pushingViewController = self
                 navigationController?.pushViewController(viewController, animated: true)
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "spot", "source": "trade"]
+                )
             }
         case .topGainer(let coinID):
             if let market = topGainers[coinID] {
                 let viewController = MarketViewController(market: market)
                 viewController.pushingViewController = self
                 navigationController?.pushViewController(viewController, animated: true)
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "spot", "source": "trade"]
+                )
             }
         case .topLoser(let coinID):
             if let market = topLosers[coinID] {
                 let viewController = MarketViewController(market: market)
                 viewController.pushingViewController = self
                 navigationController?.pushViewController(viewController, animated: true)
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "spot", "source": "trade"]
+                )
             }
         default:
             break

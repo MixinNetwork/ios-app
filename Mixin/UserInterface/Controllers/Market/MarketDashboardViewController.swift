@@ -558,6 +558,52 @@ final class MarketDashboardViewController: UIViewController {
         )
     }
     
+    private func reportingSecondaryTabName(index: Int) -> String? {
+        switch category {
+        case .watchlist:
+            switch WatchlistSubCategory.allCases[index] {
+            case .crypto:
+                "crypto"
+            case .perps:
+                "perpetual"
+            }
+        case .crypto:
+            switch Market.SubCategory.allCases[index] {
+            case .watchlist:
+                "watchlist"
+            case .trending:
+                "trending"
+            case .topGainer:
+                "top_gainers"
+            case .topLoser:
+                "top_losers"
+            case .all:
+                "all"
+            }
+        case .perps:
+            switch PerpetualMarket.SubCategory.allCases[index] {
+            case .watchlist:
+                "watchlist"
+            case .trending:
+                "trending"
+            case .topGainers:
+                "top_gainers"
+            case .topLosers:
+                "top_losers"
+            case .memes:
+                "memes"
+            case .indices:
+                "indices"
+            case .commodities:
+                "commodities"
+            case .forex:
+                "forex"
+            }
+        case .indicator:
+            nil
+        }
+    }
+    
 }
 
 // MARK: - Actions
@@ -719,6 +765,10 @@ extension MarketDashboardViewController: UICollectionViewDelegate {
                 let controller = MarketViewController(market: market)
                 controller.pushingViewController = self
                 navigationController?.pushViewController(controller, animated: true)
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "spot", "source": "markets_list"]
+                )
             }
         case let .perps(id):
             if let market = perpsMarkets[id],
@@ -727,6 +777,10 @@ extension MarketDashboardViewController: UICollectionViewDelegate {
                 let market = PerpetualMarketViewController(
                     wallet: .privacy,
                     viewModel: viewModel,
+                )
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "perps", "source": "markets_list"]
                 )
                 navigationController?.pushViewController(market, animated: true)
             }
@@ -755,6 +809,12 @@ extension MarketDashboardViewController: MarketHeaderView.Delegate {
             debugReason: "SubCategorySwitch",
         )
         AppGroupUserDefaults.User.marketSubCategoryIndices[category.rawValue] = index
+        
+        var reportingTags = ["level": "secondary"]
+        if let tab = reportingSecondaryTabName(index: index) {
+            reportingTags["tab"] = tab
+        }
+        reporter.report(event: .marketsTabSwitch, tags: reportingTags)
     }
     
 }
@@ -763,19 +823,36 @@ extension MarketDashboardViewController: MarketHeaderView.Delegate {
 extension MarketDashboardViewController: MarketOrderingHeaderView.Delegate {
     
     func marketOrderingHeaderViewDidSelectSetting(_ view: MarketOrderingHeaderView) {
+        var tags = ["primary_tab": category.reportingName]
+        if let tab = reportingSecondaryTabName(index: subCategoryIndex) {
+            tags["secondary_tab"] = tab
+        }
+        
         let settings: MarketDisplaySettingsViewController
         switch category {
         case .watchlist:
             switch WatchlistSubCategory.allCases[subCategoryIndex] {
             case .crypto:
-                settings = MarketDisplaySettingsViewController(rows: [.quoteColor, .priceChange])
+                settings = MarketDisplaySettingsViewController(
+                    rows: [.quoteColor, .priceChange],
+                    reportingTags: tags
+                )
             case .perps:
-                settings = MarketDisplaySettingsViewController(rows: [.quoteColor])
+                settings = MarketDisplaySettingsViewController(
+                    rows: [.quoteColor],
+                    reportingTags: tags
+                )
             }
         case .crypto:
-            settings = MarketDisplaySettingsViewController(rows: [.quoteColor, .priceChange])
+            settings = MarketDisplaySettingsViewController(
+                rows: [.quoteColor, .priceChange],
+                reportingTags: tags
+            )
         case .perps:
-            settings = MarketDisplaySettingsViewController(rows: [.quoteColor])
+            settings = MarketDisplaySettingsViewController(
+                rows: [.quoteColor],
+                reportingTags: tags
+            )
         case .indicator:
             return
         }
@@ -790,6 +867,33 @@ extension MarketDashboardViewController: MarketOrderingHeaderView.Delegate {
             scheduleRemoteLoader: false,
             debugReason: "OrderSwitch",
         )
+        
+        var tags = ["primary_tab": category.reportingName]
+        if let tab = reportingSecondaryTabName(index: subCategoryIndex) {
+            tags["secondary_tab"] = tab
+        }
+        tags["sort_field"] = switch order.field {
+        case .marketCap:
+            "market_cap"
+        case .volume:
+            "vol"
+        case .price:
+            "price"
+        case .change(let period):
+            switch period {
+            case .twentyFourHours:
+                "24h"
+            case .sevenDays:
+                "7d"
+            }
+        }
+        tags["sort_direction"] = switch order.direction {
+        case .ascending:
+            "ascending"
+        case .descending:
+            "descending"
+        }
+        reporter.report(event: .marketsListSort, tags: tags)
     }
     
 }
@@ -824,6 +928,10 @@ extension MarketDashboardViewController: FavorableMarketCell.Delegate {
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
+            reporter.report(
+                event: .marketWatchlistRemove,
+                tags: ["type": "spot", "source": "markets"]
+            )
         } else {
             cell.favoriteButton.setFavorite(true, animated: true)
             RouteAPI.favoriteMarket(coinID: market.coinID) { [weak self] result in
@@ -840,6 +948,10 @@ extension MarketDashboardViewController: FavorableMarketCell.Delegate {
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
+            reporter.report(
+                event: .marketWatchlistAdd,
+                tags: ["type": "spot", "source": "markets"]
+            )
         }
     }
     
@@ -875,6 +987,10 @@ extension MarketDashboardViewController: FavorablePerpsMarketCell.Delegate {
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
+            reporter.report(
+                event: .marketWatchlistRemove,
+                tags: ["type": "perps", "source": "markets"]
+            )
         } else {
             cell.favoriteButton.setFavorite(true, animated: true)
             RouteAPI.favoritePerpsMarket(marketID: market.marketID) { [weak self] result in
@@ -891,6 +1007,10 @@ extension MarketDashboardViewController: FavorablePerpsMarketCell.Delegate {
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
             }
+            reporter.report(
+                event: .marketWatchlistAdd,
+                tags: ["type": "perps", "source": "markets"]
+            )
         }
     }
     
@@ -942,6 +1062,10 @@ extension MarketDashboardViewController: WatchlistRecommendationFooterView.Deleg
                     }
                 }
             }
+            reporter.report(
+                event: .marketWatchlistAdd,
+                tags: ["type": "spot", "source": "markets"]
+            )
         } else if !perpsMarketIDs.isEmpty {
             collectionView.isUserInteractionEnabled = false
             footerView.actionButton.isBusy = true
@@ -965,6 +1089,10 @@ extension MarketDashboardViewController: WatchlistRecommendationFooterView.Deleg
                     }
                 }
             }
+            reporter.report(
+                event: .marketWatchlistAdd,
+                tags: ["type": "perps", "source": "markets"]
+            )
         }
     }
     
@@ -1036,6 +1164,19 @@ extension MarketDashboardViewController {
                 }
             case .indicator:
                 0
+            }
+        }
+        
+        var reportingName: String {
+            switch self {
+            case .watchlist:
+                "watchlist"
+            case .crypto:
+                "crypto"
+            case .perps:
+                "perpetual"
+            case .indicator:
+                "indicator"
             }
         }
         
@@ -1122,6 +1263,10 @@ extension MarketDashboardViewController {
                 debugReason: "CategorySwitch",
             )
             AppGroupUserDefaults.User.marketCategory = category.rawValue
+            reporter.report(
+                event: .marketsTabSwitch,
+                tags: ["level": "primary", "tab": category.reportingName]
+            )
         }
         
     }

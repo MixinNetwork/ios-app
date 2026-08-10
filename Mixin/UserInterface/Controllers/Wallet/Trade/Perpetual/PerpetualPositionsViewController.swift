@@ -270,6 +270,10 @@ extension PerpetualPositionsViewController: UICollectionViewDelegate {
                     wallet: wallet,
                     viewModel: viewModel,
                 )
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "perps", "source": "all_perps_positions"]
+                )
                 navigationController?.pushViewController(market, animated: true)
             }
         }

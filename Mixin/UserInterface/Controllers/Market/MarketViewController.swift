@@ -197,8 +197,6 @@ final class MarketViewController: UIViewController {
                 break
             }
         })
-        
-        reporter.report(event: .marketDetail)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -242,8 +240,11 @@ final class MarketViewController: UIViewController {
                     }
                 }
             }
+            reporter.report(
+                event: .marketWatchlistRemove,
+                tags: ["type": "spot", "source": "market_detail"]
+            )
         } else {
-            reporter.report(event: .marketFavoriteAdd, tags: ["source": analyticSource.rawValue])
             market.isFavorite = true
             favoriteButton.setFavorite(true, animated: true)
             RouteAPI.favoriteMarket(coinID: market.coinID) { [weak self] result in
@@ -261,6 +262,10 @@ final class MarketViewController: UIViewController {
                     }
                 }
             }
+            reporter.report(
+                event: .marketWatchlistAdd,
+                tags: ["type": "spot", "source": "market_detail"]
+            )
         }
     }
     
@@ -296,7 +301,10 @@ final class MarketViewController: UIViewController {
                     self.navigationController?.pushViewController(alert, animated: true)
                 } else {
                     let coin = MarketAlertCoin(market: market)
-                    let addAlert = AddMarketAlertViewController(coin: coin)
+                    let addAlert = AddMarketAlertViewController(
+                        coin: coin,
+                        reportingSource: "market_detail",
+                    )
                     self.navigationController?.pushViewController(addAlert, animated: true)
                 }
             } else {
@@ -504,6 +512,10 @@ final class MarketViewController: UIViewController {
             next = PerpetualMarketViewController(
                 wallet: .privacy,
                 viewModel: viewModel
+            )
+            reporter.report(
+                event: .marketDetail,
+                tags: ["type": "perps", "source": "market_detail"]
             )
         } else {
             next = OpenPerpsPositionViewController(

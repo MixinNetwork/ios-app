@@ -136,6 +136,10 @@ extension AllPerpetualMarketsViewController: UICollectionViewDelegate {
             wallet: wallet,
             viewModel: viewModel,
         )
+        reporter.report(
+            event: .marketDetail,
+            tags: ["type": "perps", "source": "all_perps_markets"]
+        )
         navigationController?.pushViewController(market, animated: true)
     }
     

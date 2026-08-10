@@ -9,9 +9,11 @@ final class MarketDisplaySettingsViewController: PopupSelectorViewController {
     }
     
     private let rows: [Row]
+    private let reportingTags: [String: String]
     
-    init(rows: [Row]) {
+    init(rows: [Row], reportingTags: [String: String]) {
         self.rows = rows
+        self.reportingTags = reportingTags
         super.init()
     }
     
@@ -45,6 +47,15 @@ final class MarketDisplaySettingsViewController: PopupSelectorViewController {
             let indexPath = IndexPath(row: row, section: 0)
             tableView.reloadRows(at: [indexPath], with: .none)
         }
+        
+        var tags = reportingTags
+        tags["color_scheme"] = switch appearance {
+        case .greenUpRedDown:
+            "green_up_red_down"
+        case .redUpGreenDown:
+            "red_up_green_down"
+        }
+        reporter.report(event: .marketsQuoteColorSwitch, tags: tags)
     }
     
     private func setPriceChange(period: MarketChangePeriod) {
@@ -53,6 +64,15 @@ final class MarketDisplaySettingsViewController: PopupSelectorViewController {
             let indexPath = IndexPath(row: row, section: 0)
             tableView.reloadRows(at: [indexPath], with: .none)
         }
+        
+        var tags = reportingTags
+        tags["period"] = switch period {
+        case .twentyFourHours:
+            "24h"
+        case .sevenDays:
+            "7d"
+        }
+        reporter.report(event: .marketsPriceChangePeriodSwitch, tags: tags)
     }
     
 }

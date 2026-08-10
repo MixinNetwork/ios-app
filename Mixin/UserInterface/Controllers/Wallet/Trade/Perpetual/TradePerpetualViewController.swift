@@ -313,6 +313,10 @@ final class TradePerpetualViewController: UIViewController {
                         wallet: self.wallet,
                         viewModel: viewModel
                     )
+                    reporter.report(
+                        event: .marketDetail,
+                        tags: ["type": "perps", "source": "perps_selector"]
+                    )
                     self.navigationController?.pushViewController(market, animated: true)
                 } else {
                     let open = OpenPerpsPositionViewController(
@@ -546,6 +550,10 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
                     wallet: wallet,
                     viewModel: viewModel,
                 )
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "perps", "source": "trade_perps"]
+                )
                 navigationController?.pushViewController(market, animated: true)
             }
         case .topMovers:
@@ -557,6 +565,10 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
                 wallet: wallet,
                 viewModel: viewModel,
             )
+            reporter.report(
+                event: .marketDetail,
+                tags: ["type": "perps", "source": "trade_perps"]
+            )
             navigationController?.pushViewController(market, animated: true)
         case .markets(let category):
             let items = marketItems(category: category)
@@ -567,6 +579,10 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
             let market = PerpetualMarketViewController(
                 wallet: wallet,
                 viewModel: viewModel,
+            )
+            reporter.report(
+                event: .marketDetail,
+                tags: ["type": "perps", "source": "trade_perps"]
             )
             navigationController?.pushViewController(market, animated: true)
         case .activity:
@@ -711,6 +727,10 @@ extension TradePerpetualViewController {
                 let market = PerpetualMarketViewController(
                     wallet: wallet,
                     viewModel: viewModel,
+                )
+                reporter.report(
+                    event: .marketDetail,
+                    tags: ["type": "perps", "source": "trade_perps"]
                 )
                 self.navigationController?.pushViewController(market, animated: true)
             }

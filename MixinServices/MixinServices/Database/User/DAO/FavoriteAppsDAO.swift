@@ -21,10 +21,10 @@ public final class FavoriteAppsDAO: UserDatabaseDAO {
     public func favoriteAppUsersOfUser(withId id: String) -> [User] {
         let sql = """
         SELECT u.*
-        FROM users u
-            LEFT JOIN favorite_apps ON favorite_apps.app_id = u.app_id
-        WHERE favorite_apps.user_id = ?
-        ORDER BY favorite_apps.created_at ASC
+        FROM favorite_apps fa
+        INNER JOIN users u ON u.user_id = fa.app_id
+        WHERE fa.user_id = ?
+        ORDER BY fa.created_at ASC
         """
         return db.select(with: sql, arguments: [id])
     }

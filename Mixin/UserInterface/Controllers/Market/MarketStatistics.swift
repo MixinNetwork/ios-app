@@ -35,14 +35,14 @@ struct MarketStatistics {
         if let value = Decimal(string: market.marketCap, locale: .enUSPOSIX), !value.isZero {
             marketCap = NamedLargeNumberFormatter.string(
                 number: value * Currency.current.decimalRate,
-                currencyPrefix: .current
+                currency: .current,
             )
         } else {
             marketCap = .notApplicable
         }
         let fiatMoneyVolume24H = NamedLargeNumberFormatter.string(
             number: market.decimalVolume * Currency.current.decimalRate,
-            currencyPrefix: .current
+            currency: .current,
         )
         
         self.high24H = high24H

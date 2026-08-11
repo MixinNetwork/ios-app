@@ -488,7 +488,6 @@
 		7BF42E4122DDF0D9005066E6 /* GalleryAnimatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF42E4022DDF0D9005066E6 /* GalleryAnimatable.swift */; };
 		7BF49DD320C3DBAC00A8510E /* Captcha.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF49DD220C3DBAC00A8510E /* Captcha.swift */; };
 		7BF52B232199AC2E007A5A74 /* NoTransactionFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */; };
-		7BF5DCEA24001F760093968C /* MixinInternalUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5DCE924001F760093968C /* MixinInternalUrl.swift */; };
 		7BF5EE4F2497A55700DDD9CC /* GroupCallMemberPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF5EE4E2497A55700DDD9CC /* GroupCallMemberPickerViewController.swift */; };
 		7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF7837A2179D1AF00BECB4B /* Call.swift */; };
 		7BF8AD83244050EE0038D293 /* PopupResizeGestureCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BF8AD82244050EE0038D293 /* PopupResizeGestureCoordinator.swift */; };
@@ -1366,6 +1365,7 @@
 		949B5E532EBDD31300D33C97 /* TradeOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949B5E522EBDD31000D33C97 /* TradeOrderViewModel.swift */; };
 		949D7D762F863B41005A26CD /* GaslessFee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949D7D752F863B3F005A26CD /* GaslessFee.swift */; };
 		949D7D812F863C97005A26CD /* GaslessTransactionProposal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949D7D802F863C93005A26CD /* GaslessTransactionProposal.swift */; };
+		949DD1C7302B02C100E6AEFB /* CryptoMarketDisplayInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949DD1C6302B02BD00E6AEFB /* CryptoMarketDisplayInfo.swift */; };
 		94A0C8C22C77259E00BDE672 /* AddressReceiversCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */; };
 		94A0C8C32C77259E00BDE672 /* AddressReceiversCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */; };
 		94A161832FD417DE0022D855 /* WalletSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A161822FD417DC0022D855 /* WalletSupport.swift */; };
@@ -2484,7 +2484,6 @@
 		7BF42E4022DDF0D9005066E6 /* GalleryAnimatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryAnimatable.swift; sourceTree = "<group>"; };
 		7BF49DD220C3DBAC00A8510E /* Captcha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Captcha.swift; sourceTree = "<group>"; };
 		7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoTransactionFooterView.xib; sourceTree = "<group>"; };
-		7BF5DCE924001F760093968C /* MixinInternalUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinInternalUrl.swift; sourceTree = "<group>"; };
 		7BF5EE4E2497A55700DDD9CC /* GroupCallMemberPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCallMemberPickerViewController.swift; sourceTree = "<group>"; };
 		7BF7837A2179D1AF00BECB4B /* Call.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Call.swift; sourceTree = "<group>"; };
 		7BF8AD82244050EE0038D293 /* PopupResizeGestureCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupResizeGestureCoordinator.swift; sourceTree = "<group>"; };
@@ -3390,6 +3389,7 @@
 		949B5E522EBDD31000D33C97 /* TradeOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOrderViewModel.swift; sourceTree = "<group>"; };
 		949D7D752F863B3F005A26CD /* GaslessFee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaslessFee.swift; sourceTree = "<group>"; };
 		949D7D802F863C93005A26CD /* GaslessTransactionProposal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaslessTransactionProposal.swift; sourceTree = "<group>"; };
+		949DD1C6302B02BD00E6AEFB /* CryptoMarketDisplayInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoMarketDisplayInfo.swift; sourceTree = "<group>"; };
 		94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressReceiversCell.swift; sourceTree = "<group>"; };
 		94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressReceiversCell.xib; sourceTree = "<group>"; };
 		94A161822FD417DC0022D855 /* WalletSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSupport.swift; sourceTree = "<group>"; };
@@ -5098,6 +5098,7 @@
 			isa = PBXGroup;
 			children = (
 				946BBA8730244FA40080D43D /* MarketLayout.swift */,
+				949DD1C6302B02BD00E6AEFB /* CryptoMarketDisplayInfo.swift */,
 				94F896FB3021FD7A00897E4F /* WatchlistSubCategory.swift */,
 				946BBA46302384090080D43D /* MarketSubCategoryDisplay.swift */,
 				94F897093021FD9F00897E4F /* ReloadWatchlistRecommendationJob.swift */,
@@ -6140,7 +6141,6 @@
 				DF5D9F1B1F9C62990036D5FD /* Constant.swift */,
 				7B3936CE20C15BA00075A97A /* MixinKeys.swift */,
 				DF6175C2222398BB00624609 /* MixinURL.swift */,
-				7BF5DCE924001F760093968C /* MixinInternalUrl.swift */,
 				E07E38A523A774940005A538 /* MixinError.swift */,
 				7C651D8E29F68277003331A4 /* BotUserID.swift */,
 				945D867A2C21754A0066C61D /* CGSize+Constants.swift */,
@@ -8030,6 +8030,7 @@
 				94A72CA62C2EBFF9001E8782 /* InscriptionTraitCell.swift in Sources */,
 				7CCE65A828D69D1D00FE944A /* PillActionView.swift in Sources */,
 				94396D4B2CE3597E009DA4E9 /* MnemonicsInputHandler.swift in Sources */,
+				949DD1C7302B02C100E6AEFB /* CryptoMarketDisplayInfo.swift in Sources */,
 				940764C329B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift in Sources */,
 				9413A4012C367D8D00B655AC /* TradeSpotViewController.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
@@ -8316,7 +8317,6 @@
 				7B65568324C8555D0038BC14 /* GroupCallMemberConnectingView.swift in Sources */,
 				949B5E532EBDD31300D33C97 /* TradeOrderViewModel.swift in Sources */,
 				940A3D252EB7BEF0001A458F /* TradeSectionHeaderView.swift in Sources */,
-				7BF5DCEA24001F760093968C /* MixinInternalUrl.swift in Sources */,
 				94287EE12B8743E50088DEAD /* MixinAPIResponseError+Localization.swift in Sources */,
 				7B5F96692414241C003A087B /* LocationInformationView.swift in Sources */,
 				7C53049D28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift in Sources */,

@@ -71,9 +71,10 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     public let descriptions: [String: String]?
     public let perpsMarketID: String?
     
+    public private(set) lazy var decimalMarketCap = Decimal(string: marketCap, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var localizedMarketCap = NamedLargeNumberFormatter.string(
-        number: (Decimal(string: marketCap, locale: .enUSPOSIX) ?? 0) * Currency.current.decimalRate,
-        currencyPrefix: .current
+        number: decimalMarketCap * Currency.current.decimalRate,
+        currency: .current,
     )
     
     public private(set) lazy var numberedRank: String? = {
@@ -85,6 +86,10 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     }()
     
     public private(set) lazy var decimalVolume = Decimal(string: totalVolume, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var prettyVolume = NamedLargeNumberFormatter.string(
+        number: decimalVolume * Currency.current.decimalRate,
+        currency: .current,
+    )
     
     public private(set) lazy var localizedUSDPrice = CurrencyFormatter.localizedString(
         from: decimalPrice,

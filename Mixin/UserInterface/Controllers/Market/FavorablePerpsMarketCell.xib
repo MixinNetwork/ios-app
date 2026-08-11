@@ -125,8 +125,8 @@
                 <outlet property="changeWidthConstraint" destination="5gu-3i-gOQ" id="PO2-IS-d8I"/>
                 <outlet property="favoriteButton" destination="LpP-m3-C03" id="8Gk-jF-JWV"/>
                 <outlet property="iconView" destination="r1h-v0-vS9" id="rTs-jg-Yey"/>
+                <outlet property="infoLabel" destination="scc-SG-u6n" id="3wD-jG-Ys9"/>
                 <outlet property="mainItemLeadingConstraint" destination="7pI-I1-Xkt" id="KN8-gN-MIi"/>
-                <outlet property="marketCapLabel" destination="scc-SG-u6n" id="3wD-jG-Ys9"/>
                 <outlet property="priceLabel" destination="QuQ-a9-BOB" id="HXW-Xk-UJe"/>
                 <outlet property="priceTrailingConstraint" destination="rZd-Ih-O1k" id="tyX-dR-kdY"/>
                 <outlet property="priceWidthConstraint" destination="qO7-fh-O0C" id="xMp-PA-JlK"/>
@@ -147,7 +147,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

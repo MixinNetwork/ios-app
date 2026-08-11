@@ -1,18 +1,22 @@
 import Foundation
 
-enum MixinInternalURL {
-    
-    static let scheme = "mixin-internal"
-    
-    enum Host {
-        static let identityNumber = "identity"
-        static let phoneNumber = "phone"
-    }
+public enum MixinInternalURL {
     
     case identityNumber(String)
     case phoneNumber(String)
     
-    init?(url: URL) {
+}
+
+extension MixinInternalURL {
+    
+    public static let scheme = "mixin-internal"
+    
+    public enum Host {
+        static let identityNumber = "identity"
+        static let phoneNumber = "phone"
+    }
+    
+    public init?(url: URL) {
         guard url.scheme == Self.scheme else {
             return nil
         }
@@ -26,7 +30,7 @@ enum MixinInternalURL {
         }
     }
     
-    var url: URL? {
+    public var url: URL? {
         var components = URLComponents()
         components.scheme = Self.scheme
         switch self {

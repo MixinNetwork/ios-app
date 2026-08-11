@@ -174,13 +174,14 @@ public final class PerpsMarketDAO: PerpsDAO {
                 break
             case .favorite:
                 try db.execute(literal: "DELETE FROM favorites WHERE market_id NOT IN \(markets.map(\.marketID))")
+                let now = Date().toUTCString()
                 for market in markets {
                     let favorite = PerpetualMarket.FavoriteStorage(
                         marketID: market.marketID,
                         isFavorite: true,
-                        createdAt: Date().toUTCString()
+                        createdAt: now,
                     )
-                    try favorite.save(db, onConflict: .ignore)
+                    try favorite.save(db)
                 }
             case .featured:
                 try db.execute(literal: "DELETE FROM market_categories WHERE category = \(Market.DatabaseCategory.featured.rawValue)")

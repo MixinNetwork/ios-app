@@ -995,11 +995,16 @@ public final class UserDatabase: Database {
             """)
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_market_categories_category ON market_categories(category)")
         }
-        
-        migrator.registerMigration("index_optimization_safe_snapshots_2") { db in
-            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_safe_snapshots_id_type_created_at ON safe_snapshots(asset_id, type, created_at DESC)")
+
+        migrator.registerMigration("index_optimization_expired_messages") { db in
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_expired_messages_expire_at ON expired_messages(expire_at) WHERE expire_at IS NOT NULL")
         }
-        
+
+        migrator.registerMigration("index_optimization_safe_snapshots_3") { db in
+            try db.execute(sql: "DROP INDEX IF EXISTS index_safe_snapshots_pending")
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_safe_snapshots_type_asset_id_created_at ON safe_snapshots(type, asset_id, created_at)")
+        }
+
         return migrator
     }
     

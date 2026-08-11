@@ -996,6 +996,10 @@ public final class UserDatabase: Database {
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_market_categories_category ON market_categories(category)")
         }
         
+        migrator.registerMigration("index_optimization_safe_snapshots_2") { db in
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_safe_snapshots_id_type_created_at ON safe_snapshots(asset_id, type, created_at DESC)")
+        }
+        
         return migrator
     }
     

@@ -24,7 +24,7 @@ public final class MarketDAO: UserDatabaseDAO {
     
     public func markets(
         subCategory: Market.SubCategory,
-        order: MarketOrdering?,
+        order: MarketOrdering,
     ) -> [FavorableMarket] {
         let marketColumns: [String] = Market.CodingKeys.allCases.compactMap { key in
             if key == .marketCapRank {
@@ -77,70 +77,28 @@ public final class MarketDAO: UserDatabaseDAO {
         case .all:
             break
         }
-        sql.append("\nORDER BY CAST(ifnull(mcr.market_cap_rank, m.market_cap_rank) AS REAL) ASC")
-        var results: [FavorableMarket] = db.select(with: sql)
-        
-        if let order {
-            switch order.field {
-            case .marketCap:
-                switch order.direction {
-                case .ascending:
-                    results.reverse()
-                case .descending:
-                    break
-                }
-            case .volume:
-                switch order.direction {
-                case .ascending:
-                    results.sort { one, another in
-                        one.decimalVolume < another.decimalVolume
-                    }
-                case .descending:
-                    results.sort { one, another in
-                        one.decimalVolume > another.decimalVolume
-                    }
-                }
-            case .price:
-                switch order.direction {
-                case .ascending:
-                    results.sort { one, another in
-                        one.decimalPrice < another.decimalPrice
-                    }
-                case .descending:
-                    results.sort { one, another in
-                        one.decimalPrice > another.decimalPrice
-                    }
-                }
-            case let .change(period):
-                switch period {
-                case .sevenDays:
-                    switch order.direction {
-                    case .ascending:
-                        results.sort { one, another in
-                            one.decimalPriceChangePercentage7D < another.decimalPriceChangePercentage7D
-                        }
-                    case .descending:
-                        results.sort { one, another in
-                            one.decimalPriceChangePercentage7D > another.decimalPriceChangePercentage7D
-                        }
-                    }
-                case .twentyFourHours:
-                    switch order.direction {
-                    case .ascending:
-                        results.sort { one, another in
-                            one.decimalPriceChangePercentage24H < another.decimalPriceChangePercentage24H
-                        }
-                    case .descending:
-                        results.sort { one, another in
-                            one.decimalPriceChangePercentage24H > another.decimalPriceChangePercentage24H
-                        }
-                    }
-                }
+        switch order.field {
+        case .marketCap:
+            sql.append("\nORDER BY CAST(market_cap AS REAL)")
+        case .volume:
+            sql.append("\nORDER BY CAST(total_volume AS REAL)")
+        case .price:
+            sql.append("\nORDER BY CAST(current_price AS REAL)")
+        case let .change(period):
+            switch period {
+            case .sevenDays:
+                sql.append("\nORDER BY CAST(price_change_percentage_7d AS REAL)")
+            case .twentyFourHours:
+                sql.append("\nORDER BY CAST(price_change_percentage_24h AS REAL)")
             }
-        } else {
-            
         }
-        return results
+        switch order.direction {
+        case .ascending:
+            sql.append(" ASC")
+        case .descending:
+            sql.append(" DESC")
+        }
+        return db.select(with: sql)
     }
     
     public func watchlistRecommendations() -> [FavorableMarket] {

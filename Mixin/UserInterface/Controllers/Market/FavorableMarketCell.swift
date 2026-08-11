@@ -11,7 +11,7 @@ final class FavorableMarketCell: UICollectionViewCell {
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var rankLabel: InsetLabel!
-    @IBOutlet weak var marketCapLabel: UILabel!
+    @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var chartImageView: MarketColorTintedImageView!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
@@ -53,12 +53,19 @@ final class FavorableMarketCell: UICollectionViewCell {
         delegate?.favorableMarketCellWantsToggleFavorite(self)
     }
     
-    func reloadData(market: FavorableMarket) {
+    func reloadData(market: FavorableMarket, info: CryptoMarketDisplayInfo) {
         favoriteButton.setFavorite(market.isFavorite, animated: false)
         iconView.setIcon(tokenIconURL: URL(string: market.iconURL))
         symbolLabel.text = market.symbol
-        rankLabel.text = market.marketCapRank
-        marketCapLabel.text = market.localizedMarketCap
+        switch info {
+        case .volume:
+            rankLabel.isHidden = true
+            infoLabel.text = R.string.localizable.volume_label(market.prettyVolume)
+        case .marketCap:
+            rankLabel.text = market.marketCapRank
+            rankLabel.isHidden = false
+            infoLabel.text = market.localizedMarketCap
+        }
         priceLabel.text = market.localizedPrice
         switch AppGroupUserDefaults.User.cryptoMarketChangePeriod {
         case .twentyFourHours:

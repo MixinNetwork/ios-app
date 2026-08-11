@@ -16,8 +16,8 @@ final class MarketIndicator {
     init(market: GlobalMarket) {
         self.marketCap = NamedLargeNumberFormatter.string(
             number: market.marketCap * Currency.current.decimalRate,
-            currencyPrefix: .current
-        ) ?? "-"
+            currency: .current,
+        )
         self.marketCapChange = NumberFormatter.percentage.string(
             decimal: market.marketCapChangePercentage / 100
         ) ?? "-"
@@ -25,8 +25,8 @@ final class MarketIndicator {
         
         self.volume = NamedLargeNumberFormatter.string(
             number: market.volume * Currency.current.decimalRate,
-            currencyPrefix: .current
-        ) ?? "-"
+            currency: .current,
+        )
         self.volumeChange = NumberFormatter.percentage.string(
             decimal: market.volumeChangePercentage / 100
         ) ?? "-"

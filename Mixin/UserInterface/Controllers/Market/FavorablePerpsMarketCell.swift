@@ -11,7 +11,7 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var tagLabel: InsetLabel!
-    @IBOutlet weak var marketCapLabel: UILabel!
+    @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
     
@@ -61,7 +61,7 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
         favoriteButton.setFavorite(market.isFavorite, animated: false)
         symbolLabel.text = market.tokenSymbol
         iconView.setIcon(tokenIconURL: URL(string: market.iconURL))
-        marketCapLabel.text = market.prettyVolume
+        infoLabel.text = R.string.localizable.volume_label(market.prettyVolume)
         priceLabel.text = market.localizedPrice
         changeLabel.text = market.changePercentage
         changeLabel.marketColor = .byValue(market.decimalChange)

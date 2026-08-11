@@ -1,8 +1,8 @@
 import Foundation
 
-public struct MarketOrdering: Equatable {
+public struct MarketOrdering: Equatable, Hashable {
     
-    public enum Direction {
+    public enum Direction: Equatable, Hashable {
         
         case ascending
         case descending
@@ -18,7 +18,7 @@ public struct MarketOrdering: Equatable {
         
     }
     
-    public enum Field: Equatable {
+    public enum Field: Equatable, Hashable {
         case marketCap
         case volume
         case price

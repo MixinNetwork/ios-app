@@ -212,10 +212,10 @@ final class MarketDashboardViewController: UIViewController {
             collectionView: collectionView
         ) { [weak self] collectionView, indexPath, item in
             switch item {
-            case let .market(id):
+            case let .market(id, info):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.favorable_market, for: indexPath)!
                 if let self, let market = self.markets[id] {
-                    cell.reloadData(market: market)
+                    cell.reloadData(market: market, info: info)
                     cell.delegate = self
                 }
                 return cell
@@ -374,6 +374,12 @@ final class MarketDashboardViewController: UIViewController {
             self,
             selector: #selector(updateMarketChangePeriod(_:)),
             name: AppGroupUserDefaults.User.marketChangePeriodDidChangeNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadDataOnCurrencyUpdate(_:)),
+            name: Currency.currentCurrencyDidChangeNotification,
             object: nil
         )
         reloadData(
@@ -722,6 +728,11 @@ extension MarketDashboardViewController {
         }
     }
     
+    @objc private func reloadDataOnCurrencyUpdate(_ notification: Notification) {
+        marketIndicator = nil
+        reloadDataWithCurrentSettings(debugReason: "CurrencyChange")
+    }
+    
     @objc private func scheduleReloadDataOnViewAppear(_ notification: Notification) {
         reloadDataOnViewAppear = true
     }
@@ -782,7 +793,7 @@ extension MarketDashboardViewController: UICollectionViewDelegate {
             return
         }
         switch item {
-        case let .market(id):
+        case let .market(id, _):
             if let market = markets[id] {
                 let controller = MarketViewController(market: market)
                 controller.pushingViewController = self
@@ -927,7 +938,7 @@ extension MarketDashboardViewController: FavorableMarketCell.Delegate {
         guard let indexPath = collectionView.indexPath(for: cell) else {
             return
         }
-        guard case let .market(id) = dataSource.itemIdentifier(for: indexPath) else {
+        guard case let .market(id, _) = dataSource.itemIdentifier(for: indexPath) else {
             return
         }
         guard let market = markets[id] else {
@@ -1213,7 +1224,7 @@ extension MarketDashboardViewController {
     }
     
     private enum Item: Hashable {
-        case market(id: String)
+        case market(id: String, info: CryptoMarketDisplayInfo)
         case perps(id: String)
         case busyIndicator
         case marketIndicator
@@ -1331,7 +1342,7 @@ extension MarketDashboardViewController {
             } else {
                 snapshot.appendSections([.market])
                 snapshot.appendItems(markets.map { market in
-                    Item.market(id: market.coinID)
+                    Item.market(id: market.coinID, info: .volume)
                 })
                 marketViewModels = markets.reduce(into: [:]) { result, market in
                     result[market.coinID] = market
@@ -1514,8 +1525,14 @@ extension MarketDashboardViewController {
                 )
             default:
                 let markets = MarketDAO.shared.markets(subCategory: subCategory, order: order)
+                let info: CryptoMarketDisplayInfo = switch subCategory {
+                case .watchlist, .trending, .topGainer, .topLoser:
+                        .volume
+                case .all:
+                        .marketCap
+                }
                 let items: [Item] = markets.map { market in
-                        .market(id: market.coinID)
+                        .market(id: market.coinID, info: info)
                 }
                 let viewModels = markets.reduce(into: [:]) { result, market in
                     result[market.coinID] = market

@@ -79,7 +79,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
     )
     
     public private(set) lazy var decimalVolume = Decimal(string: volume, locale: .enUSPOSIX) ?? 0
-    public private(set) lazy var prettyVolume = NamedLargeNumberFormatter.string(number: decimalVolume, currencyPrefix: .usd) ?? volume
+    public private(set) lazy var prettyVolume = NamedLargeNumberFormatter.string(number: decimalVolume, currency: .usd)
     
     public private(set) lazy var decimalChange = Decimal(string: change, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var changePercentage = NumberFormatter.percentage.string(decimal: decimalChange) ?? "-%"

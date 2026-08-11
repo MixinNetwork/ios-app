@@ -226,6 +226,7 @@ extension AppCardV1MessageCell {
                     self.descriptionLabel = descriptionLabel
                 }
                 descriptionLabel.text = description
+                descriptionLabel.additionalLinksMap = content.descriptionLinks
             } else {
                 descriptionLabel?.isHidden = true
             }

@@ -404,6 +404,16 @@ final class MarketDashboardViewController: UIViewController {
             name: MarketDAO.unfavoriteNotification,
             object: nil
         )
+        NotificationCenter.default.removeObserver(
+            self,
+            name: PerpsMarketDAO.favoriteNotification,
+            object: nil
+        )
+        NotificationCenter.default.removeObserver(
+            self,
+            name: PerpsMarketDAO.unfavoriteNotification,
+            object: nil
+        )
         if reloadDataOnViewAppear {
             reloadDataOnViewAppear = false
             reloadDataWithCurrentSettings(debugReason: "ViewAppear")
@@ -425,6 +435,18 @@ final class MarketDashboardViewController: UIViewController {
             self,
             selector: #selector(scheduleReloadDataOnViewAppear),
             name: MarketDAO.unfavoriteNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(scheduleReloadDataOnViewAppear),
+            name: PerpsMarketDAO.favoriteNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(scheduleReloadDataOnViewAppear),
+            name: PerpsMarketDAO.unfavoriteNotification,
             object: nil
         )
     }
@@ -653,50 +675,50 @@ extension MarketDashboardViewController {
     }
     
     @objc private func reloadDataOnDatabaseUpdate(_ notification: Notification) {
-        if isViewAppearing {
-            let cryptoDataSource = notification.userInfo?[MarketDAO.UserInfoKey.dataSource]
-            let perpsDataSource = notification.userInfo?[PerpsMarketDAO.UserInfoKey.dataSource]
-            let matchesContent = if let dataSource = cryptoDataSource as? MarketDAO.DataSource {
-                switch dataSource {
+        let cryptoDataSource = notification.userInfo?[MarketDAO.UserInfoKey.dataSource]
+        let perpsDataSource = notification.userInfo?[PerpsMarketDAO.UserInfoKey.dataSource]
+        let matchesContent = if let dataSource = cryptoDataSource as? MarketDAO.DataSource {
+            switch dataSource {
+            case .all:
+                category == .crypto && Market.SubCategory.allCases[subCategoryIndex] == .all
+            case .favorite:
+                (category == .crypto && Market.SubCategory.allCases[subCategoryIndex] == .watchlist)
+                || (category == .watchlist && WatchlistSubCategory.allCases[subCategoryIndex] == .crypto)
+            case .categorized(let databaseCategory) where category == .crypto:
+                switch Market.SubCategory.allCases[subCategoryIndex] {
+                case .watchlist:
+                    databaseCategory == .featured
+                case .trending:
+                    databaseCategory == .trending
+                case .topGainer:
+                    databaseCategory == .topGainer
+                case .topLoser:
+                    databaseCategory == .topLoser
                 case .all:
-                    category == .crypto && Market.SubCategory.allCases[subCategoryIndex] == .all
-                case .favorite:
-                    (category == .crypto && Market.SubCategory.allCases[subCategoryIndex] == .watchlist)
-                    || (category == .watchlist && WatchlistSubCategory.allCases[subCategoryIndex] == .crypto)
-                case .categorized(let databaseCategory) where category == .crypto:
-                    switch Market.SubCategory.allCases[subCategoryIndex] {
-                    case .watchlist:
-                        databaseCategory == .featured
-                    case .trending:
-                        databaseCategory == .trending
-                    case .topGainer:
-                        databaseCategory == .topGainer
-                    case .topLoser:
-                        databaseCategory == .topLoser
-                    case .all:
-                        false
-                    }
-                case .categorized, .other:
                     false
                 }
-            } else if let dataSource = perpsDataSource as? PerpetualMarket.RequestCategory {
-                switch dataSource {
-                case .all:
-                    category == .perps && PerpetualMarket.SubCategory.allCases[subCategoryIndex] != .watchlist
-                case .favorite, .featured:
-                    (category == .perps && PerpetualMarket.SubCategory.allCases[subCategoryIndex] == .watchlist)
-                    || (category == .watchlist && WatchlistSubCategory.allCases[subCategoryIndex] == .perps)
-                }
-            } else {
+            case .categorized, .other:
                 false
             }
-            if matchesContent {
-                reloadDataWithCurrentSettings(debugReason: "DBUpdate")
-            } else {
-                Logger.general.debug(category: "MarketDashboard", message: "Skip reloading")
+        } else if let dataSource = perpsDataSource as? PerpetualMarket.RequestCategory {
+            switch dataSource {
+            case .all:
+                category == .perps && PerpetualMarket.SubCategory.allCases[subCategoryIndex] != .watchlist
+            case .favorite, .featured:
+                (category == .perps && PerpetualMarket.SubCategory.allCases[subCategoryIndex] == .watchlist)
+                || (category == .watchlist && WatchlistSubCategory.allCases[subCategoryIndex] == .perps)
             }
         } else {
-            reloadDataOnViewAppear = true
+            false
+        }
+        if matchesContent {
+            if isViewAppearing {
+                reloadDataWithCurrentSettings(debugReason: "DBUpdate")
+            } else {
+                reloadDataOnViewAppear = true
+            }
+        } else {
+            Logger.general.debug(category: "MarketDashboard", message: "Skip reloading")
         }
     }
     

@@ -1365,6 +1365,7 @@
 		949B5E532EBDD31300D33C97 /* TradeOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949B5E522EBDD31000D33C97 /* TradeOrderViewModel.swift */; };
 		949D7D762F863B41005A26CD /* GaslessFee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949D7D752F863B3F005A26CD /* GaslessFee.swift */; };
 		949D7D812F863C97005A26CD /* GaslessTransactionProposal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949D7D802F863C93005A26CD /* GaslessTransactionProposal.swift */; };
+		949DD1C7302B02C100E6AEFB /* CryptoMarketDisplayInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949DD1C6302B02BD00E6AEFB /* CryptoMarketDisplayInfo.swift */; };
 		94A0C8C22C77259E00BDE672 /* AddressReceiversCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */; };
 		94A0C8C32C77259E00BDE672 /* AddressReceiversCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */; };
 		94A161832FD417DE0022D855 /* WalletSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A161822FD417DC0022D855 /* WalletSupport.swift */; };
@@ -3388,6 +3389,7 @@
 		949B5E522EBDD31000D33C97 /* TradeOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOrderViewModel.swift; sourceTree = "<group>"; };
 		949D7D752F863B3F005A26CD /* GaslessFee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaslessFee.swift; sourceTree = "<group>"; };
 		949D7D802F863C93005A26CD /* GaslessTransactionProposal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaslessTransactionProposal.swift; sourceTree = "<group>"; };
+		949DD1C6302B02BD00E6AEFB /* CryptoMarketDisplayInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoMarketDisplayInfo.swift; sourceTree = "<group>"; };
 		94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressReceiversCell.swift; sourceTree = "<group>"; };
 		94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressReceiversCell.xib; sourceTree = "<group>"; };
 		94A161822FD417DC0022D855 /* WalletSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSupport.swift; sourceTree = "<group>"; };
@@ -5096,6 +5098,7 @@
 			isa = PBXGroup;
 			children = (
 				946BBA8730244FA40080D43D /* MarketLayout.swift */,
+				949DD1C6302B02BD00E6AEFB /* CryptoMarketDisplayInfo.swift */,
 				94F896FB3021FD7A00897E4F /* WatchlistSubCategory.swift */,
 				946BBA46302384090080D43D /* MarketSubCategoryDisplay.swift */,
 				94F897093021FD9F00897E4F /* ReloadWatchlistRecommendationJob.swift */,
@@ -8027,6 +8030,7 @@
 				94A72CA62C2EBFF9001E8782 /* InscriptionTraitCell.swift in Sources */,
 				7CCE65A828D69D1D00FE944A /* PillActionView.swift in Sources */,
 				94396D4B2CE3597E009DA4E9 /* MnemonicsInputHandler.swift in Sources */,
+				949DD1C7302B02C100E6AEFB /* CryptoMarketDisplayInfo.swift in Sources */,
 				940764C329B2633C00B779A6 /* WalletConnectDecodedSigningRequest.swift in Sources */,
 				9413A4012C367D8D00B655AC /* TradeSpotViewController.swift in Sources */,
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,

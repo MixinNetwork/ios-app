@@ -945,10 +945,11 @@ extension MarketViewController {
                     case 0:
                         infos.append(Info.contentNotApplicable(title: title))
                     default:
-                        let value = marketCap * Currency.current.decimalRate
-                        if let content = NamedLargeNumberFormatter.string(number: value, currencyPrefix: .current) {
-                            infos.append(Info(title: title, primaryContent: content))
-                        }
+                        let content = NamedLargeNumberFormatter.string(
+                            number: marketCap * Currency.current.decimalRate,
+                            currency: .current,
+                        )
+                        infos.append(Info(title: title, primaryContent: content))
                     }
                 }
                 if let circulatingSupply = Decimal(string: market.circulatingSupply, locale: .enUSPOSIX) {
@@ -957,9 +958,11 @@ extension MarketViewController {
                     case 0:
                         infos.append(Info.contentNotApplicable(title: title))
                     default:
-                        if let content = NamedLargeNumberFormatter.string(number: circulatingSupply, currencyPrefix: nil) {
-                            infos.append(Info(title: title, primaryContent: content + " " + market.symbol))
-                        }
+                        let content = NamedLargeNumberFormatter.string(
+                            number: circulatingSupply,
+                            currency: nil,
+                        )
+                        infos.append(Info(title: title, primaryContent: content + " " + market.symbol))
                     }
                 }
                 if let totalSupply = Decimal(string: market.totalSupply, locale: .enUSPOSIX) {
@@ -968,9 +971,11 @@ extension MarketViewController {
                     case 0:
                         infos.append(Info.contentNotApplicable(title: title))
                     default:
-                        if let content = NamedLargeNumberFormatter.string(number: totalSupply, currencyPrefix: nil) {
-                            infos.append(Info(title: title, primaryContent: content + " " + market.symbol))
-                        }
+                        let content = NamedLargeNumberFormatter.string(
+                            number: totalSupply,
+                            currency: nil,
+                        )
+                        infos.append(Info(title: title, primaryContent: content + " " + market.symbol))
                     }
                 }
                 if let ath = Decimal(string: market.ath, locale: .enUSPOSIX) {

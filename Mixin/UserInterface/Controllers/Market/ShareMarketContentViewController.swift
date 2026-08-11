@@ -200,12 +200,10 @@ extension ShareMarketContentViewController: ModernShareContentViewController {
             event: .marketShare,
             tags: ["type": "spot", "target": "mixin_contact"]
         )
-        var description = R.string.localizable.market_share_card_asset(market.name, market.symbol) + "\n"
-        if let marketCap = market.localizedMarketCap {
-            description += R.string.localizable.market_share_card_market_cap(marketCap) + "\n"
-        }
-        description += R.string.localizable.market_share_card_price(market.localizedPrice) + "\n"
-        description += R.string.localizable.market_share_card_price_change(market.localizedPriceChangePercentage24H)
+        let description = R.string.localizable.market_share_card_asset(market.name, market.symbol) + "\n"
+        + R.string.localizable.market_share_card_market_cap(market.localizedMarketCap) + "\n"
+        + R.string.localizable.market_share_card_price(market.localizedPrice) + "\n"
+        + R.string.localizable.market_share_card_price_change(market.localizedPriceChangePercentage24H)
         var actions: [AppCardData.V1Content.Action] = [
             .init(
                 action: "mixin://mixin.one/markets/\(market.coinID)",

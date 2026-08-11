@@ -445,6 +445,18 @@ public final class MessageDAO: UserDatabaseDAO {
         return try MessageItem.fetchAll(database, sql: sql)
     }
     
+    public func getFullMessages(messageIds: [String]) -> [MessageItem] {
+        guard !messageIds.isEmpty else {
+            return []
+        }
+        let ids = messageIds.joined(separator: "', '")
+        let sql = """
+        \(Self.sqlQueryFullMessage)
+        WHERE m.id in ('\(ids)')
+        """
+        return db.select(with: sql)
+    }
+    
     public func getMessage(messageId: String) -> Message? {
         db.select(where: Message.column(of: .messageId) == messageId)
     }

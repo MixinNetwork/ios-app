@@ -1366,6 +1366,7 @@
 		949D7D762F863B41005A26CD /* GaslessFee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949D7D752F863B3F005A26CD /* GaslessFee.swift */; };
 		949D7D812F863C97005A26CD /* GaslessTransactionProposal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949D7D802F863C93005A26CD /* GaslessTransactionProposal.swift */; };
 		949DD1C7302B02C100E6AEFB /* CryptoMarketDisplayInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949DD1C6302B02BD00E6AEFB /* CryptoMarketDisplayInfo.swift */; };
+		949DD378302C9B7400E6AEFB /* MarketChartImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949DD377302C9B7400E6AEFB /* MarketChartImageView.swift */; };
 		94A0C8C22C77259E00BDE672 /* AddressReceiversCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */; };
 		94A0C8C32C77259E00BDE672 /* AddressReceiversCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */; };
 		94A161832FD417DE0022D855 /* WalletSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A161822FD417DC0022D855 /* WalletSupport.swift */; };
@@ -3390,6 +3391,7 @@
 		949D7D752F863B3F005A26CD /* GaslessFee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaslessFee.swift; sourceTree = "<group>"; };
 		949D7D802F863C93005A26CD /* GaslessTransactionProposal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaslessTransactionProposal.swift; sourceTree = "<group>"; };
 		949DD1C6302B02BD00E6AEFB /* CryptoMarketDisplayInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoMarketDisplayInfo.swift; sourceTree = "<group>"; };
+		949DD377302C9B7400E6AEFB /* MarketChartImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketChartImageView.swift; sourceTree = "<group>"; };
 		94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressReceiversCell.swift; sourceTree = "<group>"; };
 		94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressReceiversCell.xib; sourceTree = "<group>"; };
 		94A161822FD417DC0022D855 /* WalletSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSupport.swift; sourceTree = "<group>"; };
@@ -5110,6 +5112,7 @@
 				9466B3B1301739AD009AF6FA /* MarketHeaderView.swift */,
 				9466B3AE301739AD009AF6FA /* MarketOrderingHeaderView.xib */,
 				9466B3AD301739AD009AF6FA /* MarketOrderingHeaderView.swift */,
+				949DD377302C9B7400E6AEFB /* MarketChartImageView.swift */,
 				944BC2EC2C7E17BA008700A8 /* FavorableMarketCell.xib */,
 				944BC2EB2C7E17BA008700A8 /* FavorableMarketCell.swift */,
 				9430BF43301A3CCA00A0388C /* FavorablePerpsMarketCell.xib */,
@@ -8102,6 +8105,7 @@
 				7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerPreviewCell.swift in Sources */,
 				94BED02F2B692F11004381FA /* PopupPresentationManager.swift in Sources */,
+				949DD378302C9B7400E6AEFB /* MarketChartImageView.swift in Sources */,
 				7B9650AE248794FD00DE86B9 /* MinimizedCallViewController.swift in Sources */,
 				940CA1902F59593500914435 /* PerpetualMarketInfoCell.swift in Sources */,
 				94428D392CA245BA00157E93 /* MenuTriggerButton.swift in Sources */,

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class MarketColorTintedImageView: UIImageView {
+class MarketColorTintedImageView: UIImageView {
     
     override var tintColor: UIColor! {
         willSet {
@@ -39,7 +39,7 @@ final class MarketColorTintedImageView: UIImageView {
         guard let color = marketColor else {
             return
         }
-        self.tintColor = color.uiColor
+        super.tintColor = color.uiColor
     }
     
 }

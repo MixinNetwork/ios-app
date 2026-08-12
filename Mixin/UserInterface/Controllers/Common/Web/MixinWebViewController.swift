@@ -386,7 +386,7 @@ extension MixinWebViewController: WebViewMessageHandler.Delegate {
         case .tipSign(let callback):
             webView.evaluateJavaScript(callback)
         case .getAssets(let assetIDs, let callback):
-            reportAssets(ids: assetIDs, callback: callback)
+            reportAssetsIfVerified(ids: assetIDs, callback: callback)
         case .web3Bridge(let json):
             web3Worker.handleRequest(json: json)
         case .signBotSignature(let callback):
@@ -394,6 +394,10 @@ extension MixinWebViewController: WebViewMessageHandler.Delegate {
         case .openInBrowser(let url):
             present(SFSafariViewController(url: url), animated: true)
         }
+    }
+    
+    func webViewMessageHanderAllowsToSignBot(_ handler: WebViewMessageHandler) -> Bool {
+        context.appEnvironment?.isAppVerified ?? false
     }
     
     func webViewMessageHanderGetCurrentURL(_ handler: WebViewMessageHandler) -> URL? {
@@ -714,40 +718,52 @@ extension MixinWebViewController {
         }
     }
     
-    private func reportAssets(ids assetIDs: [String], callback: String) {
+    private func reportAssetsIfVerified(ids assetIDs: [String], callback: String) {
         let failureCallback = "\(callback)('[]');"
         guard
-            let app = context.appEnvironment?.app,
+            let environment = context.appEnvironment,
             assetIDs.allSatisfy(UUID.isValidLowercasedUUIDString),
-            let appHomeURL = URL(string: app.homeUri),
+            let appHomeURL = URL(string: environment.app.homeUri),
             let currentURL = webView.url,
             appHomeURL.host == currentURL.host
         else {
             webView.evaluateJavaScript(failureCallback)
             return
         }
-        AuthorizeAPI.authorizations(appId: app.appId) { [weak webView] result in
-            switch result {
-            case let .success(response):
-                guard let scopes = response.first?.scopes, scopes.contains("ASSETS:READ") else {
-                    webView?.evaluateJavaScript(failureCallback)
-                    return
-                }
-                DispatchQueue.global().async {
-                    let tokens = TokenDAO.shared.appTokens(ids: assetIDs)
-                    if let data = try? JSONEncoder.default.encode(tokens), let string = String(data: data, encoding: .utf8) {
-                        let assets = string.replacingOccurrences(of: "'", with: "\\'")
-                        DispatchQueue.main.async {
-                            webView?.evaluateJavaScript("\(callback)('\(assets)');")
-                        }
+        if environment.isAppVerified {
+            reportAssets(ids: assetIDs, successCallback: callback, failureCallback: failureCallback)
+        } else {
+            AuthorizeAPI.authorizations(appId: environment.app.appId) { [weak self, weak webView] result in
+                switch result {
+                case let .success(response):
+                    if let scopes = response.first?.scopes, scopes.contains("ASSETS:READ") {
+                        self?.reportAssets(ids: assetIDs, successCallback: callback, failureCallback: failureCallback)
                     } else {
-                        DispatchQueue.main.async {
-                            webView?.evaluateJavaScript(failureCallback)
-                        }
+                        webView?.evaluateJavaScript(failureCallback)
                     }
+                case .failure:
+                    webView?.evaluateJavaScript(failureCallback)
                 }
-            case .failure:
-                webView?.evaluateJavaScript(failureCallback)
+            }
+        }
+    }
+    
+    private func reportAssets(
+        ids assetIDs: [String],
+        successCallback: String,
+        failureCallback: String,
+    ) {
+        DispatchQueue.global().async { [weak webView] in
+            let tokens = TokenDAO.shared.appTokens(ids: assetIDs)
+            if let data = try? JSONEncoder.default.encode(tokens), let string = String(data: data, encoding: .utf8) {
+                let assets = string.replacingOccurrences(of: "'", with: "\\'")
+                DispatchQueue.main.async {
+                    webView?.evaluateJavaScript("\(successCallback)('\(assets)');")
+                }
+            } else {
+                DispatchQueue.main.async {
+                    webView?.evaluateJavaScript(failureCallback)
+                }
             }
         }
     }

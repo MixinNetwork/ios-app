@@ -68,7 +68,7 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
     
     func presentAppPage(appID: String) {
         if let app = AppDAO.shared.getApp(appId: appID) {
-            pushWebViewController(context: .init(conversationId: "", app: app))
+            pushWebViewController(context: .init(conversationID: "", app: app))
             let updateUser = RefreshUserJob(userIds: [appID])
             ConcurrentJobQueue.shared.addJob(job: updateUser)
             return
@@ -84,7 +84,7 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
                 }
                 hud.hide()
                 if let app = response.app {
-                    self?.pushWebViewController(context: .init(conversationId: "", app: app))
+                    self?.pushWebViewController(context: .init(conversationID: "", app: app))
                 }
             case .failure(let error):
                 hud.set(style: .error, text: error.localizedDescription)

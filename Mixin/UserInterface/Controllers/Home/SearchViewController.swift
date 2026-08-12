@@ -391,7 +391,7 @@ extension SearchViewController: UITableViewDelegate {
             }
         case .maoUser:
             if let app = maoUser?.app {
-                let web = MixinWebViewController(context: .init(conversationId: "", app: app))
+                let web = MixinWebViewController(context: .init(conversationID: "", app: app))
                 homeNavigationController?.pushViewController(web, animated: true)
             } else if let user = maoUser?.user, user.isCreatedByMessenger {
                 let vc = ConversationViewController.instance(ownerUser: user)

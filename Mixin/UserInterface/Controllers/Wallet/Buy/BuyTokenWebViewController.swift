@@ -12,7 +12,7 @@ final class BuyTokenWebViewController: PopupTitledWebViewController {
     private lazy var messageHandler = WebViewMessageHandler(delegate: self)
     
     init(tokenSymbol: String, url: URL) {
-        self.context = MixinWebContext(conversationId: "", initialUrl: url)
+        self.context = MixinWebContext(conversationID: "", initialURL: url)
         super.init(
             title: R.string.localizable.buy_asset(tokenSymbol),
             subtitle: nil,

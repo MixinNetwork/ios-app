@@ -877,7 +877,7 @@ class UrlWindow {
                 return false
             }
             navigationController.pushWebViewController(
-                context: .init(conversationId: "", initialUrl: url)
+                context: .init(conversationID: "", initialURL: url)
             )
             return true
         }
@@ -1029,7 +1029,7 @@ extension UrlWindow {
                 case .presentHomePage(let additionalQueries):
                     UIApplication.homeNavigationController?.pushWebViewController(
                         context: .init(
-                            conversationId: conversationId,
+                            conversationID: conversationId,
                             app: app,
                             additionalURLQueries: additionalQueries
                         )
@@ -1959,7 +1959,7 @@ extension UrlWindow {
     }
     
     private static func presentAuthorization(authorization: AuthorizationResponse, webContext: MixinWebContext? = nil, hud: Hud) {
-        if let context = webContext,  case let .app(app, _) = context.style {
+        if let app = webContext?.appEnvironment?.app {
             if let switcher = UIApplication.homeContainerViewController?.clipSwitcher, let clip = switcher.clips.first(where: { $0.app?.appId == app.appId }) {
                 Logger.general.info(category: "Authorization", message: "Auth window presented from clip: \(clip.title), url: \(clip.url)")
             }

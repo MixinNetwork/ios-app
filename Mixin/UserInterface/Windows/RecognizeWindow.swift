@@ -69,7 +69,7 @@ class RecognizeWindow: BottomSheetView {
         }
         dismissPopupController(animated: true)
         navigationController.pushWebViewController(
-            context: .init(conversationId: "", initialUrl: url)
+            context: .init(conversationID: "", initialURL: url)
         )
         return false
     }

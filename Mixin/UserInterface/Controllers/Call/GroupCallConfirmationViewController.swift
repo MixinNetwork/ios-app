@@ -51,7 +51,7 @@ class GroupCallConfirmationViewController: CallViewController {
         hideContentView {
             self.service.removeViewControllerAsContainersChildIfNeeded(self)
             navigationController.pushWebViewController(
-                context: .init(conversationId: "", initialUrl: .aboutEncryption)
+                context: .init(conversationID: "", initialURL: .aboutEncryption)
             )
         }
     }

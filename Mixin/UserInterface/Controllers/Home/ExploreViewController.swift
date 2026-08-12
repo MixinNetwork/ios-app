@@ -197,7 +197,7 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
             return
         }
         AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
-        let web = MixinWebViewController(context: .init(conversationId: "", app: app))
+        let web = MixinWebViewController(context: .init(conversationID: "", app: app))
         navigationController?.pushViewController(web, animated: true)
     }
     

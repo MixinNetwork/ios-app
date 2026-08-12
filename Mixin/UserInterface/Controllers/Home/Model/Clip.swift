@@ -48,9 +48,9 @@ final class Clip: Codable {
             } else {
                 let context: MixinWebContext
                 if let app = app {
-                    context = .init(conversationId: conversationId, app: app, shareable: isShareable)
+                    context = .init(conversationID: conversationId, app: app, shareable: isShareable)
                 } else {
-                    context = .init(conversationId: conversationId, initialUrl: url, shareable: isShareable)
+                    context = .init(conversationID: conversationId, initialURL: url, shareable: isShareable)
                 }
                 return MixinWebViewController(context: context)
             }
@@ -68,7 +68,7 @@ final class Clip: Codable {
     
     init(app: App?, url: URL, controller: MixinWebViewController) {
         self.id = UUID()
-        self.conversationId = controller.context.conversationId
+        self.conversationId = controller.context.conversationID
         self.app = app
         self.isShareable = controller.context.isShareable
         if let app = app {

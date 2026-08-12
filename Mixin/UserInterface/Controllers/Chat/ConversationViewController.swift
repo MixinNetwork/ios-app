@@ -1370,7 +1370,7 @@ final class ConversationViewController: UIViewController {
             return
         }
         UIApplication.homeNavigationController?.pushWebViewController(
-            context: .init(conversationId: conversationId, app: app),
+            context: .init(conversationID: conversationId, app: app),
         )
     }
     
@@ -2689,9 +2689,9 @@ extension ConversationViewController {
         }
         let context: MixinWebContext
         if let app = app {
-            context = .init(conversationId: conversationId, url: url, app: app, shareable: shareable)
+            context = .init(conversationID: conversationId, app: app, url: url, shareable: shareable)
         } else {
-            context = .init(conversationId: conversationId, initialUrl: url)
+            context = .init(conversationID: conversationId, initialURL: url)
         }
         UIApplication.homeNavigationController?.pushWebViewController(context: context)
     }

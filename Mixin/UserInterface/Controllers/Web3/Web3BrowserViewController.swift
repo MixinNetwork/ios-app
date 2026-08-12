@@ -136,7 +136,7 @@ extension Web3BrowserViewController: UITableViewDelegate {
             if let navigationController = UIApplication.homeNavigationController {
                 let url = searchResults[indexPath.row].homeURL
                 navigationController.pushWebViewController(
-                    context: .init(conversationId: "", initialUrl: url)
+                    context: .init(conversationID: "", initialURL: url)
                 )
             }
         }

@@ -291,7 +291,7 @@ extension StaticMessagesViewController {
                         guard let navigationController = UIApplication.homeNavigationController else {
                             return
                         }
-                        let context = MixinWebContext(conversationId: "", url: content.action, app: app)
+                        let context = MixinWebContext(conversationID: "", app: app, url: content.action)
                         navigationController.pushWebViewController(context: context)
                     }
                 }
@@ -640,7 +640,7 @@ extension StaticMessagesViewController {
             return
         }
         navigationController.pushWebViewController(
-            context: .init(conversationId: "", initialUrl: url)
+            context: .init(conversationID: "", initialURL: url)
         )
     }
     

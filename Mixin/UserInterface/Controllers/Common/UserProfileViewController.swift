@@ -377,7 +377,7 @@ extension UserProfileViewController {
                 DispatchQueue.main.async {
                     AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
                     navigationController.pushWebViewController(
-                        context: .init(conversationId: conversationId, app: app)
+                        context: .init(conversationID: conversationId, app: app)
                     )
                 }
             }

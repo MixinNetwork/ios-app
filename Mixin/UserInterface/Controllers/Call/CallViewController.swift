@@ -329,7 +329,7 @@ class CallViewController: ResizablePopupViewController {
         }
         self.minimize {
             navigationController.pushWebViewController(
-                context: .init(conversationId: "", initialUrl: .aboutEncryption),
+                context: .init(conversationID: "", initialURL: .aboutEncryption),
             )
         }
     }

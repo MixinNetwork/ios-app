@@ -1365,12 +1365,12 @@ final class ConversationViewController: UIViewController {
         CallService.shared.makePeerCall(with: ownerUser)
     }
     
-    func openOpponentApp(_ app: App) {
+    func openOpponentApp(_ app: App, verified: Bool) {
         guard !conversationId.isEmpty else {
             return
         }
         UIApplication.homeNavigationController?.pushWebViewController(
-            context: .init(conversationID: conversationId, app: app),
+            context: .init(conversationID: conversationId, app: app, isAppVerified: verified),
         )
     }
     
@@ -2625,15 +2625,24 @@ extension ConversationViewController {
         if let appId = appCard.appId, !appId.isEmpty {
             DispatchQueue.global().async { [weak self] in
                 var app = AppDAO.shared.getApp(appId: appId)
+                var verified = UserDAO.shared.isUserVerified(withAppID: appId)
                 if app == nil {
                     if case let .success(response) = UserAPI.showUser(userId: appId) {
                         UserDAO.shared.updateUsers(users: [response])
                         app = response.app
+                        verified = response.isVerified
                     }
                 }
-                
                 DispatchQueue.main.async {
-                    self?.open(url: appCard.action, app: app, shareable: isShareable)
+                    if let app {
+                        self?.open(
+                            url: appCard.action,
+                            appEnvironment: (app, verified),
+                            shareable: isShareable
+                        )
+                    } else {
+                        self?.open(url: appCard.action, shareable: isShareable)
+                    }
                 }
             }
         } else {
@@ -2649,18 +2658,25 @@ extension ConversationViewController {
             return
         }
         if let app = composer.opponentApp, app.appId == sendUserId {
-            open(url: url, app: app, shareable: shareable)
+            let verified = UserDAO.shared.isUserVerified(withAppID: app.appId)
+            open(url: url, appEnvironment: (app, verified), shareable: shareable)
         } else {
             DispatchQueue.global().async { [weak self] in
                 var app = AppDAO.shared.getApp(ofUserId: sendUserId)
+                var verified = UserDAO.shared.isUserVerified(withAppID: sendUserId)
                 if app == nil {
                     if case let .success(response) = UserAPI.showUser(userId: sendUserId) {
                         UserDAO.shared.updateUsers(users: [response])
                         app = response.app
+                        verified = response.isVerified
                     }
                 }
                 DispatchQueue.main.async {
-                    self?.open(url: url, app: app, shareable: shareable)
+                    if let app {
+                        self?.open(url: url, appEnvironment: (app, verified), shareable: shareable)
+                    } else {
+                        self?.open(url: url, shareable: shareable)
+                    }
                 }
             }
         }
@@ -2679,7 +2695,11 @@ extension ConversationViewController {
         return true
     }
     
-    private func open(url: URL, app: App? = nil, shareable: Bool? = nil) {
+    private func open(
+        url: URL,
+        appEnvironment: (app: App, isVerified: Bool)? = nil,
+        shareable: Bool? = nil
+    ) {
         let wrapper = WeakWrapper(object: composer!)
         guard !UrlWindow.checkUrl(url: url, from: .conversation(wrapper)) else {
             return
@@ -2688,8 +2708,14 @@ extension ConversationViewController {
             return
         }
         let context: MixinWebContext
-        if let app = app {
-            context = .init(conversationID: conversationId, app: app, url: url, shareable: shareable)
+        if let appEnvironment {
+            context = .init(
+                conversationID: conversationId,
+                app: appEnvironment.app,
+                isAppVerified: appEnvironment.isVerified,
+                url: url,
+                shareable: shareable
+            )
         } else {
             context = .init(conversationID: conversationId, initialURL: url)
         }

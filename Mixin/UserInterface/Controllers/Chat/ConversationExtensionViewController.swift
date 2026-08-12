@@ -124,8 +124,9 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
         } else {
             let app = apps[indexPath.row - fixedExtensions.count].app
             if let conversationId = composer?.conversationId {
+                let verified = UserDAO.shared.isUserVerified(withAppID: app.appId)
                 UIApplication.homeNavigationController?.pushWebViewController(
-                    context: .init(conversationID: conversationId, app: app),
+                    context: .init(conversationID: conversationId, app: app, isAppVerified: verified),
                 )
             }
         }

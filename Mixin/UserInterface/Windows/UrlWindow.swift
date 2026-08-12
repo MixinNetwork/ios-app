@@ -1031,6 +1031,7 @@ extension UrlWindow {
                         context: .init(
                             conversationID: conversationId,
                             app: app,
+                            isAppVerified: user.isVerified,
                             additionalURLQueries: additionalQueries
                         )
                     )
@@ -1960,7 +1961,7 @@ extension UrlWindow {
     
     private static func presentAuthorization(authorization: AuthorizationResponse, webContext: MixinWebContext? = nil, hud: Hud) {
         if let app = webContext?.appEnvironment?.app {
-            if let switcher = UIApplication.homeContainerViewController?.clipSwitcher, let clip = switcher.clips.first(where: { $0.app?.appId == app.appId }) {
+            if let switcher = UIApplication.homeContainerViewController?.clipSwitcher, let clip = switcher.clips.first(where: { $0.appEnvironment?.app.appId == app.appId }) {
                 Logger.general.info(category: "Authorization", message: "Auth window presented from clip: \(clip.title), url: \(clip.url)")
             }
             Logger.general.info(category: "Authorization", message: "Auth window presented with web context. App number: \(app.appNumber), name: \(app.name), home: \(app.homeUri)")

@@ -3,9 +3,9 @@ import MixinServices
 
 struct MixinWebContext {
     
-    struct AppEnvironment {
+    struct AppEnvironment: Codable {
         let app: App
-        let user: User?
+        let isAppVerified: Bool
         let isInitialURLAppHome: Bool
     }
     
@@ -53,6 +53,7 @@ struct MixinWebContext {
     init(
         conversationID: String,
         app: App,
+        isAppVerified: Bool,
         url: URL? = nil, // nil to use app.home_uri
         shareable: Bool? = nil,
         additionalURLQueries: [String: String] = [:]
@@ -71,7 +72,7 @@ struct MixinWebContext {
         self.additionalURLQueries = additionalURLQueries
         self.appEnvironment = AppEnvironment(
             app: app,
-            user: nil,
+            isAppVerified: isAppVerified,
             isInitialURLAppHome: url == nil,
         )
         self.isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false

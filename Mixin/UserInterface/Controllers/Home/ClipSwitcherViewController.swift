@@ -147,7 +147,7 @@ extension ClipSwitcherViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.clip_thumbnail, for: indexPath)!
         let clip = clips[indexPath.item]
         cell.titleLabel.text = clip.title
-        if let app = clip.app {
+        if let app = clip.appEnvironment?.app {
             cell.appAvatarImageView.setImage(app: app)
             cell.appAvatarImageView.isHidden = false
         } else {

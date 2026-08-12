@@ -53,13 +53,11 @@ final class ClipSwitcher {
         }
         let clip = if let app = controller.context.appEnvironment?.app {
             Clip(
-                app: app,
                 url: controller.webView.url ?? URL(string: app.homeUri) ?? .blank,
                 controller: controller
             )
         } else {
             Clip(
-                app: nil,
                 url: controller.webView.url ?? .blank,
                 controller: controller
             )

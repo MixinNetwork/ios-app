@@ -13,7 +13,7 @@ final class FavorableMarketCell: UICollectionViewCell {
     @IBOutlet weak var rankLabel: InsetLabel!
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
-    @IBOutlet weak var chartImageView: MarketColorTintedImageView!
+    @IBOutlet weak var chartImageView: MarketChartImageView!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
     
     @IBOutlet weak var mainItemLeadingConstraint: NSLayoutConstraint!
@@ -45,8 +45,7 @@ final class FavorableMarketCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        chartImageView.sd_cancelCurrentImageLoad()
-        chartImageView.image = nil
+        chartImageView.prepareForReuse()
     }
     
     @IBAction func toggleFavorite(_ sender: Any) {
@@ -69,23 +68,13 @@ final class FavorableMarketCell: UICollectionViewCell {
         priceLabel.text = market.localizedPrice
         switch AppGroupUserDefaults.User.cryptoMarketChangePeriod {
         case .twentyFourHours:
-            chartImageView.sd_setImage(
-                with: market.sparklineIn24HURL,
-                placeholderImage: nil,
-                options: .refreshCached,
-                context: templateImageTransformingContext
-            )
+            chartImageView.setChartImage(url: market.sparklineIn24HURL)
             changeLabel.text = market.localizedPriceChangePercentage24H
             let color: MarketColor = .byValue(market.decimalPriceChangePercentage24H)
             changeLabel.marketColor = color
             chartImageView.marketColor = color
         case .sevenDays:
-            chartImageView.sd_setImage(
-                with: market.sparklineIn7DURL,
-                placeholderImage: nil,
-                options: .refreshCached,
-                context: templateImageTransformingContext
-            )
+            chartImageView.setChartImage(url: market.sparklineIn7DURL)
             changeLabel.text = market.localizedPriceChangePercentage7D
             let color: MarketColor = .byValue(market.decimalPriceChangePercentage7D)
             changeLabel.marketColor = color

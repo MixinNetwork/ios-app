@@ -96,7 +96,7 @@
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="zWi-sh-Jng">
                         <rect key="frame" x="299" y="6.6666666666666679" width="60" height="37"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="b3S-uO-F3V" customClass="MarketColorTintedImageView" customModule="Mixin" customModuleProvider="target">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="b3S-uO-F3V" customClass="MarketChartImageView" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="60" height="23"/>
                                 <color key="backgroundColor" name="background"/>
                                 <constraints>

@@ -10,10 +10,16 @@ final class TradeViewController: UIViewController {
     }
     
     private struct Context {
+        
         let sendAssetID: String?
         let sendAmount: Decimal?
         let receiveAssetID: String?
         let referral: String?
+        
+        var hasAssetID: Bool {
+            sendAssetID != nil || receiveAssetID != nil
+        }
+        
     }
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -125,7 +131,7 @@ final class TradeViewController: UIViewController {
             IndexPath(item: 0, section: 0)
         }
         collectionView.selectItem(at: defaultSelection, animated: false, scrollPosition: .left)
-        replaceChildViewController(trading: trading)
+        replaceChildViewController(trading: trading, focusOnInput: initialContext.hasAssetID)
     }
     
     func prepareForReuse() {
@@ -286,10 +292,10 @@ extension TradeViewController {
         }
         AppGroupUserDefaults.Wallet.tradeMode = trading.rawValue
         self.trading = trading
-        replaceChildViewController(trading: trading)
+        replaceChildViewController(trading: trading, focusOnInput: false)
     }
     
-    private func replaceChildViewController(trading: Trading) {
+    private func replaceChildViewController(trading: Trading, focusOnInput: Bool) {
         var context: Context?
         if let tradingViewController {
             tradingViewController.willMove(toParent: nil)
@@ -320,7 +326,8 @@ extension TradeViewController {
                     sendAssetID: context?.sendAssetID,
                     sendAmount: context?.sendAmount,
                     receiveAssetID: context?.receiveAssetID,
-                    referral: context?.referral
+                    referral: context?.referral,
+                    focusOnInput: focusOnInput,
                 )
             case .advancedSpot:
                 tradingViewController = TradeMixinSpotViewController(
@@ -328,7 +335,8 @@ extension TradeViewController {
                     sendAssetID: context?.sendAssetID,
                     sendAmount: context?.sendAmount,
                     receiveAssetID: context?.receiveAssetID,
-                    referral: context?.referral
+                    referral: context?.referral,
+                    focusOnInput: focusOnInput,
                 )
             case .perpetualFutures:
                 tradingViewController = TradePerpetualViewController(
@@ -345,6 +353,7 @@ extension TradeViewController {
                     sendAssetID: context?.sendAssetID,
                     sendAmount: context?.sendAmount,
                     receiveAssetID: context?.receiveAssetID,
+                    focusOnInput: focusOnInput,
                 )
             case .advancedSpot:
                 tradingViewController = TradeWeb3SpotViewController(
@@ -354,6 +363,7 @@ extension TradeViewController {
                     sendAssetID: context?.sendAssetID,
                     sendAmount: context?.sendAmount,
                     receiveAssetID: context?.receiveAssetID,
+                    focusOnInput: focusOnInput,
                 )
             case .perpetualFutures:
                 assertionFailure("Unsupported combination")

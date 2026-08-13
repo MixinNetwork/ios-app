@@ -27,7 +27,8 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
         sendAssetID: String?,
         sendAmount: Decimal?,
         receiveAssetID: String?,
-        referral: String?
+        referral: String?,
+        focusOnInput: Bool,
     ) {
         self.referral = referral
         super.init(
@@ -35,7 +36,8 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
             tokenSource: .mixin,
             sendAssetID: sendAssetID,
             sendAmount: sendAmount,
-            receiveAssetID: receiveAssetID
+            receiveAssetID: receiveAssetID,
+            focusOnInput: focusOnInput,
         )
     }
     

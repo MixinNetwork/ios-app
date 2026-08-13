@@ -26,7 +26,8 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
         supportedChainIDs: Set<String>?,
         sendAssetID: String?,
         sendAmount: Decimal?,
-        receiveAssetID: String?
+        receiveAssetID: String?,
+        focusOnInput: Bool,
     ) {
         self.wallet = wallet
         self.supportedChainIDs = supportedChainIDs
@@ -36,7 +37,8 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
             tokenSource: .web3,
             sendAssetID: sendAssetID,
             sendAmount: sendAmount,
-            receiveAssetID: receiveAssetID
+            receiveAssetID: receiveAssetID,
+            focusOnInput: focusOnInput,
         )
     }
     

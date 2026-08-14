@@ -329,7 +329,7 @@ final class ConversationInputViewController: UIViewController {
             return
         }
         dismiss()
-        let verified = UserDAO.shared.isUserVerified(withAppID: app.appId)
+        let verified = UserDAO.shared.isVerified(userID: app.appId)
         conversationViewController.openOpponentApp(app, verified: verified)
     }
     

@@ -506,7 +506,7 @@ extension MixinWebViewController {
             url = context.initialURL
         }
         DispatchQueue.global().async {
-            let isVerified = UserDAO.shared.isUserVerified(withAppID: appID)
+            let isVerified = UserDAO.shared.isVerified(userID: appID)
             DispatchQueue.main.async {
                 self.loadURL(url: url, fraudulentWarning: isVerified ? .disabled : .byWhitelist)
             }

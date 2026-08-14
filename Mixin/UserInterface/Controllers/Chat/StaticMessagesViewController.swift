@@ -275,7 +275,7 @@ extension StaticMessagesViewController {
                 }
                 DispatchQueue.global().async {
                     var app = AppDAO.shared.getApp(appId: appId)
-                    var verified = UserDAO.shared.isUserVerified(withAppID: appId)
+                    var verified = UserDAO.shared.isVerified(userID: appId)
                     if app == nil {
                         if case let .success(response) = UserAPI.showUser(userId: appId) {
                             UserDAO.shared.updateUsers(users: [response])

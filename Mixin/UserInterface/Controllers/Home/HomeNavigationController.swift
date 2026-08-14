@@ -68,7 +68,7 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
     
     func presentAppPage(appID: String) {
         if let app = AppDAO.shared.getApp(appId: appID) {
-            let verified = UserDAO.shared.isUserVerified(withAppID: appID)
+            let verified = UserDAO.shared.isVerified(userID: appID)
             pushWebViewController(context: .init(conversationID: "", app: app, isAppVerified: verified))
             let updateUser = RefreshUserJob(userIds: [appID])
             ConcurrentJobQueue.shared.addJob(job: updateUser)

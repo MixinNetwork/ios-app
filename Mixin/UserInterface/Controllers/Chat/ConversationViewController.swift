@@ -2625,7 +2625,7 @@ extension ConversationViewController {
         if let appId = appCard.appId, !appId.isEmpty {
             DispatchQueue.global().async { [weak self] in
                 var app = AppDAO.shared.getApp(appId: appId)
-                var verified = UserDAO.shared.isUserVerified(withAppID: appId)
+                var verified = UserDAO.shared.isVerified(userID: appId)
                 if app == nil {
                     if case let .success(response) = UserAPI.showUser(userId: appId) {
                         UserDAO.shared.updateUsers(users: [response])
@@ -2658,12 +2658,12 @@ extension ConversationViewController {
             return
         }
         if let app = composer.opponentApp, app.appId == sendUserId {
-            let verified = UserDAO.shared.isUserVerified(withAppID: app.appId)
+            let verified = UserDAO.shared.isVerified(userID: app.appId)
             open(url: url, appEnvironment: (app, verified), shareable: shareable)
         } else {
             DispatchQueue.global().async { [weak self] in
                 var app = AppDAO.shared.getApp(ofUserId: sendUserId)
-                var verified = UserDAO.shared.isUserVerified(withAppID: sendUserId)
+                var verified = UserDAO.shared.isVerified(userID: sendUserId)
                 if app == nil {
                     if case let .success(response) = UserAPI.showUser(userId: sendUserId) {
                         UserDAO.shared.updateUsers(users: [response])

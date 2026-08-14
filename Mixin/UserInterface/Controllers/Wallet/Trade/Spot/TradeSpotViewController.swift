@@ -80,6 +80,7 @@ class TradeSpotViewController: UIViewController {
     
     private var arbitrarySendAssetID: String?
     private var arbitraryReceiveAssetID: String?
+    private var focusOnInput: Bool
     
     private var showReviewWrapperConstraints: [NSLayoutConstraint] = []
     private var hideReviewWrapperConstraints: [NSLayoutConstraint] = []
@@ -163,7 +164,8 @@ class TradeSpotViewController: UIViewController {
         tokenSource: RouteTokenSource,
         sendAssetID: String?,
         sendAmount: Decimal?,
-        receiveAssetID: String?
+        receiveAssetID: String?,
+        focusOnInput: Bool,
     ) {
         self.mode = mode
         self.pricingModel = TradePricingModel(
@@ -173,6 +175,7 @@ class TradeSpotViewController: UIViewController {
         self.tokenSource = tokenSource
         self.arbitrarySendAssetID = sendAssetID
         self.arbitraryReceiveAssetID = receiveAssetID
+        self.focusOnInput = focusOnInput
         let nib = R.nib.tradeSpotView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -1546,6 +1549,10 @@ extension TradeSpotViewController {
                     self.swapPriceContent = .error(description: description, advancedTradingHint: false)
                 }
                 self.updateMarkets()
+                if self.focusOnInput {
+                    self.focusOnInput = false
+                    self.amountInputCell?.sendAmountTextField.becomeFirstResponder()
+                }
             }
         }
     }

@@ -14,13 +14,14 @@ final class PerpetualActivityViewController: UIViewController {
         case general(title: String, content: String)
         case pnl(value: String, color: MarketColor)
         case wallet(Wallet)
+        case fee(String)
     }
     
     private let wallet: Wallet
-    private let viewModel: PerpetualActivityViewModel
+    private let viewModel: PerpetualOrderViewModel
     private let infos: [Info]
     
-    init(wallet: Wallet, viewModel: PerpetualActivityViewModel) {
+    init(wallet: Wallet, viewModel: PerpetualOrderViewModel) {
         var infos: [Info] = []
         if let displaySymbol = viewModel.displaySymbol {
             infos.append(.product(iconURL: viewModel.iconURL, name: displaySymbol))
@@ -39,9 +40,15 @@ final class PerpetualActivityViewController: UIViewController {
                         content: payAmount
                     ),
                 ])
+                if let fee = viewModel.feeAmount {
+                    infos.append(.fee(fee))
+                }
             case let .close(pnl, closePrice):
+                infos.append(.pnl(value: pnl.aggregated, color: pnl.color))
+                if let fee = viewModel.feeAmount {
+                    infos.append(.fee(fee))
+                }
                 infos.append(contentsOf: [
-                    .pnl(value: pnl.aggregated, color: pnl.color),
                     .general(
                         title: R.string.localizable.entry_price().uppercased(),
                         content: viewModel.entryPrice
@@ -138,9 +145,9 @@ final class PerpetualActivityViewController: UIViewController {
     
     private func viewMarket() {
         if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID),
-           let viewModel = PerpetualMarketViewModel(market: market),
            let navigationController
         {
+            let viewModel = PerpetualMarketViewModel(market: market)
             let market = PerpetualMarketViewController(
                 wallet: wallet,
                 viewModel: viewModel,
@@ -210,12 +217,14 @@ extension PerpetualActivityViewController: UICollectionViewDataSource {
             case let .general(title, content):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_compact_info, for: indexPath)!
                 cell.titleLabel.text = title
+                cell.infoButton.isHidden = true
                 cell.contentLabel.text = content
                 cell.contentLabel.textColor = R.color.text()
                 return cell
             case let .pnl(value, color):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_compact_info, for: indexPath)!
                 cell.titleLabel.text = R.string.localizable.pnl()
+                cell.infoButton.isHidden = true
                 cell.contentLabel.text = value
                 cell.contentLabel.marketColor = color
                 return cell
@@ -233,6 +242,14 @@ extension PerpetualActivityViewController: UICollectionViewDataSource {
                     cell.nameLabel.text = wallet.name
                     cell.iconImageView.isHidden = true
                 }
+                return cell
+            case let .fee(value):
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_compact_info, for: indexPath)!
+                cell.titleLabel.text = R.string.localizable.fee().uppercased()
+                cell.infoButton.isHidden = false
+                cell.contentLabel.text = value
+                cell.contentLabel.textColor = R.color.text()
+                cell.delegate = self
                 return cell
             }
         }
@@ -298,6 +315,16 @@ extension PerpetualActivityViewController: PerpetualPositionHeaderCell.Delegate 
     
     func perpetualPositionHeaderCellRequestToViewMarket(_ cell: PerpetualPositionHeaderCell) {
         viewMarket()
+    }
+    
+}
+
+extension PerpetualActivityViewController: PerpetualPositionCompactInfoCell.Delegate {
+    
+    func perpetualPositionCompactInfoCellDidSelectInfo(_ cell: PerpetualPositionCompactInfoCell) {
+        let manual = PerpsManual.viewController(initialPage: .tradingFee)
+        present(manual, animated: true)
+        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_order"])
     }
     
 }

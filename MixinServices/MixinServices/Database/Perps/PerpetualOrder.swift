@@ -21,6 +21,7 @@ public class PerpetualOrder: Codable, DatabaseColumnConvertible, MixinFetchableR
         case triggerPrice = "trigger_price"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+        case feeAmount = "fee_amount"
     }
     
     public enum OrderType: String {
@@ -53,6 +54,7 @@ public class PerpetualOrder: Codable, DatabaseColumnConvertible, MixinFetchableR
     public let triggerPrice: String?
     public let createdAt: String
     public let updatedAt: String
+    public let feeAmount: String
     
 }
 

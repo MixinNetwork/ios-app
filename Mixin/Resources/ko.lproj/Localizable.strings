@@ -339,6 +339,7 @@
 "clock_skew_hint" = "수정 후 다시 이용해주세요. 설정 > 일반 > 날짜 및 시간 > 자동 설정 켜기";
 "close" = "닫기";
 "close_all_positions" = "모든 포지션 종료 (%d)";
+"close_fee" = "종료 수수료";
 "close_position" = "종료";
 "close_price" = "종가";
 "closed_long" = "롱 포지션 종료";
@@ -671,6 +672,8 @@
 "example_direction" = "방향";
 "example_leverage_multiplier" = "레버리지";
 "example_price_change" = "가격 변경";
+"example_scene1_increasing" = "Scenario 1: Price Rises";
+"example_scene2_decreasing" = "Scenario 2: Price Falls";
 "exchanges_or_wallets" = "교환 또는 지갑";
 "exchanging_data" = "동기화 키 샤드 진행 중 %@%%...";
 "exit_confirmation" = "\"%@\"을(를) 종료하시겠습니까?";
@@ -1122,11 +1125,13 @@
 "one_year" = "1년";
 "open" = "열기";
 "open_desktop_to_confirm" = "Mixin 데스크톱을 열어 작업을 확인하세요.";
+"open_fee" = "진입 수수료";
 "open_home_page" = "홈페이지 열기";
 "open_in_browser" = "브라우저에서 열기";
 "open_in_gaode_maps" = "高德地图에서 영업 중";
 "open_in_google_maps" = "Google 지도에서 열기";
 "open_in_maps" = "지도에서 열기";
+"open_interest" = "Open Interest";
 "open_link" = "링크 열기: %@";
 "open_orders_count" = "미결 주문(%d)";
 "open_position" = "포지션 오픈";
@@ -1205,6 +1210,7 @@
 "perps_funding_rate_key_point_3" = "차익거래 기회 창출";
 "perps_funding_rate_overview" = "펀딩 비율은 Perps 가격을 현물 가격에 가깝게 유지하기 위해 롱과 숏 트레이더 간에 주고받는 수수료입니다. 양수이면 롱이 숏에게 지불하고, 음수이면 숏이 롱에게 지불합니다.";
 "perps_funding_rate_purpose" = "목적";
+"perps_funding_title_interval" = "펀딩 (%d시간)";
 "perps_intro_overview" = "Mixin Perps는 만기일 없는 암호화폐 결제 방식의 무기한 계약으로, 거래자가 암호화폐 자산 가격을 예측해 거래할 수 있습니다. 무기한 보유할 수 있으며 일반적으로 기초 현물 시장을 추종합니다.";
 "perps_intro_risk_notice_1" = "레버리지는 이익과 손실을 모두 증폭시킵니다.";
 "perps_intro_risk_notice_2" = "마진 요구 사항이 유지되지 않으면 포지션이 청산될 수 있습니다.";
@@ -1238,6 +1244,10 @@
 "perps_short_overview" = "가격 하락이 예상될 때 숏 포지션을 오픈합니다. 가격이 떨어지면 이익을 얻고, 가격이 오르면 손실이 발생합니다.";
 "perps_top_movers" = "최고 변동 항목";
 "perps_tpsl_overview" = "이익실현 및 손절매는 발동 가격에 도달하면 자동으로 실행되는 조건부 주문입니다.";
+"perps_trading_fee_overview" = "포지션을 열거나 추가하거나 닫을 때 수수료가 발생합니다. 수수료는 증거금이 아닌 포지션 가치를 기준으로 계산됩니다.";
+"perps_trading_fee_pnl_1" = "포지션이 클수록 수수료가 높아집니다";
+"perps_trading_fee_pnl_2" = "포지션이 작을수록 수수료가 낮아집니다";
+"perps_trading_fee_pnl_3" = "실현 손익에는 관련 수수료가 차감되어 있습니다";
 "phone_as_key_shard" = "귀하의 휴대폰 번호는 귀하가 관리하는 MPC 지갑의 키 샤드와 연결됩니다.";
 "phone_call" = "전화 통화";
 "phone_contact" = "전화 연락처";
@@ -1803,6 +1813,7 @@
 "trade_native_tokens" = "수천 개의 기본 토큰을 거래하세요";
 "trade_order_pending" = "보류 중";
 "trade_simple" = "간단함";
+"trading_fee" = "거래 수수료";
 "transaction" = "거래";
 "transaction_approved" = "거래 승인됨";
 "transaction_failed" = "거래 실패";

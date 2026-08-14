@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-struct PerpetualActivityViewModel {
+struct PerpetualOrderViewModel {
     
     struct PnL {
         let receivingAmount: String
@@ -58,6 +58,7 @@ struct PerpetualActivityViewModel {
     let orderValueInToken: String
     let entryPrice: String
     let date: String
+    let feeAmount: String?
     let priceFormatStyle: Decimal.FormatStyle.Currency
     let offset: String
     
@@ -208,6 +209,19 @@ struct PerpetualActivityViewModel {
             DateFormatter.dateFull.string(from: date)
         } else {
             order.updatedAt
+        }
+        if let decimalFee = Decimal(string: order.feeAmount, locale: .enUSPOSIX),
+           decimalFee != 0
+        {
+            self.feeAmount = decimalFee.formatted(
+                Decimal.FormatStyle.Currency
+                    .currency(code: "USD")
+                    .presentation(.narrow)
+                    .precision(.fractionLength(0...16))
+                    .rounded(rule: .towardZero)
+            )
+        } else {
+            self.feeAmount = nil
         }
         self.priceFormatStyle = order.priceFormatStyle
         self.offset = order.updatedAt

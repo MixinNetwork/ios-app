@@ -15,7 +15,7 @@ final class PerpetualActivitiesViewController: UIViewController {
     private weak var collectionView: UICollectionView!
     
     private var value: PerpetualPositionValue?
-    private var viewModels: [PerpetualActivityViewModel]?
+    private var viewModels: [PerpetualOrderViewModel]?
     private var loadNextPageIndexPath: IndexPath?
     
     init(wallet: Wallet) {
@@ -134,7 +134,7 @@ final class PerpetualActivitiesViewController: UIViewController {
                 limit: pageCount
             )
             let viewModels = orderItems.compactMap { item in
-                PerpetualActivityViewModel(wallet: wallet, order: item)
+                PerpetualOrderViewModel(wallet: wallet, order: item)
             }
             let hasMore = orderItems.count == pageCount
             if offset != nil, viewModels.isEmpty {

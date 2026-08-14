@@ -174,6 +174,28 @@ public final class PerpsDatabase: Database {
             }
         }
         
+        migrator.registerMigration("fee") { db in
+            let perpOrdersColumns = try TableInfo
+                .fetchAll(db, sql: "PRAGMA table_info(perps_orders)")
+                .map(\.name)
+            if !perpOrdersColumns.contains("fee_amount") {
+                try db.execute(sql: "ALTER TABLE `perps_orders` ADD COLUMN `fee_amount` TEXT NOT NULL DEFAULT '0'")
+            }
+            
+            let marketsColumns = try TableInfo
+                .fetchAll(db, sql: "PRAGMA table_info(markets)")
+                .map(\.name)
+            if !marketsColumns.contains("funding_interval_hours") {
+                try db.execute(sql: "ALTER TABLE `markets` ADD COLUMN `funding_interval_hours` INTEGER NOT NULL DEFAULT 0")
+            }
+            if !marketsColumns.contains("next_funding_at") {
+                try db.execute(sql: "ALTER TABLE `markets` ADD COLUMN `next_funding_at` TEXT NOT NULL DEFAULT ''")
+            }
+            if !marketsColumns.contains("open_interest") {
+                try db.execute(sql: "ALTER TABLE `markets` ADD COLUMN `open_interest` TEXT NOT NULL DEFAULT '0'")
+            }
+        }
+        
         return migrator
     }
     

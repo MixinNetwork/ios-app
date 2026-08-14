@@ -398,11 +398,11 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     @objc private func reloadMarket(_ notification: Notification) {
         guard
             let market = notification.userInfo?[PerpsMarketDAO.UserInfoKey.market],
-            let market = market as? PerpetualMarket,
-            let viewModel = PerpetualMarketViewModel(market: market)
+            let market = market as? PerpetualMarket
         else {
             return
         }
+        let viewModel = PerpetualMarketViewModel(market: market)
         self.viewModel = viewModel
         priceLabel.text = R.string.localizable.current_price(viewModel.price)
         updateDescriptions(

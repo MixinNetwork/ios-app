@@ -15,12 +15,13 @@ struct PerpetualMarketViewModel {
     let changeColor: MarketColor
     let userDisplayPriceFormatStyle: Decimal.FormatStyle.Currency
     let description: String?
+    let nextFundingAt: Date
+    let openInterest: String?
     
-    init?(market m: PerpetualMarket) {
-        guard let decimalFundingRate = Decimal(string: m.fundingRate, locale: .enUSPOSIX) else {
-            return nil
-        }
+    init(market m: PerpetualMarket) {
         let userDisplayPriceFormatStyle = PerpetualMarket.userDisplayPriceFormatStyle(scale: m.priceScale)
+        let decimalFundingRate = Decimal(string: m.fundingRate, locale: .enUSPOSIX)
+        let openInterest = Decimal(string: m.openInterest, locale: .enUSPOSIX)
         
         self.market = m
         self.iconURL = URL(string: m.iconURL)
@@ -29,11 +30,15 @@ struct PerpetualMarketViewModel {
         self.decimalPrice = m.decimalPrice
         self.price = m.localizedPrice
         self.volume = m.prettyVolume
-        self.fundingRate = PercentageFormatter.string(
-            from: decimalFundingRate,
-            format: .precision,
-            sign: .whenNegative
-        )
+        self.fundingRate = if let decimalFundingRate {
+            PercentageFormatter.string(
+                from: decimalFundingRate,
+                format: .precision,
+                sign: .whenNegative
+            )
+        } else {
+            m.fundingRate
+        }
         self.change = m.changePercentage
         self.changeColor = m.decimalChange >= 0 ? .rising : .falling
         self.userDisplayPriceFormatStyle = userDisplayPriceFormatStyle
@@ -43,6 +48,15 @@ struct PerpetualMarketViewModel {
             self.description = description
         } else {
             self.description = nil
+        }
+        self.nextFundingAt = m.nextFundingAt.toUTCDate()
+        if let openInterest, openInterest != 0 {
+            self.openInterest = NamedLargeNumberFormatter.string(
+                number: openInterest,
+                currency: .usd
+            )
+        } else {
+            self.openInterest = nil
         }
     }
     

@@ -339,6 +339,7 @@
 "clock_skew_hint" = "Continúa usándolo nuevamente después de la corrección. Configuración > General > Fecha y hora > Activar Establecer automáticamente";
 "close" = "Cerrar";
 "close_all_positions" = "Cerrar todas las posiciones (%d)";
+"close_fee" = "Comisión de cierre";
 "close_position" = "Cerrar";
 "close_price" = "Precio de cierre";
 "closed_long" = "Posición long cerrada";
@@ -671,6 +672,8 @@
 "example_direction" = "Dirección";
 "example_leverage_multiplier" = "Apalancamiento";
 "example_price_change" = "Cambio de precio";
+"example_scene1_increasing" = "Scenario 1: Price Rises";
+"example_scene2_decreasing" = "Scenario 2: Price Falls";
 "exchanges_or_wallets" = "Intercambios o billeteras";
 "exchanging_data" = "Fragmentos de clave de sincronización en curso %@%%...";
 "exit_confirmation" = "¿Salir de %@?";
@@ -1122,11 +1125,13 @@
 "one_year" = "1 año";
 "open" = "Abierto";
 "open_desktop_to_confirm" = "Abre tu escritorio Mixin para confirmar la operación.";
+"open_fee" = "Comisión de apertura";
 "open_home_page" = "Abrir página de inicio";
 "open_in_browser" = "Abrir en el navegador";
 "open_in_gaode_maps" = "Abrir en 高德地图";
 "open_in_google_maps" = "Abrir en Google Maps";
 "open_in_maps" = "Abrir en Mapas";
+"open_interest" = "Open Interest";
 "open_link" = "Abrir enlace: %@";
 "open_orders_count" = "Órdenes abiertas (%d)";
 "open_position" = "Posición abierta";
@@ -1205,6 +1210,7 @@
 "perps_funding_rate_key_point_3" = "Crear oportunidades de arbitraje";
 "perps_funding_rate_overview" = "La tasa de financiación es una comisión pagada o recibida entre traders long y short para mantener el precio de Perps cerca del precio spot. Cuando es positiva, los long pagan a los short. Cuando es negativa, los short pagan a los long.";
 "perps_funding_rate_purpose" = "Propósito";
+"perps_funding_title_interval" = "Financiación (%d h)";
 "perps_intro_overview" = "Mixin Perps son contratos perpetuos liquidados en criptomonedas sin fecha de vencimiento que permiten a los traders especular sobre el precio de los criptoactivos. Se pueden mantener indefinidamente y suelen seguir el mercado spot subyacente.";
 "perps_intro_risk_notice_1" = "El apalancamiento amplifica tanto las ganancias como las pérdidas";
 "perps_intro_risk_notice_2" = "Las posiciones pueden liquidarse si no se mantienen los requisitos de margen";
@@ -1238,6 +1244,10 @@
 "perps_short_overview" = "Abre una posición short cuando espera que el precio baje. Si el precio baja, obtiene ganancias; si sube, incurre en pérdidas.";
 "perps_top_movers" = "Principales avances";
 "perps_tpsl_overview" = "Take-profit y stop-loss son órdenes condicionales que se ejecutan automáticamente cuando se alcanza el precio de activación.";
+"perps_trading_fee_overview" = "Se aplican comisiones al abrir, añadir o cerrar una posición. Se calculan en función del valor de la posición, no del margen.";
+"perps_trading_fee_pnl_1" = "Cuanto mayor sea la posición, mayores serán las comisiones";
+"perps_trading_fee_pnl_2" = "Cuanto menor sea la posición, menores serán las comisiones";
+"perps_trading_fee_pnl_3" = "Las comisiones están incluidas en su PnL realizado";
 "phone_as_key_shard" = "Su número de teléfono móvil se asociará con un fragmento de clave de la billetera MPC administrada por usted";
 "phone_call" = "Llamada telefónica";
 "phone_contact" = "Contactos del teléfono";
@@ -1803,6 +1813,7 @@
 "trade_native_tokens" = "Negocia con miles de tokens nativos";
 "trade_order_pending" = "Pendiente";
 "trade_simple" = "Sencillo";
+"trading_fee" = "Comisión de trading";
 "transaction" = "Transacción";
 "transaction_approved" = "Transacción aprobada";
 "transaction_failed" = "Transacción fallida";

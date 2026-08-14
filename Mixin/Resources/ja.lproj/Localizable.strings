@@ -339,6 +339,7 @@
 "clock_skew_hint" = "設定を変更してください。 設定 > 一般 > 日付と時刻 > 自動設定をオン";
 "close" = "閉じる";
 "close_all_positions" = "すべてのポジションをクローズ (%d)";
+"close_fee" = "決済手数料";
 "close_position" = "閉じる";
 "close_price" = "終値";
 "closed_long" = "ロングポジションをクローズ";
@@ -671,6 +672,8 @@
 "example_direction" = "方向";
 "example_leverage_multiplier" = "レバレッジ";
 "example_price_change" = "価格変更";
+"example_scene1_increasing" = "Scenario 1: Price Rises";
+"example_scene2_decreasing" = "Scenario 2: Price Falls";
 "exchanges_or_wallets" = "取引所またはウォレット";
 "exchanging_data" = "同期キー シャードが進行中です%@%%...";
 "exit_confirmation" = "\"%@\"を退出しますか?";
@@ -1122,11 +1125,13 @@
 "one_year" = "1年間";
 "open" = "開く";
 "open_desktop_to_confirm" = "Mixin デスクトップを開いて動作を確認してください。";
+"open_fee" = "新規建て手数料";
 "open_home_page" = "ホームページを開く";
 "open_in_browser" = "ブラウザで開く";
 "open_in_gaode_maps" = "Gaodeマップで開く";
 "open_in_google_maps" = "Googleマップで開く";
 "open_in_maps" = "マップで開く";
+"open_interest" = "Open Interest";
 "open_link" = "リンクを開く: %@";
 "open_orders_count" = "オープンオーダー (%d)";
 "open_position" = "オープンポジション";
@@ -1205,6 +1210,7 @@
 "perps_funding_rate_key_point_3" = "裁定取引の機会を創出する";
 "perps_funding_rate_overview" = "資金調達率は、Perps価格を現物価格に近づけるためにロングとショートのトレーダー間で支払われる、または受け取られる手数料です。プラスの場合はロングがショートに支払い、マイナスの場合はショートがロングに支払います。";
 "perps_funding_rate_purpose" = "目的";
+"perps_funding_title_interval" = "資金調達（%d時間）";
 "perps_intro_overview" = "Mixin Perpsは、有効期限のない暗号資産決済の無期限契約で、トレーダーが暗号資産価格に投機できます。無期限に保有でき、通常は基礎となる現物市場に連動します。";
 "perps_intro_risk_notice_1" = "レバレッジにより利益と損失の両方が増幅される";
 "perps_intro_risk_notice_2" = "証拠金要件が維持されない場合、ポジションは強制決済される場合があります";
@@ -1238,6 +1244,10 @@
 "perps_short_overview" = "価格が下がると予想される場合は、ショート ポジションをオープンします。価格が下がれば利益が得られます。価格が上昇すると損失が発生します。";
 "perps_top_movers" = "トップムーバー";
 "perps_tpsl_overview" = "テイクプロフィットとストップロスは、トリガー価格に達すると自動的に実行される条件付き注文です。";
+"perps_trading_fee_overview" = "ポジションの新規建て、追加、決済時に手数料が発生します。手数料は証拠金ではなく、ポジションの価値を基に計算されます。";
+"perps_trading_fee_pnl_1" = "ポジションが大きいほど手数料が高くなります";
+"perps_trading_fee_pnl_2" = "ポジションが小さいほど手数料が低くなります";
+"perps_trading_fee_pnl_3" = "実現損益には関連する手数料が含まれています";
 "phone_as_key_shard" = "あなたの携帯電話番号は、あなたが管理する MPC ウォレットのキーシャードに関連付けられます。";
 "phone_call" = "通話";
 "phone_contact" = "連絡帳";
@@ -1803,6 +1813,7 @@
 "trade_native_tokens" = "何千ものネイティブ トークンを取引する";
 "trade_order_pending" = "保留中";
 "trade_simple" = "シンプル";
+"trading_fee" = "取引手数料";
 "transaction" = "トランザクション";
 "transaction_approved" = "トランザクションが承認されました";
 "transaction_failed" = "トランザクションが失敗しました";

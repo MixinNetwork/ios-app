@@ -78,9 +78,8 @@ class UrlWindow {
                                 PerpsMarketDAO.shared.save(market: market)
                             }
                             hud.hide()
-                            if let navigationController = UIApplication.homeNavigationController,
-                               let viewModel = PerpetualMarketViewModel(market: market)
-                            {
+                            if let navigationController = UIApplication.homeNavigationController {
+                                let viewModel = PerpetualMarketViewModel(market: market)
                                 let market = PerpetualMarketViewController(
                                     wallet: .privacy,
                                     viewModel: viewModel,

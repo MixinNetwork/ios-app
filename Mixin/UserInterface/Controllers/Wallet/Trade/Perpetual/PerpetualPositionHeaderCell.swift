@@ -35,7 +35,7 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
         delegate?.perpetualPositionHeaderCellRequestToViewMarket(self)
     }
     
-    func load(viewModel: PerpetualActivityViewModel) {
+    func load(viewModel: PerpetualOrderViewModel) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
         titleLabel.text = viewModel.quantity
         symbolLabel.text = viewModel.tokenSymbol

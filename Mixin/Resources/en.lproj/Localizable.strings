@@ -339,6 +339,7 @@
 "clock_skew_hint" = "Please continue to use again after correction. Settings > General > Date & Time > Turn on Set Automatically";
 "close" = "Close";
 "close_all_positions" = "Close All Positions (%d)";
+"close_fee" = "Close Fee";
 "close_position" = "Close";
 "close_price" = "Close Price";
 "closed_long" = "Closed Long";
@@ -671,6 +672,8 @@
 "example_direction" = "Direction";
 "example_leverage_multiplier" = "Leverage";
 "example_price_change" = "Price Change";
+"example_scene1_increasing" = "Scenario 1: Price Rises";
+"example_scene2_decreasing" = "Scenario 2: Price Falls";
 "exchanges_or_wallets" = "Exchanges or Wallets";
 "exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "Exit \"%@\"?";
@@ -1122,11 +1125,13 @@
 "one_year" = "1 Year";
 "open" = "Open";
 "open_desktop_to_confirm" = "Please open your Mixin desktop to confirm the operation.";
+"open_fee" = "Open Fee";
 "open_home_page" = "Open Homepage";
 "open_in_browser" = "Open in browser";
 "open_in_gaode_maps" = "Open in 高德地图";
 "open_in_google_maps" = "Open in Google Maps";
 "open_in_maps" = "Open in Maps";
+"open_interest" = "Open Interest";
 "open_link" = "Open Link: %@";
 "open_orders_count" = "Open Orders (%d)";
 "open_position" = "Open Position";
@@ -1205,6 +1210,7 @@
 "perps_funding_rate_key_point_3" = "Create arbitrage opportunities";
 "perps_funding_rate_overview" = "Funding rate is a fee paid or received between long and short traders to keep the perpetual price close to the spot price. When positive, longs pay shorts. When negative, shorts pay longs.";
 "perps_funding_rate_purpose" = "Purpose";
+"perps_funding_title_interval" = "Funding (%dH)";
 "perps_intro_overview" = "Mixin Perpetual Futures are crypto-settled perpetual contracts with no expiry date that allow traders to speculate on the price of crypto assets. They can be held indefinitely and typically track the underlying spot market.";
 "perps_intro_risk_notice_1" = "Leverage amplifies both profits and losses";
 "perps_intro_risk_notice_2" = "Positions may be liquidated if margin requirements are not maintained";
@@ -1238,6 +1244,10 @@
 "perps_short_overview" = "You open a short position when you expect the price to fall. If the price falls, you profit; if the price rises, you incur a loss.";
 "perps_top_movers" = "Top Movers";
 "perps_tpsl_overview" = "Take-profit and stop-loss are conditional orders that execute automatically when the trigger price is reached.";
+"perps_trading_fee_overview" = "Fees apply when opening, adding to, or closing a position. They are calculated based on position value, not margin.";
+"perps_trading_fee_pnl_1" = "Larger position, higher fees";
+"perps_trading_fee_pnl_2" = "Smaller position, lower fees";
+"perps_trading_fee_pnl_3" = "Fees are included in your realized PnL";
 "phone_as_key_shard" = "Your mobile number will be associated with a key shard of the MPC wallet managed by you";
 "phone_call" = "Phone call";
 "phone_contact" = "Phone Contacts";
@@ -1803,6 +1813,7 @@
 "trade_native_tokens" = "Trade thousands of native tokens";
 "trade_order_pending" = "Pending";
 "trade_simple" = "Simple";
+"trading_fee" = "Trading Fee";
 "transaction" = "Transaction";
 "transaction_approved" = "Transaction Approved";
 "transaction_failed" = "Transaction Failed";

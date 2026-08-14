@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,21 +18,36 @@
                 <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="yji-Iv-fvT">
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="yji-Iv-fvT">
                         <rect key="frame" x="16" y="0.0" width="303" height="44"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="AMOUNT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lDz-rr-BJv">
-                                <rect key="frame" x="0.0" y="0.0" width="303" height="17"/>
-                                <color key="backgroundColor" name="background"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" name="text_quaternary"/>
-                                <nil key="highlightedColor"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                </userDefinedRuntimeAttributes>
-                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="BiS-xY-e5r">
+                                <rect key="frame" x="0.0" y="0.0" width="61.333333333333336" height="20.666666666666668"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="AMOUNT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lDz-rr-BJv">
+                                        <rect key="frame" x="0.0" y="2" width="61.333333333333336" height="17"/>
+                                        <color key="backgroundColor" name="background"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" name="text_quaternary"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mbl-eJ-XBi">
+                                        <rect key="frame" x="0.0" y="2.3333333333333339" width="0.0" height="16"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="info" imagePadding="0.0">
+                                            <directionalEdgeInsets key="contentInsets" top="0.0" leading="4" bottom="0.0" trailing="4"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="invokeInfo:" destination="Kz5-SP-5o3" eventType="touchUpInside" id="WN6-EM-Wcb"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="0.00001342 ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ltc-zC-lig" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="21" width="303" height="23"/>
+                                <rect key="frame" x="0.0" y="24.666666666666671" width="123" height="19.333333333333329"/>
                                 <color key="backgroundColor" name="background"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <color key="textColor" name="text"/>
@@ -52,12 +67,14 @@
             <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="contentLabel" destination="Ltc-zC-lig" id="6ht-bX-5bG"/>
+                <outlet property="infoButton" destination="Mbl-eJ-XBi" id="sJE-Js-fZd"/>
                 <outlet property="titleLabel" destination="lDz-rr-BJv" id="scN-Hg-Wef"/>
             </connections>
             <point key="canvasLocation" x="-1408" y="152"/>
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="info" width="16" height="16"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

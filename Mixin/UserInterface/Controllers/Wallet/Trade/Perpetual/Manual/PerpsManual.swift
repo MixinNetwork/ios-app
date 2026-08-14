@@ -12,6 +12,7 @@ enum PerpsManual {
         case autoClosing
         case liquidation
         case fundingRate
+        case tradingFee
     }
     
     static let cardInsets = EdgeInsets(top: 20, leading: 16, bottom: 20, trailing: 16)
@@ -50,6 +51,10 @@ enum PerpsManual {
             ManualViewController.Page(
                 title: R.string.localizable.funding_rate(),
                 view: PerpsManualFundingRatePageView()
+            ),
+            ManualViewController.Page(
+                title: R.string.localizable.trading_fee(),
+                view: PerpsManualTradingFeePageView()
             ),
         ]
         let manual = ManualViewController(

@@ -334,12 +334,10 @@ final class EditPerpClosingConditionViewController: UIViewController {
     @objc private func reloadMarkets(_ notification: Notification) {
         let marketID = viewModel.market.marketID
         DispatchQueue.global().async { [weak self] in
-            guard
-                let market = PerpsMarketDAO.shared.market(marketID: marketID),
-                let viewModel = PerpetualMarketViewModel(market: market)
-            else {
+            guard let market = PerpsMarketDAO.shared.market(marketID: marketID) else {
                 return
             }
+            let viewModel = PerpetualMarketViewModel(market: market)
             DispatchQueue.main.async {
                 guard let self else {
                     return

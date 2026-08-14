@@ -804,9 +804,8 @@ extension MarketDashboardViewController: UICollectionViewDelegate {
                 )
             }
         case let .perps(id):
-            if let market = perpsMarkets[id],
-               let viewModel = PerpetualMarketViewModel(market: market)
-            {
+            if let market = perpsMarkets[id] {
+                let viewModel = PerpetualMarketViewModel(market: market)
                 let market = PerpetualMarketViewController(
                     wallet: .privacy,
                     viewModel: viewModel,

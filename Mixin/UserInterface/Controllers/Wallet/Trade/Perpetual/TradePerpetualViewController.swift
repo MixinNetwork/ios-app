@@ -24,7 +24,7 @@ final class TradePerpetualViewController: UIViewController {
     private var stocks: [PerpetualMarketViewModel]?
     private var commodities: [PerpetualMarketViewModel]?
     private var hasHistoryLoadedFromRemote = false
-    private var activities: [PerpetualActivityViewModel]?
+    private var activities: [PerpetualOrderViewModel]?
     
     init(
         wallet: Wallet,
@@ -242,7 +242,7 @@ final class TradePerpetualViewController: UIViewController {
                 offsetUpdatedAt: nil,
                 limit: generalItemCount
             ).compactMap { order in
-                PerpetualActivityViewModel(wallet: wallet, order: order)
+                PerpetualOrderViewModel(wallet: wallet, order: order)
             }
             DispatchQueue.main.async {
                 guard let self else {
@@ -305,9 +305,7 @@ final class TradePerpetualViewController: UIViewController {
                 position.marketID == market.marketID
             }
             self.dismiss(animated: true) {
-                guard let viewModel = PerpetualMarketViewModel(market: market) else {
-                    return
-                }
+                let viewModel = PerpetualMarketViewModel(market: market)
                 if alreadyOpened {
                     let market = PerpetualMarketViewController(
                         wallet: self.wallet,
@@ -543,9 +541,8 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
             break
         case .positions:
             let position = openPositions[indexPath.item]
-            if let market = PerpsMarketDAO.shared.market(marketID: position.marketID),
-               let viewModel = PerpetualMarketViewModel(market: market)
-            {
+            if let market = PerpsMarketDAO.shared.market(marketID: position.marketID) {
+                let viewModel = PerpetualMarketViewModel(market: market)
                 let market = PerpetualMarketViewController(
                     wallet: wallet,
                     viewModel: viewModel,
@@ -721,9 +718,7 @@ extension TradePerpetualViewController {
                 return
             }
             self.dismiss(animated: true) {
-                guard let viewModel = PerpetualMarketViewModel(market: market) else {
-                    return
-                }
+                let viewModel = PerpetualMarketViewModel(market: market)
                 let market = PerpetualMarketViewController(
                     wallet: wallet,
                     viewModel: viewModel,
@@ -837,7 +832,7 @@ extension TradePerpetualViewController {
                 offsetUpdatedAt: nil,
                 limit: limit
             ).compactMap { history in
-                PerpetualActivityViewModel(wallet: wallet, order: history)
+                PerpetualOrderViewModel(wallet: wallet, order: history)
             }
             DispatchQueue.main.async {
                 guard let self else {

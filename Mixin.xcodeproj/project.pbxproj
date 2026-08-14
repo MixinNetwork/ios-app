@@ -1399,7 +1399,7 @@
 		94ABA8D82FBC3CA300FC536D /* EditPerpsPositionTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ABA8D72FBC3CA300FC536D /* EditPerpsPositionTitleView.swift */; };
 		94ABA8E72FBC3D7500FC536D /* EditPerpsPositionTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94ABA8E62FBC3D7500FC536D /* EditPerpsPositionTitleView.xib */; };
 		94ABA8F62FBC48A800FC536D /* PerpsMarginInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ABA8F52FBC48A800FC536D /* PerpsMarginInputViewController.swift */; };
-		94ABAABC2FBDCB8B00FC536D /* PerpetualActivityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ABAABB2FBDCB8500FC536D /* PerpetualActivityViewModel.swift */; };
+		94ABAABC2FBDCB8B00FC536D /* PerpetualOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ABAABB2FBDCB8500FC536D /* PerpetualOrderViewModel.swift */; };
 		94ABAAD02FBDDCBE00FC536D /* PerpetualActivitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ABAACF2FBDDCB800FC536D /* PerpetualActivitiesViewController.swift */; };
 		94AC15602C3D77CD0029E1AB /* AppButtonGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94AC155F2C3D77CD0029E1AB /* AppButtonGroupView.swift */; };
 		94AC15652C3D7A110029E1AB /* AppButtonsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94AC15642C3D7A110029E1AB /* AppButtonsViewModel.swift */; };
@@ -1469,6 +1469,8 @@
 		94C3BDDC2FA23A6400BFAE47 /* MixinWebContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C3BDDB2FA23A5E00BFAE47 /* MixinWebContext.swift */; };
 		94C3E56C2DAE76CF0015AFA4 /* Web3TransactionTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C3E56B2DAE76CC0015AFA4 /* Web3TransactionTableHeaderView.swift */; };
 		94C3E57E2DAE80510015AFA4 /* RLPDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C3E57D2DAE804E0015AFA4 /* RLPDecoder.swift */; };
+		94C45E31302EF2130097EE8D /* PerpsManualTradingFeePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C45E30302EF20B0097EE8D /* PerpsManualTradingFeePageView.swift */; };
+		94C45E9F302F3C550097EE8D /* PerpsFundingRateDurationFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C45E9E302F3C4B0097EE8D /* PerpsFundingRateDurationFormatter.swift */; };
 		94C56D342C53AFBE009F3AB8 /* SwapQuoteRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C56D332C53AFBE009F3AB8 /* SwapQuoteRequester.swift */; };
 		94C56D392C53C954009F3AB8 /* SwapQuoteDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C56D382C53C954009F3AB8 /* SwapQuoteDraft.swift */; };
 		94C56D3E2C560DD6009F3AB8 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C56D3D2C560DD6009F3AB8 /* CircularProgressView.swift */; };
@@ -1497,6 +1499,8 @@
 		94CA5C512CE5F5390086C484 /* PaymentCollectibleSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CA5C502CE5F5390086C484 /* PaymentCollectibleSelectorViewController.swift */; };
 		94CA5C572CE5F5F80086C484 /* PaymentCollectibleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CA5C562CE5F5F80086C484 /* PaymentCollectibleCell.xib */; };
 		94CA5C582CE5F5F80086C484 /* PaymentCollectibleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CA5C552CE5F5F80086C484 /* PaymentCollectibleCell.swift */; };
+		94CA8B122F59593500914435 /* PerpMarketFundingRateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CA8B102F59593500914435 /* PerpMarketFundingRateCell.swift */; };
+		94CA8B132F59593500914435 /* PerpMarketFundingRateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CA8B112F59593500914435 /* PerpMarketFundingRateCell.xib */; };
 		94CAAAB42F1F71B50022D29F /* MultilineTextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CAAAB32F1F71B50022D29F /* MultilineTextButton.swift */; };
 		94CB84D62C6A65C200135641 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CB84D52C6A65C200135641 /* ChartView.swift */; };
 		94CB85CF2C6B43A900135641 /* TokenMyBalanceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CB85CD2C6B43A900135641 /* TokenMyBalanceCell.swift */; };
@@ -3424,7 +3428,7 @@
 		94ABA8D72FBC3CA300FC536D /* EditPerpsPositionTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPerpsPositionTitleView.swift; sourceTree = "<group>"; };
 		94ABA8E62FBC3D7500FC536D /* EditPerpsPositionTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditPerpsPositionTitleView.xib; sourceTree = "<group>"; };
 		94ABA8F52FBC48A800FC536D /* PerpsMarginInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsMarginInputViewController.swift; sourceTree = "<group>"; };
-		94ABAABB2FBDCB8500FC536D /* PerpetualActivityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualActivityViewModel.swift; sourceTree = "<group>"; };
+		94ABAABB2FBDCB8500FC536D /* PerpetualOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualOrderViewModel.swift; sourceTree = "<group>"; };
 		94ABAACF2FBDDCB800FC536D /* PerpetualActivitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualActivitiesViewController.swift; sourceTree = "<group>"; };
 		94AC155F2C3D77CD0029E1AB /* AppButtonGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupView.swift; sourceTree = "<group>"; };
 		94AC15642C3D7A110029E1AB /* AppButtonsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonsViewModel.swift; sourceTree = "<group>"; };
@@ -3494,6 +3498,8 @@
 		94C3BDDB2FA23A5E00BFAE47 /* MixinWebContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinWebContext.swift; sourceTree = "<group>"; };
 		94C3E56B2DAE76CC0015AFA4 /* Web3TransactionTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionTableHeaderView.swift; sourceTree = "<group>"; };
 		94C3E57D2DAE804E0015AFA4 /* RLPDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLPDecoder.swift; sourceTree = "<group>"; };
+		94C45E30302EF20B0097EE8D /* PerpsManualTradingFeePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualTradingFeePageView.swift; sourceTree = "<group>"; };
+		94C45E9E302F3C4B0097EE8D /* PerpsFundingRateDurationFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsFundingRateDurationFormatter.swift; sourceTree = "<group>"; };
 		94C56D332C53AFBE009F3AB8 /* SwapQuoteRequester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapQuoteRequester.swift; sourceTree = "<group>"; };
 		94C56D382C53C954009F3AB8 /* SwapQuoteDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapQuoteDraft.swift; sourceTree = "<group>"; };
 		94C56D3D2C560DD6009F3AB8 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
@@ -3522,6 +3528,8 @@
 		94CA5C502CE5F5390086C484 /* PaymentCollectibleSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCollectibleSelectorViewController.swift; sourceTree = "<group>"; };
 		94CA5C552CE5F5F80086C484 /* PaymentCollectibleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCollectibleCell.swift; sourceTree = "<group>"; };
 		94CA5C562CE5F5F80086C484 /* PaymentCollectibleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCollectibleCell.xib; sourceTree = "<group>"; };
+		94CA8B102F59593500914435 /* PerpMarketFundingRateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpMarketFundingRateCell.swift; sourceTree = "<group>"; };
+		94CA8B112F59593500914435 /* PerpMarketFundingRateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpMarketFundingRateCell.xib; sourceTree = "<group>"; };
 		94CAAAB32F1F71B50022D29F /* MultilineTextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineTextButton.swift; sourceTree = "<group>"; };
 		94CB84D52C6A65C200135641 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		94CB85CD2C6B43A900135641 /* TokenMyBalanceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMyBalanceCell.swift; sourceTree = "<group>"; };
@@ -4927,6 +4935,8 @@
 				940FC5202F5031D7000C4260 /* PerpetualMarketPriceCell.swift */,
 				940CA18F2F59593500914435 /* PerpetualMarketInfoCell.xib */,
 				940CA18E2F59593500914435 /* PerpetualMarketInfoCell.swift */,
+				94CA8B112F59593500914435 /* PerpMarketFundingRateCell.xib */,
+				94CA8B102F59593500914435 /* PerpMarketFundingRateCell.swift */,
 				94FB2E922F5050BD00F85AB4 /* PerpsMarketDescriptionCell.xib */,
 				94FB2E912F5050BD00F85AB4 /* PerpsMarketDescriptionCell.swift */,
 				9484BA382FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib */,
@@ -5231,6 +5241,7 @@
 				948B81622FB6142800D1D167 /* PerpsManualTPSLPageView.swift */,
 				94728C7D2FB6E6B9004F087F /* PerpsManualLiquidationPricePageView.swift */,
 				946AFC0F2FDBED8100E97E34 /* PerpsManualFundingRatePageView.swift */,
+				94C45E30302EF20B0097EE8D /* PerpsManualTradingFeePageView.swift */,
 			);
 			path = Manual;
 			sourceTree = "<group>";
@@ -5843,10 +5854,11 @@
 				949967172F6BDFAA00D3F42E /* PerpetualCandleViewModel.swift */,
 				94973DCF2F55E84100C350C7 /* PerpetualChangeSimulation.swift */,
 				94D9DD512F59CFEF00B3B990 /* PerpetualPositionViewModel.swift */,
-				94ABAABB2FBDCB8500FC536D /* PerpetualActivityViewModel.swift */,
+				94ABAABB2FBDCB8500FC536D /* PerpetualOrderViewModel.swift */,
 				94E066B12F5B15690090F1BA /* PerpetualLeverage.swift */,
 				94A8095B2FB1C1B100755E1A /* PerpsAutoClosingCondition.swift */,
 				9431E23F2FCD706500B20838 /* PerpsLiquidationPriceRequester.swift */,
+				94C45E9E302F3C4B0097EE8D /* PerpsFundingRateDurationFormatter.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -7289,6 +7301,7 @@
 				946BBCDC302486710080D43D /* PerpsMarketSelectorCategoryCell.xib in Resources */,
 				94834ACD2FE949E000A0AADF /* LogCell.xib in Resources */,
 				940CA1912F59593500914435 /* PerpetualMarketInfoCell.xib in Resources */,
+				94CA8B132F59593500914435 /* PerpMarketFundingRateCell.xib in Resources */,
 				94327CF72D53662700DEE36D /* AddressInfoInputHeaderView.xib in Resources */,
 				94E82DBC2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib in Resources */,
 				7C5B65D027701A62004EDD53 /* DeleteAccountHintWindow.xib in Resources */,
@@ -8108,6 +8121,7 @@
 				949DD378302C9B7400E6AEFB /* MarketChartImageView.swift in Sources */,
 				7B9650AE248794FD00DE86B9 /* MinimizedCallViewController.swift in Sources */,
 				940CA1902F59593500914435 /* PerpetualMarketInfoCell.swift in Sources */,
+				94CA8B122F59593500914435 /* PerpMarketFundingRateCell.swift in Sources */,
 				94428D392CA245BA00157E93 /* MenuTriggerButton.swift in Sources */,
 				9451E5282D6CF91600A6C4FD /* SessionReporter.swift in Sources */,
 				943A63E328BDEC27008E0F78 /* TIPPopupInputViewController.swift in Sources */,
@@ -8812,7 +8826,7 @@
 				94D78F9F2E3A0E5900552D2E /* AddWalletInputMnemonicsViewController.swift in Sources */,
 				7BC022E5214A13DC00B7A398 /* MixinAuthorizationsViewController.swift in Sources */,
 				94B5777D2B5E755100AE576E /* SeparatorHeaderFooterView.swift in Sources */,
-				94ABAABC2FBDCB8B00FC536D /* PerpetualActivityViewModel.swift in Sources */,
+				94ABAABC2FBDCB8B00FC536D /* PerpetualOrderViewModel.swift in Sources */,
 				946E9F5C2D455F0900DBC308 /* MixinTokenReceiverViewController.swift in Sources */,
 				94509D772DE086E100DC6A43 /* IAPTransactionObserver.swift in Sources */,
 				94428D742CA2A8F200157E93 /* EditMarketAlertViewController.swift in Sources */,
@@ -9019,6 +9033,7 @@
 				7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */,
 				94AC15652C3D7A110029E1AB /* AppButtonsViewModel.swift in Sources */,
 				94E66F002D13F91F00578F19 /* MAONameSearchResult.swift in Sources */,
+				94C45E31302EF2130097EE8D /* PerpsManualTradingFeePageView.swift in Sources */,
 				940EE2992C9DDD24001A52FA /* MarketAlertItemView.swift in Sources */,
 				948AF9D42EB9EDB10035C9BF /* TradePricingModel.swift in Sources */,
 				94FB2E6F2F50A51400F85AB4 /* PerpetualMarketViewModel.swift in Sources */,
@@ -9105,6 +9120,7 @@
 				94C93C902C94880600A31591 /* TIP+Web3.swift in Sources */,
 				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,
 				94D5C0EE2D5C911D0046C20E /* WalletSummaryViewController.swift in Sources */,
+				94C45E9F302F3C550097EE8D /* PerpsFundingRateDurationFormatter.swift in Sources */,
 				94ED2FEC2E2650EE00B99837 /* AddWalletPINValidationViewController.swift in Sources */,
 				94428E482CA3435300157E93 /* SwapQuote.swift in Sources */,
 				9414D3532E06914900F38028 /* RouteProfile.swift in Sources */,

@@ -5,7 +5,8 @@ import MixinServices
 final class Clip: Codable {
     
     enum CodingKeys: String, CodingKey {
-        case id, app, title, url
+        case id, title, url
+        case appEnvironment = "app_env"
         case isShareable = "shareable"
         case conversationId = "conversation_id"
     }
@@ -21,7 +22,7 @@ final class Clip: Codable {
     
     let id: UUID
     let conversationId: String
-    let app: App?
+    let appEnvironment: MixinWebContext.AppEnvironment?
     let isShareable: Bool?
     
     private(set) var title: String
@@ -47,10 +48,19 @@ final class Clip: Codable {
                 return controller
             } else {
                 let context: MixinWebContext
-                if let app = app {
-                    context = .init(conversationId: conversationId, app: app, shareable: isShareable)
+                if let environment = appEnvironment {
+                    context = .init(
+                        conversationID: conversationId,
+                        app: environment.app,
+                        isAppVerified: environment.isAppVerified,
+                        shareable: isShareable
+                    )
                 } else {
-                    context = .init(conversationId: conversationId, initialUrl: url, shareable: isShareable)
+                    context = .init(
+                        conversationID: conversationId,
+                        initialURL: url,
+                        shareable: isShareable
+                    )
                 }
                 return MixinWebViewController(context: context)
             }
@@ -66,12 +76,12 @@ final class Clip: Codable {
         Self.thumbnailCachesURL?.appendingPathComponent(id.uuidString)
     }
     
-    init(app: App?, url: URL, controller: MixinWebViewController) {
+    init(url: URL, controller: MixinWebViewController) {
         self.id = UUID()
-        self.conversationId = controller.context.conversationId
-        self.app = app
+        self.conversationId = controller.context.conversationID
+        self.appEnvironment = controller.context.appEnvironment
         self.isShareable = controller.context.isShareable
-        if let app = app {
+        if let app = appEnvironment?.app {
             self.title = app.name
         } else {
             self.title = controller.titleLabel.text ?? ""
@@ -86,7 +96,7 @@ final class Clip: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(UUID.self, forKey: .id)
         self.conversationId = (try? container.decodeIfPresent(String.self, forKey: .conversationId)) ?? ""
-        self.app = try container.decodeIfPresent(App.self, forKey: .app)
+        self.appEnvironment = try? container.decodeIfPresent(MixinWebContext.AppEnvironment.self, forKey: .appEnvironment)
         self.isShareable = (try? container.decodeIfPresent(Bool.self, forKey: .isShareable)) ?? true
         self.title = try container.decode(String.self, forKey: .title)
         self.url = try container.decode(URL.self, forKey: .url)
@@ -112,7 +122,7 @@ final class Clip: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(conversationId, forKey: .conversationId)
-        try container.encode(app, forKey: .app)
+        try container.encode(appEnvironment, forKey: .appEnvironment)
         try container.encode(isShareable, forKey: .isShareable)
         try container.encode(title, forKey: .title)
         try container.encode(url, forKey: .url)
@@ -189,7 +199,7 @@ extension Clip {
             self.url = url
             hasPropertyChange = true
         }
-        if app == nil {
+        if appEnvironment?.app == nil {
             self.title = controller.webView.title ?? ""
             hasPropertyChange = true
         }

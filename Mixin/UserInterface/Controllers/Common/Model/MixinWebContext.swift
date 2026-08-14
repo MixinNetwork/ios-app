@@ -3,19 +3,20 @@ import MixinServices
 
 struct MixinWebContext {
     
-    enum Style {
-        case webPage
-        case app(app: App, isHomeUrl: Bool)
+    struct AppEnvironment: Codable {
+        let app: App
+        let isAppVerified: Bool
+        let isInitialURLAppHome: Bool
     }
     
-    let conversationId: String
-    let initialUrl: URL
+    let conversationID: String
+    let initialURL: URL
     let isShareable: Bool?
     let saveAsRecentSearch: Bool
+    let additionalURLQueries: [String: String]
     
-    var style: Style
+    var appEnvironment: AppEnvironment?
     var isImmersive: Bool
-    var additionalURLQueries: [String: String] = [:]
     
     var appContextString: String {
         let ctx: [String: Any] = [
@@ -25,7 +26,7 @@ struct MixinWebContext {
             "currency": Currency.current.code,
             "locale": "\(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? "")",
             "platform": "iOS",
-            "conversation_id": conversationId
+            "conversation_id": conversationID
         ]
         if let data = try? JSONSerialization.data(withJSONObject: ctx, options: []), let string = String(data: data, encoding: .utf8) {
             return string
@@ -34,35 +35,46 @@ struct MixinWebContext {
         }
     }
     
-    init(conversationId: String, app: App, shareable: Bool? = nil, additionalURLQueries: [String: String] = [:]) {
-        if conversationId.isEmpty {
-            self.conversationId = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: app.appId)
-        } else {
-            self.conversationId = conversationId
-        }
-        self.initialUrl = URL(string: app.homeUri) ?? .blank
-        self.isShareable = shareable
-        self.saveAsRecentSearch = false
-        self.style = .app(app: app, isHomeUrl: true)
-        self.isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
-        self.additionalURLQueries = additionalURLQueries
-    }
-    
-    init(conversationId: String, initialUrl: URL, shareable: Bool? = nil, saveAsRecentSearch: Bool = false) {
-        self.conversationId = conversationId
-        self.initialUrl = initialUrl
+    init(
+        conversationID: String,
+        initialURL: URL,
+        shareable: Bool? = nil,
+        saveAsRecentSearch: Bool = false
+    ) {
+        self.conversationID = conversationID
+        self.initialURL = initialURL
         self.isShareable = shareable
         self.saveAsRecentSearch = saveAsRecentSearch
-        self.style = .webPage
+        self.additionalURLQueries = [:]
+        self.appEnvironment = nil
         self.isImmersive = false
     }
     
-    init(conversationId: String, url: URL, app: App, shareable: Bool? = nil) {
-        self.conversationId = conversationId
-        self.initialUrl = url
+    init(
+        conversationID: String,
+        app: App,
+        isAppVerified: Bool,
+        url: URL? = nil, // nil to use app.home_uri
+        shareable: Bool? = nil,
+        additionalURLQueries: [String: String] = [:]
+    ) {
+        self.conversationID = if conversationID.isEmpty {
+            ConversationDAO.shared.makeConversationId(
+                userId: myUserId,
+                ownerUserId: app.appId
+            )
+        } else {
+            conversationID
+        }
+        self.initialURL = url ?? URL(string: app.homeUri) ?? .blank
         self.isShareable = shareable
         self.saveAsRecentSearch = false
-        self.style = .app(app: app, isHomeUrl: false)
+        self.additionalURLQueries = additionalURLQueries
+        self.appEnvironment = AppEnvironment(
+            app: app,
+            isAppVerified: isAppVerified,
+            isInitialURLAppHome: url == nil,
+        )
         self.isImmersive = app.capabilities?.contains("IMMERSIVE") ?? false
     }
     

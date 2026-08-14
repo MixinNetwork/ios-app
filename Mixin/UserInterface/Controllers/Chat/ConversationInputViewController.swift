@@ -329,7 +329,8 @@ final class ConversationInputViewController: UIViewController {
             return
         }
         dismiss()
-        conversationViewController.openOpponentApp(app)
+        let verified = UserDAO.shared.isVerified(userID: app.appId)
+        conversationViewController.openOpponentApp(app, verified: verified)
     }
     
     @IBAction func showPhotosAction(_ sender: Any) {

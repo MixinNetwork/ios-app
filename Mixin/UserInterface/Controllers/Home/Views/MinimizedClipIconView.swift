@@ -20,7 +20,7 @@ class MinimizedClipIconView: UIView {
     
     func load(clip: Clip) {
         avatarImageView.prepareForReuse()
-        if let app = clip.app {
+        if let app = clip.appEnvironment?.app {
             avatarImageView.imageView.contentMode = .scaleAspectFill
             avatarImageView.setImage(app: app)
         } else {

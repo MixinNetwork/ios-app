@@ -45,7 +45,7 @@ extension ExploreSearchViewController where Self: UIViewController {
         guard let navigationController = UIApplication.homeNavigationController else {
             return
         }
-        let context = MixinWebContext(conversationId: "", initialUrl: app.homeURL)
+        let context = MixinWebContext(conversationID: "", initialURL: app.homeURL)
         navigationController.pushWebViewController(context: context)
         AppGroupUserDefaults.User.insertRecentSearch(.dapp(name: app.name))
     }

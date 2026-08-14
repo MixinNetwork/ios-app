@@ -94,7 +94,7 @@ extension PostWebViewController: WKNavigationDelegate {
             return
         }
         UIApplication.homeNavigationController?.pushWebViewController(
-            context: .init(conversationId: "", initialUrl: url)
+            context: .init(conversationID: "", initialURL: url)
         )
     }
     

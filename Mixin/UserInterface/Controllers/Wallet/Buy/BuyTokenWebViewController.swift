@@ -12,7 +12,7 @@ final class BuyTokenWebViewController: PopupTitledWebViewController {
     private lazy var messageHandler = WebViewMessageHandler(delegate: self)
     
     init(tokenSymbol: String, url: URL) {
-        self.context = MixinWebContext(conversationId: "", initialUrl: url)
+        self.context = MixinWebContext(conversationID: "", initialURL: url)
         super.init(
             title: R.string.localizable.buy_asset(tokenSymbol),
             subtitle: nil,
@@ -164,6 +164,10 @@ extension BuyTokenWebViewController: WebViewMessageHandler.Delegate {
         case .openInBrowser(let url):
             present(SFSafariViewController(url: url), animated: true)
         }
+    }
+    
+    func webViewMessageHander(_ handler: WebViewMessageHandler, allowsSignBotWith appID: String) -> Bool {
+        true
     }
     
     func webViewMessageHanderGetCurrentURL(_ handler: WebViewMessageHandler) -> URL? {

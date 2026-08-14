@@ -390,8 +390,10 @@ extension SearchViewController: UITableViewDelegate {
                 self?.present(profile, animated: true)
             }
         case .maoUser:
-            if let app = maoUser?.app {
-                let web = MixinWebViewController(context: .init(conversationId: "", app: app))
+            if let maoUser, let app = maoUser.app {
+                let web = MixinWebViewController(
+                    context: .init(conversationID: "", app: app, isAppVerified: maoUser.user.isVerified)
+                )
                 homeNavigationController?.pushViewController(web, animated: true)
             } else if let user = maoUser?.user, user.isCreatedByMessenger {
                 let vc = ConversationViewController.instance(ownerUser: user)

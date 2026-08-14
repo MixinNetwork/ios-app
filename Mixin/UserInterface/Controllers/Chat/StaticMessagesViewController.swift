@@ -275,10 +275,12 @@ extension StaticMessagesViewController {
                 }
                 DispatchQueue.global().async {
                     var app = AppDAO.shared.getApp(appId: appId)
+                    var verified = UserDAO.shared.isVerified(userID: appId)
                     if app == nil {
                         if case let .success(response) = UserAPI.showUser(userId: appId) {
                             UserDAO.shared.updateUsers(users: [response])
                             app = response.app
+                            verified = response.isVerified
                         }
                     }
                     guard let app else {
@@ -291,7 +293,12 @@ extension StaticMessagesViewController {
                         guard let navigationController = UIApplication.homeNavigationController else {
                             return
                         }
-                        let context = MixinWebContext(conversationId: "", url: content.action, app: app)
+                        let context = MixinWebContext(
+                            conversationID: "",
+                            app: app,
+                            isAppVerified: verified,
+                            url: content.action
+                        )
                         navigationController.pushWebViewController(context: context)
                     }
                 }
@@ -640,7 +647,7 @@ extension StaticMessagesViewController {
             return
         }
         navigationController.pushWebViewController(
-            context: .init(conversationId: "", initialUrl: url)
+            context: .init(conversationID: "", initialURL: url)
         )
     }
     

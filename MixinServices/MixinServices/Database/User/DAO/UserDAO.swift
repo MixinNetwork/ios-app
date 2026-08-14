@@ -78,9 +78,9 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [identityNumber])
     }
     
-    public func isUserVerified(withAppID id: String) -> Bool {
-        let sql = "SELECT is_verified FROM users WHERE app_id = ?"
-        let verified: Bool? = db.select(with: sql, arguments: [id])
+    public func isVerified(userID: String) -> Bool {
+        let sql = "SELECT is_verified FROM users WHERE user_id = ?"
+        let verified: Bool? = db.select(with: sql, arguments: [userID])
         return verified ?? false
     }
     

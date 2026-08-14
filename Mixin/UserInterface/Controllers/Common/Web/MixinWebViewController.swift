@@ -158,22 +158,20 @@ final class MixinWebViewController: WebViewController {
             floatAction = .cancelFloat
         }
         let sections: [[WebMoreMenuViewController.MenuItem]]
-        switch context.style {
-        case let .app(app, _):
+        if let app = context.appEnvironment?.app {
             sections = [[.share, floatAction, .refresh], [.about, .viewAuthorization(app.appId)]]
-        case .webPage:
+        } else {
             sections = [[.share, floatAction, .refresh], [.scanQRCode, .copyLink, .openInBrowser]]
         }
         let more = WebMoreMenuViewController(sections: sections)
         more.overrideStatusBarStyle = preferredStatusBarStyle
         more.titleView.titleLabel.text = titleLabel.text
-        switch context.style {
-        case let .app(app, _):
+        if let app = context.appEnvironment?.app {
             more.titleView.subtitleLabel.text = app.appNumber
             more.titleView.imageView.isHidden = false
             more.titleView.imageView.setImage(app: app)
-        case .webPage:
-            more.titleView.subtitleLabel.text = (context.initialUrl.host ?? "") + context.initialUrl.path
+        } else {
+            more.titleView.subtitleLabel.text = (context.initialURL.host ?? "") + context.initialURL.path
             more.titleView.imageView.isHidden = true
         }
         more.delegate = self
@@ -198,7 +196,7 @@ final class MixinWebViewController: WebViewController {
     }
     
     @IBAction func contactDeveloperAction(_ sender: Any) {
-        guard case let .app(app, _) = context.style else {
+        guard let app = context.appEnvironment?.app else {
             return
         }
         let hud = Hud()
@@ -349,11 +347,7 @@ extension MixinWebViewController: WKNavigationDelegate {
                 }
             }
             loadFailLabel.text = R.string.localizable.web_cannot_reached_desc(host)
-            if case .app = context.style {
-                contactDeveloperButton.isHidden = false
-            } else {
-                contactDeveloperButton.isHidden = true
-            }
+            contactDeveloperButton.isHidden = context.appEnvironment == nil
         default:
             break
         }
@@ -392,13 +386,21 @@ extension MixinWebViewController: WebViewMessageHandler.Delegate {
         case .tipSign(let callback):
             webView.evaluateJavaScript(callback)
         case .getAssets(let assetIDs, let callback):
-            reportAssets(ids: assetIDs, callback: callback)
+            reportAssetsIfVerified(ids: assetIDs, callback: callback)
         case .web3Bridge(let json):
             web3Worker.handleRequest(json: json)
         case .signBotSignature(let callback):
             webView.evaluateJavaScript(callback)
         case .openInBrowser(let url):
             present(SFSafariViewController(url: url), animated: true)
+        }
+    }
+    
+    func webViewMessageHander(_ handler: WebViewMessageHandler, allowsSignBotWith appID: String) -> Bool {
+        if let environment = context.appEnvironment {
+            environment.isAppVerified && environment.app.appId == appID
+        } else {
+            false
         }
     }
     
@@ -416,15 +418,14 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
             let url = webView.url ?? .blank
             switch item {
             case .share:
-                switch context.style {
-                case .app:
+                if context.appEnvironment == nil {
+                    shareUrlAction(currentUrl: url)
+                } else {
                     if context.isShareable ?? true {
                         shareAppCardAction(currentUrl: url)
                     } else {
                         presentGotItAlertController(title: R.string.localizable.link_shareable_false())
                     }
-                case .webPage:
-                    shareUrlAction(currentUrl: url)
                 }
             case .float:
                 if let switcher = clipSwitcher {
@@ -475,20 +476,20 @@ extension MixinWebViewController {
         if title.count > 50 {
             title = title.prefix(49) + "…"
         }
-        let item: RecentSearch = .link(title: title, url: context.initialUrl)
+        let item: RecentSearch = .link(title: title, url: context.initialURL)
         AppGroupUserDefaults.User.insertRecentSearch(item)
         hasSavedAsRecentSearch = true
     }
     
     private func loadNormalUrl() {
         webViewTitleObserver = webView.observe(\.title, options: [.initial, .new], changeHandler: { [weak self] (webView, _) in
-            guard let self, case .webPage = self.context.style else {
+            guard let self, self.context.appEnvironment == nil else {
                 return
             }
             self.titleLabel.text = webView.title
             self.saveAsRecentSearchIfNeeded()
         })
-        loadURL(url: context.initialUrl, fraudulentWarning: .byWhitelist)
+        loadURL(url: context.initialURL, fraudulentWarning: .byWhitelist)
     }
 
     private func loadAppUrl(title: String, iconUrl: URL?, appID: String) {
@@ -498,18 +499,18 @@ extension MixinWebViewController {
             titleImageView.sd_setImage(with: iconUrl, completed: nil)
         }
         let url: URL
-        if !context.additionalURLQueries.isEmpty, var components = URLComponents(url: context.initialUrl, resolvingAgainstBaseURL: true) {
+        if !context.additionalURLQueries.isEmpty, var components = URLComponents(url: context.initialURL, resolvingAgainstBaseURL: true) {
             var queryItems: [URLQueryItem] = components.queryItems ?? []
             for item in context.additionalURLQueries {
                 queryItems.append(URLQueryItem(name: item.key, value: item.value))
             }
             components.queryItems = queryItems
-            url = components.url ?? context.initialUrl
+            url = components.url ?? context.initialURL
         } else {
-            url = context.initialUrl
+            url = context.initialURL
         }
         DispatchQueue.global().async {
-            let isVerified = UserDAO.shared.isUserVerified(withAppID: appID)
+            let isVerified = UserDAO.shared.isVerified(userID: appID)
             DispatchQueue.main.async {
                 self.loadURL(url: url, fraudulentWarning: isVerified ? .disabled : .byWhitelist)
             }
@@ -541,45 +542,44 @@ extension MixinWebViewController {
     }
     
     private func loadWebView() {
-        switch context.style {
-        case .webPage:
+        guard let environment = context.appEnvironment else {
             loadNormalUrl()
-        case let .app(app, isHomeUrl):
-            let appId = app.appId
-            let title = app.name
-            let iconUrl = URL(string: app.iconUrl)
-            if isHomeUrl {
-                loadAppUrl(title: title, iconUrl: iconUrl, appID: appId)
-            } else {
-                let initialURL = context.initialUrl
-                DispatchQueue.global().async { [weak self] in
-                    var app = AppDAO.shared.getApp(appId: appId)
-                    if app == nil || !(app?.resourcePatterns(accepts: initialURL) ?? false) {
-                        if case let .success(response) = UserAPI.showUser(userId: appId) {
-                            UserDAO.shared.updateUsers(users: [response])
-                            app = response.app
-                        }
+            return
+        }
+        let appId = environment.app.appId
+        let title = environment.app.name
+        let iconUrl = URL(string: environment.app.iconUrl)
+        if environment.isInitialURLAppHome {
+            loadAppUrl(title: title, iconUrl: iconUrl, appID: appId)
+        } else {
+            let initialURL = context.initialURL
+            DispatchQueue.global().async { [weak self] in
+                var app = AppDAO.shared.getApp(appId: appId)
+                if app == nil || !(app?.resourcePatterns(accepts: initialURL) ?? false) {
+                    if case let .success(response) = UserAPI.showUser(userId: appId) {
+                        UserDAO.shared.updateUsers(users: [response])
+                        app = response.app
                     }
-                    DispatchQueue.main.async {
-                        guard let self = self else {
-                            return
-                        }
-                        if app?.resourcePatterns(accepts: initialURL) ?? false {
-                            self.loadAppUrl(title: title, iconUrl: iconUrl, appID: appId)
-                        } else {
-                            if self.suspicousLinkView.superview == nil {
-                                self.view.insertSubview(
-                                    self.suspicousLinkView,
-                                    belowSubview: self.pageControlView
-                                )
-                                self.suspicousLinkView.snp.makeConstraints { make in
-                                    make.leading.trailing.equalToSuperview()
-                                    make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
-                                }
+                }
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    if app?.resourcePatterns(accepts: initialURL) ?? false {
+                        self.loadAppUrl(title: title, iconUrl: iconUrl, appID: appId)
+                    } else {
+                        if self.suspicousLinkView.superview == nil {
+                            self.view.insertSubview(
+                                self.suspicousLinkView,
+                                belowSubview: self.pageControlView
+                            )
+                            self.suspicousLinkView.snp.makeConstraints { make in
+                                make.leading.trailing.equalToSuperview()
+                                make.top.bottom.equalTo(self.view.safeAreaLayoutGuide)
                             }
-                            self.context.style = .webPage
-                            self.context.isImmersive = false
                         }
+                        self.context.appEnvironment = nil
+                        self.context.isImmersive = false
                     }
                 }
             }
@@ -597,7 +597,7 @@ extension MixinWebViewController {
     }
     
     private func aboutAction() {
-        guard case let .app(app, _) = context.style else {
+        guard let app = context.appEnvironment?.app else {
             return
         }
         let appId = app.appId
@@ -653,7 +653,7 @@ extension MixinWebViewController {
     }
 
     private func shareAppCardAction(currentUrl: URL) {
-        guard case let .app(app, _) = context.style else {
+        guard let app = context.appEnvironment?.app else {
             return
         }
         let appId = app.appId
@@ -695,7 +695,7 @@ extension MixinWebViewController {
     }
 
     private func shareUrlAction(currentUrl: URL) {
-        guard case .webPage = context.style else {
+        guard context.appEnvironment == nil else {
             return
         }
         let vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
@@ -722,44 +722,53 @@ extension MixinWebViewController {
         }
     }
     
-    private func reportAssets(ids assetIDs: [String], callback: String) {
+    private func reportAssetsIfVerified(ids assetIDs: [String], callback: String) {
         let failureCallback = "\(callback)('[]');"
-        guard assetIDs.allSatisfy(UUID.isValidLowercasedUUIDString) else {
+        guard
+            let environment = context.appEnvironment,
+            assetIDs.allSatisfy(UUID.isValidLowercasedUUIDString),
+            let appHomeURL = URL(string: environment.app.homeUri),
+            let currentURL = webView.url,
+            appHomeURL.host == currentURL.host
+        else {
             webView.evaluateJavaScript(failureCallback)
             return
         }
-        switch context.style {
-        case let .app(app, _):
-            guard let appHomeURL = URL(string: app.homeUri), let currentURL = webView.url, appHomeURL.host == currentURL.host else {
-                webView.evaluateJavaScript(failureCallback)
-                return
-            }
-            AuthorizeAPI.authorizations(appId: app.appId) { [weak webView] result in
+        if environment.isAppVerified {
+            reportAssets(ids: assetIDs, successCallback: callback, failureCallback: failureCallback)
+        } else {
+            AuthorizeAPI.authorizations(appId: environment.app.appId) { [weak self, weak webView] result in
                 switch result {
                 case let .success(response):
-                    guard let scopes = response.first?.scopes, scopes.contains("ASSETS:READ") else {
+                    if let scopes = response.first?.scopes, scopes.contains("ASSETS:READ") {
+                        self?.reportAssets(ids: assetIDs, successCallback: callback, failureCallback: failureCallback)
+                    } else {
                         webView?.evaluateJavaScript(failureCallback)
-                        return
-                    }
-                    DispatchQueue.global().async {
-                        let tokens = TokenDAO.shared.appTokens(ids: assetIDs)
-                        if let data = try? JSONEncoder.default.encode(tokens), let string = String(data: data, encoding: .utf8) {
-                            let assets = string.replacingOccurrences(of: "'", with: "\\'")
-                            DispatchQueue.main.async {
-                                webView?.evaluateJavaScript("\(callback)('\(assets)');")
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                webView?.evaluateJavaScript(failureCallback)
-                            }
-                        }
                     }
                 case .failure:
                     webView?.evaluateJavaScript(failureCallback)
                 }
             }
-        case .webPage:
-            webView.evaluateJavaScript(failureCallback)
+        }
+    }
+    
+    private func reportAssets(
+        ids assetIDs: [String],
+        successCallback: String,
+        failureCallback: String,
+    ) {
+        DispatchQueue.global().async { [weak webView] in
+            let tokens = TokenDAO.shared.appTokens(ids: assetIDs)
+            if let data = try? JSONEncoder.default.encode(tokens), let string = String(data: data, encoding: .utf8) {
+                let assets = string.replacingOccurrences(of: "'", with: "\\'")
+                DispatchQueue.main.async {
+                    webView?.evaluateJavaScript("\(successCallback)('\(assets)');")
+                }
+            } else {
+                DispatchQueue.main.async {
+                    webView?.evaluateJavaScript(failureCallback)
+                }
+            }
         }
     }
     

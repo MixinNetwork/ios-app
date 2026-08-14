@@ -517,7 +517,7 @@ final class PrivacyWalletViewController: WalletViewController {
                    let navigationController = UIApplication.homeNavigationController
                 {
                     navigationController.pushWebViewController(
-                        context: .init(conversationId: conversationID, app: app)
+                        context: .init(conversationID: conversationID, app: app, isAppVerified: response.isVerified)
                     )
                 }
             case .failure:

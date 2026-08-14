@@ -224,7 +224,7 @@ extension ProfileViewController: CoreTextLabelDelegate {
             }
             if !UrlWindow.checkUrl(url: url) {
                 navigationController.pushWebViewController(
-                    context: .init(conversationId: conversationId, initialUrl: url)
+                    context: .init(conversationID: conversationId, initialURL: url)
                 )
             }
         }

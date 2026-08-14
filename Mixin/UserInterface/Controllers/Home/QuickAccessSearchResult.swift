@@ -88,8 +88,8 @@ final class QuickAccessSearchResult {
             let isOpened = UrlWindow.checkUrl(url: url)
             if !isOpened, let navigationController = UIApplication.homeNavigationController {
                 let context = MixinWebContext(
-                    conversationId: "",
-                    initialUrl: url,
+                    conversationID: "",
+                    initialURL: url,
                     saveAsRecentSearch: true
                 )
                 navigationController.pushWebViewController(context: context)

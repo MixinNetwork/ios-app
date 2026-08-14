@@ -5,6 +5,7 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
     
     protocol Delegate: AnyObject {
         func webViewMessageHander(_ handler: WebViewMessageHandler, didReceiveMessage message: Message)
+        func webViewMessageHander(_ handler: WebViewMessageHandler, allowsSignBotWith appID: String) -> Bool
         func webViewMessageHanderGetCurrentURL(_ handler: WebViewMessageHandler) -> URL?
     }
     
@@ -107,7 +108,6 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
             delegate?.webViewMessageHander(self, didReceiveMessage: .web3Bridge(body))
         case .signBotSignature:
             guard
-                let url = delegate?.webViewMessageHanderGetCurrentURL(self),
                 let messageBody = message.body as? [Any],
                 messageBody.count >= 6,
                 let appID = messageBody[0] as? String,
@@ -115,8 +115,17 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
                 let method = messageBody[2] as? String,
                 let path = messageBody[3] as? String,
                 let body = messageBody[4] as? String,
-                let callback = messageBody[5] as? String
+                let callback = messageBody[5] as? String,
+                let delegate
             else {
+                return
+            }
+            let failureCallback = "\(callback)([]);"
+            guard
+                let url = delegate.webViewMessageHanderGetCurrentURL(self),
+                delegate.webViewMessageHander(self, allowsSignBotWith: appID)
+            else {
+                delegate.webViewMessageHander(self, didReceiveMessage: .signBotSignature(callback: failureCallback))
                 return
             }
             DispatchQueue.global().async { [weak delegate] in
@@ -154,8 +163,7 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
                     }
                 } catch {
                     DispatchQueue.main.async {
-                        let result = "\(callback)(null);"
-                        delegate?.webViewMessageHander(self, didReceiveMessage: .signBotSignature(callback: result))
+                        delegate?.webViewMessageHander(self, didReceiveMessage: .signBotSignature(callback: failureCallback))
                     }
                 }
             }

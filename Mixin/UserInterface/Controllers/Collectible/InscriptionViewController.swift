@@ -187,7 +187,7 @@ final class InscriptionViewController: UIViewController {
             return
         }
         navigationController.pushWebViewController(
-            context: .init(conversationId: "", initialUrl: url)
+            context: .init(conversationID: "", initialURL: url)
         )
     }
     

@@ -360,6 +360,7 @@ extension UserProfileViewController {
     
     @objc func openApp() {
         let userId = user.userId
+        let userVerified = user.isVerified
         checkedDismiss(animated: true) { _ in
             guard let navigationController = UIApplication.homeNavigationController else {
                 return
@@ -377,7 +378,7 @@ extension UserProfileViewController {
                 DispatchQueue.main.async {
                     AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
                     navigationController.pushWebViewController(
-                        context: .init(conversationId: conversationId, app: app)
+                        context: .init(conversationID: conversationId, app: app, isAppVerified: userVerified)
                     )
                 }
             }

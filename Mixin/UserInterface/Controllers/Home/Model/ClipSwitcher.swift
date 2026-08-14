@@ -51,16 +51,16 @@ final class ClipSwitcher {
         guard !clips.contains(where: { $0.controllerIfLoaded == controller }) else {
             return
         }
-        let clip: Clip
-        switch controller.context.style {
-        case let .app(app, _):
-            clip = Clip(app: app,
-                        url: controller.webView.url ?? URL(string: app.homeUri) ?? .blank,
-                        controller: controller)
-        case .webPage:
-            clip = Clip(app: nil,
-                        url: controller.webView.url ?? .blank,
-                        controller: controller)
+        let clip = if let app = controller.context.appEnvironment?.app {
+            Clip(
+                url: controller.webView.url ?? URL(string: app.homeUri) ?? .blank,
+                controller: controller
+            )
+        } else {
+            Clip(
+                url: controller.webView.url ?? .blank,
+                controller: controller
+            )
         }
         minimizedController?.appendClip(clip, animated: true)
         clips.append(clip)

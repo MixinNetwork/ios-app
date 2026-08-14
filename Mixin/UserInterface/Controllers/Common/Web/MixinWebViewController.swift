@@ -396,8 +396,12 @@ extension MixinWebViewController: WebViewMessageHandler.Delegate {
         }
     }
     
-    func webViewMessageHanderAllowsToSignBot(_ handler: WebViewMessageHandler) -> Bool {
-        context.appEnvironment?.isAppVerified ?? false
+    func webViewMessageHander(_ handler: WebViewMessageHandler, allowsSignBotWith appID: String) -> Bool {
+        if let environment = context.appEnvironment {
+            environment.isAppVerified && environment.app.appId == appID
+        } else {
+            false
+        }
     }
     
     func webViewMessageHanderGetCurrentURL(_ handler: WebViewMessageHandler) -> URL? {

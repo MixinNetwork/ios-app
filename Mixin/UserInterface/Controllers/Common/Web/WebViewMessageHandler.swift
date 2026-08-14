@@ -5,7 +5,7 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
     
     protocol Delegate: AnyObject {
         func webViewMessageHander(_ handler: WebViewMessageHandler, didReceiveMessage message: Message)
-        func webViewMessageHanderAllowsToSignBot(_ handler: WebViewMessageHandler) -> Bool
+        func webViewMessageHander(_ handler: WebViewMessageHandler, allowsSignBotWith appID: String) -> Bool
         func webViewMessageHanderGetCurrentURL(_ handler: WebViewMessageHandler) -> URL?
     }
     
@@ -109,7 +109,6 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
         case .signBotSignature:
             guard
                 let delegate,
-                delegate.webViewMessageHanderAllowsToSignBot(self),
                 let url = delegate.webViewMessageHanderGetCurrentURL(self),
                 let messageBody = message.body as? [Any],
                 messageBody.count >= 6,
@@ -118,7 +117,8 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
                 let method = messageBody[2] as? String,
                 let path = messageBody[3] as? String,
                 let body = messageBody[4] as? String,
-                let callback = messageBody[5] as? String
+                let callback = messageBody[5] as? String,
+                delegate.webViewMessageHander(self, allowsSignBotWith: appID)
             else {
                 return
             }

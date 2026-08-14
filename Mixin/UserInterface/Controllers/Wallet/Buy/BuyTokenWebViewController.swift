@@ -166,7 +166,7 @@ extension BuyTokenWebViewController: WebViewMessageHandler.Delegate {
         }
     }
     
-    func webViewMessageHanderAllowsToSignBot(_ handler: WebViewMessageHandler) -> Bool {
+    func webViewMessageHander(_ handler: WebViewMessageHandler, allowsSignBotWith appID: String) -> Bool {
         true
     }
     

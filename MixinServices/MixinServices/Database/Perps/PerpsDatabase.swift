@@ -179,6 +179,7 @@ public final class PerpsDatabase: Database {
                 .fetchAll(db, sql: "PRAGMA table_info(perps_orders)")
                 .map(\.name)
             if !perpOrdersColumns.contains("fee_amount") {
+                try db.execute(sql: "DELETE FROM perps_orders")
                 try db.execute(sql: "ALTER TABLE `perps_orders` ADD COLUMN `fee_amount` TEXT NOT NULL DEFAULT '0'")
             }
             

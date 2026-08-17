@@ -587,7 +587,7 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
                 return
             }
             let viewModel = activities[indexPath.item]
-            let activity = PerpetualActivityViewController(wallet: wallet, viewModel: viewModel)
+            let activity = PerpetualOrderViewController(wallet: wallet, viewModel: viewModel)
             navigationController?.pushViewController(activity, animated: true)
             reporter.report(event: .tradePerpsActivityDetail, tags: ["source": "perps_home_list"])
         case .introduction:

@@ -921,7 +921,7 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
             break
         case .activities(let viewModels):
             let viewModel = viewModels[indexPath.item]
-            let activity = PerpetualActivityViewController(wallet: wallet, viewModel: viewModel)
+            let activity = PerpetualOrderViewController(wallet: wallet, viewModel: viewModel)
             navigationController?.pushViewController(activity, animated: true)
             reporter.report(event: .tradePerpsActivityDetail, tags: ["source": "perps_market"])
         case .introduction:

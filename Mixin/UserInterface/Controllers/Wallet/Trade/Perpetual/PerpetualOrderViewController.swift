@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class PerpetualActivityViewController: UIViewController {
+final class PerpetualOrderViewController: UIViewController {
     
     private enum Section: Int, CaseIterable {
         case header
@@ -161,7 +161,7 @@ final class PerpetualActivityViewController: UIViewController {
                 controller is PerpetualMarketViewController
                 || controller is PerpetualPositionsViewController
                 || controller is PerpetualActivitiesViewController
-                || controller is PerpetualActivityViewController
+                || controller is PerpetualOrderViewController
             }
             viewControllers.append(market)
             navigationController.setViewControllers(viewControllers, animated: true)
@@ -170,7 +170,7 @@ final class PerpetualActivityViewController: UIViewController {
     
 }
 
-extension PerpetualActivityViewController: NavigationBarStyling {
+extension PerpetualOrderViewController: NavigationBarStyling {
     
     var navigationBarStyle: NavigationBarStyle {
         .secondaryBackground
@@ -178,7 +178,7 @@ extension PerpetualActivityViewController: NavigationBarStyling {
     
 }
 
-extension PerpetualActivityViewController: UICollectionViewDataSource {
+extension PerpetualOrderViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         Section.allCases.count
@@ -257,7 +257,7 @@ extension PerpetualActivityViewController: UICollectionViewDataSource {
     
 }
 
-extension PerpetualActivityViewController: UICollectionViewDelegate {
+extension PerpetualOrderViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
@@ -275,7 +275,7 @@ extension PerpetualActivityViewController: UICollectionViewDelegate {
     
 }
 
-extension PerpetualActivityViewController: PillActionView.Delegate {
+extension PerpetualOrderViewController: PillActionView.Delegate {
     
     func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
         switch viewModel.actions[index] {
@@ -311,7 +311,7 @@ extension PerpetualActivityViewController: PillActionView.Delegate {
     
 }
 
-extension PerpetualActivityViewController: PerpetualPositionHeaderCell.Delegate {
+extension PerpetualOrderViewController: PerpetualPositionHeaderCell.Delegate {
     
     func perpetualPositionHeaderCellRequestToViewMarket(_ cell: PerpetualPositionHeaderCell) {
         viewMarket()
@@ -319,7 +319,7 @@ extension PerpetualActivityViewController: PerpetualPositionHeaderCell.Delegate 
     
 }
 
-extension PerpetualActivityViewController: PerpetualPositionCompactInfoCell.Delegate {
+extension PerpetualOrderViewController: PerpetualPositionCompactInfoCell.Delegate {
     
     func perpetualPositionCompactInfoCellDidSelectInfo(_ cell: PerpetualPositionCompactInfoCell) {
         let manual = PerpsManual.viewController(initialPage: .tradingFee)

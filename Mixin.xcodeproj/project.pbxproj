@@ -1564,7 +1564,7 @@
 		94D82BDD2E40B06C000BA0BF /* AddressLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D82BDC2E40B069000BA0BF /* AddressLabel.swift */; };
 		94D8426C2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */; };
 		94D916EF2DC0C45E009B8A7F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D916EE2DC0C45E009B8A7F /* StoreKit.framework */; };
-		94D9DD3B2F59CF1C00B3B990 /* PerpetualActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DD3A2F59CF1A00B3B990 /* PerpetualActivityViewController.swift */; };
+		94D9DD3B2F59CF1C00B3B990 /* PerpetualOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DD3A2F59CF1A00B3B990 /* PerpetualOrderViewController.swift */; };
 		94D9DD522F59CFF400B3B990 /* PerpetualPositionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DD512F59CFEF00B3B990 /* PerpetualPositionViewModel.swift */; };
 		94D9DD612F59D26D00B3B990 /* PerpetualPositionHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DD5F2F59D26D00B3B990 /* PerpetualPositionHeaderCell.swift */; };
 		94D9DD622F59D26D00B3B990 /* PerpetualPositionHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D9DD602F59D26D00B3B990 /* PerpetualPositionHeaderCell.xib */; };
@@ -3593,7 +3593,7 @@
 		94D82BDC2E40B069000BA0BF /* AddressLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressLabel.swift; sourceTree = "<group>"; };
 		94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		94D916EE2DC0C45E009B8A7F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		94D9DD3A2F59CF1A00B3B990 /* PerpetualActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualActivityViewController.swift; sourceTree = "<group>"; };
+		94D9DD3A2F59CF1A00B3B990 /* PerpetualOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualOrderViewController.swift; sourceTree = "<group>"; };
 		94D9DD512F59CFEF00B3B990 /* PerpetualPositionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualPositionViewModel.swift; sourceTree = "<group>"; };
 		94D9DD5F2F59D26D00B3B990 /* PerpetualPositionHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualPositionHeaderCell.swift; sourceTree = "<group>"; };
 		94D9DD602F59D26D00B3B990 /* PerpetualPositionHeaderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpetualPositionHeaderCell.xib; sourceTree = "<group>"; };
@@ -4958,7 +4958,7 @@
 				94FB2EE82F51672200F85AB4 /* LeverageMultiplierInputViewController.swift */,
 				941C75C92F5E9FC8005B70A9 /* PerpetualPositionsViewController.swift */,
 				94ABAACF2FBDDCB800FC536D /* PerpetualActivitiesViewController.swift */,
-				94D9DD3A2F59CF1A00B3B990 /* PerpetualActivityViewController.swift */,
+				94D9DD3A2F59CF1A00B3B990 /* PerpetualOrderViewController.swift */,
 				94D9DD602F59D26D00B3B990 /* PerpetualPositionHeaderCell.xib */,
 				94D9DD5F2F59D26D00B3B990 /* PerpetualPositionHeaderCell.swift */,
 				94D9DD7C2F59D79400B3B990 /* PerpetualPositionProductCell.xib */,
@@ -9192,7 +9192,7 @@
 				7B5E9B4C2437434D000AE24E /* CircleEditingButton.swift in Sources */,
 				7B4CBDC22528533600BA66D0 /* ClipSwitcher.swift in Sources */,
 				945A72892E59BE1F006A11E9 /* TIPQuizQuestionCell.swift in Sources */,
-				94D9DD3B2F59CF1C00B3B990 /* PerpetualActivityViewController.swift in Sources */,
+				94D9DD3B2F59CF1C00B3B990 /* PerpetualOrderViewController.swift in Sources */,
 				941995022CCE79E700F5425C /* IntroductionViewController.swift in Sources */,
 				94CB85CF2C6B43A900135641 /* TokenMyBalanceCell.swift in Sources */,
 				945A72932E59BE2E006A11E9 /* TIPQuizAnswerCell.swift in Sources */,

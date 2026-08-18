@@ -658,7 +658,7 @@
 "error_transfer_to_deactivated_user" = "ОШИБКА 20160: невозможно осуществить переводы деактивированному пользователю.";
 "error_two_parts" = "ОШИБКА %@: %@";
 "error_used_phone" = "ОШИБКА 20122: этот номер телефона уже связан с другой учетной записью.";
-"error_watch_address_not_supported" = "ОШИБКА 10633: неверный адрес";
+"error_watch_address_not_supported" = "ОШИБКА 10633: Добавление этого адреса в настоящее время не поддерживается";
 "error_withdrawal_memo_format_incorrect" = "ОШИБКА 20131: Неверный формат уведомления о снятии средств.";
 "error_withdrawal_suspend" = "ОШИБКА 20137: Вывод средств приостановлен.";
 "estimated_balance_change" = "Изменение баланса (оценка)";

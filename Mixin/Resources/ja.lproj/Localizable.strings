@@ -658,7 +658,7 @@
 "error_transfer_to_deactivated_user" = "エラー 20160: 非アクティブ化されたユーザーには転送できません";
 "error_two_parts" = "エラー %@：%@";
 "error_used_phone" = "エラー20122：この電話番号はすでに他のアカウントと紐づけられています";
-"error_watch_address_not_supported" = "エラー 10633: 無効なアドレス";
+"error_watch_address_not_supported" = "エラー 10633: このアドレスは現在対応していません";
 "error_withdrawal_memo_format_incorrect" = "エラー20131：出金メモのフォーマットが不正確です";
 "error_withdrawal_suspend" = "エラー 20137: 出金は一時停止されています。";
 "estimated_balance_change" = "バランス変更 (推定)";

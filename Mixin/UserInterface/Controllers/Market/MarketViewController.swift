@@ -504,9 +504,7 @@ final class MarketViewController: UIViewController {
     }
     
     private func viewPerps(market: PerpetualMarket, openOnSide side: PerpetualOrderSide) {
-        guard let viewModel = PerpetualMarketViewModel(market: market) else {
-            return
-        }
+        let viewModel = PerpetualMarketViewModel(market: market)
         let next: UIViewController
         if PerpsPositionDAO.shared.hasPosition(marketID: viewModel.market.marketID) {
             next = PerpetualMarketViewController(

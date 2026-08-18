@@ -41,6 +41,9 @@ public final class FavorablePerpetualMarket: PerpetualMarket {
             tags: m.tags,
             priceScale: m.priceScale,
             descriptions: m.descriptions,
+            fundingIntervalHours: m.fundingIntervalHours,
+            nextFundingAt: m.nextFundingAt,
+            openInterest: m.openInterest,
         )
     }
     

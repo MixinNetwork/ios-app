@@ -26,9 +26,32 @@ final class PerpetualMarketViewController: UIViewController {
         case autoClosingIntroduction(PerpsAutoClosingCondition.Behavior)
         case openPosition(PerpetualPositionViewModel)
         case info
-        case activities([PerpetualActivityViewModel])
+        case activities([PerpetualOrderViewModel])
         case introduction
         case description(String)
+    }
+    
+    private enum Info {
+        
+        case volume
+        case openInterest
+        case fundingRate
+        
+        static func availableInfos(
+            in viewModel: PerpetualMarketViewModel
+        ) -> [Info] {
+            var infos: [Info] = [.volume]
+            if viewModel.openInterest != nil {
+                infos.append(.openInterest)
+            }
+            if viewModel.market.fundingIntervalHours != 0,
+               viewModel.nextFundingAt.timeIntervalSinceNow > 0
+            {
+                infos.append(.fundingRate)
+            }
+            return infos
+        }
+        
     }
     
     private let wallet: Wallet
@@ -41,6 +64,7 @@ final class PerpetualMarketViewController: UIViewController {
     private var viewModel: PerpetualMarketViewModel
     private var isFavorite: Bool = false
     private var sections: [Section] = [.price, .info]
+    private var infos: [Info] = []
     private var selectedTimeFrame: PerpetualTimeFrame = {
         if let value = AppGroupUserDefaults.Wallet.perpsChartTimeFrame,
            let frame = PerpetualTimeFrame(rawValue: value)
@@ -92,6 +116,7 @@ final class PerpetualMarketViewController: UIViewController {
             marketID: viewModel.market.marketID
         )
         self.viewModel = viewModel
+        self.infos = Info.availableInfos(in: viewModel)
         super.init(nibName: nil, bundle: nil)
         self.candleLoader.delegate = self
     }
@@ -231,6 +256,7 @@ final class PerpetualMarketViewController: UIViewController {
         )
         collectionView.register(R.nib.perpetualMarketPriceCell)
         collectionView.register(R.nib.perpetualMarketInfoCell)
+        collectionView.register(R.nib.perpMarketFundingRateCell)
         collectionView.register(R.nib.perpetualIntroductionCell)
         collectionView.register(R.nib.perpsAutoClosingIntroCell)
         collectionView.register(R.nib.perpetualMarketOpenPositionCell)
@@ -406,17 +432,17 @@ final class PerpetualMarketViewController: UIViewController {
     @objc private func reloadMarket(_ notification: Notification) {
         let marketID = viewModel.market.marketID
         DispatchQueue.global().async { [weak self] in
-            guard
-                let market = PerpsMarketDAO.shared.market(marketID: marketID),
-                let viewModel = PerpetualMarketViewModel(market: market)
-            else {
+            guard let market = PerpsMarketDAO.shared.market(marketID: marketID) else {
                 return
             }
+            let viewModel = PerpetualMarketViewModel(market: market)
+            let infos = Info.availableInfos(in: viewModel)
             DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
                 self.viewModel = viewModel
+                self.infos = infos
                 UIView.performWithoutAnimation(self.collectionView.reloadData)
             }
         }
@@ -436,7 +462,7 @@ final class PerpetualMarketViewController: UIViewController {
                 marketID: marketID,
                 limit: limit
             ).compactMap { order in
-                PerpetualActivityViewModel(wallet: wallet, order: order)
+                PerpetualOrderViewModel(wallet: wallet, order: order)
             }
             DispatchQueue.main.async {
                 self?.reloadData(
@@ -449,7 +475,7 @@ final class PerpetualMarketViewController: UIViewController {
     
     private func reloadData(
         openPosition: PerpetualPositionViewModel?,
-        activities: [PerpetualActivityViewModel]
+        activities: [PerpetualOrderViewModel]
     ) {
         if let openPosition, openPosition.state != .opening {
             sections = [.price]
@@ -509,6 +535,9 @@ final class PerpetualMarketViewController: UIViewController {
         if let description = viewModel.description {
             sections.append(.description(description))
         }
+        
+        infos = Info.availableInfos(in: viewModel)
+        
         collectionView.reloadData()
     }
     
@@ -766,7 +795,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
         case .openPosition:
             1
         case .info:
-            2
+            infos.count
         case .activities(let activities):
             min(maxItemCount, activities.count)
         case .introduction:
@@ -804,20 +833,32 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             openPositionCell = cell
             return cell
         case .info:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_info, for: indexPath)!
-            switch indexPath.item {
-            case 0:
+            switch infos[indexPath.item] {
+            case .volume:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_info, for: indexPath)!
                 cell.titleLabel.text = R.string.localizable.volume_24h().uppercased()
                 cell.titleInfoImageView.isHidden = true
                 cell.contentLabel.text = viewModel.volume
                 cell.delegate = nil
-            default:
-                cell.titleLabel.text = R.string.localizable.funding_rate().uppercased()
-                cell.titleInfoImageView.isHidden = false
+                return cell
+            case .openInterest:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_info, for: indexPath)!
+                cell.titleLabel.text = R.string.localizable.open_interest().uppercased()
+                cell.titleInfoImageView.isHidden = true
+                cell.contentLabel.text = viewModel.openInterest
+                cell.delegate = nil
+                return cell
+            case .fundingRate:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perp_market_funding_rate, for: indexPath)!
+                cell.titleLabel.text = R.string.localizable.perps_funding_title_interval(viewModel.market.fundingIntervalHours).uppercased()
                 cell.contentLabel.text = viewModel.fundingRate
                 cell.delegate = self
+                cell.startCountDown(
+                    nextFundingDate: viewModel.nextFundingAt,
+                    totalInterval: TimeInterval(viewModel.market.fundingIntervalHours) * .hour
+                )
+                return cell
             }
-            return cell
         case .activities(let viewModels):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_activity, for: indexPath)!
             let viewModel = viewModels[indexPath.item]
@@ -881,7 +922,7 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
             break
         case .activities(let viewModels):
             let viewModel = viewModels[indexPath.item]
-            let activity = PerpetualActivityViewController(wallet: wallet, viewModel: viewModel)
+            let activity = PerpetualOrderViewController(wallet: wallet, viewModel: viewModel)
             navigationController?.pushViewController(activity, animated: true)
             reporter.report(event: .tradePerpsActivityDetail, tags: ["source": "perps_market"])
         case .introduction:
@@ -996,9 +1037,9 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
     
 }
 
-extension PerpetualMarketViewController: PerpetualMarketInfoCell.Delegate {
+extension PerpetualMarketViewController: PerpMarketFundingRateCell.Delegate {
     
-    func perpetualMarketInfoCellDidRequestInfo(_ cell: PerpetualMarketInfoCell) {
+    func perpMarketFundingRateCellDidRequestInfo(_ cell: PerpMarketFundingRateCell) {
         let manual = PerpsManual.viewController(initialPage: .fundingRate)
         present(manual, animated: true)
         reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_market_info"])

@@ -37,7 +37,7 @@ final class PerpetualActivityCell: UICollectionViewCell {
         changeLabel.textColor = R.color.text_tertiary()
     }
     
-    func load(viewModel: PerpetualActivityViewModel) {
+    func load(viewModel: PerpetualOrderViewModel) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
         titleLabel.text = viewModel.title
         valueLabel.text = viewModel.orderValueInToken

@@ -46,8 +46,8 @@ struct SharePerpetualPositionDataSource {
     }
     
     init(
-        viewModel: PerpetualActivityViewModel,
-        pnl: PerpetualActivityViewModel.PnL,
+        viewModel: PerpetualOrderViewModel,
+        pnl: PerpetualOrderViewModel.PnL,
         closePrice: String,
     ) {
         self.title = viewModel.directionWithSymbol

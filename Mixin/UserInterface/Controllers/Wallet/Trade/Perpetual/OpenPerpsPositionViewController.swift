@@ -398,11 +398,11 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     @objc private func reloadMarket(_ notification: Notification) {
         guard
             let market = notification.userInfo?[PerpsMarketDAO.UserInfoKey.market],
-            let market = market as? PerpetualMarket,
-            let viewModel = PerpetualMarketViewModel(market: market)
+            let market = market as? PerpetualMarket
         else {
             return
         }
+        let viewModel = PerpetualMarketViewModel(market: market)
         self.viewModel = viewModel
         priceLabel.text = R.string.localizable.current_price(viewModel.price)
         updateDescriptions(
@@ -477,6 +477,12 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
                     leverage: (leverageMultiplier as NSDecimalNumber).intValue
                 ) { [weak self] price in
                     self?.show(liquidationPrice: .valid(price: price, isBalanceSufficient: isBalanceSufficient))
+                } onFailure: { [weak self] error in
+                    guard let self else {
+                        return
+                    }
+                    self.show(liquidationPrice: .invalid)
+                    self.showError(description: error.localizedDescription)
                 }
                 show(liquidationPrice: .busy)
                 showError(description: isBalanceSufficient ? nil : R.string.localizable.insufficient_balance())

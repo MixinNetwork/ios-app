@@ -342,7 +342,7 @@ extension PerpetualMarketSelectorViewController: UICollectionViewDataSource {
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.favorable_perps_market, for: indexPath)!
-            cell.reloadData(market: market)
+            cell.reloadData(market: market, tag: .leverage)
             cell.delegate = self
             return cell
         }

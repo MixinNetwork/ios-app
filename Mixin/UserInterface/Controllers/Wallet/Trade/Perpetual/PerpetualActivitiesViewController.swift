@@ -15,7 +15,7 @@ final class PerpetualActivitiesViewController: UIViewController {
     private weak var collectionView: UICollectionView!
     
     private var value: PerpetualPositionValue?
-    private var viewModels: [PerpetualActivityViewModel]?
+    private var viewModels: [PerpetualOrderViewModel]?
     private var loadNextPageIndexPath: IndexPath?
     
     init(wallet: Wallet) {
@@ -134,7 +134,7 @@ final class PerpetualActivitiesViewController: UIViewController {
                 limit: pageCount
             )
             let viewModels = orderItems.compactMap { item in
-                PerpetualActivityViewModel(wallet: wallet, order: item)
+                PerpetualOrderViewModel(wallet: wallet, order: item)
             }
             let hasMore = orderItems.count == pageCount
             if offset != nil, viewModels.isEmpty {
@@ -254,7 +254,7 @@ extension PerpetualActivitiesViewController: UICollectionViewDelegate {
                 return
             }
             let viewModel = viewModels[indexPath.item]
-            let activity = PerpetualActivityViewController(wallet: wallet, viewModel: viewModel)
+            let activity = PerpetualOrderViewController(wallet: wallet, viewModel: viewModel)
             navigationController?.pushViewController(activity, animated: true)
             reporter.report(event: .tradePerpsActivityDetail, tags: ["source": "perps_activity_list"])
         }

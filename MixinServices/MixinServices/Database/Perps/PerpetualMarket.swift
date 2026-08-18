@@ -28,6 +28,9 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
         case tags = "tags"
         case priceScale = "price_scale"
         case descriptions = "descriptions"
+        case fundingIntervalHours = "funding_interval_hours"
+        case nextFundingAt = "next_funding_at"
+        case openInterest = "open_interest"
     }
     
     public enum Category: String, CaseIterable {
@@ -63,6 +66,9 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
     public let tags: [String]
     public let priceScale: Int
     public let descriptions: [String: String]?
+    public let fundingIntervalHours: Int
+    public let nextFundingAt: String
+    public let openInterest: String
     
     public var canonicalPriceFormatStyle: Decimal.FormatStyle {
         Decimal.FormatStyle.number
@@ -108,7 +114,10 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
         category: UnknownableEnum<PerpetualMarket.Category>,
         tags: [String],
         priceScale: Int,
-        descriptions: [String : String]? = nil
+        descriptions: [String : String]?,
+        fundingIntervalHours: Int,
+        nextFundingAt: String,
+        openInterest: String,
     ) {
         self.marketID = marketID
         self.displaySymbol = displaySymbol
@@ -134,6 +143,9 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
         self.tags = tags
         self.priceScale = priceScale
         self.descriptions = descriptions
+        self.fundingIntervalHours = fundingIntervalHours
+        self.nextFundingAt = nextFundingAt
+        self.openInterest = openInterest
     }
     
 }

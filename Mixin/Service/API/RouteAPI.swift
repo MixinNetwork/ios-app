@@ -369,12 +369,13 @@ extension RouteAPI {
         if let liquidationPrice = Decimal(string: result.liquidationPrice, locale: .enUSPOSIX) {
             return liquidationPrice
         } else {
-            throw DecodingError.dataCorrupted(
+            let error = DecodingError.dataCorrupted(
                 .init(
                     codingPath: [Price.CodingKeys.liquidationPrice],
                     debugDescription: "Invalid price"
                 )
             )
+            throw MixinAPIError.invalidJSON(error)
         }
     }
     

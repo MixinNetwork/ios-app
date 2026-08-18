@@ -603,6 +603,7 @@ class TradeSpotViewController: UIViewController {
                     toSection: .openOrders
                 )
             }
+            snapshot.reloadSections([.openOrders])
             dataSource.apply(snapshot, animatingDifferences: false)
         }
     }

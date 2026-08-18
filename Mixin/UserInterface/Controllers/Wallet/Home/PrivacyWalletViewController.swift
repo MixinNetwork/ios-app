@@ -577,9 +577,9 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
             UIApplication.homeNavigationController?.presentCashPage()
         case .perpsPosition(let positionID):
             if let position = perpsPositions[positionID],
-               let market = PerpsMarketDAO.shared.market(marketID: position.marketID),
-               let viewModel = PerpetualMarketViewModel(market: market)
+               let market = PerpsMarketDAO.shared.market(marketID: position.marketID)
             {
+                let viewModel = PerpetualMarketViewModel(market: market)
                 let market = PerpetualMarketViewController(
                     wallet: .privacy,
                     viewModel: viewModel,

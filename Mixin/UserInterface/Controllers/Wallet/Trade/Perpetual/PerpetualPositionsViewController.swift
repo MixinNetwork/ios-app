@@ -263,9 +263,8 @@ extension PerpetualPositionsViewController: UICollectionViewDelegate {
                 return
             }
             let viewModel = viewModels[indexPath.item]
-            if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID),
-               let viewModel = PerpetualMarketViewModel(market: market)
-            {
+            if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID) {
+                let viewModel = PerpetualMarketViewModel(market: market)
                 let market = PerpetualMarketViewController(
                     wallet: wallet,
                     viewModel: viewModel,

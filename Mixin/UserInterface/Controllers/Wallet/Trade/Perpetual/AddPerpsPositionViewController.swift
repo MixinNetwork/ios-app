@@ -289,6 +289,12 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
                     amount: marginAmount
                 ) { [weak self] price in
                     self?.show(liquidationPrice: .valid(price: price, isBalanceSufficient: isBalanceSufficient))
+                } onFailure: { [weak self] error in
+                    guard let self else {
+                        return
+                    }
+                    self.show(liquidationPrice: .invalid)
+                    self.showError(description: error.localizedDescription)
                 }
                 show(liquidationPrice: .busy)
                 showError(description: isBalanceSufficient ? nil : R.string.localizable.insufficient_balance())

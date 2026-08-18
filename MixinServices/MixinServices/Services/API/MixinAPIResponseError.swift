@@ -64,6 +64,7 @@ extension MixinAPIResponseError {
     public static let tooManyWallets                       = MixinAPIResponseError(status: 202, code: 10632)
     public static let unsupportedWatchAddress              = MixinAPIResponseError(status: 202, code: 10633)
     public static let alreadyHadPosition                   = MixinAPIResponseError(status: 202, code: 10651)
+    public static let tooManyMargin                        = MixinAPIResponseError(status: 202, code: 10655)
     public static let referralCodeNotFound                 = MixinAPIResponseError(status: 202, code: 10730)
     public static let alreadyBondedReferralCode            = MixinAPIResponseError(status: 202, code: 10731)
     public static let referringSelf                        = MixinAPIResponseError(status: 202, code: 10732)

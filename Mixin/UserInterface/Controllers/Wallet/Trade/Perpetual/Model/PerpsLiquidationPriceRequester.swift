@@ -8,6 +8,10 @@ class PerpsLiquidationPriceRequester {
     
     fileprivate var task: Task<Void, Error>?
     
+    deinit {
+        task?.cancel()
+    }
+    
     func cancelLastRequest() {
         task?.cancel()
     }
@@ -28,7 +32,8 @@ final class OpenPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceReq
     func request(
         amount: Decimal,
         leverage: Int,
-        completion: @escaping @MainActor (Decimal) -> Void
+        onSuccess: @escaping @MainActor (Decimal) -> Void,
+        onFailure: @escaping @MainActor (Error) -> Void,
     ) {
         task?.cancel()
         task = Task { [debounceInterval, marketID, side] in
@@ -42,14 +47,19 @@ final class OpenPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceReq
                     )
                     try Task.checkCancellation()
                     await MainActor.run {
-                        completion(price)
+                        onSuccess(price)
                     }
                     return
                 } catch is CancellationError {
                     // Ignore
-                } catch {
+                } catch let error as MixinAPIError where error.worthRetrying {
                     Logger.general.error(category: "OpenPerpsPosition", message: "\(error)")
                     try await Task.sleep(nanoseconds: failRetryInterval * NSEC_PER_SEC)
+                } catch {
+                    await MainActor.run {
+                        onFailure(error)
+                    }
+                    return
                 }
             }
         }
@@ -68,7 +78,8 @@ final class AddPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceRequ
     @MainActor
     func request(
         amount: Decimal,
-        completion: @escaping @MainActor (Decimal) -> Void
+        onSuccess: @escaping @MainActor (Decimal) -> Void,
+        onFailure: @escaping @MainActor (Error) -> Void,
     ) {
         task?.cancel()
         task = Task { [debounceInterval, positionID] in
@@ -82,14 +93,19 @@ final class AddPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceRequ
                     )
                     try Task.checkCancellation()
                     await MainActor.run {
-                        completion(price)
+                        onSuccess(price)
                     }
                     return
                 } catch is CancellationError {
                     // Ignore
-                } catch {
-                    Logger.general.error(category: "OpenPerpsPosition", message: "\(error)")
+                } catch let error as MixinAPIError where error.worthRetrying {
+                    Logger.general.error(category: "AddPerpsPosition", message: "\(error)")
                     try await Task.sleep(nanoseconds: failRetryInterval * NSEC_PER_SEC)
+                } catch {
+                    await MainActor.run {
+                        onFailure(error)
+                    }
+                    return
                 }
             }
         }

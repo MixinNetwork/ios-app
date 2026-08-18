@@ -22,6 +22,7 @@ struct PerpetualMarketViewModel {
         let userDisplayPriceFormatStyle = PerpetualMarket.userDisplayPriceFormatStyle(scale: m.priceScale)
         let decimalFundingRate = Decimal(string: m.fundingRate, locale: .enUSPOSIX)
         let openInterest = Decimal(string: m.openInterest, locale: .enUSPOSIX)
+        let markPrice = Decimal(string: m.markPrice, locale: .enUSPOSIX)
         
         self.market = m
         self.iconURL = URL(string: m.iconURL)
@@ -50,11 +51,13 @@ struct PerpetualMarketViewModel {
             self.description = nil
         }
         self.nextFundingAt = m.nextFundingAt.toUTCDate()
-        if let openInterest, openInterest != 0 {
-            self.openInterest = NamedLargeNumberFormatter.string(
-                number: openInterest,
-                currency: .usd
-            )
+        if let openInterest, let markPrice {
+            let value = openInterest * markPrice
+            if value == 0 {
+                self.openInterest = nil
+            } else {
+                self.openInterest = NamedLargeNumberFormatter.string(number: value, currency: .usd)
+            }
         } else {
             self.openInterest = nil
         }

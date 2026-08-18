@@ -72,6 +72,7 @@ extension MarketHeaderView: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         delegate?.marketHeaderView(self, didSelectSubCategoryAt: indexPath.item)
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
     
 }

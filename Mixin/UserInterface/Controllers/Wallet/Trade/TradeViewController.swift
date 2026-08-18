@@ -272,6 +272,7 @@ extension TradeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let trading = allTradings[indexPath.item]
         switchTo(trading: trading, indexPath: indexPath)
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
     
 }

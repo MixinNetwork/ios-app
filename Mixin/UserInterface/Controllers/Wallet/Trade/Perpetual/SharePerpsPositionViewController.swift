@@ -162,6 +162,7 @@ extension SharePerpsPositionViewController: UICollectionViewDelegate {
         case styleSelectorCollectionView:
             style = SharePerpsPositionStyle(rawValue: indexPath.item)!
             contentPreviewCollectionView.reloadData()
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         case contentPreviewCollectionView:
             break
         default:

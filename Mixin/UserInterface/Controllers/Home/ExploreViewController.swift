@@ -247,6 +247,7 @@ extension ExploreViewController: UICollectionViewDelegate {
             switchToChild(collectiblesViewController)
         }
         AppGroupUserDefaults.User.exploreSegmentIndex = indexPath.item
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
     
 }

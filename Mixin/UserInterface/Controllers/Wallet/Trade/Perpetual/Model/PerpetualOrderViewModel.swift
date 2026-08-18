@@ -213,7 +213,7 @@ struct PerpetualOrderViewModel {
         if let decimalFee = Decimal(string: order.feeAmount, locale: .enUSPOSIX),
            decimalFee != 0
         {
-            self.feeAmount = decimalFee.formatted(
+            self.feeAmount = (-decimalFee).formatted(
                 Decimal.FormatStyle.Currency
                     .currency(code: "USD")
                     .presentation(.narrow)

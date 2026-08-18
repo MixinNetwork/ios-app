@@ -2,10 +2,16 @@ import UIKit
 
 final class PerpMarketFundingRateCell: UICollectionViewCell {
     
+    protocol Delegate: AnyObject {
+        func perpMarketFundingRateCellDidRequestInfo(_ cell: PerpMarketFundingRateCell)
+    }
+    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var contentLabel: UILabel!
     @IBOutlet weak var progressView: CircularProgressView!
     @IBOutlet weak var countDownLabel: UILabel!
+    
+    weak var delegate: Delegate?
     
     private var nextFundingDate: Date?
     private var totalInterval: TimeInterval?
@@ -31,6 +37,10 @@ final class PerpMarketFundingRateCell: UICollectionViewCell {
     
     deinit {
         countDownTimer?.invalidate()
+    }
+    
+    @IBAction func requestInfo(_ sender: Any) {
+        delegate?.perpMarketFundingRateCellDidRequestInfo(self)
     }
     
     func startCountDown(nextFundingDate: Date, totalInterval: TimeInterval) {

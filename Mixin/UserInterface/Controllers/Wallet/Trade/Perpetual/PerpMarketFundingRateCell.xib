@@ -21,12 +21,20 @@
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="cPl-Nt-U06">
                         <rect key="frame" x="16" y="0.0" width="303" height="69"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IDo-7Q-M43">
-                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="17"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" name="text_quaternary"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="6Oz-Hg-5sn">
+                                <rect key="frame" x="0.0" y="0.0" width="20" height="17"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IDo-7Q-M43">
+                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" name="text_quaternary"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info" translatesAutoresizingMaskIntoConstraints="NO" id="hDG-9a-MN5">
+                                        <rect key="frame" x="4" y="0.66666666666666607" width="16" height="15.999999999999998"/>
+                                    </imageView>
+                                </subviews>
+                            </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="500" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="19" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HHa-La-sun">
                                 <rect key="frame" x="0.0" y="25" width="0.0" height="19"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
@@ -54,12 +62,26 @@
                             </stackView>
                         </subviews>
                     </stackView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pyw-4Y-k5m">
+                        <rect key="frame" x="6" y="-13.666666666666666" width="44" height="44.333333333333336"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="R3u-5I-5w8"/>
+                            <constraint firstAttribute="height" constant="44" id="r7O-mE-Lkj"/>
+                        </constraints>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain"/>
+                        <connections>
+                            <action selector="requestInfo:" destination="Tpd-Bi-N7Y" eventType="touchUpInside" id="ZpL-wE-zf5"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
                     <constraint firstItem="cPl-Nt-U06" firstAttribute="leading" secondItem="7EH-Ib-Jwp" secondAttribute="leading" constant="16" id="0TK-Mr-aVD"/>
                     <constraint firstAttribute="trailing" secondItem="cPl-Nt-U06" secondAttribute="trailing" constant="16" id="128-fy-PlD"/>
                     <constraint firstAttribute="bottom" secondItem="cPl-Nt-U06" secondAttribute="bottom" id="Ghe-8Z-55S"/>
+                    <constraint firstItem="Pyw-4Y-k5m" firstAttribute="centerX" secondItem="hDG-9a-MN5" secondAttribute="centerX" id="Kml-M9-9Q8"/>
+                    <constraint firstItem="Pyw-4Y-k5m" firstAttribute="centerY" secondItem="hDG-9a-MN5" secondAttribute="centerY" id="meR-r0-jLp"/>
                     <constraint firstItem="cPl-Nt-U06" firstAttribute="top" secondItem="7EH-Ib-Jwp" secondAttribute="top" id="shv-uE-32Z"/>
                 </constraints>
             </collectionViewCellContentView>
@@ -74,6 +96,7 @@
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="info" width="16" height="16"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

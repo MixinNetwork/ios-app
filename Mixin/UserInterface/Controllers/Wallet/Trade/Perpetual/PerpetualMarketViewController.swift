@@ -852,6 +852,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perp_market_funding_rate, for: indexPath)!
                 cell.titleLabel.text = R.string.localizable.perps_funding_title_interval(viewModel.market.fundingIntervalHours).uppercased()
                 cell.contentLabel.text = viewModel.fundingRate
+                cell.delegate = self
                 cell.startCountDown(
                     nextFundingDate: viewModel.nextFundingAt,
                     totalInterval: TimeInterval(viewModel.market.fundingIntervalHours) * .hour
@@ -1032,6 +1033,16 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
             self.editingLock = nil
             self.handleTPSLUpdate(result: result)
         }
+    }
+    
+}
+
+extension PerpetualMarketViewController: PerpMarketFundingRateCell.Delegate {
+    
+    func perpMarketFundingRateCellDidRequestInfo(_ cell: PerpMarketFundingRateCell) {
+        let manual = PerpsManual.viewController(initialPage: .fundingRate)
+        present(manual, animated: true)
+        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_market_info"])
     }
     
 }

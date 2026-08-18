@@ -658,7 +658,7 @@
 "error_transfer_to_deactivated_user" = "오류 20160: 비활성화된 사용자에게 이전할 수 없습니다.";
 "error_two_parts" = "오류 %@: %@";
 "error_used_phone" = "오류 20122: 이 휴대폰 번호는 이미 다른 계정과 연결되어 있습니다.";
-"error_watch_address_not_supported" = "오류 10633: 잘못된 주소";
+"error_watch_address_not_supported" = "오류 10633: 현재 이 주소를 추가할 수 없습니다";
 "error_withdrawal_memo_format_incorrect" = "오류 20131: 출금 메모 형식이 잘못되었습니다.";
 "error_withdrawal_suspend" = "오류 20137: 출금이 일시 중지되었습니다.";
 "estimated_balance_change" = "잔액 변경(예상)";

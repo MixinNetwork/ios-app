@@ -658,7 +658,7 @@
 "error_transfer_to_deactivated_user" = "錯誤 20160：無法給已經刪除的賬號轉賬";
 "error_two_parts" = "錯誤 %@：%@";
 "error_used_phone" = "錯誤 20122：電話號碼已經被佔用。";
-"error_watch_address_not_supported" = "錯誤 10633：地址不可用";
+"error_watch_address_not_supported" = "錯誤 10633：暫不支援新增該地址";
 "error_withdrawal_memo_format_incorrect" = "錯誤 20131：提現備註格式不正確";
 "error_withdrawal_suspend" = "錯誤 20137：提現暫停";
 "estimated_balance_change" = "餘額變動（預估）";

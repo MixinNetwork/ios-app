@@ -658,7 +658,7 @@
 "error_transfer_to_deactivated_user" = "ERROR 20160: Transfers cannot be made to a deactivated user";
 "error_two_parts" = "ERROR %@: %@";
 "error_used_phone" = "ERROR 20122: This mobile number is already associated with another account.";
-"error_watch_address_not_supported" = "ERROR 10633: Invalid Address";
+"error_watch_address_not_supported" = "ERROR 10633: This address is currently not supported";
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Withdrawal memo format incorrect.";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawals are suspended.";
 "estimated_balance_change" = "Balance Change (estimate)";

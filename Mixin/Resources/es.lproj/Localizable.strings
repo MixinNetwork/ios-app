@@ -658,7 +658,7 @@
 "error_transfer_to_deactivated_user" = "ERROR 20160: No se pueden realizar transferencias a un usuario desactivado";
 "error_two_parts" = "ERROR %@: %@";
 "error_used_phone" = "ERROR 20122: Este número de teléfono ya está asociado a otra cuenta.";
-"error_watch_address_not_supported" = "ERROR 10633: Dirección no válida";
+"error_watch_address_not_supported" = "ERROR 10633: Actualmente no se admite añadir esta dirección";
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Formato de nota de retiro incorrecto.";
 "error_withdrawal_suspend" = "ERROR 20137: Los retiros están suspendidos.";
 "estimated_balance_change" = "Cambio de saldo (estimación)";

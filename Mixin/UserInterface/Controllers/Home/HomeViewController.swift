@@ -36,14 +36,11 @@ final class HomeViewController: UIViewController {
     private var isEditingRow = false
     private var insufficientBalanceForEmergencyContactBulletinConfirmedDate: Date?
     private var isShowingSearch = false
-    private var hasStartedAppsFlyer = false
-    
+
     private var topLeftTitle: String {
         AppGroupUserDefaults.User.circleName ?? R.string.localizable.mixin()
     }
-    
-    private weak var appsFlyerStartingObserver: AnyObject?
-    
+
     private lazy var circlesViewController = R.storyboard.home.circles()!
     
     deinit {
@@ -87,6 +84,10 @@ final class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(groupConversationParticipantDidChange(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(cancelSearchingSilently(_:)), name: dismissSearchNotification, object: nil)
+        
+        if UIApplication.shared.applicationState == .active {
+            startAppsFlyer()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -111,22 +112,8 @@ final class HomeViewController: UIViewController {
         }
         ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
         ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
-        if !hasStartedAppsFlyer {
-            hasStartedAppsFlyer = true
-            if UIApplication.shared.applicationState == .active {
-                startAppsFlyer()
-            } else {
-                appsFlyerStartingObserver = NotificationCenter.default.addObserver(
-                    forName: UIApplication.didBecomeActiveNotification,
-                    object: nil,
-                    queue: .main
-                ) { [weak self] _ in
-                    self?.startAppsFlyer()
-                }
-            }
-        }
     }
-    
+
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         dragDownIndicator.center.x = tableView.frame.width / 2
@@ -185,6 +172,7 @@ final class HomeViewController: UIViewController {
     @objc private func applicationDidBecomeActive(_ sender: Notification) {
         presentPopupTipIfNeeded()
         fetchConversations()
+        startAppsFlyer()
     }
     
     @objc private func dataDidChange() {
@@ -286,26 +274,17 @@ final class HomeViewController: UIViewController {
             assertionFailure("Missing app_instance_id")
         }
         Task {
-            var retryCount = 0
-            while (true) {
-                do {
-                    let sessionID = try await Analytics.sessionID()
-                    firebaseInfos["ga_session_id"] = sessionID
-                    break
-                } catch {
-                    Logger.general.error(category: "Home", message: "Get ga_session_id: \(error)")
-                    let nsError = error as NSError
-                    if nsError.domain == "com.google.gmp.measurement.ErrorDomain" && nsError.code == 13 {
-                        // Analytics uninitialized
-                        retryCount += 1
-                        if retryCount == 10 {
-                            reporter.report(error: AnalyticError.missingGASessionID)
-                            break
-                        }
-                        try await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
-                    } else {
-                        break
-                    }
+            do {
+                let sessionID = try await Analytics.sessionID()
+                firebaseInfos["ga_session_id"] = sessionID
+            } catch {
+                let nsError = error as NSError
+                if nsError.domain == "com.google.gmp.measurement.ErrorDomain" && nsError.code == 13 {
+                    // Analytics uninitialized, commonly caused by poor/blocked network reachability
+                    // to Google's endpoints rather than a Mixin-side bug, only log it locally.
+                    Logger.general.error(category: "HomeViewController", message: "Get ga_session_id: \(error)")
+                } else {
+                    reporter.report(error: error)
                 }
             }
             Logger.general.debug(category: "Home", message: "Reporting \(firebaseInfos)")
@@ -313,9 +292,6 @@ final class HomeViewController: UIViewController {
             AppsFlyerLib.shared().customerUserID = Reporter.userIDHash(userID: myUserId)
             AppsFlyerLib.shared().disableAdvertisingIdentifier = true
             try await AppsFlyerLib.shared().start()
-        }
-        if let observer = appsFlyerStartingObserver {
-            NotificationCenter.default.removeObserver(observer)
         }
     }
     
@@ -442,11 +418,7 @@ extension HomeViewController: UIScrollViewDelegate {
 }
 
 extension HomeViewController {
-    
-    enum AnalyticError: Error {
-        case missingGASessionID
-    }
-    
+
     private func checkServerStatus() {
         guard LoginManager.shared.isLoggedIn else {
             return

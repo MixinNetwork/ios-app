@@ -26,8 +26,7 @@ final class MainAppReporter: Reporter {
     
     override func report(event: Event, tags: [String: String]? = nil) {
         switch event {
-        case .signUpStart,
-             .buyStart,
+        case .buyStart,
              .tradeSpotStart,
              .tradeSpotEnd,
              .tradePerpsOpenStart,
@@ -40,12 +39,14 @@ final class MainAppReporter: Reporter {
              .sendStart,
              .sendEnd:
             AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
-            AppsFlyerLib.shared().start()
         case .signUpAccountCreated:
             AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
             if let appInstanceID = Analytics.appInstanceID() {
                 AppsFlyerLib.shared().customData = ["app_instance_id": appInstanceID]
             }
+            AppsFlyerLib.shared().start()
+        case .signUpStart:
+            AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
             AppsFlyerLib.shared().start()
         case .loginEnd:
             AppsFlyerLib.shared().logEvent(AFEventLogin, withValues: tags)

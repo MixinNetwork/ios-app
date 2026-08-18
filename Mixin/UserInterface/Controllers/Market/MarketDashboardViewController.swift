@@ -222,7 +222,7 @@ final class MarketDashboardViewController: UIViewController {
             case let .perps(id):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.favorable_perps_market, for: indexPath)!
                 if let self, let market = self.perpsMarkets[id] {
-                    cell.reloadData(market: market)
+                    cell.reloadData(market: market, tag: .identity)
                     cell.delegate = self
                 }
                 return cell

@@ -7,6 +7,11 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
         func favorablePerpsMarketCellWantsToggleFavorite(_ cell: FavorablePerpsMarketCell)
     }
     
+    enum Tag {
+        case leverage
+        case identity
+    }
+    
     @IBOutlet weak var favoriteButton: FavoriteButton!
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var symbolLabel: UILabel!
@@ -34,8 +39,6 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )
-        tagLabel.contentInset = UIEdgeInsets(top: 1, left: 3, bottom: 1, right: 3)
-        tagLabel.text = R.string.localizable.perp()
         tagLabel.layer.cornerRadius = 4
         tagLabel.layer.masksToBounds = true
         priceLabel.setFont(
@@ -57,7 +60,7 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
         delegate?.favorablePerpsMarketCellWantsToggleFavorite(self)
     }
     
-    func reloadData(market: FavorablePerpetualMarket) {
+    func reloadData(market: FavorablePerpetualMarket, tag: Tag) {
         favoriteButton.setFavorite(market.isFavorite, animated: false)
         symbolLabel.text = market.tokenSymbol
         iconView.setIcon(tokenIconURL: URL(string: market.iconURL))
@@ -65,6 +68,16 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
         priceLabel.text = market.localizedPrice
         changeLabel.text = market.changePercentage
         changeLabel.marketColor = .byValue(market.decimalChange)
+        switch tag {
+        case .leverage:
+            tagLabel.font = UIFontMetrics.default.scaledFont(for: .condensed(size: 12))
+            tagLabel.contentInset = UIEdgeInsets(top: 2, left: 3, bottom: 0, right: 3)
+            tagLabel.text = PerpetualLeverage.stringRepresentation(multiplier: market.leverage)
+        case .identity:
+            tagLabel.font = .preferredFont(forTextStyle: .caption1)
+            tagLabel.contentInset = UIEdgeInsets(top: 1, left: 3, bottom: 1, right: 3)
+            tagLabel.text = R.string.localizable.perp()
+        }
     }
     
 }

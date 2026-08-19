@@ -60,21 +60,21 @@ public final class PerpsMarketDAO: PerpsDAO {
         case .categorized(let category):
             sql.append("    AND m.category = '\(category.rawValue)'")
         }
+        let direction = switch ordering.direction {
+        case .ascending:
+            "ASC"
+        case .descending:
+            "DESC"
+        }
         switch ordering.field {
         case .volume:
-            sql += "\nORDER BY CAST(volume AS REAL)"
+            sql += "\nORDER BY CAST(volume AS REAL) \(direction)"
         case .price:
-            sql += "\nORDER BY CAST(last AS REAL)"
+            sql += "\nORDER BY CAST(last AS REAL) \(direction)"
         case .change:
-            sql += "\nORDER BY CAST(change AS REAL)"
+            sql += "\nORDER BY CAST(change AS REAL) \(direction)"
         case .score:
-            sql += "\nORDER BY trade_volume_score_1d"
-        }
-        switch ordering.direction {
-        case .ascending:
-            sql += " ASC"
-        case .descending:
-            sql += " DESC"
+            sql += "\nORDER BY trade_volume_score_1d \(direction), CAST(volume AS REAL) \(direction)"
         }
         if let limit {
             sql += "\nLIMIT \(limit)"

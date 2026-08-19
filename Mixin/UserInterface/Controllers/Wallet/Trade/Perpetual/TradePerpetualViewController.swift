@@ -658,24 +658,23 @@ extension TradePerpetualViewController {
             let topMovers = PerpsMarketDAO.shared.availableTopMovers(count: topMoversCount)
             let topMoverViewModels = topMovers.compactMap(PerpetualMarketViewModel.init(market:))
             
-            let scoreDescending = PerpetualMarket.Ordering(field: .score, direction: .descending)
             let trending = PerpsMarketDAO.shared.availableMarkets(
                 category: .all,
-                ordering: scoreDescending,
+                ordering: .init(field: .score, direction: .descending),
                 limit: otherItemCount
             )
             let trendingViewModels = trending.compactMap(PerpetualMarketViewModel.init(market:))
             
             let stocks = PerpsMarketDAO.shared.availableMarkets(
                 category: .categorized(.stocks),
-                ordering: scoreDescending,
+                ordering: .init(field: .volume, direction: .descending),
                 limit: otherItemCount
             )
             let stockViewModels = stocks.compactMap(PerpetualMarketViewModel.init(market:))
             
             let commodities = PerpsMarketDAO.shared.availableMarkets(
                 category: .categorized(.commodities),
-                ordering: scoreDescending,
+                ordering: .init(field: .volume, direction: .descending),
                 limit: otherItemCount
             )
             let commoditiesViewModels = commodities.compactMap(PerpetualMarketViewModel.init(market:))

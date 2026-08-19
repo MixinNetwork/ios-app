@@ -506,6 +506,7 @@
 "delete_watch_wallet_description" = "Eliminar esta billetera no afectará sus activos, ya que es una billetera de solo lectura.";
 "delete_withdraw_address" = "Eliminar dirección de %@";
 "deleted" = "Eliminado";
+"deleted_this_message" = "%@ eliminó este mensaje.";
 "deleting_address" = "Eliminar dirección";
 "deleting_address_failed" = "Error al eliminar la dirección";
 "deposit" = "Depósito";
@@ -2093,7 +2094,7 @@
 "years_count_short" = "%dY";
 "you" = "Tú";
 "you_are_watching_address" = "Estás observando %@";
-"you_deleted_this_message" = "Has borrado este mensaje";
+"you_deleted_this_message" = "Has borrado este mensaje.";
 "you_have_a_new_message" = "Tienes un nuevo mensaje";
 "you_have_left_the_group" = "Te has ido del grupo";
 "your_emergency_contact_has_been_changed" = "Su contacto de recuperación ha sido cambiado";

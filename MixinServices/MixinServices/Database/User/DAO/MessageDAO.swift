@@ -700,7 +700,7 @@ public final class MessageDAO: UserDatabaseDAO {
         }
     }
     
-    public func recallMessage(message: MessageItem) {
+    public func recallMessage(message: MessageItem, actorUserId: String) {
         let messageId = message.messageId
         ReceiveMessageService.shared.stopRecallMessage(item: message)
         
@@ -715,13 +715,15 @@ public final class MessageDAO: UserDatabaseDAO {
                                    conversationId: message.conversationId,
                                    category: message.category,
                                    status: message.status,
+                                   actorUserId: actorUserId,
                                    quoteMessageIds: quoteMessageIds)
         }
     }
-    
-    public func recallMessage(database: GRDB.Database, messageId: String, conversationId: String, category: String, status: String, quoteMessageIds: [String]) throws {
+
+    public func recallMessage(database: GRDB.Database, messageId: String, conversationId: String, category: String, status: String, actorUserId: String, quoteMessageIds: [String]) throws {
         var assignments: [ColumnAssignment] = [
-            Message.column(of: .category).set(to: MessageCategory.MESSAGE_RECALL.rawValue)
+            Message.column(of: .category).set(to: MessageCategory.MESSAGE_RECALL.rawValue),
+            Message.column(of: .participantId).set(to: actorUserId)
         ]
         
         if status == MessageStatus.UNKNOWN.rawValue || ["_TEXT", "_POST", "_LOCATION"].contains(where: category.hasSuffix(_:)) {

@@ -8,12 +8,7 @@ class RecalledMessageViewModel: IconPrefixedTextMessageViewModel {
     }
     
     override var rawContent: String {
-        let isRecalledByRemote = message.userId != myUserId
-        if isRecalledByRemote {
-            return R.string.localizable.this_message_was_deleted()
-        } else {
-            return R.string.localizable.you_deleted_this_message()
-        }
+        RecalledMessage.description(item: message)
     }
     
     override var showStatusImage: Bool {

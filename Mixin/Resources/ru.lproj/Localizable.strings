@@ -506,6 +506,7 @@
 "delete_watch_wallet_description" = "Удаление этого кошелька не повлияет на ваши активы, поскольку это кошелек только для просмотра.";
 "delete_withdraw_address" = "Удалить адрес %@";
 "deleted" = "Удалено";
+"deleted_this_message" = "%@ удалил(а) это сообщение.";
 "deleting_address" = "Удалить адрес";
 "deleting_address_failed" = "Не удалось удалить адрес";
 "deposit" = "Депозит";
@@ -2093,7 +2094,7 @@
 "years_count_short" = "%dY";
 "you" = "Вы";
 "you_are_watching_address" = "Вы просматриваете %@";
-"you_deleted_this_message" = "Вы удалили это сообщение";
+"you_deleted_this_message" = "Вы удалили это сообщение.";
 "you_have_a_new_message" = "У вас новое сообщение";
 "you_have_left_the_group" = "Вы вышли из группы";
 "your_emergency_contact_has_been_changed" = "Ваш контакт для восстановления был изменен";

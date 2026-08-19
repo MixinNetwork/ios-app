@@ -414,7 +414,9 @@ public class ReceiveMessageService: MixinService {
         MessageHistoryDAO.shared.replaceMessageHistory(messageId: data.messageId)
 
         if let base64Data = Data(base64Encoded: data.data), let plainData = (try? JSONDecoder.default.decode(TransferRecallData.self, from: base64Data)), !plainData.messageId.isEmpty, let message = MessageDAO.shared.getFullMessage(messageId: plainData.messageId) {
-            MessageDAO.shared.recallMessage(message: message)
+            let actorUserId = data.getSenderId()
+            checkUser(userId: actorUserId, tryAgain: true)
+            MessageDAO.shared.recallMessage(message: message, actorUserId: actorUserId)
         }
     }
 

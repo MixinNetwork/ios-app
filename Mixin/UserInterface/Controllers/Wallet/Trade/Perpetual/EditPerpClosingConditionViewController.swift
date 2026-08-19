@@ -607,6 +607,7 @@ extension EditPerpClosingConditionViewController: UICollectionViewDelegate {
         case inputContentSelectorCollectionView:
             inputContent = InputContent(rawValue: indexPath.item)!
             reloadInputSection(content: inputContent)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         case fixedInputCollectionView:
             collectionView.deselectItem(at: indexPath, animated: true)
             let percentage = fixedInputs[indexPath.item]

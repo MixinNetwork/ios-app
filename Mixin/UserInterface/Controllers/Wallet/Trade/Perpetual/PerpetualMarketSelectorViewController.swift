@@ -616,6 +616,7 @@ extension PerpetualMarketSelectorViewController {
         func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
             let category = categories[indexPath.item]
             delegate?.categorySelectorController(self, didSelectCategory: category)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
         
     }

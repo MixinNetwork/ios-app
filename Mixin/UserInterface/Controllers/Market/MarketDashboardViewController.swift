@@ -1299,6 +1299,7 @@ extension MarketDashboardViewController {
                 event: .marketsTabSwitch,
                 tags: ["level": "primary", "tab": category.reportingName]
             )
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
         
     }

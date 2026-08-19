@@ -352,6 +352,7 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
             }
             self.reloadWithoutAnimation(section: .tokens)
             self.reloadTokenSelection()
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         case .tokens:
             let token = token(at: indexPath)
             if searchResults == nil {

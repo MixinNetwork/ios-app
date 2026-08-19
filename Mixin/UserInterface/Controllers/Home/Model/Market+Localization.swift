@@ -20,31 +20,6 @@ extension Market.SubCategory {
     
 }
 
-extension PerpetualMarket.SubCategory {
-    
-    var subCategoryDisplay: MarketSubCategoryDisplay {
-        switch self {
-        case .watchlist:
-                .favorite
-        case .trending:
-                .text(R.string.localizable.trending())
-        case .topGainers:
-                .text(R.string.localizable.top_gainers())
-        case .topLosers:
-                .text(R.string.localizable.top_losers())
-        case .memes:
-                .text(R.string.localizable.perps_category_meme())
-        case .indices:
-                .text(R.string.localizable.perps_category_indices())
-        case .commodities:
-                .text(R.string.localizable.perps_category_commodities())
-        case .forex:
-                .text(R.string.localizable.perps_category_forex())
-        }
-    }
-    
-}
-
 extension MarketChangePeriod {
     
     public var displayTitle: String {

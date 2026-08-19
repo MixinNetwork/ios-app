@@ -24,7 +24,7 @@ public final class MarketDAO: UserDatabaseDAO {
     
     public func markets(
         subCategory: Market.SubCategory,
-        order: MarketOrdering,
+        order: Market.Ordering,
     ) -> [FavorableMarket] {
         let marketColumns: [String] = Market.CodingKeys.allCases.compactMap { key in
             if key == .marketCapRank {

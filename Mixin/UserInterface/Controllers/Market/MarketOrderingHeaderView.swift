@@ -3,9 +3,14 @@ import MixinServices
 
 final class MarketOrderingHeaderView: MarketHeaderView {
     
+    enum LeftOrderingField {
+        case marketCap
+        case volume
+    }
+    
     protocol Delegate: MarketHeaderView.Delegate {
         func marketOrderingHeaderViewDidSelectSetting(_ view: MarketOrderingHeaderView)
-        func marketOrderingHeaderView(_ view: MarketOrderingHeaderView, didSwitchToOrdering order: MarketOrdering)
+        func marketOrderingHeaderView(_ view: MarketOrderingHeaderView, didSwitchToOrdering order: MarketDashboardOrder)
     }
     
     @IBOutlet weak var leftOrderButton: UIButton!
@@ -16,19 +21,13 @@ final class MarketOrderingHeaderView: MarketHeaderView {
     @IBOutlet weak var priceWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var periodWidthConstraint: NSLayoutConstraint!
     
-    var order: MarketOrdering? {
+    var order: MarketDashboardOrder? {
         didSet {
             if let oldValue {
-                iconButton(ordering: oldValue).configuration?.image = R.image.order_none()
+                iconButton(ordering: oldValue)?.configuration?.image = R.image.order_none()
             }
-            if let order {
-                switch order.field {
-                case .marketCap, .volume:
-                    leftOrderingField = order.field
-                case .price, .change:
-                    break
-                }
-                iconButton(ordering: order).configuration?.image = switch order.direction {
+            if let order, let button = iconButton(ordering: order) {
+                button.configuration?.image = switch order.direction {
                 case .ascending:
                     R.image.order_ascending()
                 case .descending:
@@ -42,15 +41,13 @@ final class MarketOrderingHeaderView: MarketHeaderView {
         }
     }
     
-    var leftOrderingField: MarketOrdering.Field = .marketCap {
+    var leftOrderingField: LeftOrderingField = .marketCap {
         didSet {
             switch leftOrderingField {
             case .marketCap:
                 leftOrderButton.configuration?.title = R.string.localizable.market_cap()
             case .volume:
                 leftOrderButton.configuration?.title = R.string.localizable.market_volume_short()
-            case .price, .change:
-                assertionFailure("Not available")
             }
         }
     }
@@ -60,6 +57,8 @@ final class MarketOrderingHeaderView: MarketHeaderView {
             periodButton.configuration?.title = changePeriod.displayTitle
         }
     }
+    
+    var isScoreOrderingAvailable = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -101,49 +100,118 @@ final class MarketOrderingHeaderView: MarketHeaderView {
         (delegate as? Delegate)?.marketOrderingHeaderViewDidSelectSetting(self)
     }
     
-    @IBAction func sortByMarketCap(_ sender: Any) {
-        let order = if let order, order.field == leftOrderingField {
-            order.directionToggled()
-        } else {
-            MarketOrdering(field: leftOrderingField, direction: .descending)
+    @IBAction func sortByLeftOrder(_ sender: Any) {
+        guard let order else {
+            return
         }
-        self.order = order
-        (delegate as? Delegate)?.marketOrderingHeaderView(self, didSwitchToOrdering: order)
+        let newOrder: MarketDashboardOrder
+        switch order {
+        case .crypto(let oldOrder):
+            let field: Market.Ordering.Field = switch leftOrderingField {
+            case .marketCap:
+                .marketCap
+            case .volume:
+                .volume
+            }
+            if oldOrder.field == field {
+                newOrder = .crypto(oldOrder.directionToggled())
+            } else {
+                newOrder = .crypto(Market.Ordering(field: field, direction: .descending))
+            }
+        case .perps(let oldOrder):
+            if oldOrder.field == .volume {
+                switch oldOrder.direction {
+                case .ascending where isScoreOrderingAvailable:
+                    newOrder = .perps(PerpetualMarket.Ordering(field: .score, direction: .descending))
+                case .ascending, .descending:
+                    newOrder = .perps(oldOrder.directionToggled())
+                }
+            } else {
+                newOrder = .perps(PerpetualMarket.Ordering(field: .volume, direction: .descending))
+            }
+        }
+        self.order = newOrder
+        (delegate as? Delegate)?.marketOrderingHeaderView(self, didSwitchToOrdering: newOrder)
     }
     
     @IBAction func sortByPrice(_ sender: Any) {
-        let order = if let order, order.field == .price {
-            order.directionToggled()
-        } else {
-            MarketOrdering(field: .price, direction: .descending)
+        guard let order else {
+            return
         }
-        self.order = order
-        (delegate as? Delegate)?.marketOrderingHeaderView(self, didSwitchToOrdering: order)
+        let newOrder: MarketDashboardOrder
+        switch order {
+        case .crypto(let oldOrder):
+            if oldOrder.field == .price {
+                newOrder = .crypto(oldOrder.directionToggled())
+            } else {
+                newOrder = .crypto(Market.Ordering(field: .price, direction: .descending))
+            }
+        case .perps(let oldOrder):
+            if oldOrder.field == .price {
+                switch oldOrder.direction {
+                case .ascending where isScoreOrderingAvailable:
+                    newOrder = .perps(PerpetualMarket.Ordering(field: .score, direction: .descending))
+                case .ascending, .descending:
+                    newOrder = .perps(oldOrder.directionToggled())
+                }
+            } else {
+                newOrder = .perps(PerpetualMarket.Ordering(field: .price, direction: .descending))
+            }
+        }
+        self.order = newOrder
+        (delegate as? Delegate)?.marketOrderingHeaderView(self, didSwitchToOrdering: newOrder)
     }
     
     @IBAction func sortByChange(_ sender: Any) {
-        let order = if let order, case .change = order.field {
-            order.directionToggled()
-        } else {
-            MarketOrdering(
-                field: .change(period: changePeriod),
-                direction: .descending
-            )
+        guard let order else {
+            return
         }
-        self.order = order
-        (delegate as? Delegate)?.marketOrderingHeaderView(self, didSwitchToOrdering: order)
+        let newOrder: MarketDashboardOrder
+        switch order {
+        case .crypto(let oldOrder):
+            if case .change = oldOrder.field {
+                newOrder = .crypto(oldOrder.directionToggled())
+            } else {
+                newOrder = .crypto(Market.Ordering(field: .change(changePeriod), direction: .descending))
+            }
+        case .perps(let oldOrder):
+            if oldOrder.field == .change {
+                switch oldOrder.direction {
+                case .ascending where isScoreOrderingAvailable:
+                    newOrder = .perps(PerpetualMarket.Ordering(field: .score, direction: .descending))
+                case .ascending, .descending:
+                    newOrder = .perps(oldOrder.directionToggled())
+                }
+            } else {
+                newOrder = .perps(PerpetualMarket.Ordering(field: .change, direction: .descending))
+            }
+        }
+        self.order = newOrder
+        (delegate as? Delegate)?.marketOrderingHeaderView(self, didSwitchToOrdering: newOrder)
     }
     
-    private func iconButton(ordering: MarketOrdering) -> UIButton {
-        switch ordering.field {
-        case .marketCap:
-            leftOrderButton
-        case .volume:
-            leftOrderButton
-        case .price:
-            priceButton
-        case .change:
-            periodButton
+    private func iconButton(ordering: MarketDashboardOrder) -> UIButton? {
+        switch ordering {
+        case .crypto(let marketOrder):
+            switch marketOrder.field {
+            case .marketCap, .volume:
+                leftOrderButton
+            case .price:
+                priceButton
+            case .change:
+                periodButton
+            }
+        case .perps(let perpsOrder):
+            switch perpsOrder.field {
+            case .volume:
+                leftOrderButton
+            case .price:
+                priceButton
+            case .change:
+                periodButton
+            case .score:
+                nil
+            }
         }
     }
     

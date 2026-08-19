@@ -20,7 +20,7 @@ final class TradePerpetualViewController: UIViewController {
     private var value: PerpetualPositionValue?
     private var openPositions: [PerpetualPositionViewModel] = []
     private var topMovers: [PerpetualMarketViewModel]?
-    private var markets: [PerpetualMarketViewModel]?
+    private var trending: [PerpetualMarketViewModel]?
     private var stocks: [PerpetualMarketViewModel]?
     private var commodities: [PerpetualMarketViewModel]?
     private var hasHistoryLoadedFromRemote = false
@@ -250,9 +250,9 @@ final class TradePerpetualViewController: UIViewController {
                 }
                 self.value = value
                 self.openPositions = openPositions
-                if !markets.all.isEmpty {
+                if !markets.trending.isEmpty {
                     self.topMovers = markets.topMovers
-                    self.markets = markets.all
+                    self.trending = markets.trending
                     self.stocks = markets.stocks
                     self.commodities = markets.commodities
                     actionView.buttonsAvailability = .allEnabled
@@ -469,16 +469,13 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.titleLabel.text = R.string.localizable.perps_top_movers()
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewAllMarkets(
-                        category: .all,
-                        ordering: MarketOrdering(
-                            field: .change(period: .twentyFourHours),
-                            direction: .descending
-                        )
+                        category: nil,
+                        ordering: .init(field: .change, direction: .descending)
                     )
                 }
             case .markets(let category):
                 view.titleLabel.text = switch category {
-                case .all:
+                case .trending:
                     R.string.localizable.trending()
                 case .stocks:
                     R.string.localizable.perps_category_stocks()
@@ -486,7 +483,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     R.string.localizable.perps_category_commodities()
                 }
                 view.onShowAll = { [weak self] (sender) in
-                    self?.viewAllMarkets(category: category, ordering: nil)
+                    self?.viewAllMarkets(category: category.perpsCategory, ordering: nil)
                 }
             case .activity:
                 view.titleLabel.text = R.string.localizable.perps_activity()
@@ -514,7 +511,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             case .markets(let category):
                 view.viewAllButton.isHidden = false
                 view.onViewAll = { [weak self] (sender) in
-                    self?.viewAllMarkets(category: category, ordering: nil)
+                    self?.viewAllMarkets(category: category.perpsCategory, ordering: nil)
                 }
             case .activity:
                 view.viewAllButton.isHidden = (activities?.count ?? 0) <= maxItemCount
@@ -601,9 +598,22 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
 extension TradePerpetualViewController {
     
     private enum MarketCategory: Equatable {
-        case all
+        
+        case trending
         case stocks
         case commodities
+        
+        var perpsCategory: PerpetualMarket.Category? {
+            switch self {
+            case .trending:
+                    .none
+            case .stocks:
+                    .stocks
+            case .commodities:
+                    .commodities
+            }
+        }
+        
     }
     
     private enum Section: Equatable {
@@ -618,7 +628,7 @@ extension TradePerpetualViewController {
         static func sections(openPositionCount: Int) -> [Section] {
             var sections: [Section] = [
                 .topMovers,
-                .markets(.all),
+                .markets(.trending),
                 .markets(.stocks),
                 .markets(.commodities),
                 .activity,
@@ -637,7 +647,7 @@ extension TradePerpetualViewController {
     private struct AggregatedMarkets {
         
         let topMovers: [PerpetualMarketViewModel]
-        let all: [PerpetualMarketViewModel]
+        let trending: [PerpetualMarketViewModel]
         let stocks: [PerpetualMarketViewModel]
         let commodities: [PerpetualMarketViewModel]
         
@@ -647,27 +657,32 @@ extension TradePerpetualViewController {
         ) -> AggregatedMarkets {
             let topMovers = PerpsMarketDAO.shared.availableTopMovers(count: topMoversCount)
             let topMoverViewModels = topMovers.compactMap(PerpetualMarketViewModel.init(market:))
-            let all = PerpsMarketDAO.shared.availableMarkets(
-                ordering: nil,
-                category: nil,
+            
+            let scoreDescending = PerpetualMarket.Ordering(field: .score, direction: .descending)
+            let trending = PerpsMarketDAO.shared.availableMarkets(
+                category: .all,
+                ordering: scoreDescending,
                 limit: otherItemCount
             )
-            let allViewModels = all.compactMap(PerpetualMarketViewModel.init(market:))
+            let trendingViewModels = trending.compactMap(PerpetualMarketViewModel.init(market:))
+            
             let stocks = PerpsMarketDAO.shared.availableMarkets(
-                ordering: nil,
-                category: .stocks,
+                category: .categorized(.stocks),
+                ordering: scoreDescending,
                 limit: otherItemCount
             )
             let stockViewModels = stocks.compactMap(PerpetualMarketViewModel.init(market:))
+            
             let commodities = PerpsMarketDAO.shared.availableMarkets(
-                ordering: nil,
-                category: .commodities,
+                category: .categorized(.commodities),
+                ordering: scoreDescending,
                 limit: otherItemCount
             )
             let commoditiesViewModels = commodities.compactMap(PerpetualMarketViewModel.init(market:))
+            
             return AggregatedMarkets(
                 topMovers: topMoverViewModels,
-                all: allViewModels,
+                trending: trendingViewModels,
                 stocks: stockViewModels,
                 commodities: commoditiesViewModels
             )
@@ -677,8 +692,8 @@ extension TradePerpetualViewController {
     
     private func marketItems(category: MarketCategory) -> [PerpetualMarketViewModel]? {
         switch category {
-        case .all:
-            markets
+        case .trending:
+            trending
         case .stocks:
             stocks
         case .commodities:
@@ -693,23 +708,17 @@ extension TradePerpetualViewController {
     }
     
     private func viewAllMarkets(
-        category: MarketCategory,
-        ordering: MarketOrdering?
+        category: PerpetualMarket.Category?,
+        ordering: PerpetualMarket.Ordering?
     ) {
-        let selector = switch category {
-        case .all:
+        let selector = if let category {
+            PerpetualMarketSelectorViewController(
+                selectedCategory: .categorized(category),
+                ordering: ordering
+            )
+        } else {
             PerpetualMarketSelectorViewController(
                 selectedCategory: .all,
-                ordering: ordering
-            )
-        case .stocks:
-            PerpetualMarketSelectorViewController(
-                selectedCategory: .categorized(.stocks),
-                ordering: ordering
-            )
-        case .commodities:
-            PerpetualMarketSelectorViewController(
-                selectedCategory: .categorized(.commodities),
                 ordering: ordering
             )
         }
@@ -792,7 +801,7 @@ extension TradePerpetualViewController {
                     return
                 }
                 self.topMovers = markets.topMovers
-                self.markets = markets.all
+                self.trending = markets.trending
                 self.stocks = markets.stocks
                 self.commodities = markets.commodities
                 
@@ -800,7 +809,7 @@ extension TradePerpetualViewController {
                 if let section = self.sections.firstIndex(of: .topMovers) {
                     sections.insert(section)
                 }
-                if let section = self.sections.firstIndex(of: .markets(.all)) {
+                if let section = self.sections.firstIndex(of: .markets(.trending)) {
                     sections.insert(section)
                 }
                 if let section = self.sections.firstIndex(of: .markets(.stocks)) {
@@ -813,7 +822,7 @@ extension TradePerpetualViewController {
                     self.collectionView.reloadSections(sections)
                 }
                 
-                self.actionView.buttonsAvailability = markets.all.isEmpty ? .allDisabled : .allEnabled
+                self.actionView.buttonsAvailability = markets.trending.isEmpty ? .allDisabled : .allEnabled
                 if !self.hasHistoryLoadedFromRemote {
                     // Load history only once, but after the markets
                     // are loaded, to avoid missing symbols in history

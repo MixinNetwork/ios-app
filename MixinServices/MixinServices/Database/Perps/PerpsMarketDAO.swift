@@ -107,20 +107,22 @@ public final class PerpsMarketDAO: PerpsDAO {
     
     public func save(
         markets: [PerpetualMarket],
-        dataSource: PerpetualMarket.RequestCategory?,
+        dataSource: PerpetualMarket.RequestCategory,
     ) {
         guard !markets.isEmpty else {
             return
         }
         db.write { db in
-            try markets.save(db)
             switch dataSource {
-            case .all, .none:
-                break
+            case .all:
+                try markets.save(db)
             case .favorite:
                 try db.execute(literal: "DELETE FROM favorites WHERE market_id NOT IN \(markets.map(\.marketID))")
                 let now = Date().toUTCString()
                 for market in markets {
+                    _ = try market.upsertAndFetch(db) { _ in
+                        [PerpetualMarket.column(of: .tradeVolumeScore1D).noOverwrite]
+                    }
                     let favorite = PerpetualMarket.FavoriteStorage(
                         marketID: market.marketID,
                         isFavorite: true,
@@ -130,10 +132,13 @@ public final class PerpsMarketDAO: PerpsDAO {
                 }
             case .featured:
                 try db.execute(literal: "DELETE FROM market_categories WHERE category = \(Market.DatabaseCategory.featured.rawValue)")
-                let categories = markets.map { market in
-                    PerpetualMarketCategory(marketID: market.marketID, category: .featured)
+                for market in markets {
+                    _ = try market.upsertAndFetch(db) { _ in
+                        [PerpetualMarket.column(of: .tradeVolumeScore1D).noOverwrite]
+                    }
+                    let category = PerpetualMarketCategory(marketID: market.marketID, category: .featured)
+                    try category.save(db)
                 }
-                try categories.save(db)
             }
             db.afterNextTransaction { _ in
                 NotificationCenter.default.postAsynchornously(

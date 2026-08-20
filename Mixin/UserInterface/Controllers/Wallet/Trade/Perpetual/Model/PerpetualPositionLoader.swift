@@ -26,32 +26,15 @@ final class PerpetualPositionLoader {
         let timer: Timer = .scheduledTimer(
             withTimeInterval: 3,
             repeats: true
-        ) { [walletID] (timer) in
-            RouteAPI.positions(
-                walletID: walletID,
-                queue: .global()
-            ) { [weak self] result in
-                let isRunning = self?.isRunning ?? false
-                guard isRunning else {
-                    return
-                }
-                switch result {
-                case .success(let positions):
-                    let different = PerpsPositionDAO.shared.replace(positions: positions)
-                    Logger.general.debug(category: "PerpPositionLoader", message: "Loaded with difference: \(different)")
-                    if different {
-                        DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
-                            let orders = SyncPerpsOrdersJob(walletID: walletID)
-                            ConcurrentJobQueue.shared.addJob(job: orders)
-                        }
-                    }
-                case .failure(let error):
-                    Logger.general.debug(category: "PerpPositionLoader", message: "\(error)")
-                }
+        ) { [weak self] (timer) in
+            if let self, self.isRunning {
+                self.reload()
+            } else {
+                timer.invalidate()
             }
         }
         self.timer = timer
-        timer.fire()
+        reload()
     }
     
     func stop() {
@@ -59,6 +42,27 @@ final class PerpetualPositionLoader {
         isRunning = false
         timer?.invalidate()
         timer = nil
+    }
+    
+    func reload() {
+        RouteAPI.positions(
+            walletID: walletID,
+            queue: .global()
+        ) { [walletID] result in
+            switch result {
+            case .success(let positions):
+                let different = PerpsPositionDAO.shared.replace(positions: positions)
+                Logger.general.debug(category: "PerpPositionLoader", message: "Loaded with difference: \(different)")
+                if different {
+                    DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
+                        let orders = SyncPerpsOrdersJob(walletID: walletID)
+                        ConcurrentJobQueue.shared.addJob(job: orders)
+                    }
+                }
+            case .failure(let error):
+                Logger.general.debug(category: "PerpPositionLoader", message: "\(error)")
+            }
+        }
     }
     
 }

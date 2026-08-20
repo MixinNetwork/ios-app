@@ -96,12 +96,17 @@ public final class PerpsMarketDAO: PerpsDAO {
     }
     
     public func save(market: PerpetualMarket) {
-        db.save(market) { _ in
-            NotificationCenter.default.postAsynchornously(
-                onMainThread: Self.marketsDidUpdateNotification,
-                object: self,
-                userInfo: [UserInfoKey.market: market],
-            )
+        db.write { db in
+            let market = try market.upsertAndFetch(db) { _ in
+                [PerpetualMarket.column(of: .tradeVolumeScore1D).noOverwrite]
+            }
+            db.afterNextTransaction { _ in
+                NotificationCenter.default.postAsynchornously(
+                    onMainThread: Self.marketsDidUpdateNotification,
+                    object: self,
+                    userInfo: [UserInfoKey.market: market],
+                )
+            }
         }
     }
     

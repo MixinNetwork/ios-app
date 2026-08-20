@@ -17,6 +17,7 @@ final class MainAppReporter: Reporter {
         ])
         Analytics.setUserID(userIDHash)
         AppsFlyerLib.shared().customerUserID = userIDHash
+        AppsFlyerLib.shared().start()
     }
     
     override func report(error: Error) {

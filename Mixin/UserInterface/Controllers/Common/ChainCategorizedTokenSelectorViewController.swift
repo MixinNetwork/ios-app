@@ -440,6 +440,7 @@ extension ChainCategorizedTokenSelectorViewController {
                 Chain(id: ChainID.arbitrumOne, name: "Arbitrum"),
                 Chain(id: ChainID.opMainnet, name: "Optimism"),
                 Chain(id: ChainID.hyperEVM, name: "HyperEVM"),
+                Chain(id: ChainID.xLayer, name: "X Layer"),
                 Chain(id: ChainID.ton, name: "TON"),
             ]
             let groups: [Group] = all.filter { chain in

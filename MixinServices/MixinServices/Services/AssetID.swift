@@ -39,6 +39,7 @@ public enum AssetID {
     public static let avalancheXAVAX = "cbc77539-0a20-4666-8c8a-4ded62b36f0a"
     public static let avalancheCAVAX = "1f67ac58-87ba-3571-9781-e9413c046f34"
     public static let hyperEVMHYPE = "36d23d9e-bf4e-3ede-a12d-26f1f1f9fd2f"
+    public static let xLayerOKB = "37f5a4d1-905f-3b34-8291-c37438c7dcfc"
     
     public static let stablecoins: Set<String> = [
         AssetID.erc20USDT, AssetID.tronUSDT, AssetID.polygonUSDT,

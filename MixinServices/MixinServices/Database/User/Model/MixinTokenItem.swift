@@ -89,6 +89,8 @@ extension MixinTokenItem: OnChainToken {
             "Arbitrum"
         case ChainID.hyperEVM:
             "HyperEVM"
+        case ChainID.xLayer:
+            "X Layer"
         case ChainID.ton:
             "TON"
         default:

@@ -26,6 +26,7 @@ public struct ExternalTransfer {
         "10"    : ChainID.opMainnet,
         "43114" : ChainID.avalancheCChain,
         "999"   : ChainID.hyperEVM,
+        "196"   : ChainID.xLayer,
     ]
     
     public let chainID: String

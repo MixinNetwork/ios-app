@@ -21,7 +21,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     
     private var selectedCategory: DisplayCategory
     private var markets: [DisplayCategory: [FavorablePerpetualMarket]] = [:]
-    private var ordering: MarketOrdering
+    private var ordering: PerpetualMarket.Ordering
     private var displayFavoritesAsRecommendations = false
     private var isUpdatingFavorites = false
     
@@ -44,9 +44,18 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         && displayFavoritesAsRecommendations
     }
     
-    init(selectedCategory: DisplayCategory, ordering: MarketOrdering?) {
+    init(selectedCategory: DisplayCategory, ordering: PerpetualMarket.Ordering?) {
         self.selectedCategory = selectedCategory
-        self.ordering = ordering ?? MarketOrdering(field: .volume, direction: .descending)
+        if let ordering {
+            self.ordering = ordering
+        } else {
+            self.ordering = switch selectedCategory {
+            case .all:
+                PerpetualMarket.Ordering(field: .score, direction: .descending)
+            case .favorite, .categorized:
+                PerpetualMarket.Ordering(field: .volume, direction: .descending)
+            }
+        }
         let nib = R.nib.perpetualMarketSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -209,9 +218,8 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         let ordering = self.ordering
         DispatchQueue.global().async { [weak self] in
             let markets = PerpsMarketDAO.shared.availableMarkets(
-                ordering: ordering,
-                category: nil,
-                limit: nil
+                category: .all,
+                ordering: ordering
             )
             var results: [DisplayCategory: [FavorablePerpetualMarket]] = [
                 .all: markets,
@@ -357,6 +365,7 @@ extension PerpetualMarketSelectorViewController: UICollectionViewDataSource {
                 for: indexPath
             )!
             header.order = ordering
+            header.isScoreOrderingAvailable = selectedCategory == .all
             header.delegate = self
             return header
         default:
@@ -397,7 +406,10 @@ extension PerpetualMarketSelectorViewController: PerpetualMarketSelectorViewCont
         didSelectCategory category: DisplayCategory
     ) {
         self.selectedCategory = category
-        if let searchResultsKeyword {
+        if category != .all, ordering.field == .score {
+            ordering = PerpetualMarket.Ordering(field: .volume, direction: .descending)
+            reloadData()
+        } else if let searchResultsKeyword {
             search(lowercasedKeyword: searchResultsKeyword)
         } else {
             marketsCollectionView.reloadData()
@@ -415,7 +427,7 @@ extension PerpetualMarketSelectorViewController: PerpetualMarketSelectorViewCont
 
 extension PerpetualMarketSelectorViewController: PerpsMarketOrderingHeaderView.Delegate {
     
-    func perpsMarketOrderingHeaderView(_ view: PerpsMarketOrderingHeaderView, didSwitchToOrdering order: MarketOrdering) {
+    func perpsMarketOrderingHeaderView(_ view: PerpsMarketOrderingHeaderView, didSwitchToOrdering order: PerpetualMarket.Ordering) {
         self.ordering = order
         reloadData()
     }

@@ -26,113 +26,58 @@ public final class PerpsMarketDAO: PerpsDAO {
     public func availableTopMovers(
         count: Int
     ) -> [PerpetualMarket] {
-        let risings: [PerpetualMarket] = db.select(with: """
-        SELECT * FROM markets
-        WHERE volume > 0
-        ORDER BY CAST(change AS REAL) DESC
-        LIMIT \(count)
-        """)
-        let fallings:  [PerpetualMarket] = db.select(with: """
-        SELECT * FROM markets
-        WHERE volume > 0
-        ORDER BY CAST(change AS REAL) ASC
-        LIMIT \(count)
-        """)
-        return risings + fallings
+        let gainers: [PerpetualMarket] = availableMarkets(
+            category: .all,
+            ordering: .init(field: .change, direction: .descending),
+            limit: count
+        )
+        let losers: [PerpetualMarket] = availableMarkets(
+            category: .all,
+            ordering: .init(field: .change, direction: .ascending),
+            limit: count
+        )
+        return gainers + losers
     }
     
     public func availableMarkets(
-        ordering: MarketOrdering?,
-        category: PerpetualMarket.Category?,
-        limit: Int?
-    ) -> [FavorablePerpetualMarket] {
-        var sql = """
-        SELECT m.*,
-            ifnull(f.is_favored, FALSE) AS '\(FavorablePerpetualMarket.JoinedQueryCodingKeys.isFavorite.rawValue)'
-        FROM markets m
-            LEFT JOIN favorites f ON m.market_id = f.market_id
-        WHERE m.volume > 0
-        """
-        if let category {
-            sql += " AND m.category = '\(category.rawValue)'"
-        }
-        if let ordering {
-            switch ordering.field {
-            case .marketCap:
-                assertionFailure("No market capitalization ordering in perps")
-                sql += "\nORDER BY m.rowid"
-            case .volume:
-                sql += "\nORDER BY CAST(m.volume AS REAL)"
-            case .price:
-                sql += "\nORDER BY CAST(m.last AS REAL)"
-            case .change:
-                sql += "\nORDER BY CAST(m.change AS REAL)"
-            }
-            switch ordering.direction {
-            case .ascending:
-                sql += " ASC"
-            case .descending:
-                sql += " DESC"
-            }
-        } else {
-            sql += "\nORDER BY m.rowid ASC"
-        }
-        if let limit {
-            sql += "\nLIMIT \(limit)"
-        }
-        return db.select(with: sql)
-    }
-    
-    public func availableMarkets(
-        subCategory: PerpetualMarket.SubCategory,
-        ordering: MarketOrdering?,
+        category: PerpetualMarket.QueryCategory,
+        ordering: PerpetualMarket.Ordering,
+        limit: Int? = nil,
     ) -> [FavorablePerpetualMarket] {
         var sql = """
         SELECT m.*,
             ifnull(f.is_favored, FALSE) AS \(FavorablePerpetualMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
         FROM markets m
             LEFT JOIN favorites f ON m.market_id = f.market_id
-        WHERE volume > 0
+        WHERE m.volume > 0
             
         """
-        switch subCategory {
+        switch category {
         case .watchlist:
-            sql.append("AND f.is_favored")
-        case .trending:
+            sql.append("    AND f.is_favored")
+        case .all:
             break
-        case .topGainers:
-            break
-        case .topLosers:
-            break
-        case .memes:
-            sql.append("AND m.category = '\(PerpetualMarket.Category.memes.rawValue)'")
-        case .indices:
-            sql.append("AND m.category = '\(PerpetualMarket.Category.indices.rawValue)'")
-        case .commodities:
-            sql.append("AND m.category = '\(PerpetualMarket.Category.commodities.rawValue)'")
-        case .forex:
-            sql.append("AND m.category = '\(PerpetualMarket.Category.forex.rawValue)'")
+        case .categorized(let category):
+            sql.append("    AND m.category = '\(category.rawValue)'")
         }
-        if let ordering {
-            switch ordering.field {
-            case .marketCap:
-                assertionFailure("No market capitalization ordering in perps")
-                sql += "\nORDER BY rowid"
-            case .volume:
-                sql += "\nORDER BY CAST(volume AS REAL)"
-            case .price:
-                sql += "\nORDER BY CAST(last AS REAL)"
-            case .change:
-                sql += "\nORDER BY CAST(change AS REAL)"
-            }
-            switch ordering.direction {
-            case .ascending:
-                sql += " ASC"
-            case .descending:
-                sql += " DESC"
-            }
-        } else {
-            sql += "\nORDER BY CAST(volume AS REAL) DESC"
+        let direction = switch ordering.direction {
+        case .ascending:
+            "ASC"
+        case .descending:
+            "DESC"
+        }
+        switch ordering.field {
+        case .volume:
+            sql += "\nORDER BY CAST(volume AS REAL) \(direction)"
+        case .price:
+            sql += "\nORDER BY CAST(last AS REAL) \(direction)"
+        case .change:
+            sql += "\nORDER BY CAST(change AS REAL) \(direction)"
+        case .score:
+            sql += "\nORDER BY trade_volume_score_1d \(direction), CAST(volume AS REAL) \(direction)"
+        }
+        if let limit {
+            sql += "\nLIMIT \(limit)"
         }
         return db.select(with: sql)
     }
@@ -151,31 +96,38 @@ public final class PerpsMarketDAO: PerpsDAO {
     }
     
     public func save(market: PerpetualMarket) {
-        db.save(market) { _ in
-            NotificationCenter.default.postAsynchornously(
-                onMainThread: Self.marketsDidUpdateNotification,
-                object: self,
-                userInfo: [UserInfoKey.market: market],
-            )
+        db.write { db in
+            let market = try market.upsertAndFetch(db) { _ in
+                [PerpetualMarket.column(of: .tradeVolumeScore1D).noOverwrite]
+            }
+            db.afterNextTransaction { _ in
+                NotificationCenter.default.postAsynchornously(
+                    onMainThread: Self.marketsDidUpdateNotification,
+                    object: self,
+                    userInfo: [UserInfoKey.market: market],
+                )
+            }
         }
     }
     
     public func save(
         markets: [PerpetualMarket],
-        dataSource: PerpetualMarket.RequestCategory?,
+        dataSource: PerpetualMarket.RequestCategory,
     ) {
         guard !markets.isEmpty else {
             return
         }
         db.write { db in
-            try markets.save(db)
             switch dataSource {
-            case .all, .none:
-                break
+            case .all:
+                try markets.save(db)
             case .favorite:
                 try db.execute(literal: "DELETE FROM favorites WHERE market_id NOT IN \(markets.map(\.marketID))")
                 let now = Date().toUTCString()
                 for market in markets {
+                    _ = try market.upsertAndFetch(db) { _ in
+                        [PerpetualMarket.column(of: .tradeVolumeScore1D).noOverwrite]
+                    }
                     let favorite = PerpetualMarket.FavoriteStorage(
                         marketID: market.marketID,
                         isFavorite: true,
@@ -185,10 +137,13 @@ public final class PerpsMarketDAO: PerpsDAO {
                 }
             case .featured:
                 try db.execute(literal: "DELETE FROM market_categories WHERE category = \(Market.DatabaseCategory.featured.rawValue)")
-                let categories = markets.map { market in
-                    PerpetualMarketCategory(marketID: market.marketID, category: .featured)
+                for market in markets {
+                    _ = try market.upsertAndFetch(db) { _ in
+                        [PerpetualMarket.column(of: .tradeVolumeScore1D).noOverwrite]
+                    }
+                    let category = PerpetualMarketCategory(marketID: market.marketID, category: .featured)
+                    try category.save(db)
                 }
-                try categories.save(db)
             }
             db.afterNextTransaction { _ in
                 NotificationCenter.default.postAsynchornously(

@@ -6,6 +6,9 @@ import MixinServices
 final class PrivacyWalletViewController: WalletViewController {
     
     private let dataLoadingQueue = DispatchQueue(label: "one.mixin.messenger.PrivacyWallet")
+    private let initialPositionLoader = PerpetualPositionLoader(
+        walletID: Wallet.privacy.tradingWalletID
+    )
     
     private var hasAssetInLegacyNetwork = false
     private var tokens: OrderedDictionary<String, MixinTokenItem> = [:]
@@ -72,6 +75,10 @@ final class PrivacyWalletViewController: WalletViewController {
             name: PerpsMarketDAO.marketsDidUpdateNotification,
             object: nil
         )
+        
+        // Reload once in case of launching on new device for the first time
+        initialPositionLoader.reload()
+        
         reloadData()
     }
     

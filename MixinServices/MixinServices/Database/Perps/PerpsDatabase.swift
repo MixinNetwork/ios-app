@@ -197,6 +197,16 @@ public final class PerpsDatabase: Database {
             }
         }
         
+        migrator.registerMigration("score") { db in
+            let marketColumns = try TableInfo
+                .fetchAll(db, sql: "PRAGMA table_info(markets)")
+                .map(\.name)
+            if !marketColumns.contains("trade_volume_score_1d") {
+                try db.execute(sql: "DELETE FROM markets")
+                try db.execute(sql: "ALTER TABLE `markets` ADD COLUMN `trade_volume_score_1d` INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+        
         return migrator
     }
     

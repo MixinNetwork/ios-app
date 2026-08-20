@@ -31,6 +31,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
         case fundingIntervalHours = "funding_interval_hours"
         case nextFundingAt = "next_funding_at"
         case openInterest = "open_interest"
+        case tradeVolumeScore1D = "trade_volume_score_1d"
     }
     
     public enum Category: String, CaseIterable {
@@ -69,6 +70,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
     public let fundingIntervalHours: Int
     public let nextFundingAt: String
     public let openInterest: String
+    public let tradeVolumeScore1D: Int
     
     public var canonicalPriceFormatStyle: Decimal.FormatStyle {
         Decimal.FormatStyle.number
@@ -118,6 +120,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
         fundingIntervalHours: Int,
         nextFundingAt: String,
         openInterest: String,
+        tradeVolumeScore1D: Int,
     ) {
         self.marketID = marketID
         self.displaySymbol = displaySymbol
@@ -146,6 +149,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
         self.fundingIntervalHours = fundingIntervalHours
         self.nextFundingAt = nextFundingAt
         self.openInterest = openInterest
+        self.tradeVolumeScore1D = tradeVolumeScore1D
     }
     
 }
@@ -171,15 +175,10 @@ extension PerpetualMarket {
 
 extension PerpetualMarket {
     
-    public enum SubCategory: CaseIterable {
+    public enum QueryCategory {
         case watchlist
-        case trending
-        case topGainers
-        case topLosers
-        case memes
-        case indices
-        case commodities
-        case forex
+        case all
+        case categorized(Category)
     }
     
     public enum RequestCategory: String, CaseIterable {
@@ -205,6 +204,53 @@ extension PerpetualMarket {
         let marketID: String
         let isFavorite: Bool
         let createdAt: String
+        
+    }
+    
+}
+
+extension PerpetualMarket {
+    
+    public struct Ordering: Equatable, Hashable, CustomDebugStringConvertible {
+        
+        public enum Field: Equatable, Hashable {
+            case volume
+            case price
+            case change
+            case score
+        }
+        
+        public let field: Field
+        public let direction: OrderingDirection
+        
+        public var debugDescription: String {
+            var description = switch field {
+            case .volume:
+                "Volume"
+            case .price:
+                "Price"
+            case .change:
+                "24H%"
+            case .score:
+                "Score"
+            }
+            switch direction {
+            case .ascending:
+                description += " ↑"
+            case .descending:
+                description += " ↓"
+            }
+            return description
+        }
+        
+        public init(field: Field, direction: OrderingDirection) {
+            self.field = field
+            self.direction = direction
+        }
+        
+        public func directionToggled() -> Ordering {
+            Ordering(field: field, direction: direction.toggled())
+        }
         
     }
     

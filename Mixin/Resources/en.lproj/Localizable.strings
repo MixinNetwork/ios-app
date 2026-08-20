@@ -506,6 +506,7 @@
 "delete_watch_wallet_description" = "Deleting this wallet will not affect your assets, as it is a watch-only wallet.";
 "delete_withdraw_address" = "Delete %@ Address";
 "deleted" = "Deleted";
+"deleted_this_message" = "%@ deleted this message.";
 "deleting_address" = "Delete Address";
 "deleting_address_failed" = "Delete Address Failed";
 "deposit" = "Deposit";
@@ -2093,7 +2094,7 @@
 "years_count_short" = "%dY";
 "you" = "You";
 "you_are_watching_address" = "You are watching %@";
-"you_deleted_this_message" = "You deleted this message";
+"you_deleted_this_message" = "You deleted this message.";
 "you_have_a_new_message" = "You have a new message";
 "you_have_left_the_group" = "You have left the group";
 "your_emergency_contact_has_been_changed" = "Your recovery contact has been changed";

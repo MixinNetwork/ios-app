@@ -506,6 +506,7 @@
 "delete_watch_wallet_description" = "这是一个观察钱包，删除此钱包不会影响你的资产。";
 "delete_withdraw_address" = "删除 %@ 地址";
 "deleted" = "已删除";
+"deleted_this_message" = "%@撤回了一条消息";
 "deleting_address" = "正在删除地址";
 "deleting_address_failed" = "删除地址失败";
 "deposit" = "充值";

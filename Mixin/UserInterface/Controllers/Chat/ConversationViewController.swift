@@ -542,7 +542,9 @@ final class ConversationViewController: UIViewController {
         case .delete:
             let viewModels = dataSource.selectedViewModels.values.map({ $0 })
             let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            if !viewModels.contains(where: { $0.message.userId != myUserId || !$0.message.canRecall }) {
+            let canRecallOthersMessages = dataSource.category != .group
+                || ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
+            if !viewModels.contains(where: { !$0.message.canRecall(canRecallOthersMessage: canRecallOthersMessages) }) {
                 controller.addAction(UIAlertAction(title: R.string.localizable.delete_for_everyone(), style: .destructive, handler: { (_) in
                     if AppGroupUserDefaults.User.hasShownRecallTips {
                         self.deleteForEveryone(viewModels: viewModels)

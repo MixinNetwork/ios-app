@@ -506,6 +506,7 @@
 "delete_watch_wallet_description" = "이 지갑은 보기 전용 지갑이므로 삭제해도 자산에 영향을 미치지 않습니다.";
 "delete_withdraw_address" = "%@ 주소 삭제";
 "deleted" = "삭제됨";
+"deleted_this_message" = "%@님이 이 메시지를 삭제했습니다.";
 "deleting_address" = "주소 삭제";
 "deleting_address_failed" = "주소 삭제 실패";
 "deposit" = "입금";

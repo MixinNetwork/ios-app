@@ -20,7 +20,7 @@ final class Web3Chain {
             case .pearl:
                 [.pearl]
             case .evm:
-                [.ethereum, .polygon, .bnbSmartChain, .base, .arbitrumOne, .opMainnet, .avalancheCChain, .hyperEVM]
+                [.ethereum, .polygon, .bnbSmartChain, .base, .arbitrumOne, .opMainnet, .avalancheCChain, .hyperEVM, .xLayer]
             case .solana:
                 [.solana]
             }
@@ -188,7 +188,7 @@ extension Web3Chain {
     static let all: [Web3Chain] = {
         let chains: [Web3Chain] = [
             .bitcoin, .pearl, .ethereum, .solana, .bnbSmartChain, .base,
-            .polygon, .arbitrumOne, .opMainnet, .avalancheCChain, .hyperEVM,
+            .polygon, .arbitrumOne, .opMainnet, .avalancheCChain, .hyperEVM, .xLayer,
         ]
         // Make sure all chains are included
         let allChains = Kind.allCases.reduce(into: []) { results, kind in
@@ -279,6 +279,14 @@ extension Web3Chain {
         feeTokenAssetID: AssetID.hyperEVMHYPE,
         name: "HyperEVM",
         failsafeRPCServerURL: URL(string: "https://rpc.hyperliquid.xyz/evm")!
+    )
+    
+    static let xLayer = Web3Chain.evm(
+        chainID: 196,
+        mixinChainID: ChainID.xLayer,
+        feeTokenAssetID: AssetID.xLayerOKB,
+        name: "X Layer",
+        failsafeRPCServerURL: URL(string: "https://rpc.xlayer.tech")!
     )
     
     static let solana = Web3Chain.solana(

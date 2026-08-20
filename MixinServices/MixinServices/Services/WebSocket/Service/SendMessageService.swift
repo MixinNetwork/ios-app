@@ -10,8 +10,8 @@ public class SendMessageService: MixinService {
         "_AUDIO", "_VIDEO", "_LIVE", "_POST", "_LOCATION",
         "_TRANSCRIPT"
     ]
-
-    internal static let recallableTimeLimit: TimeInterval = 60 * 60 * 24 * 30
+    
+    internal static let recallableTimeLimit: TimeInterval = 30 * .day
     
     public let jobCreationQueue = DispatchQueue(label: "one.mixin.services.queue.send.message.job.creation")
     

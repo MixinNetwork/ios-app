@@ -12,18 +12,13 @@ final class Web3Worker {
     
     private weak var webView: WKWebView?
     
-    private var currentProposer: Web3DappProposer {
-        Web3DappProposer(name: webView?.title ?? "(no title)",
-                         host: webView?.url?.host ?? "(no host)")
-    }
-    
     init(webView: WKWebView, evmChain: Web3Chain, solanaChain: Web3Chain) {
         self.webView = webView
         self.evmChain = evmChain
         self.solanaChain = solanaChain
     }
     
-    func handleRequest(json: [String: Any]) {
+    func handleRequest(json: [String: Any], proposer: Web3DappProposer) {
         guard let request = Request(json: json) else {
             return
         }
@@ -35,16 +30,16 @@ final class Web3Worker {
         case .requestAccounts:
             requestAccounts(json: json, to: request)
         case .signTransaction:
-            signTransaction(json: json, to: request)
+            signTransaction(json: json, to: request, proposer: proposer)
         case .signMessage:
             if let data = messageData(json: json) {
-                signMessage(data: data, to: request)
+                signMessage(data: data, to: request, proposer: proposer)
             } else {
                 send(error: "Invalid Data", to: request)
             }
         case .signPersonalMessage:
             if let data = messageData(json: json) {
-                signMessage(data: data, to: request)
+                signMessage(data: data, to: request, proposer: proposer)
             } else {
                 send(error: "Invalid Data", to: request)
             }
@@ -57,7 +52,7 @@ final class Web3Worker {
                 send(error: "Invalid Data", to: request)
                 return
             }
-            signTypedData(data: data, to: request)
+            signTypedData(data: data, to: request, proposer: proposer)
         case .sendTransaction:
             break
         case .ecRecover:
@@ -98,9 +93,9 @@ final class Web3Worker {
             sendNull(to: request)
             self.evmChain = chain
         case .signRawTransaction:
-            signRawTransaction(json: json, to: request)
+            signRawTransaction(json: json, to: request, proposer: proposer)
         case .signIn:
-            signIn(json: json, to: request)
+            signIn(json: json, to: request, proposer: proposer)
         default:
             send(error: "Unsupported method", to: request)
         }
@@ -122,7 +117,7 @@ final class Web3Worker {
         send(results: [address], to: request)
     }
     
-    private func signMessage(data: Data, to request: Request) {
+    private func signMessage(data: Data, to request: Request, proposer: Web3DappProposer) {
         guard let wallet = Web3WalletDAO.shared.currentSelectedWallet() else {
             send(error: "No Wallet", to: request)
             return
@@ -147,7 +142,7 @@ final class Web3Worker {
             wallet: wallet,
             chain: chain,
             address: address,
-            proposer: currentProposer,
+            proposer: proposer,
             signable: signable,
             humanReadableMessage: humanReadable
         ) { signature in
@@ -162,7 +157,7 @@ final class Web3Worker {
         Web3PopupCoordinator.enqueue(popup: .request(sign))
     }
     
-    private func signTypedData(data: Data, to request: Request) {
+    private func signTypedData(data: Data, to request: Request, proposer: Web3DappProposer) {
         guard let wallet = Web3WalletDAO.shared.currentSelectedWallet() else {
             send(error: "No Wallet", to: request)
             return
@@ -179,7 +174,7 @@ final class Web3Worker {
                 wallet: wallet,
                 chain: evmChain,
                 address: address,
-                proposer: currentProposer,
+                proposer: proposer,
                 signable: signable,
                 humanReadableMessage: humanReadable
             ) { signature in
@@ -195,7 +190,7 @@ final class Web3Worker {
         }
     }
     
-    private func signTransaction(json: [String: Any], to request: Request) {
+    private func signTransaction(json: [String: Any], to request: Request, proposer: Web3DappProposer) {
         guard let object = json["object"] as? [String: Any] else {
             send(error: "Invalid Data", to: request)
             return
@@ -208,7 +203,7 @@ final class Web3Worker {
             send(error: "No Address", to: request)
             return
         }
-        Task.detached { [evmChain, proposer=currentProposer] in
+        Task.detached { [evmChain, proposer] in
             do {
                 let preview = try ExternalEVMTransaction(json: object)
                 let operation = try EVMTransferWithBrowserWalletOperation(
@@ -243,7 +238,7 @@ final class Web3Worker {
         }
     }
     
-    private func signIn(json: [String: Any], to request: Request) {
+    private func signIn(json: [String: Any], to request: Request, proposer: Web3DappProposer) {
         guard
             let object = json["object"] as? [String: Any],
             let input = object["data"] as? [String: Any]
@@ -263,16 +258,20 @@ final class Web3Worker {
             send(error: "Empty WebView", to: request)
             return
         }
+        guard proposer.host == webViewHost else {
+            send(error: "Mismatched host", to: request)
+            return
+        }
         if let address = input["address"] as? String, address != myAddress.destination {
             send(error: "Mismatched address", to: request)
             return
         }
-        if let domain = input["domain"] as? String, domain != webViewHost {
+        if let domain = input["domain"] as? String, domain != proposer.host {
             send(error: "Mismatched domain", to: request)
             return
         }
         
-        var message = "\(webViewHost) wants you to sign in with your Solana account:\n"
+        var message = "\(proposer.host) wants you to sign in with your Solana account:\n"
         message += "\(myAddress)"
         if let statement = input["statement"] as? String {
             message += "\n\n\(statement)"
@@ -280,7 +279,7 @@ final class Web3Worker {
         var fields: [String] = []
         if let uri = input["uri"] as? String {
             let origin: String? = {
-                guard webViewURL.scheme == "https", let host = webViewURL.host else {
+                guard webViewURL.scheme == "https", let host = webViewURL.host, host == proposer.host else {
                     return nil
                 }
                 var origin = "https://" + host
@@ -375,7 +374,7 @@ final class Web3Worker {
             wallet: wallet,
             chain: solanaChain,
             address: myAddress,
-            proposer: currentProposer,
+            proposer: proposer,
             signable: signable,
             humanReadableMessage: message
         ) { signature in
@@ -387,7 +386,7 @@ final class Web3Worker {
         Web3PopupCoordinator.enqueue(popup: .request(sign))
     }
     
-    private func signRawTransaction(json: [String: Any], to request: Request) {
+    private func signRawTransaction(json: [String: Any], to request: Request, proposer: Web3DappProposer) {
         guard
             let object = json["object"] as? [String: Any],
             let raw = object["raw"] as? String,
@@ -404,7 +403,7 @@ final class Web3Worker {
             send(error: "No Address", to: request)
             return
         }
-        Task.detached { [solanaChain, proposer=currentProposer] in
+        Task.detached { [solanaChain, proposer] in
             do {
                 let operation = try await SolanaTransferWithCustomRespondingOperation(
                     wallet: wallet,

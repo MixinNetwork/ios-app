@@ -218,7 +218,7 @@ final class AddWalletSelectorViewController: UIViewController {
                 return
             }
             let addresses = wallets.flatMap { wallet in
-                [wallet.evm.address, wallet.solana.address]
+                [wallet.bitcoin.address, wallet.evm.address, wallet.solana.address]
             }
             RouteAPI.assets(searchAddresses: addresses, queue: .global()) { result in
                 switch result {
@@ -231,18 +231,23 @@ final class AddWalletSelectorViewController: UIViewController {
                         let bitcoinTokens = tokens[wallet.bitcoin.address] ?? []
                         let evmTokens = tokens[wallet.evm.address] ?? []
                         let solanaTokens = tokens[wallet.solana.address] ?? []
+                        let allTokens = bitcoinTokens + evmTokens + solanaTokens
                         
                         let name = walletNames[wallet.bitcoin.address]
                         ?? walletNames[wallet.evm.address]
                         ?? walletNames[wallet.solana.address]
                         
-                        return tokens.isEmpty ? nil : WalletCandidate(
-                            bitcoinWallet: wallet.bitcoin,
-                            evmWallet: wallet.evm,
-                            solanaWallet: wallet.solana,
-                            tokens: bitcoinTokens + evmTokens + solanaTokens,
-                            importedAsName: name
-                        )
+                        if allTokens.isEmpty && name == nil  {
+                            return nil
+                        } else {
+                            return WalletCandidate(
+                                bitcoinWallet: wallet.bitcoin,
+                                evmWallet: wallet.evm,
+                                solanaWallet: wallet.solana,
+                                tokens: allTokens,
+                                importedAsName: name
+                            )
+                        }
                     }
                     DispatchQueue.main.async {
                         guard let self else {

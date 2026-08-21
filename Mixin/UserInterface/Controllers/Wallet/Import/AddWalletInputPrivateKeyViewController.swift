@@ -147,7 +147,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                 } else {
                     Data(hexEncodedString: input)
                 }
-                guard let privateKey else {
+                guard let privateKey, privateKey.count == 32 else {
                     throw LoadKeyError.invalidInput
                 }
                 let keyStorage = InPlaceKeyStorage(raw: privateKey)

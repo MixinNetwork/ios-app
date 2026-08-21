@@ -27,6 +27,7 @@ class EVMTransferOperation: Web3TransferOperation {
         case invalidAmount(Decimal)
         case invalidReceiver(String)
         case notEVMChain(String)
+        case mismatchedFromAddress
     }
     
     fileprivate enum RequestError: Error {
@@ -105,6 +106,9 @@ class EVMTransferOperation: Web3TransferOperation {
         simulationDisplay: SimulationDisplay,
         isFeeWaived: Bool,
     ) throws {
+        guard transaction.from.toChecksumAddress() == fromAddress.destination else {
+            throw InitError.mismatchedFromAddress
+        }
         let chainID: Int
         switch chain.specification {
         case let .evm(id):
@@ -316,10 +320,7 @@ class EVMTransferOperation: Web3TransferOperation {
         fee: Web3DisplayFee
     ) async throws {
         do {
-            let transactionDescription = transaction.raw?.hexEncodedString()
-                ?? transaction.jsonRepresentation
-                ?? "(null)"
-            Logger.web3.info(category: "EVMTransfer", message: "Will send tx: \(transactionDescription)")
+            Logger.web3.info(category: "EVMTransfer", message: "Will send tx")
             let hexEncodedSignedTransaction = try {
                 let signedTx = try account.sign(transaction: transaction)
                 guard let raw = signedTx.raw else {

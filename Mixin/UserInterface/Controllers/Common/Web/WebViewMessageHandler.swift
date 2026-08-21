@@ -28,7 +28,7 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
         case getTIPAddress(callback: String)
         case tipSign(callback: String)
         case getAssets(assetIDs: [String], callback: String)
-        case web3Bridge([String: Any])
+        case web3Bridge([String: Any], host: String)
         case signBotSignature(callback: String)
         case openInBrowser(URL)
     }
@@ -50,6 +50,9 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
     }
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.frameInfo.isMainFrame else {
+            return
+        }
         guard let handlerName = Name(rawValue: message.name) else {
             return
         }
@@ -93,6 +96,11 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
                 delegate?.webViewMessageHander(self, didReceiveMessage: .getAssets(assetIDs: assetIDs, callback: callback))
             }
         case .web3Bridge:
+            let origin = message.frameInfo.securityOrigin
+            let originProtocol = origin.protocol.lowercased()
+            guard !origin.host.isEmpty, ["http", "https"].contains(originProtocol) else {
+                return
+            }
             let body: [String: Any]
             if let string = message.body as? String,
                let data = string.data(using: .utf8),
@@ -105,7 +113,7 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
             } else {
                 return
             }
-            delegate?.webViewMessageHander(self, didReceiveMessage: .web3Bridge(body))
+            delegate?.webViewMessageHander(self, didReceiveMessage: .web3Bridge(body, host: origin.host))
         case .signBotSignature:
             guard
                 let messageBody = message.body as? [Any],

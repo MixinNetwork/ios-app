@@ -100,8 +100,8 @@ class InputBIP39MnemonicsViewController: TitledMnemonicsViewController {
     
     @objc private func pastePhrases(_ sender: Any) {
         let phrases = UIPasteboard.general.string?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .components(separatedBy: " ")
+            .split(whereSeparator: \.isWhitespace)
+            .map(String.init)
         guard let phrases else {
             return
         }
@@ -212,7 +212,7 @@ class InputBIP39MnemonicsViewController: TitledMnemonicsViewController {
 extension InputBIP39MnemonicsViewController: QRCodeScannerViewControllerDelegate {
     
     func qrCodeScannerViewController(_ controller: QRCodeScannerViewController, shouldRecognizeString string: String) -> Bool {
-        let phrases = string.components(separatedBy: " ")
+        let phrases = string.split(whereSeparator: \.isWhitespace).map(String.init)
         input(phrases: phrases)
         return false
     }

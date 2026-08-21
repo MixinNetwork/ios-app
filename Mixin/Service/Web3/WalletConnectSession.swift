@@ -12,6 +12,7 @@ final class WalletConnectSession {
         case noChain(String)
         case noWallet
         case noAddress
+        case mismatchedFromAddress
     }
     
     enum Method: String, CaseIterable {
@@ -160,7 +161,7 @@ extension WalletConnectSession {
         assert(Thread.isMainThread)
         let proposer = Web3DappProposer(name: name, host: host)
         Task.detached {
-            Logger.web3.info(category: "Session", message: "Got tx: \(request.id) \(request.params)")
+            Logger.web3.info(category: "Session", message: "Got tx: \(request.id)")
             do {
                 let params = try request.params.get([ExternalEVMTransaction].self)
                 guard let transactionPreview = params.first else {
@@ -174,6 +175,9 @@ extension WalletConnectSession {
                 }
                 guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID) else {
                     throw Error.noAddress
+                }
+                guard transactionPreview.from.toChecksumAddress() == address.destination else {
+                    throw Error.mismatchedFromAddress
                 }
                 let operation = try Web3TransferWithWalletConnectOperation(
                     wallet: wallet,
@@ -228,7 +232,7 @@ extension WalletConnectSession {
         assert(Thread.isMainThread)
         let proposer = Web3DappProposer(name: name, host: host)
         Task.detached {
-            Logger.web3.info(category: "Session", message: "Got tx: \(request.id) \(request.params)")
+            Logger.web3.info(category: "Session", message: "Got tx: \(request.id)")
             do {
                 struct RequestParams: Codable {
                     let transaction: String
@@ -303,6 +307,9 @@ extension WalletConnectSession {
             }
             guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID) else {
                 throw Error.noAddress
+            }
+            guard decoded.address.caseInsensitiveCompare(address.destination) == .orderedSame else {
+                throw Error.mismatchedFromAddress
             }
             let operation = Web3SignWithWalletConnectOperation(
                 wallet: wallet,

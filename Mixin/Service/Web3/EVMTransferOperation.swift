@@ -320,10 +320,7 @@ class EVMTransferOperation: Web3TransferOperation {
         fee: Web3DisplayFee
     ) async throws {
         do {
-            let transactionDescription = transaction.raw?.hexEncodedString()
-                ?? transaction.jsonRepresentation
-                ?? "(null)"
-            Logger.web3.info(category: "EVMTransfer", message: "Will send tx: \(transactionDescription)")
+            Logger.web3.info(category: "EVMTransfer", message: "Will send tx")
             let hexEncodedSignedTransaction = try {
                 let signedTx = try account.sign(transaction: transaction)
                 guard let raw = signedTx.raw else {

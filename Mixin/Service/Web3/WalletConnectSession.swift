@@ -161,7 +161,7 @@ extension WalletConnectSession {
         assert(Thread.isMainThread)
         let proposer = Web3DappProposer(name: name, host: host)
         Task.detached {
-            Logger.web3.info(category: "Session", message: "Got tx: \(request.id) \(request.params)")
+            Logger.web3.info(category: "Session", message: "Got tx: \(request.id)")
             do {
                 let params = try request.params.get([ExternalEVMTransaction].self)
                 guard let transactionPreview = params.first else {
@@ -232,7 +232,7 @@ extension WalletConnectSession {
         assert(Thread.isMainThread)
         let proposer = Web3DappProposer(name: name, host: host)
         Task.detached {
-            Logger.web3.info(category: "Session", message: "Got tx: \(request.id) \(request.params)")
+            Logger.web3.info(category: "Session", message: "Got tx: \(request.id)")
             do {
                 struct RequestParams: Codable {
                     let transaction: String

@@ -60,7 +60,7 @@ class SolanaTransferOperation: Web3TransferOperation {
     }
     
     fileprivate func send(signedTransaction: String, fee: Web3DisplayFee?) async throws {
-        Logger.web3.info(category: "SolanaTransfer", message: "Will send tx: \(signedTransaction)")
+        Logger.web3.info(category: "SolanaTransfer", message: "Will send tx")
         let rawTransaction = try await RouteAPI.postTransaction(
             chainID: ChainID.solana,
             from: fromAddress.destination,

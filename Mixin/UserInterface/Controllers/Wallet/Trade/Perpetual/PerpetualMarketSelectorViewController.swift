@@ -24,6 +24,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     private var ordering: PerpetualMarket.Ordering
     private var displayFavoritesAsRecommendations = false
     private var isUpdatingFavorites = false
+    private var hasScrolledToSelectedCategory = false
     
     private weak var marketsCollectionView: UICollectionView!
     private weak var addToWatchlistButton: UIButton?
@@ -180,6 +181,15 @@ final class PerpetualMarketSelectorViewController: UIViewController {
             object: nil
         )
         reloadData()
+    }
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        if !hasScrolledToSelectedCategory {
+            hasScrolledToSelectedCategory = true
+            categorySelectorCollectionView.layoutIfNeeded()
+            categorySelectorController.scrollToSelectedCategory(animated: false)
+        }
     }
     
     @IBAction func cancel(_ sender: Any) {
@@ -591,6 +601,17 @@ extension PerpetualMarketSelectorViewController {
             }
             let indexPath = IndexPath(item: item, section: 0)
             collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
+        }
+        
+        func scrollToSelectedCategory(animated: Bool) {
+            guard let indexPath = collectionView.indexPathsForSelectedItems?.first else {
+                return
+            }
+            collectionView.scrollToItem(
+                at: indexPath,
+                at: .centeredHorizontally,
+                animated: animated
+            )
         }
         
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

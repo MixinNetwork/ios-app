@@ -98,8 +98,8 @@ class SignInWithMnemonicsViewController<PhrasesCount: SignInAvailablePhrasesCoun
     
     @objc func pastePhrases(_ sender: Any) {
         let phrases = UIPasteboard.general.string?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .components(separatedBy: " ")
+            .split(whereSeparator: \.isWhitespace)
+            .map(String.init)
         guard let phrases else {
             return
         }
@@ -187,7 +187,9 @@ extension SignInWithMnemonicsViewController: NavigationBarStyling {
 extension SignInWithMnemonicsViewController: QRCodeScannerViewControllerDelegate {
     
     func qrCodeScannerViewController(_ controller: QRCodeScannerViewController, shouldRecognizeString string: String) -> Bool {
-        let phrases = string.components(separatedBy: " ")
+        let phrases = string
+            .split(whereSeparator: \.isWhitespace)
+            .map(String.init)
         input(phrases: phrases)
         return false
     }

@@ -185,4 +185,37 @@ struct MixinTests {
         #expect(hashes == expectedHashes)
     }
     
+    @Test func testPBKDF2NFKDNormalization() throws {
+        let precomposedPassword = "pass\u{00E9}"
+        let decomposedPassword = "pass\u{0065}\u{0301}"
+        let precomposedSalt = "mnemonic\u{00E9}"
+        let decomposedSalt = "mnemonic\u{0065}\u{0301}"
+        
+        let seed1 = try PBKDF2.derivation(
+            password: precomposedPassword,
+            salt: precomposedSalt,
+            pseudoRandomAlgorithm: .hmacSHA512,
+            iterationCount: 2048,
+            keyCount: 64
+        )
+        let seed2 = try PBKDF2.derivation(
+            password: decomposedPassword,
+            salt: decomposedSalt,
+            pseudoRandomAlgorithm: .hmacSHA512,
+            iterationCount: 2048,
+            keyCount: 64
+        )
+        #expect(seed1 == seed2)
+    }
+    
+    @Test func testMnemonicWhitespaceSplitting() throws {
+        let rawInput = "  legal\nwinner\t thank\r\n year   wave sausage worth useful legal\n\nwinner thank yellow  "
+        let phrases = rawInput.split(whereSeparator: \.isWhitespace).map(String.init)
+        #expect(phrases.count == 12)
+        #expect(BIP39Mnemonics.areValid(phrases: phrases))
+        
+        let mnemonics = try BIP39Mnemonics(phrases: phrases)
+        #expect(mnemonics.entropy == Data(hexEncodedString: "7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f")!)
+    }
+    
 }

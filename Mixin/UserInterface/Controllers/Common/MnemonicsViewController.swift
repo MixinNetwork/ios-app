@@ -69,6 +69,7 @@ extension MnemonicsViewController {
             textField.autocapitalizationType = .none
             textField.autocorrectionType = .no
             textField.spellCheckingType = .no
+            textField.keyboardType = .asciiCapable
             wrapper.addSubview(textField)
             textField.snp.makeConstraints { make in
                 make.edges.equalToSuperview()

@@ -12,6 +12,7 @@ final class WalletConnectSession {
         case noChain(String)
         case noWallet
         case noAddress
+        case mismatchedFromAddress
     }
     
     enum Method: String, CaseIterable {
@@ -175,6 +176,9 @@ extension WalletConnectSession {
                 guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID) else {
                     throw Error.noAddress
                 }
+                guard transactionPreview.from.toChecksumAddress() == address.destination else {
+                    throw Error.mismatchedFromAddress
+                }
                 let operation = try Web3TransferWithWalletConnectOperation(
                     wallet: wallet,
                     fromAddress: address,
@@ -303,6 +307,9 @@ extension WalletConnectSession {
             }
             guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID) else {
                 throw Error.noAddress
+            }
+            guard decoded.address.caseInsensitiveCompare(address.destination) == .orderedSame else {
+                throw Error.mismatchedFromAddress
             }
             let operation = Web3SignWithWalletConnectOperation(
                 wallet: wallet,

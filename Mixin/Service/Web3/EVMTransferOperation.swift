@@ -27,6 +27,7 @@ class EVMTransferOperation: Web3TransferOperation {
         case invalidAmount(Decimal)
         case invalidReceiver(String)
         case notEVMChain(String)
+        case mismatchedFromAddress
     }
     
     fileprivate enum RequestError: Error {
@@ -105,6 +106,9 @@ class EVMTransferOperation: Web3TransferOperation {
         simulationDisplay: SimulationDisplay,
         isFeeWaived: Bool,
     ) throws {
+        guard transaction.from.toChecksumAddress() == fromAddress.destination else {
+            throw InitError.mismatchedFromAddress
+        }
         let chainID: Int
         switch chain.specification {
         case let .evm(id):

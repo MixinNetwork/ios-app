@@ -56,7 +56,7 @@ final class PrivateKeyViewController: UIViewController {
     }
     
     @IBAction func copyPrivateKey(_ sender: Any) {
-        UIPasteboard.general.string = privateKey
+        UIPasteboard.general.setString(privateKey, expireAfter: .minute)
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     

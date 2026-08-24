@@ -10,9 +10,18 @@
 
 #import <Foundation/Foundation.h>
 
-#import <WebRTC/RTCMacros.h>
+#import <WebRTC/RTCVideoCodecInfo.h>
 #import <WebRTC/RTCVideoDecoder.h>
+#import <WebRTC/RTCMacros.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 RTC_OBJC_EXPORT
 @interface RTC_OBJC_TYPE (RTCVideoDecoderH264) : NSObject <RTC_OBJC_TYPE(RTCVideoDecoder)>
+
+/** Returns the list of supported codec formats (profiles) for the H264 decoder. */
++ (NSArray<RTC_OBJC_TYPE(RTCVideoCodecInfo) *> *)supportedCodecs;
+
 @end
+
+NS_ASSUME_NONNULL_END

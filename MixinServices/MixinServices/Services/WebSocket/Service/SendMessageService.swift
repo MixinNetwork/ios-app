@@ -672,10 +672,16 @@ extension SendMessageService {
         }
         if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue || message.category == MessageCategory.APP_CARD.rawValue {
             try checkConversationAndExpireIn()
+            
+            // `blazeMessage.params?.data` may carry custom payload (e.g. serialized child messages for transcripts),
+            // while `message.content` contains the message text or local preview. Prefer `data` if present,
+            // otherwise fall back to `message.content`.
+            let rawContent = blazeMessage.params?.data ?? message.content
+            
             if needsEncodeCategories.map(\.rawValue).contains(message.category) {
-                blazeMessage.params?.data = message.content?.base64Encoded()
+                blazeMessage.params?.data = rawContent?.base64Encoded()
             } else if blazeMessage.params?.data == nil {
-                blazeMessage.params?.data = message.content
+                blazeMessage.params?.data = rawContent
             }
         } else if message.category.hasPrefix("ENCRYPTED_") {
             // FIXME: Participant session saving may not finished after the func below returns.

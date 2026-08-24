@@ -44,6 +44,7 @@ public final class FavorablePerpetualMarket: PerpetualMarket {
             fundingIntervalHours: m.fundingIntervalHours,
             nextFundingAt: m.nextFundingAt,
             openInterest: m.openInterest,
+            tradeVolumeScore1D: m.tradeVolumeScore1D,
         )
     }
     

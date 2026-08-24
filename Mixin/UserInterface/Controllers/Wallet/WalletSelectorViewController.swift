@@ -566,6 +566,7 @@ extension WalletSelectorViewController: UICollectionViewDelegate {
                     collectionView.reloadSections(sections)
                 }
             }
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         case .wallet:
             let digest = if let searchResults {
                 searchResults[indexPath.row]

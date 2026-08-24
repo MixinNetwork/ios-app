@@ -11,6 +11,8 @@ public class SendMessageService: MixinService {
         "_TRANSCRIPT"
     ]
     
+    internal static let recallableTimeLimit: TimeInterval = 30 * .day
+    
     public let jobCreationQueue = DispatchQueue(label: "one.mixin.services.queue.send.message.job.creation")
     
     private let dispatchQueue = DispatchQueue(label: "one.mixin.services.queue.send.messages")
@@ -93,6 +95,7 @@ public class SendMessageService: MixinService {
                                                 conversationId: conversationId,
                                                 category: category,
                                                 status: item.status,
+                                                actorUserId: myUserId,
                                                 quoteMessageIds: quoteMessageIds)
         }
         SendMessageService.shared.processMessages()

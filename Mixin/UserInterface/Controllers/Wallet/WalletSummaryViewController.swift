@@ -609,6 +609,7 @@ extension WalletSummaryViewController {
                 break
             }
             delegate?.categorySelectorController(self, didSelectCategory: category)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
         
     }

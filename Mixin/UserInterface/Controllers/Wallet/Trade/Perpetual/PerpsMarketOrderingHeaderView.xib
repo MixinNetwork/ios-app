@@ -24,13 +24,13 @@
                             <state key="normal" title="Watchlist" image="order_descending">
                                 <color key="titleColor" name="text_tertiary"/>
                             </state>
-                            <buttonConfiguration key="configuration" style="plain" image="order_descending" imagePlacement="trailing" title="Vol" imagePadding="4">
+                            <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="Vol" imagePadding="4">
                                 <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
                                 <directionalEdgeInsets key="contentInsets" top="10" leading="16" bottom="10" trailing="10"/>
                                 <color key="baseForegroundColor" name="text_tertiary"/>
                             </buttonConfiguration>
                             <connections>
-                                <action selector="sortByMarketCap:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Zih-0k-FkB"/>
+                                <action selector="sortByVolume:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Zih-0k-FkB"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k6E-9M-NO3">

@@ -329,17 +329,24 @@ extension MessageItem {
         return !(appId?.isEmpty ?? true)
     }
     
-    public var canRecall: Bool {
-        guard userId == myUserId, status != MessageStatus.SENDING.rawValue else {
+    private var isRecallableCategoryAndAge: Bool {
+        guard status != MessageStatus.SENDING.rawValue else {
             return false
         }
         guard category == MessageCategory.APP_CARD.rawValue || SendMessageService.recallableSuffices.contains(where: category.hasSuffix) else {
             return false
         }
-        guard abs(createdAt.toUTCDate().timeIntervalSinceNow) < 3600 else {
+        guard abs(createdAt.toUTCDate().timeIntervalSinceNow) < SendMessageService.recallableTimeLimit else {
             return false
         }
         return true
+    }
+
+    public func canRecall(canRecallOthersMessage: Bool) -> Bool {
+        guard isRecallableCategoryAndAge else {
+            return false
+        }
+        return userId == myUserId || canRecallOthersMessage
     }
     
     public var assetTypeIsJSON: Bool {

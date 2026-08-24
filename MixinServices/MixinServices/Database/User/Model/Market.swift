@@ -394,3 +394,55 @@ extension Market {
     }
     
 }
+
+extension Market {
+    
+    public struct Ordering: Equatable, Hashable, CustomDebugStringConvertible {
+        
+        public enum Field: Equatable, Hashable {
+            case marketCap
+            case volume
+            case price
+            case change(MarketChangePeriod)
+        }
+        
+        public let field: Field
+        public let direction: OrderingDirection
+        
+        public var debugDescription: String {
+            var description = switch field {
+            case .marketCap:
+                "MarketCap"
+            case .volume:
+                "Volume"
+            case .price:
+                "Price"
+            case .change(let period):
+                switch period {
+                case .twentyFourHours:
+                    "24H%"
+                case .sevenDays:
+                    "7D%"
+                }
+            }
+            switch direction {
+            case .ascending:
+                description += " ↑"
+            case .descending:
+                description += " ↓"
+            }
+            return description
+        }
+        
+        public init(field: Field, direction: OrderingDirection) {
+            self.field = field
+            self.direction = direction
+        }
+        
+        public func directionToggled() -> Ordering {
+            Ordering(field: field, direction: direction.toggled())
+        }
+        
+    }
+    
+}

@@ -142,11 +142,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 contentLabel.text = "[\(appCard.digest)]"
             } else if category == MessageCategory.MESSAGE_RECALL.rawValue {
                 setContentLabelFontItalic(true)
-                if senderIsMe {
-                    contentLabel.text = R.string.localizable.you_deleted_this_message()
-                } else {
-                    contentLabel.text = R.string.localizable.this_message_was_deleted()
-                }
+                contentLabel.text = RecalledMessage.description(item: item)
             } else if category == MessageCategory.MESSAGE_PIN.rawValue {
                 contentLabel.text = TransferPinAction.pinMessage(item: item)
             } else if category == MessageCategory.KRAKEN_PUBLISH.rawValue {

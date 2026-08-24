@@ -55,7 +55,7 @@
                                 <color key="baseForegroundColor" name="text_tertiary"/>
                             </buttonConfiguration>
                             <connections>
-                                <action selector="sortByMarketCap:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Zih-0k-FkB"/>
+                                <action selector="sortByLeftOrder:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Zih-0k-FkB"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k6E-9M-NO3">

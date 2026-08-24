@@ -506,6 +506,7 @@
 "delete_watch_wallet_description" = "このウォレットは閲覧専用ウォレットのため、削除しても資産には影響しません。";
 "delete_withdraw_address" = "%@のアドレス削除";
 "deleted" = "削除しました";
+"deleted_this_message" = "%@がこのメッセージを削除しました。";
 "deleting_address" = "アドレスを削除";
 "deleting_address_failed" = "アドレスの削除に失敗しました";
 "deposit" = "入金";

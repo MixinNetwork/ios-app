@@ -343,6 +343,7 @@ extension MembershipPlansViewController: UICollectionViewDelegate {
             self.selectedIndex = indexPath.item
             reload(sections: [.introduction, .badge, .benefits])
             updateActionButton(observer: .global)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         case .introduction, .badge, .benefits:
             break
         }

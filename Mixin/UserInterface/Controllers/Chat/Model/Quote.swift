@@ -52,7 +52,7 @@ struct Quote {
         if message.category == MessageCategory.MESSAGE_RECALL.rawValue {
             category = .recalled
             icon = R.image.ic_recalled_message_prefix_received()
-            subtitle = R.string.localizable.this_message_was_deleted()
+            subtitle = RecalledMessage.description(item: message)
             image = nil
         } else {
             category = .normal

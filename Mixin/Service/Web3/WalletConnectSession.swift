@@ -250,6 +250,9 @@ extension WalletConnectSession {
                 guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.solana) else {
                     throw Error.noAddress
                 }
+                guard address.destination == transaction.feePayer else {
+                    throw Error.mismatchedFromAddress
+                }
                 let operation = try await SolanaTransferWithWalletConnectOperation(
                     wallet: wallet,
                     transaction: transaction,

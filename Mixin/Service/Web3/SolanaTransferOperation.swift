@@ -9,6 +9,7 @@ class SolanaTransferOperation: Web3TransferOperation {
         case noFeeToken(String)
         case invalidAmount(Decimal)
         case buildTransaction
+        case mismatchedFromAddress
     }
     
     fileprivate init(
@@ -97,6 +98,9 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
         toAddress: String,
         chain: Web3Chain
     ) throws {
+        guard fromAddress.destination == transaction.feePayer else {
+            throw InitError.mismatchedFromAddress
+        }
         self.transaction = transaction
         try super.init(
             wallet: wallet,

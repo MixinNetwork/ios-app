@@ -16,8 +16,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^RTCCallbackLoggerMessageHandler)(NSString *message);
-typedef void (^RTCCallbackLoggerMessageAndSeverityHandler)(NSString *message,
-                                                           RTCLoggingSeverity severity);
+typedef void (^RTCCallbackLoggerMessageAndSeverityHandler)(
+    NSString *message, RTCLoggingSeverity severity);
 
 // This class intercepts WebRTC logs and forwards them to a registered block.
 // This class is not threadsafe.
@@ -32,7 +32,7 @@ RTC_OBJC_EXPORT
 // to implement dispatching to some other queue.
 - (void)start:(nullable RTCCallbackLoggerMessageHandler)handler;
 - (void)startWithMessageAndSeverityHandler:
-        (nullable RTCCallbackLoggerMessageAndSeverityHandler)handler;
+    (nullable RTCCallbackLoggerMessageAndSeverityHandler)handler;
 
 - (void)stop;
 

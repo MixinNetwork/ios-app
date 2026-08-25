@@ -11,23 +11,27 @@ final class WalletOverview {
     
     private var perpsValue: Decimal
     private var cashValue: Decimal
+    private var earnValue: Decimal
     
     init(
         tokensValue: Decimal,
         perpsValue: Decimal,
         cashValue: Decimal,
-        btcPrice: Decimal?
+        earnValue: Decimal,
+        btcPrice: Decimal?,
     ) {
         (self.value, self.btcValue) = Self.calculateValues(
             tokensValue: tokensValue,
             perpsValue: perpsValue,
             cashValue: cashValue,
+            earnValue: earnValue,
             btcPrice: btcPrice
         )
         self.tokensValue = tokensValue
         self.btcPrice = btcPrice
         self.perpsValue = perpsValue
         self.cashValue = cashValue
+        self.earnValue = earnValue
     }
     
     func update(perpsValue: Decimal) {
@@ -36,6 +40,7 @@ final class WalletOverview {
             tokensValue: tokensValue,
             perpsValue: perpsValue,
             cashValue: cashValue,
+            earnValue: earnValue,
             btcPrice: btcPrice
         )
     }
@@ -46,6 +51,18 @@ final class WalletOverview {
             tokensValue: tokensValue,
             perpsValue: perpsValue,
             cashValue: cashValue,
+            earnValue: earnValue,
+            btcPrice: btcPrice
+        )
+    }
+    
+    func update(earnValue: Decimal) {
+        self.earnValue = earnValue
+        (self.value, self.btcValue) = Self.calculateValues(
+            tokensValue: tokensValue,
+            perpsValue: perpsValue,
+            cashValue: cashValue,
+            earnValue: earnValue,
             btcPrice: btcPrice
         )
     }
@@ -78,9 +95,10 @@ extension WalletOverview {
         tokensValue: Decimal,
         perpsValue: Decimal,
         cashValue: Decimal,
+        earnValue: Decimal,
         btcPrice: Decimal?,
     ) -> (value: String, btcValue: String?) {
-        let usdValue = tokensValue + perpsValue + cashValue
+        let usdValue = tokensValue + perpsValue + cashValue + earnValue
         let value = CurrencyFormatter.localizedString(
             from: usdValue * Currency.current.decimalRate,
             format: .fiatMoneyPrecision,

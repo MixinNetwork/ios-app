@@ -258,7 +258,7 @@
 "cant_receive_the_code" = "Не можете получить код?";
 "caption_send" = "ОТПРАВИТЬ";
 "card" = "карта";
-"cash_account" = "Денежный счет";
+"cash_account" = "Остаток денежных средств";
 "cash_account_add_cash" = "Добавить деньги";
 "cash_account_apy" = "%@ APY";
 "cash_account_invalid_amount" = "Сумма превышает лимит. Пожалуйста, войдите еще раз.";
@@ -566,6 +566,11 @@
 "duplicate_transfer_confirmation" = "Дубликат подтверждения перевода";
 "duplicate_withdraw_confirmation" = "Дубликат подтверждения вывода средств";
 "duplication_reminder" = "Вы передали %1$@ получателю %2$@ назад.";
+"earn" = "Earn";
+"earn_balance" = "Баланс Earn";
+"earn_pending_earning" = "Ожидаемый доход";
+"earn_reward_rate" = "Ставка доходности";
+"earn_total_earnings" = "Общий доход";
 "edit" = "Редактировать";
 "edit_address" = "Изменить адрес %@";
 "edit_alert" = "Изменить оповещение";

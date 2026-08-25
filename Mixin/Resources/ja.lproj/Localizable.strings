@@ -258,7 +258,7 @@
 "cant_receive_the_code" = "コードを受け取れませんか？";
 "caption_send" = "出金";
 "card" = "ロボ";
-"cash_account" = "現金口座";
+"cash_account" = "現金残高";
 "cash_account_add_cash" = "現金を追加する";
 "cash_account_apy" = "%@ APY";
 "cash_account_invalid_amount" = "金額が制限を超えています。再入力してください。";
@@ -566,6 +566,11 @@
 "duplicate_transfer_confirmation" = "二重送金の確認";
 "duplicate_withdraw_confirmation" = "二重出金の確認";
 "duplication_reminder" = "以前に %1$@ を受信者 %2$@ に転送しました。";
+"earn" = "Earn";
+"earn_balance" = "Earn残高";
+"earn_pending_earning" = "保留中の収益";
+"earn_reward_rate" = "報酬率";
+"earn_total_earnings" = "総収益";
 "edit" = "編集";
 "edit_address" = "%@アドレスを修正";
 "edit_alert" = "アラートの編集";

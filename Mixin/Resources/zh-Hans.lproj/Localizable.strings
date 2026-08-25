@@ -258,7 +258,7 @@
 "cant_receive_the_code" = "接收不到验证码？";
 "caption_send" = "转出";
 "card" = "卡片";
-"cash_account" = "现金账户";
+"cash_account" = "现金余额";
 "cash_account_add_cash" = "添加现金";
 "cash_account_apy" = "年化 %@";
 "cash_account_invalid_amount" = "输入金额太大，请重新输入";
@@ -566,6 +566,11 @@
 "duplicate_transfer_confirmation" = "重复转账确认";
 "duplicate_withdraw_confirmation" = "重复提现确认";
 "duplication_reminder" = "您已经在%2$@前给该收款人转账了 %1$@。";
+"earn" = "Earn";
+"earn_balance" = "理财余额";
+"earn_pending_earning" = "待结算收益";
+"earn_reward_rate" = "收益率";
+"earn_total_earnings" = "总收益";
 "edit" = "编辑";
 "edit_address" = "修改 %@ 地址";
 "edit_alert" = "编辑价格预警";

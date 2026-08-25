@@ -6,6 +6,7 @@ final class MixinTokensViewController: TokensViewController {
     private var overview: WalletOverview?
     private var overviewTray: WalletOverview.Tray?
     private var tokens: [MixinTokenItem]?
+    private var earningAvailableAssetIDs: Set<String> = []
     
     private var isDisplayingSearch = false
     private var searchTokenHandler: WalletSearchMixinTokenHandler?
@@ -109,12 +110,18 @@ final class MixinTokensViewController: TokensViewController {
                 tokensValue: tokensValue,
                 perpsValue: 0,
                 cashValue: 0,
+                earnValue: 0,
                 btcPrice: btcPrice
             )
             let tokens = TokenDAO.shared.notHiddenTokens(
                 includesZeroBalanceItems: true,
                 limit: nil
             )
+            let products = PropertiesDAO.shared.jsonObject(
+                forKey: .earnProducts,
+                type: [EarnProduct].self
+            ) ?? []
+            let earningAvailableAssetIDs = Set(products.map(\.assetID))
             var sections: [Section] = [.overview]
             if tokens.isEmpty {
                 sections.append(.emptyIndicator)
@@ -128,6 +135,7 @@ final class MixinTokensViewController: TokensViewController {
                 self.sections = sections
                 self.overview = overview
                 self.tokens = tokens
+                self.earningAvailableAssetIDs = earningAvailableAssetIDs
                 self.collectionView.reloadData()
             }
         }
@@ -218,7 +226,8 @@ extension MixinTokensViewController: UICollectionViewDataSource {
         case .tokens:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.token, for: indexPath)!
             if let token = tokens?[indexPath.item] {
-                cell.load(token: token)
+                let availableForEarning = earningAvailableAssetIDs.contains(token.assetID)
+                cell.load(token: token, availableForEarning: availableForEarning)
             }
             return cell
         case .emptyIndicator:

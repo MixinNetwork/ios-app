@@ -258,7 +258,7 @@
 "cant_receive_the_code" = "코드를 받을 수 없나요?";
 "caption_send" = "보내기";
 "card" = "카드";
-"cash_account" = "현금 계좌";
+"cash_account" = "현금 잔액";
 "cash_account_add_cash" = "현금 추가";
 "cash_account_apy" = "%@ APY";
 "cash_account_invalid_amount" = "금액이 한도를 초과했습니다. 다시 입력해 주세요.";
@@ -566,6 +566,11 @@
 "duplicate_transfer_confirmation" = "중복 이체 확인";
 "duplicate_withdraw_confirmation" = "중복된 출금 확인";
 "duplication_reminder" = "%1$@을 %2$@ 전에 수신자에게 전송했습니다.";
+"earn" = "Earn";
+"earn_balance" = "Earn 잔액";
+"earn_pending_earning" = "대기 중인 수익";
+"earn_reward_rate" = "보상률";
+"earn_total_earnings" = "총 수익";
 "edit" = "수정";
 "edit_address" = "%@ 주소 수정";
 "edit_alert" = "알림 편집";

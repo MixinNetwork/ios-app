@@ -258,7 +258,7 @@
 "cant_receive_the_code" = "接收不到驗證碼？";
 "caption_send" = "轉出";
 "card" = "卡片";
-"cash_account" = "現金賬戶";
+"cash_account" = "現金餘額";
 "cash_account_add_cash" = "新增現金";
 "cash_account_apy" = "年化 %@";
 "cash_account_invalid_amount" = "輸入金額太大，請重新輸入";
@@ -566,6 +566,11 @@
 "duplicate_transfer_confirmation" = "重複轉賬確認";
 "duplicate_withdraw_confirmation" = "重複提現確認";
 "duplication_reminder" = "您已經在%2$@前給該收款人轉賬了 %1$@。";
+"earn" = "Earn";
+"earn_balance" = "理財餘額";
+"earn_pending_earning" = "待結算收益";
+"earn_reward_rate" = "收益率";
+"earn_total_earnings" = "總收益";
 "edit" = "編輯";
 "edit_address" = "修改 %@ 地址";
 "edit_alert" = "編輯價格預警";

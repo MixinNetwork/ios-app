@@ -1176,6 +1176,11 @@ extension RouteAPI {
             host: "https://api.cash.mixin.one"
         )
         
+        static let earn = Config(
+            botUserID: BotUserID.mixinEarn,
+            host: "https://api.earn.mixin.one"
+        )
+        
         let botUserID: String
         let host: String
         

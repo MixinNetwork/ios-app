@@ -30,6 +30,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     var perpsTopMovers: OrderedDictionary<String, PerpetualMarketViewModel> = [:]
     
     var cashAccount: CashAccount?
+    var earnAccount: EarnAccount?
     
     var walletActionHandler: (any WalletActionHandler)?
     
@@ -220,10 +221,24 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                         section.visibleItemsInvalidationHandler = nil
                     }
                     return section
-                case .cash:
-                    let section = singleItem(estimatedHeight: 86)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-                    return section
+                case .valueAddedServices:
+                    let servicesCount = dataSource.snapshot().numberOfItems(inSection: .valueAddedServices)
+                    switch servicesCount {
+                    case 1:
+                        let section = singleItem(estimatedHeight: 86)
+                        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                        return section
+                    default:
+                        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(96))
+                        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
+                        group.interItemSpacing = .fixed(11)
+                        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                        let section = NSCollectionLayoutSection(group: group)
+                        section.interGroupSpacing = 10
+                        return section
+                    }
                 case .perpsPositions:
                     return listSection(
                         showFooter: self?.hasMorePerpsPositions ?? false,
@@ -331,11 +346,6 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
             cell.banner = banner
             cell.delegate = self
         }
-        let cashAccountRegistration = UICollectionView.CellRegistration<WalletCashAccountCell, Void>(
-            cellNib: UINib(resource: R.nib.walletCashAccountCell)
-        ) { [weak self] cell, indexPath, _ in
-            cell.load(account: self?.cashAccount)
-        }
         let bannerPageControlRegistration = UICollectionView.SupplementaryRegistration<WalletBannerPageControlFooterView>(
             elementKind: UICollectionView.elementKindSectionFooter
         ) { [weak self] footerView, elementKind, indexPath in
@@ -379,7 +389,19 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
             case let .banner(banner, _):
                 return collectionView.dequeueConfiguredReusableCell(using: bannerRegistration, for: indexPath, item: banner)
             case .cash:
-                return collectionView.dequeueConfiguredReusableCell(using: cashAccountRegistration, for: indexPath, item: ())
+                guard let self else {
+                    return nil
+                }
+                let cell = self.dequeueValueAddedServiceCell(indexPath: indexPath)
+                cell.load(account: cashAccount)
+                return cell
+            case .earn:
+                guard let self else {
+                    return nil
+                }
+                let cell = self.dequeueValueAddedServiceCell(indexPath: indexPath)
+                cell.load(account: earnAccount)
+                return cell
             case let .perpsPosition(positionID):
                 if let viewModel = self?.perpsPositions[positionID] {
                     switch viewModel.state {
@@ -520,6 +542,8 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
             }
         }
         collectionView.register(R.nib.walletOverviewCell)
+        collectionView.register(R.nib.largeWalletValueAddedServiceCell)
+        collectionView.register(R.nib.mediumWalletValueAddedServiceCell)
         collectionView.register(R.nib.perpetualActivityCell)
         collectionView.register(R.nib.perpetualMarketCell)
         collectionView.register(R.nib.tokenCell)
@@ -618,7 +642,11 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         
     }
     
-    func reload(account: CashAccount?) {
+    func reload(cashAccount: CashAccount?) {
+        
+    }
+    
+    func reload(earnAccount: EarnAccount) {
         
     }
     
@@ -653,6 +681,16 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         }
     }
     
+    private func dequeueValueAddedServiceCell(indexPath: IndexPath) -> any WalletValueAddedServiceCell {
+        let servicesCount = dataSource.snapshot().numberOfItems(inSection: .valueAddedServices)
+        switch servicesCount {
+        case 1:
+            return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.large_wallet_vas, for: indexPath)!
+        default:
+            return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.medium_wallet_vas, for: indexPath)!
+        }
+    }
+    
 }
 
 extension WalletViewController {
@@ -661,7 +699,7 @@ extension WalletViewController {
         case overview
         case emptyWalletInstruction
         case banners
-        case cash
+        case valueAddedServices
         case perpsPositions
         case tokens
         case transactions
@@ -676,6 +714,7 @@ extension WalletViewController {
         case emptyWalletInstruction
         case banner(WalletBanner, duplicationOffset: Int)
         case cash
+        case earn
         case perpsPosition(positionID: String)
         case token(assetID: String)
         case transaction(id: String)
@@ -881,13 +920,13 @@ extension WalletViewController {
                 DispatchQueue.global().async {
                     PropertiesDAO.shared.set(jsonObject: account, forKey: .cashAccount)
                 }
-                self?.reload(account: account)
+                self?.reload(cashAccount: account)
             case .failure(.response(.notFound)):
                 Logger.general.debug(category: "Wallet", message: "No cash account")
                 DispatchQueue.global().async {
                     PropertiesDAO.shared.removeValue(forKey: .cashAccount)
                 }
-                self?.reload(account: nil)
+                self?.reload(cashAccount: nil)
             case .failure(let error):
                 Logger.general.debug(category: "Wallet", message: "\(error)")
                 // Don't overwrite local account on network error
@@ -895,22 +934,33 @@ extension WalletViewController {
         }
     }
     
-    func insertOrUpdateCashAccountItem(into snapshot: inout DataSourceSnapshot) {
-        if snapshot.sectionIdentifiers.contains(.cash) {
-            if snapshot.itemIdentifiers(inSection: .cash).contains(.cash) {
-                snapshot.reconfigureItems([.cash])
+    func insertOrUpdate(
+        vasItem: Item,
+        into snapshot: inout DataSourceSnapshot,
+    ) {
+        if snapshot.sectionIdentifiers.contains(.valueAddedServices) {
+            let existingItems = snapshot.itemIdentifiers(inSection: .valueAddedServices)
+            if existingItems.contains(vasItem) {
+                snapshot.reconfigureItems([vasItem])
             } else {
-                snapshot.appendItems([.cash], toSection: .cash)
+                if vasItem == .cash, existingItems.contains(.earn) {
+                    snapshot.insertItems([.cash], beforeItem: .earn)
+                } else {
+                    snapshot.appendItems([vasItem], toSection: .valueAddedServices)
+                }
+                if !existingItems.isEmpty {
+                    snapshot.reloadItems(existingItems)
+                }
             }
         } else {
             if snapshot.sectionIdentifiers.contains(.banners) {
-                snapshot.insertSections([.cash], afterSection: .banners)
+                snapshot.insertSections([.valueAddedServices], afterSection: .banners)
             } else if let firstSection = snapshot.sectionIdentifiers.first {
-                snapshot.insertSections([.cash], afterSection: firstSection)
+                snapshot.insertSections([.valueAddedServices], afterSection: firstSection)
             } else {
-                snapshot.appendSections([.cash])
+                snapshot.appendSections([.valueAddedServices])
             }
-            snapshot.appendItems([.cash], toSection: .cash)
+            snapshot.appendItems([vasItem], toSection: .valueAddedServices)
         }
     }
     

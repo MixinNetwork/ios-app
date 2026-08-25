@@ -96,7 +96,7 @@ class BitcoinTransferOperation: Web3TransferOperation {
             self.state = .sending
         }
         do {
-            Logger.web3.info(category: "BTCTransfer", message: "Will send tx: \(signedTransaction.transaction)")
+            Logger.web3.info(category: "BTCTransfer", message: "Will send tx")
             let rawTransaction = try await RouteAPI
                 .postTransaction(
                     chainID: ChainID.bitcoin,
@@ -459,7 +459,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
             self.state = .sending
         }
         do {
-            Logger.web3.info(category: "BTCCancel", message: "Will send tx: \(signedTransaction.transaction)")
+            Logger.web3.info(category: "BTCCancel", message: "Will send tx")
             let rawTransaction = try await RouteAPI
                 .postTransaction(
                     chainID: ChainID.bitcoin,

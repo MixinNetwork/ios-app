@@ -263,7 +263,7 @@ extension TIP {
         spendKey: Data,
         path: DerivationPath
     ) throws -> Data {
-        let masterKey = ExtendedKey(seed: spendKey, curve: .secp256k1)
+        let masterKey = try ExtendedKey(seed: spendKey, curve: .secp256k1)
         let derivation = try masterKey.deriveUsingSecp256k1(path: path)
         return derivation.key
     }
@@ -272,7 +272,7 @@ extension TIP {
         spendKey: Data,
         path: DerivationPath
     ) throws -> Data {
-        let masterKey = ExtendedKey(seed: spendKey, curve: .secp256k1)
+        let masterKey = try ExtendedKey(seed: spendKey, curve: .secp256k1)
         let derivation = try masterKey.deriveUsingSecp256k1(path: path)
         return derivation.key
     }
@@ -281,7 +281,7 @@ extension TIP {
         spendKey: Data,
         path: DerivationPath
     ) throws -> Data {
-        let masterKey = ExtendedKey(seed: spendKey, curve: .secp256k1)
+        let masterKey = try ExtendedKey(seed: spendKey, curve: .secp256k1)
         let derivation = try masterKey.deriveUsingSecp256k1(path: path)
         return derivation.key
     }

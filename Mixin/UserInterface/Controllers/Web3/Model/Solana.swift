@@ -133,6 +133,7 @@ extension Solana {
         }
         
         let rawTransaction: String
+        let feePayer: String
         
         private let pointer: UnsafeRawPointer
         
@@ -153,12 +154,21 @@ extension Solana {
                 return nil
             }
             
+            let feePayer = try? Solana.withSolanaStringPointer { result in
+                solana_transaction_fee_payer(pointer, &result)
+            }
+            guard let feePayer else {
+                solana_free_transaction(pointer)
+                return nil
+            }
+            
             self.rawTransaction = switch encoding {
             case .base64:
                 string
             case .base64URL:
                 transactionData.base64EncodedString()
             }
+            self.feePayer = feePayer
             self.pointer = pointer
         }
         
@@ -222,6 +232,7 @@ extension Solana {
             }
             
             self.rawTransaction = rawTransaction
+            self.feePayer = from
             self.pointer = transaction
         }
         

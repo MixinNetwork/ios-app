@@ -9,6 +9,7 @@ class SolanaTransferOperation: Web3TransferOperation {
         case noFeeToken(String)
         case invalidAmount(Decimal)
         case buildTransaction
+        case mismatchedFromAddress
     }
     
     fileprivate init(
@@ -60,7 +61,7 @@ class SolanaTransferOperation: Web3TransferOperation {
     }
     
     fileprivate func send(signedTransaction: String, fee: Web3DisplayFee?) async throws {
-        Logger.web3.info(category: "SolanaTransfer", message: "Will send tx: \(signedTransaction)")
+        Logger.web3.info(category: "SolanaTransfer", message: "Will send tx")
         let rawTransaction = try await RouteAPI.postTransaction(
             chainID: ChainID.solana,
             from: fromAddress.destination,
@@ -97,6 +98,9 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
         toAddress: String,
         chain: Web3Chain
     ) throws {
+        guard fromAddress.destination == transaction.feePayer else {
+            throw InitError.mismatchedFromAddress
+        }
         self.transaction = transaction
         try super.init(
             wallet: wallet,

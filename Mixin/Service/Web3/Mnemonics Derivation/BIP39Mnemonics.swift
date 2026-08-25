@@ -56,8 +56,8 @@ struct BIP39Mnemonics {
         self.entropy = entropy
         self.phrases = phrases
         self.joinedPhrases = joinedPhrases
-        self.secp256k1MasterKey = ExtendedKey(seed: seed, curve: .secp256k1)
-        self.ed25519MasterKey = ExtendedKey(seed: seed, curve: .ed25519)
+        self.secp256k1MasterKey = try ExtendedKey(seed: seed, curve: .secp256k1)
+        self.ed25519MasterKey = try ExtendedKey(seed: seed, curve: .ed25519)
     }
     
 }

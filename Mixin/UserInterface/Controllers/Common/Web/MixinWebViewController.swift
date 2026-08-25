@@ -387,8 +387,9 @@ extension MixinWebViewController: WebViewMessageHandler.Delegate {
             webView.evaluateJavaScript(callback)
         case .getAssets(let assetIDs, let callback):
             reportAssetsIfVerified(ids: assetIDs, callback: callback)
-        case .web3Bridge(let json):
-            web3Worker.handleRequest(json: json)
+        case .web3Bridge(let json, let host):
+            let proposer = Web3DappProposer(name: webView.title ?? "(no title)", host: host)
+            web3Worker.handleRequest(json: json, proposer: proposer)
         case .signBotSignature(let callback):
             webView.evaluateJavaScript(callback)
         case .openInBrowser(let url):
@@ -812,12 +813,11 @@ extension MixinWebViewController {
                                 forMainFrameOnly: true)
         }()
         
-        static let web3Provider: WKUserScript = {
-            let source = try! String(contentsOf: R.file.mixinMinJs()!)
-            return WKUserScript(source: source,
-                                injectionTime: .atDocumentStart,
-                                forMainFrameOnly: false)
-        }()
+        static let web3Provider = WKUserScript(
+            source: try! String(contentsOf: R.file.mixinMinJs()!),
+            injectionTime: .atDocumentStart,
+            forMainFrameOnly: true
+        )
         
         static func web3Config(evm: EVMConfig?, solana: SolanaConfig?) -> WKUserScript? {
             guard evm != nil || solana != nil else {
@@ -893,7 +893,7 @@ extension MixinWebViewController {
                     initializeEIP6963(window.ethereum);
                 })();
             """
-            return WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+            return WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: true)
         }
         
     }

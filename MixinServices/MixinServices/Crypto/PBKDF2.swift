@@ -8,8 +8,6 @@ public enum PBKDF2 {
     }
     
     public enum DerivationError: Error {
-        case invalidPassword
-        case invalidSalt
         case code(Int32)
     }
     
@@ -20,12 +18,12 @@ public enum PBKDF2 {
         iterationCount rounds: UInt32,
         keyCount: Int
     ) throws -> Data {
-        guard let passwordData = password.data(using: .utf8) else {
-            throw DerivationError.invalidPassword
-        }
-        guard let saltData = salt.data(using: .utf8) else {
-            throw DerivationError.invalidSalt
-        }
+        let passwordData = Data(
+            password.decomposedStringWithCompatibilityMapping.utf8
+        )
+        let saltData = Data(
+            salt.decomposedStringWithCompatibilityMapping.utf8
+        )
         let prf = switch pseudoRandomAlgorithm {
         case .hmacSHA512:
             CCPBKDFAlgorithm(kCCPRFHmacAlgSHA512)

@@ -35,13 +35,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         MixinService.callMessageCoordinator = CallService.shared
         reporterClass = MainAppReporter.self
         reporter.configure()
-        if let key = MixinKeys.appsFlyer {
-            AppsFlyerLib.shared().appsFlyerDevKey = key
-        } else {
-            assertionFailure("Missing AppsFlyer key")
-        }
-        AppsFlyerLib.shared().appleAppID = appStoreAppID
-        AppsFlyerLib.shared().delegate = self
         AppGroupUserDefaults.migrateIfNeeded()
         updateImageManagerConfig()
         _ = ReachabilityManger.shared
@@ -59,6 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         configAnalytics()
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         addObservers()
+        configAppsFlyer()
         Logger.general.info(category: "AppDelegate", message: "App \(Bundle.main.shortVersionString)(\(Bundle.main.bundleVersion)) did finish launching with state: \(UIApplication.shared.applicationStateString), device: \(Device.current.machineName) \(ProcessInfo.processInfo.operatingSystemVersionString), id: \(Device.current.id)")
         if UIApplication.shared.applicationState == .background {
             MixinService.isStopProcessMessages = false
@@ -102,6 +96,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard LoginManager.shared.isLoggedIn else {
             return
         }
+        
         requestTimeout = 5
         BackgroundMessagingService.shared.end()
         MixinService.isStopProcessMessages = false
@@ -431,6 +426,46 @@ extension AppDelegate {
     
 }
 
+extension AppDelegate {
+    
+    func configAppsFlyer() {
+        if let key = MixinKeys.appsFlyer {
+            AppsFlyerLib.shared().initialize(devKey: key, appId: appStoreAppID)
+        } else {
+            assertionFailure("Missing AppsFlyer key")
+        }
+        AppsFlyerLib.shared().delegate = self
+        AppsFlyerLib.shared().registerSessionReadyListener {
+            Logger.general.info(category: "AppsFlyer", message: "Session ready")
+            
+            var customData: [String: Any] = [:]
+            if let appInstanceID = Analytics.appInstanceID() {
+                customData["app_instance_id"] = appInstanceID
+            } else {
+                assertionFailure("Missing app_instance_id")
+            }
+            Task {
+                do {
+                    let sessionID = try await Analytics.sessionID()
+                    customData["ga_session_id"] = sessionID
+                } catch {
+                    reporter.report(error: error)
+                }
+                Logger.general.debug(category: "AppsFlyer", message: "Reporting \(customData)")
+                AppsFlyerLib.shared().customData = customData
+                if let account = LoginManager.shared.account {
+                    AppsFlyerLib.shared().customerUserID = Reporter.userIDHash(userID: account.userID)
+                }
+                do {
+                    try await AppsFlyerLib.shared().start()
+                } catch {
+                    reporter.report(error: error)
+                }
+            }
+        }
+    }
+}
+
 extension AppDelegate : AppsFlyerLibDelegate {
 
     // Handle Organic/Non-organic installation
@@ -438,15 +473,9 @@ extension AppDelegate : AppsFlyerLibDelegate {
         guard let status = conversionInfo["af_status"] as? String else {
             return
         }
-        guard UIApplication.shared.isProtectedDataAvailable else {
-            return
-        }
-        guard LoginManager.shared.isLoggedIn else {
-            return
-        }
-        
+
         reporter.updateUserProperty(key: "af_source", value: status)
-        if status == "Non-Organic" {
+        if status == "Non-organic" {
             if let mediaSource = conversionInfo["media_source"] as? String, !mediaSource.isEmpty {
                 reporter.updateUserProperty(key: "af_media_source", value: mediaSource)
             }
@@ -455,6 +484,7 @@ extension AppDelegate : AppsFlyerLibDelegate {
                 reporter.updateUserProperty(key: "af_campaign", value: campaign)
             }
         }
+        Logger.general.debug(category: "AppsFlyer", message: "status \(conversionInfo)")
     }
  
     func onConversionDataFail(_ error: any Error) {

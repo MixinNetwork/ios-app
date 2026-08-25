@@ -16,7 +16,6 @@ final class MainAppReporter: Reporter {
             "IdentityNumber": account.identityNumber
         ])
         Analytics.setUserID(userIDHash)
-        AppsFlyerLib.shared().customerUserID = userIDHash
     }
     
     override func report(error: Error) {
@@ -41,13 +40,9 @@ final class MainAppReporter: Reporter {
             AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
         case .signUpAccountCreated:
             AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
-            if let appInstanceID = Analytics.appInstanceID() {
-                AppsFlyerLib.shared().customData = ["app_instance_id": appInstanceID]
-            }
             AppsFlyerLib.shared().start()
         case .signUpStart:
             AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
-            AppsFlyerLib.shared().start()
         case .loginEnd:
             AppsFlyerLib.shared().logEvent(AFEventLogin, withValues: tags)
             AppsFlyerLib.shared().start()

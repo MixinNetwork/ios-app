@@ -1,8 +1,8 @@
 PODS:
   - Alamofire (5.11.2)
-  - AppsFlyerFramework (6.18.0):
-    - AppsFlyerFramework/Main (= 6.18.0)
-  - AppsFlyerFramework/Main (6.18.0)
+  - AppsFlyerFramework (7.0.2):
+    - AppsFlyerFramework/Main (= 7.0.2)
+  - AppsFlyerFramework/Main (7.0.2)
   - Bugsnag (6.36.0)
   - Firebase/Analytics (12.13.0):
     - Firebase/Core
@@ -276,7 +276,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Alamofire: 400275dd1c6d87d95a041861d2a59da4b520a203
-  AppsFlyerFramework: c1e1e4cd3b98ffdca2fe32b17ae93909e409b6ab
+  AppsFlyerFramework: bf96b40ed77d0ad089e5d3e2ae2c0a0d8d62f5b1
   Bugsnag: 1c12a922ec4027ea1ac93e24e27383a54c588589
   Firebase: 7d62445aeabdaea36f7d372f33052fed9a72514f
   FirebaseABTesting: a308446df8bd5fd29d2535ddfb124a7011dadbc2

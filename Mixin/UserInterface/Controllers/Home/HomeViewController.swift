@@ -1,7 +1,5 @@
 import UIKit
 import StoreKit
-import FirebaseAnalytics
-import AppsFlyerLib
 import MixinServices
 
 final class HomeViewController: UIViewController {
@@ -85,9 +83,6 @@ final class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(cancelSearchingSilently(_:)), name: dismissSearchNotification, object: nil)
         
-        if UIApplication.shared.applicationState == .active {
-            startAppsFlyer()
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -172,7 +167,6 @@ final class HomeViewController: UIViewController {
     @objc private func applicationDidBecomeActive(_ sender: Notification) {
         presentPopupTipIfNeeded()
         fetchConversations()
-        startAppsFlyer()
     }
     
     @objc private func dataDidChange() {
@@ -264,35 +258,6 @@ final class HomeViewController: UIViewController {
     
     @objc private func circleNameDidChange() {
         titleButton.setTitle(topLeftTitle, for: .normal)
-    }
-    
-    private func startAppsFlyer() {
-        var firebaseInfos: [String: Any] = [:]
-        if let appInstanceID = Analytics.appInstanceID() {
-            firebaseInfos["app_instance_id"] = appInstanceID
-        } else {
-            assertionFailure("Missing app_instance_id")
-        }
-        Task {
-            do {
-                let sessionID = try await Analytics.sessionID()
-                firebaseInfos["ga_session_id"] = sessionID
-            } catch {
-                let nsError = error as NSError
-                if nsError.domain == "com.google.gmp.measurement.ErrorDomain" && nsError.code == 13 {
-                    // Analytics uninitialized, commonly caused by poor/blocked network reachability
-                    // to Google's endpoints rather than a Mixin-side bug, only log it locally.
-                    Logger.general.error(category: "HomeViewController", message: "Get ga_session_id: \(error)")
-                } else {
-                    reporter.report(error: error)
-                }
-            }
-            Logger.general.debug(category: "Home", message: "Reporting \(firebaseInfos)")
-            AppsFlyerLib.shared().customData = firebaseInfos
-            AppsFlyerLib.shared().customerUserID = Reporter.userIDHash(userID: myUserId)
-            AppsFlyerLib.shared().disableAdvertisingIdentifier = true
-            try await AppsFlyerLib.shared().start()
-        }
     }
     
     func setNeedsRefresh() {

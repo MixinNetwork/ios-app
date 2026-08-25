@@ -22,6 +22,7 @@
 		52B2726E2DAE358000F46EC0 /* TradeWeb3SpotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B2726D2DAE358000F46EC0 /* TradeWeb3SpotViewController.swift */; };
 		52B272762DAE586B00F46EC0 /* TradeSpotPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B272752DAE586B00F46EC0 /* TradeSpotPreviewViewController.swift */; };
 		52B273572DB225F500F46EC0 /* TradeWeb3TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B273562DB225F500F46EC0 /* TradeWeb3TokenSelectorViewController.swift */; };
+		52C0F5CD303E056D00F5D567 /* AppsFlyerLibConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 52C0F5CC303E056D00F5D567 /* AppsFlyerLibConfig.plist */; };
 		52DE7B4A2BEB7C040060A364 /* Web3TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */; };
 		52DE7B4F2BEB7C940060A364 /* TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B4E2BEB7C940060A364 /* TransactionViewController.swift */; };
 		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
@@ -596,7 +597,6 @@
 		7CB0955126CCED420049F4C7 /* PinMessageBannerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB0955026CCED420049F4C7 /* PinMessageBannerView.xib */; };
 		7CB0955326CD18F70049F4C7 /* PinMessagesPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955226CD18F70049F4C7 /* PinMessagesPreviewViewController.swift */; };
 		7CB0955726CE5F040049F4C7 /* TransferPinAction+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */; };
-		E1E4D3D2AE8111FEA2F9C942 /* RecalledMessage+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D875CB7B470C4D1A8D3D47 /* RecalledMessage+Description.swift */; };
 		7CB0955926CE69250049F4C7 /* PinMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */; };
 		7CB0955B26CF4DDC0049F4C7 /* PinMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */; };
 		7CB17B642771602A00CF4C94 /* DeleteAccountConfirmWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */; };
@@ -1949,6 +1949,7 @@
 		E0E3301F23962B2100276746 /* EditFavoriteAppsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E3301E23962B2100276746 /* EditFavoriteAppsHeaderView.swift */; };
 		E0FAE8D223CDC4F4008B056A /* MainAppReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FAE8D123CDC4F4008B056A /* MainAppReporter.swift */; };
 		E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */; };
+		E1E4D3D2AE8111FEA2F9C942 /* RecalledMessage+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D875CB7B470C4D1A8D3D47 /* RecalledMessage+Description.swift */; };
 		F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23987C4F141F7C6E533A683D /* Pods_Mixin.framework */; };
 /* End PBXBuildFile section */
 
@@ -2026,6 +2027,7 @@
 		52B2726D2DAE358000F46EC0 /* TradeWeb3SpotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeWeb3SpotViewController.swift; sourceTree = "<group>"; };
 		52B272752DAE586B00F46EC0 /* TradeSpotPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeSpotPreviewViewController.swift; sourceTree = "<group>"; };
 		52B273562DB225F500F46EC0 /* TradeWeb3TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeWeb3TokenSelectorViewController.swift; sourceTree = "<group>"; };
+		52C0F5CC303E056D00F5D567 /* AppsFlyerLibConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AppsFlyerLibConfig.plist; sourceTree = "<group>"; };
 		52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionViewController.swift; sourceTree = "<group>"; };
 		52DE7B4E2BEB7C940060A364 /* TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionViewController.swift; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
@@ -2608,7 +2610,6 @@
 		7CB0955026CCED420049F4C7 /* PinMessageBannerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinMessageBannerView.xib; sourceTree = "<group>"; };
 		7CB0955226CD18F70049F4C7 /* PinMessagesPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessagesPreviewViewController.swift; sourceTree = "<group>"; };
 		7CB0955626CE5F040049F4C7 /* TransferPinAction+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransferPinAction+Description.swift"; sourceTree = "<group>"; };
-		E1D875CB7B470C4D1A8D3D47 /* RecalledMessage+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecalledMessage+Description.swift"; sourceTree = "<group>"; };
 		7CB0955826CE69250049F4C7 /* PinMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageViewModel.swift; sourceTree = "<group>"; };
 		7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageCell.swift; sourceTree = "<group>"; };
 		7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountConfirmWindow.swift; sourceTree = "<group>"; };
@@ -3990,6 +3991,7 @@
 		E0E3301E23962B2100276746 /* EditFavoriteAppsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFavoriteAppsHeaderView.swift; sourceTree = "<group>"; };
 		E0FAE8D123CDC4F4008B056A /* MainAppReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppReporter.swift; sourceTree = "<group>"; };
 		E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItem.swift; sourceTree = "<group>"; };
+		E1D875CB7B470C4D1A8D3D47 /* RecalledMessage+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecalledMessage+Description.swift"; sourceTree = "<group>"; };
 		E49F74E7017E780C23E3311F /* Pods_MixinDebug.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinDebug.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -6336,6 +6338,7 @@
 				277FF7101F909A1200DBB2EB /* Info.plist */,
 				94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */,
 				94739A5326258F8200E8914D /* Custom-acknowledgements.plist */,
+				52C0F5CC303E056D00F5D567 /* AppsFlyerLibConfig.plist */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -7300,6 +7303,7 @@
 				94E206EF2F4EB61100D65D98 /* PerpetualPositionValueCell.xib in Resources */,
 				946BBCDC302486710080D43D /* PerpsMarketSelectorCategoryCell.xib in Resources */,
 				94834ACD2FE949E000A0AADF /* LogCell.xib in Resources */,
+				52C0F5CD303E056D00F5D567 /* AppsFlyerLibConfig.plist in Resources */,
 				940CA1912F59593500914435 /* PerpetualMarketInfoCell.xib in Resources */,
 				94CA8B132F59593500914435 /* PerpMarketFundingRateCell.xib in Resources */,
 				94327CF72D53662700DEE36D /* AddressInfoInputHeaderView.xib in Resources */,

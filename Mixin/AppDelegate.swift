@@ -437,30 +437,44 @@ extension AppDelegate {
         AppsFlyerLib.shared().delegate = self
         AppsFlyerLib.shared().registerSessionReadyListener {
             Logger.general.info(category: "AppsFlyer", message: "Session ready")
-            
-            var customData: [String: Any] = [:]
-            if let appInstanceID = Analytics.appInstanceID() {
-                customData["app_instance_id"] = appInstanceID
-            } else {
-                assertionFailure("Missing app_instance_id")
+            self.startAppsFlyer()
+        }
+    }
+    
+    func startAppsFlyer(userId: String? = LoginManager.shared.account?.userID) {
+        guard AppsFlyerLib.shared().isSessionReady() else {
+            return
+        }
+        
+        var customData: [String: Any] = [:]
+        if let appInstanceID = Analytics.appInstanceID() {
+            customData["app_instance_id"] = appInstanceID
+        } else {
+            assertionFailure("Missing app_instance_id")
+        }
+        Task {
+            do {
+                let sessionID = try await Analytics.sessionID()
+                customData["ga_session_id"] = sessionID
+            } catch {
+                let nsError = error as NSError
+                if nsError.domain == "com.google.gmp.measurement.ErrorDomain" && nsError.code == 13 {
+                    // Analytics uninitialized, commonly caused by poor/blocked network reachability
+                    // to Google's endpoints rather than a Mixin-side bug, only log it locally.
+                    Logger.general.error(category: "HomeViewController", message: "Get ga_session_id: \(error)")
+                } else {
+                    reporter.report(error: error)
+                }
             }
-            Task {
-                do {
-                    let sessionID = try await Analytics.sessionID()
-                    customData["ga_session_id"] = sessionID
-                } catch {
-                    reporter.report(error: error)
-                }
-                Logger.general.debug(category: "AppsFlyer", message: "Reporting \(customData)")
-                AppsFlyerLib.shared().customData = customData
-                if let account = LoginManager.shared.account {
-                    AppsFlyerLib.shared().customerUserID = Reporter.userIDHash(userID: account.userID)
-                }
-                do {
-                    try await AppsFlyerLib.shared().start()
-                } catch {
-                    reporter.report(error: error)
-                }
+            Logger.general.debug(category: "AppsFlyer", message: "Reporting \(customData)")
+            AppsFlyerLib.shared().customData = customData
+            if let userId {
+                AppsFlyerLib.shared().customerUserID = Reporter.userIDHash(userID: userId)
+            }
+            do {
+                try await AppsFlyerLib.shared().start()
+            } catch {
+                reporter.report(error: error)
             }
         }
     }

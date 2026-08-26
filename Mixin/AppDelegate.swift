@@ -35,13 +35,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         MixinService.callMessageCoordinator = CallService.shared
         reporterClass = MainAppReporter.self
         reporter.configure()
-        if let key = MixinKeys.appsFlyer {
-            AppsFlyerLib.shared().appsFlyerDevKey = key
-        } else {
-            assertionFailure("Missing AppsFlyer key")
-        }
-        AppsFlyerLib.shared().appleAppID = appStoreAppID
-        AppsFlyerLib.shared().delegate = self
         AppGroupUserDefaults.migrateIfNeeded()
         updateImageManagerConfig()
         _ = ReachabilityManger.shared
@@ -57,6 +50,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ScreenLockManager.shared.lockScreenIfNeeded()
         checkJailbreak()
         configAnalytics()
+        if let key = MixinKeys.appsFlyer {
+            AppsFlyerLib.shared().initialize(devKey: key, appId: appStoreAppID)
+        } else {
+            assertionFailure("Missing AppsFlyer key")
+        }
+        AppsFlyerLib.shared().delegate = self
+        AppsFlyerLib.shared().registerSessionReadyListener {
+            Logger.general.info(category: "AppsFlyer", message: "Session ready")
+            self.startAppsFlyerIfReady()
+        }
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         addObservers()
         Logger.general.info(category: "AppDelegate", message: "App \(Bundle.main.shortVersionString)(\(Bundle.main.bundleVersion)) did finish launching with state: \(UIApplication.shared.applicationStateString), device: \(Device.current.machineName) \(ProcessInfo.processInfo.operatingSystemVersionString), id: \(Device.current.id)")
@@ -102,6 +105,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard LoginManager.shared.isLoggedIn else {
             return
         }
+        
         requestTimeout = 5
         BackgroundMessagingService.shared.end()
         MixinService.isStopProcessMessages = false
@@ -282,6 +286,9 @@ extension AppDelegate {
         UNUserNotificationCenter.current().removeAllNotifications()
         UIApplication.shared.unregisterForRemoteNotifications()
         
+        Analytics.setUserID(nil)
+        AppsFlyerLib.shared().customerUserID = nil
+        
         mainWindow.endEditing(true)
         let oldRootViewController = mainWindow.rootViewController
         mainWindow.rootViewController = LoginNavigationController()
@@ -431,6 +438,49 @@ extension AppDelegate {
     
 }
 
+extension AppDelegate {
+    
+    func startAppsFlyerIfReady() {
+        guard AppsFlyerLib.shared().isSessionReady() else {
+            return
+        }
+        var customData: [String: Any] = [:]
+        if let appInstanceID = Analytics.appInstanceID() {
+            customData["app_instance_id"] = appInstanceID
+        } else {
+            assertionFailure("Missing app_instance_id")
+        }
+        Task {
+            do {
+                let sessionID = try await Analytics.sessionID()
+                customData["ga_session_id"] = sessionID
+            } catch {
+                let nsError = error as NSError
+                if nsError.domain == "com.google.gmp.measurement.ErrorDomain" && nsError.code == 13 {
+                    // Analytics uninitialized, commonly caused by poor/blocked network reachability
+                    // to Google's endpoints rather than a Mixin-side bug, only log it locally.
+                    Logger.general.error(category: "AppsFlyer", message: "Get ga_session_id: \(error)")
+                } else {
+                    reporter.report(error: error)
+                }
+            }
+            Logger.general.debug(category: "AppsFlyer", message: "Reporting \(customData)")
+            AppsFlyerLib.shared().customData = customData
+            if let userID = LoginManager.shared.account?.userID {
+                AppsFlyerLib.shared().customerUserID = Reporter.userIDHash(userID: userID)
+            } else {
+                AppsFlyerLib.shared().customerUserID = nil
+            }
+            do {
+                try await AppsFlyerLib.shared().start()
+            } catch {
+                reporter.report(error: error)
+            }
+        }
+    }
+    
+}
+
 extension AppDelegate : AppsFlyerLibDelegate {
 
     // Handle Organic/Non-organic installation
@@ -438,15 +488,9 @@ extension AppDelegate : AppsFlyerLibDelegate {
         guard let status = conversionInfo["af_status"] as? String else {
             return
         }
-        guard UIApplication.shared.isProtectedDataAvailable else {
-            return
-        }
-        guard LoginManager.shared.isLoggedIn else {
-            return
-        }
-        
+
         reporter.updateUserProperty(key: "af_source", value: status)
-        if status == "Non-Organic" {
+        if status == "Non-organic" {
             if let mediaSource = conversionInfo["media_source"] as? String, !mediaSource.isEmpty {
                 reporter.updateUserProperty(key: "af_media_source", value: mediaSource)
             }
@@ -455,6 +499,7 @@ extension AppDelegate : AppsFlyerLibDelegate {
                 reporter.updateUserProperty(key: "af_campaign", value: campaign)
             }
         }
+        Logger.general.debug(category: "AppsFlyer", message: "status \(conversionInfo)")
     }
  
     func onConversionDataFail(_ error: any Error) {

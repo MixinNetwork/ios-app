@@ -46,6 +46,9 @@ extension LoginAccountHandler where Self: UIViewController {
         Logger.login.info(category: "Login", message: "TIP Secrets cleared")
         LoginManager.shared.setAccount(account, updateUserTable: false)
         
+        reporter.registerUserInformation(account: account)
+        AppDelegate.current.startAppsFlyerIfReady()
+        
         if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
             AppGroupUserDefaults.migrateUserSpecificDefaults()
         }

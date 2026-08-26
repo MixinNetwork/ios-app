@@ -288,7 +288,6 @@ extension LoginWithMnemonicViewController {
                         }
                     case .signUp:
                         intent = .signUp(.mixinMnemonics)
-                        reporter.registerUserInformation(account: account)
                         reporter.report(event: .signUpAccountCreated)
                     }
                     let error = self.login(

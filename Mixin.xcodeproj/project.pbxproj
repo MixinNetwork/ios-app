@@ -22,6 +22,7 @@
 		52B2726E2DAE358000F46EC0 /* TradeWeb3SpotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B2726D2DAE358000F46EC0 /* TradeWeb3SpotViewController.swift */; };
 		52B272762DAE586B00F46EC0 /* TradeSpotPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B272752DAE586B00F46EC0 /* TradeSpotPreviewViewController.swift */; };
 		52B273572DB225F500F46EC0 /* TradeWeb3TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B273562DB225F500F46EC0 /* TradeWeb3TokenSelectorViewController.swift */; };
+		52C0F5CD303E056D00F5D567 /* AppsFlyerLibConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 52C0F5CC303E056D00F5D567 /* AppsFlyerLibConfig.plist */; };
 		52DE7B4A2BEB7C040060A364 /* Web3TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */; };
 		52DE7B4F2BEB7C940060A364 /* TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B4E2BEB7C940060A364 /* TransactionViewController.swift */; };
 		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
@@ -2027,6 +2028,7 @@
 		52B2726D2DAE358000F46EC0 /* TradeWeb3SpotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeWeb3SpotViewController.swift; sourceTree = "<group>"; };
 		52B272752DAE586B00F46EC0 /* TradeSpotPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeSpotPreviewViewController.swift; sourceTree = "<group>"; };
 		52B273562DB225F500F46EC0 /* TradeWeb3TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeWeb3TokenSelectorViewController.swift; sourceTree = "<group>"; };
+		52C0F5CC303E056D00F5D567 /* AppsFlyerLibConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AppsFlyerLibConfig.plist; sourceTree = "<group>"; };
 		52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionViewController.swift; sourceTree = "<group>"; };
 		52DE7B4E2BEB7C940060A364 /* TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionViewController.swift; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
@@ -6339,6 +6341,7 @@
 				277FF7101F909A1200DBB2EB /* Info.plist */,
 				94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */,
 				94739A5326258F8200E8914D /* Custom-acknowledgements.plist */,
+				52C0F5CC303E056D00F5D567 /* AppsFlyerLibConfig.plist */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -7303,6 +7306,7 @@
 				94E206EF2F4EB61100D65D98 /* PerpetualPositionValueCell.xib in Resources */,
 				946BBCDC302486710080D43D /* PerpsMarketSelectorCategoryCell.xib in Resources */,
 				94834ACD2FE949E000A0AADF /* LogCell.xib in Resources */,
+				52C0F5CD303E056D00F5D567 /* AppsFlyerLibConfig.plist in Resources */,
 				940CA1912F59593500914435 /* PerpetualMarketInfoCell.xib in Resources */,
 				94CA8B132F59593500914435 /* PerpMarketFundingRateCell.xib in Resources */,
 				94327CF72D53662700DEE36D /* AddressInfoInputHeaderView.xib in Resources */,

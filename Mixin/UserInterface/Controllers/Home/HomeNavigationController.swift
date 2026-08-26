@@ -24,7 +24,6 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
            !AppGroupUserDefaults.isClockSkewed,
            let account = LoginManager.shared.account
         {
-            reporter.registerUserInformation(account: account)
             Logger.general.info(category: "HomeNavigationController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
             if UIApplication.shared.applicationState == .active {
                 WebSocketService.shared.connect(firstConnect: true)

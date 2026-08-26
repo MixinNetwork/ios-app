@@ -103,7 +103,6 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
             case let .success(account):
                 if account.hasEmptyName {
                     reporter.report(event: .signUpAccountCreated)
-                    AppDelegate.current.startAppsFlyer(userId: account.userID)
                 }
                 let error = self.login(
                     account: account,

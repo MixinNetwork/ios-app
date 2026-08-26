@@ -32,6 +32,7 @@ extension LoginAccountHandler where Self: UIViewController {
         }
         AccountVerificationIntent.current = intent
         
+        reporter.registerUserInformation(account: account)
         AppGroupKeychain.sessionSecret = sessionKey.rawRepresentation
         AppGroupKeychain.pinToken = pinToken
         if !account.isAnonymous {

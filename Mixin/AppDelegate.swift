@@ -50,9 +50,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ScreenLockManager.shared.lockScreenIfNeeded()
         checkJailbreak()
         configAnalytics()
+        configAppsFlyer(launchOptions: launchOptions)
         pendingShortcutItem = launchOptions?[UIApplication.LaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem
         addObservers()
-        configAppsFlyer()
         Logger.general.info(category: "AppDelegate", message: "App \(Bundle.main.shortVersionString)(\(Bundle.main.bundleVersion)) did finish launching with state: \(UIApplication.shared.applicationStateString), device: \(Device.current.machineName) \(ProcessInfo.processInfo.operatingSystemVersionString), id: \(Device.current.id)")
         if UIApplication.shared.applicationState == .background {
             MixinService.isStopProcessMessages = false
@@ -277,6 +277,8 @@ extension AppDelegate {
         UNUserNotificationCenter.current().removeAllNotifications()
         UIApplication.shared.unregisterForRemoteNotifications()
         
+        AppsFlyerLib.shared().customerUserID = nil
+        
         mainWindow.endEditing(true)
         let oldRootViewController = mainWindow.rootViewController
         mainWindow.rootViewController = LoginNavigationController()
@@ -428,56 +430,52 @@ extension AppDelegate {
 
 extension AppDelegate {
     
-    func configAppsFlyer() {
+    private func configAppsFlyer(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
         if let key = MixinKeys.appsFlyer {
             AppsFlyerLib.shared().initialize(devKey: key, appId: appStoreAppID)
         } else {
             assertionFailure("Missing AppsFlyer key")
         }
         AppsFlyerLib.shared().delegate = self
+        AppsFlyerLib.shared().handleLaunchOptions(launchOptions)
         AppsFlyerLib.shared().registerSessionReadyListener {
             Logger.general.info(category: "AppsFlyer", message: "Session ready")
-            self.startAppsFlyer()
-        }
-    }
-    
-    func startAppsFlyer(userId: String? = LoginManager.shared.account?.userID) {
-        guard AppsFlyerLib.shared().isSessionReady() else {
-            return
-        }
-        
-        var customData: [String: Any] = [:]
-        if let appInstanceID = Analytics.appInstanceID() {
-            customData["app_instance_id"] = appInstanceID
-        } else {
-            assertionFailure("Missing app_instance_id")
-        }
-        Task {
-            do {
-                let sessionID = try await Analytics.sessionID()
-                customData["ga_session_id"] = sessionID
-            } catch {
-                let nsError = error as NSError
-                if nsError.domain == "com.google.gmp.measurement.ErrorDomain" && nsError.code == 13 {
-                    // Analytics uninitialized, commonly caused by poor/blocked network reachability
-                    // to Google's endpoints rather than a Mixin-side bug, only log it locally.
-                    Logger.general.error(category: "HomeViewController", message: "Get ga_session_id: \(error)")
+            var customData: [String: Any] = [:]
+            if let appInstanceID = Analytics.appInstanceID() {
+                customData["app_instance_id"] = appInstanceID
+            } else {
+                assertionFailure("Missing app_instance_id")
+            }
+            Task {
+                do {
+                    let sessionID = try await Analytics.sessionID()
+                    customData["ga_session_id"] = sessionID
+                } catch {
+                    let nsError = error as NSError
+                    if nsError.domain == "com.google.gmp.measurement.ErrorDomain" && nsError.code == 13 {
+                        // Analytics uninitialized, commonly caused by poor/blocked network reachability
+                        // to Google's endpoints rather than a Mixin-side bug, only log it locally.
+                        Logger.general.error(category: "AppsFlyer", message: "Get ga_session_id: \(error)")
+                    } else {
+                        reporter.report(error: error)
+                    }
+                }
+                Logger.general.debug(category: "AppsFlyer", message: "Reporting \(customData)")
+                AppsFlyerLib.shared().customData = customData
+                if let userID = LoginManager.shared.account?.userID {
+                    AppsFlyerLib.shared().customerUserID = Reporter.userIDHash(userID: userID)
                 } else {
+                    AppsFlyerLib.shared().customerUserID = nil
+                }
+                do {
+                    try await AppsFlyerLib.shared().start()
+                } catch {
                     reporter.report(error: error)
                 }
             }
-            Logger.general.debug(category: "AppsFlyer", message: "Reporting \(customData)")
-            AppsFlyerLib.shared().customData = customData
-            if let userId {
-                AppsFlyerLib.shared().customerUserID = Reporter.userIDHash(userID: userId)
-            }
-            do {
-                try await AppsFlyerLib.shared().start()
-            } catch {
-                reporter.report(error: error)
-            }
         }
     }
+    
 }
 
 extension AppDelegate : AppsFlyerLibDelegate {

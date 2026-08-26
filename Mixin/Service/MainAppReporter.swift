@@ -16,7 +16,7 @@ final class MainAppReporter: Reporter {
             "IdentityNumber": account.identityNumber
         ])
         Analytics.setUserID(userIDHash)
-        AppDelegate.current.startAppsFlyer(userId: account.userID)
+        AppsFlyerLib.shared().customerUserID = userIDHash
     }
     
     override func report(error: Error) {
@@ -37,18 +37,14 @@ final class MainAppReporter: Reporter {
              .receiveEnd,
              .receiveSuccess,
              .sendStart,
-             .sendEnd:
-            AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
-        case .signUpAccountCreated:
-            AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
-        case .signUpStart:
+             .sendEnd,
+             .signUpAccountCreated,
+             .signUpStart:
             AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
         case .loginEnd:
             AppsFlyerLib.shared().logEvent(AFEventLogin, withValues: tags)
-            AppDelegate.current.startAppsFlyer()
         case .signUpEnd:
             AppsFlyerLib.shared().logEvent(AFEventCompleteRegistration, withValues: tags)
-            AppDelegate.current.startAppsFlyer()
         default:
             break
         }

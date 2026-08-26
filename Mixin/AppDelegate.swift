@@ -286,6 +286,7 @@ extension AppDelegate {
         UNUserNotificationCenter.current().removeAllNotifications()
         UIApplication.shared.unregisterForRemoteNotifications()
         
+        Analytics.setUserID(nil)
         AppsFlyerLib.shared().customerUserID = nil
         
         mainWindow.endEditing(true)

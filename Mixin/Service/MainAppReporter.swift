@@ -43,8 +43,10 @@ final class MainAppReporter: Reporter {
             AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
         case .loginEnd:
             AppsFlyerLib.shared().logEvent(AFEventLogin, withValues: tags)
+            AppDelegate.current.startAppsFlyerIfReady()
         case .signUpEnd:
             AppsFlyerLib.shared().logEvent(AFEventCompleteRegistration, withValues: tags)
+            AppDelegate.current.startAppsFlyerIfReady()
         default:
             break
         }

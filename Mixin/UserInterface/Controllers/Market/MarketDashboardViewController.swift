@@ -291,15 +291,15 @@ final class MarketDashboardViewController: UIViewController {
                     }
                 case .stock:
                     header.categoriesMargin = .large
-                    header.subCategories = WatchlistSubCategory.allCases.map(\.subCategoryDisplay)
+                    header.subCategories = StockSubCategory.allCases.map(\.subCategoryDisplay)
                     header.leftOrderingField = .volume
-                    switch WatchlistSubCategory.allCases[self.subCategoryIndex] {
+                    switch StockSubCategory.allCases[self.subCategoryIndex] {
                     case .crypto:
                         header.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
                     case .perps:
                         header.changePeriod = .twentyFourHours
                     }
-                    header.isScoreOrderingAvailable = WatchlistSubCategory.allCases[self.subCategoryIndex] == .perps
+                    header.isScoreOrderingAvailable = StockSubCategory.allCases[self.subCategoryIndex] == .perps
                 case .indicator:
                     return nil
                 }
@@ -327,7 +327,7 @@ final class MarketDashboardViewController: UIViewController {
                         header.subCategories = PerpsSubCategory.allCases.map(\.subCategoryDisplay)
                     case .stock:
                         header.categoriesMargin = .large
-                        header.subCategories = WatchlistSubCategory.allCases.map(\.subCategoryDisplay)
+                        header.subCategories = StockSubCategory.allCases.map(\.subCategoryDisplay)
                     case .indicator:
                         return nil
                     }
@@ -364,7 +364,7 @@ final class MarketDashboardViewController: UIViewController {
                     header.subCategories = PerpsSubCategory.allCases.map(\.subCategoryDisplay)
                 case .stock:
                     header.categoriesMargin = .large
-                    header.subCategories = WatchlistSubCategory.allCases.map(\.subCategoryDisplay)
+                    header.subCategories = StockSubCategory.allCases.map(\.subCategoryDisplay)
                 case .indicator:
                     return nil
                 }
@@ -661,7 +661,7 @@ final class MarketDashboardViewController: UIViewController {
                 "forex"
             }
         case .stock:
-            switch WatchlistSubCategory.allCases[index] {
+            switch StockSubCategory.allCases[index] {
             case .crypto:
                 "crypto"
             case .perps:
@@ -744,7 +744,7 @@ extension MarketDashboardViewController {
                     false
                 }
             case .categorized(let databaseCategory) where category == .stock:
-                databaseCategory == .stock && WatchlistSubCategory.allCases[subCategoryIndex] == .crypto
+                databaseCategory == .stock && StockSubCategory.allCases[subCategoryIndex] == .crypto
             case .categorized, .other:
                 false
             }
@@ -752,7 +752,7 @@ extension MarketDashboardViewController {
             switch dataSource {
             case .all:
                 (category == .perps && PerpsSubCategory.allCases[subCategoryIndex] != .watchlist)
-                || (category == .stock && WatchlistSubCategory.allCases[subCategoryIndex] == .perps)
+                || (category == .stock && StockSubCategory.allCases[subCategoryIndex] == .perps)
             case .favorite, .featured:
                 (category == .perps && PerpsSubCategory.allCases[subCategoryIndex] == .watchlist)
                 || (category == .watchlist && WatchlistSubCategory.allCases[subCategoryIndex] == .perps)
@@ -932,7 +932,7 @@ extension MarketDashboardViewController: MarketOrderingHeaderView.Delegate {
                 reportingTags: tags
             )
         case .stock:
-            switch WatchlistSubCategory.allCases[subCategoryIndex] {
+            switch StockSubCategory.allCases[subCategoryIndex] {
             case .crypto:
                 settings = MarketDisplaySettingsViewController(
                     rows: [.quoteColor, .priceChange],
@@ -1262,8 +1262,14 @@ extension MarketDashboardViewController {
         var defaultSubCategoryIndex: Int {
             let index = AppGroupUserDefaults.User.marketSubCategoryIndices[rawValue]
             return switch self {
-            case .watchlist, .stock:
+            case .watchlist:
                 if let index, index < WatchlistSubCategory.allCases.count {
+                    index
+                } else {
+                    0
+                }
+            case .stock:
+                if let index, index < StockSubCategory.allCases.count {
                     index
                 } else {
                     0
@@ -1800,7 +1806,7 @@ extension MarketDashboardViewController {
         }
 
         override func main() {
-            switch WatchlistSubCategory.allCases[subCategoryIndex] {
+            switch StockSubCategory.allCases[subCategoryIndex] {
             case .crypto:
                 reloadStockSpotMarkets()
             case .perps:
@@ -1932,7 +1938,7 @@ extension MarketDashboardViewController {
                     perpsCategories.remove(.all)
                 }
             case .stock:
-                let excludingSubCategory = WatchlistSubCategory.allCases[excludingSubCategoryIndex]
+                let excludingSubCategory = StockSubCategory.allCases[excludingSubCategoryIndex]
                 switch excludingSubCategory {
                 case .crypto:
                     cryptoCategories.remove(.stocks)

@@ -47,8 +47,15 @@ enum MarketDashboardOrder: Equatable, CustomDebugStringConvertible {
         subCategoryIndex: Int
     ) -> MarketDashboardOrder {
         switch category {
-        case .watchlist, .stock:
+        case .watchlist:
             switch WatchlistSubCategory.allCases[subCategoryIndex] {
+            case .crypto:
+                .crypto(.derived(category: category, subCategoryIndex: subCategoryIndex))
+            case .perps:
+                .perps(.derived(category: category, subCategoryIndex: subCategoryIndex))
+            }
+        case .stock:
+            switch StockSubCategory.allCases[subCategoryIndex] {
             case .crypto:
                 .crypto(.derived(category: category, subCategoryIndex: subCategoryIndex))
             case .perps:
@@ -75,7 +82,7 @@ extension Market.Ordering {
         case .perps, .indicator:
             Market.Ordering(field: .volume, direction: .descending)
         case .stock:
-            switch WatchlistSubCategory.allCases[subCategoryIndex] {
+            switch StockSubCategory.allCases[subCategoryIndex] {
             case .crypto:
                 Market.Ordering(field: .apiOrder, direction: .ascending)
             case .perps:
@@ -117,7 +124,7 @@ extension PerpetualMarket.Ordering {
         case .crypto, .indicator:
             PerpetualMarket.Ordering(field: .volume, direction: .descending)
         case .stock:
-            switch WatchlistSubCategory.allCases[subCategoryIndex] {
+            switch StockSubCategory.allCases[subCategoryIndex] {
             case .crypto:
                 PerpetualMarket.Ordering(field: .volume, direction: .descending)
             case .perps:

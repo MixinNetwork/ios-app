@@ -1741,6 +1741,7 @@
 		94F7BCE22D2B9ED700BA27D9 /* TradeInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F7BCE12D2B9ED700BA27D9 /* TradeInputAccessoryView.swift */; };
 		94F7E8692D9C0C1F006AA6CD /* ReviewPendingWeb3RawTransactionJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F7E8682D9C0BF6006AA6CD /* ReviewPendingWeb3RawTransactionJob.swift */; };
 		94F896FC3021FD7A00897E4F /* WatchlistSubCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F896FB3021FD7A00897E4F /* WatchlistSubCategory.swift */; };
+		94F896FE3021FD7A00897E4F /* StockSubCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F896FD3021FD7A00897E4F /* StockSubCategory.swift */; };
 		94F8970A3021FDA000897E4F /* ReloadWatchlistRecommendationJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F897093021FD9F00897E4F /* ReloadWatchlistRecommendationJob.swift */; };
 		94F952672AE66A700025B995 /* AmountIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952662AE66A700025B995 /* AmountIntent.swift */; };
 		94FA8FC92644236F006BC715 /* ConversationMessageComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */; };
@@ -3781,6 +3782,7 @@
 		94F7BCE12D2B9ED700BA27D9 /* TradeInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeInputAccessoryView.swift; sourceTree = "<group>"; };
 		94F7E8682D9C0BF6006AA6CD /* ReviewPendingWeb3RawTransactionJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPendingWeb3RawTransactionJob.swift; sourceTree = "<group>"; };
 		94F896FB3021FD7A00897E4F /* WatchlistSubCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistSubCategory.swift; sourceTree = "<group>"; };
+		94F896FD3021FD7A00897E4F /* StockSubCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockSubCategory.swift; sourceTree = "<group>"; };
 		94F897093021FD9F00897E4F /* ReloadWatchlistRecommendationJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadWatchlistRecommendationJob.swift; sourceTree = "<group>"; };
 		94F952662AE66A700025B995 /* AmountIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountIntent.swift; sourceTree = "<group>"; };
 		94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationMessageComposer.swift; sourceTree = "<group>"; };
@@ -5135,6 +5137,7 @@
 				946BBA8730244FA40080D43D /* MarketLayout.swift */,
 				949DD1C6302B02BD00E6AEFB /* CryptoMarketDisplayInfo.swift */,
 				94F896FB3021FD7A00897E4F /* WatchlistSubCategory.swift */,
+				94F896FD3021FD7A00897E4F /* StockSubCategory.swift */,
 				946BBA46302384090080D43D /* MarketSubCategoryDisplay.swift */,
 				94F897093021FD9F00897E4F /* ReloadWatchlistRecommendationJob.swift */,
 				9430C239301B388C00A0388C /* MarketIndicator.swift */,
@@ -8390,6 +8393,7 @@
 				DFB6CE2123C485AB00FB6615 /* SendMessageService+Sending.swift in Sources */,
 				7C7579D029DC3E660002DA0B /* DeviceTransferActionTableHeaderView.swift in Sources */,
 				94F896FC3021FD7A00897E4F /* WatchlistSubCategory.swift in Sources */,
+				94F896FE3021FD7A00897E4F /* StockSubCategory.swift in Sources */,
 				7CF7416E27DAD93000DA0004 /* SnapCenterFlowLayout.swift in Sources */,
 				94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */,
 				942F4729299CDF1800528759 /* URLSessionWebSocketFactory.swift in Sources */,

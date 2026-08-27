@@ -3,6 +3,8 @@ import MixinServices
 
 final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSnapshotItem> {
     
+    private var availableForEarning = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -41,6 +43,7 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
                     self.tableView.reloadSections([Section.earning.rawValue], with: .none)
                 }
                 if earning != nil {
+                    self.availableForEarning = true
                     center.addObserver(
                         self,
                         selector: #selector(self.earnProductsDidUpdate(_:)),
@@ -52,6 +55,15 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
                     )
                 }
             }
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if availableForEarning {
+            ConcurrentJobQueue.shared.addJob(
+                job: RefreshEarnProductJob(notificationQueue: queue)
+            )
         }
     }
     

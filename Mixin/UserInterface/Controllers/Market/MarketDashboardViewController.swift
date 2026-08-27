@@ -283,7 +283,23 @@ final class MarketDashboardViewController: UIViewController {
                     header.subCategories = PerpsSubCategory.allCases.map(\.subCategoryDisplay)
                     header.leftOrderingField = .volume
                     header.changePeriod = .twentyFourHours
-                    header.isScoreOrderingAvailable = PerpsSubCategory.allCases[self.subCategoryIndex] == .trending
+                    header.isScoreOrderingAvailable = switch PerpsSubCategory.allCases[self.subCategoryIndex] {
+                    case .trending, .memes, .indices, .commodities, .forex:
+                        true
+                    case .watchlist, .topGainers, .topLosers:
+                        false
+                    }
+                case .stock:
+                    header.categoriesMargin = .large
+                    header.subCategories = WatchlistSubCategory.allCases.map(\.subCategoryDisplay)
+                    header.leftOrderingField = .volume
+                    switch WatchlistSubCategory.allCases[self.subCategoryIndex] {
+                    case .crypto:
+                        header.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
+                    case .perps:
+                        header.changePeriod = .twentyFourHours
+                    }
+                    header.isScoreOrderingAvailable = WatchlistSubCategory.allCases[self.subCategoryIndex] == .perps
                 case .indicator:
                     return nil
                 }
@@ -309,6 +325,9 @@ final class MarketDashboardViewController: UIViewController {
                     case .perps:
                         header.categoriesMargin = .medium
                         header.subCategories = PerpsSubCategory.allCases.map(\.subCategoryDisplay)
+                    case .stock:
+                        header.categoriesMargin = .large
+                        header.subCategories = WatchlistSubCategory.allCases.map(\.subCategoryDisplay)
                     case .indicator:
                         return nil
                     }
@@ -343,6 +362,9 @@ final class MarketDashboardViewController: UIViewController {
                 case .perps:
                     header.categoriesMargin = .medium
                     header.subCategories = PerpsSubCategory.allCases.map(\.subCategoryDisplay)
+                case .stock:
+                    header.categoriesMargin = .large
+                    header.subCategories = WatchlistSubCategory.allCases.map(\.subCategoryDisplay)
                 case .indicator:
                     return nil
                 }
@@ -522,6 +544,14 @@ final class MarketDashboardViewController: UIViewController {
                 viewController: self,
             )
             queue.addOperation(op)
+        case .stock:
+            let op = ReloadStockMarketsOperation(
+                subCategoryIndex: subCategoryIndex,
+                order: order,
+                scheduleRemoteLoader: scheduleRemoteLoader,
+                viewController: self,
+            )
+            queue.addOperation(op)
         case .indicator:
             self.category = .indicator
             self.subCategoryIndex = 0
@@ -630,6 +660,13 @@ final class MarketDashboardViewController: UIViewController {
             case .forex:
                 "forex"
             }
+        case .stock:
+            switch WatchlistSubCategory.allCases[index] {
+            case .crypto:
+                "crypto"
+            case .perps:
+                "perpetual"
+            }
         case .indicator:
             nil
         }
@@ -706,13 +743,16 @@ extension MarketDashboardViewController {
                 case .all:
                     false
                 }
+            case .categorized(let databaseCategory) where category == .stock:
+                databaseCategory == .stock && WatchlistSubCategory.allCases[subCategoryIndex] == .crypto
             case .categorized, .other:
                 false
             }
         } else if let dataSource = perpsDataSource as? PerpetualMarket.RequestCategory {
             switch dataSource {
             case .all:
-                category == .perps && PerpsSubCategory.allCases[subCategoryIndex] != .watchlist
+                (category == .perps && PerpsSubCategory.allCases[subCategoryIndex] != .watchlist)
+                || (category == .stock && WatchlistSubCategory.allCases[subCategoryIndex] == .perps)
             case .favorite, .featured:
                 (category == .perps && PerpsSubCategory.allCases[subCategoryIndex] == .watchlist)
                 || (category == .watchlist && WatchlistSubCategory.allCases[subCategoryIndex] == .perps)
@@ -745,7 +785,7 @@ extension MarketDashboardViewController {
             return
         }
         switch order.field {
-        case .marketCap, .volume, .price:
+        case .marketCap, .volume, .price, .apiOrder, .addedAt:
             var snapshot = dataSource.snapshot()
             snapshot.reconfigureItems(snapshot.itemIdentifiers)
             dataSource.apply(snapshot) {
@@ -891,6 +931,19 @@ extension MarketDashboardViewController: MarketOrderingHeaderView.Delegate {
                 rows: [.quoteColor],
                 reportingTags: tags
             )
+        case .stock:
+            switch WatchlistSubCategory.allCases[subCategoryIndex] {
+            case .crypto:
+                settings = MarketDisplaySettingsViewController(
+                    rows: [.quoteColor, .priceChange],
+                    reportingTags: tags
+                )
+            case .perps:
+                settings = MarketDisplaySettingsViewController(
+                    rows: [.quoteColor],
+                    reportingTags: tags
+                )
+            }
         case .indicator:
             return
         }
@@ -926,6 +979,10 @@ extension MarketDashboardViewController: MarketOrderingHeaderView.Delegate {
                 case .sevenDays:
                     "7d"
                 }
+            case .apiOrder:
+                "api_order"
+            case .addedAt:
+                "added_at"
             }
             tags["sort_direction"] = switch order.direction {
             case .ascending:
@@ -943,6 +1000,8 @@ extension MarketDashboardViewController: MarketOrderingHeaderView.Delegate {
                 "24h"
             case .score:
                 "score"
+            case .addedAt:
+                "added_at"
             }
             tags["sort_direction"] = switch order.direction {
             case .ascending:
@@ -1197,12 +1256,13 @@ extension MarketDashboardViewController {
         case watchlist
         case crypto
         case perps
+        case stock
         case indicator
-        
+
         var defaultSubCategoryIndex: Int {
             let index = AppGroupUserDefaults.User.marketSubCategoryIndices[rawValue]
             return switch self {
-            case .watchlist:
+            case .watchlist, .stock:
                 if let index, index < WatchlistSubCategory.allCases.count {
                     index
                 } else {
@@ -1224,7 +1284,7 @@ extension MarketDashboardViewController {
                 0
             }
         }
-        
+
         var reportingName: String {
             switch self {
             case .watchlist:
@@ -1233,11 +1293,13 @@ extension MarketDashboardViewController {
                 "crypto"
             case .perps:
                 "perpetual"
+            case .stock:
+                "stock"
             case .indicator:
                 "indicator"
             }
         }
-        
+
     }
     
     enum PerpsSubCategory: CaseIterable {
@@ -1335,6 +1397,8 @@ extension MarketDashboardViewController {
                 R.string.localizable.perps_category_crypto()
             case .perps:
                 R.string.localizable.perpetual()
+            case .stock:
+                R.string.localizable.perps_category_stocks()
             case .indicator:
                 R.string.localizable.indicator()
             }
@@ -1714,9 +1778,120 @@ extension MarketDashboardViewController {
                 }
             }
         }
-        
+
     }
-    
+
+    private final class ReloadStockMarketsOperation: ReloadDataOperation, @unchecked Sendable {
+
+        private let subCategoryIndex: Int
+        private let order: MarketDashboardOrder?
+        private let scheduleRemoteLoader: Bool
+
+        init(
+            subCategoryIndex: Int,
+            order: MarketDashboardOrder?,
+            scheduleRemoteLoader: Bool,
+            viewController: MarketDashboardViewController,
+        ) {
+            self.subCategoryIndex = subCategoryIndex
+            self.order = order
+            self.scheduleRemoteLoader = scheduleRemoteLoader
+            super.init(viewController: viewController)
+        }
+
+        override func main() {
+            switch WatchlistSubCategory.allCases[subCategoryIndex] {
+            case .crypto:
+                reloadStockSpotMarkets()
+            case .perps:
+                reloadStockPerpsMarkets()
+            }
+        }
+
+        private func reloadStockSpotMarkets() {
+            let order = order?.cryptoOrdering ?? .derived(
+                category: .stock,
+                subCategoryIndex: subCategoryIndex
+            )
+            let markets = MarketDAO.shared.stockMarkets(order: order)
+            let items: [Item] = markets.map { market in
+                    .market(id: market.coinID, info: .volume)
+            }
+            let viewModels = markets.reduce(into: [:]) { result, market in
+                result[market.coinID] = market
+            }
+            var snapshot = DataSourceSnapshot()
+            if items.isEmpty {
+                snapshot.appendSections([.busyIndicator])
+                snapshot.appendItems([.busyIndicator], toSection: .busyIndicator)
+            } else {
+                snapshot.appendSections([.market])
+                snapshot.appendItems(items, toSection: .market)
+            }
+            DispatchQueue.main.sync { [weak self] in
+                guard let self, !self.isCancelled, let viewController else {
+                    return
+                }
+                viewController.category = .stock
+                viewController.subCategoryIndex = subCategoryIndex
+                viewController.order = .crypto(order)
+                viewController.markets = viewModels
+                viewController.collectionView.allowsMultipleSelection = false
+                viewController.dataSource.applySnapshotUsingReloadData(snapshot)
+                if scheduleRemoteLoader {
+                    let requester = MarketPeriodicRequester(category: .stocks)
+                    viewController.marketLoader = requester
+                    requester.start()
+                }
+            }
+        }
+
+        private func reloadStockPerpsMarkets() {
+            let order = order?.perpsOrdering ?? .derived(
+                category: .stock,
+                subCategoryIndex: subCategoryIndex
+            )
+            let markets = PerpsMarketDAO.shared.availableMarkets(
+                category: .categorized(.stocks),
+                ordering: order
+            )
+            let items: [Item] = markets.map { market in
+                    .perps(id: market.marketID)
+            }
+            let viewModels = markets.reduce(into: [:]) { result, market in
+                result[market.marketID] = market
+            }
+            var snapshot = DataSourceSnapshot()
+            if items.isEmpty {
+                snapshot.appendSections([.busyIndicator])
+                snapshot.appendItems([.busyIndicator], toSection: .busyIndicator)
+            } else {
+                snapshot.appendSections([.perps])
+                snapshot.appendItems(items, toSection: .perps)
+            }
+            DispatchQueue.main.sync { [weak self] in
+                guard let self, !self.isCancelled, let viewController else {
+                    return
+                }
+                viewController.category = .stock
+                viewController.subCategoryIndex = subCategoryIndex
+                viewController.order = .perps(order)
+                viewController.perpsMarkets = viewModels
+                viewController.collectionView.allowsMultipleSelection = false
+                viewController.dataSource.applySnapshotUsingReloadData(snapshot)
+                if scheduleRemoteLoader {
+                    let requester = PerpetualMarketLoader(
+                        request: .multiple(.all),
+                        timeInterval: 30
+                    )
+                    viewController.perpsMarketLoader = requester
+                    requester.start()
+                }
+            }
+        }
+
+    }
+
     private final class AllDataLoader: MarketPeriodicRequester.Delegate, PerpetualMarketLoader.Delegate {
         
         private let debugDescription: String
@@ -1754,6 +1929,14 @@ extension MarketDashboardViewController {
                 case .watchlist:
                     perpsCategories.remove(.favorite)
                 case .trending, .topGainers, .topLosers, .indices, .commodities, .forex, .memes:
+                    perpsCategories.remove(.all)
+                }
+            case .stock:
+                let excludingSubCategory = WatchlistSubCategory.allCases[excludingSubCategoryIndex]
+                switch excludingSubCategory {
+                case .crypto:
+                    cryptoCategories.remove(.stocks)
+                case .perps:
                     perpsCategories.remove(.all)
                 }
             case .indicator:

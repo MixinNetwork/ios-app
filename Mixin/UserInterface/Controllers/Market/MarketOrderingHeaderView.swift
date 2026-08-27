@@ -200,6 +200,8 @@ final class MarketOrderingHeaderView: MarketHeaderView {
                 priceButton
             case .change:
                 periodButton
+            case .apiOrder, .addedAt:
+                nil
             }
         case .perps(let perpsOrder):
             switch perpsOrder.field {
@@ -209,7 +211,7 @@ final class MarketOrderingHeaderView: MarketHeaderView {
                 priceButton
             case .change:
                 periodButton
-            case .score:
+            case .score, .addedAt:
                 nil
             }
         }

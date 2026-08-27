@@ -404,6 +404,8 @@ extension Market {
             case volume
             case price
             case change(MarketChangePeriod)
+            case apiOrder
+            case addedAt
         }
         
         public let field: Field
@@ -424,6 +426,10 @@ extension Market {
                 case .sevenDays:
                     "7D%"
                 }
+            case .apiOrder:
+                "APIOrder"
+            case .addedAt:
+                "AddedAt"
             }
             switch direction {
             case .ascending:

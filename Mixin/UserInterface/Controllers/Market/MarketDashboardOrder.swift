@@ -47,7 +47,7 @@ enum MarketDashboardOrder: Equatable, CustomDebugStringConvertible {
         subCategoryIndex: Int
     ) -> MarketDashboardOrder {
         switch category {
-        case .watchlist:
+        case .watchlist, .stock:
             switch WatchlistSubCategory.allCases[subCategoryIndex] {
             case .crypto:
                 .crypto(.derived(category: category, subCategoryIndex: subCategoryIndex))
@@ -70,12 +70,23 @@ extension Market.Ordering {
         subCategoryIndex: Int
     ) -> Market.Ordering {
         switch category {
-        case .watchlist, .perps, .indicator:
+        case .watchlist:
+            Market.Ordering(field: .addedAt, direction: .descending)
+        case .perps, .indicator:
             Market.Ordering(field: .volume, direction: .descending)
+        case .stock:
+            switch WatchlistSubCategory.allCases[subCategoryIndex] {
+            case .crypto:
+                Market.Ordering(field: .apiOrder, direction: .ascending)
+            case .perps:
+                Market.Ordering(field: .volume, direction: .descending)
+            }
         case .crypto:
             switch Market.SubCategory.allCases[subCategoryIndex] {
-            case .watchlist, .trending:
-                Market.Ordering(field: .volume, direction: .descending)
+            case .watchlist:
+                Market.Ordering(field: .addedAt, direction: .descending)
+            case .trending:
+                Market.Ordering(field: .apiOrder, direction: .ascending)
             case .topGainer:
                 Market.Ordering(
                     field: .change(AppGroupUserDefaults.User.cryptoMarketChangePeriod),
@@ -101,12 +112,23 @@ extension PerpetualMarket.Ordering {
         subCategoryIndex: Int
     ) -> PerpetualMarket.Ordering {
         switch category {
-        case .watchlist, .crypto, .indicator:
+        case .watchlist:
+            PerpetualMarket.Ordering(field: .addedAt, direction: .descending)
+        case .crypto, .indicator:
             PerpetualMarket.Ordering(field: .volume, direction: .descending)
+        case .stock:
+            switch WatchlistSubCategory.allCases[subCategoryIndex] {
+            case .crypto:
+                PerpetualMarket.Ordering(field: .volume, direction: .descending)
+            case .perps:
+                PerpetualMarket.Ordering(field: .score, direction: .descending)
+            }
         case .perps:
             switch MarketDashboardViewController.PerpsSubCategory.allCases[subCategoryIndex] {
-            case .watchlist, .memes, .indices, .commodities, .forex:
-                PerpetualMarket.Ordering(field: .volume, direction: .descending)
+            case .watchlist:
+                PerpetualMarket.Ordering(field: .addedAt, direction: .descending)
+            case .memes, .indices, .commodities, .forex:
+                PerpetualMarket.Ordering(field: .score, direction: .descending)
             case .trending:
                 PerpetualMarket.Ordering(field: .score, direction: .descending)
             case .topGainers:

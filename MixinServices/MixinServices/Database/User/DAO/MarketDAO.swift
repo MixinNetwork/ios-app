@@ -52,11 +52,8 @@ public final class MarketDAO: UserDatabaseDAO {
             sql.append("\nWHERE mf.is_favored")
         case .trending:
             sql.append("""
-            
-            WHERE EXISTS (
-                SELECT 1 FROM market_categories mc 
-                WHERE mc.coin_id = m.coin_id AND mc.category = \(Market.DatabaseCategory.trending.rawValue)
-            )
+
+            INNER JOIN market_categories mc ON mc.coin_id = m.coin_id AND mc.category = \(Market.DatabaseCategory.trending.rawValue)
             """)
         case .topGainer:
             sql.append("""
@@ -77,6 +74,40 @@ public final class MarketDAO: UserDatabaseDAO {
         case .all:
             break
         }
+        switch subCategory {
+        case .watchlist:
+            break
+        case .trending, .all:
+            sql.append("\nWHERE m.coin_id NOT IN (SELECT coin_id FROM market_categories WHERE category = \(Market.DatabaseCategory.stock.rawValue))")
+        case .topGainer, .topLoser:
+            sql.append("\n    AND m.coin_id NOT IN (SELECT coin_id FROM market_categories WHERE category = \(Market.DatabaseCategory.stock.rawValue))")
+        }
+        appendOrder(order, to: &sql)
+        return db.select(with: sql)
+    }
+
+    public func stockMarkets(order: Market.Ordering) -> [FavorableMarket] {
+        let marketColumns: [String] = Market.CodingKeys.allCases.compactMap { key in
+            if key == .marketCapRank {
+                nil // `market_cap_rank` is selected from `market_cap_ranks`
+            } else {
+                "m." + key.rawValue
+            }
+        }
+        var sql = """
+        SELECT \(marketColumns.joined(separator: ", ")),
+            ifnull(mcr.market_cap_rank, m.market_cap_rank) AS \(Market.CodingKeys.marketCapRank.rawValue),
+            ifnull(mf.is_favored, FALSE) AS \(FavorableMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
+        FROM markets m
+            LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
+            LEFT JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id
+            INNER JOIN market_categories mc ON mc.coin_id = m.coin_id AND mc.category = \(Market.DatabaseCategory.stock.rawValue)
+        """
+        appendOrder(order, to: &sql)
+        return db.select(with: sql)
+    }
+
+    private func appendOrder(_ order: Market.Ordering, to sql: inout String) {
         switch order.field {
         case .marketCap:
             sql.append("\nORDER BY CAST(market_cap AS REAL)")
@@ -91,6 +122,10 @@ public final class MarketDAO: UserDatabaseDAO {
             case .twentyFourHours:
                 sql.append("\nORDER BY CAST(price_change_percentage_24h AS REAL)")
             }
+        case .apiOrder:
+            sql.append("\nORDER BY mc.rowid")
+        case .addedAt:
+            sql.append("\nORDER BY mf.created_at")
         }
         switch order.direction {
         case .ascending:
@@ -98,9 +133,11 @@ public final class MarketDAO: UserDatabaseDAO {
         case .descending:
             sql.append(" DESC")
         }
-        return db.select(with: sql)
+        if order.field == .addedAt {
+            sql.append(", mf.rowid ASC")
+        }
     }
-    
+
     public func watchlistRecommendations() -> [FavorableMarket] {
         let sql = """
         SELECT m.*

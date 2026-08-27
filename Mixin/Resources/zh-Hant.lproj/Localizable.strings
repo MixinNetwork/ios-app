@@ -566,6 +566,11 @@
 "duplicate_transfer_confirmation" = "重複轉賬確認";
 "duplicate_withdraw_confirmation" = "重複提現確認";
 "duplication_reminder" = "您已經在%2$@前給該收款人轉賬了 %1$@。";
+"earn" = "理財";
+"earn_balance" = "理財餘額";
+"earn_pending_earning" = "待結算收益";
+"earn_reward_rate" = "收益率";
+"earn_total_earnings" = "總收益";
 "edit" = "編輯";
 "edit_address" = "修改 %@ 地址";
 "edit_alert" = "編輯價格預警";

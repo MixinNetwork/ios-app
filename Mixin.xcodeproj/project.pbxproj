@@ -748,6 +748,8 @@
 		9414D3A62E069ACD00F38028 /* BuyTokenInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414D3A52E069ACD00F38028 /* BuyTokenInputAmountViewController.swift */; };
 		9414D4FD2E070AF800F38028 /* TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414D4FC2E070AF500F38028 /* TokenSelectorViewController.swift */; };
 		9414D5332E07129900F38028 /* SimpleTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414D5322E07129900F38028 /* SimpleTokenSelectorViewController.swift */; };
+		941503263033568C00E3C7B2 /* MediumWalletValueAddedServiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 941503253033568C00E3C7B2 /* MediumWalletValueAddedServiceCell.xib */; };
+		941503273033568C00E3C7B2 /* MediumWalletValueAddedServiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941503243033568C00E3C7B2 /* MediumWalletValueAddedServiceCell.swift */; };
 		9416231A29BEEFB800E540B9 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 9416231929BEEFB800E540B9 /* OrderedCollections */; };
 		9416548325CD2D9A007E76D0 /* OggOpusRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9416548225CD2D9A007E76D0 /* OggOpusRecorder.swift */; };
 		9416548B25CD7190007E76D0 /* AudioMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9416548A25CD7190007E76D0 /* AudioMetadata.swift */; };
@@ -1198,8 +1200,11 @@
 		946E059F2CBFEE85004B264E /* SearchNavigationControllerChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */; };
 		946E98DF2FF3A03A0083D89C /* CashAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E98DE2FF3A0380083D89C /* CashAPI.swift */; };
 		946E98E72FF3A0530083D89C /* CashAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E98E62FF3A0500083D89C /* CashAccount.swift */; };
-		946E98FC2FF3AF050083D89C /* WalletCashAccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946E98FB2FF3AF050083D89C /* WalletCashAccountCell.xib */; };
-		946E98FD2FF3AF050083D89C /* WalletCashAccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E98FA2FF3AF050083D89C /* WalletCashAccountCell.swift */; };
+		946E98E92FF3A0610083D89C /* EarnAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E98E82FF3A0600083D89C /* EarnAPI.swift */; };
+		946E98EB2FF3A0710083D89C /* EarnProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E98EA2FF3A0700083D89C /* EarnProduct.swift */; };
+		946E98FC2FF3AF050083D89C /* LargeWalletValueAddedServiceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946E98FB2FF3AF050083D89C /* LargeWalletValueAddedServiceCell.xib */; };
+		946E98FD2FF3AF050083D89C /* LargeWalletValueAddedServiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E98FA2FF3AF050083D89C /* LargeWalletValueAddedServiceCell.swift */; };
+		946E99022FF4B0000083D89C /* RefreshEarnProductJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E99012FF4B0000083D89C /* RefreshEarnProductJob.swift */; };
 		946E99382FF415630083D89C /* AddCashInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E99372FF415630083D89C /* AddCashInputAmountViewController.swift */; };
 		946E99542FF4E8700083D89C /* AddCashPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946E99532FF4E8700083D89C /* AddCashPreviewView.xib */; };
 		946E99552FF4E8700083D89C /* AddCashPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E99522FF4E8700083D89C /* AddCashPreviewViewController.swift */; };
@@ -1316,6 +1321,11 @@
 		948C1CC32FAF3F22005C8653 /* FixedInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948C1CC12FAF3F22005C8653 /* FixedInputCell.swift */; };
 		948C1CC42FAF3F22005C8653 /* FixedInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948C1CC22FAF3F22005C8653 /* FixedInputCell.xib */; };
 		948CFAED2F2CB4C000BC34C3 /* QRCodeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CFAE92F2CB4B200BC34C3 /* QRCodeDetector.swift */; };
+		948D3D48303C8EC600211A98 /* EarnAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948D3D44303C8EBF00211A98 /* EarnAccount.swift */; };
+		948D3D74303D709400211A98 /* WalletValueAddedServiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948D3D73303D709300211A98 /* WalletValueAddedServiceCell.swift */; };
+		948D3DEB303DE49E00211A98 /* TokenEarningViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948D3DEA303DE49700211A98 /* TokenEarningViewModel.swift */; };
+		948D3E01303DE64F00211A98 /* TokenEarningCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948D3DFF303DE64F00211A98 /* TokenEarningCell.swift */; };
+		948D3E02303DE64F00211A98 /* TokenEarningCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948D3E00303DE64F00211A98 /* TokenEarningCell.xib */; };
 		948D42922FDA921D00575015 /* AttributedAmount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948D42912FDA921900575015 /* AttributedAmount.swift */; };
 		948DFB6B2F18BE0800200EFA /* WebViewMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948DFB6A2F18BE0700200EFA /* WebViewMessageHandler.swift */; };
 		948DFCEE2F192E4600200EFA /* Web3OutputsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948DFCED2F192E4000200EFA /* Web3OutputsViewController.swift */; };
@@ -2766,6 +2776,8 @@
 		9414D3A52E069ACD00F38028 /* BuyTokenInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyTokenInputAmountViewController.swift; sourceTree = "<group>"; };
 		9414D4FC2E070AF500F38028 /* TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenSelectorViewController.swift; sourceTree = "<group>"; };
 		9414D5322E07129900F38028 /* SimpleTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleTokenSelectorViewController.swift; sourceTree = "<group>"; };
+		941503243033568C00E3C7B2 /* MediumWalletValueAddedServiceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediumWalletValueAddedServiceCell.swift; sourceTree = "<group>"; };
+		941503253033568C00E3C7B2 /* MediumWalletValueAddedServiceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MediumWalletValueAddedServiceCell.xib; sourceTree = "<group>"; };
 		9416548225CD2D9A007E76D0 /* OggOpusRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusRecorder.swift; sourceTree = "<group>"; };
 		9416548A25CD7190007E76D0 /* AudioMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMetadata.swift; sourceTree = "<group>"; };
 		941655C325CD7DA7007E76D0 /* AudioSessionClientPriority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionClientPriority.swift; sourceTree = "<group>"; };
@@ -3234,8 +3246,11 @@
 		946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationControllerChild.swift; sourceTree = "<group>"; };
 		946E98DE2FF3A0380083D89C /* CashAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashAPI.swift; sourceTree = "<group>"; };
 		946E98E62FF3A0500083D89C /* CashAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashAccount.swift; sourceTree = "<group>"; };
-		946E98FA2FF3AF050083D89C /* WalletCashAccountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCashAccountCell.swift; sourceTree = "<group>"; };
-		946E98FB2FF3AF050083D89C /* WalletCashAccountCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletCashAccountCell.xib; sourceTree = "<group>"; };
+		946E98E82FF3A0600083D89C /* EarnAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarnAPI.swift; sourceTree = "<group>"; };
+		946E98EA2FF3A0700083D89C /* EarnProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarnProduct.swift; sourceTree = "<group>"; };
+		946E98FA2FF3AF050083D89C /* LargeWalletValueAddedServiceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeWalletValueAddedServiceCell.swift; sourceTree = "<group>"; };
+		946E98FB2FF3AF050083D89C /* LargeWalletValueAddedServiceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LargeWalletValueAddedServiceCell.xib; sourceTree = "<group>"; };
+		946E99012FF4B0000083D89C /* RefreshEarnProductJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshEarnProductJob.swift; sourceTree = "<group>"; };
 		946E99372FF415630083D89C /* AddCashInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCashInputAmountViewController.swift; sourceTree = "<group>"; };
 		946E99522FF4E8700083D89C /* AddCashPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCashPreviewViewController.swift; sourceTree = "<group>"; };
 		946E99532FF4E8700083D89C /* AddCashPreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddCashPreviewView.xib; sourceTree = "<group>"; };
@@ -3348,6 +3363,11 @@
 		948C1CC12FAF3F22005C8653 /* FixedInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedInputCell.swift; sourceTree = "<group>"; };
 		948C1CC22FAF3F22005C8653 /* FixedInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FixedInputCell.xib; sourceTree = "<group>"; };
 		948CFAE92F2CB4B200BC34C3 /* QRCodeDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeDetector.swift; sourceTree = "<group>"; };
+		948D3D44303C8EBF00211A98 /* EarnAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarnAccount.swift; sourceTree = "<group>"; };
+		948D3D73303D709300211A98 /* WalletValueAddedServiceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletValueAddedServiceCell.swift; sourceTree = "<group>"; };
+		948D3DEA303DE49700211A98 /* TokenEarningViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenEarningViewModel.swift; sourceTree = "<group>"; };
+		948D3DFF303DE64F00211A98 /* TokenEarningCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenEarningCell.swift; sourceTree = "<group>"; };
+		948D3E00303DE64F00211A98 /* TokenEarningCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenEarningCell.xib; sourceTree = "<group>"; };
 		948D42912FDA921900575015 /* AttributedAmount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedAmount.swift; sourceTree = "<group>"; };
 		948DFB6A2F18BE0700200EFA /* WebViewMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewMessageHandler.swift; sourceTree = "<group>"; };
 		948DFCED2F192E4000200EFA /* Web3OutputsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3OutputsViewController.swift; sourceTree = "<group>"; };
@@ -5459,10 +5479,14 @@
 				94A1651C2FD464310022D855 /* WalletBenefitCell.swift */,
 				9408C5A22FD8069800A46150 /* WalletReferralCell.xib */,
 				9408C5A12FD8069800A46150 /* WalletReferralCell.swift */,
-				946E98FB2FF3AF050083D89C /* WalletCashAccountCell.xib */,
-				946E98FA2FF3AF050083D89C /* WalletCashAccountCell.swift */,
+				948D3D73303D709300211A98 /* WalletValueAddedServiceCell.swift */,
+				946E98FB2FF3AF050083D89C /* LargeWalletValueAddedServiceCell.xib */,
+				946E98FA2FF3AF050083D89C /* LargeWalletValueAddedServiceCell.swift */,
+				941503253033568C00E3C7B2 /* MediumWalletValueAddedServiceCell.xib */,
+				941503243033568C00E3C7B2 /* MediumWalletValueAddedServiceCell.swift */,
 				948664FC2CF867DC0032B9BE /* WalletView.xib */,
 				94EB73C42FCED285003F9269 /* WalletViewController.swift */,
+				948D3D44303C8EBF00211A98 /* EarnAccount.swift */,
 				94FCC9612FD6F37C00AA6AA7 /* PrivacyWalletPendingDepositObserver.swift */,
 				9408C5292FD7E41400A46150 /* PrivacyWalletOverviewActionHandler.swift */,
 				9451E86D2D6DFF0A00A6C4FD /* PrivacyWalletViewController.swift */,
@@ -5874,6 +5898,9 @@
 				94FCC9082FD67A4D00AA6AA7 /* TokensViewController.swift */,
 				94FCC9172FD6889900AA6AA7 /* MixinTokensViewController.swift */,
 				94FCC9882FD6FE5F00AA6AA7 /* Web3TokensViewController.swift */,
+				948D3DEA303DE49700211A98 /* TokenEarningViewModel.swift */,
+				948D3E00303DE64F00211A98 /* TokenEarningCell.xib */,
+				948D3DFF303DE64F00211A98 /* TokenEarningCell.swift */,
 				948FC56A2D760017000795E4 /* TokenViewController.swift */,
 				DF5BF55E1FBB281E0092AFB8 /* MixinTokenViewController.swift */,
 				948FC2952D74DE70000795E4 /* Web3TokenViewController.swift */,
@@ -6678,6 +6705,7 @@
 				945FFC792C3818630013DC51 /* RouteAPI.swift */,
 				94614C0F2FA339BE00A406B0 /* RewardAPI.swift */,
 				946E98DE2FF3A0380083D89C /* CashAPI.swift */,
+				946E98E82FF3A0600083D89C /* EarnAPI.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -6724,6 +6752,7 @@
 				94614C262FA3406000A406B0 /* Referral.swift */,
 				948666732FEA6480006B4B94 /* AppBanner.swift */,
 				946E98E62FF3A0500083D89C /* CashAccount.swift */,
+				946E98EA2FF3A0700083D89C /* EarnProduct.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -6957,6 +6986,7 @@
 				94509BC02DDDFC5800DC6A43 /* RefreshWeb3TokenJob.swift */,
 				94F2F94F2DEF2C750013B820 /* ReloadMembershipOrderJob.swift */,
 				94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */,
+				946E99012FF4B0000083D89C /* RefreshEarnProductJob.swift */,
 				94D175372EE064B20049B23F /* SaveWeb3TokenJob.swift */,
 				949B5E0B2EBCFB8A00D33C97 /* SyncWeb3OrdersJob.swift */,
 				94D23C512EEC06EB00934DC7 /* ReloadSafeWalletsJob.swift */,
@@ -7255,12 +7285,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				941503263033568C00E3C7B2 /* MediumWalletValueAddedServiceCell.xib in Resources */,
 				94E0BB802EB11B7B0096797E /* SwapPriceCell.xib in Resources */,
 				7B833E9C22C4AED20063929D /* ic_app_loading@2x.webp in Resources */,
 				7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */,
 				946EA0452D469AD200DBC308 /* AddressCell.xib in Resources */,
 				94FB8E072D1A92CF002DCA20 /* TokenSelectorView.xib in Resources */,
 				94735E272E28EBF80001C179 /* ImportedWalletNetworkCell.xib in Resources */,
+				948D3E02303DE64F00211A98 /* TokenEarningCell.xib in Resources */,
 				94CD471D2BECAE9D00A3DE10 /* InscriptionHashCell.xib in Resources */,
 				7B833E9D22C4AED20063929D /* ic_app_loading@3x.webp in Resources */,
 				945A72782E59BC48006A11E9 /* TIPQuizView.xib in Resources */,
@@ -7481,7 +7513,7 @@
 				94E619B92645BAA000A38049 /* SuspiciousLinkView.xib in Resources */,
 				7B2D175022B11A8600AE3DD8 /* LoginInfoInputView.xib in Resources */,
 				94E681722E5ED27B003304DF /* DepositGeneralEntryCell.xib in Resources */,
-				946E98FC2FF3AF050083D89C /* WalletCashAccountCell.xib in Resources */,
+				946E98FC2FF3AF050083D89C /* LargeWalletValueAddedServiceCell.xib in Resources */,
 				94E9792D2D0B43B100FFCC12 /* UpdateView.xib in Resources */,
 				944D17942F6199C3008BBA92 /* ClosePerpsReceiveCell.xib in Resources */,
 				DF0A713922D5E93300E69C50 /* WithdrawalTipWindow.xib in Resources */,
@@ -7930,6 +7962,7 @@
 				9464EB272D00BE81000D0688 /* CheckSessionEnvironmentViewController.swift in Sources */,
 				94B6EDFE2B707F15001DCC50 /* WithdrawPreviewViewController.swift in Sources */,
 				943A14382FE13D6800D01354 /* TradeSpotMarketCell.swift in Sources */,
+				948D3E01303DE64F00211A98 /* TokenEarningCell.swift in Sources */,
 				7BE0E6572475062D00DCC0D3 /* Vibrator.swift in Sources */,
 				94E206702AF37F2600CCF6D8 /* SnapshotMessageCell.swift in Sources */,
 				94FCC9092FD67A4D00AA6AA7 /* TokensViewController.swift in Sources */,
@@ -8093,6 +8126,7 @@
 				9468E0562E30E10400EB79C0 /* CreateWalletRequest.swift in Sources */,
 				7C66E7B82743988500FF24C1 /* ProfileDescriptionLabel.swift in Sources */,
 				94682F2A2E029B2700B1C6D3 /* CompactComboBoxView.swift in Sources */,
+				948D3D48303C8EC600211A98 /* EarnAccount.swift in Sources */,
 				946BBCDD302486710080D43D /* PerpsMarketSelectorCategoryCell.swift in Sources */,
 				9497AEE92C5E264600966946 /* MixinTransactionHistoryViewController.swift in Sources */,
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
@@ -8140,6 +8174,7 @@
 				94D82BDD2E40B06C000BA0BF /* AddressLabel.swift in Sources */,
 				7C2DE55928DD94D200C00818 /* LiveTextImageView.swift in Sources */,
 				7B35AF78228AA3BD00E8101D /* MessagesWithUserSearchResult.swift in Sources */,
+				948D3D74303D709400211A98 /* WalletValueAddedServiceCell.swift in Sources */,
 				942FD9FF2D3B591F004DCC4C /* LocalizedEnum.swift in Sources */,
 				941E360B2D78B813000E7093 /* RefreshWeb3WalletTokenJob.swift in Sources */,
 				7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */,
@@ -8239,6 +8274,7 @@
 				7BEED890246D0C3D00387EAE /* CallAdapter.swift in Sources */,
 				946E99382FF415630083D89C /* AddCashInputAmountViewController.swift in Sources */,
 				94327CF52D53650600DEE36D /* AddressInfoInputHeaderView.swift in Sources */,
+				948D3DEB303DE49E00211A98 /* TokenEarningViewModel.swift in Sources */,
 				94B89D162DE74C9C002A0DDC /* MembershipOrder+Convenience.swift in Sources */,
 				7B09E55C1FD15B9B002E45D3 /* PhotoMessageViewModel.swift in Sources */,
 				94F237562C6915B70057D1AB /* PriceHistory.swift in Sources */,
@@ -8260,6 +8296,7 @@
 				9445C6FA2F9602D70016BCC6 /* Web3GaslessTradingFee.swift in Sources */,
 				7BA24D77253438B9004906AD /* ViewPanningController.swift in Sources */,
 				946E98E72FF3A0530083D89C /* CashAccount.swift in Sources */,
+				946E98EB2FF3A0710083D89C /* EarnProduct.swift in Sources */,
 				94510FD42C8743AA00ACD972 /* MarketTokenSelectorCell.swift in Sources */,
 				7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */,
 				7BF42E3322DC860E005066E6 /* GalleryItemViewController.swift in Sources */,
@@ -8347,7 +8384,7 @@
 				7B5F96692414241C003A087B /* LocationInformationView.swift in Sources */,
 				7C53049D28FEABF100567CF6 /* AuthorizationScopeConfirmationView.swift in Sources */,
 				7BD0532A20A435D300C36F69 /* CoreTextExtension.swift in Sources */,
-				946E98FD2FF3AF050083D89C /* WalletCashAccountCell.swift in Sources */,
+				946E98FD2FF3AF050083D89C /* LargeWalletValueAddedServiceCell.swift in Sources */,
 				7BD00F2625597229004D8814 /* WalletSearchTableViewController.swift in Sources */,
 				946CBA062E9F7A950099FFCB /* CommonWalletReceiverCell.swift in Sources */,
 				DFB6CE2123C485AB00FB6615 /* SendMessageService+Sending.swift in Sources */,
@@ -8377,6 +8414,7 @@
 				7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */,
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,
 				94051FB22E81306F005B3A16 /* RefreshTokenJob.swift in Sources */,
+				946E99022FF4B0000083D89C /* RefreshEarnProductJob.swift in Sources */,
 				94902E3B2DA6CD6200E52FC6 /* SimpleWeb3TransactionTableHeaderView.swift in Sources */,
 				94ABAAD02FBDDCBE00FC536D /* PerpetualActivitiesViewController.swift in Sources */,
 				E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */,
@@ -8453,6 +8491,7 @@
 				944F54082E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.swift in Sources */,
 				944531702EFA76BE00E056D1 /* SafeRole+Localization.swift in Sources */,
 				94973E802F5712DD00C350C7 /* OpenPerpetualPositionPreviewViewController.swift in Sources */,
+				941503273033568C00E3C7B2 /* MediumWalletValueAddedServiceCell.swift in Sources */,
 				946FFAD32B6C566800B62B7F /* AuthenticationProgressView.swift in Sources */,
 				7C4C039F28530C9E003DE0C0 /* ContactViewController.swift in Sources */,
 				940A3C442EB60A7E001A458F /* MixinLimitOrderRequest.swift in Sources */,
@@ -8529,6 +8568,7 @@
 				940FC4B12F500A8B000C4260 /* PerpetualMarketSelectorViewController.swift in Sources */,
 				7C8CC5A4280D347A00F7CBDF /* PreviewWallpaperViewController.swift in Sources */,
 				946E98DF2FF3A03A0083D89C /* CashAPI.swift in Sources */,
+				946E98E92FF3A0610083D89C /* EarnAPI.swift in Sources */,
 				7BAE1B44223B51F3004F2D16 /* MobileNumberVerificationContext.swift in Sources */,
 				940D10B62C5CC3380071E36D /* NoTransactionIndicatorCell.swift in Sources */,
 				947402BF2DA69B890085C183 /* ComplexWeb3TransactionTableHeaderView.swift in Sources */,

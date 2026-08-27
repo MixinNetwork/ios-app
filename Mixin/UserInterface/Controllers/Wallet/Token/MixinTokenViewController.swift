@@ -3,6 +3,8 @@ import MixinServices
 
 final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSnapshotItem> {
     
+    private var availableForEarning = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -22,6 +24,47 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
         center.addObserver(self, selector: #selector(snapshotsDidSave(_:)), name: SafeSnapshotDAO.snapshotDidSaveNotification, object: nil)
         center.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishNotification, object: nil)
         reloadSnapshots()
+        
+        queue.async { [weak self, token] in
+            let products = PropertiesDAO.shared.jsonObject(
+                forKey: .earnProducts,
+                type: [EarnProduct].self
+            )
+            let earning = TokenEarningViewModel(
+                token: token,
+                products: products ?? []
+            )
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.earning = earning
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadSections([Section.earning.rawValue], with: .none)
+                }
+                if earning != nil {
+                    self.availableForEarning = true
+                    center.addObserver(
+                        self,
+                        selector: #selector(self.earnProductsDidUpdate(_:)),
+                        name: RefreshEarnProductJob.earnProductsDidUpdateNotification,
+                        object: nil
+                    )
+                    ConcurrentJobQueue.shared.addJob(
+                        job: RefreshEarnProductJob(notificationQueue: self.queue)
+                    )
+                }
+            }
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if availableForEarning {
+            ConcurrentJobQueue.shared.addJob(
+                job: RefreshEarnProductJob(notificationQueue: queue)
+            )
+        }
     }
     
     override func send() {
@@ -137,9 +180,25 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
         reloadSnapshots()
     }
     
+    @objc private func earnProductsDidUpdate(_ notification: Notification) {
+        guard let products = notification.userInfo?[RefreshEarnProductJob.UserInfoKey.products] as? [EarnProduct] else {
+            return
+        }
+        let token = Queue.main.autoSync {
+            self.token
+        }
+        let earning = TokenEarningViewModel(token: token, products: products)
+        DispatchQueue.main.async {
+            self.earning = earning
+            UIView.performWithoutAnimation {
+                self.tableView.reloadSections([Section.earning.rawValue], with: .none)
+            }
+        }
+    }
+    
     private func reloadToken() {
         let assetID = token.assetID
-        DispatchQueue.global().async { [weak self] in
+        queue.async { [weak self] in
             guard let token = TokenDAO.shared.tokenItem(assetID: assetID) else {
                 return
             }

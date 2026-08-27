@@ -360,6 +360,7 @@ final class CommonWalletViewController: WalletViewController {
                 tokensValue: tokensValue,
                 perpsValue: 0,
                 cashValue: 0,
+                earnValue: 0,
                 btcPrice: btcPrice
             )
             
@@ -492,7 +493,7 @@ extension CommonWalletViewController: UICollectionViewDelegate {
             return
         }
         switch item {
-        case .overview, .emptyWalletInstruction, .cash, .perpsPosition, .perpsTopMover, .referral, .benefit:
+        case .overview, .emptyWalletInstruction, .cash, .earn, .perpsPosition, .perpsTopMover, .referral, .benefit:
             break
         case let .banner(banner, _):
             banner.invokeRemoteActionURL()

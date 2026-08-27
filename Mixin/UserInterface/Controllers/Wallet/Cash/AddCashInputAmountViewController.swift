@@ -51,7 +51,12 @@ final class AddCashInputAmountViewController: TokenConsumingInputAmountViewContr
             
             let balanceLabel = UILabel()
             balanceLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-            balanceLabel.text = account.displayBalance + " " + Currency.usd.code
+            balanceLabel.text = CurrencyFormatter.localizedString(
+                from: account.decimalBalance,
+                format: .fiatMoneyPrecision,
+                sign: .never,
+                symbol: .custom("USD")
+            )
             balanceLabel.textColor = R.color.text_quaternary()
             balanceLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             

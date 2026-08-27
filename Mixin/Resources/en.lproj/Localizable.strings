@@ -566,6 +566,11 @@
 "duplicate_transfer_confirmation" = "Duplicate Transfer Confirmation";
 "duplicate_withdraw_confirmation" = "Duplicate Withdraw Confirmation";
 "duplication_reminder" = "You transferred %1$@ to the recipient %2$@ ago.";
+"earn" = "Earn";
+"earn_balance" = "Earn Balance";
+"earn_pending_earning" = "Pending Earning";
+"earn_reward_rate" = "Reward Rate";
+"earn_total_earnings" = "Total Earnings";
 "edit" = "Edit";
 "edit_address" = "Edit %@ Address";
 "edit_alert" = "Edit Alert";

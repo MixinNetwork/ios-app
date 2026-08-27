@@ -12,6 +12,7 @@ final class PrivacyWalletViewController: WalletViewController {
     
     private var hasAssetInLegacyNetwork = false
     private var tokens: OrderedDictionary<String, MixinTokenItem> = [:]
+    private var earningAvailableAssetIDs: Set<String> = []
     private var transactions: OrderedDictionary<String, SafeSnapshotItem> = [:]
     
     private var pendingDepositObserver: PrivacyWalletPendingDepositObserver?
@@ -73,6 +74,12 @@ final class PrivacyWalletViewController: WalletViewController {
             self,
             selector: #selector(reloadPerpsTopMovers),
             name: PerpsMarketDAO.marketsDidUpdateNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadEarnAccount(_:)),
+            name: RefreshEarnProductJob.earnProductsDidUpdateNotification,
             object: nil
         )
         
@@ -138,7 +145,8 @@ final class PrivacyWalletViewController: WalletViewController {
         guard let token = tokens[assetID] else {
             return
         }
-        tokenCell.load(token: token)
+        let availableForEarning = earningAvailableAssetIDs.contains(assetID)
+        tokenCell.load(token: token, availableForEarning: availableForEarning)
     }
     
     override func configure(transactionCell: TransactionCell, withTransactionOf id: String) {
@@ -148,9 +156,9 @@ final class PrivacyWalletViewController: WalletViewController {
         transactionCell.load(snapshot: snapshot)
     }
     
-    override func reload(account: CashAccount?) {
+    override func reload(cashAccount: CashAccount?) {
         let old = self.cashAccount
-        let new = account
+        let new = cashAccount
         
         self.cashAccount = new
         switch (old, new) {
@@ -160,7 +168,7 @@ final class PrivacyWalletViewController: WalletViewController {
             if snapshot.itemIdentifiers.contains(.overview) {
                 snapshot.reconfigureItems([.overview])
             }
-            insertOrUpdateCashAccountItem(into: &snapshot)
+            insertOrUpdate(vasItem: .cash, into: &snapshot)
             dataSource.apply(snapshot, animatingDifferences: false)
         case (.some, .none):
             overview?.update(cashValue: 0)
@@ -169,11 +177,33 @@ final class PrivacyWalletViewController: WalletViewController {
                 snapshot.reconfigureItems([.overview])
             }
             snapshot.deleteItems([.cash])
-            snapshot.deleteSections([.cash])
+            let remainingIdentifiers = snapshot.itemIdentifiers(inSection: .valueAddedServices)
+            if remainingIdentifiers.isEmpty {
+                snapshot.deleteSections([.valueAddedServices])
+            } else {
+                snapshot.reloadItems(remainingIdentifiers)
+            }
             dataSource.apply(snapshot, animatingDifferences: false)
         case (.none, .none):
             break
         }
+    }
+    
+    override func reload(earnAccount: EarnAccount) {
+        self.earnAccount = earnAccount
+        self.earningAvailableAssetIDs = earnAccount.availableAssetIDs
+        overview?.update(earnValue: earnAccount.usdBalance)
+        var snapshot = dataSource.snapshot()
+        if snapshot.itemIdentifiers.contains(.overview) {
+            snapshot.reconfigureItems([.overview])
+        }
+        insertOrUpdate(vasItem: .earn, into: &snapshot)
+        if snapshot.sectionIdentifiers.contains(.tokens) {
+            snapshot.reconfigureItems(
+                snapshot.itemIdentifiers(inSection: .tokens)
+            )
+        }
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
     
     override func hideTokenAction(indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -229,6 +259,16 @@ final class PrivacyWalletViewController: WalletViewController {
         }
     }
     
+    @objc private func reloadEarnAccount(_ notification: Notification) {
+        guard let products = notification.userInfo?[RefreshEarnProductJob.UserInfoKey.products] as? [EarnProduct] else {
+            return
+        }
+        let account = EarnAccount(products: products)
+        DispatchQueue.main.async {
+            self.reload(earnAccount: account)
+        }
+    }
+    
     @objc private func reloadData() {
         let displayItemsCount = itemsCount
         let hasMoreDeterminatingItemsCount = itemsCount + 1
@@ -248,10 +288,16 @@ final class PrivacyWalletViewController: WalletViewController {
                 forKey: .cashAccount,
                 type: CashAccount.self
             )
+            let earnProducts = PropertiesDAO.shared.jsonObject(
+                forKey: .earnProducts,
+                type: [EarnProduct].self
+            )
+            let earnAccount = EarnAccount(products: earnProducts ?? [])
             let overview = WalletOverview(
                 tokensValue: tokensValue,
                 perpsValue: perpsValue.decimalValue,
                 cashValue: cashAccount?.decimalBalance ?? 0,
+                earnValue: earnAccount.usdBalance,
                 btcPrice: btcPrice
             )
             
@@ -369,11 +415,14 @@ final class PrivacyWalletViewController: WalletViewController {
                 self.hasMorePerpsPositions = hasMorePerpsPositions
                 self.perpsTopMovers = perpsTopMovers
                 self.cashAccount = cashAccount
+                self.earnAccount = earnAccount
+                self.earningAvailableAssetIDs = earnAccount.availableAssetIDs
                 
                 self.insertReferralSection(into: &snapshot)
                 if cashAccount != nil {
-                    self.insertOrUpdateCashAccountItem(into: &snapshot)
+                    self.insertOrUpdate(vasItem: .cash, into: &snapshot)
                 }
+                self.insertOrUpdate(vasItem: .earn, into: &snapshot)
                 self.dataSource.applySnapshotUsingReloadData(snapshot) {
                     self.scrollToFirstBanner()
                     self.scheduleBannersAutoScrolling()
@@ -381,6 +430,10 @@ final class PrivacyWalletViewController: WalletViewController {
                 
                 self.reloadBannersIfAllowed(chainIDs: nil)
                 self.reloadCashAccount()
+                ConcurrentJobQueue.shared.addJob(
+                    job: RefreshEarnProductJob(notificationQueue: .global())
+                )
+                
                 if !perpsPositions.isEmpty {
                     let positionLoader: PerpetualPositionLoader
                     if let loader = self.perpsPositionLoader {
@@ -582,6 +635,8 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
             banner.invokeRemoteActionURL()
         case .cash:
             UIApplication.homeNavigationController?.presentCashPage()
+        case .earn:
+            UIApplication.homeNavigationController?.presentEarnPage()
         case .perpsPosition(let positionID):
             if let position = perpsPositions[positionID],
                let market = PerpsMarketDAO.shared.market(marketID: position.marketID)

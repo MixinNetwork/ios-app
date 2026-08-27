@@ -65,10 +65,28 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
         presentAppPage(appID: BotUserID.mixinCash)
     }
     
-    func presentAppPage(appID: String) {
+    func presentEarnPage(
+        additionalURLQueries: [String: String] = [:]
+    ) {
+        presentAppPage(
+            appID: BotUserID.mixinEarn,
+            additionalURLQueries: additionalURLQueries
+        )
+    }
+    
+    func presentAppPage(
+        appID: String,
+        additionalURLQueries: [String: String] = [:]
+    ) {
         if let app = AppDAO.shared.getApp(appId: appID) {
             let verified = UserDAO.shared.isVerified(userID: appID)
-            pushWebViewController(context: .init(conversationID: "", app: app, isAppVerified: verified))
+            let context = MixinWebContext(
+                conversationID: "",
+                app: app,
+                isAppVerified: verified,
+                additionalURLQueries: additionalURLQueries,
+            )
+            pushWebViewController(context: context)
             let updateUser = RefreshUserJob(userIds: [appID])
             ConcurrentJobQueue.shared.addJob(job: updateUser)
             return
@@ -84,9 +102,13 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
                 }
                 hud.hide()
                 if let app = response.app {
-                    self?.pushWebViewController(
-                        context: .init(conversationID: "", app: app, isAppVerified: response.isVerified)
+                    let context = MixinWebContext(
+                        conversationID: "",
+                        app: app,
+                        isAppVerified: response.isVerified,
+                        additionalURLQueries: additionalURLQueries,
                     )
+                    self?.pushWebViewController(context: context)
                 }
             case .failure(let error):
                 hud.set(style: .error, text: error.localizedDescription)

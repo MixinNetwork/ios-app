@@ -566,6 +566,11 @@
 "duplicate_transfer_confirmation" = "重复转账确认";
 "duplicate_withdraw_confirmation" = "重复提现确认";
 "duplication_reminder" = "您已经在%2$@前给该收款人转账了 %1$@。";
+"earn" = "理财";
+"earn_balance" = "理财余额";
+"earn_pending_earning" = "待结算收益";
+"earn_reward_rate" = "收益率";
+"earn_total_earnings" = "总收益";
 "edit" = "编辑";
 "edit_address" = "修改 %@ 地址";
 "edit_alert" = "编辑价格预警";
@@ -1731,7 +1736,7 @@
 "stop_loss_when" = "止损条件";
 "stop_playing" = "停止播放";
 "stop_playing_this_list" = "确定要停止并关闭播放列表？";
-"storage_usage" = "储存空间";
+"storage_usage" = "存储空间";
 "stranger_hint" = "对方不是你的联系人";
 "submitting_position" = "正在提交仓位";
 "successful" = "成功";

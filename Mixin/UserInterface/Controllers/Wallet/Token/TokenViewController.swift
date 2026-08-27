@@ -7,6 +7,7 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
     let transactionsCount = 20
     
     var token: Token
+    var earning: TokenEarningViewModel?
     
     weak var tableView: UITableView!
     
@@ -65,6 +66,7 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
         tableView.register(R.nib.tokenBalanceCell)
         tableView.register(R.nib.insetGroupedTitleCell)
         tableView.register(R.nib.tokenMarketCell)
+        tableView.register(R.nib.tokenEarningCell)
         tableView.register(R.nib.noTransactionIndicatorCell)
         tableView.register(
             UITableViewCell.self,
@@ -185,6 +187,8 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
             1
         case .market:
             MarketRow.allCases.count
+        case .earning:
+            earning == nil ? 0 : 1
         case .pending:
             pendingSnapshots.isEmpty ? 0 : pendingSnapshots.count + 2 // Title and bottom separator
         case .transactions:
@@ -232,6 +236,12 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
                 }
                 return cell
             }
+        case .earning:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_earning, for: indexPath)!
+            if let earning {
+                cell.load(earning: earning)
+            }
+            return cell
         case .pending:
             switch indexPath.row {
             case 0:
@@ -284,7 +294,7 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
     // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch Section(rawValue: indexPath.section)! {
-        case .warning, .balance, .market:
+        case .warning, .balance, .market, .earning:
             UITableView.automaticDimension
         case .pending:
             switch indexPath.row {
@@ -311,8 +321,10 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch Section(rawValue: section) {
-        case .warning where !token.isMalicious, .pending where pendingSnapshots.isEmpty:
-                .leastNormalMagnitude
+        case .warning where !token.isMalicious,
+                .earning where earning == nil,
+                .pending where pendingSnapshots.isEmpty:
+            CGFloat.leastNormalMagnitude
         default:
             10
         }
@@ -339,6 +351,13 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
             break
         case .market:
             viewMarket()
+        case .earning:
+            guard let productionID = earning?.topProductionID else {
+                return
+            }
+            UIApplication.homeNavigationController?.presentEarnPage(
+                additionalURLQueries: ["production": productionID]
+            )
         case .pending:
             switch indexPath.row {
             case 0, pendingSnapshots.count + 1:
@@ -400,6 +419,7 @@ extension TokenViewController {
         case warning
         case balance
         case market
+        case earning
         case pending
         case transactions
     }

@@ -12,13 +12,6 @@ final class LargeWalletValueAddedServiceCell: UICollectionViewCell {
     private weak var apyLabelIfLoaded: MarketColoredLabel?
     private weak var tokensViewIfLoaded: StackedTokenIconView?
     
-    private var formatStyle: Decimal.FormatStyle {
-        .number
-        .locale(.current)
-        .precision(.fractionLength(0...2))
-        .rounded(rule: .towardZero)
-    }
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
@@ -56,7 +49,7 @@ extension LargeWalletValueAddedServiceCell: WalletValueAddedServiceCell {
         apyLabel.isHidden = false
         apyLabel.marketColor = .rising
         if let account {
-            balanceLabel.text = account.decimalBalance.formatted(formatStyle)
+            balanceLabel.text = account.decimalBalance.formatted(balanceFormatStyle)
             apyLabel.text = account.displayAPY
         } else {
             balanceLabel.text = "-"
@@ -83,7 +76,7 @@ extension LargeWalletValueAddedServiceCell: WalletValueAddedServiceCell {
         }
         tokensView.isHidden = false
         if let account {
-            balanceLabel.text = account.usdBalance.formatted(formatStyle)
+            balanceLabel.text = account.usdBalance.formatted(balanceFormatStyle)
             tokensView.setIcons(urls: account.iconURLs)
         } else {
             balanceLabel.text = "-"

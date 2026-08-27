@@ -28,16 +28,17 @@
                                 <rect key="frame" x="0.0" y="0.0" width="245" height="16.333333333333332"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Cash Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CYl-xj-JSX">
-                                        <rect key="frame" x="0.0" y="0.0" width="227" height="16.333333333333332"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="229" height="16.333333333333332"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" name="text_secondary"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="external_indicator_arrow" translatesAutoresizingMaskIntoConstraints="NO" id="e0U-G6-d2B">
-                                        <rect key="frame" x="227" y="4.3333333333333321" width="18" height="8"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="external_indicator_arrow_bold" translatesAutoresizingMaskIntoConstraints="NO" id="e0U-G6-d2B">
+                                        <rect key="frame" x="229" y="0.33333333333333215" width="16" height="16"/>
                                         <color key="tintColor" name="icon_tint_tertiary"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="18" id="oS4-6O-WXe"/>
+                                            <constraint firstAttribute="height" constant="16" id="cl1-2w-N3B"/>
+                                            <constraint firstAttribute="width" constant="16" id="oS4-6O-WXe"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
@@ -93,7 +94,7 @@
     </objects>
     <resources>
         <image name="cash" width="42" height="42"/>
-        <image name="external_indicator_arrow" width="8" height="8"/>
+        <image name="external_indicator_arrow_bold" width="30" height="30"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

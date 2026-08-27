@@ -229,13 +229,44 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                         section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                         return section
                     default:
-                        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
-                        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(96))
-                        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
-                        group.interItemSpacing = .fixed(11)
-                        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-                        let section = NSCollectionLayoutSection(group: group)
+                        let section: NSCollectionLayoutSection
+                        if #available(iOS 17.0, *) {
+                            let itemSize = NSCollectionLayoutSize(
+                                widthDimension: .fractionalWidth(1),
+                                heightDimension: .uniformAcrossSiblings(estimate: 96)
+                            )
+                            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                            let groupSize = NSCollectionLayoutSize(
+                                widthDimension: .fractionalWidth(1),
+                                heightDimension: .estimated(110)
+                            )
+                            let group = NSCollectionLayoutGroup.horizontal(
+                                layoutSize: groupSize,
+                                subitem: item,
+                                count: 2
+                            )
+                            group.interItemSpacing = .fixed(11)
+                            group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                            section = NSCollectionLayoutSection(group: group)
+                        } else {
+                            let itemSize = NSCollectionLayoutSize(
+                                widthDimension: .fractionalWidth(1),
+                                heightDimension: .fractionalHeight(1)
+                            )
+                            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                            let groupSize = NSCollectionLayoutSize(
+                                widthDimension: .fractionalWidth(1),
+                                heightDimension: .estimated(96)
+                            )
+                            let group = NSCollectionLayoutGroup.horizontal(
+                                layoutSize: groupSize,
+                                subitem: item,
+                                count: 2
+                            )
+                            group.interItemSpacing = .fixed(11)
+                            group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                            section = NSCollectionLayoutSection(group: group)
+                        }
                         section.interGroupSpacing = 10
                         return section
                     }

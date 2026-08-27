@@ -10,22 +10,10 @@ final class MediumWalletValueAddedServiceCell: UICollectionViewCell {
     private weak var apyLabelIfLoaded: MarketColoredLabel?
     private weak var tokensViewIfLoaded: StackedTokenIconView?
     
-    private var formatStyle: Decimal.FormatStyle.Currency {
-        Decimal.FormatStyle.Currency
-            .currency(code: "USD")
-            .presentation(.narrow)
-            .precision(.fractionLength(0...2))
-            .rounded(rule: .towardZero)
-    }
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
-        amountLabel.setFont(
-            scaledFor: .systemFont(ofSize: 18, weight: .semibold),
-            adjustForContentSize: true
-        )
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(updateAPYLabelBackground),
@@ -54,7 +42,7 @@ extension MediumWalletValueAddedServiceCell: WalletValueAddedServiceCell {
                 scaledFor: .systemFont(ofSize: 12, weight: .medium),
                 adjustForContentSize: true
             )
-            apyLabel.contentInset = UIEdgeInsets(top: 3, left: 1, bottom: 3, right: 1)
+            apyLabel.contentInset = UIEdgeInsets(top: 1, left: 3, bottom: 1, right: 3)
             descriptionStackView.insertArrangedSubview(apyLabel, at: 0)
             apyLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             apyLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -66,7 +54,7 @@ extension MediumWalletValueAddedServiceCell: WalletValueAddedServiceCell {
         apyLabel.marketColor = .rising
         updateAPYLabelBackground()
         if let account {
-            amountLabel.text = account.decimalBalance.formatted(formatStyle)
+            amountLabel.text = account.decimalBalance.formatted(balanceFormatStyle)
             apyLabel.text = account.displayAPY
         } else {
             amountLabel.text = "-"
@@ -93,7 +81,7 @@ extension MediumWalletValueAddedServiceCell: WalletValueAddedServiceCell {
         }
         tokensView.isHidden = false
         if let account {
-            amountLabel.text = account.usdBalance.formatted(formatStyle)
+            amountLabel.text = account.usdBalance.formatted(balanceFormatStyle)
             tokensView.setIcons(urls: account.iconURLs)
         } else {
             amountLabel.text = "-"

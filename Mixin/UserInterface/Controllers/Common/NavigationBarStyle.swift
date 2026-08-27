@@ -38,6 +38,16 @@ enum NavigationBarStyle {
                 navigationController.setNavigationBarHidden(true, animated: animated)
             }
         }
+        navigationController.transitionCoordinator?.animate(alongsideTransition: nil) { context in
+            let top = context.viewController(forKey: .from) ?? navigationController.topViewController
+            if context.isCancelled, let top {
+                updateAppearances(
+                    navigationController: navigationController,
+                    willShow: top,
+                    animated: context.isAnimated
+                )
+            }
+        }
     }
     
 }

@@ -191,7 +191,7 @@ extension HomeNavigationController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         switch gestureRecognizer {
         case interactivePopGestureRecognizer:
-            guard viewControllers.count > 1 else {
+            guard viewControllers.count > 1, transitionCoordinator == nil else {
                 return false
             }
             if let vc = viewControllers.last {
@@ -204,7 +204,7 @@ extension HomeNavigationController: UIGestureRecognizerDelegate {
                 return true
             }
         case interactivePopOutRecognizer:
-            guard viewControllers.count > 1 else {
+            guard viewControllers.count > 1, transitionCoordinator == nil else {
                 return false
             }
             if let vc = viewControllers.last, let vc = vc as? PopupNavigationAnimating {

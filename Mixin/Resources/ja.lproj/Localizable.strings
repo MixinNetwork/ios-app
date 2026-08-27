@@ -258,7 +258,7 @@
 "cant_receive_the_code" = "コードを受け取れませんか？";
 "caption_send" = "出金";
 "card" = "ロボ";
-"cash_account" = "現金残高";
+"cash_account" = "現金口座";
 "cash_account_add_cash" = "現金を追加する";
 "cash_account_apy" = "%@ APY";
 "cash_account_invalid_amount" = "金額が制限を超えています。再入力してください。";

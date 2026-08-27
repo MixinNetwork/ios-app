@@ -258,7 +258,7 @@
 "cant_receive_the_code" = "¿No puedes recibir el código?";
 "caption_send" = "Enviar";
 "card" = "tarjeta";
-"cash_account" = "Saldo de efectivo";
+"cash_account" = "Cuenta de efectivo";
 "cash_account_add_cash" = "Agregar efectivo";
 "cash_account_apy" = "%@ APY";
 "cash_account_invalid_amount" = "El importe supera el límite. Por favor vuelva a ingresar.";

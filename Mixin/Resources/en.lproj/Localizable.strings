@@ -258,7 +258,7 @@
 "cant_receive_the_code" = "Can't receive the code?";
 "caption_send" = "Send";
 "card" = "card";
-"cash_account" = "Cash Balance";
+"cash_account" = "Cash Account";
 "cash_account_add_cash" = "Add Cash";
 "cash_account_apy" = "%@ APY";
 "cash_account_invalid_amount" = "Amount exceeds limit. Please re-enter.";

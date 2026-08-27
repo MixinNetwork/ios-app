@@ -12,6 +12,7 @@ final class PrivacyWalletViewController: WalletViewController {
     
     private var hasAssetInLegacyNetwork = false
     private var tokens: OrderedDictionary<String, MixinTokenItem> = [:]
+    private var earningAvailableAssetIDs: Set<String> = []
     private var transactions: OrderedDictionary<String, SafeSnapshotItem> = [:]
     
     private var pendingDepositObserver: PrivacyWalletPendingDepositObserver?
@@ -144,7 +145,8 @@ final class PrivacyWalletViewController: WalletViewController {
         guard let token = tokens[assetID] else {
             return
         }
-        tokenCell.load(token: token, availableForEarning: false)
+        let availableForEarning = earningAvailableAssetIDs.contains(assetID)
+        tokenCell.load(token: token, availableForEarning: availableForEarning)
     }
     
     override func configure(transactionCell: TransactionCell, withTransactionOf id: String) {
@@ -189,12 +191,18 @@ final class PrivacyWalletViewController: WalletViewController {
     
     override func reload(earnAccount: EarnAccount) {
         self.earnAccount = earnAccount
+        self.earningAvailableAssetIDs = earnAccount.availableAssetIDs
         overview?.update(earnValue: earnAccount.usdBalance)
         var snapshot = dataSource.snapshot()
         if snapshot.itemIdentifiers.contains(.overview) {
             snapshot.reconfigureItems([.overview])
         }
         insertOrUpdate(vasItem: .earn, into: &snapshot)
+        if snapshot.sectionIdentifiers.contains(.tokens) {
+            snapshot.reconfigureItems(
+                snapshot.itemIdentifiers(inSection: .tokens)
+            )
+        }
         dataSource.apply(snapshot, animatingDifferences: false)
     }
     
@@ -408,6 +416,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 self.perpsTopMovers = perpsTopMovers
                 self.cashAccount = cashAccount
                 self.earnAccount = earnAccount
+                self.earningAvailableAssetIDs = earnAccount.availableAssetIDs
                 
                 self.insertReferralSection(into: &snapshot)
                 if cashAccount != nil {

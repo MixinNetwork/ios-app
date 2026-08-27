@@ -42,6 +42,8 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
         switch kind {
         case .bitcoin:
             selectedChain = .bitcoin
+        case .pearl:
+            selectedChain = .pearl
         case .evm:
             selectedChain = .ethereum
         case .solana:
@@ -80,7 +82,7 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
     override func reloadViews(chain: Web3Chain) {
         super.reloadViews(chain: chain)
         inputPlaceholderLabel.text = switch kind {
-        case .bitcoin:
+        case .bitcoin, .pearl:
             R.string.localizable.bitcoin_private_key_hint()
         case .evm:
             R.string.localizable.ethereum_private_key_hint()
@@ -117,7 +119,7 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
                     }
                 }
                 let address = try Bitcoin.segwitAddress(privateKey: privateKey)
-                let validationAddress = try {
+                let crossCheckAddress = try {
                     let key = if input.hasPrefix("0x") {
                         String(input.dropFirst(2))
                     } else {
@@ -130,7 +132,42 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
                     }
                     return address
                 }()
-                guard address == validationAddress else {
+                guard address == crossCheckAddress else {
+                    throw LoadKeyError.mismatchedAddress
+                }
+                guard addresses.allSatisfy({ $0.destination == address }) else {
+                    throw LoadKeyError.mismatchedWallet
+                }
+                encryptedPrivateKey = try EncryptedPrivateKey(
+                    privateKey: privateKey,
+                    key: encryptionKey
+                )
+            case .pearl:
+                let privateKey: Data
+                do {
+                    privateKey = try Pearl.privateKey(wif: input)
+                } catch {
+                    let key = if input.hasPrefix("0x") {
+                        Data(hexEncodedString: input.dropFirst(2))
+                    } else {
+                        Data(hexEncodedString: input)
+                    }
+                    if let key, key.count == Pearl.privateKeyLength {
+                        privateKey = key
+                    } else {
+                        throw LoadKeyError.invalidInput
+                    }
+                }
+                let address = try Pearl.address(privateKey: privateKey)
+                let crossCheckAddress = try {
+                    var error: NSError?
+                    let address = BlockchainGeneratePearlAddressFromPrivateKey(privateKey.hexEncodedString(), &error)
+                    if let error {
+                        throw error
+                    }
+                    return address
+                }()
+                guard address == crossCheckAddress else {
                     throw LoadKeyError.mismatchedAddress
                 }
                 guard addresses.allSatisfy({ $0.destination == address }) else {
@@ -152,7 +189,7 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
                 let keyStorage = InPlaceKeyStorage(raw: privateKey)
                 let account = try EthereumAccount(keyStorage: keyStorage)
                 let address = account.address.toChecksumAddress()
-                let validationAddress = try {
+                let crossCheckAddress = try {
                     let key = if input.hasPrefix("0x") {
                         String(input.dropFirst(2))
                     } else {
@@ -165,7 +202,7 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
                     }
                     return address
                 }()
-                guard address == validationAddress else {
+                guard address == crossCheckAddress else {
                     throw LoadKeyError.mismatchedAddress
                 }
                 guard addresses.allSatisfy({ $0.destination == address }) else {

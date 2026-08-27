@@ -9,6 +9,7 @@
 import Testing
 import CommonCrypto
 import CryptoKit
+import TIP
 @testable import Mixin
 @testable import MixinServices
 
@@ -216,6 +217,43 @@ struct MixinTests {
         
         let mnemonics = try BIP39Mnemonics(phrases: phrases)
         #expect(mnemonics.entropy == Data(hexEncodedString: "7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f")!)
+    }
+    
+    @Test func testPearlDerivation() throws {
+        let phrases = "legal winner thank year wave sausage worth useful legal winner thank yellow"
+            .components(separatedBy: " ")
+        let mnemonics = try BIP39Mnemonics(phrases: phrases)
+        let path = try DerivationPath.pearl(index: 0)
+        let derivation = try mnemonics.checkedDerivationForPearl(path: path)
+        #expect(Pearl.isValidAddress(address: derivation.address))
+        #expect(derivation.address.hasPrefix("prl1p"))
+        
+        let wif = try Pearl.wif(privateKey: derivation.privateKey)
+        let recoveredKey = try Pearl.privateKey(wif: wif)
+        #expect(recoveredKey == derivation.privateKey)
+        
+        let signature = try Pearl.sign(message: "test message", with: derivation.privateKey)
+        #expect(!signature.isEmpty)
+        
+        var error: NSError?
+        let tipAddress = BlockchainGeneratePearlAddressFromPrivateKey(derivation.privateKey.hexEncodedString(), &error)
+        #expect(error == nil)
+        #expect(tipAddress == derivation.address)
+        
+        let mnemonicTipAddress = BlockchainGeneratePearlAddressFromMnemonic(phrases.joined(separator: " "), path.string, &error)
+        #expect(error == nil)
+        #expect(mnemonicTipAddress == derivation.address)
+        
+        let seed = try PBKDF2.derivation(
+            password: phrases.joined(separator: " "),
+            salt: "mnemonic",
+            pseudoRandomAlgorithm: .hmacSHA512,
+            iterationCount: 2048,
+            keyCount: 64
+        )
+        let seedTipAddress = BlockchainGeneratePearlAddress(seed.hexEncodedString(), path.string, &error)
+        #expect(error == nil)
+        #expect(seedTipAddress == derivation.address)
     }
     
 }

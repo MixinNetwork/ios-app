@@ -67,7 +67,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
     override func reloadViews(chain: Web3Chain) {
         super.reloadViews(chain: chain)
         inputPlaceholderLabel.text = switch selectedChain.kind {
-        case .bitcoin:
+        case .bitcoin, .pearl:
             R.string.localizable.bitcoin_private_key_hint()
         case .evm:
             R.string.localizable.ethereum_private_key_hint()
@@ -107,7 +107,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                     }
                 }
                 let address = try Bitcoin.segwitAddress(privateKey: privateKey)
-                let validationAddress = try {
+                let crossCheckAddress = try {
                     let key = if input.hasPrefix("0x") {
                         String(input.dropFirst(2))
                     } else {
@@ -120,7 +120,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                     }
                     return address
                 }()
-                guard address == validationAddress else {
+                guard address == crossCheckAddress else {
                     throw LoadKeyError.mismatchedAddress
                 }
                 if importedAddresses.contains(address) {
@@ -141,6 +141,52 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                         try Bitcoin.sign(message: message, with: privateKey)
                     }
                 )
+            case .pearl:
+                let privateKey: Data
+                do {
+                    privateKey = try Pearl.privateKey(wif: input)
+                } catch {
+                    let key = if input.hasPrefix("0x") {
+                        Data(hexEncodedString: input.dropFirst(2))
+                    } else {
+                        Data(hexEncodedString: input)
+                    }
+                    if let key, key.count == Pearl.privateKeyLength {
+                        privateKey = key
+                    } else {
+                        throw LoadKeyError.invalidInput
+                    }
+                }
+                let address = try Pearl.address(privateKey: privateKey)
+                let crossCheckAddress = try {
+                    var error: NSError?
+                    let address = BlockchainGeneratePearlAddressFromPrivateKey(privateKey.hexEncodedString(), &error)
+                    if let error {
+                        throw error
+                    }
+                    return address
+                }()
+                guard address == crossCheckAddress else {
+                    throw LoadKeyError.mismatchedAddress
+                }
+                if importedAddresses.contains(address) {
+                    throw LoadKeyError.alreadyImported
+                }
+                let encryptedPrivateKey = try EncryptedPrivateKey(
+                    privateKey: privateKey,
+                    key: encryptionKey
+                )
+                wallet = try Wallet(
+                    privateKey: encryptedPrivateKey,
+                    address: .init(
+                        destination: address,
+                        chainID: ChainID.pearl,
+                        path: nil,
+                        userID: userID
+                    ) { message in
+                        try Pearl.sign(message: message, with: privateKey)
+                    }
+                )
             case .evm:
                 let privateKey = if input.hasPrefix("0x") {
                     Data(hexEncodedString: input.dropFirst(2))
@@ -153,7 +199,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                 let keyStorage = InPlaceKeyStorage(raw: privateKey)
                 let account = try EthereumAccount(keyStorage: keyStorage)
                 let address = account.address.toChecksumAddress()
-                let validationAddress = try {
+                let crossCheckAddress = try {
                     let key = if input.hasPrefix("0x") {
                         String(input.dropFirst(2))
                     } else {
@@ -166,7 +212,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                     }
                     return address
                 }()
-                guard address == validationAddress else {
+                guard address == crossCheckAddress else {
                     throw LoadKeyError.mismatchedAddress
                 }
                 if importedAddresses.contains(address) {

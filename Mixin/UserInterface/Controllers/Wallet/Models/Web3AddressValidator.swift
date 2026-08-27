@@ -95,6 +95,11 @@ enum Web3AddressValidator {
                             payment: addressPayment,
                             decimalAmount: amount
                         )
+                    case .pearl:
+                        try PearlTransferToAddressOperation(
+                            payment: addressPayment,
+                            decimalAmount: amount
+                        )
                     case let .evm(chainID):
                         try EVMTransferToAddressOperation(
                             evmChainID: chainID,

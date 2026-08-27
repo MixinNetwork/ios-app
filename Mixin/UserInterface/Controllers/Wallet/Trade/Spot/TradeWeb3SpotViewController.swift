@@ -354,6 +354,11 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
                     payment: payment,
                     decimalAmount: sendAmount
                 )
+            case .pearl:
+                try PearlTransferToAddressOperation(
+                    payment: payment,
+                    decimalAmount: sendAmount
+                )
             case .evm(let id):
                 try EVMTransferToAddressOperation(
                     evmChainID: id,

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class UnlockBitcoinInputPINViewController: FullscreenPINValidationViewController {
+final class UnlockCommonWalletChainsInputPINViewController: FullscreenPINValidationViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,12 +18,12 @@ final class UnlockBitcoinInputPINViewController: FullscreenPINValidationViewCont
             do {
                 try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                 await MainActor.run {
-                    Logger.web3.info(category: "UnlockBitcoinInputPIN", message: "Finished")
-                    (navigationController as? UnlockBitcoinNavigationController)?.onSuccess?()
+                    Logger.web3.info(category: "UnlockChainsInputPIN", message: "Finished")
+                    (navigationController as? UnlockCommonWalletChainsNavigationController)?.onSuccess?()
                     navigationController?.presentingViewController?.dismiss(animated: true)
                 }
             } catch {
-                Logger.web3.error(category: "UnlockBitcoinInputPIN", message: "Failed: \(error)")
+                Logger.web3.error(category: "UnlockChainsInputPIN", message: "Failed: \(error)")
                 await MainActor.run {
                     self.pinField.clear()
                     self.isBusy = false

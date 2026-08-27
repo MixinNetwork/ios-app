@@ -125,6 +125,7 @@ final class AddWalletImportingViewController: IntroductionViewController, CheckS
             do {
                 for wallet in wallets {
                     let bitcoinWallet = wallet.candidate.bitcoinWallet
+                    let pearlWallet = wallet.candidate.pearlWallet
                     let evmWallet = wallet.candidate.evmWallet
                     let solanaWallet = wallet.candidate.solanaWallet
                     let request = try CreateSigningWalletRequest(
@@ -140,6 +141,17 @@ final class AddWalletImportingViewController: IntroductionViewController, CheckS
                                 try Bitcoin.sign(
                                     message: message,
                                     with: bitcoinWallet.privateKey
+                                )
+                            },
+                            .init(
+                                destination: pearlWallet.address,
+                                chainID: ChainID.pearl,
+                                path: pearlWallet.path.string,
+                                userID: userID
+                            ) { message in
+                                try Pearl.sign(
+                                    message: message,
+                                    with: pearlWallet.privateKey
                                 )
                             },
                             .init(

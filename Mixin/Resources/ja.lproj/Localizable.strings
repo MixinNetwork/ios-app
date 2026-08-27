@@ -328,6 +328,7 @@
 "circle_title" = "%@のグループリスト";
 "circles" = "グループリスト";
 "circulation_supply" = "循環供給";
+"classic_wallet_pearl_intro_title" = "Common WalletがPearlに対応しました";
 "classic_wallet_tip_description" = "分散型アプリケーションと DeFi プロトコルにアクセスする一般的なマルチチェーン ウォレット。";
 "classic_wallet_tip_title" = "共通ウォレットとは何ですか?";
 "clear" = "クリア";

@@ -948,6 +948,21 @@ extension RouteAPI {
         )
     }
     
+    static func pearlNetworkInfo(feeRate: String?) async throws -> BitcoinNetworkInfo {
+        var parameters = [
+            "chain_id": ChainID.pearl,
+        ]
+        if let feeRate {
+            // Used in RBF transactions
+            parameters["fee_rate"] = feeRate
+        }
+        return try await request(
+            method: .post,
+            path: "/web3/estimate-fee",
+            with: parameters
+        )
+    }
+    
     static func estimatedEthereumFee(
         mixinChainID: String,
         from: String,

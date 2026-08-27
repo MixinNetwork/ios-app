@@ -1,14 +1,18 @@
 import UIKit
 import MixinServices
 
-final class UnlockBitcoinViewController: UIViewController {
-    
+final class UnlockCommonWalletChainsViewController: UIViewController {
+        
+    @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var mainTitleLabel: UILabel!
     @IBOutlet weak var featureStackView: UIStackView!
     @IBOutlet weak var unlockButton: UIButton!
     
-    init() {
-        let nib = R.nib.unlockBitcoinView
+    private let content: UnlockableCommonWalletChain
+    
+    init(content: UnlockableCommonWalletChain) {
+        self.content = content
+        let nib = R.nib.unlockCommonWalletChainsView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
@@ -18,7 +22,14 @@ final class UnlockBitcoinViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mainTitleLabel.text = R.string.localizable.common_wallet_now_supports_btc()
+        switch content {
+        case .bitcoin:
+            iconImageView.image = R.image.bitcoin_chain()
+            mainTitleLabel.text = R.string.localizable.common_wallet_now_supports_btc()
+        case .pearl:
+            iconImageView.image = R.image.pearl_chain()
+            mainTitleLabel.text = R.string.localizable.classic_wallet_pearl_intro_title()
+        }
         
         let featureItemViews = [
             FeatureItemView(
@@ -54,7 +65,7 @@ final class UnlockBitcoinViewController: UIViewController {
     }
     
     @IBAction func unlock(_ sender: Any) {
-        let inputPIN = UnlockBitcoinInputPINViewController()
+        let inputPIN = UnlockCommonWalletChainsInputPINViewController()
         navigationController?.setViewControllers([inputPIN], animated: true)
     }
     

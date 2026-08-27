@@ -3,7 +3,8 @@ import Foundation
 public enum AppGroupContainer {
     
     // In iOS, the value is nil when the group identifier is invalid.
-    static let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)!
+    static let url: URL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)
+        ?? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     
     public static let documentsUrl: URL = {
         let url = AppGroupContainer.url.appendingPathComponent("Documents", isDirectory: true)

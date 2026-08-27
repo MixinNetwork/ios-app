@@ -95,6 +95,8 @@ extension DepositLink {
             switch chain.specification {
             case .bitcoin:
                 value = "bitcoin:\(address)?amount=\(amount)"
+            case .pearl:
+                value = "pearl:\(address)?amount=\(amount)"
             case .evm(let id):
                 if token.assetID == token.chainID {
                     value = "ethereum:\(address)"
@@ -136,6 +138,8 @@ extension DepositLink {
                 }
             case ChainID.bitcoin:
                 value = "bitcoin:\(address)?amount=\(amount)"
+            case ChainID.pearl:
+                value = "pearl:\(address)?amount=\(amount)"
             case ChainID.litecoin:
                 value = "litecoin:\(address)?amount=\(amount)"
             case ChainID.dogecoin:

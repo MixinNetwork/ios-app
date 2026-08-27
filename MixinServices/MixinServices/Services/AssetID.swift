@@ -21,6 +21,7 @@ public enum AssetID {
     
     public static let btc = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
     public static let lightningBTC = "59c09123-95cc-3ffd-a659-0f9169074cee"
+    public static let pearl = "e1bf305c-0d49-397d-85bd-55b9eaadafba"
     
     public static let erc20USDT = "4d8c508b-91c5-375b-92b0-ee702ed2dac5"
     public static let tronUSDT = "b91e18ff-a9ae-3dc7-8679-e935d9a4b34b"

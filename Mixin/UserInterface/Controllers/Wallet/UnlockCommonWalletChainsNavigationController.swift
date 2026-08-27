@@ -1,11 +1,11 @@
 import UIKit
 
-final class UnlockBitcoinNavigationController: UINavigationController, UIAdaptivePresentationControllerDelegate {
+final class UnlockCommonWalletChainsNavigationController: UINavigationController, UIAdaptivePresentationControllerDelegate {
     
     var onSuccess: (() -> Void)?
     
-    init() {
-        let unlock = UnlockBitcoinViewController()
+    init(content: UnlockableCommonWalletChain) {
+        let unlock = UnlockCommonWalletChainsViewController(content: content)
         super.init(rootViewController: unlock)
         presentationController?.delegate = self
         setNavigationBarHidden(true, animated: false)

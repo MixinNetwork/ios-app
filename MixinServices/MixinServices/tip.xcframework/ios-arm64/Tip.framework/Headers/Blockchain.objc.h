@@ -110,8 +110,22 @@ FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateLitecoinAddress(NSString*
 
 /**
  * GeneratePearlAddress derives a Pearl Taproot address from a hexadecimal seed.
+An empty path falls back to Pearl's default derivation path.
  */
-FOUNDATION_EXPORT NSString* _Nonnull BlockchainGeneratePearlAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGeneratePearlAddress(NSString* _Nullable seed, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
+
+/**
+ * GeneratePearlAddressFromMnemonic derives a Pearl Taproot address from a BIP39
+mnemonic. An empty path falls back to Pearl's default derivation path.
+ */
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGeneratePearlAddressFromMnemonic(NSString* _Nullable mnemonic, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
+
+/**
+ * GeneratePearlAddressFromPrivateKey derives the BIP86 Pearl Taproot address a
+private key controls. It accepts the same hexadecimal private key that
+BuildPearlTransaction signs with.
+ */
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGeneratePearlAddressFromPrivateKey(NSString* _Nullable privateKey, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddress(NSString* _Nullable seed, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 

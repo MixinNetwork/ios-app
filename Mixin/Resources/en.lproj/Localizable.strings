@@ -328,6 +328,7 @@
 "circle_title" = "%@'s Circles";
 "circles" = "Circles";
 "circulation_supply" = "Circulation Supply";
+"classic_wallet_pearl_intro_title" = "Common Wallet now supports Pearl";
 "classic_wallet_tip_description" = "A common multi-chain wallet that accesses decentralized applications and DeFi protocols.";
 "classic_wallet_tip_title" = "What’s the Common Wallet?";
 "clear" = "Clear";

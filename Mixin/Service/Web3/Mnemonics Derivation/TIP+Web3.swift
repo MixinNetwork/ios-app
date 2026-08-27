@@ -12,6 +12,7 @@ extension TIP {
     enum GenerationError: Swift.Error {
         case noAccount
         case bitcoinMismatched
+        case pearlMismatched
         case evmMismatched
         case solanaMismatched
     }
@@ -22,6 +23,14 @@ extension TIP {
     ) async throws -> Data {
         let spendKey = try await TIP.spendPriv(pin: pin)
         return try deriveBitcoinPrivateKey(spendKey: spendKey, path: path)
+    }
+    
+    static func derivePearlPrivateKey(
+        pin: String,
+        path: DerivationPath
+    ) async throws -> Data {
+        let spendKey = try await TIP.spendPriv(pin: pin)
+        return try derivePearlPrivateKey(spendKey: spendKey, path: path)
     }
     
     static func deriveEthereumPrivateKey(
@@ -54,7 +63,7 @@ extension TIP {
             let path = try DerivationPath.bitcoin(index: index)
             let privateKey = try TIP.deriveBitcoinPrivateKey(spendKey: spendKey, path: path)
             let destination = try Bitcoin.segwitAddress(privateKey: privateKey)
-            let validationDestination = try {
+            let crossCheckDestination = try {
                 var error: NSError?
                 let address = BlockchainGenerateBitcoinSegwitAddress(hexSpendKey, path.string, &error)
                 if let error {
@@ -62,8 +71,8 @@ extension TIP {
                 }
                 return address
             }()
-            guard destination == validationDestination else {
-                Logger.web3.error(category: "TIP+Web3", message: "Derive Bitcoin Address: \(destination), \(validationDestination)")
+            guard destination == crossCheckDestination else {
+                Logger.web3.error(category: "TIP+Web3", message: "Derive Bitcoin Address: \(destination), \(crossCheckDestination)")
                 throw GenerationError.bitcoinMismatched
             }
             return try CreateSigningWalletRequest.SignedAddress(
@@ -76,6 +85,32 @@ extension TIP {
             }
         }()
         
+        let pearlAddress = try {
+            let path = try DerivationPath.pearl(index: index)
+            let privateKey = try TIP.derivePearlPrivateKey(spendKey: spendKey, path: path)
+            let destination = try Pearl.address(privateKey: privateKey)
+            let crossCheckDestination = try {
+                var error: NSError?
+                let address = BlockchainGeneratePearlAddress(hexSpendKey, path.string, &error)
+                if let error {
+                    throw error
+                }
+                return address
+            }()
+            guard destination == crossCheckDestination else {
+                Logger.web3.error(category: "TIP+Web3", message: "Derive Pearl Address: \(destination), \(crossCheckDestination)")
+                throw GenerationError.pearlMismatched
+            }
+            return try CreateSigningWalletRequest.SignedAddress(
+                destination: destination,
+                chainID: ChainID.pearl,
+                path: path.string,
+                userID: userID
+            ) { message in
+                try Pearl.sign(message: message, with: privateKey)
+            }
+        }()
+        
         let evmAddress = try {
             let path = try DerivationPath.evm(index: index)
             let account = try {
@@ -84,7 +119,7 @@ extension TIP {
                 return try EthereumAccount(keyStorage: keyStorage)
             }()
             let destination = account.address.toChecksumAddress()
-            let validationDestination = try {
+            let crossCheckDestination = try {
                 var error: NSError?
                 let address = BlockchainGenerateEthereumAddress(hexSpendKey, path.string, &error)
                 if let error {
@@ -92,8 +127,8 @@ extension TIP {
                 }
                 return address
             }()
-            guard destination == validationDestination else {
-                Logger.web3.error(category: "TIP+Web3", message: "Derive EVM Address: \(destination), \(validationDestination)")
+            guard destination == crossCheckDestination else {
+                Logger.web3.error(category: "TIP+Web3", message: "Derive EVM Address: \(destination), \(crossCheckDestination)")
                 throw GenerationError.evmMismatched
             }
             return try CreateSigningWalletRequest.SignedAddress(
@@ -110,7 +145,7 @@ extension TIP {
             let path = try DerivationPath.solana(index: index)
             let privateKey = try TIP.deriveSolanaPrivateKey(spendKey: spendKey, path: path)
             let destination = try Solana.publicKey(seed: privateKey)
-            let validationDestination = try {
+            let crossCheckDestination = try {
                 var error: NSError?
                 let address = BlockchainGenerateSolanaAddress(hexSpendKey, path.string, &error)
                 if let error {
@@ -118,8 +153,8 @@ extension TIP {
                 }
                 return address
             }()
-            guard destination == validationDestination else {
-                Logger.web3.error(category: "TIP+Web3", message: "Derive Solana Address: \(destination), \(validationDestination)")
+            guard destination == crossCheckDestination else {
+                Logger.web3.error(category: "TIP+Web3", message: "Derive Solana Address: \(destination), \(crossCheckDestination)")
                 throw GenerationError.solanaMismatched
             }
             return try CreateSigningWalletRequest.SignedAddress(
@@ -136,7 +171,7 @@ extension TIP {
             }
         }()
         
-        return [bitcoinAddress, evmAddress, solanaAddress]
+        return [bitcoinAddress, pearlAddress, evmAddress, solanaAddress]
     }
     
     static func registerDefaultCommonWalletIfNeeded(pin: String) async throws {
@@ -148,95 +183,161 @@ extension TIP {
         let hasCommonWalletRegistered = remoteWallets.contains { response in
             response.wallet.category.knownCase == .classic
         }
-        let hasBitcoinAddressUpdated = remoteWallets.allSatisfy { response in
-            switch response.bitcoinAvailability {
+        let hasAddressUpdated = remoteWallets.allSatisfy { response in
+            let bitcoinAvailable = switch response.bitcoinAvailability {
             case .available, .notInvolved:
                 true
             case .unavailable:
                 false
             }
+            let pearlAvailable = switch response.pearlAvailability {
+            case .available, .notInvolved:
+                true
+            case .unavailable:
+                false
+            }
+            return bitcoinAvailable && pearlAvailable
         }
         if hasCommonWalletRegistered {
-            if hasBitcoinAddressUpdated {
+            if hasAddressUpdated {
                 Logger.login.info(category: "TIP+Web3", message: "All common wallets set up")
             } else {
-                Logger.login.info(category: "TIP+Web3", message: "Update Bitcoin address")
-                struct BitcoinUpdate {
+                Logger.login.info(category: "TIP+Web3", message: "Update wallet addresses")
+                struct WalletUpdate {
                     let walletID: String
-                    let address: CreateSigningWalletRequest.SignedAddress
+                    let addresses: [CreateSigningWalletRequest.SignedAddress]
                 }
-                var updates: [BitcoinUpdate] = []
+                var updates: [WalletUpdate] = []
                 for response in remoteWallets {
                     let hasBitcoinAddress = response.addresses.contains { address in
                         address.chainID == ChainID.bitcoin
                     }
-                    if hasBitcoinAddress {
+                    let hasPearlAddress = response.addresses.contains { address in
+                        address.chainID == ChainID.pearl
+                    }
+                    if hasBitcoinAddress && hasPearlAddress {
                         continue
                     }
                     
                     let wallet = response.wallet
                     let paths = response.addresses.compactMap(\.path)
                     let index = try SequentialWalletPathGenerator.maxIndex(paths: paths)
-                    let path = try DerivationPath.bitcoin(index: index)
                     
-                    let privateKey: Data
-                    let destination: String
-                    switch wallet.category.knownCase {
-                    case .classic:
-                        privateKey = try await deriveBitcoinPrivateKey(pin: pin, path: path)
-                        destination = try Bitcoin.segwitAddress(privateKey: privateKey)
-                        let validationDestination = try await {
-                            let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
-                            var error: NSError?
-                            let address = BlockchainGenerateBitcoinSegwitAddress(spendKey, path.string, &error)
-                            if let error {
-                                throw error
+                    var newAddresses: [CreateSigningWalletRequest.SignedAddress] = []
+                    
+                    if !hasBitcoinAddress {
+                        let path = try DerivationPath.bitcoin(index: index)
+                        let privateKey: Data
+                        let destination: String
+                        switch wallet.category.knownCase {
+                        case .classic:
+                            privateKey = try await deriveBitcoinPrivateKey(pin: pin, path: path)
+                            destination = try Bitcoin.segwitAddress(privateKey: privateKey)
+                            let crossCheckDestination = try await {
+                                let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
+                                var error: NSError?
+                                let address = BlockchainGenerateBitcoinSegwitAddress(spendKey, path.string, &error)
+                                if let error {
+                                    throw error
+                                }
+                                return address
+                            }()
+                            guard destination == crossCheckDestination else {
+                                Logger.web3.error(category: "TIP+Web3", message: "Update Bitcoin Address: \(destination), \(crossCheckDestination)")
+                                throw GenerationError.bitcoinMismatched
                             }
-                            return address
-                        }()
-                        guard destination == validationDestination else {
-                            Logger.web3.error(category: "TIP+Web3", message: "Update Bitcoin Address: \(destination), \(validationDestination)")
-                            throw GenerationError.bitcoinMismatched
-                        }
-                    case .importedMnemonic:
-                        let encryptedMnemonics = AppGroupKeychain.importedMnemonics(
-                            walletID: wallet.walletID
-                        )
-                        if let encryptedMnemonics {
-                            let key = try await TIP.importedWalletEncryptionKey(pin: pin)
-                            let mnemonics = try encryptedMnemonics.decrypt(with: key)
-                            let derivation = try mnemonics.checkedDerivationForBitcoin(path: path)
-                            privateKey = derivation.privateKey
-                            destination = derivation.address
-                        } else {
-                            // Skipped. Could be updated when re-importing the mnemonics
+                        case .importedMnemonic:
+                            let encryptedMnemonics = AppGroupKeychain.importedMnemonics(
+                                walletID: wallet.walletID
+                            )
+                            if let encryptedMnemonics {
+                                let key = try await TIP.importedWalletEncryptionKey(pin: pin)
+                                let mnemonics = try encryptedMnemonics.decrypt(with: key)
+                                let derivation = try mnemonics.checkedDerivationForBitcoin(path: path)
+                                privateKey = derivation.privateKey
+                                destination = derivation.address
+                            } else {
+                                continue
+                            }
+                        case .importedPrivateKey, .watchAddress, .none:
                             continue
                         }
-                    case .importedPrivateKey, .watchAddress, .none:
-                        continue
+                        
+                        let address = try CreateSigningWalletRequest.SignedAddress(
+                            destination: destination,
+                            chainID: ChainID.bitcoin,
+                            path: path.string,
+                            userID: myUserId
+                        ) { message in
+                            try Bitcoin.sign(message: message, with: privateKey)
+                        }
+                        newAddresses.append(address)
                     }
                     
-                    let address = try CreateSigningWalletRequest.SignedAddress(
-                        destination: destination,
-                        chainID: ChainID.bitcoin,
-                        path: path.string,
-                        userID: myUserId
-                    ) { message in
-                        try Bitcoin.sign(message: message, with: privateKey)
+                    if !hasPearlAddress {
+                        let path = try DerivationPath.pearl(index: index)
+                        let privateKey: Data
+                        let destination: String
+                        switch wallet.category.knownCase {
+                        case .classic:
+                            privateKey = try await derivePearlPrivateKey(pin: pin, path: path)
+                            destination = try Pearl.address(privateKey: privateKey)
+                            let crossCheckDestination = try await {
+                                let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
+                                var error: NSError?
+                                let address = BlockchainGeneratePearlAddress(spendKey, path.string, &error)
+                                if let error {
+                                    throw error
+                                }
+                                return address
+                            }()
+                            guard destination == crossCheckDestination else {
+                                Logger.web3.error(category: "TIP+Web3", message: "Update Pearl Address: \(destination), \(crossCheckDestination)")
+                                throw GenerationError.pearlMismatched
+                            }
+                        case .importedMnemonic:
+                            let encryptedMnemonics = AppGroupKeychain.importedMnemonics(
+                                walletID: wallet.walletID
+                            )
+                            if let encryptedMnemonics {
+                                let key = try await TIP.importedWalletEncryptionKey(pin: pin)
+                                let mnemonics = try encryptedMnemonics.decrypt(with: key)
+                                let derivation = try mnemonics.checkedDerivationForPearl(path: path)
+                                privateKey = derivation.privateKey
+                                destination = derivation.address
+                            } else {
+                                continue
+                            }
+                        case .importedPrivateKey, .watchAddress, .none:
+                            continue
+                        }
+                        
+                        let address = try CreateSigningWalletRequest.SignedAddress(
+                            destination: destination,
+                            chainID: ChainID.pearl,
+                            path: path.string,
+                            userID: myUserId
+                        ) { message in
+                            try Pearl.sign(message: message, with: privateKey)
+                        }
+                        newAddresses.append(address)
                     }
-                    let update = BitcoinUpdate(walletID: wallet.walletID, address: address)
-                    updates.append(update)
+                    
+                    if !newAddresses.isEmpty {
+                        let update = WalletUpdate(walletID: wallet.walletID, addresses: newAddresses)
+                        updates.append(update)
+                    }
                 }
-                Logger.login.info(category: "TIP+Web3", message: "Update Bitcoin for: \(updates.map(\.walletID))")
+                Logger.login.info(category: "TIP+Web3", message: "Update addresses for: \(updates.map(\.walletID))")
                 try await withThrowingTaskGroup(of: Void.self) { group in
                     for update in updates {
                         group.addTask {
                             let addresses = try await RouteAPI.updateWallet(
                                 id: update.walletID,
-                                appendingAddresses: [update.address]
+                                appendingAddresses: update.addresses
                             )
                             Web3AddressDAO.shared.save(addresses: addresses)
-                            Logger.login.info(category: "TIP+Web3", message: "\(update.walletID) bitcoin updated")
+                            Logger.login.info(category: "TIP+Web3", message: "\(update.walletID) addresses updated")
                         }
                     }
                     try await group.waitForAll()
@@ -260,6 +361,15 @@ extension TIP {
     }
     
     private static func deriveBitcoinPrivateKey(
+        spendKey: Data,
+        path: DerivationPath
+    ) throws -> Data {
+        let masterKey = try ExtendedKey(seed: spendKey, curve: .secp256k1)
+        let derivation = try masterKey.deriveUsingSecp256k1(path: path)
+        return derivation.key
+    }
+    
+    private static func derivePearlPrivateKey(
         spendKey: Data,
         path: DerivationPath
     ) throws -> Data {

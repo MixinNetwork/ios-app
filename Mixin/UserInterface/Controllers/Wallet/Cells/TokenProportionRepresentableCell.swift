@@ -9,6 +9,7 @@ enum TokenProportionPlaceholder {
     
     enum Chain {
         case bitcoin
+        case pearl
         case ethereum
         case litecoin
         case polygon
@@ -24,6 +25,8 @@ enum TokenProportionPlaceholder {
         switch kind {
         case .bitcoin:
                 .chain(.bitcoin)
+        case .pearl:
+                .chain(.pearl)
         case .evm:
                 .evmChains
         case .solana:
@@ -69,6 +72,8 @@ extension TokenProportionRepresentableCell {
                     R.image.evm_chains()
                 case .chain(.bitcoin):
                     R.image.bitcoin_chain()
+                case .chain(.pearl):
+                    R.image.pearl_chain()
                 case .chain(.ethereum):
                     R.image.ethereum_chain()
                 case .chain(.litecoin):

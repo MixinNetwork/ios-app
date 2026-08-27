@@ -386,6 +386,8 @@ extension CheckSessionEnvironmentViewController {
                     switch address.chainID {
                     case ChainID.bitcoin:
                         derivation = try mnemonics.plain.checkedDerivationForBitcoin(path: path)
+                    case ChainID.pearl:
+                        derivation = try mnemonics.plain.checkedDerivationForPearl(path: path)
                     case ChainID.ethereum:
                         derivation = try mnemonics.plain.checkedDerivationForEVM(path: path)
                     case ChainID.solana:

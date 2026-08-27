@@ -93,7 +93,7 @@ extension MediumWalletValueAddedServiceCell: WalletValueAddedServiceCell {
         }
         tokensView.isHidden = false
         if let account {
-            amountLabel.text = account.balance.formatted(formatStyle)
+            amountLabel.text = account.usdBalance.formatted(formatStyle)
             tokensView.setIcons(urls: account.iconURLs)
         } else {
             amountLabel.text = "-"

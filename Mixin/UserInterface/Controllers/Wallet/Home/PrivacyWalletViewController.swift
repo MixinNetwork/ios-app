@@ -189,7 +189,7 @@ final class PrivacyWalletViewController: WalletViewController {
     
     override func reload(earnAccount: EarnAccount) {
         self.earnAccount = earnAccount
-        overview?.update(earnValue: earnAccount.balance)
+        overview?.update(earnValue: earnAccount.usdBalance)
         var snapshot = dataSource.snapshot()
         if snapshot.itemIdentifiers.contains(.overview) {
             snapshot.reconfigureItems([.overview])
@@ -289,7 +289,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 tokensValue: tokensValue,
                 perpsValue: perpsValue.decimalValue,
                 cashValue: cashAccount?.decimalBalance ?? 0,
-                earnValue: earnAccount.balance,
+                earnValue: earnAccount.usdBalance,
                 btcPrice: btcPrice
             )
             

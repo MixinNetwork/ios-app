@@ -83,7 +83,7 @@ extension LargeWalletValueAddedServiceCell: WalletValueAddedServiceCell {
         }
         tokensView.isHidden = false
         if let account {
-            balanceLabel.text = account.balance.formatted(formatStyle)
+            balanceLabel.text = account.usdBalance.formatted(formatStyle)
             tokensView.setIcons(urls: account.iconURLs)
         } else {
             balanceLabel.text = "-"

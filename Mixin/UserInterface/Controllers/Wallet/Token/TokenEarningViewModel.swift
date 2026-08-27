@@ -52,6 +52,7 @@ struct TokenEarningViewModel {
     let topProductionID: String
     
     init?(token: MixinTokenItem, products: [EarnProduct]) {
+        assert(!Thread.isMainThread)
         let relatingProducts = products.filter { product in
             product.assetID == token.assetID
         }.map { product in
@@ -89,11 +90,11 @@ struct TokenEarningViewModel {
             }
         }
         
-        self.totalEarnings = totalEarnings.formatted(
+        self.totalEarnings = (totalEarnings * token.decimalUSDPrice).formatted(
             Decimal.FormatStyle.Currency
                 .currency(code: "USD")
                 .presentation(.narrow)
-                .precision(.fractionLength(0...2))
+                .precision(.fractionLength(0...8))
                 .rounded(rule: .towardZero)
         )
         self.totalAmount = CurrencyFormatter.localizedString(
@@ -102,7 +103,7 @@ struct TokenEarningViewModel {
             sign: .never,
             symbol: .custom(token.symbol)
         )
-        self.pendingEarning = pendingEarning.formatted(
+        self.pendingEarning = (pendingEarning * token.decimalUSDPrice).formatted(
             Decimal.FormatStyle.Currency
                 .currency(code: "USD")
                 .presentation(.narrow)

@@ -19,10 +19,10 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
         center.addObserver(self, selector: #selector(chainsDidChange(_:)), name: ChainDAO.chainsDidChangeNotification, object: nil)
         ConcurrentJobQueue.shared.addJob(job: RefreshTokenJob(assetID: token.assetID))
         
-        center.addObserver(self, selector: #selector(earnProductsDidUpdate(_:)), name: RefreshEarnProductJob.earnProductsDidUpdateNotification, object: nil)
-        ConcurrentJobQueue.shared.addJob(
-            job: RefreshEarnProductJob(notificationQueue: queue)
-        )
+        center.addObserver(self, selector: #selector(snapshotsDidSave(_:)), name: SafeSnapshotDAO.snapshotDidSaveNotification, object: nil)
+        center.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishNotification, object: nil)
+        reloadSnapshots()
+        
         queue.async { [weak self, token] in
             let products = PropertiesDAO.shared.jsonObject(
                 forKey: .earnProducts,
@@ -40,12 +40,19 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
                 UIView.performWithoutAnimation {
                     self.tableView.reloadSections([Section.earning.rawValue], with: .none)
                 }
+                if earning != nil {
+                    center.addObserver(
+                        self,
+                        selector: #selector(self.earnProductsDidUpdate(_:)),
+                        name: RefreshEarnProductJob.earnProductsDidUpdateNotification,
+                        object: nil
+                    )
+                    ConcurrentJobQueue.shared.addJob(
+                        job: RefreshEarnProductJob(notificationQueue: self.queue)
+                    )
+                }
             }
         }
-        
-        center.addObserver(self, selector: #selector(snapshotsDidSave(_:)), name: SafeSnapshotDAO.snapshotDidSaveNotification, object: nil)
-        center.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishNotification, object: nil)
-        reloadSnapshots()
     }
     
     override func send() {

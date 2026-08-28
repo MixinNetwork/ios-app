@@ -346,8 +346,15 @@ extension MixinWebViewController: WKNavigationDelegate {
                     make.top.bottom.equalTo(view.safeAreaLayoutGuide)
                 }
             }
-            loadFailLabel.text = R.string.localizable.web_cannot_reached_desc(host)
-            contactDeveloperButton.isHidden = context.appEnvironment == nil
+            if let app = context.appEnvironment?.app {
+                loadFailLabel.text = R.string.localizable.web_cannot_reached_desc(
+                    app.name + " (\(app.appNumber))"
+                )
+                contactDeveloperButton.isHidden = false
+            } else {
+                loadFailLabel.text = R.string.localizable.web_cannot_reached_desc(host)
+                contactDeveloperButton.isHidden = true
+            }
         default:
             break
         }

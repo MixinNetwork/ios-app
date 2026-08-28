@@ -1105,17 +1105,20 @@ extension UrlWindow {
             let payment: Payment
             switch paymentURL.request {
             case let .notDetermined(assetID, amount):
-                DispatchQueue.main.async {
-                    switch (assetID, amount) {
-                    case (.none, .some):
+                switch (assetID, amount) {
+                case (.none, .some):
+                    DispatchQueue.main.async {
                         completion(R.string.localizable.invalid_payment_link())
-                    case let (.some(assetID), .none):
-                        let token = syncToken(assetID: assetID) { errorDescription in
-                            completion(errorDescription)
-                        }
-                        guard let token else {
-                            return
-                        }
+                    }
+                case let (.some(assetID), .none):
+                    let token = syncToken(assetID: assetID) { errorDescription in
+                        completion(errorDescription)
+                    }
+                    guard let token else {
+                        completion(nil)
+                        return
+                    }
+                    DispatchQueue.main.async {
                         completion(nil)
                         reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "schema"])
                         reporter.report(event: .sendRecipient, tags: ["type": "contact"])
@@ -1128,8 +1131,10 @@ extension UrlWindow {
                         inputAmount.reference = paymentURL.reference
                         inputAmount.redirection = paymentURL.redirection
                         UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
-                    case (.none, .none):
-                        // Receive money QR code
+                    }
+                case (.none, .none):
+                    // Receive money QR code
+                    DispatchQueue.main.async {
                         completion(nil)
                         reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "schema"])
                         let selector = MixinTokenSelectorViewController(intent: .send)
@@ -1146,7 +1151,9 @@ extension UrlWindow {
                             UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
                         }
                         presenter.present(selector, animated: true)
-                    case (.some, .some):
+                    }
+                case (.some, .some):
+                    DispatchQueue.main.async {
                         completion(nil)
                         assertionFailure("This case should be `prefilled`")
                     }

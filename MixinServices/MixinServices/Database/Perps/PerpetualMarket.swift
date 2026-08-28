@@ -191,7 +191,7 @@ extension PerpetualMarket {
 
 extension PerpetualMarket {
     
-    struct FavoriteStorage: Codable, MixinEncodableRecord, PersistableRecord {
+    struct FavoriteStorage: Codable, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord, DatabaseColumnConvertible {
         
         enum CodingKeys: String, CodingKey {
             case marketID = "market_id"

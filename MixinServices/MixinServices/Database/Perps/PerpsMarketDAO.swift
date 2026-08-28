@@ -111,26 +111,29 @@ public final class PerpsMarketDAO: PerpsDAO {
         markets: [PerpetualMarket],
         dataSource: PerpetualMarket.RequestCategory,
     ) {
-        guard !markets.isEmpty else {
-            return
-        }
         db.write { db in
             switch dataSource {
             case .all:
                 try markets.save(db)
             case .favorite:
-                try db.execute(literal: "DELETE FROM favorites WHERE market_id NOT IN \(markets.map(\.marketID))")
-                let now = Date().toUTCString()
-                for market in markets {
-                    _ = try market.upsertAndFetch(db) { _ in
-                        [PerpetualMarket.column(of: .tradeVolumeScore1D).noOverwrite]
+                if markets.isEmpty {
+                    try db.execute(sql: "DELETE FROM favorites")
+                } else {
+                    try db.execute(literal: "DELETE FROM favorites WHERE market_id NOT IN \(markets.map(\.marketID))")
+                    let now = Date().toUTCString()
+                    for market in markets {
+                        _ = try market.upsertAndFetch(db) { _ in
+                            [PerpetualMarket.column(of: .tradeVolumeScore1D).noOverwrite]
+                        }
+                        let favorite = PerpetualMarket.FavoriteStorage(
+                            marketID: market.marketID,
+                            isFavorite: true,
+                            createdAt: now,
+                        )
+                        _ = try favorite.upsertAndFetch(db) { _ in
+                            [PerpetualMarket.FavoriteStorage.column(of: .createdAt).noOverwrite]
+                        }
                     }
-                    let favorite = PerpetualMarket.FavoriteStorage(
-                        marketID: market.marketID,
-                        isFavorite: true,
-                        createdAt: now,
-                    )
-                    try favorite.save(db)
                 }
             case .featured:
                 try db.execute(literal: "DELETE FROM market_categories WHERE category = \(Market.DatabaseCategory.featured.rawValue)")

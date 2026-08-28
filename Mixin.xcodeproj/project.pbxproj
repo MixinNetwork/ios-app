@@ -852,7 +852,6 @@
 		942D90F12B05F8FE00E81358 /* NetworkFeeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 942D90EF2B05F8FE00E81358 /* NetworkFeeCell.xib */; };
 		942D90F32B0606C700E81358 /* WithdrawFeeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942D90F22B0606C700E81358 /* WithdrawFeeItem.swift */; };
 		942D90F82B06145F00E81358 /* TouchEventBypassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942D90F72B06145F00E81358 /* TouchEventBypassView.swift */; };
-		942DB9A52CAA9C8600FFCB40 /* CoinMarketAlertsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942DB9A42CAA9C2F00FFCB40 /* CoinMarketAlertsViewController.swift */; };
 		942DB9A72CAA9C8F00FFCB40 /* AllMarketAlertsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942DB9A62CAA9C8B00FFCB40 /* AllMarketAlertsViewController.swift */; };
 		942DB9A92CAAA14900FFCB40 /* AllAlertsTopActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 942DB9A82CAAA14900FFCB40 /* AllAlertsTopActionView.xib */; };
 		942E2B052FD3FB6B00E5E6FB /* TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942E2B042FD3FB6B00E5E6FB /* TransactionCell.swift */; };
@@ -2880,7 +2879,6 @@
 		942D90EF2B05F8FE00E81358 /* NetworkFeeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NetworkFeeCell.xib; sourceTree = "<group>"; };
 		942D90F22B0606C700E81358 /* WithdrawFeeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawFeeItem.swift; sourceTree = "<group>"; };
 		942D90F72B06145F00E81358 /* TouchEventBypassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchEventBypassView.swift; sourceTree = "<group>"; };
-		942DB9A42CAA9C2F00FFCB40 /* CoinMarketAlertsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinMarketAlertsViewController.swift; sourceTree = "<group>"; };
 		942DB9A62CAA9C8B00FFCB40 /* AllMarketAlertsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllMarketAlertsViewController.swift; sourceTree = "<group>"; };
 		942DB9A82CAAA14900FFCB40 /* AllAlertsTopActionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllAlertsTopActionView.xib; sourceTree = "<group>"; };
 		942E2B042FD3FB6B00E5E6FB /* TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionCell.swift; sourceTree = "<group>"; };
@@ -5179,7 +5177,6 @@
 				94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */,
 				9443A9202CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift */,
 				94960DA12C929D3C00FB17E2 /* MarketAlertViewController.swift */,
-				942DB9A42CAA9C2F00FFCB40 /* CoinMarketAlertsViewController.swift */,
 				942DB9A62CAA9C8B00FFCB40 /* AllMarketAlertsViewController.swift */,
 				94668E242CB50B6800558755 /* AlertTypeSelectorViewController.swift */,
 				94668E2D2CB5308200558755 /* AlertFrequencySelectorViewController.swift */,
@@ -8740,7 +8737,6 @@
 				946C50EE2E959F2500A0EA6A /* TokenComparator.swift in Sources */,
 				943B5F942F5C0A6C0043078A /* PerpsManualIntroductionPageView.swift in Sources */,
 				7C695D56285B25AB0042177C /* SpotlightManager.swift in Sources */,
-				942DB9A52CAA9C8600FFCB40 /* CoinMarketAlertsViewController.swift in Sources */,
 				7B35AF76228A98EF00E8101D /* ConversationSearchResult.swift in Sources */,
 				94396F2829EB475500A57833 /* NWParameters+DeviceTransfer.swift in Sources */,
 				7B7264F5209C5B1A00F234BE /* CoreTextLabel.swift in Sources */,

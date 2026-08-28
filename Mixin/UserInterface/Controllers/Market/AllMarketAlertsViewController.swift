@@ -7,12 +7,12 @@ final class AllMarketAlertsViewController: MarketAlertViewController {
     @IBOutlet weak var addAlertButton: BusyButton!
     
     private var coins: [MarketAlertCoin]
-    
-    init() {
-        self.coins = []
+
+    init(initialCoin: MarketAlertCoin? = nil) {
+        self.coins = if let initialCoin { [initialCoin] } else { [] }
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
     }
@@ -56,9 +56,17 @@ final class AllMarketAlertsViewController: MarketAlertViewController {
     }
     
     @IBAction func addAlert(_ sender: BusyButton) {
-        let picker = MarketAlertCoinPickerViewController()
-        picker.delegate = self
-        self.present(picker, animated: true)
+        if coins.count == 1 {
+            let addAlert = AddMarketAlertViewController(
+                coin: coins[0],
+                reportingSource: "price_alert_list",
+            )
+            navigationController?.pushViewController(addAlert, animated: true)
+        } else {
+            let picker = MarketAlertCoinPickerViewController()
+            picker.delegate = self
+            self.present(picker, animated: true)
+        }
     }
     
     @objc private func pickTokens(_ sender: Any) {

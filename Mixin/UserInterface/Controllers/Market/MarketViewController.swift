@@ -295,18 +295,9 @@ final class MarketViewController: UIViewController {
         }
         NotificationManager.shared.getAuthorized { isAuthorized in
             if isAuthorized {
-                if self.actionView.hasAlert {
-                    let coin = MarketAlertCoin(market: market)
-                    let alert = CoinMarketAlertsViewController(coin: coin)
-                    self.navigationController?.pushViewController(alert, animated: true)
-                } else {
-                    let coin = MarketAlertCoin(market: market)
-                    let addAlert = AddMarketAlertViewController(
-                        coin: coin,
-                        reportingSource: "market_detail",
-                    )
-                    self.navigationController?.pushViewController(addAlert, animated: true)
-                }
+                let coin = MarketAlertCoin(market: market)
+                let alerts = AllMarketAlertsViewController(initialCoin: coin)
+                self.navigationController?.pushViewController(alerts, animated: true)
             } else {
                 self.requestEnableNotifications()
             }

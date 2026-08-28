@@ -1629,23 +1629,17 @@ extension MarketDashboardViewController {
         override func main() {
             switch WatchlistSubCategory.allCases[subCategoryIndex] {
             case .crypto:
-                let cryptoOrder = order?.cryptoOrdering ?? .derived(
-                    category: .watchlist,
-                    subCategoryIndex: subCategoryIndex
-                )
+                let order = order?.cryptoOrdering ?? .derived(subCategory: .watchlist)
                 reloadCryptoWatchlist(
-                    order: cryptoOrder,
+                    order: order,
                     displayCategory: .watchlist,
                     displaySubCategoryIndex: subCategoryIndex,
                     scheduleRemoteLoader: scheduleRemoteLoader,
                 )
             case .perps:
-                let perpsOrder = order?.perpsOrdering ?? .derived(
-                    category: .watchlist,
-                    subCategoryIndex: subCategoryIndex
-                )
+                let order = order?.perpsOrdering ?? .derived(subCategory: .watchlist)
                 reloadPerpsWatchlist(
-                    order: perpsOrder,
+                    order: order,
                     displayCategory: .watchlist,
                     displaySubCategoryIndex: subCategoryIndex,
                     scheduleRemoteLoader: scheduleRemoteLoader,
@@ -1658,6 +1652,7 @@ extension MarketDashboardViewController {
     private final class ReloadCryptoMarketsOperation: ReloadDataOperation, @unchecked Sendable {
         
         private let subCategoryIndex: Int
+        private let subCategory: CryptoSubCategory
         private let order: Market.Ordering
         private let scheduleRemoteLoader: Bool
         
@@ -1667,17 +1662,15 @@ extension MarketDashboardViewController {
             scheduleRemoteLoader: Bool,
             viewController: MarketDashboardViewController,
         ) {
+            let subCategory = CryptoSubCategory.allCases[subCategoryIndex]
             self.subCategoryIndex = subCategoryIndex
-            self.order = order ?? .derived(
-                category: .crypto,
-                subCategoryIndex: subCategoryIndex
-            )
+            self.subCategory = subCategory
+            self.order = order ?? .derived(subCategory: subCategory)
             self.scheduleRemoteLoader = scheduleRemoteLoader
             super.init(viewController: viewController)
         }
         
         override func main() {
-            let subCategory = CryptoSubCategory.allCases[subCategoryIndex]
             switch subCategory {
             case .watchlist:
                 reloadCryptoWatchlist(
@@ -1751,6 +1744,7 @@ extension MarketDashboardViewController {
     private final class ReloadPerpsMarketsOperation: ReloadDataOperation, @unchecked Sendable {
         
         private let subCategoryIndex: Int
+        private let subCategory: PerpsSubCategory
         private let order: PerpetualMarket.Ordering
         private let scheduleRemoteLoader: Bool
         
@@ -1760,18 +1754,17 @@ extension MarketDashboardViewController {
             scheduleRemoteLoader: Bool,
             viewController: MarketDashboardViewController,
         ) {
+            let subCategory = PerpsSubCategory.allCases[subCategoryIndex]
             self.subCategoryIndex = subCategoryIndex
-            self.order = order ?? .derived(
-                category: .perps,
-                subCategoryIndex: subCategoryIndex
-            )
+            self.subCategory = subCategory
+            self.order = order ?? .derived(subCategory: subCategory)
             self.scheduleRemoteLoader = scheduleRemoteLoader
             super.init(viewController: viewController)
         }
         
         override func main() {
             let queryCategory: PerpetualMarket.QueryCategory
-            switch PerpsSubCategory.allCases[subCategoryIndex] {
+            switch subCategory {
             case .watchlist:
                 reloadPerpsWatchlist(
                     order: order,
@@ -1861,10 +1854,7 @@ extension MarketDashboardViewController {
         }
         
         private func reloadStockSpotMarkets() {
-            let order = order?.cryptoOrdering ?? .derived(
-                category: .stock,
-                subCategoryIndex: subCategoryIndex
-            )
+            let order = order?.cryptoOrdering ?? .stocksDefault
             let markets = MarketDAO.shared.markets(category: .stock, order: order)
             let items: [Item] = markets.map { market in
                     .market(id: market.coinID, info: .volume)
@@ -1899,10 +1889,7 @@ extension MarketDashboardViewController {
         }
         
         private func reloadStockPerpsMarkets() {
-            let order = order?.perpsOrdering ?? .derived(
-                category: .stock,
-                subCategoryIndex: subCategoryIndex
-            )
+            let order = order?.perpsOrdering ?? .stocksDefault
             let markets = PerpsMarketDAO.shared.availableMarkets(
                 category: .categorized(.stocks),
                 ordering: order

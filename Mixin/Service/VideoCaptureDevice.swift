@@ -26,7 +26,7 @@ enum VideoCaptureDevice {
                 UIAlertAction(
                     title: R.string.localizable.settings(),
                     style: .default,
-                    handler: { (_) in UIApplication.openAppSettings() }
+                    handler: { (_) in UIApplication.shared.openAppSettings() }
                 )
             )
             return alert

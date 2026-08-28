@@ -93,7 +93,7 @@ extension PostWebViewController: WKNavigationDelegate {
         if UrlWindow.checkUrl(url: url) {
             return
         }
-        UIApplication.homeNavigationController?.pushWebViewController(
+        UIApplication.shared.homeNavigationController?.pushWebViewController(
             context: .init(conversationID: "", initialURL: url)
         )
     }
@@ -135,7 +135,7 @@ extension PostWebViewController {
     
     private func exportAsPDF(to cacheURL: URL) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         
         let filename: String
         if let pageTitle {
@@ -171,7 +171,7 @@ extension PostWebViewController {
                         }
                         if AppGroupUserDefaults.User.reloadConversation {
                             AppGroupUserDefaults.User.reloadConversation = false
-                            UIApplication.currentConversationViewController()?.dataSource.reload()
+                            UIApplication.shared.currentConversationViewController()?.dataSource.reload()
                         }
                     }
                     self.present(activity, animated: true, completion: nil)

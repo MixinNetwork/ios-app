@@ -45,10 +45,16 @@ final class TextPreviewView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         textView.textDragInteraction?.isEnabled = false
-        let bottomInset: CGFloat = AppDelegate.current.mainWindow.safeAreaInsets.bottom > 20 ? 0 : 20
+        let bottomInset: CGFloat = safeAreaInsets.bottom > 20 ? 0 : 20
         textView.contentInset = UIEdgeInsets(top: 0, left: horizontalMargin, bottom: bottomInset, right: horizontalMargin)
         tapRecognizer.delegate = self
         textView.delegate = self
+    }
+    
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        let bottomInset: CGFloat = safeAreaInsets.bottom > 20 ? 0 : 20
+        textView.contentInset.bottom = bottomInset
     }
     
     override func didMoveToSuperview() {

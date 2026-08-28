@@ -34,7 +34,7 @@ extension UIViewController {
         let alc = UIAlertController(title: message, message: nil, preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         alc.addAction(UIAlertAction(title: R.string.localizable.settings(), style: .default, handler: { (_) in
-            UIApplication.openAppSettings()
+            UIApplication.shared.openAppSettings()
         }))
         self.present(alc, animated: true, completion: nil)
     }
@@ -54,6 +54,14 @@ extension UIViewController {
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.got_it(), style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
+    }
+    
+    var topPresentedViewController: UIViewController {
+        var topMost = self
+        while let next = topMost.presentedViewController, !next.isBeingDismissed {
+            topMost = next
+        }
+        return topMost
     }
     
 }

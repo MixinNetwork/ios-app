@@ -3,10 +3,13 @@ import UIKit
 enum UserInterfaceStyle: String {
     
     static var current: UserInterfaceStyle {
-        if AppDelegate.current.mainWindow.overrideUserInterfaceStyle != .unspecified {
-            return UserInterfaceStyle(style: AppDelegate.current.mainWindow.overrideUserInterfaceStyle)
+        if let scene = UIApplication.shared.firstWindowScene,
+           let window = scene.keyWindow,
+           window.overrideUserInterfaceStyle != .unspecified
+        {
+            UserInterfaceStyle(style: window.overrideUserInterfaceStyle)
         } else {
-            return UserInterfaceStyle(style: UIScreen.main.traitCollection.userInterfaceStyle)
+            UserInterfaceStyle(style: UIScreen.main.traitCollection.userInterfaceStyle)
         }
     }
     

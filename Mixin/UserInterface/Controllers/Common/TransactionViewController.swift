@@ -58,7 +58,7 @@ class TransactionViewController: UIViewController {
             return
         }
         let targetSize = CGSize(
-            width: AppDelegate.current.mainWindow.bounds.width,
+            width: view.bounds.width,
             height: UIView.layoutFittingExpandedSize.height
         )
         let layoutSize = tableHeaderView.systemLayoutSizeFitting(targetSize)

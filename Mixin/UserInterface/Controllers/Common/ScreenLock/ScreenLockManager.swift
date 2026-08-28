@@ -93,18 +93,24 @@ extension ScreenLockManager {
             return
         }
         isLocked = true
-        AppDelegate.current.mainWindow.endEditing(true)
+        let keyWindow = UIApplication.shared.firstWindowScene?.keyWindow
+        keyWindow?.endEditing(true)
         viewController = ScreenLockViewController()
         viewController!.tapUnlockAction = { [weak self] in
             self?.performBiometricAuthentication()
         }
-        window = Window(frame: UIScreen.main.bounds)
+        if let windowScene = keyWindow?.windowScene {
+            window = Window(windowScene: windowScene)
+        } else {
+            window = Window(frame: UIScreen.main.bounds)
+        }
         window!.rootViewController = viewController
         window!.makeKeyAndVisible()
     }
     
     private func hideScreenLockView() {
-        AppDelegate.current.mainWindow.makeKeyAndVisible()
+        let keyWindow = UIApplication.shared.firstWindowScene?.keyWindow
+        keyWindow?.makeKeyAndVisible()
         viewController = nil
         window = nil
         isLocked = false

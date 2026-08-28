@@ -1,30 +1,31 @@
-import Foundation
+import UIKit
 import MixinServices
 
-class DuplicateConfirmationWindow: AssetConfirmationWindow {
+final class DuplicateConfirmationWindow: AssetConfirmationWindow {
     
     enum Operation {
         case transfer(UserItem)
         case withdraw(WithdrawableAddress)
     }
     
-    static func instance() -> DuplicateConfirmationWindow {
-        return Bundle.main.loadNibNamed("DuplicateConfirmationWindow", owner: nil, options: nil)?.first as! DuplicateConfirmationWindow
-    }
+    private let configure: (DuplicateConfirmationWindow) -> Void
     
-    func render(traceCreatedAt: String, asset: AssetItem, action: PayWindow.PinAction, amount: String, memo: String, fiatMoneyAmount: String? = nil, completion: @escaping CompletionHandler) -> BottomSheetView {
-        let result = super.render(asset: asset, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
-        switch action {
-        case let .transfer(_, user, _, _):
-            titleLabel.text = R.string.localizable.duplicate_transfer_confirmation()
-            tipsLabel.text = R.string.localizable.wallet_transfer_recent_tip(traceCreatedAt.toUTCDate().simpleTimeAgo(), user.fullName, amountLabel.text ?? "")
-        default:
-            break
+    init(traceCreatedAt: String, asset: AssetItem, action: PayWindow.PinAction, amount: String, memo: String, fiatMoneyAmount: String? = nil, completion: @escaping CompletionHandler) {
+        self.configure = { window in
+            window.setup(asset: asset, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, completion: completion)
+            switch action {
+            case let .transfer(_, user, _, _):
+                window.titleLabel.text = R.string.localizable.duplicate_transfer_confirmation()
+                window.tipsLabel.text = R.string.localizable.wallet_transfer_recent_tip(traceCreatedAt.toUTCDate().simpleTimeAgo(), user.fullName, window.amountLabel.text ?? "")
+            default:
+                break
+            }
         }
-        return result
+        let nib = R.nib.duplicateConfirmationWindow
+        super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
-    func render(
+    init(
         token: MixinTokenItem,
         operation: Operation,
         amount: Decimal,
@@ -32,17 +33,29 @@ class DuplicateConfirmationWindow: AssetConfirmationWindow {
         memo: String,
         traceCreatedAt: Date,
         completion: @escaping CompletionHandler
-    ) -> BottomSheetView {
-        super.render(token: token, tokenAmount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, completion: completion)
-        switch operation {
-        case let .transfer(opponent):
-            titleLabel.text = R.string.localizable.duplicate_transfer_confirmation()
-            tipsLabel.text = R.string.localizable.wallet_transfer_recent_tip(traceCreatedAt.simpleTimeAgo(), opponent.fullName, amountLabel.text ?? "")
-        case let .withdraw(address):
-            titleLabel.text = R.string.localizable.duplicate_transfer_confirmation()
-            tipsLabel.text = R.string.localizable.wallet_withdrawal_recent_tip(traceCreatedAt.simpleTimeAgo(), address.compactRepresentation, amountLabel.text ?? "")
+    ) {
+        self.configure = { window in
+            window.setup(token: token, tokenAmount: amount, fiatMoneyAmount: fiatMoneyAmount, memo: memo, completion: completion)
+            switch operation {
+            case let .transfer(opponent):
+                window.titleLabel.text = R.string.localizable.duplicate_transfer_confirmation()
+                window.tipsLabel.text = R.string.localizable.wallet_transfer_recent_tip(traceCreatedAt.simpleTimeAgo(), opponent.fullName, window.amountLabel.text ?? "")
+            case let .withdraw(address):
+                window.titleLabel.text = R.string.localizable.duplicate_transfer_confirmation()
+                window.tipsLabel.text = R.string.localizable.wallet_withdrawal_recent_tip(traceCreatedAt.simpleTimeAgo(), address.compactRepresentation, window.amountLabel.text ?? "")
+            }
         }
-        return self
+        let nib = R.nib.duplicateConfirmationWindow
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configure(self)
     }
     
 }

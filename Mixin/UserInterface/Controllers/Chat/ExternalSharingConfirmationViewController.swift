@@ -105,7 +105,7 @@ final class ExternalSharingConfirmationViewController: UIViewController {
         case .forward:
             dismiss(animated: true) { [message] in
                 let vc = MessageReceiverViewController.instance(content: .message(message))
-                UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+                UIApplication.shared.homeNavigationController?.pushViewController(vc, animated: true)
             }
         }
     }

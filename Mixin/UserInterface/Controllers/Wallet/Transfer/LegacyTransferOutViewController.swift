@@ -186,11 +186,6 @@ class LegacyTransferOutViewController: KeyboardBasedLayoutViewController {
         adjustBottomConstraintWhenKeyboardFrameChanges = false
 
         let traceId = self.traceId
-        let payWindow = PayWindow.instance()
-        payWindow.onDismiss = { [weak self] in
-            self?.adjustBottomConstraintWhenKeyboardFrameChanges = true
-        }
-        self.payWindowIfLoaded = payWindow
         
         switch opponent! {
         case .contact(let user):
@@ -203,7 +198,12 @@ class LegacyTransferOutViewController: KeyboardBasedLayoutViewController {
                         }
                         weakSelf.continueButton.isBusy = false
                         if canPay {
-                            payWindow.render(asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField).presentPopupControllerAnimated()
+                            let payWindow = PayWindow(asset: asset, action: action, amount: amount, memo: memo, fiatMoneyAmount: fiatMoneyAmount, textfield: weakSelf.amountTextField)
+                            payWindow.onDismiss = { [weak weakSelf] in
+                                weakSelf?.adjustBottomConstraintWhenKeyboardFrameChanges = true
+                            }
+                            weakSelf.payWindowIfLoaded = payWindow
+                            weakSelf.present(payWindow, animated: true)
                         } else {
                             weakSelf.amountTextField.becomeFirstResponder()
                             if let error = errorMsg {

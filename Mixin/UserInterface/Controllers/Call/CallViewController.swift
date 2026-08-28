@@ -38,9 +38,9 @@ class CallViewController: ResizablePopupViewController {
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         if service.isInterfaceMinimized {
-            return AppDelegate.current.mainWindow.rootViewController?.preferredStatusBarStyle ?? .default
+            super.preferredStatusBarStyle
         } else {
-            return .lightContent
+            .lightContent
         }
     }
     
@@ -178,8 +178,8 @@ class CallViewController: ResizablePopupViewController {
     }
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
-        let window = AppDelegate.current.mainWindow
-        let maxHeight = window.bounds.height - window.safeAreaInsets.top
+        let totalHeight = presentingViewController?.view.bounds.height ?? view.window?.bounds.height ?? UIScreen.main.bounds.height
+        let maxHeight = totalHeight - view.windowSafeAreaInsets.top
         switch size {
         case .expanded, .unavailable:
             return maxHeight
@@ -203,7 +203,7 @@ class CallViewController: ResizablePopupViewController {
         guard !isShowingContentView else {
             return
         }
-        AppDelegate.current.mainWindow.endEditing(true)
+        view.window?.endEditing(true)
         isShowingContentView = true
         hideContentViewConstraint.priority = .defaultLow
         showContentViewConstraint.priority = .defaultHigh
@@ -324,7 +324,7 @@ class CallViewController: ResizablePopupViewController {
     }
     
     func learnMoreAboutEncryption() {
-        guard let navigationController = UIApplication.homeNavigationController else {
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return
         }
         self.minimize {
@@ -432,7 +432,7 @@ extension CallViewController: UICollectionViewDelegate {
             }
             minimize {
                 let profile = UserProfileViewController(user: user)
-                UIApplication.homeContainerViewController?.present(profile, animated: true, completion: nil)
+                UIApplication.shared.homeContainerViewController?.present(profile, animated: true, completion: nil)
             }
         } else if let call = call as? GroupCall {
             if indexPath.item == 0 {
@@ -457,7 +457,7 @@ extension CallViewController: UICollectionViewDelegate {
             } else if let member = call.membersDataSource.member(at: indexPath) {
                 minimize {
                     let profile = UserProfileViewController(user: member.item)
-                    UIApplication.homeContainerViewController?.present(profile, animated: true, completion: nil)
+                    UIApplication.shared.homeContainerViewController?.present(profile, animated: true, completion: nil)
                 }
             }
         }

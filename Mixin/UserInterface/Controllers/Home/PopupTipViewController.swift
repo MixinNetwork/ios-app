@@ -202,7 +202,7 @@ final class PopupTipViewController: UIViewController {
         case .recovery:
             presentingViewController?.dismiss(animated: true) {
                 let recovery = RecoveryKitViewController()
-                UIApplication.homeNavigationController?.pushViewController(recovery, animated: true)
+                UIApplication.shared.homeNavigationController?.pushViewController(recovery, animated: true)
             }
         case .notification:
             presentingViewController?.dismiss(animated: true)
@@ -222,24 +222,24 @@ final class PopupTipViewController: UIViewController {
         case .verifyMobileNumber:
             presentingViewController?.dismiss(animated: true) {
                 let pin = VerifyMobileNumberPINValidationViewController(intent: .periodicVerification)
-                UIApplication.homeNavigationController?.pushViewController(pin, animated: true)
+                UIApplication.shared.homeNavigationController?.pushViewController(pin, animated: true)
             }
         case .appRating:
             break
         case let .importPrivateKey(wallet, kind):
             presentingViewController?.dismiss(animated: true) {
                 let validation = AddWalletPINValidationViewController(action: .reimportPrivateKey(wallet, kind))
-                UIApplication.homeNavigationController?.pushViewController(validation, animated: true)
+                UIApplication.shared.homeNavigationController?.pushViewController(validation, animated: true)
             }
         case let .importMnemonics(wallet):
             presentingViewController?.dismiss(animated: true) {
                 let validation = AddWalletPINValidationViewController(action: .reimportMnemonics(wallet))
-                UIApplication.homeNavigationController?.pushViewController(validation, animated: true)
+                UIApplication.shared.homeNavigationController?.pushViewController(validation, animated: true)
             }
         case .addMobileNumber:
             presentingViewController?.dismiss(animated: true) {
                 let introduction = MobileNumberIntroductionViewController(action: .add)
-                UIApplication.homeNavigationController?.pushViewController(introduction, animated: true)
+                UIApplication.shared.homeNavigationController?.pushViewController(introduction, animated: true)
             }
         }
     }

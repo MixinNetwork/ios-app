@@ -75,7 +75,7 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
     }
     
     @IBAction func scanQRCode(_ sender: Any) {
-        UIApplication.homeNavigationController?.pushQRCodeScannerViewController()
+        UIApplication.shared.homeNavigationController?.pushQRCodeScannerViewController()
     }
     
     @IBAction func openSettings(_ sender: Any) {
@@ -149,7 +149,7 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
             }
             BadgeManager.shared.setHasViewed(identifier: .membership)
         case .referral:
-            UIApplication.homeNavigationController?.presentReferralPage()
+            UIApplication.shared.homeNavigationController?.presentReferralPage()
             BadgeManager.shared.setHasViewed(identifier: .referral)
         case .linkDesktop:
             let desktop = DesktopViewController()

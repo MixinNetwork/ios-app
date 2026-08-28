@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class DeleteAccountAbortWindow: BottomSheetView {
+final class DeleteAccountAbortWindow: UIViewController {
     
     typealias CompletionHandler = (Bool) -> Void
 
@@ -9,41 +9,33 @@ class DeleteAccountAbortWindow: BottomSheetView {
     @IBOutlet weak var continueButton: RoundedButton!
     @IBOutlet weak var cancelButton: UIButton!
     
+    private let presentationManager = PopupPresentationManager()
     private weak var timer: Timer?
-    private var completion: CompletionHandler?
+    private let completion: CompletionHandler?
+    private let deactivation: Deactivation
     private var canDismiss = false
     private var countDown = 3
+
+    init(deactivation: Deactivation, completion: CompletionHandler? = nil) {
+        self.deactivation = deactivation
+        self.completion = completion
+        let nib = R.nib.deleteAccountAbortWindow
+        super.init(nibName: nib.name, bundle: nib.bundle)
+        transitioningDelegate = presentationManager
+        modalPresentationStyle = .custom
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
 
     deinit {
         timer?.invalidate()
         timer = nil
     }
     
-    override func dismissPopupController(animated: Bool) {
-        guard canDismiss else {
-            return
-        }
-        super.dismissPopupController(animated: animated)
-    }
-    
-    @IBAction func continueAction(_ sender: Any) {
-        canDismiss = true
-        completion?(false)
-        dismissPopupController(animated: true)
-    }
-    
-    @IBAction func cancelAction(_ sender: Any) {
-        canDismiss = true
-        completion?(true)
-        dismissPopupController(animated: true)
-    }
-    
-    class func instance() -> DeleteAccountAbortWindow {
-        R.nib.deleteAccountAbortWindow(withOwner: self)!
-    }
-    
-    func render(deactivation: Deactivation, completion: @escaping CompletionHandler) {
-        self.completion = completion
+    override func viewDidLoad() {
+        super.viewDidLoad()
         let requestedAt = DateFormatter.deleteAccount.string(from: deactivation.requestedAt)
         let effectiveAt = DateFormatter.deleteAccount.string(from: deactivation.effectiveAt)
         label.text = R.string.localizable.landing_delete_content(requestedAt, effectiveAt)
@@ -52,6 +44,22 @@ class DeleteAccountAbortWindow: BottomSheetView {
         cancelButton.isEnabled = false
         cancelButton.setTitleColor(R.color.button_text_disabled()!, for: .normal)
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(countDownAction), userInfo: nil, repeats: true)
+    }
+    
+    @IBAction func continueAction(_ sender: Any) {
+        canDismiss = true
+        let completion = self.completion
+        dismiss(animated: true) {
+            completion?(false)
+        }
+    }
+    
+    @IBAction func cancelAction(_ sender: Any) {
+        canDismiss = true
+        let completion = self.completion
+        dismiss(animated: true) {
+            completion?(true)
+        }
     }
     
     @objc private func countDownAction() {

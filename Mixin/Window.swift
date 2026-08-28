@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class Window: UIWindow {
+final class Window: UIWindow {
     
     private var dismissMenuResponder: UIButton?
     
@@ -11,6 +11,12 @@ class Window: UIWindow {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        observeUserInterfaceStyleChangeNotification()
+        updateUserInterfaceStyle()
+    }
+    
+    override init(windowScene: UIWindowScene) {
+        super.init(windowScene: windowScene)
         observeUserInterfaceStyleChangeNotification()
         updateUserInterfaceStyle()
     }

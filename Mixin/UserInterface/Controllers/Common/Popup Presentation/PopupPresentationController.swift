@@ -79,7 +79,14 @@ class PopupPresentationController: UIPresentationController {
     }
     
     private func updatePresentedViewFrame() {
-        presentedView?.frame = frameOfPresentedViewInContainerView
+        guard let presentedView = presentedView else {
+            return
+        }
+        let targetFrame = frameOfPresentedViewInContainerView
+        guard presentedView.frame != targetFrame else {
+            return
+        }
+        presentedView.frame = targetFrame
     }
     
 }

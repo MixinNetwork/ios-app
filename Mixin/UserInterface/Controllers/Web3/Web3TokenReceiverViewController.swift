@@ -182,7 +182,7 @@ extension Web3TokenReceiverViewController {
     
     private func sendToPrivacyWallet() {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         Task { [payment, weak self] in
             do {
                 let chainID = payment.chain.chainID

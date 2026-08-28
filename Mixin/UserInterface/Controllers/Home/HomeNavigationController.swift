@@ -34,9 +34,12 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
     }
     
     func pushQRCodeScannerViewController() {
+        if viewControllers.last is QRCodeScannerViewController {
+            return
+        }
         VideoCaptureDevice.checkAuthorization {
             let scanner = QRCodeScannerViewController()
-            self.pushViewController(scanner, animated: true)
+            self.pushViewController(withBackRoot: scanner)
         } onDenied: { alert in
             self.present(alert, animated: true)
         }
@@ -93,7 +96,7 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
         }
         
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: view)
+        hud.show(style: .busy, text: "")
         UserAPI.showUser(userId: appID) { [weak self] result in
             switch result {
             case .success(let response):

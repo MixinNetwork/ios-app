@@ -9,9 +9,16 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DeleteAccountAbortWindow" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="cancelButton" destination="SsQ-Pa-U23" id="Tob-5v-8gm"/>
+                <outlet property="continueButton" destination="Wvn-2g-8pH" id="tiR-00-6r3"/>
+                <outlet property="label" destination="fqw-51-CRz" id="mAE-T8-tIF"/>
+                <outlet property="view" destination="iN0-l3-epB" id="s0e-Wz-P0a"/>
+            </connections>
+        </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view alpha="0.94999999999999996" contentMode="scaleToFill" id="iN0-l3-epB" customClass="DeleteAccountAbortWindow" customModule="Mixin" customModuleProvider="target">
+        <view alpha="0.94999999999999996" contentMode="scaleToFill" id="iN0-l3-epB">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -59,7 +66,7 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="continue"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="continueAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="rvj-kU-vZx"/>
+                                <action selector="continueAction:" destination="-1" eventType="touchUpInside" id="rvj-kU-vZx"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SsQ-Pa-U23">
@@ -73,7 +80,7 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular16"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="cancelAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="aYc-du-qZP"/>
+                                <action selector="cancelAction:" destination="-1" eventType="touchUpInside" id="aYc-du-qZP"/>
                             </connections>
                         </button>
                     </subviews>
@@ -95,19 +102,13 @@
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="displayP3"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="1Vo-0t-6vQ" secondAttribute="bottom" id="4LD-GO-ODi"/>
                 <constraint firstItem="1Vo-0t-6vQ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Wab-Jm-Dhr"/>
                 <constraint firstAttribute="trailing" secondItem="1Vo-0t-6vQ" secondAttribute="trailing" id="Yzr-iF-xp5"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="SsQ-Pa-U23" secondAttribute="bottom" constant="30" id="ijP-IL-wEF"/>
             </constraints>
-            <connections>
-                <outlet property="cancelButton" destination="SsQ-Pa-U23" id="Tob-5v-8gm"/>
-                <outlet property="continueButton" destination="Wvn-2g-8pH" id="tiR-00-6r3"/>
-                <outlet property="label" destination="fqw-51-CRz" id="mAE-T8-tIF"/>
-                <outlet property="popupView" destination="1Vo-0t-6vQ" id="pLQ-P4-BSk"/>
-            </connections>
             <point key="canvasLocation" x="137.68115942028987" y="152.67857142857142"/>
         </view>
     </objects>

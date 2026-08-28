@@ -70,7 +70,7 @@ class UrlWindow {
                 switch context.type {
                 case let .perpsMarket(marketID):
                     let hud = Hud()
-                    hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+                    hud.show(style: .busy, text: "")
                     RouteAPI.perpsMarket(marketID: marketID) { result in
                         switch result {
                         case .success(let market):
@@ -78,7 +78,7 @@ class UrlWindow {
                                 PerpsMarketDAO.shared.save(market: market)
                             }
                             hud.hide()
-                            if let navigationController = UIApplication.homeNavigationController {
+                            if let navigationController = UIApplication.shared.homeNavigationController {
                                 let viewModel = PerpetualMarketViewModel(market: market)
                                 let market = PerpetualMarketViewController(
                                     wallet: .privacy,
@@ -113,7 +113,7 @@ class UrlWindow {
                         receiveAssetID: output ?? AssetID.erc20USDT,
                         referral: context.referral
                     )
-                    if let navigationController = UIApplication.homeNavigationController, let trade {
+                    if let navigationController = UIApplication.shared.homeNavigationController, let trade {
                         navigationController.pushViewController(trade, animated: true)
                     }
                 }
@@ -124,7 +124,7 @@ class UrlWindow {
                 checkMarket(id: id)
                 return true
             case .membership:
-                if let homeContainer = UIApplication.homeContainerViewController {
+                if let homeContainer = UIApplication.shared.homeContainerViewController {
                     let plan = if let plan = LoginManager.shared.account?.membership?.plan {
                         SafeMembership.Plan(userMembershipPlan: plan)
                     } else {
@@ -136,7 +136,7 @@ class UrlWindow {
                 return true
             case let .referral(code):
                 let input = InputReferralCodeViewController(code: code)
-                UIApplication.homeContainerViewController?.present(input, animated: true)
+                UIApplication.shared.homeContainerViewController?.present(input, animated: true)
                 return true
             }
         } else if let mixinURL = MixinURL(url: url) {
@@ -175,7 +175,7 @@ class UrlWindow {
                 checkDevice(id: id, publicKey: publicKey)
                 result = true
             case .upgradeDesktop:
-                UIApplication.currentActivity()?.alert(R.string.localizable.desktop_upgrade())
+                UIApplication.shared.homeContainerViewController?.alert(R.string.localizable.desktop_upgrade())
                 result = true
             case let .deviceTransfer(command):
                 result = checkDeviceTransfer(command: command)
@@ -189,18 +189,20 @@ class UrlWindow {
                 }
             case .buy:
                 let buy = BuyTokenInputAmountViewController(wallet: .privacy)
-                UIApplication.homeNavigationController?.pushViewController(buy, animated: true)
+                UIApplication.shared.homeNavigationController?.pushViewController(buy, animated: true)
                 return true
             case .unknown:
                 if source.isExternal && url.scheme == MixinURL.scheme {
-                    UnknownURLWindow.instance().render(url: url).presentPopupControllerAnimated()
+                    let window = UnknownURLWindow(url: url)
+                    UIApplication.shared.homeContainerViewController?.present(window, animated: true)
                     result = true
                 } else {
                     result = false
                 }
             }
             if !result && source.isExternal && url.scheme == MixinURL.scheme {
-                UnknownURLWindow.instance().render(url: url).presentPopupControllerAnimated()
+                let window = UnknownURLWindow(url: url)
+                UIApplication.shared.homeContainerViewController?.present(window, animated: true)
                 return true
             } else {
                 return result
@@ -220,7 +222,7 @@ class UrlWindow {
                     showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
                 }))
                 sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-                UIApplication.homeContainerViewController?.present(sheet, animated: true, completion: nil)
+                UIApplication.shared.homeContainerViewController?.present(sheet, animated: true, completion: nil)
                 return true
             }
         } else {
@@ -237,7 +239,7 @@ class UrlWindow {
         }
 
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         DispatchQueue.global().async {
             var snapshotItem: SnapshotItem?
             if let traceId = traceId  {
@@ -288,11 +290,11 @@ class UrlWindow {
                 func push() {
                     hud.hide()
                     let vc = LegacyTransactionViewController.instance(asset: assetItem, snapshot: snapshot)
-                    UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+                    UIApplication.shared.homeNavigationController?.pushViewController(vc, animated: true)
                 }
                 
-                if UIApplication.homeContainerViewController?.isShowingGallery ?? false {
-                    UIApplication.homeContainerViewController?.galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
+                if UIApplication.shared.homeContainerViewController?.isShowingGallery ?? false {
+                    UIApplication.shared.homeContainerViewController?.galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
                         push()
                     }
                 } else {
@@ -319,10 +321,10 @@ class UrlWindow {
                     viewController = nil
                 }
                 if let viewController = viewController {
-                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: viewController)
+                    UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: viewController)
                 }
             }
-            if let container = UIApplication.homeContainerViewController, container.galleryIsOnTopMost {
+            if let container = UIApplication.shared.homeContainerViewController, container.galleryIsOnTopMost {
                 let currentItemViewController = container.galleryViewController.currentItemViewController
                 if let vc = currentItemViewController as? GalleryVideoItemViewController {
                     vc.togglePipMode(completion: {
@@ -338,7 +340,7 @@ class UrlWindow {
         }
         
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         DispatchQueue.global().async {
             if let userId = userId, conversationId == ConversationDAO.shared.makeConversationId(userId: userId, ownerUserId: myUserId) {
                 guard let (user, _) = syncUser(userId: userId, hud: hud) else {
@@ -402,7 +404,7 @@ class UrlWindow {
         }
 
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         DispatchQueue.global().async {
             guard let (user, updateUserFromRemoteAfterReloaded) = syncUser(userId: userId, hud: hud) else {
                 return
@@ -411,7 +413,7 @@ class UrlWindow {
                 hud.hide()
                 let vc = UserProfileViewController(user: user)
                 vc.updateUserFromRemoteAfterReloaded = updateUserFromRemoteAfterReloaded
-                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                UIApplication.shared.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }
         return true
@@ -444,7 +446,7 @@ class UrlWindow {
             DispatchQueue.main.async {
                 let vc = UserProfileViewController(user: user)
                 vc.updateUserFromRemoteAfterReloaded = updateUserFromRemoteAfterReloaded
-                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                UIApplication.shared.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }
         return true
@@ -456,7 +458,7 @@ class UrlWindow {
         }
 
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         DispatchQueue.global().async {
             guard let (user, _) = syncUser(userId: userId, hud: hud) else {
                 return
@@ -467,13 +469,13 @@ class UrlWindow {
                 func push() {
                     let vc = LegacyTransferOutViewController.instance(asset: nil, type: .contact(user))
                     if clearNavigationStack {
-                        UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                        UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: vc)
                     } else {
-                        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+                        UIApplication.shared.homeNavigationController?.pushViewController(vc, animated: true)
                     }
                 }
-                if UIApplication.homeContainerViewController?.isShowingGallery ?? false {
-                    UIApplication.homeContainerViewController?.galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
+                if UIApplication.shared.homeContainerViewController?.isShowingGallery ?? false {
+                    UIApplication.shared.homeContainerViewController?.galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
                         push()
                     }
                 } else {
@@ -490,7 +492,7 @@ class UrlWindow {
             showAutoHiddenHud(style: .notification, text: R.string.localizable.logined())
         }
         let authentication = AuthenticationViewController(intent: desktopSession)
-        UIApplication.homeNavigationController?.present(authentication, animated: true)
+        UIApplication.shared.homeNavigationController?.present(authentication, animated: true)
     }
     
     class func checkQrCodeDetection(string: String, clearNavigationStack: Bool = true) {
@@ -507,19 +509,20 @@ class UrlWindow {
             WalletConnectService.shared.connect(to: uri)
             return
         }
-        RecognizeWindow.instance().presentWindow(text: string)
+        let window = RecognizeWindow(text: string)
+        UIApplication.shared.homeContainerViewController?.present(window, animated: true)
     }
     
     class func checkWithdrawal(string: String) -> Bool {
         guard ExternalTransfer.isDecodable(raw: string) else {
             return false
         }
-        guard let homeContainer = UIApplication.homeContainerViewController else {
+        guard let homeContainer = UIApplication.shared.homeContainerViewController else {
             return false
         }
         
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         
         AddressValidator.validate(string: string, withdrawing: nil) { result in
             switch result {
@@ -529,7 +532,7 @@ class UrlWindow {
             case let .addressVerified(token, destination):
                 hud.hide()
                 let inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: destination)
-                UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
+                UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
             case let .insufficientBalance(withdrawing, fee):
                 hud.hide()
                 let insufficient = InsufficientBalanceViewController(intent: .withdraw(withdrawing: withdrawing, fee: fee))
@@ -575,7 +578,7 @@ class UrlWindow {
         let recipientId = transfer.recipientID
         let amount = transfer.amount
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         DispatchQueue.global().async {
             guard let asset = syncAsset(assetId: transfer.assetID, hud: hud) else {
                 return
@@ -588,7 +591,8 @@ class UrlWindow {
                 DispatchQueue.main.async {
                     if canPay {
                         hud.hide()
-                        PayWindow.instance().render(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: memo).presentPopupControllerAnimated()
+                        let window = PayWindow(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: memo)
+                        UIApplication.shared.homeContainerViewController?.present(window, animated: true)
                     } else if let error = errorMsg {
                         hud.set(style: .error, text: error)
                         hud.scheduleAutoHidden()
@@ -607,7 +611,7 @@ class UrlWindow {
         }
 
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         DispatchQueue.global().async {
             guard let token = syncToken(assetID: assetID, hud: hud) else {
                 return
@@ -640,7 +644,7 @@ class UrlWindow {
                                                                        destination: address.destination,
                                                                        tag: address.tag,
                                                                        action: .delete(id: address.addressId))
-                        UIApplication.homeContainerViewController?.present(preview, animated: true)
+                        UIApplication.shared.homeContainerViewController?.present(preview, animated: true)
                     } else {
                         hud.set(style: .error, text: R.string.localizable.address_not_found())
                         hud.scheduleAutoHidden()
@@ -656,7 +660,7 @@ class UrlWindow {
                                                                    destination: destination,
                                                                    tag: tag,
                                                                    action: address == nil ? .add : .update)
-                    UIApplication.homeContainerViewController?.present(preview, animated: true)
+                    UIApplication.shared.homeContainerViewController?.present(preview, animated: true)
                 }
             } else {
                 hud.hideInMainThread()
@@ -667,9 +671,9 @@ class UrlWindow {
     
     class func checkSendUrl(sharingContext: ExternalSharingContext, webContext: MixinWebContext?) -> Bool {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         
-        let onScreenConversationID: String? = UIApplication.currentConversationId()
+        let onScreenConversationID: String? = UIApplication.shared.currentConversationId()
         let conversationID: String?
         let needsConfirmation: Bool
         switch sharingContext.destination {
@@ -742,7 +746,7 @@ class UrlWindow {
                     webContext: webContext,
                     action: action
                 )
-                UIApplication.homeContainerViewController?.present(confirmation, animated: true, completion: nil)
+                UIApplication.shared.homeContainerViewController?.present(confirmation, animated: true, completion: nil)
             }
             
             DispatchQueue.global().async {
@@ -798,7 +802,7 @@ class UrlWindow {
                         SendMessageService.shared.sendMessage(message: message, ownerUser: user, isGroupMessage: conversation.isGroup())
                         if conversationID != onScreenConversationID {
                             let viewController = ConversationViewController.instance(ownerUser: user)
-                            UIApplication.homeNavigationController?.pushViewController(withBackRoot: viewController)
+                            UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: viewController)
                         }
                     }
                 }
@@ -874,7 +878,7 @@ class UrlWindow {
             .compactMap(URL.init)
             .compactMap(\.host)
         if externalSchemeHosts.contains(host) {
-            guard let navigationController = UIApplication.homeNavigationController else {
+            guard let navigationController = UIApplication.shared.homeNavigationController else {
                 return false
             }
             navigationController.pushWebViewController(
@@ -893,7 +897,7 @@ class UrlWindow {
         }
         if let market {
             let viewController = MarketViewController(market: market)
-            UIApplication.homeNavigationController?.pushMarketViewController(viewController, animated: true)
+            UIApplication.shared.homeNavigationController?.pushMarketViewController(viewController, animated: true)
             reporter.report(
                 event: .marketDetail,
                 tags: ["type": "spot", "source": "schema"]
@@ -901,7 +905,7 @@ class UrlWindow {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         RouteAPI.markets(id: id, queue: .global()) { result in
             switch result {
             case let .success(market):
@@ -909,7 +913,7 @@ class UrlWindow {
                     DispatchQueue.main.async {
                         hud.hide()
                         let viewController = MarketViewController(market: market)
-                        UIApplication.homeNavigationController?.pushMarketViewController(viewController, animated: true)
+                        UIApplication.shared.homeNavigationController?.pushMarketViewController(viewController, animated: true)
                         reporter.report(
                             event: .marketDetail,
                             tags: ["type": "spot", "source": "schema"]
@@ -948,15 +952,15 @@ class UrlWindow {
             return true
         }
         guard command.version == DeviceTransferCommand.localVersion else {
-            UIApplication.currentActivity()?.alert(R.string.localizable.transfer_protocol_version_not_matched())
+            UIApplication.shared.homeContainerViewController?.alert(R.string.localizable.transfer_protocol_version_not_matched())
             return true
         }
         guard case let .push(context) = command.action else {
-            UIApplication.currentActivity()?.alert(R.string.localizable.transfer_protocol_version_not_matched())
+            UIApplication.shared.homeContainerViewController?.alert(R.string.localizable.transfer_protocol_version_not_matched())
             return true
         }
         guard context.userID == myUserId else {
-            UIApplication.currentActivity()?.alert(R.string.localizable.unable_synced_between_different_account())
+            UIApplication.shared.homeContainerViewController?.alert(R.string.localizable.unable_synced_between_different_account())
             return true
         }
         let client = DeviceTransferClient(hostname: context.hostname,
@@ -966,7 +970,7 @@ class UrlWindow {
                                           remotePlatform: command.platform)
         client.start()
         let progress = DeviceTransferProgressViewController(connection: .client(client, .phone))
-        if let rootViewController = AppDelegate.current.mainWindow.rootViewController,
+        if let rootViewController = UIApplication.shared.firstWindowScene?.keyWindow?.rootViewController,
            let checkEnvironment = rootViewController as? CheckSessionEnvironmentViewController,
            let navigationController = checkEnvironment.contentViewController as? UINavigationController
         {
@@ -1026,9 +1030,9 @@ extension UrlWindow {
                 case .presentProfile:
                     let vc = UserProfileViewController(user: user)
                     vc.updateUserFromRemoteAfterReloaded = refreshUser
-                    UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                    UIApplication.shared.homeContainerViewController?.present(vc, animated: true, completion: nil)
                 case .presentHomePage(let additionalQueries):
-                    UIApplication.homeNavigationController?.pushWebViewController(
+                    UIApplication.shared.homeNavigationController?.pushWebViewController(
                         context: .init(
                             conversationID: conversationId,
                             app: app,
@@ -1047,7 +1051,7 @@ extension UrlWindow {
 extension UrlWindow {
 
     private static func checkSafePaymentURL(_ paymentURL: SafePaymentURL, from source: Source) {
-        var presenter: UIViewController? = UIApplication.homeContainerViewController
+        var presenter: UIViewController? = UIApplication.shared.homeContainerViewController
         while let next = presenter?.presentedViewController, !next.isBeingDismissed {
             presenter = next
         }
@@ -1060,7 +1064,7 @@ extension UrlWindow {
             completion = externalCompletion
         default:
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: presenter.view)
+            hud.show(style: .busy, text: "")
             completion = { (message) in
                 if let message {
                     hud.set(style: .error, text: message)
@@ -1131,7 +1135,7 @@ extension UrlWindow {
                         )
                         inputAmount.reference = paymentURL.reference
                         inputAmount.redirection = paymentURL.redirection
-                        UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
+                        UIApplication.shared.homeNavigationController?.pushViewController(inputAmount, animated: true)
                     }
                 case (.none, .none):
                     // Receive money QR code
@@ -1149,7 +1153,7 @@ extension UrlWindow {
                             )
                             inputAmount.reference = paymentURL.reference
                             inputAmount.redirection = paymentURL.redirection
-                            UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
+                            UIApplication.shared.homeNavigationController?.pushViewController(inputAmount, animated: true)
                         }
                         presenter.present(selector, animated: true)
                     }
@@ -1273,7 +1277,7 @@ extension UrlWindow {
                     }
                     completion(nil)
                     let selector = PaymentCollectibleSelectorViewController(receiver: receiver, collectionHash: hash)
-                    UIApplication.homeNavigationController?.present(selector, animated: true)
+                    UIApplication.shared.homeNavigationController?.present(selector, animated: true)
                 }
                 return
             case let .prefilled(assetID, amount):
@@ -1362,11 +1366,11 @@ extension UrlWindow {
     }
     
     private static func checkMultisig(_ multisig: MultisigURL) {
-        guard let homeContainer = UIApplication.homeContainerViewController else {
+        guard let homeContainer = UIApplication.shared.homeContainerViewController else {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         SafeAPI.multisigs(id: multisig.id, queue: .global()) { result in
             switch result {
             case .success(let response):
@@ -1472,7 +1476,7 @@ extension UrlWindow {
     
     private static func checkCode(_ code: String, from source: Source, clearNavigationStack: Bool) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         SafeAPI.scheme(uuid: code) { result in
             switch result {
             case .success(let scheme):
@@ -1491,7 +1495,7 @@ extension UrlWindow {
         }
 
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
 
         UserAPI.codes(codeId: codeId) { (result) in
             switch result {
@@ -1521,11 +1525,11 @@ extension UrlWindow {
     }
     
     private static func checkTIP(_ tip: TIPURL, from source: Source) {
-        guard let homeContainer = UIApplication.homeContainerViewController else {
+        guard let homeContainer = UIApplication.shared.homeContainerViewController else {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: homeContainer.view)
+        hud.show(style: .busy, text: "")
         switch tip {
         case let .sign(requestID, chain, action, raw):
             switch chain {
@@ -1587,11 +1591,11 @@ extension UrlWindow {
     }
     
     private static func checkInscription(hash: String) {
-        guard let navigationController = UIApplication.homeNavigationController else {
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: navigationController.view)
+        hud.show(style: .busy, text: "")
         DispatchQueue.global().async { [weak navigationController] in
             if let output = InscriptionDAO.shared.inscriptionOutput(inscriptionHash: hash) {
                 DispatchQueue.main.async {
@@ -1630,7 +1634,7 @@ extension UrlWindow {
         }
         
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         let marketID = leaderPosition.marketID
         RouteAPI.perpsMarket(marketID: marketID) { result in
             switch result {
@@ -1638,7 +1642,7 @@ extension UrlWindow {
                 DispatchQueue.global().async {
                     PerpsMarketDAO.shared.save(market: market)
                 }
-                guard let navigationController = UIApplication.homeNavigationController else {
+                guard let navigationController = UIApplication.shared.homeNavigationController else {
                     hud.hide()
                     return
                 }
@@ -2034,7 +2038,8 @@ extension UrlWindow {
 
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: multisig.amount, memo: "", error: error).presentPopupControllerAnimated()
+                let window = PayWindow(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: multisig.amount, memo: "", error: error)
+                UIApplication.shared.homeContainerViewController?.present(window, animated: true)
             }
         }
     }
@@ -2065,7 +2070,8 @@ extension UrlWindow {
             }
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(asset: asset, action: action, amount: payment.amount, memo: payment.memo, error: error).presentPopupControllerAnimated()
+                let window = PayWindow(asset: asset, action: action, amount: payment.amount, memo: payment.memo, error: error)
+                UIApplication.shared.homeContainerViewController?.present(window, animated: true)
             }
         }
     }
@@ -2078,7 +2084,7 @@ extension UrlWindow {
                 hud.hide()
                 let user = UserItem.createUser(from: user)
                 let vc = UserProfileViewController(user: user)
-                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                UIApplication.shared.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }
     }
@@ -2101,14 +2107,15 @@ extension UrlWindow {
             }
             DispatchQueue.main.async {
                 hud.hide()
-                PayWindow.instance().render(token: token, action: .collectible(collectible: collectible, senders: senderUsers, receivers: receiverUsers), amount: collectible.amount, memo: "", error: error).presentPopupControllerAnimated()
+                let window = PayWindow(token: token, action: .collectible(collectible: collectible, senders: senderUsers, receivers: receiverUsers), amount: collectible.amount, memo: "", error: error)
+                UIApplication.shared.homeContainerViewController?.present(window, animated: true)
             }
         }
     }
     
     private static func presentAuthorization(authorization: AuthorizationResponse, webContext: MixinWebContext? = nil, hud: Hud) {
         if let app = webContext?.appEnvironment?.app {
-            if let switcher = UIApplication.homeContainerViewController?.clipSwitcher, let clip = switcher.clips.first(where: { $0.appEnvironment?.app.appId == app.appId }) {
+            if let switcher = UIApplication.shared.homeContainerViewController?.clipSwitcher, let clip = switcher.clips.first(where: { $0.appEnvironment?.app.appId == app.appId }) {
                 Logger.general.info(category: "Authorization", message: "Auth window presented from clip: \(clip.title), url: \(clip.url)")
             }
             Logger.general.info(category: "Authorization", message: "Auth window presented with web context. App number: \(app.appNumber), name: \(app.name), home: \(app.homeUri)")
@@ -2116,12 +2123,14 @@ extension UrlWindow {
             Logger.general.info(category: "Authorization", message: "Auth window presented with app number: \(authorization.app.appNumber), name: \(authorization.app.name), home: \(authorization.app.homeUri)")
         }
         
-        if let window = UIApplication.shared.keyWindow?.subviews.compactMap({ $0 as? AuthorizationWindow }).first, window.isShowing {
+        let root = UIApplication.shared.homeContainerViewController ?? UIApplication.shared.firstWindowScene?.keyWindow?.rootViewController
+        if root?.topPresentedViewController is AuthorizationWindow {
             hud.hideInMainThread()
             return
         }
         hud.hide()
-        AuthorizationWindow.instance().render(authInfo: authorization).presentPopupControllerAnimated()
+        let window = AuthorizationWindow(authInfo: authorization)
+        UIApplication.shared.homeContainerViewController?.present(window, animated: true)
     }
 
     private static func presentConversation(conversation: ConversationResponse, codeId: String, hud: Hud) {
@@ -2166,10 +2175,10 @@ extension UrlWindow {
                 hud.hide()
                 if isMember {
                     let vc = ConversationViewController.instance(conversation: ConversationItem(response: conversation))
-                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                    UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: vc)
                 } else {
                     let vc = GroupProfileViewController(response: conversation, codeId: codeId, participants: participants, isMember: isMember)
-                    UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                    UIApplication.shared.homeContainerViewController?.present(vc, animated: true, completion: nil)
                 }
                 
             }

@@ -205,7 +205,7 @@ extension CirclesViewController {
         let sheet = UIAlertController(title: circle.name, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: delete, style: .destructive, handler: { (_) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             CircleAPI.delete(id: circle.circleId) { (result) in
                 switch result {
                 case .success:
@@ -231,7 +231,7 @@ extension CirclesViewController {
     
     private func addCircle(name: String) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         CircleAPI.create(name: name) { (result) in
             switch result {
             case .success(let circle):
@@ -255,7 +255,7 @@ extension CirclesViewController {
     
     private func editCircle(with circleId: String, name: String) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         CircleAPI.update(id: circleId, name: name, completion: { result in
             switch result {
             case .success(let circle):

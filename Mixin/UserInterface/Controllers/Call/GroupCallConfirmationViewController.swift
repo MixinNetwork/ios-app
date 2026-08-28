@@ -45,7 +45,7 @@ class GroupCallConfirmationViewController: CallViewController {
     }
     
     override func learnMoreAboutEncryption() {
-        guard let navigationController = UIApplication.homeNavigationController else {
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return
         }
         hideContentView {

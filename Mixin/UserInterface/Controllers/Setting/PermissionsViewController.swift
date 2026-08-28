@@ -43,7 +43,7 @@ final class PermissionsViewController: UIViewController {
         switch dataSource {
         case .app(let id):
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             AuthorizeAPI.authorizations(appId: id) { [weak self] result in
                 guard let self = self else {
                     return

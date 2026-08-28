@@ -228,7 +228,7 @@ final class ConversationViewController: UIViewController {
     }
     
     private var maxInputWrapperHeight: CGFloat {
-        return AppDelegate.current.mainWindow.frame.height
+        view.bounds.height
             - navigationBarView.frame.height
             - minInputWrapperTopMargin
     }
@@ -238,7 +238,7 @@ final class ConversationViewController: UIViewController {
         if let banner = pinMessageBannerViewIfLoaded, !banner.isHidden {
             min = navigationBarView.frame.maxY + pinMessageBannerHeight + 33
         } else {
-            min = AppDelegate.current.mainWindow.safeAreaInsets.top + titleViewHeightConstraint.constant + 30
+            min = view.safeAreaInsets.top + titleViewHeightConstraint.constant + 30
         }
         let max = inputWrapperView.frame.minY - 30
         return (min, max)
@@ -713,7 +713,7 @@ final class ConversationViewController: UIViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.confirm(), style: .destructive, handler: { _ in
             let hud = Hud()
             if let view = self.navigationController?.view {
-                hud.show(style: .busy, text: "", on: view)
+                hud.show(style: .busy, text: "")
             }
             UserAPI.reportUser(userId: inviterId) { result in
                 switch result {
@@ -816,14 +816,14 @@ final class ConversationViewController: UIViewController {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
                 conversationInputViewController.dismiss()
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
-                if let galleryViewController = UIApplication.homeContainerViewController?.galleryViewController {
+                if let galleryViewController = UIApplication.shared.homeContainerViewController?.galleryViewController {
                     galleryViewController.conversationId = conversationId
                     galleryViewController.show(item: item, from: cell)
                 }
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue || viewModel.mediaStatus == MediaStatus.READ.rawValue {
                     conversationInputViewController.dismiss()
-                    UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
+                    UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
                     if viewModel.isListPlayable {
                         if CallService.shared.hasCall {
                             alert(R.string.localizable.call_on_another_call_hint())
@@ -1371,7 +1371,7 @@ final class ConversationViewController: UIViewController {
         guard !conversationId.isEmpty else {
             return
         }
-        UIApplication.homeNavigationController?.pushWebViewController(
+        UIApplication.shared.homeNavigationController?.pushWebViewController(
             context: .init(conversationID: conversationId, app: app, isAppVerified: verified),
         )
     }
@@ -1892,7 +1892,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
-        guard UIApplication.homeContainerViewController?.pipController?.item != item else {
+        guard UIApplication.shared.homeContainerViewController?.pipController?.item != item else {
             return
         }
         setCell(ofMessageId: item.messageId, contentViewHidden: true)
@@ -2254,7 +2254,7 @@ extension ConversationViewController {
     }
     
     private func updateNavigationBarHeightAndTableViewTopInset() {
-        titleViewTopConstraint.constant = max(20, AppDelegate.current.mainWindow.safeAreaInsets.top)
+        titleViewTopConstraint.constant = max(20, view.safeAreaInsets.top)
         tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
         tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
     }
@@ -2316,7 +2316,10 @@ extension ConversationViewController {
     
     private func frameOfPhotoRepresentableCell(_ cell: PhotoRepresentableMessageCell) -> CGRect {
         var rect = cell.contentImageView.convert(cell.contentImageView.bounds, to: view)
-        if UIApplication.shared.statusBarHeight == StatusBarHeight.inCall {
+        if let scene = view.window?.windowScene,
+           let statusBarFrame = scene.statusBarManager?.statusBarFrame,
+           statusBarFrame.height == StatusBarHeight.inCall
+        {
             rect.origin.y += (StatusBarHeight.inCall - StatusBarHeight.normal)
         }
         return rect
@@ -2526,7 +2529,7 @@ extension ConversationViewController {
     private func hidePinMessagePreview() {
         pinMessageBannerView.hideMessagePreview()
         pinMessageBannerView.snp.updateConstraints { make in
-            make.left.equalTo(AppDelegate.current.mainWindow.bounds.width - 60)
+            make.left.equalTo(view.bounds.width - 60)
         }
     }
     
@@ -2721,7 +2724,7 @@ extension ConversationViewController {
         } else {
             context = .init(conversationID: conversationId, initialURL: url)
         }
-        UIApplication.homeNavigationController?.pushWebViewController(context: context)
+        UIApplication.shared.homeNavigationController?.pushWebViewController(context: context)
     }
     
     private func reportAirDop(conversationId: String) {

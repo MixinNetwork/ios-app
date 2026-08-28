@@ -192,7 +192,7 @@ final class AddCashInputAmountViewController: TokenConsumingInputAmountViewContr
                 addingAmount: receiveAmount,
                 operation: operation
             )
-            UIApplication.homeContainerViewController?.present(preview, animated: true)
+            UIApplication.shared.homeContainerViewController?.present(preview, animated: true)
         }
     }
     

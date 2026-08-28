@@ -19,7 +19,7 @@ enum WalletBanner: Equatable, Hashable {
                let url = URL(string: action)
             {
                 if !UrlWindow.checkUrl(url: url) {
-                    UIApplication.homeNavigationController?.pushWebViewController(
+                    UIApplication.shared.homeNavigationController?.pushWebViewController(
                         context: .init(conversationID: "", initialURL: url)
                     )
                 }

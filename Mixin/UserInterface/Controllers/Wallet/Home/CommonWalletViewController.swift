@@ -559,7 +559,7 @@ extension CommonWalletViewController {
         case .always:
             if AppGroupUserDefaults.Wallet.dappConnectionWalletID != wallet.walletID {
                 AppGroupUserDefaults.Wallet.dappConnectionWalletID = wallet.walletID
-                UIApplication.homeContainerViewController?.clipSwitcher.reloadWebViews()
+                UIApplication.shared.homeContainerViewController?.clipSwitcher.reloadWebViews()
                 WalletConnectService.shared.updateSessions(with: wallet)
             }
         case .never, .afterImportingMnemonics, .afterImportingPrivateKey:
@@ -589,7 +589,7 @@ extension CommonWalletViewController {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         RouteAPI.renameWallet(id: wallet.walletID, name: name, queue: .main) { [weak self] result in
             switch result {
             case let .success(wallet):

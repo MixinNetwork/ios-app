@@ -71,7 +71,7 @@ final class CancelPendingMembershipOrderViewController: UIViewController {
     @IBAction func cancelWaiting(_ sender: Any) {
         presentingViewController?.dismiss(animated: true)
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         let id = order.orderID.uuidString.lowercased()
         SafeAPI.cancelMembershipOrder(id: id) { result in
             switch result {

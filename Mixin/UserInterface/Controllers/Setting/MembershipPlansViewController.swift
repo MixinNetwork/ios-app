@@ -207,7 +207,7 @@ final class MembershipPlansViewController: UIViewController {
         }
         presentingViewController.dismiss(animated: true) {
             let viewController = MembershipOrderViewController(order: order)
-            UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
+            UIApplication.shared.homeNavigationController?.pushViewController(viewController, animated: true)
         }
     }
     

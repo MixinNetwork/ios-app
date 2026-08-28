@@ -49,8 +49,14 @@ class ConversationDataSource {
     
     var layoutSize: CGSize {
         Queue.main.autoSync {
-            var size = AppDelegate.current.mainWindow.bounds.size
-            if UIApplication.shared.isLandscape {
+            guard
+                let scene = UIApplication.shared.firstWindowScene,
+                let window = scene.keyWindow
+            else {
+                return CGSize(width: 320, height: 568)
+            }
+            var size = window.bounds.size
+            if scene.interfaceOrientation.isLandscape {
                 swap(&size.width, &size.height)
             }
             return size

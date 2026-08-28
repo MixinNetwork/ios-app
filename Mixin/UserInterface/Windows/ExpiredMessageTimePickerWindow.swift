@@ -1,6 +1,6 @@
 import UIKit
 
-class ExpiredMessageTimePickerWindow: BottomSheetView {
+final class ExpiredMessageTimePickerWindow: UIViewController {
         
     @IBOutlet weak var pickerView: UIPickerView!
     
@@ -12,31 +12,17 @@ class ExpiredMessageTimePickerWindow: BottomSheetView {
             guard oldValue != selectedUnit else {
                 return
             }
-            pickerView.reloadComponent(Component.duration.rawValue)
+            pickerView?.reloadComponent(Component.duration.rawValue)
         }
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        pickerView.dataSource = self
-        pickerView.delegate = self
-    }
-    
-    @IBAction func setAction(_ sender: Any) {
-        let expireIn = Int64(selectedUnit.interval) * Int64(max(selectedDuration, 1))
-        onPick?(expireIn)
-        dismissPopupController(animated: true)
-    }
-    
-    @IBAction func closeAction(_ sender: Any) {
-        dismissPopupController(animated: true)
-    }
-    
-    class func instance() -> ExpiredMessageTimePickerWindow {
-        R.nib.expiredMessageTimePickerWindow(withOwner: self)!
-    }
-    
-    func render(expireIn: Int64) {
+    init(expireIn: Int64, onPick: ((Int64) -> Void)? = nil) {
+        self.onPick = onPick
+        let nib = R.nib.expiredMessageTimePickerWindow
+        super.init(nibName: nib.name, bundle: nib.bundle)
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
+        modalPresentationStyle = .custom
+        
         let timeInterval = TimeInterval(expireIn)
         if timeInterval < .minute {
             selectedUnit = .second
@@ -54,8 +40,30 @@ class ExpiredMessageTimePickerWindow: BottomSheetView {
             selectedUnit = .week
             selectedDuration = Int(timeInterval / .week)
         }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        pickerView.dataSource = self
+        pickerView.delegate = self
         pickerView.selectRow(index(for: selectedDuration), inComponent: Component.duration.rawValue, animated: false)
         pickerView.selectRow(selectedUnit.rawValue, inComponent: Component.unit.rawValue, animated: false)
+    }
+    
+    @IBAction func setAction(_ sender: Any) {
+        let expireIn = Int64(selectedUnit.interval) * Int64(max(selectedDuration, 1))
+        let onPick = self.onPick
+        dismiss(animated: true) {
+            onPick?(expireIn)
+        }
+    }
+    
+    @IBAction func closeAction(_ sender: Any) {
+        dismiss(animated: true)
     }
     
 }

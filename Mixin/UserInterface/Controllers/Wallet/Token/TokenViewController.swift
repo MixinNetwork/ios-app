@@ -355,7 +355,7 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
             guard let productionID = earning?.topProductionID else {
                 return
             }
-            UIApplication.homeNavigationController?.presentEarnPage(
+            UIApplication.shared.homeNavigationController?.presentEarnPage(
                 additionalURLQueries: ["production": productionID]
             )
         case .pending:

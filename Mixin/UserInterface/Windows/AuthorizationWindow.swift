@@ -1,7 +1,7 @@
-import Foundation
+import UIKit
 import MixinServices
 
-class AuthorizationWindow: BottomSheetView {
+final class AuthorizationWindow: UIViewController {
     
     @IBOutlet weak var scopePreviewView: AuthorizationScopePreviewView!
     @IBOutlet weak var scopeConfirmationView: AuthorizationScopeConfirmationView!
@@ -16,11 +16,32 @@ class AuthorizationWindow: BottomSheetView {
     @IBOutlet weak var showScopeConfirmationViewConstraint: NSLayoutConstraint!
     
     private var dataSource: AuthorizationScopeDataSource!
-    private var authInfo: AuthorizationResponse!
+    private let authInfo: AuthorizationResponse
     private var loginSuccess = false
     
-    override func dismissPopupController(animated: Bool) {
-        super.dismissPopupController(animated: animated)
+    init(authInfo: AuthorizationResponse) {
+        self.authInfo = authInfo
+        let nib = R.nib.authorizationWindow
+        super.init(nibName: nib.name, bundle: nib.bundle)
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
+        modalPresentationStyle = .custom
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        avatarImageView.setImage(app: authInfo.app)
+        setupLabels()
+        dataSource = AuthorizationScopeDataSource(response: authInfo)
+        scopePreviewView.delegate = self
+        scopePreviewView.dataSource = dataSource
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         guard !loginSuccess else {
             return
         }
@@ -34,22 +55,8 @@ class AuthorizationWindow: BottomSheetView {
         }
     }
     
-    class func instance() -> AuthorizationWindow {
-        R.nib.authorizationWindow(withOwner: self)!
-    }
-    
-    func render(authInfo: AuthorizationResponse) -> AuthorizationWindow {
-        self.authInfo = authInfo
-        avatarImageView.setImage(app: authInfo.app)
-        setupLabels()
-        dataSource = AuthorizationScopeDataSource(response: authInfo)
-        scopePreviewView.delegate = self
-        scopePreviewView.dataSource = dataSource
-        return self
-    }
-    
     @IBAction func backAction(_ sender: Any) {
-        dismissPopupController(animated: true)
+        dismiss(animated: true)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -82,7 +89,7 @@ extension AuthorizationWindow: AuthorizationScopePreviewViewDelegate {
         scopeConfirmationView.resetInput()
         showScopePreviewViewConstraint.priority = .defaultLow
         showScopeConfirmationViewConstraint.priority = .defaultHigh
-        UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve) {
+        UIView.transition(with: view, duration: 0.3, options: .transitionCrossDissolve) {
             self.scopePreviewView.isHidden = true
             self.scopeConfirmationView.isHidden = false
         } completion: { _ in
@@ -107,9 +114,9 @@ extension AuthorizationWindow: AuthorizationScopeConfirmationViewDelegate {
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 self.loginSuccess = true
                 showAutoHiddenHud(style: .notification, text: R.string.localizable.authorized())
-                self.dismissPopupController(animated: true)
-                if UIApplication.homeNavigationController?.viewControllers.last is QRCodeScannerViewController {
-                    UIApplication.homeNavigationController?.popViewController(animated: true)
+                self.dismiss(animated: true)
+                if UIApplication.shared.homeNavigationController?.viewControllers.last is QRCodeScannerViewController {
+                    UIApplication.shared.homeNavigationController?.popViewController(animated: true)
                 }
                 UIApplication.shared.tryOpenThirdApp(response: response)
             case let .failure(error):

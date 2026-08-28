@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class DeleteAccountConfirmWindow: BottomSheetView {
+final class DeleteAccountConfirmWindow: UIViewController {
     
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var textLabel: TextLabel!
@@ -12,17 +12,28 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
     @IBOutlet weak var textLabelTrailingConstraint: NSLayoutConstraint!
     
     private var lastViewWidth: CGFloat = 0
-    private var verificationID: String?
+    private let verificationID: String?
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    init(verificationID: String? = nil) {
+        self.verificationID = verificationID
+        let nib = R.nib.deleteAccountConfirmWindow
+        super.init(nibName: nib.name, bundle: nib.bundle)
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
+        modalPresentationStyle = .custom
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillChangeFrame(_:)),
                                                name: UIResponder.keyboardWillChangeFrameNotification,
                                                object: nil)
         
         pinField.delegate = self
-        pinField.becomeFirstResponder()
         
         textLabel.font = .preferredFont(forTextStyle: .callout)
         textLabel.lineSpacing = 4
@@ -40,29 +51,24 @@ final class DeleteAccountConfirmWindow: BottomSheetView {
             textLabel.linkColor = .theme
             textLabel.additionalLinksMap = [linkRange: URL.deleteAccount]
         }
+        pinField.becomeFirstResponder()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        guard bounds.width != lastViewWidth else {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard view.bounds.width != lastViewWidth else {
             return
         }
-        let labelWidth = bounds.width
+        let labelWidth = view.bounds.width
             - textLabelLeadingConstraint.constant
             - textLabelTrailingConstraint.constant
         let sizeToFitLabel = CGSize(width: labelWidth, height: UIView.layoutFittingExpandedSize.height)
         textLabelHeightConstraint.constant = textLabel.sizeThatFits(sizeToFitLabel).height
-        lastViewWidth = bounds.width
+        lastViewWidth = view.bounds.width
     }
     
     @IBAction func closeAction(_ sender: Any) {
-        dismissPopupController(animated: true)
-    }
-    
-    class func instance(verificationID: String?) -> DeleteAccountConfirmWindow {
-        let window = R.nib.deleteAccountConfirmWindow(withOwner: self)!
-        window.verificationID = verificationID
-        return window
+        dismiss(animated: true)
     }
     
 }
@@ -73,9 +79,9 @@ extension DeleteAccountConfirmWindow {
         guard let endFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
-        let windowHeight = AppDelegate.current.mainWindow.bounds.height
-        textLabelBottomConstraint.constant = windowHeight - endFrame.origin.y + 60
-        layoutIfNeeded()
+        let screenHeight = view.window?.bounds.height ?? UIScreen.main.bounds.height
+        textLabelBottomConstraint.constant = max(0, screenHeight - endFrame.origin.y) + 60
+        view.layoutIfNeeded()
     }
     
 }
@@ -84,7 +90,7 @@ extension DeleteAccountConfirmWindow: PinFieldDelegate {
     
     func inputFinished(pin: String) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         AccountAPI.deactiveAccount(pin: pin, verificationID: verificationID) { [weak self] (result) in
             hud.hide()
             guard let weakSelf = self else {

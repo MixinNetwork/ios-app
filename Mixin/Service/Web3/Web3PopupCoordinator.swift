@@ -48,7 +48,7 @@ struct Web3PopupCoordinator {
     }
     
     private static func presentNextPopupIfNeeded() {
-        guard let container = UIApplication.homeContainerViewController else {
+        guard let container = UIApplication.shared.homeContainerViewController else {
             return
         }
         guard let popup = popups.first else {

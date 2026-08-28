@@ -93,7 +93,7 @@ class ConversationCircleEditorViewController: UITableViewController {
     
     private func performAddCircle(name: String) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         CircleAPI.create(name: name) { (result) in
             switch result {
             case .success(let circle):
@@ -206,7 +206,7 @@ extension ConversationCircleEditorViewController: CircleCellDelegate {
         }
         let conversationId = self.conversationId
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         let completion: (MixinAPI.Result<[CircleConversation]>) -> Void
         let requests: [ConversationCircleRequest]
         

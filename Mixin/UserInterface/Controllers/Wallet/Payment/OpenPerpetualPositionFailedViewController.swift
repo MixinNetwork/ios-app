@@ -142,7 +142,7 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
                 openedMargin: margin,
                 leaderPosition: leaderPosition,
             )
-            UIApplication.homeContainerViewController?.present(addPosition, animated: true)
+            UIApplication.shared.homeContainerViewController?.present(addPosition, animated: true)
         }
     }
     

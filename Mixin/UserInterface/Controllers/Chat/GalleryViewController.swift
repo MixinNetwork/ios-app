@@ -66,8 +66,15 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        if let scrollView = pageViewController.view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView {
-            scrollView.isScrollEnabled = UIApplication.shared.isPortrait
+        let scrollView = pageViewController.view.subviews
+            .lazy
+            .compactMap { $0 as? UIScrollView }
+            .first
+        if let window = view.window,
+           let scene = window.windowScene,
+           let scrollView
+        {
+            scrollView.isScrollEnabled = scene.interfaceOrientation.isPortrait
         }
     }
     
@@ -118,7 +125,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         itemToShowAfterAvPipStops = nil
         modelController.direction = source.direction
         let item = items[index]
-        if let controller = UIApplication.homeContainerViewController?.pipController {
+        if let controller = UIApplication.shared.homeContainerViewController?.pipController {
             if controller.item == item {
                 controller.stopPipIfActive()
                 return
@@ -132,7 +139,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                 }
             }
         }
-        UIApplication.shared.keyWindow?.endEditing(true)
+        view.window?.endEditing(true)
         backgroundView.alpha = 0
         pageViewController.view.alpha = 0
         delegate?.galleryViewController(self, willShow: item)
@@ -171,9 +178,9 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         guard let item = viewController.item else {
             return
         }
-        UIApplication.shared.keyWindow?.endEditing(true)
+        view.window?.endEditing(true)
         var viewControllerToHide: GalleryItemViewController?
-        if let homeContainer = UIApplication.homeContainerViewController, homeContainer.isShowingGallery {
+        if let homeContainer = UIApplication.shared.homeContainerViewController, homeContainer.isShowingGallery {
             viewControllerToHide = currentItemViewController
         } else {
             delegate?.galleryViewController(self, willShow: item)
@@ -233,7 +240,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     }
     
     func dismiss(pipController: GalleryVideoItemViewController) {
-        guard let item = pipController.item, let container = UIApplication.homeContainerViewController else {
+        guard let item = pipController.item, let container = UIApplication.shared.homeContainerViewController else {
             return
         }
         pageViewController.setViewControllers([UIViewController()], direction: .forward, animated: false, completion: nil)
@@ -274,7 +281,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }
         let receiver = MessageReceiverViewController.instance(content: content)
         dismiss(transitionViewInitialOffsetY: 0) {
-            UIApplication.homeNavigationController?.pushViewController(receiver, animated: true)
+            UIApplication.shared.homeNavigationController?.pushViewController(receiver, animated: true)
         }
     }
     
@@ -282,10 +289,10 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         guard let messageId = currentItemViewController?.item?.messageId else {
             return
         }
-        guard let conversationController = UIApplication.homeNavigationController?.viewControllers.first(where: { $0 is ConversationViewController }) as? ConversationViewController else {
+        guard let conversationController = UIApplication.shared.homeNavigationController?.viewControllers.first(where: { $0 is ConversationViewController }) as? ConversationViewController else {
             return
         }
-        let sharedMedia = UIApplication.homeNavigationController?.viewControllers
+        let sharedMedia = UIApplication.shared.homeNavigationController?.viewControllers
             .compactMap({ $0 as? SharedMediaViewController })
             .first
         if let sharedMedia {

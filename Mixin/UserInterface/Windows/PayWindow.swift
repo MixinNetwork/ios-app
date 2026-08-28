@@ -5,7 +5,7 @@ import AudioToolbox
 import Alamofire
 import MixinServices
 
-class PayWindow: BottomSheetView {
+final class PayWindow: UIViewController {
 
     enum PinAction {
         case payment(payment: PaymentCodeResponse, receivers: [UserItem])
@@ -63,17 +63,21 @@ class PayWindow: BottomSheetView {
     @IBOutlet weak var resultViewPlaceHeightConstraint: ScreenHeightCompatibleLayoutConstraint!
     @IBOutlet weak var pinViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var successButtonBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentBottomConstraint: NSLayoutConstraint!
     
     private lazy var biometricAuthQueue = DispatchQueue(label: "one.mixin.messenger.PayWindow.BioAuth")
     private lazy var context = LAContext()
     private weak var textfield: UITextField?
 
-    private var pinAction: PinAction!
+    private let pinAction: PinAction
     private var errorContinueAction: ErrorContinueAction?
-    private var asset: AssetItem?
-    private var amount = ""
-    private var memo = ""
-    private var fiatMoneyAmount: String?
+    private let asset: AssetItem?
+    private let collectibleToken: CollectibleToken?
+    private let amount: String
+    private let isAmountLocalized: Bool
+    private let memo: String
+    private let initialError: String?
+    private let fiatMoneyAmount: String?
     private var amountToken = ""
     private var amountExchange = ""
     private var soundId: SystemSoundID = 0
@@ -81,6 +85,7 @@ class PayWindow: BottomSheetView {
     private var processing = false
     private var isKeyboardAppear = false
     private var isMultisigUsersAppear = false
+    private var hasCleanedUp = false
     private var isAllowBiometricPay: Bool {
         guard AppGroupUserDefaults.Wallet.payWithBiometricAuthentication else {
             return false
@@ -96,8 +101,38 @@ class PayWindow: BottomSheetView {
 
     var onDismiss: (() -> Void)?
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    init(
+        asset: AssetItem? = nil,
+        token: CollectibleToken? = nil,
+        action: PinAction,
+        amount: String,
+        isAmountLocalized: Bool = true,
+        memo: String,
+        error: String? = nil,
+        fiatMoneyAmount: String? = nil,
+        textfield: UITextField? = nil
+    ) {
+        self.asset = asset
+        self.collectibleToken = token
+        self.pinAction = action
+        self.amount = amount
+        self.isAmountLocalized = isAmountLocalized
+        self.memo = memo
+        self.initialError = error
+        self.fiatMoneyAmount = fiatMoneyAmount
+        self.textfield = textfield
+        let nib = R.nib.payWindow
+        super.init(nibName: nib.name, bundle: nib.bundle)
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
+        modalPresentationStyle = .custom
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
         pinField.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -109,25 +144,17 @@ class PayWindow: BottomSheetView {
         case .extraLong:
             mixinIDLabel.numberOfLines = 5
         }
+        setupContent()
     }
 
-    func render(
-        asset: AssetItem? = nil,
-        token: CollectibleToken? = nil,
-        action: PinAction,
-        amount: String,
-        isAmountLocalized: Bool = true,
-        memo: String,
-        error: String? = nil,
-        fiatMoneyAmount: String? = nil,
-        textfield: UITextField? = nil
-    ) -> PayWindow {
-        self.asset = asset
-        self.amount = amount
-        self.memo = memo
-        self.pinAction = action
-        self.textfield = textfield
-        self.fiatMoneyAmount = fiatMoneyAmount
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if isBeingDismissed {
+            cleanupOnDismiss()
+        }
+    }
+
+    private func setupContent() {
         if let asset = asset {
             assetIconView.isHidden = false
             collectibleView.isHidden = true
@@ -147,7 +174,7 @@ class PayWindow: BottomSheetView {
                 amountLabel.text = amountToken
                 amountExchangeLabel.text = amountExchange
             }
-            switch pinAction! {
+            switch pinAction {
             case let .transfer(_, user, _, _):
                 multisigView.isHidden = true
                 nameLabel.text = R.string.localizable.transfer_to(user.fullName)
@@ -184,7 +211,7 @@ class PayWindow: BottomSheetView {
             memoLabel.isHidden = memo.isEmpty
             memoPlaceView.isHidden = memo.isEmpty
             memoLabel.text = memo
-        } else if let token = token, case let .collectible(collectible, senders, receivers) = action {
+        } else if let token = collectibleToken, case let .collectible(collectible, senders, receivers) = pinAction {
             multisigView.isHidden = false
             assetIconView.isHidden = true
             collectibleView.isHidden = false
@@ -211,14 +238,14 @@ class PayWindow: BottomSheetView {
             renderMultisigInfo(senders: senders, receivers: receivers)
         }
         dismissButton.isEnabled = true
-        if let error, !error.isEmpty {
+        if let initialError, !initialError.isEmpty {
             resultViewPlaceHeightConstraint.constant = 30
             errorContinueAction = .close
             pinView.isHidden = true
             biometricButton.isHidden = true
             successView.isHidden = true
             errorView.isHidden = false
-            errorLabel.text = error
+            errorLabel.text = initialError
         } else {
             resetPinInput()
             if isAllowBiometricPay {
@@ -228,7 +255,6 @@ class PayWindow: BottomSheetView {
                 pinViewHeightConstraint.constant = 60
             }
         }
-        return self
     }
 
     private func renderMultisigInfo(senders: [UserItem], receivers: [UserItem]) {
@@ -305,23 +331,16 @@ class PayWindow: BottomSheetView {
         pinField.becomeFirstResponder()
     }
 
-    override func removeFromSuperview() {
-        super.removeFromSuperview()
-
-        if case let .multisig(multisig, _, _) = pinAction! {
-            MultisigAPI.cancel(requestId: multisig.requestId) { (_) in }
-        } else if case let .collectible(collectible, _, _) = pinAction! {
-            CollectibleAPI.cancel(requestId: collectible.requestId) { (_) in }
-        }
-    }
-
-    override func dismissPopupController(animated: Bool) {
-        guard !processing else {
-            return
-        }
-        super.dismissPopupController(animated: animated)
+    private func cleanupOnDismiss() {
+        guard !hasCleanedUp else { return }
+        hasCleanedUp = true
         textfield?.becomeFirstResponder()
         onDismiss?()
+        if case let .multisig(multisig, _, _) = pinAction {
+            MultisigAPI.cancel(requestId: multisig.requestId) { (_) in }
+        } else if case let .collectible(collectible, _, _) = pinAction {
+            CollectibleAPI.cancel(requestId: collectible.requestId) { (_) in }
+        }
     }
 
     @IBAction func errorNextAction(_ sender: Any) {
@@ -332,16 +351,16 @@ class PayWindow: BottomSheetView {
         case .retryPin:
             resetPinInput()
         default:
-            dismissPopupController(animated: true)
+            dismiss(animated: true)
         }
         errorContinueAction = nil
     }
 
     @IBAction func sendersAction(_ sender: Any) {
         let users: [UserItem]?
-        if case let .multisig(_, senders, _) = pinAction! {
+        if case let .multisig(_, senders, _) = pinAction {
             users = senders
-        } else if case let .collectible(_, senders, _) = pinAction! {
+        } else if case let .collectible(_, senders, _) = pinAction {
             users = senders
         } else {
             users = nil
@@ -349,8 +368,7 @@ class PayWindow: BottomSheetView {
         guard let users = users else {
             return
         }
-        let window = MultisigUsersWindow.instance()
-        window.render(users: users, isSender: true)
+        let window = MultisigUsersWindow(users: users, isSender: true)
         let isKeyboardAppear = self.isKeyboardAppear
         window.onDismiss = {
             self.isMultisigUsersAppear = false
@@ -358,7 +376,7 @@ class PayWindow: BottomSheetView {
                 self.pinField.becomeFirstResponder()
             }
         }
-        window.presentPopupControllerAnimated()
+        present(window, animated: true)
 
         isMultisigUsersAppear = true
         if isKeyboardAppear {
@@ -369,7 +387,7 @@ class PayWindow: BottomSheetView {
 
     @IBAction func receiversAction(_ sender: Any) {
         var users = [UserItem]()
-        switch pinAction! {
+        switch pinAction {
         case let .multisig(_, _, receivers):
             users = receivers
         case let .payment(_, receivers):
@@ -379,8 +397,7 @@ class PayWindow: BottomSheetView {
         default:
             return
         }
-        let window = MultisigUsersWindow.instance()
-        window.render(users: users, isSender: false)
+        let window = MultisigUsersWindow(users: users, isSender: false)
         let isKeyboardAppear = self.isKeyboardAppear
         window.onDismiss = {
             self.isMultisigUsersAppear = false
@@ -388,7 +405,7 @@ class PayWindow: BottomSheetView {
                 self.pinField.becomeFirstResponder()
             }
         }
-        window.presentPopupControllerAnimated()
+        present(window, animated: true)
 
         isMultisigUsersAppear = true
         if isKeyboardAppear {
@@ -426,19 +443,19 @@ class PayWindow: BottomSheetView {
         if isKeyboardAppear && textfield == nil {
             pinField.resignFirstResponder()
         } else {
-            dismissPopupController(animated: true)
+            dismiss(animated: true)
         }
     }
 
     @IBAction func dismissTipsAction(_ sender: Any) {
-        dismissPopupController(animated: true)
+        dismiss(animated: true)
     }
     
     @IBAction func enableBiometricAuth(_ sender: Any) {
         pinField.resignFirstResponder()
         processing = false
-        dismissPopupController(animated: true)
-        guard let navigationController = UIApplication.homeNavigationController else {
+        dismiss(animated: true)
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return
         }
         var viewControllers = navigationController.viewControllers.filter { (viewController) -> Bool in
@@ -449,18 +466,14 @@ class PayWindow: BottomSheetView {
     }
     
     @IBAction func successAction(_ sender: Any) {
-        if case let .transfer(_, _, _, returnTo) = pinAction!, let url = returnTo {
+        if case let .transfer(_, _, _, returnTo) = pinAction, let url = returnTo {
             UIApplication.shared.open(url)
         }
-        dismissWindow()
+        dismiss(animated: true)
     }
     
     @IBAction func stayInMixinAction(_ sender: Any) {
-        dismissWindow()
-    }
-    
-    static func instance() -> PayWindow {
-        return Bundle.main.loadNibNamed("PayWindow", owner: nil, options: nil)?.first as! PayWindow
+        dismiss(animated: true)
     }
 
 }
@@ -469,7 +482,7 @@ extension PayWindow {
 
     @objc func keyboardWillAppear(_ sender: Notification) {
         isKeyboardAppear = true
-        guard let info = sender.userInfo, isShowing else {
+        guard let info = sender.userInfo, isViewLoaded, view.window != nil else {
             return
         }
         guard let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
@@ -484,13 +497,13 @@ extension PayWindow {
         let options = UIView.AnimationOptions(rawValue: UInt(animation << 16))
         UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
             self.contentBottomConstraint.constant = endKeyboardRect.height
-            self.layoutIfNeeded()
+            self.view.layoutIfNeeded()
         }, completion: nil)
     }
 
     @objc func keyboardWillDisappear(_ sender: Notification) {
         isKeyboardAppear = false
-        guard let info = sender.userInfo, isShowing, !isMultisigUsersAppear else {
+        guard let info = sender.userInfo, isViewLoaded, view.window != nil, !isMultisigUsersAppear else {
             return
         }
         guard let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue else {
@@ -502,17 +515,11 @@ extension PayWindow {
         let options = UIView.AnimationOptions(rawValue: UInt(animation << 16))
 
         if successView.isHidden && errorContinueAction == nil {
-            UIView.animate(withDuration: 5, delay: 0, options: options, animations: {
-                self.alpha = 0
-                self.popupView.center = self.getAnimationStartPoint()
-            }, completion: { (_) in
-                self.isShowing = false
-                self.removeFromSuperview()
-            })
+            dismiss(animated: true)
         } else {
             UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
                 self.contentBottomConstraint.constant = 0
-                self.layoutIfNeeded()
+                self.view.layoutIfNeeded()
             }, completion: nil)
         }
     }
@@ -587,7 +594,7 @@ extension PayWindow: PinFieldDelegate {
         dismissButton.isHidden = true
         resultViewPlaceHeightConstraint.constant = 30
         var successViewHeight = 171.0
-        if case let .transfer(_, _, _, returnTo) = pinAction!, returnTo != nil {
+        if case let .transfer(_, _, _, returnTo) = pinAction, returnTo != nil {
             UIView.performWithoutAnimation {
                 successButton.setTitle(R.string.localizable.back_to_merchant(), for: .normal)
                 successButton.layoutIfNeeded()
@@ -633,7 +640,7 @@ extension PayWindow: PinFieldDelegate {
             return
         }
         processing = true
-        let pinAction: PinAction = self.pinAction!
+        let pinAction: PinAction = self.pinAction
         dismissButton.isEnabled = false
         if !biometricButton.isHidden {
             biometricButton.isHidden = true
@@ -741,11 +748,6 @@ extension PayWindow: PinFieldDelegate {
         }
     }
 
-    private func dismissWindow() {
-        processing = false
-        dismissPopupController(animated: true)
-    }
-
     private func playSuccessSound() {
         if soundId == 0 {
             guard let path = Bundle.main.path(forResource: "payment_success", ofType: "caf") else {
@@ -776,7 +778,8 @@ extension PayWindow {
                 case let .success(payment):
                     if payment.status.knownCase == .paid {
                         DispatchQueue.main.async {
-                            PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo, error: R.string.localizable.pay_paid(), fiatMoneyAmount: fiatMoneyAmount).presentPopupControllerAnimated()
+                            let window = PayWindow(asset: asset, action: action, amount: amount, memo: memo, error: R.string.localizable.pay_paid(), fiatMoneyAmount: fiatMoneyAmount)
+                            UIApplication.shared.homeContainerViewController?.present(window, animated: true)
                         }
                         completion(false, nil)
                         return
@@ -795,7 +798,8 @@ extension PayWindow {
                 let threshold = LoginManager.shared.account?.transferConfirmationThreshold ?? 0
                 if threshold != 0 && fiatMoneyValue >= threshold {
                     DispatchQueue.main.async {
-                        BigAmountConfirmationWindow.instance().render(asset: asset, user: user, amount: amount, memo: memo, completion: completion).presentPopupControllerAnimated()
+                        let window = BigAmountConfirmationWindow(asset: asset, user: user, amount: amount, memo: memo, completion: completion)
+                        UIApplication.shared.homeContainerViewController?.present(window, animated: true)
                     }
                     return
                 }
@@ -815,13 +819,14 @@ extension PayWindow {
             }
             if let snapshotId = trace.snapshotId, !snapshotId.isEmpty {
                 DispatchQueue.main.async {
-                    DuplicateConfirmationWindow.instance().render(traceCreatedAt: trace.createdAt, asset: asset, action: action, amount: localizedAmount, memo: memo, fiatMoneyAmount: fiatMoneyAmount) { (isContinue, errorMsg) in
+                    let window = DuplicateConfirmationWindow(traceCreatedAt: trace.createdAt, asset: asset, action: action, amount: localizedAmount, memo: memo, fiatMoneyAmount: fiatMoneyAmount) { (isContinue, errorMsg) in
                         if isContinue {
                             checkAmountAction()
                         } else {
                             completion(false, errorMsg)
                         }
-                    }.presentPopupControllerAnimated()
+                    }
+                    UIApplication.shared.homeContainerViewController?.present(window, animated: true)
                 }
                 return
             } else {
@@ -829,13 +834,14 @@ extension PayWindow {
                 case let .success(snapshot):
                     TraceDAO.shared.updateSnapshot(traceId: traceId, snapshotId: snapshot.snapshotId)
                     DispatchQueue.main.async {
-                        DuplicateConfirmationWindow.instance().render(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: localizedAmount, memo: memo, fiatMoneyAmount: fiatMoneyAmount) { (isContinue, errorMsg) in
+                        let window = DuplicateConfirmationWindow(traceCreatedAt: snapshot.createdAt, asset: asset, action: action, amount: localizedAmount, memo: memo, fiatMoneyAmount: fiatMoneyAmount) { (isContinue, errorMsg) in
                             if isContinue {
                                 checkAmountAction()
                             } else {
                                 completion(false, errorMsg)
                             }
-                        }.presentPopupControllerAnimated()
+                        }
+                        UIApplication.shared.homeContainerViewController?.present(window, animated: true)
                     }
                     return
                 case .failure(.notFound):

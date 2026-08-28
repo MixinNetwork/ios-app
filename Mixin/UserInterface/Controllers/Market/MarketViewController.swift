@@ -274,7 +274,7 @@ final class MarketViewController: UIViewController {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         Referral.loadAvailableCode { [weak self] code in
             hud.hide()
             let share = PopupShareViewController(
@@ -831,7 +831,7 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
             viewPerps(market: market, openOnSide: side)
         } else {
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             RouteAPI.perpsMarket(marketID: marketID) { [weak self] result in
                 switch result {
                 case .success(let market):

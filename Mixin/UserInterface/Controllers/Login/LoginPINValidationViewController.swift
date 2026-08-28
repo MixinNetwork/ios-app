@@ -42,7 +42,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 self?.checkSessionEnvironmentAgain(pin: pin)
             case .failure(.response(.malformedPin)):
                 Logger.login.error(category: "LoginPINValidation", message: "malformedPin...hasPIN:\(account.hasPIN)...hasSafe:\(account.hasSafe)")
-                AppDelegate.current.mainWindow.rootViewController = LegacyPINViewController()
+                self?.view.window?.rootViewController = LegacyPINViewController()
             case .failure(let error):
                 Logger.login.error(category: "LoginPINValidation", message: "Failed: \(error)")
                 guard let self else {

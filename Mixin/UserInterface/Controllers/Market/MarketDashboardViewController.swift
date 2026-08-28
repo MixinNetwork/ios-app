@@ -882,6 +882,7 @@ extension MarketDashboardViewController: UICollectionViewDelegate {
 extension MarketDashboardViewController: MarketHeaderView.Delegate {
     
     func marketHeaderView(_ view: MarketHeaderView, didSelectSubCategoryAt index: Int) {
+        collectionView.setContentOffset(.zero, animated: false)
         reloadData(
             category: category,
             subCategoryIndex: index,

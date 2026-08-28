@@ -87,33 +87,25 @@ public final class MarketDAO: UserDatabaseDAO {
         case .topGainer, .topLoser:
             sql.append("\n    AND m.coin_id NOT IN (SELECT coin_id FROM market_categories WHERE category = \(Market.DatabaseCategory.stock.rawValue))")
         }
+        let direction = order.direction.sql
         switch order.field {
         case .marketCap:
-            sql.append("\nORDER BY CAST(market_cap AS REAL)")
+            sql.append("\nORDER BY CAST(market_cap AS REAL) \(direction)")
         case .volume:
-            sql.append("\nORDER BY CAST(total_volume AS REAL)")
+            sql.append("\nORDER BY CAST(total_volume AS REAL) \(direction)")
         case .price:
-            sql.append("\nORDER BY CAST(current_price AS REAL)")
+            sql.append("\nORDER BY CAST(current_price AS REAL) \(direction)")
         case let .change(period):
             switch period {
             case .sevenDays:
-                sql.append("\nORDER BY CAST(price_change_percentage_7d AS REAL)")
+                sql.append("\nORDER BY CAST(price_change_percentage_7d AS REAL) \(direction)")
             case .twentyFourHours:
-                sql.append("\nORDER BY CAST(price_change_percentage_24h AS REAL)")
+                sql.append("\nORDER BY CAST(price_change_percentage_24h AS REAL) \(direction)")
             }
         case .rowid:
-            sql.append("\nORDER BY mc.rowid")
+            sql.append("\nORDER BY mc.rowid \(direction)")
         case .addedAt:
-            sql.append("\nORDER BY mf.created_at")
-        }
-        switch order.direction {
-        case .ascending:
-            sql.append(" ASC")
-        case .descending:
-            sql.append(" DESC")
-        }
-        if order.field == .addedAt {
-            sql.append(", mf.rowid ASC")
+            sql.append("\nORDER BY mf.created_at \(direction), mf.rowid ASC")
         }
         return db.select(with: sql)
     }

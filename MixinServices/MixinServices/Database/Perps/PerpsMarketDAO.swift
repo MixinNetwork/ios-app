@@ -60,12 +60,7 @@ public final class PerpsMarketDAO: PerpsDAO {
         case .categorized(let category):
             sql.append("    AND m.category = '\(category.rawValue)'")
         }
-        let direction = switch ordering.direction {
-        case .ascending:
-            "ASC"
-        case .descending:
-            "DESC"
-        }
+        let direction = ordering.direction.sql
         switch ordering.field {
         case .volume:
             sql += "\nORDER BY CAST(volume AS REAL) \(direction)"

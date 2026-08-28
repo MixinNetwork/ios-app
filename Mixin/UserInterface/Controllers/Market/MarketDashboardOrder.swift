@@ -82,7 +82,7 @@ extension Market.Ordering {
     static func derived(subCategory: MarketDashboardViewController.CryptoSubCategory) -> Market.Ordering {
         switch subCategory {
         case .watchlist:
-            Market.Ordering(field: .addedAt, direction: .descending)
+            watchlistDefault
         case .trending:
             Market.Ordering(field: .rowid, direction: .ascending)
         case .topGainer:
@@ -110,7 +110,7 @@ extension PerpetualMarket.Ordering {
     static func derived(subCategory: MarketDashboardViewController.PerpsSubCategory) -> PerpetualMarket.Ordering {
         switch subCategory {
         case .watchlist:
-            PerpetualMarket.Ordering(field: .addedAt, direction: .descending)
+            watchlistDefault
         case .memes, .indices, .commodities, .forex, .trending:
             PerpetualMarket.Ordering(field: .score, direction: .descending)
         case .topGainers:

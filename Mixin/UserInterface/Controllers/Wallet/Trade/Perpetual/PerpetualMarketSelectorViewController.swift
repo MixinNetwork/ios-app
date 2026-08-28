@@ -416,11 +416,13 @@ extension PerpetualMarketSelectorViewController: PerpetualMarketSelectorViewCont
         didSelectCategory category: DisplayCategory
     ) {
         self.selectedCategory = category
-        if category == .favorite, ordering.field == .score {
-            ordering = PerpetualMarket.Ordering(field: .addedAt, direction: .descending)
-            reloadData()
-        } else if category != .favorite, ordering.field == .addedAt {
-            ordering = PerpetualMarket.Ordering(field: .score, direction: .descending)
+        let newOrder: PerpetualMarket.Ordering = if category == .favorite {
+            .init(field: .addedAt, direction: .descending)
+        } else {
+            .init(field: .score, direction: .descending)
+        }
+        if ordering != newOrder {
+            ordering = newOrder
             reloadData()
         } else if let searchResultsKeyword {
             search(lowercasedKeyword: searchResultsKeyword)

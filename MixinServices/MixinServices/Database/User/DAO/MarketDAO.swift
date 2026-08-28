@@ -79,14 +79,6 @@ public final class MarketDAO: UserDatabaseDAO {
         case .all:
             break
         }
-        switch category {
-        case .watchlist, .stock:
-            break
-        case .trending, .all:
-            sql.append("\nWHERE m.coin_id NOT IN (SELECT coin_id FROM market_categories WHERE category = \(Market.DatabaseCategory.stock.rawValue))")
-        case .topGainer, .topLoser:
-            sql.append("\n    AND m.coin_id NOT IN (SELECT coin_id FROM market_categories WHERE category = \(Market.DatabaseCategory.stock.rawValue))")
-        }
         let direction = order.direction.sql
         switch order.field {
         case .marketCap:

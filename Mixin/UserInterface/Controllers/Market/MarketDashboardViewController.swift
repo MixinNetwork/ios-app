@@ -271,24 +271,17 @@ final class MarketDashboardViewController: UIViewController {
                     case .perps:
                         header.changePeriod = .twentyFourHours
                     }
-                    header.isScoreOrderingAvailable = false
                 case .crypto:
+                    let subCategory = CryptoSubCategory.allCases[self.subCategoryIndex]
                     header.categoriesMargin = .medium
                     header.subCategories = CryptoSubCategory.allCases.map(\.subCategoryDisplay)
-                    header.leftOrderingField = CryptoSubCategory.allCases[self.subCategoryIndex] == .all ? .marketCap : .volume
+                    header.leftOrderingField = subCategory == .all ? .marketCap : .volume
                     header.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
-                    header.isScoreOrderingAvailable = false
                 case .perps:
                     header.categoriesMargin = .medium
                     header.subCategories = PerpsSubCategory.allCases.map(\.subCategoryDisplay)
                     header.leftOrderingField = .volume
                     header.changePeriod = .twentyFourHours
-                    header.isScoreOrderingAvailable = switch PerpsSubCategory.allCases[self.subCategoryIndex] {
-                    case .trending, .memes, .indices, .commodities, .forex:
-                        true
-                    case .watchlist, .topGainers, .topLosers:
-                        false
-                    }
                 case .stock:
                     header.categoriesMargin = .large
                     header.subCategories = StockSubCategory.allCases.map(\.subCategoryDisplay)
@@ -299,12 +292,22 @@ final class MarketDashboardViewController: UIViewController {
                     case .perps:
                         header.changePeriod = .twentyFourHours
                     }
-                    header.isScoreOrderingAvailable = StockSubCategory.allCases[self.subCategoryIndex] == .perps
                 case .indicator:
                     return nil
                 }
                 header.selectSubCategory(at: self.subCategoryIndex)
                 header.order = self.order
+                header.loopbackOrder = {
+                    let derivation: MarketDashboardOrder = .derived(
+                        category: self.category,
+                        subCategoryIndex: self.subCategoryIndex
+                    )
+                    if header.iconButton(ordering: derivation) == nil {
+                        return derivation
+                    } else {
+                        return nil
+                    }
+                }()
                 header.delegate = self
                 return header
             case .recommendationItem:

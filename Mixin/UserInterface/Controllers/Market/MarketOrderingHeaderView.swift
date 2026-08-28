@@ -58,7 +58,7 @@ final class MarketOrderingHeaderView: MarketHeaderView {
         }
     }
     
-    var isScoreOrderingAvailable = false
+    var loopbackOrder: MarketDashboardOrder?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -114,16 +114,19 @@ final class MarketOrderingHeaderView: MarketHeaderView {
                 .volume
             }
             if oldOrder.field == field {
-                newOrder = .crypto(oldOrder.directionToggled())
+                if oldOrder.direction == .ascending, let loopbackOrder {
+                    newOrder = loopbackOrder
+                } else {
+                    newOrder = .crypto(oldOrder.directionToggled())
+                }
             } else {
                 newOrder = .crypto(Market.Ordering(field: field, direction: .descending))
             }
         case .perps(let oldOrder):
             if oldOrder.field == .volume {
-                switch oldOrder.direction {
-                case .ascending where isScoreOrderingAvailable:
-                    newOrder = .perps(PerpetualMarket.Ordering(field: .score, direction: .descending))
-                case .ascending, .descending:
+                if oldOrder.direction == .ascending, let loopbackOrder {
+                    newOrder = loopbackOrder
+                } else {
                     newOrder = .perps(oldOrder.directionToggled())
                 }
             } else {
@@ -142,16 +145,19 @@ final class MarketOrderingHeaderView: MarketHeaderView {
         switch order {
         case .crypto(let oldOrder):
             if oldOrder.field == .price {
-                newOrder = .crypto(oldOrder.directionToggled())
+                if oldOrder.direction == .ascending, let loopbackOrder {
+                    newOrder = loopbackOrder
+                } else {
+                    newOrder = .crypto(oldOrder.directionToggled())
+                }
             } else {
                 newOrder = .crypto(Market.Ordering(field: .price, direction: .descending))
             }
         case .perps(let oldOrder):
             if oldOrder.field == .price {
-                switch oldOrder.direction {
-                case .ascending where isScoreOrderingAvailable:
-                    newOrder = .perps(PerpetualMarket.Ordering(field: .score, direction: .descending))
-                case .ascending, .descending:
+                if oldOrder.direction == .ascending, let loopbackOrder {
+                    newOrder = loopbackOrder
+                } else {
                     newOrder = .perps(oldOrder.directionToggled())
                 }
             } else {
@@ -170,16 +176,19 @@ final class MarketOrderingHeaderView: MarketHeaderView {
         switch order {
         case .crypto(let oldOrder):
             if case .change = oldOrder.field {
-                newOrder = .crypto(oldOrder.directionToggled())
+                if oldOrder.direction == .ascending, let loopbackOrder {
+                    newOrder = loopbackOrder
+                } else {
+                    newOrder = .crypto(oldOrder.directionToggled())
+                }
             } else {
                 newOrder = .crypto(Market.Ordering(field: .change(changePeriod), direction: .descending))
             }
         case .perps(let oldOrder):
             if oldOrder.field == .change {
-                switch oldOrder.direction {
-                case .ascending where isScoreOrderingAvailable:
-                    newOrder = .perps(PerpetualMarket.Ordering(field: .score, direction: .descending))
-                case .ascending, .descending:
+                if oldOrder.direction == .ascending, let loopbackOrder {
+                    newOrder = loopbackOrder
+                } else {
                     newOrder = .perps(oldOrder.directionToggled())
                 }
             } else {
@@ -190,7 +199,7 @@ final class MarketOrderingHeaderView: MarketHeaderView {
         (delegate as? Delegate)?.marketOrderingHeaderView(self, didSwitchToOrdering: newOrder)
     }
     
-    private func iconButton(ordering: MarketDashboardOrder) -> UIButton? {
+    func iconButton(ordering: MarketDashboardOrder) -> UIButton? {
         switch ordering {
         case .crypto(let marketOrder):
             switch marketOrder.field {

@@ -1115,7 +1115,6 @@ extension UrlWindow {
                         completion(errorDescription)
                     }
                     guard let token else {
-                        completion(nil)
                         return
                     }
                     DispatchQueue.main.async {

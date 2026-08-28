@@ -284,10 +284,12 @@ public final class MarketDAO: UserDatabaseDAO {
         db.write { db in
             try markets.save(db)
             
-            try db.execute(
-                literal: "DELETE FROM market_ids WHERE coin_id IN \(markets.map(\.coinID))"
-            )
-            try ids.save(db)
+            if !markets.isEmpty {
+                try db.execute(
+                    literal: "DELETE FROM market_ids WHERE coin_id IN \(markets.map(\.coinID))"
+                )
+                try ids.save(db)
+            }
             
             switch dataSource {
             case .all:
@@ -295,15 +297,21 @@ public final class MarketDAO: UserDatabaseDAO {
                 let rankStorages = markets.compactMap(\.rankStorage)
                 try rankStorages.save(db)
             case .favorite:
-                let favoritesStorage = markets.map { market in
-                    Market.FavoriteStorage(
-                        coinID: market.coinID,
-                        isFavored: true,
-                        createdAt: now
-                    )
+                if markets.isEmpty {
+                    try db.execute(sql: "DELETE FROM market_favored")
+                } else {
+                    try db.execute(literal: "DELETE FROM market_favored WHERE coin_id NOT IN \(markets.map(\.coinID))")
+                    for market in markets {
+                        let favorite = Market.FavoriteStorage(
+                            coinID: market.coinID,
+                            isFavored: true,
+                            createdAt: now
+                        )
+                        _ = try favorite.upsertAndFetch(db) { _ in
+                            [Market.FavoriteStorage.column(of: .createdAt).noOverwrite]
+                        }
+                    }
                 }
-                try db.execute(sql: "DELETE FROM market_favored")
-                try favoritesStorage.save(db)
             case .categorized(let category):
                 try db.execute(
                     sql: "DELETE FROM market_categories WHERE category = ?",

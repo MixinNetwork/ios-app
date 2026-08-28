@@ -312,7 +312,7 @@ extension Market {
 
 extension Market {
     
-    struct FavoriteStorage: Codable, MixinEncodableRecord, TableRecord, PersistableRecord {
+    struct FavoriteStorage: Codable, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord, DatabaseColumnConvertible {
         
         enum CodingKeys: String, CodingKey {
             case coinID = "coin_id"

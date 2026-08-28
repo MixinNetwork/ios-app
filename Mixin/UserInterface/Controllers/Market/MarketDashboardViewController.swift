@@ -785,7 +785,7 @@ extension MarketDashboardViewController {
             return
         }
         switch order.field {
-        case .marketCap, .volume, .price, .apiOrder, .addedAt:
+        case .marketCap, .volume, .price, .rowid, .addedAt:
             var snapshot = dataSource.snapshot()
             snapshot.reconfigureItems(snapshot.itemIdentifiers)
             dataSource.apply(snapshot) {
@@ -979,8 +979,8 @@ extension MarketDashboardViewController: MarketOrderingHeaderView.Delegate {
                 case .sevenDays:
                     "7d"
                 }
-            case .apiOrder:
-                "api_order"
+            case .rowid:
+                "rowid"
             case .addedAt:
                 "added_at"
             }

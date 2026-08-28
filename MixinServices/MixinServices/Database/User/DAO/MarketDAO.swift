@@ -101,7 +101,7 @@ public final class MarketDAO: UserDatabaseDAO {
             case .twentyFourHours:
                 sql.append("\nORDER BY CAST(price_change_percentage_24h AS REAL)")
             }
-        case .apiOrder:
+        case .rowid:
             sql.append("\nORDER BY mc.rowid")
         case .addedAt:
             sql.append("\nORDER BY mf.created_at")

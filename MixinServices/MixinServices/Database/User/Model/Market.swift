@@ -388,7 +388,7 @@ extension Market {
             case volume
             case price
             case change(MarketChangePeriod)
-            case apiOrder
+            case rowid
             case addedAt
         }
         
@@ -410,8 +410,8 @@ extension Market {
                 case .sevenDays:
                     "7D%"
                 }
-            case .apiOrder:
-                "APIOrder"
+            case .rowid:
+                "RowID"
             case .addedAt:
                 "AddedAt"
             }

@@ -86,7 +86,7 @@ extension Market.Ordering {
             case .watchlist:
                 Market.Ordering(field: .addedAt, direction: .descending)
             case .trending:
-                Market.Ordering(field: .apiOrder, direction: .ascending)
+                Market.Ordering(field: .rowid, direction: .ascending)
             case .topGainer:
                 Market.Ordering(
                     field: .change(AppGroupUserDefaults.User.cryptoMarketChangePeriod),
@@ -103,7 +103,7 @@ extension Market.Ordering {
         case .stock:
             switch StockSubCategory.allCases[subCategoryIndex] {
             case .crypto:
-                Market.Ordering(field: .apiOrder, direction: .ascending)
+                Market.Ordering(field: .rowid, direction: .ascending)
             case .perps:
                 Market.Ordering(field: .volume, direction: .descending)
             }

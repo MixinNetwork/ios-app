@@ -218,6 +218,7 @@ extension PerpetualMarket {
             case price
             case change
             case score
+            case addedAt
         }
         
         public let field: Field
@@ -233,6 +234,8 @@ extension PerpetualMarket {
                 "24H%"
             case .score:
                 "Score"
+            case .addedAt:
+                "AddedAt"
             }
             switch direction {
             case .ascending:

@@ -51,10 +51,10 @@ final class PerpetualMarketSelectorViewController: UIViewController {
             self.ordering = ordering
         } else {
             self.ordering = switch selectedCategory {
-            case .all:
+            case .all, .categorized:
                 PerpetualMarket.Ordering(field: .score, direction: .descending)
-            case .favorite, .categorized:
-                PerpetualMarket.Ordering(field: .volume, direction: .descending)
+            case .favorite:
+                PerpetualMarket.Ordering(field: .addedAt, direction: .descending)
             }
         }
         let nib = R.nib.perpetualMarketSelectorView
@@ -375,7 +375,7 @@ extension PerpetualMarketSelectorViewController: UICollectionViewDataSource {
                 for: indexPath
             )!
             header.order = ordering
-            header.isScoreOrderingAvailable = selectedCategory == .all
+            header.isScoreOrderingAvailable = selectedCategory != .favorite
             header.delegate = self
             return header
         default:
@@ -416,8 +416,11 @@ extension PerpetualMarketSelectorViewController: PerpetualMarketSelectorViewCont
         didSelectCategory category: DisplayCategory
     ) {
         self.selectedCategory = category
-        if category != .all, ordering.field == .score {
-            ordering = PerpetualMarket.Ordering(field: .volume, direction: .descending)
+        if category == .favorite, ordering.field == .score {
+            ordering = PerpetualMarket.Ordering(field: .addedAt, direction: .descending)
+            reloadData()
+        } else if category != .favorite, ordering.field == .addedAt {
+            ordering = PerpetualMarket.Ordering(field: .score, direction: .descending)
             reloadData()
         } else if let searchResultsKeyword {
             search(lowercasedKeyword: searchResultsKeyword)

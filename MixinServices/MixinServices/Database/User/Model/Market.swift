@@ -230,16 +230,16 @@ extension Market {
 
 extension Market {
     
-    public enum SubCategory: CaseIterable {
+    public enum QueryCategory: CaseIterable {
         case watchlist
         case trending
         case topGainer
         case topLoser
         case all
+        case stock
     }
     
     public enum RequestCategory: String, CaseIterable {
-        
         case all
         case favorite
         case trending
@@ -247,22 +247,6 @@ extension Market {
         case topGainers = "top_gainers"
         case topLosers = "top_losers"
         case featured = "featured"
-        
-        public init(subCategory: SubCategory) {
-            self = switch subCategory {
-            case .watchlist:
-                    .favorite
-            case .trending:
-                    .trending
-            case .topGainer:
-                    .topGainers
-            case .topLoser:
-                    .topLosers
-            case .all:
-                    .all
-            }
-        }
-        
     }
     
 }
@@ -404,6 +388,8 @@ extension Market {
             case volume
             case price
             case change(MarketChangePeriod)
+            case rowid
+            case addedAt
         }
         
         public let field: Field
@@ -424,6 +410,10 @@ extension Market {
                 case .sevenDays:
                     "7D%"
                 }
+            case .rowid:
+                "RowID"
+            case .addedAt:
+                "AddedAt"
             }
             switch direction {
             case .ascending:

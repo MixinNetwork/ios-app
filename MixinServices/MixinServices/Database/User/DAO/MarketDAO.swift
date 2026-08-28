@@ -23,7 +23,7 @@ public final class MarketDAO: UserDatabaseDAO {
     public static let didUpdateNotification = Notification.Name("one.mixin.service.MarketDAO.Update")
     
     public func markets(
-        subCategory: Market.SubCategory,
+        category: Market.QueryCategory,
         order: Market.Ordering,
     ) -> [FavorableMarket] {
         let marketColumns: [String] = Market.CodingKeys.allCases.compactMap { key in
@@ -41,22 +41,19 @@ public final class MarketDAO: UserDatabaseDAO {
             LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
             
         """
-        switch subCategory {
-        case .watchlist, .trending, .topGainer, .topLoser:
+        switch category {
+        case .watchlist, .trending, .topGainer, .topLoser, .stock:
             sql.append("LEFT JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id")
         case .all:
             sql.append("INNER JOIN market_cap_ranks mcr ON m.coin_id = mcr.coin_id")
         }
-        switch subCategory {
+        switch category {
         case .watchlist:
             sql.append("\nWHERE mf.is_favored")
         case .trending:
             sql.append("""
-            
-            WHERE EXISTS (
-                SELECT 1 FROM market_categories mc 
-                WHERE mc.coin_id = m.coin_id AND mc.category = \(Market.DatabaseCategory.trending.rawValue)
-            )
+
+            INNER JOIN market_categories mc ON mc.coin_id = m.coin_id AND mc.category = \(Market.DatabaseCategory.trending.rawValue)
             """)
         case .topGainer:
             sql.append("""
@@ -74,29 +71,33 @@ public final class MarketDAO: UserDatabaseDAO {
                 WHERE mc.coin_id = m.coin_id AND mc.category = \(Market.DatabaseCategory.topLoser.rawValue)
             )
             """)
+        case .stock:
+            sql.append("""
+
+            INNER JOIN market_categories mc ON mc.coin_id = m.coin_id AND mc.category = \(Market.DatabaseCategory.stock.rawValue)
+            """)
         case .all:
             break
         }
+        let direction = order.direction.sql
         switch order.field {
         case .marketCap:
-            sql.append("\nORDER BY CAST(market_cap AS REAL)")
+            sql.append("\nORDER BY CAST(market_cap AS REAL) \(direction)")
         case .volume:
-            sql.append("\nORDER BY CAST(total_volume AS REAL)")
+            sql.append("\nORDER BY CAST(total_volume AS REAL) \(direction)")
         case .price:
-            sql.append("\nORDER BY CAST(current_price AS REAL)")
+            sql.append("\nORDER BY CAST(current_price AS REAL) \(direction)")
         case let .change(period):
             switch period {
             case .sevenDays:
-                sql.append("\nORDER BY CAST(price_change_percentage_7d AS REAL)")
+                sql.append("\nORDER BY CAST(price_change_percentage_7d AS REAL) \(direction)")
             case .twentyFourHours:
-                sql.append("\nORDER BY CAST(price_change_percentage_24h AS REAL)")
+                sql.append("\nORDER BY CAST(price_change_percentage_24h AS REAL) \(direction)")
             }
-        }
-        switch order.direction {
-        case .ascending:
-            sql.append(" ASC")
-        case .descending:
-            sql.append(" DESC")
+        case .rowid:
+            sql.append("\nORDER BY mc.rowid \(direction)")
+        case .addedAt:
+            sql.append("\nORDER BY mf.created_at \(direction), mf.rowid ASC")
         }
         return db.select(with: sql)
     }

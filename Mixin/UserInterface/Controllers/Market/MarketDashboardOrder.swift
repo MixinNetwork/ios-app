@@ -50,14 +50,25 @@ enum MarketDashboardOrder: Equatable, CustomDebugStringConvertible {
         case .watchlist:
             switch WatchlistSubCategory.allCases[subCategoryIndex] {
             case .crypto:
-                .crypto(.derived(category: category, subCategoryIndex: subCategoryIndex))
+                return .crypto(.watchlistDefault)
             case .perps:
-                .perps(.derived(category: category, subCategoryIndex: subCategoryIndex))
+                return .perps(.watchlistDefault)
             }
-        case .crypto, .indicator:
-            .crypto(.derived(category: category, subCategoryIndex: subCategoryIndex))
+        case .crypto:
+            let subCategory = MarketDashboardViewController.CryptoSubCategory.allCases[subCategoryIndex]
+            return .crypto(.derived(subCategory: subCategory))
         case .perps:
-            .perps(.derived(category: category, subCategoryIndex: subCategoryIndex))
+            let subCategory = MarketDashboardViewController.PerpsSubCategory.allCases[subCategoryIndex]
+            return .perps(.derived(subCategory: subCategory))
+        case .stock:
+            switch StockSubCategory.allCases[subCategoryIndex] {
+            case .crypto:
+                return .crypto(.stocksDefault)
+            case .perps:
+                return .perps(.stocksDefault)
+            }
+        case .indicator: // Placeholder only, never triggers
+            return .crypto(Market.Ordering(field: .volume, direction: .descending))
         }
     }
     
@@ -65,30 +76,27 @@ enum MarketDashboardOrder: Equatable, CustomDebugStringConvertible {
 
 extension Market.Ordering {
     
-    static func derived(
-        category: MarketDashboardViewController.Category,
-        subCategoryIndex: Int
-    ) -> Market.Ordering {
-        switch category {
-        case .watchlist, .perps, .indicator:
-            Market.Ordering(field: .volume, direction: .descending)
-        case .crypto:
-            switch Market.SubCategory.allCases[subCategoryIndex] {
-            case .watchlist, .trending:
-                Market.Ordering(field: .volume, direction: .descending)
-            case .topGainer:
-                Market.Ordering(
-                    field: .change(AppGroupUserDefaults.User.cryptoMarketChangePeriod),
-                    direction: .descending
-                )
-            case .topLoser:
-                Market.Ordering(
-                    field: .change(AppGroupUserDefaults.User.cryptoMarketChangePeriod),
-                    direction: .ascending
-                )
-            case .all:
-                Market.Ordering(field: .marketCap, direction: .descending)
-            }
+    static let watchlistDefault = Market.Ordering(field: .addedAt, direction: .descending)
+    static let stocksDefault = Market.Ordering(field: .rowid, direction: .ascending)
+    
+    static func derived(subCategory: MarketDashboardViewController.CryptoSubCategory) -> Market.Ordering {
+        switch subCategory {
+        case .watchlist:
+            watchlistDefault
+        case .trending:
+            Market.Ordering(field: .rowid, direction: .ascending)
+        case .topGainer:
+            Market.Ordering(
+                field: .change(AppGroupUserDefaults.User.cryptoMarketChangePeriod),
+                direction: .descending
+            )
+        case .topLoser:
+            Market.Ordering(
+                field: .change(AppGroupUserDefaults.User.cryptoMarketChangePeriod),
+                direction: .ascending
+            )
+        case .all:
+            Market.Ordering(field: .marketCap, direction: .descending)
         }
     }
     
@@ -96,30 +104,19 @@ extension Market.Ordering {
 
 extension PerpetualMarket.Ordering {
     
-    static func derived(
-        category: MarketDashboardViewController.Category,
-        subCategoryIndex: Int
-    ) -> PerpetualMarket.Ordering {
-        switch category {
-        case .watchlist, .crypto, .indicator:
-            PerpetualMarket.Ordering(field: .volume, direction: .descending)
-        case .perps:
-            switch MarketDashboardViewController.PerpsSubCategory.allCases[subCategoryIndex] {
-            case .watchlist, .memes, .indices, .commodities, .forex:
-                PerpetualMarket.Ordering(field: .volume, direction: .descending)
-            case .trending:
-                PerpetualMarket.Ordering(field: .score, direction: .descending)
-            case .topGainers:
-                PerpetualMarket.Ordering(
-                    field: .change,
-                    direction: .descending
-                )
-            case .topLosers:
-                PerpetualMarket.Ordering(
-                    field: .change,
-                    direction: .ascending
-                )
-            }
+    static let watchlistDefault = PerpetualMarket.Ordering(field: .addedAt, direction: .descending)
+    static let stocksDefault = PerpetualMarket.Ordering(field: .score, direction: .descending)
+    
+    static func derived(subCategory: MarketDashboardViewController.PerpsSubCategory) -> PerpetualMarket.Ordering {
+        switch subCategory {
+        case .watchlist:
+            watchlistDefault
+        case .memes, .indices, .commodities, .forex, .trending:
+            PerpetualMarket.Ordering(field: .score, direction: .descending)
+        case .topGainers:
+            PerpetualMarket.Ordering(field: .change, direction: .descending)
+        case .topLosers:
+            PerpetualMarket.Ordering(field: .change, direction: .ascending)
         }
     }
     

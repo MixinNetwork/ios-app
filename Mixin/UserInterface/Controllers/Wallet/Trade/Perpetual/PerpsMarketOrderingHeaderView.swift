@@ -130,7 +130,7 @@ final class PerpsMarketOrderingHeaderView: UICollectionReusableView {
             priceButton
         case .change:
             periodButton
-        case .score:
+        case .score, .addedAt:
             nil
         }
     }

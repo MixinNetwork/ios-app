@@ -952,7 +952,7 @@
 		943CAA302CC8383300346677 /* CallingCodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943CAA2F2CC8383300346677 /* CallingCodeCell.xib */; };
 		943D18022EFDB163009A1139 /* bitcoin_rust_sdk.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 943D18012EFDB163009A1139 /* bitcoin_rust_sdk.xcframework */; };
 		943D180A2EFE5A4F009A1139 /* Bitcoin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943D18092EFE5A4E009A1139 /* Bitcoin.swift */; };
-		943EDC482C833B55007E160B /* Market+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943EDC472C833B55007E160B /* Market+Localization.swift */; };
+		943EDC482C833B55007E160B /* MarketChangePeriod+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943EDC472C833B55007E160B /* MarketChangePeriod+Localization.swift */; };
 		943F032C301DE000001820A3 /* MarketDashboardOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943F032B301DE000001820A3 /* MarketDashboardOrder.swift */; };
 		943FEB3E2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943FEB3C2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift */; };
 		943FEB3F2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943FEB3D2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib */; };
@@ -2981,7 +2981,7 @@
 		943CAA2F2CC8383300346677 /* CallingCodeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CallingCodeCell.xib; sourceTree = "<group>"; };
 		943D18012EFDB163009A1139 /* bitcoin_rust_sdk.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = bitcoin_rust_sdk.xcframework; sourceTree = "<group>"; };
 		943D18092EFE5A4E009A1139 /* Bitcoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bitcoin.swift; sourceTree = "<group>"; };
-		943EDC472C833B55007E160B /* Market+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Market+Localization.swift"; sourceTree = "<group>"; };
+		943EDC472C833B55007E160B /* MarketChangePeriod+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MarketChangePeriod+Localization.swift"; sourceTree = "<group>"; };
 		943F032B301DE000001820A3 /* MarketDashboardOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketDashboardOrder.swift; sourceTree = "<group>"; };
 		943FEB3C2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertTokenCell.swift; sourceTree = "<group>"; };
 		943FEB3D2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketAlertTokenCell.xib; sourceTree = "<group>"; };
@@ -4476,7 +4476,7 @@
 				7BA24D76253438B9004906AD /* ViewPanningController.swift */,
 				94D9DF6025F89D6E00FC2F28 /* PopupTip.swift */,
 				94B577862B5EC11500AE576E /* ExploreAction.swift */,
-				943EDC472C833B55007E160B /* Market+Localization.swift */,
+				943EDC472C833B55007E160B /* MarketChangePeriod+Localization.swift */,
 				94E1A5242FE29C71003CE6FE /* MarketPeriodicRequester.swift */,
 			);
 			path = Model;
@@ -8026,7 +8026,7 @@
 				E09C5EB82370057B0095F729 /* UserProfileViewController.swift in Sources */,
 				7B9A2BD12023729E00135DA4 /* AppButtonGroupMessageViewModel.swift in Sources */,
 				9489E3A025C5B150000319F8 /* AcknowledgementListViewController.swift in Sources */,
-				943EDC482C833B55007E160B /* Market+Localization.swift in Sources */,
+				943EDC482C833B55007E160B /* MarketChangePeriod+Localization.swift in Sources */,
 				7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */,
 				94ED25322DD4579D00A34266 /* Web3ReputationPickerViewController.swift in Sources */,
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,

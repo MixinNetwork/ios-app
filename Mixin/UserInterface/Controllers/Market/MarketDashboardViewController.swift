@@ -274,8 +274,8 @@ final class MarketDashboardViewController: UIViewController {
                     header.isScoreOrderingAvailable = false
                 case .crypto:
                     header.categoriesMargin = .medium
-                    header.subCategories = Market.SubCategory.allCases.map(\.subCategoryDisplay)
-                    header.leftOrderingField = Market.SubCategory.allCases[self.subCategoryIndex] == .all ? .marketCap : .volume
+                    header.subCategories = CryptoSubCategory.allCases.map(\.subCategoryDisplay)
+                    header.leftOrderingField = CryptoSubCategory.allCases[self.subCategoryIndex] == .all ? .marketCap : .volume
                     header.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
                     header.isScoreOrderingAvailable = false
                 case .perps:
@@ -321,7 +321,7 @@ final class MarketDashboardViewController: UIViewController {
                         header.subCategories = WatchlistSubCategory.allCases.map(\.subCategoryDisplay)
                     case .crypto:
                         header.categoriesMargin = .medium
-                        header.subCategories = Market.SubCategory.allCases.map(\.subCategoryDisplay)
+                        header.subCategories = CryptoSubCategory.allCases.map(\.subCategoryDisplay)
                     case .perps:
                         header.categoriesMargin = .medium
                         header.subCategories = PerpsSubCategory.allCases.map(\.subCategoryDisplay)
@@ -358,7 +358,7 @@ final class MarketDashboardViewController: UIViewController {
                     header.subCategories = WatchlistSubCategory.allCases.map(\.subCategoryDisplay)
                 case .crypto:
                     header.categoriesMargin = .medium
-                    header.subCategories = Market.SubCategory.allCases.map(\.subCategoryDisplay)
+                    header.subCategories = CryptoSubCategory.allCases.map(\.subCategoryDisplay)
                 case .perps:
                     header.categoriesMargin = .medium
                     header.subCategories = PerpsSubCategory.allCases.map(\.subCategoryDisplay)
@@ -629,7 +629,7 @@ final class MarketDashboardViewController: UIViewController {
                 "perpetual"
             }
         case .crypto:
-            switch Market.SubCategory.allCases[index] {
+            switch CryptoSubCategory.allCases[index] {
             case .watchlist:
                 "watchlist"
             case .trending:
@@ -726,12 +726,12 @@ extension MarketDashboardViewController {
         let matchesContent = if let dataSource = cryptoDataSource as? MarketDAO.DataSource {
             switch dataSource {
             case .all:
-                category == .crypto && Market.SubCategory.allCases[subCategoryIndex] == .all
+                category == .crypto && CryptoSubCategory.allCases[subCategoryIndex] == .all
             case .favorite:
-                (category == .crypto && Market.SubCategory.allCases[subCategoryIndex] == .watchlist)
+                (category == .crypto && CryptoSubCategory.allCases[subCategoryIndex] == .watchlist)
                 || (category == .watchlist && WatchlistSubCategory.allCases[subCategoryIndex] == .crypto)
             case .categorized(let databaseCategory) where category == .crypto:
-                switch Market.SubCategory.allCases[subCategoryIndex] {
+                switch CryptoSubCategory.allCases[subCategoryIndex] {
                 case .watchlist:
                     databaseCategory == .featured
                 case .trending:
@@ -1258,7 +1258,7 @@ extension MarketDashboardViewController {
         case perps
         case stock
         case indicator
-
+        
         var defaultSubCategoryIndex: Int {
             let index = AppGroupUserDefaults.User.marketSubCategoryIndices[rawValue]
             return switch self {
@@ -1275,10 +1275,10 @@ extension MarketDashboardViewController {
                     0
                 }
             case .crypto:
-                if let index, index < Market.SubCategory.allCases.count {
+                if let index, index < CryptoSubCategory.allCases.count {
                     index
                 } else {
-                    Market.SubCategory.allCases.firstIndex(of: .trending) ?? 0
+                    CryptoSubCategory.allCases.firstIndex(of: .trending) ?? 0
                 }
             case .perps:
                 if let index, index < PerpsSubCategory.allCases.count {
@@ -1290,7 +1290,7 @@ extension MarketDashboardViewController {
                 0
             }
         }
-
+        
         var reportingName: String {
             switch self {
             case .watchlist:
@@ -1305,7 +1305,32 @@ extension MarketDashboardViewController {
                 "indicator"
             }
         }
-
+        
+    }
+    
+    enum CryptoSubCategory: CaseIterable {
+        
+        case watchlist
+        case trending
+        case topGainer
+        case topLoser
+        case all
+        
+        var subCategoryDisplay: MarketSubCategoryDisplay {
+            switch self {
+            case .watchlist:
+                    .favorite
+            case .trending:
+                    .text(R.string.localizable.trending())
+            case .topGainer:
+                    .text(R.string.localizable.top_gainers())
+            case .topLoser:
+                    .text(R.string.localizable.top_losers())
+            case .all:
+                    .text(R.string.localizable.all())
+            }
+        }
+        
     }
     
     enum PerpsSubCategory: CaseIterable {
@@ -1452,7 +1477,7 @@ extension MarketDashboardViewController {
             scheduleRemoteLoader: Bool,
         ) {
             var snapshot = DataSourceSnapshot()
-            let markets = MarketDAO.shared.markets(subCategory: .watchlist, order: order)
+            let markets = MarketDAO.shared.markets(category: .watchlist, order: order)
             let showsRecommendations = markets.isEmpty
             let marketViewModels: [String: FavorableMarket]
             if showsRecommendations {
@@ -1649,7 +1674,7 @@ extension MarketDashboardViewController {
         }
         
         override func main() {
-            let subCategory = Market.SubCategory.allCases[subCategoryIndex]
+            let subCategory = CryptoSubCategory.allCases[subCategoryIndex]
             switch subCategory {
             case .watchlist:
                 reloadCryptoWatchlist(
@@ -1658,8 +1683,27 @@ extension MarketDashboardViewController {
                     displaySubCategoryIndex: subCategoryIndex,
                     scheduleRemoteLoader: scheduleRemoteLoader,
                 )
-            default:
-                let markets = MarketDAO.shared.markets(subCategory: subCategory, order: order)
+            case .trending, .topGainer, .topLoser, .all:
+                let queryCategory: Market.QueryCategory
+                let requestCategory: Market.RequestCategory
+                switch subCategory {
+                case .watchlist:
+                    queryCategory = .watchlist
+                    requestCategory = .favorite
+                case .trending:
+                    queryCategory = .trending
+                    requestCategory = .trending
+                case .topGainer:
+                    queryCategory = .topGainer
+                    requestCategory = .topGainers
+                case .topLoser:
+                    queryCategory = .topLoser
+                    requestCategory = .topLosers
+                case .all:
+                    queryCategory = .all
+                    requestCategory = .all
+                }
+                let markets = MarketDAO.shared.markets(category: queryCategory, order: order)
                 let info: CryptoMarketDisplayInfo = switch subCategory {
                 case .watchlist, .trending, .topGainer, .topLoser:
                         .volume
@@ -1691,7 +1735,6 @@ extension MarketDashboardViewController {
                     viewController.collectionView.allowsMultipleSelection = false
                     viewController.dataSource.applySnapshotUsingReloadData(snapshot)
                     if scheduleRemoteLoader {
-                        let requestCategory = Market.RequestCategory(subCategory: subCategory)
                         let requester = MarketPeriodicRequester(category: requestCategory)
                         viewController.marketLoader = requester
                         requester.start()
@@ -1784,15 +1827,15 @@ extension MarketDashboardViewController {
                 }
             }
         }
-
+        
     }
-
+    
     private final class ReloadStockMarketsOperation: ReloadDataOperation, @unchecked Sendable {
-
+        
         private let subCategoryIndex: Int
         private let order: MarketDashboardOrder?
         private let scheduleRemoteLoader: Bool
-
+        
         init(
             subCategoryIndex: Int,
             order: MarketDashboardOrder?,
@@ -1804,7 +1847,7 @@ extension MarketDashboardViewController {
             self.scheduleRemoteLoader = scheduleRemoteLoader
             super.init(viewController: viewController)
         }
-
+        
         override func main() {
             switch StockSubCategory.allCases[subCategoryIndex] {
             case .crypto:
@@ -1813,13 +1856,13 @@ extension MarketDashboardViewController {
                 reloadStockPerpsMarkets()
             }
         }
-
+        
         private func reloadStockSpotMarkets() {
             let order = order?.cryptoOrdering ?? .derived(
                 category: .stock,
                 subCategoryIndex: subCategoryIndex
             )
-            let markets = MarketDAO.shared.stockMarkets(order: order)
+            let markets = MarketDAO.shared.markets(category: .stock, order: order)
             let items: [Item] = markets.map { market in
                     .market(id: market.coinID, info: .volume)
             }
@@ -1851,7 +1894,7 @@ extension MarketDashboardViewController {
                 }
             }
         }
-
+        
         private func reloadStockPerpsMarkets() {
             let order = order?.perpsOrdering ?? .derived(
                 category: .stock,
@@ -1895,9 +1938,9 @@ extension MarketDashboardViewController {
                 }
             }
         }
-
+        
     }
-
+    
     private final class AllDataLoader: MarketPeriodicRequester.Delegate, PerpetualMarketLoader.Delegate {
         
         private let debugDescription: String
@@ -1926,9 +1969,19 @@ extension MarketDashboardViewController {
                     perpsCategories.remove(.favorite)
                 }
             case .crypto:
-                let excludingSubCategory = Market.SubCategory.allCases[excludingSubCategoryIndex]
-                let excludingRequestCategory = Market.RequestCategory(subCategory: excludingSubCategory)
-                cryptoCategories.remove(excludingRequestCategory)
+                let excludingSubCategory = CryptoSubCategory.allCases[excludingSubCategoryIndex]
+                switch excludingSubCategory {
+                case .watchlist:
+                    cryptoCategories.remove(.favorite)
+                case .trending:
+                    cryptoCategories.remove(.trending)
+                case .topGainer:
+                    cryptoCategories.remove(.topGainers)
+                case .topLoser:
+                    cryptoCategories.remove(.topLosers)
+                case .all:
+                    cryptoCategories.remove(.all)
+                }
             case .perps:
                 let excludingSubCategory = PerpsSubCategory.allCases[excludingSubCategoryIndex]
                 switch excludingSubCategory {

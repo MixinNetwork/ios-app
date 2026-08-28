@@ -81,15 +81,8 @@ extension Market.Ordering {
             Market.Ordering(field: .addedAt, direction: .descending)
         case .perps, .indicator:
             Market.Ordering(field: .volume, direction: .descending)
-        case .stock:
-            switch StockSubCategory.allCases[subCategoryIndex] {
-            case .crypto:
-                Market.Ordering(field: .apiOrder, direction: .ascending)
-            case .perps:
-                Market.Ordering(field: .volume, direction: .descending)
-            }
         case .crypto:
-            switch Market.SubCategory.allCases[subCategoryIndex] {
+            switch MarketDashboardViewController.CryptoSubCategory.allCases[subCategoryIndex] {
             case .watchlist:
                 Market.Ordering(field: .addedAt, direction: .descending)
             case .trending:
@@ -107,6 +100,13 @@ extension Market.Ordering {
             case .all:
                 Market.Ordering(field: .marketCap, direction: .descending)
             }
+        case .stock:
+            switch StockSubCategory.allCases[subCategoryIndex] {
+            case .crypto:
+                Market.Ordering(field: .apiOrder, direction: .ascending)
+            case .perps:
+                Market.Ordering(field: .volume, direction: .descending)
+            }
         }
     }
     
@@ -123,13 +123,6 @@ extension PerpetualMarket.Ordering {
             PerpetualMarket.Ordering(field: .addedAt, direction: .descending)
         case .crypto, .indicator:
             PerpetualMarket.Ordering(field: .volume, direction: .descending)
-        case .stock:
-            switch StockSubCategory.allCases[subCategoryIndex] {
-            case .crypto:
-                PerpetualMarket.Ordering(field: .volume, direction: .descending)
-            case .perps:
-                PerpetualMarket.Ordering(field: .score, direction: .descending)
-            }
         case .perps:
             switch MarketDashboardViewController.PerpsSubCategory.allCases[subCategoryIndex] {
             case .watchlist:
@@ -148,6 +141,13 @@ extension PerpetualMarket.Ordering {
                     field: .change,
                     direction: .ascending
                 )
+            }
+        case .stock:
+            switch StockSubCategory.allCases[subCategoryIndex] {
+            case .crypto:
+                PerpetualMarket.Ordering(field: .volume, direction: .descending)
+            case .perps:
+                PerpetualMarket.Ordering(field: .score, direction: .descending)
             }
         }
     }

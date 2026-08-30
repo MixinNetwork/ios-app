@@ -1848,6 +1848,7 @@
 		DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8A7522236301DB00765A82 /* AuthorizationWindow.xib */; };
 		DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECD61FC2EE4200E40064 /* PayWindow.swift */; };
 		DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */; };
+		DF8CECE51FC3177100E40064 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE41FC3177100E40064 /* BottomSheetView.swift */; };
 		DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF8CECE61FC317BF00E40064 /* PayWindow.xib */; };
 		DF8CECE91FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECE81FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift */; };
 		DF8CECED1FC41A9A00E40064 /* ConversationSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */; };
@@ -3894,6 +3895,7 @@
 		DF8CECCE1FC2B1C900E40064 /* Mixin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mixin-Bridging-Header.h"; sourceTree = "<group>"; };
 		DF8CECD61FC2EE4200E40064 /* PayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayWindow.swift; sourceTree = "<group>"; };
 		DF8CECE01FC3054700E40064 /* TransferTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTypeCell.swift; sourceTree = "<group>"; };
+		DF8CECE41FC3177100E40064 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
 		DF8CECE61FC317BF00E40064 /* PayWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PayWindow.xib; sourceTree = "<group>"; };
 		DF8CECE81FC411AB00E40064 /* NotificationAndConfirmationSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationAndConfirmationSettingsViewController.swift; sourceTree = "<group>"; };
 		DF8CECEC1FC41A9A00E40064 /* ConversationSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSettingViewController.swift; sourceTree = "<group>"; };
@@ -6272,6 +6274,7 @@
 				7B869C6D202D7D90009930BA /* NumberPadView.xib */,
 				7B869C71202D7FC8009930BA /* NumberPadButton.swift */,
 				7B869C73202D8206009930BA /* NumberPadButton.xib */,
+				DF8CECE41FC3177100E40064 /* BottomSheetView.swift */,
 				E041064A23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift */,
 				7B7264F4209C5B1A00F234BE /* CoreTextLabel.swift */,
 				DF44B0CB20C6897000A099B6 /* EmptyView.swift */,
@@ -9077,6 +9080,7 @@
 				94A75B4730382F2100F660EF /* UIPasteboard+Expiration.swift in Sources */,
 				94E9504E2E10082A000AEFE5 /* BuyTokenWebViewController.swift in Sources */,
 				940EAFC92EAE454A009B3DAA /* WaivedFeeCell.swift in Sources */,
+				DF8CECE51FC3177100E40064 /* BottomSheetView.swift in Sources */,
 				7B86B1EF23F6A70300C80AD9 /* AudioMessageActionView.swift in Sources */,
 				7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */,
 				94AC15652C3D7A110029E1AB /* AppButtonsViewModel.swift in Sources */,

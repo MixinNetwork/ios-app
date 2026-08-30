@@ -1,48 +1,48 @@
 import UIKit
 import MixinServices
 
-final class MultisigUsersWindow: UIViewController {
+class MultisigUsersWindow: BottomSheetView {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var titleLabel: UILabel!
 
-    private let users: [UserItem]
-    private let isSender: Bool
+    private var users: [UserItem] = []
 
     var onDismiss: (() -> Void)?
     
-    init(users: [UserItem], isSender: Bool) {
+    func render(users: [UserItem], isSender: Bool) {
         self.users = users
-        self.isSender = isSender
-        let nib = R.nib.multisigUsersWindow
-        super.init(nibName: nib.name, bundle: nib.bundle)
-        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
-        modalPresentationStyle = .custom
+        if isSender {
+            titleLabel.text = R.string.localizable.senders()
+        } else {
+            titleLabel.text = R.string.localizable.receivers()
+        }
+        prepareTableView()
+        tableView.reloadData()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("Storyboard not supported")
+
+    override func dismissPopupController(animated: Bool) {
+        onDismiss?()
+        super.dismissPopupController(animated: animated)
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+
+    @IBAction func dismissAction(_ sender: Any) {
+        dismissPopupController(animated: true)
+    }
+
+    class func instance() -> MultisigUsersWindow {
+        return Bundle.main.loadNibNamed("MultisigUsersWindow", owner: nil, options: nil)?.first as! MultisigUsersWindow
+    }
+}
+
+extension MultisigUsersWindow: UITableViewDelegate, UITableViewDataSource {
+
+    private func prepareTableView() {
         tableView.register(R.nib.multisigUserCell)
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
-        titleLabel.text = isSender ? R.string.localizable.senders() : R.string.localizable.receivers()
     }
-
-    @IBAction func dismissAction(_ sender: Any) {
-        let onDismiss = self.onDismiss
-        dismiss(animated: true) {
-            onDismiss?()
-        }
-    }
-
-}
-
-extension MultisigUsersWindow: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return users.count

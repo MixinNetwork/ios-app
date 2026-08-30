@@ -9,56 +9,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PayWindow" customModule="Mixin" customModuleProvider="target">
-            <connections>
-                <outlet property="amountExchangeLabel" destination="2PH-Ch-c3M" id="OEd-UD-9Xl"/>
-                <outlet property="amountLabel" destination="z51-ol-7We" id="Org-mu-VkH"/>
-                <outlet property="amountLabelPlaceHeightConstraint" destination="1Cw-JE-RWK" id="RpS-Su-nv9"/>
-                <outlet property="assetIconView" destination="V2K-V8-QTR" id="o8x-82-O2i"/>
-                <outlet property="biometricButton" destination="9LC-YO-0cd" id="uj8-Ha-78l"/>
-                <outlet property="collectibleImageView" destination="36D-mc-S27" id="gfi-7C-LC9"/>
-                <outlet property="collectibleView" destination="kEj-ha-IpG" id="Wff-u9-pMW"/>
-                <outlet property="contentBottomConstraint" destination="Kj1-Cd-2IZ" id="quv-It-XeJ"/>
-                <outlet property="dismissButton" destination="gXI-gx-wZd" id="PqQ-K8-gdU"/>
-                <outlet property="enableBiometricAuthButton" destination="BSf-bK-UvH" id="MoZ-xq-IOY"/>
-                <outlet property="errorContinueButton" destination="bfm-a2-pNd" id="yBu-C9-gPH"/>
-                <outlet property="errorLabel" destination="alA-n5-fOS" id="58o-RH-fuU"/>
-                <outlet property="errorView" destination="Mes-3z-Cyg" id="XsU-nr-PDN"/>
-                <outlet property="loadingView" destination="MtN-so-wKF" id="7Fm-S3-1J0"/>
-                <outlet property="memoLabel" destination="3g0-U4-ZFa" id="iY1-5L-GFv"/>
-                <outlet property="memoPlaceView" destination="5f3-GA-Aig" id="wjZ-YA-vSJ"/>
-                <outlet property="mixinIDLabel" destination="Xua-9X-dAo" id="7MT-iH-wwO"/>
-                <outlet property="mixinIDPlaceView" destination="LwX-MD-Oov" id="CbU-KZ-j6x"/>
-                <outlet property="multisigActionView" destination="InA-gq-86H" id="sui-ED-mIX"/>
-                <outlet property="multisigStackView" destination="qGj-IP-qzY" id="6qZ-C5-mAX"/>
-                <outlet property="multisigView" destination="QTE-p7-9Tt" id="tJN-Bh-4bn"/>
-                <outlet property="nameLabel" destination="Xfg-Lf-zjd" id="bvk-aO-Pxi"/>
-                <outlet property="paySuccessImageView" destination="gfw-v1-eUv" id="i4H-4S-7b2"/>
-                <outlet property="pinField" destination="GhP-FQ-P0s" id="bHG-Dy-Znn"/>
-                <outlet property="pinView" destination="oXe-5X-NEr" id="C0u-83-QbD"/>
-                <outlet property="pinViewHeightConstraint" destination="XVN-0R-Bs7" id="1hc-FU-W7k"/>
-                <outlet property="receiverMoreLabel" destination="CKD-Rd-VMG" id="E3z-XQ-0H9"/>
-                <outlet property="receiverMoreView" destination="jxT-fG-jc1" id="yLU-1y-yYT"/>
-                <outlet property="receiverViewOne" destination="erW-Sg-vcU" id="Fka-Ec-Hrr"/>
-                <outlet property="receiverViewTwo" destination="fku-oZ-uir" id="fiD-B2-XrC"/>
-                <outlet property="receiversButtonWidthConstraint" destination="O0O-iw-P3C" id="iSO-SH-mYa"/>
-                <outlet property="resultViewPlaceHeightConstraint" destination="Blo-vS-RNo" id="ReE-mO-BNc"/>
-                <outlet property="senderMoreLabel" destination="xIJ-50-vjo" id="IiP-X3-WH3"/>
-                <outlet property="senderMoreView" destination="omW-3E-iZg" id="eJT-bP-QIU"/>
-                <outlet property="senderViewOne" destination="Edj-oR-Zbb" id="WGX-zb-XZ4"/>
-                <outlet property="senderViewTwo" destination="i5P-mM-a8u" id="zRk-Yn-Lbq"/>
-                <outlet property="sendersButtonWidthConstraint" destination="qRO-lC-QnD" id="iP4-cv-VfI"/>
-                <outlet property="stayInMixinButton" destination="fjW-Ly-QyB" id="dlI-Qj-usV"/>
-                <outlet property="successButton" destination="CnK-KV-eN2" id="INI-wz-mKg"/>
-                <outlet property="successButtonBottomConstraint" destination="Mr3-eD-5PT" id="Xnt-un-8h7"/>
-                <outlet property="successView" destination="gQV-om-Skc" id="JOT-5o-AFb"/>
-                <outlet property="successViewHeightConstraint" destination="P1B-SA-R2I" id="qzX-Yv-ga4"/>
-                <outlet property="tokenNameLabel" destination="8VZ-xH-pcV" id="WSK-8t-Szz"/>
-                <outlet property="view" destination="iN0-l3-epB" id="s0e-Wz-P0a"/>
-            </connections>
-        </placeholder>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="PayWindow" customModule="Mixin" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -76,7 +29,7 @@
                                     </constraints>
                                     <state key="normal" image="dialog_close"/>
                                     <connections>
-                                        <action selector="dismissAction:" destination="-1" eventType="touchUpInside" id="oxo-rM-oKl"/>
+                                        <action selector="dismissAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="oxo-rM-oKl"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -272,7 +225,7 @@
                                                 <constraint firstAttribute="width" constant="32" id="qRO-lC-QnD"/>
                                             </constraints>
                                             <connections>
-                                                <action selector="sendersAction:" destination="-1" eventType="touchUpInside" id="9I6-OL-Wxv"/>
+                                                <action selector="sendersAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="9I6-OL-Wxv"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OD4-RY-Joe">
@@ -281,7 +234,7 @@
                                                 <constraint firstAttribute="width" constant="32" id="O0O-iw-P3C"/>
                                             </constraints>
                                             <connections>
-                                                <action selector="receiversAction:" destination="-1" eventType="touchUpInside" id="M3L-2W-go5"/>
+                                                <action selector="receiversAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="M3L-2W-go5"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -491,7 +444,7 @@
                                         <color key="titleColor" red="0.29411764709999999" green="0.48627450979999998" blue="0.86666666670000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </state>
                                     <connections>
-                                        <action selector="biometricAction:" destination="-1" eventType="touchUpInside" id="4Cp-KF-bkG"/>
+                                        <action selector="biometricAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="4Cp-KF-bkG"/>
                                     </connections>
                                 </button>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mes-3z-Cyg">
@@ -536,7 +489,7 @@
                                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="ok"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
-                                                <action selector="errorNextAction:" destination="-1" eventType="touchUpInside" id="tlI-af-Bhc"/>
+                                                <action selector="errorNextAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="tlI-af-Bhc"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -586,7 +539,7 @@
                                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="done"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
-                                                <action selector="successAction:" destination="-1" eventType="touchUpInside" id="C2d-MO-pTJ"/>
+                                                <action selector="successAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="C2d-MO-pTJ"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="BSf-bK-UvH">
@@ -601,7 +554,7 @@
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
-                                                <action selector="enableBiometricAuth:" destination="-1" eventType="touchUpInside" id="Jve-qK-A87"/>
+                                                <action selector="enableBiometricAuth:" destination="iN0-l3-epB" eventType="touchUpInside" id="Jve-qK-A87"/>
                                             </connections>
                                         </button>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjW-Ly-QyB">
@@ -617,7 +570,7 @@
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
-                                                <action selector="stayInMixinAction:" destination="-1" eventType="touchUpInside" id="D1I-oz-5Bm"/>
+                                                <action selector="stayInMixinAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="D1I-oz-5Bm"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -680,7 +633,7 @@
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="Bst-np-9j8" secondAttribute="bottom" constant="-13" id="B7p-8n-yPj"/>
                 <constraint firstItem="Bst-np-9j8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="HSK-Ux-Xby"/>
@@ -688,6 +641,52 @@
                 <constraint firstAttribute="trailing" secondItem="Bst-np-9j8" secondAttribute="trailing" id="LhC-bb-fCQ"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="qOs-Lg-MP3" secondAttribute="bottom" id="qTs-Ya-Drk"/>
             </constraints>
+            <connections>
+                <outlet property="amountExchangeLabel" destination="2PH-Ch-c3M" id="OEd-UD-9Xl"/>
+                <outlet property="amountLabel" destination="z51-ol-7We" id="Org-mu-VkH"/>
+                <outlet property="amountLabelPlaceHeightConstraint" destination="1Cw-JE-RWK" id="RpS-Su-nv9"/>
+                <outlet property="assetIconView" destination="V2K-V8-QTR" id="o8x-82-O2i"/>
+                <outlet property="biometricButton" destination="9LC-YO-0cd" id="uj8-Ha-78l"/>
+                <outlet property="collectibleImageView" destination="36D-mc-S27" id="gfi-7C-LC9"/>
+                <outlet property="collectibleView" destination="kEj-ha-IpG" id="Wff-u9-pMW"/>
+                <outlet property="contentBottomConstraint" destination="Kj1-Cd-2IZ" id="quv-It-XeJ"/>
+                <outlet property="dismissButton" destination="gXI-gx-wZd" id="PqQ-K8-gdU"/>
+                <outlet property="enableBiometricAuthButton" destination="BSf-bK-UvH" id="MoZ-xq-IOY"/>
+                <outlet property="errorContinueButton" destination="bfm-a2-pNd" id="yBu-C9-gPH"/>
+                <outlet property="errorLabel" destination="alA-n5-fOS" id="58o-RH-fuU"/>
+                <outlet property="errorView" destination="Mes-3z-Cyg" id="XsU-nr-PDN"/>
+                <outlet property="loadingView" destination="MtN-so-wKF" id="7Fm-S3-1J0"/>
+                <outlet property="memoLabel" destination="3g0-U4-ZFa" id="iY1-5L-GFv"/>
+                <outlet property="memoPlaceView" destination="5f3-GA-Aig" id="wjZ-YA-vSJ"/>
+                <outlet property="mixinIDLabel" destination="Xua-9X-dAo" id="7MT-iH-wwO"/>
+                <outlet property="mixinIDPlaceView" destination="LwX-MD-Oov" id="CbU-KZ-j6x"/>
+                <outlet property="multisigActionView" destination="InA-gq-86H" id="sui-ED-mIX"/>
+                <outlet property="multisigStackView" destination="qGj-IP-qzY" id="6qZ-C5-mAX"/>
+                <outlet property="multisigView" destination="QTE-p7-9Tt" id="tJN-Bh-4bn"/>
+                <outlet property="nameLabel" destination="Xfg-Lf-zjd" id="bvk-aO-Pxi"/>
+                <outlet property="paySuccessImageView" destination="gfw-v1-eUv" id="i4H-4S-7b2"/>
+                <outlet property="pinField" destination="GhP-FQ-P0s" id="bHG-Dy-Znn"/>
+                <outlet property="pinView" destination="oXe-5X-NEr" id="C0u-83-QbD"/>
+                <outlet property="pinViewHeightConstraint" destination="XVN-0R-Bs7" id="1hc-FU-W7k"/>
+                <outlet property="popupView" destination="Bst-np-9j8" id="naN-XQ-uMY"/>
+                <outlet property="receiverMoreLabel" destination="CKD-Rd-VMG" id="E3z-XQ-0H9"/>
+                <outlet property="receiverMoreView" destination="jxT-fG-jc1" id="yLU-1y-yYT"/>
+                <outlet property="receiverViewOne" destination="erW-Sg-vcU" id="Fka-Ec-Hrr"/>
+                <outlet property="receiverViewTwo" destination="fku-oZ-uir" id="fiD-B2-XrC"/>
+                <outlet property="receiversButtonWidthConstraint" destination="O0O-iw-P3C" id="iSO-SH-mYa"/>
+                <outlet property="resultViewPlaceHeightConstraint" destination="Blo-vS-RNo" id="ReE-mO-BNc"/>
+                <outlet property="senderMoreLabel" destination="xIJ-50-vjo" id="IiP-X3-WH3"/>
+                <outlet property="senderMoreView" destination="omW-3E-iZg" id="eJT-bP-QIU"/>
+                <outlet property="senderViewOne" destination="Edj-oR-Zbb" id="WGX-zb-XZ4"/>
+                <outlet property="senderViewTwo" destination="i5P-mM-a8u" id="zRk-Yn-Lbq"/>
+                <outlet property="sendersButtonWidthConstraint" destination="qRO-lC-QnD" id="iP4-cv-VfI"/>
+                <outlet property="stayInMixinButton" destination="fjW-Ly-QyB" id="dlI-Qj-usV"/>
+                <outlet property="successButton" destination="CnK-KV-eN2" id="INI-wz-mKg"/>
+                <outlet property="successButtonBottomConstraint" destination="Mr3-eD-5PT" id="Xnt-un-8h7"/>
+                <outlet property="successView" destination="gQV-om-Skc" id="JOT-5o-AFb"/>
+                <outlet property="successViewHeightConstraint" destination="P1B-SA-R2I" id="qzX-Yv-ga4"/>
+                <outlet property="tokenNameLabel" destination="8VZ-xH-pcV" id="WSK-8t-Szz"/>
+            </connections>
             <point key="canvasLocation" x="82.400000000000006" y="63.418290854572717"/>
         </view>
     </objects>

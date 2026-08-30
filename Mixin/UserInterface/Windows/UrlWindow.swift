@@ -591,8 +591,7 @@ class UrlWindow {
                 DispatchQueue.main.async {
                     if canPay {
                         hud.hide()
-                        let window = PayWindow(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: memo)
-                        UIApplication.shared.homeContainerViewController?.present(window, animated: true)
+                        PayWindow.instance().render(asset: asset, action: action, amount: amount, isAmountLocalized: false, memo: memo).presentPopupControllerAnimated()
                     } else if let error = errorMsg {
                         hud.set(style: .error, text: error)
                         hud.scheduleAutoHidden()
@@ -2038,8 +2037,7 @@ extension UrlWindow {
 
             DispatchQueue.main.async {
                 hud.hide()
-                let window = PayWindow(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: multisig.amount, memo: "", error: error)
-                UIApplication.shared.homeContainerViewController?.present(window, animated: true)
+                PayWindow.instance().render(asset: asset, action: .multisig(multisig: multisig, senders: senderUsers, receivers: receiverUsers), amount: multisig.amount, memo: "", error: error).presentPopupControllerAnimated()
             }
         }
     }
@@ -2070,8 +2068,7 @@ extension UrlWindow {
             }
             DispatchQueue.main.async {
                 hud.hide()
-                let window = PayWindow(asset: asset, action: action, amount: payment.amount, memo: payment.memo, error: error)
-                UIApplication.shared.homeContainerViewController?.present(window, animated: true)
+                PayWindow.instance().render(asset: asset, action: action, amount: payment.amount, memo: payment.memo, error: error).presentPopupControllerAnimated()
             }
         }
     }
@@ -2107,8 +2104,7 @@ extension UrlWindow {
             }
             DispatchQueue.main.async {
                 hud.hide()
-                let window = PayWindow(token: token, action: .collectible(collectible: collectible, senders: senderUsers, receivers: receiverUsers), amount: collectible.amount, memo: "", error: error)
-                UIApplication.shared.homeContainerViewController?.present(window, animated: true)
+                PayWindow.instance().render(token: token, action: .collectible(collectible: collectible, senders: senderUsers, receivers: receiverUsers), amount: collectible.amount, memo: "", error: error).presentPopupControllerAnimated()
             }
         }
     }

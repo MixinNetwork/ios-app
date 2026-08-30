@@ -1,7 +1,7 @@
-import UIKit
+import Foundation
 import MixinServices
 
-class AssetConfirmationWindow: UIViewController {
+class AssetConfirmationWindow: BottomSheetView {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tipsLabel: UILabel!
@@ -12,7 +12,6 @@ class AssetConfirmationWindow: UIViewController {
     @IBOutlet weak var memoLabel: UILabel!
     @IBOutlet weak var memoPlaceView: UIView!
 
-    private let presentationManager = PopupPresentationManager()
     private var canDismiss = false
     private var timer: Timer?
     private var countDown = 3
@@ -20,24 +19,19 @@ class AssetConfirmationWindow: UIViewController {
 
     typealias CompletionHandler = (Bool, String?) -> Void
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        transitioningDelegate = presentationManager
-        modalPresentationStyle = .custom
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        transitioningDelegate = presentationManager
-        modalPresentationStyle = .custom
-    }
-
     deinit {
         timer?.invalidate()
         timer = nil
     }
 
-    func setup(asset: AssetItem, amount: String, memo: String, fiatMoneyAmount: String? = nil, completion: @escaping CompletionHandler) {
+    override func dismissPopupController(animated: Bool) {
+        guard canDismiss else {
+            return
+        }
+        super.dismissPopupController(animated: animated)
+    }
+
+    func render(asset: AssetItem, amount: String, memo: String, fiatMoneyAmount: String? = nil, completion: @escaping CompletionHandler) -> BottomSheetView {
         self.completion = completion
 
         let amountToken = CurrencyFormatter.localizedString(from: amount, locale: .current, format: .precision, sign: .whenNegative, symbol: .custom(asset.symbol)) ?? amount
@@ -56,9 +50,10 @@ class AssetConfirmationWindow: UIViewController {
         memoLabel.text = memo
 
         initTimer()
+        return self
     }
     
-    func setup(token: MixinTokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal, memo: String, completion: @escaping CompletionHandler) {
+    func render(token: MixinTokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal, memo: String, completion: @escaping CompletionHandler) {
         self.completion = completion
         
         amountLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .whenNegative, symbol: .custom(token.symbol))
@@ -82,18 +77,14 @@ class AssetConfirmationWindow: UIViewController {
 
     @IBAction func continueAction(_ sender: Any) {
         canDismiss = true
-        let completion = self.completion
-        dismiss(animated: true) {
-            completion?(true, nil)
-        }
+        completion?(true, nil)
+        dismissPopupController(animated: true)
     }
 
     @IBAction func dismissAction(_ sender: Any) {
         canDismiss = true
-        let completion = self.completion
-        dismiss(animated: true) {
-            completion?(false, nil)
-        }
+        completion?(false, nil)
+        dismissPopupController(animated: true)
     }
 
     @objc func countDownAction() {

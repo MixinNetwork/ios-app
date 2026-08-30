@@ -9,21 +9,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DuplicateConfirmationWindow" customModule="Mixin" customModuleProvider="target">
-            <connections>
-                <outlet property="amountExchangeLabel" destination="DSV-vU-jJ2" id="tkB-Df-UM8"/>
-                <outlet property="amountLabel" destination="mAb-DT-EOg" id="Leg-iH-ZKn"/>
-                <outlet property="assetIconView" destination="9KZ-t4-edy" id="SW3-66-RV4"/>
-                <outlet property="confirmButton" destination="a0F-ly-bky" id="Wx7-5y-Ka2"/>
-                <outlet property="memoLabel" destination="hKK-fA-3Wo" id="v5f-3W-CVN"/>
-                <outlet property="memoPlaceView" destination="vq8-xG-umy" id="aZI-8J-vOz"/>
-                <outlet property="tipsLabel" destination="0Ff-mC-TOt" id="neW-RD-KyW"/>
-                <outlet property="titleLabel" destination="ctr-PD-2RY" id="nTs-Qo-Aed"/>
-                <outlet property="view" destination="y7t-NN-kgF" id="s0e-Wz-P0a"/>
-            </connections>
-        </placeholder>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="y7t-NN-kgF">
+        <view contentMode="scaleToFill" id="y7t-NN-kgF" customClass="DuplicateConfirmationWindow" customModule="Mixin" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -213,7 +201,7 @@
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
-                                                <action selector="continueAction:" destination="-1" eventType="touchUpInside" id="qzR-gd-dqJ"/>
+                                                <action selector="continueAction:" destination="y7t-NN-kgF" eventType="touchUpInside" id="qzR-gd-dqJ"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q4h-ZK-U3X">
@@ -225,7 +213,7 @@
                                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
-                                                <action selector="dismissAction:" destination="-1" eventType="touchUpInside" id="p0M-3u-vsU"/>
+                                                <action selector="dismissAction:" destination="y7t-NN-kgF" eventType="touchUpInside" id="p0M-3u-vsU"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -286,13 +274,26 @@
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="4sc-72-bh1"/>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="UUl-xL-gXt" secondAttribute="trailing" id="0oo-pM-2jX"/>
                 <constraint firstAttribute="bottom" secondItem="UUl-xL-gXt" secondAttribute="bottom" constant="-13" id="Kbf-Of-z7q"/>
                 <constraint firstItem="4sc-72-bh1" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="hCN-jh-ZW6" secondAttribute="bottom" id="irA-xQ-6hw"/>
+                <constraint firstAttribute="bottom" secondItem="hCN-jh-ZW6" secondAttribute="bottom" priority="999" id="sX1-Fp-W4p"/>
                 <constraint firstItem="UUl-xL-gXt" firstAttribute="leading" secondItem="y7t-NN-kgF" secondAttribute="leading" id="yhN-DC-nc3"/>
             </constraints>
+            <connections>
+                <outlet property="amountExchangeLabel" destination="DSV-vU-jJ2" id="tkB-Df-UM8"/>
+                <outlet property="amountLabel" destination="mAb-DT-EOg" id="Leg-iH-ZKn"/>
+                <outlet property="assetIconView" destination="9KZ-t4-edy" id="SW3-66-RV4"/>
+                <outlet property="confirmButton" destination="a0F-ly-bky" id="Wx7-5y-Ka2"/>
+                <outlet property="contentBottomConstraint" destination="sX1-Fp-W4p" id="qVP-7D-64I"/>
+                <outlet property="memoLabel" destination="hKK-fA-3Wo" id="v5f-3W-CVN"/>
+                <outlet property="memoPlaceView" destination="vq8-xG-umy" id="aZI-8J-vOz"/>
+                <outlet property="popupView" destination="UUl-xL-gXt" id="AX3-Ul-iqV"/>
+                <outlet property="tipsLabel" destination="0Ff-mC-TOt" id="neW-RD-KyW"/>
+                <outlet property="titleLabel" destination="ctr-PD-2RY" id="nTs-Qo-Aed"/>
+            </connections>
             <point key="canvasLocation" x="82.400000000000006" y="63.418290854572717"/>
         </view>
     </objects>

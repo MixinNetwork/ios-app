@@ -1,5 +1,6 @@
 import UIKit
 import MixinServices
+import SnapKit
 
 class StickerInputViewController: UIViewController {
     
@@ -31,11 +32,30 @@ class StickerInputViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 26, *) {
+            view.backgroundColor = .clear
+            let effect = UIGlassEffect()
+            let effectView = UIVisualEffectView(effect: effect)
+            effectView.isUserInteractionEnabled = false
+            view.insertSubview(effectView, at: 0)
+            effectView.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+            view.layer.cornerRadius = 24
+            view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            view.clipsToBounds = true
+            effectView.layer.cornerRadius = 24
+            effectView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            effectView.clipsToBounds = true
+        }
         pageViewController.delegate = self
         albumsCollectionView.dataSource = self
         albumsCollectionView.delegate = self
         pageScrollView = pageViewController.view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView
         pageScrollView?.delegate = self
+        if #available(iOS 26, *) {
+            pageScrollView?.backgroundColor = .clear
+        }
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(reload),
                                                name: AlbumDAO.addedAlbumsDidChangeNotification,
@@ -65,6 +85,9 @@ class StickerInputViewController: UIViewController {
         super.prepare(for: segue, sender: sender)
         if let page = segue.destination as? UIPageViewController {
             pageViewController = page
+            if #available(iOS 26, *) {
+                page.view.backgroundColor = .clear
+            }
         }
     }
     

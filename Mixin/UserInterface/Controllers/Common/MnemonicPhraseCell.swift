@@ -7,6 +7,9 @@ final class MnemonicPhraseCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        if #available(iOS 26, *) {
+            backgroundColor = .clear
+        }
         labelBackgroundView.layer.masksToBounds = true
         labelBackgroundView.layer.cornerRadius = 16
     }

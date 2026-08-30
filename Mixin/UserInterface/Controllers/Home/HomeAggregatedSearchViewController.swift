@@ -3,19 +3,16 @@ import Alamofire
 import GRDB
 import MixinServices
 
-class SearchViewController: UIViewController, HomeSearchViewController {
+final class HomeAggregatedSearchViewController: UIViewController, HomeSearchViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var recentAppsContainerView: UIView!
     
     let cancelButton = SearchCancelButton()
+    let searchBoxView = SearchBoxView()
     
-    var wantsNavigationSearchBox: Bool {
-        return true
-    }
-    
-    var navigationSearchBoxInsets: UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: cancelButton.frame.width + cancelButtonRightMargin)
+    var searchTextField: UITextField! {
+        searchBoxView.textField
     }
     
     private let resultLimit = 3
@@ -29,7 +26,6 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     private var conversationsByMessage = [SearchResult]()
     private var lastKeyword: String?
     private var recentAppsViewController: RecentAppsViewController?
-    private var lastSearchFieldText: String?
     private var snapshot: DatabaseSnapshot?
     
     private weak var maoNameSearchRequest: Request?
@@ -48,8 +44,21 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
-        navigationItem.title = ""
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        navigationItem.backButtonDisplayMode = .minimal
+        navigationItem.titleView = searchBoxView
+        navigationItem.rightBarButtonItem = {
+            let item = UIBarButtonItem(customView: cancelButton)
+            if #available(iOS 26.0, *) {
+                item.hidesSharedBackground = true
+            }
+            return item
+        }()
+        searchTextField.delegate = self
+        searchTextField.addTarget(
+            self,
+            action: #selector(searchAction(_:)),
+            for: .editingChanged
+        )
         tableView.register(SearchHeaderView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.register(SearchFooterView.self,
@@ -65,19 +74,9 @@ class SearchViewController: UIViewController, HomeSearchViewController {
         tableView.delegate = self
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
-        navigationSearchBoxView.isBusy = !queue.operations.isEmpty
-        if let text = lastSearchFieldText {
-            searchTextField.text = text
-        }
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        searchTextField.removeTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
-        lastSearchFieldText = searchTextField.text
+        searchTextField.resignFirstResponder()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -97,11 +96,11 @@ class SearchViewController: UIViewController, HomeSearchViewController {
             maoNameSearchRequest?.cancel()
             showRecentApps()
             lastKeyword = nil
-            navigationSearchBoxView.isBusy = false
+            searchBoxView.isBusy = false
             return
         }
         guard keyword != lastKeyword else {
-            navigationSearchBoxView.isBusy = false
+            searchBoxView.isBusy = false
             return
         }
         cancelOperation()
@@ -215,12 +214,12 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                     self.tableView.reloadSections(Section.conversation.indexSet, with: .none)
                 }
                 if !op.isCancelled {
-                    self.navigationSearchBoxView.isBusy = false
+                    self.searchBoxView.isBusy = false
                 }
             }
         }
         queue.addOperation(op)
-        navigationSearchBoxView.isBusy = true
+        searchBoxView.isBusy = true
     }
     
     func prepareForReuse() {
@@ -236,11 +235,9 @@ class SearchViewController: UIViewController, HomeSearchViewController {
         lastKeyword = nil
         if let navigationController = navigationController as? SearchNavigationViewController {
             navigationController.viewControllers.removeAll(where: { $0 != self })
-            navigationController.searchNavigationBar.layoutSearchBoxView(insets: navigationSearchBoxInsets)
         }
-        lastSearchFieldText = nil
         searchTextField.text = nil
-        navigationSearchBoxView.isBusy = false
+        searchBoxView.isBusy = false
     }
     
     func willHide() {
@@ -249,7 +246,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     
 }
 
-extension SearchViewController: UITableViewDataSource {
+extension HomeAggregatedSearchViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
@@ -306,7 +303,7 @@ extension SearchViewController: UITableViewDataSource {
     
 }
 
-extension SearchViewController: UITableViewDelegate {
+extension HomeAggregatedSearchViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch Section(rawValue: indexPath.section)! {
@@ -412,32 +409,36 @@ extension SearchViewController: UITableViewDelegate {
     
 }
 
-extension SearchViewController: SearchHeaderViewDelegate {
+extension HomeAggregatedSearchViewController: SearchHeaderViewDelegate {
     
     func searchHeaderViewDidSendMoreAction(_ view: SearchHeaderView) {
         guard let sectionValue = view.section, let section = Section(rawValue: sectionValue) else {
             return
         }
-        let vc = R.storyboard.home.search_category()!
+        searchTextField.resignFirstResponder()
+        let category: SearchCategoryViewController.Category
         switch section {
         case .quickAccess, .maoUser:
             return
         case .asset:
-            vc.category = .asset
+            category = .asset
         case .user:
-            vc.category = .user
+            category = .user
         case .group:
-            vc.category = .conversationsByName
+            category = .conversationsByName
         case .conversation:
-            vc.category = .conversationsByMessage
+            category = .conversationsByMessage
         }
-        searchTextField.resignFirstResponder()
-        searchNavigationController?.pushViewController(vc, animated: true)
+        let searchCategory = SearchCategoryViewController(
+            category: category,
+            keyword: searchTextField.text
+        )
+        navigationController?.pushViewController(searchCategory, animated: true)
     }
     
 }
 
-extension SearchViewController {
+extension HomeAggregatedSearchViewController {
     
     private enum ReuseId {
         static let header = "h"
@@ -532,6 +533,15 @@ extension SearchViewController {
         case .conversation:
             quickAccess == nil && maoUser == nil && assets.isEmpty && users.isEmpty && conversationsByName.isEmpty
         }
+    }
+    
+}
+
+extension HomeAggregatedSearchViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
     }
     
 }

@@ -59,12 +59,8 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
         switch segment {
         case .explore:
             let searchViewController = ExploreAggregatedSearchViewController()
-            let navigationController = SearchNavigationViewController(
-                navigationBarClass: SearchNavigationBar.self,
-                toolbarClass: nil
-            )
+            let navigationController = SearchNavigationViewController()
             navigationController.viewControllers = [searchViewController]
-            navigationController.searchNavigationBar.searchBoxView.textField.clearButtonMode = .always
             presentSearch(with: navigationController)
             searchViewController.searchTextField.becomeFirstResponder()
         case .collectibles:

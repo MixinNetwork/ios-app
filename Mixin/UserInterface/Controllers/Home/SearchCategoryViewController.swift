@@ -1,10 +1,12 @@
 import UIKit
 import GRDB
 import MixinServices
+import SnapKit
 
-class SearchCategoryViewController: UIViewController, HomeSearchViewController {
+final class SearchCategoryViewController: UIViewController, HomeSearchViewController {
     
     enum Category {
+        
         case asset
         case user
         case conversationsByName
@@ -22,28 +24,34 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
                 return R.string.localizable.messages()
             }
         }
+        
     }
     
-    @IBOutlet weak var tableView: UITableView!
-    
-    let cancelButton = SearchCancelButton()
-    
-    var category = Category.asset
-    
-    var wantsNavigationSearchBox: Bool {
-        return true
+    var searchTextField: UITextField! {
+        searchBoxView.textField
     }
     
-    var navigationSearchBoxInsets: UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: backButtonWidth, bottom: 0, right: cancelButton.frame.width + cancelButtonRightMargin)
-    }
-    
+    private let category: Category
+    private let inheritedKeyword: String?
+    private let searchBoxView = SearchBoxView()
+    private let cancelButton = SearchCancelButton()
     private let queue = OperationQueue()
     
+    private weak var tableView: UITableView!
+    
     private var lastKeyword: String?
-    private var lastSearchFieldText: String?
     private var models = [[Any]]()
     private var snapshot: DatabaseSnapshot?
+    
+    init(category: Category, keyword: String?) {
+        self.category = category
+        self.inheritedKeyword = keyword
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     deinit {
         cancelOperation()
@@ -51,19 +59,52 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = R.color.background_secondary()
+        
+        let topView = UIView()
+        topView.backgroundColor = R.color.background()
+        view.addSubview(topView)
+        topView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(10)
+        }
+        
+        let tableView = UITableView(frame: view.bounds, style: .plain)
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(topView.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        self.tableView = tableView
+        tableView.backgroundColor = R.color.background_secondary()
+        tableView.alwaysBounceVertical = true
+        tableView.keyboardDismissMode = .onDrag
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 70
+        
         queue.maxConcurrentOperationCount = 1
         navigationItem.title = ""
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        navigationItem.titleView = searchBoxView
+        navigationItem.rightBarButtonItem = {
+            let item = UIBarButtonItem(customView: cancelButton)
+            if #available(iOS 26.0, *) {
+                item.hidesSharedBackground = true
+            }
+            return item
+        }()
         cancelButton.addTarget(homeViewController, action: #selector(HomeViewController.cancelSearching(_:)), for: .touchUpInside)
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
+        searchTextField.text = inheritedKeyword
         switch category {
         case .asset:
             tableView.register(R.nib.assetCell)
         case .user, .conversationsByName, .conversationsByMessage:
             tableView.register(R.nib.peerCell)
         }
-        let headerFrame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 36)
+        let headerFrame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 36)
         let headerView = SearchHeaderView(frame: headerFrame)
         headerView.label.text = category.title
         headerView.button.isHidden = true
@@ -74,20 +115,9 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
         searchAction(self)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
-        navigationSearchBoxView.isBusy = !queue.operations.isEmpty
-        if let text = lastSearchFieldText {
-            searchTextField.text = text
-        }
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         searchTextField.resignFirstResponder()
-        searchTextField.removeTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
-        lastSearchFieldText = searchTextField.text
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -107,7 +137,7 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
             models = []
             tableView.reloadData()
             lastKeyword = nil
-            navigationSearchBoxView.isBusy = false
+            searchBoxView.isBusy = false
             return
         }
         guard keyword != lastKeyword else {
@@ -156,11 +186,11 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
                 weakSelf.models = [models]
                 weakSelf.tableView.reloadData()
                 weakSelf.lastKeyword = keyword
-                weakSelf.navigationSearchBoxView?.isBusy = false
+                weakSelf.searchBoxView.isBusy = false
             }
         }
         queue.addOperation(op)
-        navigationSearchBoxView.isBusy = true
+        searchBoxView.isBusy = true
     }
     
     private func cancelOperation() {

@@ -318,8 +318,7 @@ public final class UserDatabase: Database {
             try db.execute(sql: "CREATE UNIQUE INDEX IF NOT EXISTS jobs_index_id ON jobs(job_id)")
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS jobs_next_indexs ON jobs(category, priority DESC, orderId ASC)")
             
-            try db.execute(sql: "CREATE INDEX IF NOT EXISTS messages_page_indexs ON messages(conversation_id, created_at)")
-            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_category ON messages(conversation_id, category)")
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_category ON messages(conversation_id, created_at, category)")
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_quote ON messages(conversation_id, quote_message_id)")
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_pick ON messages(conversation_id, status, user_id, created_at)")
             
@@ -997,6 +996,12 @@ public final class UserDatabase: Database {
         migrator.registerMigration("index_optimization_safe_snapshots_2") { db in
             try db.execute(sql: "DROP INDEX IF EXISTS index_safe_snapshots_pending")
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_safe_snapshots_type_asset_id_created_at ON safe_snapshots(type, asset_id, created_at)")
+        }
+        
+        migrator.registerMigration("index_optimization_3") { (db) in
+            try db.execute(sql: "DROP INDEX IF EXISTS messages_page_indexs")
+            try db.execute(sql: "DROP INDEX IF EXISTS index_messages_category")
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_messages_category ON messages(conversation_id, created_at, category)")
         }
         
         return migrator

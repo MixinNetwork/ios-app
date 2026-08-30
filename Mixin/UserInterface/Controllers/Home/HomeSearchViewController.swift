@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-protocol HomeSearchViewController: SearchNavigationControllerChild {
+protocol HomeSearchViewController {
     var searchTextField: UITextField! { get }
 }
 
@@ -20,11 +20,11 @@ extension HomeSearchViewController where Self: UIViewController {
     }
     
     var homeViewController: HomeViewController? {
-        return parent?.parent as? HomeViewController
+        parent?.parent as? HomeViewController
     }
     
     var homeNavigationController: UINavigationController? {
-        return homeViewController?.navigationController
+        homeViewController?.navigationController
     }
     
     func pushViewController(keyword: String?, result: SearchResult) {
@@ -39,7 +39,7 @@ extension HomeSearchViewController where Self: UIViewController {
             let vc = SearchConversationViewController()
             vc.load(searchResult: result)
             vc.inheritedKeyword = keyword
-            searchNavigationController?.pushViewController(vc, animated: true)
+            navigationController?.pushViewController(vc, animated: true)
         default:
             break
         }

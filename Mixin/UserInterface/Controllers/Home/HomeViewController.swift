@@ -28,7 +28,7 @@ final class HomeViewController: UIViewController {
     private var needRefresh = true
     private var refreshing = false
     private var beginDraggingOffset: CGFloat = 0
-    private var searchViewController: SearchViewController!
+    private var searchViewController: HomeAggregatedSearchViewController!
     private var searchContainerBeginTopConstant: CGFloat!
     private var loadMoreMessageThreshold = 10
     private var isEditingRow = false
@@ -47,7 +47,7 @@ final class HomeViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-        if let vc = (segue.destination as? UINavigationController)?.viewControllers.first as? SearchViewController {
+        if let vc = (segue.destination as? UINavigationController)?.viewControllers.first as? HomeAggregatedSearchViewController {
             searchViewController = vc
         }
     }
@@ -61,7 +61,11 @@ final class HomeViewController: UIViewController {
         }
         presentPopupTipIfNeeded()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
-        searchViewController.cancelButton.addTarget(self, action: #selector(cancelSearching(_:)), for: .touchUpInside)
+        searchViewController.cancelButton.addTarget(
+            self,
+            action: #selector(cancelSearching(_:)),
+            for: .touchUpInside
+        )
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .singleLine

@@ -342,7 +342,6 @@
 		7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9C3226DCFFC00255943 /* SearchConversationViewController.swift */; };
 		7BA9D9C8226DE71E00255943 /* NavigationAvatarIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */; };
 		7BA9D9EE226F114700255943 /* HomeSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9ED226F114700255943 /* HomeSearchViewController.swift */; };
-		7BA9D9F0226F32EA00255943 /* SearchNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9D9EF226F32EA00255943 /* SearchNavigationBar.swift */; };
 		7BA9F32024A22EC200D7C091 /* CallMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BA9F31E24A22EC100D7C091 /* CallMemberCell.swift */; };
 		7BA9F32124A22EC200D7C091 /* CallMemberCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BA9F31F24A22EC100D7C091 /* CallMemberCell.xib */; };
 		7BAB3058247E8248005D6C3F /* call.caf in Resources */ = {isa = PBXBuildFile; fileRef = 7BAB3057247E7A72005D6C3F /* call.caf */; };
@@ -448,7 +447,7 @@
 		7BDBDE7022365017006220DF /* SettingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BDBDE6F22365017006220DF /* SettingCell.xib */; };
 		7BDC2DE222F315480098AB81 /* GalleryActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDC2DE122F315480098AB81 /* GalleryActivityIndicatorView.swift */; };
 		7BDD4450233766CB00A0491D /* TableHeaderBypassTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDD444F233766CB00A0491D /* TableHeaderBypassTableView.swift */; };
-		7BDEE5C71FA72EB9004CB189 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */; };
+		7BDEE5C71FA72EB9004CB189 /* HomeAggregatedSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDEE5C61FA72EB9004CB189 /* HomeAggregatedSearchViewController.swift */; };
 		7BDFAE902559008800296F8B /* WalletSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDFAE8F2559008800296F8B /* WalletSearchViewController.swift */; };
 		7BDFAE942559165800296F8B /* CompactAssetCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BDFAE932559165800296F8B /* CompactAssetCell.xib */; };
 		7BE036842337AB36003F4241 /* UserHandleTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE036832337AB36003F4241 /* UserHandleTableHeaderView.swift */; };
@@ -1227,7 +1226,6 @@
 		946E05742CBE7CFB004B264E /* MarketSearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946E05722CBE7CFB004B264E /* MarketSearchResultCell.xib */; };
 		946E05922CBFD67B004B264E /* ExploreSearchCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05912CBFD67B004B264E /* ExploreSearchCategoryViewController.swift */; };
 		946E059D2CBFD846004B264E /* ExploreSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05992CBFD841004B264E /* ExploreSearchViewController.swift */; };
-		946E059F2CBFEE85004B264E /* SearchNavigationControllerChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */; };
 		946E98DF2FF3A03A0083D89C /* CashAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E98DE2FF3A0380083D89C /* CashAPI.swift */; };
 		946E98E72FF3A0530083D89C /* CashAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E98E62FF3A0500083D89C /* CashAccount.swift */; };
 		946E98E92FF3A0610083D89C /* EarnAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E98E82FF3A0600083D89C /* EarnAPI.swift */; };
@@ -2374,7 +2372,6 @@
 		7BA9D9C3226DCFFC00255943 /* SearchConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchConversationViewController.swift; sourceTree = "<group>"; };
 		7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationAvatarIconView.swift; sourceTree = "<group>"; };
 		7BA9D9ED226F114700255943 /* HomeSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchViewController.swift; sourceTree = "<group>"; };
-		7BA9D9EF226F32EA00255943 /* SearchNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationBar.swift; sourceTree = "<group>"; };
 		7BA9F31E24A22EC100D7C091 /* CallMemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallMemberCell.swift; sourceTree = "<group>"; };
 		7BA9F31F24A22EC100D7C091 /* CallMemberCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CallMemberCell.xib; sourceTree = "<group>"; };
 		7BAB3057247E7A72005D6C3F /* call.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = call.caf; sourceTree = "<group>"; };
@@ -2477,7 +2474,7 @@
 		7BDBDE6F22365017006220DF /* SettingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingCell.xib; sourceTree = "<group>"; };
 		7BDC2DE122F315480098AB81 /* GalleryActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryActivityIndicatorView.swift; sourceTree = "<group>"; };
 		7BDD444F233766CB00A0491D /* TableHeaderBypassTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableHeaderBypassTableView.swift; sourceTree = "<group>"; };
-		7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		7BDEE5C61FA72EB9004CB189 /* HomeAggregatedSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAggregatedSearchViewController.swift; sourceTree = "<group>"; };
 		7BDFAE8F2559008800296F8B /* WalletSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSearchViewController.swift; sourceTree = "<group>"; };
 		7BDFAE932559165800296F8B /* CompactAssetCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CompactAssetCell.xib; sourceTree = "<group>"; };
 		7BE036832337AB36003F4241 /* UserHandleTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHandleTableHeaderView.swift; sourceTree = "<group>"; };
@@ -3285,7 +3282,6 @@
 		946E05722CBE7CFB004B264E /* MarketSearchResultCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketSearchResultCell.xib; sourceTree = "<group>"; };
 		946E05912CBFD67B004B264E /* ExploreSearchCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchCategoryViewController.swift; sourceTree = "<group>"; };
 		946E05992CBFD841004B264E /* ExploreSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchViewController.swift; sourceTree = "<group>"; };
-		946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationControllerChild.swift; sourceTree = "<group>"; };
 		946E98DE2FF3A0380083D89C /* CashAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashAPI.swift; sourceTree = "<group>"; };
 		946E98E62FF3A0500083D89C /* CashAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashAccount.swift; sourceTree = "<group>"; };
 		946E98E82FF3A0600083D89C /* EarnAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EarnAPI.swift; sourceTree = "<group>"; };
@@ -4569,7 +4565,6 @@
 				7BC3559E2265B7C30073C7BF /* DragDownIndicator.swift */,
 				7B595352226736BD00D59DB4 /* SearchHeaderView.swift */,
 				7B955337224375D600CE95E6 /* SearchFooterView.swift */,
-				7BA9D9EF226F32EA00255943 /* SearchNavigationBar.swift */,
 				7BB633DE22702D0500A106D2 /* SearchCancelButton.swift */,
 				7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */,
 				7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */,
@@ -6421,10 +6416,9 @@
 				94B61EC22B344A7A00BD39AF /* HomeTabBarController.swift */,
 				DF3C47461FA071F400A07C71 /* HomeViewController.swift */,
 				7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */,
-				946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */,
 				7BA9D9ED226F114700255943 /* HomeSearchViewController.swift */,
 				946575AE2BC9672800C4C4F4 /* QuickAccessSearchResult.swift */,
-				7BDEE5C61FA72EB9004CB189 /* SearchViewController.swift */,
+				7BDEE5C61FA72EB9004CB189 /* HomeAggregatedSearchViewController.swift */,
 				7B5281732265D7E30023616D /* RecentAppsViewController.swift */,
 				7BA9D9BB226D8BF700255943 /* SearchCategoryViewController.swift */,
 				7BA9D9C3226DCFFC00255943 /* SearchConversationViewController.swift */,
@@ -8388,7 +8382,6 @@
 				DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */,
 				94CB85E02C6BA9D000135641 /* TokenStatsCell.swift in Sources */,
 				94CF1F332BA1CD7700BC52C1 /* BulletDescriptionView.swift in Sources */,
-				7BA9D9F0226F32EA00255943 /* SearchNavigationBar.swift in Sources */,
 				7C8FA78D27687D1500855AFD /* DeleteAccountSettingViewController.swift in Sources */,
 				7B59534D226720F700D59DB4 /* TopShadowView.swift in Sources */,
 				7B1ABB0E21196B24009FAA6C /* TilingCollectionViewFlowLayout.swift in Sources */,
@@ -8686,7 +8679,7 @@
 				947084B42D93F891007DF965 /* InvoicePaymentOperation.swift in Sources */,
 				940764C729B26EF300B779A6 /* AuthenticationIntent.swift in Sources */,
 				9496DF2C2DFB377100F6DE26 /* InsufficientBalanceViewController.swift in Sources */,
-				7BDEE5C71FA72EB9004CB189 /* SearchViewController.swift in Sources */,
+				7BDEE5C71FA72EB9004CB189 /* HomeAggregatedSearchViewController.swift in Sources */,
 				9414A7832BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift in Sources */,
 				94E2075C2F4EE56B00D65D98 /* PerpetualOrderSide.swift in Sources */,
 				94D3CEA22C3EFD4B00E1E542 /* AppCardV1MessageCell.swift in Sources */,
@@ -8763,7 +8756,6 @@
 				94658CA82B34829B00F5EB21 /* OutputCell.swift in Sources */,
 				7CEB736829DBCE44006FB5B2 /* DeviceTransferPinMessage.swift in Sources */,
 				7B35AF74228A948A00E8101D /* UserSearchResult.swift in Sources */,
-				946E059F2CBFEE85004B264E /* SearchNavigationControllerChild.swift in Sources */,
 				DFC0ECFA23BB610C0091E7AC /* GiphyAPI.swift in Sources */,
 				940FC8602CDCA8970056BFF2 /* MobileNumberLoginContext.swift in Sources */,
 				943270E22E5D894500DFC486 /* DepositDataSource.swift in Sources */,

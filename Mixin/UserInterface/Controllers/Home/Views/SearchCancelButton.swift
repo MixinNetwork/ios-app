@@ -1,14 +1,19 @@
 import UIKit
 
-class SearchCancelButton: UIButton {
+final class SearchCancelButton: UIButton {
     
     convenience init() {
-        self.init(type: .system)
-        titleLabel?.font = .preferredFont(forTextStyle: .callout)
+        var config: UIButton.Configuration = .plain()
+        config.attributedTitle = AttributedString(
+            string: R.string.localizable.cancel(),
+            textStyle: .callout
+        )
+        config.baseForegroundColor = .theme
+        if #unavailable(iOS 26.0) {
+            config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 0)
+        }
+        self.init(configuration: config)
         titleLabel?.adjustsFontForContentSizeCategory = true
-        setTitleColor(.theme, for: .normal)
-        contentEdgeInsets = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
-        setTitle(R.string.localizable.cancel(), for: .normal)
         sizeToFit()
         frame.size.height = 44
     }

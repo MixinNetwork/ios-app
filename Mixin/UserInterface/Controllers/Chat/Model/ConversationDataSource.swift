@@ -756,6 +756,8 @@ extension ConversationDataSource: MessageViewModelFactoryDelegate {
     func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
         if let viewModel = viewModel as? TextMessageViewModel, let keyword = highlight?.keyword {
             viewModel.highlight(keyword: keyword)
+        } else if let viewModel = viewModel as? PhotoMessageViewModel, let keyword = highlight?.keyword {
+            viewModel.highlight(keyword: keyword)
         }
     }
     

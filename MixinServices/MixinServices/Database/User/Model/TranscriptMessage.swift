@@ -101,7 +101,7 @@ public final class TranscriptMessage {
         self.thumbImage = thumbImage
         self.thumbUrl = item.thumbUrl
         self.mediaName = item.name
-        self.caption = nil
+        self.caption = item.caption
         self.stickerId = item.stickerId
         self.sharedUserId = item.sharedUserId
         self.quoteMessageId = item.quoteMessageId

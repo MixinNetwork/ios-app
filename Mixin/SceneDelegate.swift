@@ -6,6 +6,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private(set) var window: Window?
     
     private var pendingShortcutItem: UIApplicationShortcutItem?
+    private var pendingURL: (url: URL, source: UrlWindow.Source)?
+    private var pendingUserActivity: NSUserActivity?
     
     override init() {
         super.init()
@@ -25,6 +27,18 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self,
             selector: #selector(handleClockSkew),
             name: MixinService.clockSkewDetectedNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handlePendingEventsIfNeeded),
+            name: HomeContainerViewController.viewDidAppearNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handlePendingEventsIfNeeded),
+            name: ScreenLockManager.didUnlockNotification,
             object: nil
         )
     }
@@ -48,13 +62,11 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         ScreenLockManager.shared.lockScreenIfNeeded()
         
         if let shortcutItem = connectionOptions.shortcutItem {
-            pendingShortcutItem = shortcutItem
+            handleShortcutItem(shortcutItem)
         }
-        
         if let urlContext = connectionOptions.urlContexts.first {
-            _ = UrlWindow.checkURLNowOrAfterScreenUnlocked(url: urlContext.url, from: .openURL)
+            handleURL(urlContext.url, from: .openURL)
         }
-        
         if let userActivity = connectionOptions.userActivities.first {
             handleUserActivity(userActivity)
         }
@@ -98,17 +110,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             AppGroupUserDefaults.User.currentConversationId = nil
         }
         
-        if let item = pendingShortcutItem, let itemType = UIApplicationShortcutItem.ItemType(rawValue: item.type) {
-            switch itemType {
-            case .scanQrCode:
-                UIApplication.shared.homeNavigationController?.pushQRCodeScannerViewController()
-            case .wallet:
-                UIApplication.shared.homeContainerViewController?.showWalletViewController()
-            case .myQrCode:
-                UIApplication.shared.homeContainerViewController?.presentMyQRCode()
-            }
-        }
-        pendingShortcutItem = nil
+        handlePendingEventsIfNeeded()
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
@@ -134,7 +136,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let url = URLContexts.first?.url else {
             return
         }
-        _ = UrlWindow.checkURLNowOrAfterScreenUnlocked(url: url, from: .openURL)
+        handleURL(url, from: .openURL)
     }
     
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
@@ -146,23 +148,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         performActionFor shortcutItem: UIApplicationShortcutItem,
         completionHandler: @escaping (Bool) -> Void
     ) {
-        pendingShortcutItem = shortcutItem
-        if LoginManager.shared.isLoggedIn {
-            if let itemType = UIApplicationShortcutItem.ItemType(rawValue: shortcutItem.type) {
-                switch itemType {
-                case .scanQrCode:
-                    UIApplication.shared.homeNavigationController?.pushQRCodeScannerViewController()
-                case .wallet:
-                    UIApplication.shared.homeContainerViewController?.showWalletViewController()
-                case .myQrCode:
-                    UIApplication.shared.homeContainerViewController?.presentMyQRCode()
-                }
-            }
-            pendingShortcutItem = nil
-            completionHandler(true)
-        } else {
-            completionHandler(false)
-        }
+        let handled = handleShortcutItem(shortcutItem)
+        completionHandler(handled)
     }
     
     @available(iOS 16.0, *)
@@ -171,14 +158,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         supportedInterfaceOrientationsFor window: UIWindow?
     ) -> UIInterfaceOrientationMask {
         AppDelegate.current.application(UIApplication.shared, supportedInterfaceOrientationsFor: window)
-    }
-    
-    private func handleUserActivity(_ userActivity: NSUserActivity) {
-        if SpotlightManager.isAvailable && SpotlightManager.shared.canContinue(activity: userActivity) {
-            SpotlightManager.shared.contiune(activity: userActivity)
-        } else if userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL {
-            _ = UrlWindow.checkURLNowOrAfterScreenUnlocked(url: url, from: .userActivity)
-        }
     }
     
 }
@@ -212,6 +191,9 @@ extension SceneDelegate {
     }
     
     @objc private func setupLoginViewController() {
+        pendingShortcutItem = nil
+        pendingURL = nil
+        pendingUserActivity = nil
         guard let window else {
             return
         }
@@ -232,6 +214,107 @@ extension SceneDelegate {
         } else {
             window.rootViewController = LoginNavigationController()
         }
+    }
+    
+}
+
+extension SceneDelegate {
+    
+    private var isReadyToHandleEvents: Bool {
+        guard LoginManager.shared.isLoggedIn else {
+            return false
+        }
+        guard !ScreenLockManager.shared.isLocked else {
+            return false
+        }
+        guard UIApplication.shared.homeContainerViewController != nil else {
+            return false
+        }
+        return true
+    }
+    
+    @discardableResult
+    private func handleShortcutItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+        guard LoginManager.shared.isLoggedIn else {
+            return false
+        }
+        guard isReadyToHandleEvents else {
+            pendingShortcutItem = shortcutItem
+            return true
+        }
+        pendingShortcutItem = nil
+        return performShortcutItem(shortcutItem)
+    }
+    
+    @discardableResult
+    private func handleURL(_ url: URL, from source: UrlWindow.Source) -> Bool {
+        guard LoginManager.shared.isLoggedIn else {
+            return false
+        }
+        guard isReadyToHandleEvents else {
+            pendingURL = (url, source)
+            return true
+        }
+        pendingURL = nil
+        return UrlWindow.checkUrl(url: url, from: source)
+    }
+    
+    @discardableResult
+    private func handleUserActivity(_ userActivity: NSUserActivity) -> Bool {
+        guard LoginManager.shared.isLoggedIn else {
+            return false
+        }
+        guard isReadyToHandleEvents else {
+            pendingUserActivity = userActivity
+            return true
+        }
+        pendingUserActivity = nil
+        return performUserActivity(userActivity)
+    }
+    
+    @objc private func handlePendingEventsIfNeeded() {
+        guard isReadyToHandleEvents else {
+            return
+        }
+        if let shortcutItem = pendingShortcutItem {
+            pendingShortcutItem = nil
+            performShortcutItem(shortcutItem)
+        }
+        if let (url, source) = pendingURL {
+            pendingURL = nil
+            _ = UrlWindow.checkUrl(url: url, from: source)
+        }
+        if let userActivity = pendingUserActivity {
+            pendingUserActivity = nil
+            performUserActivity(userActivity)
+        }
+    }
+    
+    @discardableResult
+    private func performShortcutItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+        guard let itemType = UIApplicationShortcutItem.ItemType(rawValue: shortcutItem.type) else {
+            return false
+        }
+        switch itemType {
+        case .scanQrCode:
+            UIApplication.shared.homeNavigationController?.pushQRCodeScannerViewController()
+        case .wallet:
+            UIApplication.shared.homeContainerViewController?.showWalletViewController()
+        case .myQrCode:
+            UIApplication.shared.homeContainerViewController?.presentMyQRCode()
+        }
+        return true
+    }
+    
+    @discardableResult
+    private func performUserActivity(_ userActivity: NSUserActivity) -> Bool {
+        if SpotlightManager.isAvailable && SpotlightManager.shared.canContinue(activity: userActivity) {
+            SpotlightManager.shared.contiune(activity: userActivity)
+            return true
+        } else if userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL {
+            return UrlWindow.checkUrl(url: url, from: .userActivity)
+        }
+        return false
     }
     
 }

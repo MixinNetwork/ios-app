@@ -931,21 +931,6 @@ class UrlWindow {
         }
     }
     
-    class func checkURLNowOrAfterScreenUnlocked(url: URL, from source: Source) -> Bool {
-        guard LoginManager.shared.isLoggedIn else {
-            return false
-        }
-        if ScreenLockManager.shared.isLocked {
-            ScreenLockManager.shared.screenLockViewDidHide = {
-                _ = checkUrl(url: url, from: source)
-                ScreenLockManager.shared.screenLockViewDidHide = nil
-            }
-            return true
-        } else {
-            return checkUrl(url: url, from: source)
-        }
-    }
-    
     class func checkDeviceTransfer(command: DeviceTransferCommand) -> Bool {
         guard AppGroupUserDefaults.Account.canRestoreFromPhone else {
             return true

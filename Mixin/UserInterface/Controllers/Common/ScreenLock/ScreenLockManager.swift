@@ -5,6 +5,8 @@ import MixinServices
 
 final class ScreenLockManager {
     
+    static let didUnlockNotification = Notification.Name("one.mixin.messenger.ScreenLockManager.DidUnlock")
+    
     private enum State: String {
         case none
         case authenticationFailed
@@ -109,11 +111,17 @@ extension ScreenLockManager {
     }
     
     private func hideScreenLockView() {
+        let wasLocked = isLocked
         let keyWindow = UIApplication.shared.firstWindowScene?.keyWindow
         keyWindow?.makeKeyAndVisible()
         viewController = nil
         window = nil
         isLocked = false
+        if wasLocked {
+            NotificationCenter.default.post(name: Self.didUnlockNotification, object: self)
+            screenLockViewDidHide?()
+            screenLockViewDidHide = nil
+        }
     }
     
 }
@@ -167,7 +175,6 @@ extension ScreenLockManager {
                     }
                 } else {
                     hideScreenLockView()
-                    screenLockViewDidHide?()
                 }
             } else if from == .willResignActive {
                 if !hasLastBiometricAuthenticationFailed {
@@ -185,7 +192,6 @@ extension ScreenLockManager {
             hasLastBiometricAuthenticationFailed = false
             hideScreenLockView()
             AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate = Date()
-            screenLockViewDidHide?()
         case .authenticationFailed:
             hasLastBiometricAuthenticationFailed = true
             viewController?.showUnlockOption(true)

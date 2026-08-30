@@ -3,6 +3,8 @@ import MixinServices
 
 final class HomeContainerViewController: UIViewController {
     
+    static let viewDidAppearNotification = Notification.Name("one.mixin.messenger.HomeContainerViewController.ViewDidAppear")
+    
     let homeTabBarController: HomeTabBarController
     let homeNavigationController: HomeNavigationController
     
@@ -145,6 +147,10 @@ final class HomeContainerViewController: UIViewController {
             refreshAccountAfterViewAppears = false
             ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         }
+        NotificationCenter.default.post(
+            name: Self.viewDidAppearNotification,
+            object: self
+        )
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

@@ -519,7 +519,8 @@ final class MarketViewController: UIViewController {
             next = OpenPerpsPositionViewController(
                 wallet: .privacy,
                 side: side,
-                viewModel: viewModel
+                viewModel: viewModel,
+                leaderPosition: nil
             )
             UserOperationAnalytics.tradeSource = analyticSource
         }

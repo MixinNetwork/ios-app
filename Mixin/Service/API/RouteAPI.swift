@@ -291,6 +291,7 @@ extension RouteAPI {
         assetID: String,
         amount: String,
         destination: String?,
+        leaderPositionID: String?,
         completion: @escaping (MixinAPI.Result<OpenPerpetualOrderResponse>) -> Void
     ) {
         var params = [
@@ -299,6 +300,9 @@ extension RouteAPI {
         ]
         if let destination {
             params["destination"] = destination
+        }
+        if let leaderPositionID {
+            params["leader_position_id"] = leaderPositionID
         }
         request(
             method: .post,

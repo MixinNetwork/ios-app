@@ -95,6 +95,41 @@ class UrlWindow {
                             hud.scheduleAutoHidden()
                         }
                     }
+                case let .perpsAction(leaderPosition):
+                    let hud = Hud()
+                    hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+                    RouteAPI.perpsMarket(marketID: leaderPosition.marketID) { result in
+                        switch result {
+                        case .success(let market):
+                            DispatchQueue.global().async {
+                                PerpsMarketDAO.shared.save(market: market)
+                            }
+                            hud.hide()
+                            if let navigationController = UIApplication.homeNavigationController {
+                                let viewModel = PerpetualMarketViewModel(market: market)
+                                if let position = PerpsPositionDAO.shared.position(marketID: market.marketID) {
+                                    let failure = OpenPerpetualPositionFailedViewController(
+                                        wallet: .privacy,
+                                        viewModel: viewModel,
+                                        openedPosition: position,
+                                        leaderPosition: leaderPosition
+                                    )
+                                    navigationController.present(failure, animated: true)
+                                } else {
+                                    let open = OpenPerpsPositionViewController(
+                                        wallet: .privacy,
+                                        side: leaderPosition.side,
+                                        viewModel: viewModel,
+                                        leaderPosition: leaderPosition
+                                    )
+                                    navigationController.pushViewController(open, animated: true)
+                                }
+                            }
+                        case .failure(let error):
+                            hud.set(style: .error, text: error.localizedDescription)
+                            hud.scheduleAutoHidden()
+                        }
+                    }
                 case let .trade(designatedTrading, input, output):
                     let trading: TradeViewController.Trading
                     if let designatedTrading {

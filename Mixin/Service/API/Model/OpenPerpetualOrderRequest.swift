@@ -12,6 +12,7 @@ struct OpenPerpetualOrderRequest: Encodable {
         case destination = "destination"
         case takeProfitPrice = "take_profit_price"
         case stopLossPrice = "stop_loss_price"
+        case leaderPositionID = "leader_position_id"
     }
     
     let assetID: String
@@ -23,5 +24,6 @@ struct OpenPerpetualOrderRequest: Encodable {
     let destination: String?
     let takeProfitPrice: String?
     let stopLossPrice: String?
+    let leaderPositionID: String?
     
 }

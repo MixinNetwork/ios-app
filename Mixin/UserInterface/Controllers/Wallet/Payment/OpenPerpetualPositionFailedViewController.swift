@@ -29,8 +29,8 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
         super.viewDidLoad()
         
         tableHeaderView.setTokenIcon(url: marketViewModel.iconURL)
-        tableHeaderView.titleLabel.text = "Cannot open"
-        tableHeaderView.subtitleTextView.text = "Already Opened"
+        tableHeaderView.titleLabel.text = R.string.localizable.position_opening_failed()
+        tableHeaderView.subtitleTextView.text = R.string.localizable.error_already_had_open_position()
         
         var rows: [Row] = [
             .perpsPositions([(

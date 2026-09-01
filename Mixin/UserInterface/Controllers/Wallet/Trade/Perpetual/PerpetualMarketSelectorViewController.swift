@@ -50,14 +50,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         if let ordering {
             self.ordering = ordering
         } else {
-            self.ordering = switch selectedCategory {
-            case .all:
-                PerpetualMarket.Ordering(field: .score, direction: .descending)
-            case .favorite:
-                PerpetualMarket.Ordering(field: .addedAt, direction: .descending)
-            case .categorized:
-                PerpetualMarket.Ordering(field: .volume, direction: .descending)
-            }
+            self.ordering = selectedCategory.defaultOrdering
         }
         let nib = R.nib.perpetualMarketSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
@@ -377,7 +370,14 @@ extension PerpetualMarketSelectorViewController: UICollectionViewDataSource {
                 for: indexPath
             )!
             header.order = ordering
-            header.isScoreOrderingAvailable = selectedCategory == .all
+            header.loopbackOrder = {
+                let derivation = selectedCategory.defaultOrdering
+                if header.iconButton(ordering: derivation) == nil {
+                    return derivation
+                } else {
+                    return nil
+                }
+            }()
             header.delegate = self
             return header
         default:
@@ -418,14 +418,7 @@ extension PerpetualMarketSelectorViewController: PerpetualMarketSelectorViewCont
         didSelectCategory category: DisplayCategory
     ) {
         self.selectedCategory = category
-        let newOrder: PerpetualMarket.Ordering = switch category {
-        case .all:
-            .init(field: .score, direction: .descending)
-        case .favorite:
-            .init(field: .addedAt, direction: .descending)
-        case .categorized:
-            .init(field: .volume, direction: .descending)
-        }
+        let newOrder = category.defaultOrdering
         if ordering != newOrder {
             ordering = newOrder
             reloadData()
@@ -572,9 +565,22 @@ extension PerpetualMarketSelectorViewController: WatchlistRecommendationFooterVi
 extension PerpetualMarketSelectorViewController {
     
     enum DisplayCategory: Hashable {
+        
         case all
         case favorite
         case categorized(PerpetualMarket.Category)
+        
+        var defaultOrdering: PerpetualMarket.Ordering {
+            switch self {
+            case .all:
+                .init(field: .score, direction: .descending)
+            case .favorite:
+                .init(field: .addedAt, direction: .descending)
+            case .categorized:
+                .init(field: .volume, direction: .descending)
+            }
+        }
+        
     }
     
     protocol CategorySelectorControllerDelegate: AnyObject {

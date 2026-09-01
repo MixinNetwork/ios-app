@@ -52,7 +52,7 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
                 let profit = PerpetualChangeSimulation.profit(
                     side: leaderPosition.side,
                     margin: margin,
-                    leverageMultiplier: leverage,
+                    leverageMultiplier: Decimal(leverage),
                     priceChangePercent: 0.01
                 )
                 rows.append(.doubleLineInfo(
@@ -104,7 +104,7 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
     
     override func loadInitialTrayView(animated: Bool) {
         let leverageMatches = if let leaderLeverage = leaderPosition.leverage {
-            NSDecimalNumber(decimal: leaderLeverage).intValue == openedPosition.leverage
+            leaderLeverage == openedPosition.leverage
         } else {
             true
         }

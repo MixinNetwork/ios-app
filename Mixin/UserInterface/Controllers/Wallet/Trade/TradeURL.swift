@@ -5,7 +5,7 @@ struct TradeURL {
     struct LeaderPosition {
         let marketID: String
         let side: PerpetualOrderSide
-        let leverage: Decimal?
+        let leverage: Int?
         let margin: Decimal?
         let id: String?
     }
@@ -40,12 +40,12 @@ struct TradeURL {
                    let side = items["side"],
                    let side = PerpetualOrderSide(rawValue: side)
                 {
-                    var leverage: Decimal?
+                    var leverage: Int?
                     if let value = items["leverage"],
                        let decimalValue = Decimal(string: value, locale: .enUSPOSIX),
                        decimalValue > 0
                     {
-                        leverage = decimalValue
+                        leverage = NSDecimalNumber(decimal: decimalValue).intValue
                     }
                     
                     var margin: Decimal?

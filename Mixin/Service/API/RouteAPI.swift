@@ -257,6 +257,13 @@ extension RouteAPI {
         )
     }
     
+    static func acceptedPerpsOrderAssets() async throws -> [String] {
+        try await request(
+            method: .get,
+            path: "/perps/orders/accepted-assets",
+        )
+    }
+    
     static func openPerpsOrder(
         orderRequest: OpenPerpetualOrderRequest,
         completion: @escaping (MixinAPI.Result<OpenPerpetualOrderResponse>) -> Void

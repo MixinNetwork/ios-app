@@ -95,8 +95,10 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         viewModel: PerpetualMarketViewModel,
         leaderPosition: TradeURL.LeaderPosition?,
     ) {
-        var leverageMultiplier = leaderPosition?.leverage ?? Decimal(
-            AppGroupUserDefaults.Wallet.lastPerpsLeverageMultiplier[viewModel.market.marketID] ?? 10
+        var leverageMultiplier = Decimal(
+            leaderPosition?.leverage
+            ?? AppGroupUserDefaults.Wallet.lastPerpsLeverageMultiplier[viewModel.market.marketID]
+            ?? 10
         )
         if leverageMultiplier > viewModel.maxLeverageMultiplier {
             leverageMultiplier = viewModel.maxLeverageMultiplier < 10 ? 2 : 10
@@ -218,11 +220,6 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         leverageMultipliersCollectionView.reloadData()
         inputLeverageMultiplier(value: leverageMultiplier)
         liquidationPriceActivityIndicator.style = .custom(diameter: 10, lineWidth: 2)
-        updateDescriptions(
-            marginAmount: marginAmount,
-            leverageMultiplier: leverageMultiplier,
-            underlyingAsset: viewModel
-        )
         
         NotificationCenter.default.addObserver(
             self,

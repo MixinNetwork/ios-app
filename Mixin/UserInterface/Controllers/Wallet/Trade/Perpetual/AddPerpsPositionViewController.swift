@@ -19,6 +19,12 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var addButton: UIButton!
     
+    override var marginToken: MixinTokenItem? {
+        didSet {
+            updateDescriptions(marginAmount: marginAmount)
+        }
+    }
+    
     private let wallet: Wallet
     private let marketViewModel: PerpetualMarketViewModel
     private let positionViewModel: PerpetualPositionViewModel
@@ -53,6 +59,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
         marketViewModel: PerpetualMarketViewModel,
         positionViewModel: PerpetualPositionViewModel,
         openedMargin: Decimal,
+        leaderPosition: TradeURL.LeaderPosition?,
     ) {
         self.wallet = wallet
         self.marketViewModel = marketViewModel
@@ -67,7 +74,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
             positionID: positionViewModel.positionID
         )
         let nib = R.nib.addPerpsPositionView
-        super.init(nibName: nib.name, bundle: nib.bundle)
+        super.init(leaderPosition: leaderPosition, nibName: nib.name, bundle: nib.bundle)
     }
     
     required init?(coder: NSCoder) {
@@ -128,7 +135,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
         totalSizeTitleLabel.text = R.string.localizable.add_position_total_size()
         liquidationPriceTitleLabel.text = R.string.localizable.liquidation_price()
         liquidationPriceActivityIndicator.style = .custom(diameter: 10, lineWidth: 2)
-        updateDescriptions(marginAmount: 0)
+        updateDescriptions(marginAmount: marginAmount)
         
         actionWrapperView.snp.makeConstraints { make in
             make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
@@ -222,7 +229,8 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
             positionID: positionViewModel.positionID,
             assetID: assetID,
             amount: amount,
-            destination: nil
+            destination: nil,
+            leaderPositionID: leaderPosition?.id,
         ) { [weak self] result in
             switch result {
             case let .success(response):

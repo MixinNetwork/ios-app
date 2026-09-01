@@ -37,6 +37,16 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     @IBOutlet weak var errorDescriptionLabel: UILabel!
     @IBOutlet weak var reviewButton: ConfigurationBasedBusyButton!
     
+    override var marginToken: MixinTokenItem? {
+        didSet {
+            updateDescriptions(
+                marginAmount: marginAmount,
+                leverageMultiplier: leverageMultiplier,
+                underlyingAsset: viewModel
+            )
+        }
+    }
+    
     private let wallet: Wallet
     private let side: PerpetualOrderSide
     private let marketLoader: PerpetualMarketLoader
@@ -83,9 +93,12 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         wallet: Wallet,
         side: PerpetualOrderSide,
         viewModel: PerpetualMarketViewModel,
+        leaderPosition: TradeURL.LeaderPosition?,
     ) {
         var leverageMultiplier = Decimal(
-            AppGroupUserDefaults.Wallet.lastPerpsLeverageMultiplier[viewModel.market.marketID] ?? 10
+            leaderPosition?.leverage
+            ?? AppGroupUserDefaults.Wallet.lastPerpsLeverageMultiplier[viewModel.market.marketID]
+            ?? 10
         )
         if leverageMultiplier > viewModel.maxLeverageMultiplier {
             leverageMultiplier = viewModel.maxLeverageMultiplier < 10 ? 2 : 10
@@ -119,7 +132,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
             side: side
         )
         let nib = R.nib.openPerpetualPositionView
-        super.init(nibName: nib.name, bundle: nib.bundle)
+        super.init(leaderPosition: leaderPosition, nibName: nib.name, bundle: nib.bundle)
     }
     
     required init?(coder: NSCoder) {
@@ -207,11 +220,6 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         leverageMultipliersCollectionView.reloadData()
         inputLeverageMultiplier(value: leverageMultiplier)
         liquidationPriceActivityIndicator.style = .custom(diameter: 10, lineWidth: 2)
-        updateDescriptions(
-            marginAmount: 0,
-            leverageMultiplier: leverageMultiplier,
-            underlyingAsset: viewModel
-        )
         
         NotificationCenter.default.addObserver(
             self,
@@ -338,6 +346,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
             stopLossPrice: stopLossPrice?.formatted(
                 viewModel.market.canonicalPriceFormatStyle
             ),
+            leaderPositionID: leaderPosition?.id
         )
         let context = Payment.PerpsContext(
             wallet: wallet,

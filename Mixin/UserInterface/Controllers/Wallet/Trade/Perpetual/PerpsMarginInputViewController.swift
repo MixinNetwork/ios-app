@@ -17,7 +17,9 @@ class PerpsMarginInputViewController: UIViewController {
     @IBOutlet weak var marginTokenNameLabel: UILabel!
     @IBOutlet weak var marginLoadingView: ActivityIndicatorView!
     
-    var marginAmount: Decimal = 0
+    let leaderPosition: TradeURL.LeaderPosition?
+    
+    var marginAmount: Decimal
     
     var marginTokens: [MixinTokenItem] = []
     var marginToken: MixinTokenItem? {
@@ -81,6 +83,20 @@ class PerpsMarginInputViewController: UIViewController {
     
     private let marginAmountPrecisionValidator = MarginAmountPrecisionValidator()
     
+    init(
+        leaderPosition: TradeURL.LeaderPosition?,
+        nibName: String?,
+        bundle: Bundle?
+    ) {
+        self.leaderPosition = leaderPosition
+        self.marginAmount = leaderPosition?.margin ?? 0
+        super.init(nibName: nibName, bundle: bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -91,6 +107,13 @@ class PerpsMarginInputViewController: UIViewController {
         marginTitleLabel.text = R.string.localizable.amount()
         marginNetworkLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         marginAmountTextField.delegate = marginAmountPrecisionValidator
+        if marginAmount > 0 {
+            marginAmountTextField.text = CurrencyFormatter.localizedString(
+                from: marginAmount,
+                format: .precision,
+                sign: .never,
+            )
+        }
         marginTokenFooterStackView.setCustomSpacing(0, after: marginTokenBalanceButton)
         marginTokenBalanceButton.titleLabel?.adjustsFontForContentSizeCategory = true
         marginTokenDepositButton.configuration?.attributedTitle = {

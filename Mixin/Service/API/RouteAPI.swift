@@ -257,6 +257,13 @@ extension RouteAPI {
         )
     }
     
+    static func acceptedPerpsOrderAssets() async throws -> [String] {
+        try await request(
+            method: .get,
+            path: "/perps/orders/accepted-assets",
+        )
+    }
+    
     static func openPerpsOrder(
         orderRequest: OpenPerpetualOrderRequest,
         completion: @escaping (MixinAPI.Result<OpenPerpetualOrderResponse>) -> Void
@@ -291,6 +298,7 @@ extension RouteAPI {
         assetID: String,
         amount: String,
         destination: String?,
+        leaderPositionID: String?,
         completion: @escaping (MixinAPI.Result<OpenPerpetualOrderResponse>) -> Void
     ) {
         var params = [
@@ -299,6 +307,9 @@ extension RouteAPI {
         ]
         if let destination {
             params["destination"] = destination
+        }
+        if let leaderPositionID {
+            params["leader_position_id"] = leaderPositionID
         }
         request(
             method: .post,

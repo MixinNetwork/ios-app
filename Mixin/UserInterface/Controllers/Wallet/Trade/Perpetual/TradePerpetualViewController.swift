@@ -321,6 +321,7 @@ final class TradePerpetualViewController: UIViewController {
                         wallet: wallet,
                         side: side,
                         viewModel: viewModel,
+                        leaderPosition: nil,
                     )
                     self.navigationController?.pushViewController(open, animated: true)
                 }

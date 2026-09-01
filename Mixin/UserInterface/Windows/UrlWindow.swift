@@ -95,6 +95,8 @@ class UrlWindow {
                             hud.scheduleAutoHidden()
                         }
                     }
+                case let .perpsAction(leaderPosition):
+                    checkLeaderPosition(leaderPosition: leaderPosition)
                 case let .trade(designatedTrading, input, output):
                     let trading: TradeViewController.Trading
                     if let designatedTrading {
@@ -1617,6 +1619,146 @@ extension UrlWindow {
                         hud.scheduleAutoHidden()
                     }
                 }
+            }
+        }
+    }
+    
+    private static func checkLeaderPosition(leaderPosition: TradeURL.LeaderPosition) {
+        enum LoadTokenError: Error {
+            case noMarginToken
+            case insufficientBalance(BalanceRequirement)
+        }
+        
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        let marketID = leaderPosition.marketID
+        RouteAPI.perpsMarket(marketID: marketID) { result in
+            switch result {
+            case .success(let market):
+                DispatchQueue.global().async {
+                    PerpsMarketDAO.shared.save(market: market)
+                }
+                guard let navigationController = UIApplication.homeNavigationController else {
+                    hud.hide()
+                    return
+                }
+                let viewModel = PerpetualMarketViewModel(market: market)
+                let wallet: Wallet = .privacy
+                if let openedPosition = PerpsPositionDAO.shared.position(marketID: marketID) {
+                    hud.hide()
+                    let failure = OpenPerpetualPositionFailedViewController(
+                        wallet: wallet,
+                        viewModel: viewModel,
+                        openedPosition: openedPosition,
+                        leaderPosition: leaderPosition
+                    )
+                    navigationController.present(failure, animated: true)
+                } else if let leverage = leaderPosition.leverage, let margin = leaderPosition.margin {
+                    Task {
+                        do {
+                            let side = leaderPosition.side
+                            let assetIDs = try await RouteAPI.acceptedPerpsOrderAssets()
+                            let marginToken: MixinTokenItem?
+                            if let token = TokenDAO.shared.greatestBalanceToken(assetIDs: assetIDs) {
+                                marginToken = token
+                            } else if let assetID = assetIDs.first {
+                                marginToken = syncToken(assetID: assetID, hud: hud)
+                            } else {
+                                marginToken = nil
+                            }
+                            guard let marginToken else {
+                                throw LoadTokenError.noMarginToken
+                            }
+                            guard marginToken.decimalBalance >= margin else {
+                                let requirement = BalanceRequirement(token: marginToken, amount: margin)
+                                throw LoadTokenError.insufficientBalance(requirement)
+                            }
+                            let liquidationPrice = try await RouteAPI.perpsLiquidationPrice(
+                                request: .open(marketID: marketID, side: side, leverage: leverage),
+                                amount: margin
+                            )
+                            let request = OpenPerpetualOrderRequest(
+                                assetID: marginToken.assetID,
+                                marketID: viewModel.market.marketID,
+                                side: side,
+                                amount: margin.formatted(
+                                    MixinToken.transferCanonicalFormatStyle
+                                ),
+                                leverage: leverage,
+                                walletID: wallet.tradingWalletID,
+                                destination: nil,
+                                takeProfitPrice: nil,
+                                stopLossPrice: nil,
+                                leaderPositionID: leaderPosition.id
+                            )
+                            let context = Payment.PerpsContext(
+                                wallet: wallet,
+                                viewModel: viewModel,
+                                operation: .open,
+                                side: side,
+                                leverageMultiplier: Decimal(leverage),
+                                liquidationPrice: liquidationPrice,
+                                takeProfitPrice: nil,
+                                stopLossPrice: nil,
+                                onDismissAfterSuccess: nil,
+                            )
+                            RouteAPI.openPerpsOrder(orderRequest: request) { result in
+                                switch result {
+                                case .success(let response):
+                                    guard let url = URL(string: response.paymentURL) else {
+                                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                                        hud.scheduleAutoHidden()
+                                        return
+                                    }
+                                    _ = UrlWindow.checkUrl(
+                                        url: url,
+                                        from: .perps(context: context, completion: { description in
+                                            if let description {
+                                                hud.set(style: .error, text: description)
+                                                hud.scheduleAutoHidden()
+                                            } else {
+                                                hud.hide()
+                                            }
+                                        })
+                                    )
+                                case .failure(let error):
+                                    hud.set(style: .error, text: error.localizedDescription)
+                                    hud.scheduleAutoHidden()
+                                }
+                            }
+                        } catch LoadTokenError.noMarginToken {
+                            await MainActor.run {
+                                hud.set(style: .error, text: R.string.localizable.invalid_parameters())
+                                hud.scheduleAutoHidden()
+                            }
+                        } catch LoadTokenError.insufficientBalance(let requirement) {
+                            await MainActor.run {
+                                hud.hide()
+                                let insufficient = InsufficientBalanceViewController(
+                                    intent: .privacyWalletTransfer(requirement)
+                                )
+                                navigationController.present(insufficient, animated: true)
+                            }
+                        } catch {
+                            await MainActor.run {
+                                hud.set(style: .error, text: error.localizedDescription)
+                                hud.scheduleAutoHidden()
+                            }
+                        }
+                    }
+                } else {
+                    hud.hide()
+                    let open = OpenPerpsPositionViewController(
+                        wallet: wallet,
+                        side: leaderPosition.side,
+                        viewModel: viewModel,
+                        leaderPosition: leaderPosition
+                    )
+                    navigationController.pushViewController(open, animated: true)
+                }
+            case .failure(let error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
             }
         }
     }

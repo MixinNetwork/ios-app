@@ -23,7 +23,10 @@ extension UIApplication {
     }
     
     var homeContainerViewController: HomeContainerViewController? {
-        firstWindowScene?.keyWindow?.rootViewController as? HomeContainerViewController
+        firstWindowScene?.windows
+            .lazy
+            .compactMap { $0.rootViewController as? HomeContainerViewController }
+            .first
     }
     
     var homeNavigationController: HomeNavigationController? {

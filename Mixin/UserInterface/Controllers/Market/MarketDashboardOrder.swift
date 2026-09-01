@@ -105,18 +105,20 @@ extension Market.Ordering {
 extension PerpetualMarket.Ordering {
     
     static let watchlistDefault = PerpetualMarket.Ordering(field: .addedAt, direction: .descending)
-    static let stocksDefault = PerpetualMarket.Ordering(field: .score, direction: .descending)
+    static let stocksDefault = PerpetualMarket.Ordering(field: .volume, direction: .descending)
     
     static func derived(subCategory: MarketDashboardViewController.PerpsSubCategory) -> PerpetualMarket.Ordering {
         switch subCategory {
         case .watchlist:
             watchlistDefault
-        case .memes, .indices, .commodities, .forex, .trending:
+        case .trending:
             PerpetualMarket.Ordering(field: .score, direction: .descending)
         case .topGainers:
             PerpetualMarket.Ordering(field: .change, direction: .descending)
         case .topLosers:
             PerpetualMarket.Ordering(field: .change, direction: .ascending)
+        case .memes, .indices, .commodities, .forex:
+            PerpetualMarket.Ordering(field: .volume, direction: .descending)
         }
     }
     

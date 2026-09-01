@@ -37,7 +37,7 @@ final class PerpsMarketOrderingHeaderView: UICollectionReusableView {
         }
     }
     
-    var isScoreOrderingAvailable = false
+    var loopbackOrder: PerpetualMarket.Ordering?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -79,10 +79,9 @@ final class PerpsMarketOrderingHeaderView: UICollectionReusableView {
     
     @IBAction func sortByVolume(_ sender: Any) {
         let order = if let order, order.field == .volume {
-            switch order.direction {
-            case .ascending where isScoreOrderingAvailable:
-                PerpetualMarket.Ordering(field: .score, direction: .descending)
-            case .ascending, .descending:
+            if order.direction == .ascending, let loopbackOrder {
+                loopbackOrder
+            } else {
                 order.directionToggled()
             }
         } else {
@@ -94,10 +93,9 @@ final class PerpsMarketOrderingHeaderView: UICollectionReusableView {
     
     @IBAction func sortByPrice(_ sender: Any) {
         let order = if let order, order.field == .price {
-            switch order.direction {
-            case .ascending where isScoreOrderingAvailable:
-                PerpetualMarket.Ordering(field: .score, direction: .descending)
-            case .ascending, .descending:
+            if order.direction == .ascending, let loopbackOrder {
+                loopbackOrder
+            } else {
                 order.directionToggled()
             }
         } else {
@@ -109,10 +107,9 @@ final class PerpsMarketOrderingHeaderView: UICollectionReusableView {
     
     @IBAction func sortByChange(_ sender: Any) {
         let order = if let order, order.field == .change {
-            switch order.direction {
-            case .ascending where isScoreOrderingAvailable:
-                PerpetualMarket.Ordering(field: .score, direction: .descending)
-            case .ascending, .descending:
+            if order.direction == .ascending, let loopbackOrder {
+                loopbackOrder
+            } else {
                 order.directionToggled()
             }
         } else {
@@ -122,7 +119,7 @@ final class PerpsMarketOrderingHeaderView: UICollectionReusableView {
         delegate?.perpsMarketOrderingHeaderView(self, didSwitchToOrdering: order)
     }
     
-    private func iconButton(ordering: PerpetualMarket.Ordering) -> UIButton? {
+    func iconButton(ordering: PerpetualMarket.Ordering) -> UIButton? {
         switch ordering.field {
         case .volume:
             volumeButton

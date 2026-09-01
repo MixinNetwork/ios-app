@@ -541,8 +541,7 @@ extension ConversationInputViewController {
         let keyboardWillBeInvisible = (screenHeight - endFrame.origin.y) <= 1
         guard
             textView.isFirstResponder ||
-            (keyboardWillBeInvisible && customInputViewController == nil) ||
-            ((presentedViewController?.isBeingDismissed ?? false) && !(presentedViewController is QLPreviewController))
+            (customInputViewController == nil && (keyboardWillBeInvisible || ((presentedViewController?.isBeingDismissed ?? false) && !(presentedViewController is QLPreviewController))))
         else {
             return
         }

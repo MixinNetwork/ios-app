@@ -8,7 +8,7 @@ struct TokenEarningViewModel {
         let productionID: String
         let totalPrincipal: Decimal
         let totalEarnings: Decimal
-        let redeemableEarnings: Decimal
+        let yesterdayEarnings: Decimal
         let minRate: Decimal?
         let maxRate: Decimal?
         
@@ -25,8 +25,8 @@ struct TokenEarningViewModel {
                 string: product.account.totalEarnings,
                 locale: .enUSPOSIX
             ) ?? 0
-            self.redeemableEarnings = Decimal(
-                string: product.account.redeemableEarnings,
+            self.yesterdayEarnings = Decimal(
+                string: product.account.yesterdayEarnings,
                 locale: .enUSPOSIX
             ) ?? 0
             self.minRate = rates.min()
@@ -34,20 +34,18 @@ struct TokenEarningViewModel {
         }
         
         static func > (lhs: ProductCalculationModel, rhs: ProductCalculationModel) -> Bool {
-            (lhs.totalPrincipal, lhs.redeemableEarnings, lhs.maxRate ?? 0)
-            > (rhs.totalPrincipal, rhs.redeemableEarnings, rhs.maxRate ?? 0)
+            (lhs.totalPrincipal, lhs.maxRate ?? 0) > (rhs.totalPrincipal, rhs.maxRate ?? 0)
         }
         
         static func < (lhs: ProductCalculationModel, rhs: ProductCalculationModel) -> Bool {
-            (lhs.totalPrincipal, lhs.redeemableEarnings, lhs.maxRate ?? 0)
-            < (rhs.totalPrincipal, rhs.redeemableEarnings, rhs.maxRate ?? 0)
+            (lhs.totalPrincipal, lhs.maxRate ?? 0) < (rhs.totalPrincipal, rhs.maxRate ?? 0)
         }
         
     }
     
     let totalEarnings: String
     let totalAmount: String
-    let pendingEarning: String
+    let yesterdayEarnings: String
     let rewardRate: String?
     let topProductionID: String
     
@@ -64,13 +62,13 @@ struct TokenEarningViewModel {
         }
         var totalEarnings: Decimal = 0
         var totalAmount: Decimal = 0
-        var pendingEarning: Decimal = 0
+        var yesterdayEarnings: Decimal = 0
         var minRate: Decimal?
         var maxRate: Decimal?
         for product in relatingProducts {
             totalEarnings += product.totalEarnings
             totalAmount += product.totalPrincipal
-            pendingEarning += product.redeemableEarnings
+            yesterdayEarnings += product.yesterdayEarnings
             if let currentMinRate = minRate {
                 if let productMinRate = product.minRate {
                     minRate = min(currentMinRate, productMinRate)
@@ -103,7 +101,7 @@ struct TokenEarningViewModel {
             sign: .never,
             symbol: .custom(token.symbol)
         )
-        self.pendingEarning = (pendingEarning * token.decimalUSDPrice).formatted(
+        self.yesterdayEarnings = (yesterdayEarnings * token.decimalUSDPrice).formatted(
             Decimal.FormatStyle.Currency
                 .currency(code: "USD")
                 .presentation(.narrow)

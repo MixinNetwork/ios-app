@@ -17,11 +17,13 @@ struct EarnProduct: Codable {
         enum CodingKeys: String, CodingKey {
             case totalPrincipal = "total_principal"
             case totalEarnings = "total_earnings"
+            case yesterdayEarnings = "yesterday_earnings"
             case redeemableEarnings = "redeemable_earnings"
         }
         
         let totalPrincipal: String
         let totalEarnings: String
+        let yesterdayEarnings: String
         let redeemableEarnings: String
         
     }

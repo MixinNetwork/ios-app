@@ -568,9 +568,9 @@
 "duplication_reminder" = "您已经在%2$@前给该收款人转账了 %1$@。";
 "earn" = "理财";
 "earn_balance" = "理财余额";
-"earn_pending_earning" = "待结算收益";
 "earn_reward_rate" = "收益率";
 "earn_total_earnings" = "总收益";
+"earn_yesterday_earnings" = "昨日收益";
 "edit" = "编辑";
 "edit_address" = "修改 %@ 地址";
 "edit_alert" = "编辑价格预警";

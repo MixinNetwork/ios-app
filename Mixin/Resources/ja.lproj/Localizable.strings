@@ -568,9 +568,9 @@
 "duplication_reminder" = "以前に %1$@ を受信者 %2$@ に転送しました。";
 "earn" = "Earn";
 "earn_balance" = "Earn残高";
-"earn_pending_earning" = "保留中の収益";
 "earn_reward_rate" = "報酬率";
 "earn_total_earnings" = "総収益";
+"earn_yesterday_earnings" = "昨日の収益";
 "edit" = "編集";
 "edit_address" = "%@アドレスを修正";
 "edit_alert" = "アラートの編集";

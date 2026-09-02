@@ -568,9 +568,9 @@
 "duplication_reminder" = "Вы передали %1$@ получателю %2$@ назад.";
 "earn" = "Earn";
 "earn_balance" = "Баланс Earn";
-"earn_pending_earning" = "Ожидаемый доход";
 "earn_reward_rate" = "Ставка доходности";
 "earn_total_earnings" = "Общий доход";
+"earn_yesterday_earnings" = "Доход за вчера";
 "edit" = "Редактировать";
 "edit_address" = "Изменить адрес %@";
 "edit_alert" = "Изменить оповещение";

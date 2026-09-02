@@ -150,8 +150,8 @@ class StaticMessagesViewController: UIViewController {
     }
     
     func presentAsChild(of parent: UIViewController) {
+        parent.view.window?.endEditing(true)
         loadViewIfNeeded()
-        view.window?.endEditing(true)
         view.frame = parent.view.bounds
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         contentViewHeightConstraint.constant = parent.view.bounds.height - parent.view.safeAreaInsets.top

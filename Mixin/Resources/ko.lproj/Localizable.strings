@@ -328,7 +328,6 @@
 "circle_title" = "%@님의 서클";
 "circles" = "서클";
 "circulation_supply" = "순환 공급";
-"classic_wallet_pearl_intro_title" = "이제 Common Wallet에서 Pearl을 지원합니다";
 "classic_wallet_tip_description" = "분산형 애플리케이션과 DeFi 프로토콜에 액세스하는 일반적인 다중 체인 지갑입니다.";
 "classic_wallet_tip_title" = "공통지갑이란 무엇인가요?";
 "clear" = "지우기";
@@ -367,7 +366,7 @@
 "combine_and_forward" = "결합 및 전달";
 "common_wallet" = "공용지갑";
 "common_wallet_index" = "공용 지갑 %@";
-"common_wallet_now_supports_btc" = "이제 Common Wallet에서 비트코인을 지원합니다";
+"common_wallet_now_supports_chain" = "이제 Common Wallet에서 %@을 지원합니다";
 "complete" = "완료";
 "completed" = "완료됨";
 "compress_database" = "데이터베이스 압축";

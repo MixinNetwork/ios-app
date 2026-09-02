@@ -328,7 +328,6 @@
 "circle_title" = "%@的圈子";
 "circles" = "圈子";
 "circulation_supply" = "流通量";
-"classic_wallet_pearl_intro_title" = "普通錢包現已支援 Pearl";
 "classic_wallet_tip_description" = "一個支援多鏈的常規錢包，可用於訪問去中心化應用和 DeFi 協議。";
 "classic_wallet_tip_title" = "什麼是普通錢包？";
 "clear" = "清除";
@@ -367,7 +366,7 @@
 "combine_and_forward" = "合併轉發";
 "common_wallet" = "普通錢包";
 "common_wallet_index" = "普通錢包 %@";
-"common_wallet_now_supports_btc" = "普通錢包現已支援比特幣";
+"common_wallet_now_supports_chain" = "普通錢包現已支援 %@";
 "complete" = "完成";
 "completed" = "已完成";
 "compress_database" = "壓縮資料庫";

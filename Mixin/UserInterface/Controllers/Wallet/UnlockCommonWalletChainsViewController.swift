@@ -25,10 +25,10 @@ final class UnlockCommonWalletChainsViewController: UIViewController {
         switch content {
         case .bitcoin:
             iconImageView.image = R.image.bitcoin_chain()
-            mainTitleLabel.text = R.string.localizable.common_wallet_now_supports_btc()
+            mainTitleLabel.text = R.string.localizable.common_wallet_now_supports_chain("Bitcoin")
         case .pearl:
             iconImageView.image = R.image.pearl_chain()
-            mainTitleLabel.text = R.string.localizable.classic_wallet_pearl_intro_title()
+            mainTitleLabel.text = R.string.localizable.common_wallet_now_supports_chain("Pearl")
         }
         
         let featureItemViews = [

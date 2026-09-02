@@ -328,7 +328,6 @@
 "circle_title" = "Círculos de %@";
 "circles" = "Círculos";
 "circulation_supply" = "Suministro de circulación";
-"classic_wallet_pearl_intro_title" = "Common Wallet ahora es compatible con Pearl";
 "classic_wallet_tip_description" = "Una billetera multicadena común que accede a aplicaciones descentralizadas y protocolos DeFi.";
 "classic_wallet_tip_title" = "¿Qué es la billetera común?";
 "clear" = "Borrar";
@@ -367,7 +366,7 @@
 "combine_and_forward" = "Combinar y reenviar";
 "common_wallet" = "Monedero común";
 "common_wallet_index" = "Monedero común %@";
-"common_wallet_now_supports_btc" = "Common Wallet ahora admite Bitcoin";
+"common_wallet_now_supports_chain" = "Common Wallet ahora admite %@";
 "complete" = "Completo";
 "completed" = "Completado";
 "compress_database" = "Comprimir base de datos";

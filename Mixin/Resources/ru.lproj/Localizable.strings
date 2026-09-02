@@ -328,7 +328,6 @@
 "circle_title" = "Круги пользователя %@";
 "circles" = "Круги";
 "circulation_supply" = "Циркуляционное предложение";
-"classic_wallet_pearl_intro_title" = "Common Wallet теперь поддерживает Pearl";
 "classic_wallet_tip_description" = "Обычный многоцепочный кошелек, обеспечивающий доступ к децентрализованным приложениям и протоколам DeFi.";
 "classic_wallet_tip_title" = "Что такое общий кошелек?";
 "clear" = "Очистить";
@@ -367,7 +366,7 @@
 "combine_and_forward" = "Объединить и переслать";
 "common_wallet" = "Общий кошелек";
 "common_wallet_index" = "Обычный кошелек %@";
-"common_wallet_now_supports_btc" = "Общий кошелек теперь поддерживает биткойны";
+"common_wallet_now_supports_chain" = "Общий кошелек теперь поддерживает %@";
 "complete" = "Завершено";
 "completed" = "Завершено";
 "compress_database" = "Сжать базу данных";

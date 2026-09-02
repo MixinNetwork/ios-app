@@ -567,14 +567,14 @@ final class PrivacyWalletViewController: WalletViewController {
         let botUserID = "84c9dfb1-bfcf-4cb4-8404-cc5a1354005b"
         let conversationID = ConversationDAO.shared.makeConversationId(userId: myUserId, ownerUserId: botUserID)
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         UserAPI.showUser(userId: botUserID) { response in
             switch response {
             case let .success(response):
                 hud.hide()
                 UserDAO.shared.updateUsers(users: [response])
                 if let app = response.app,
-                   let navigationController = UIApplication.homeNavigationController
+                   let navigationController = UIApplication.shared.homeNavigationController
                 {
                     navigationController.pushWebViewController(
                         context: .init(conversationID: conversationID, app: app, isAppVerified: response.isVerified)
@@ -634,9 +634,9 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
         case let .banner(banner, _):
             banner.invokeRemoteActionURL()
         case .cash:
-            UIApplication.homeNavigationController?.presentCashPage()
+            UIApplication.shared.homeNavigationController?.presentCashPage()
         case .earn:
-            UIApplication.homeNavigationController?.presentEarnPage()
+            UIApplication.shared.homeNavigationController?.presentEarnPage()
         case .perpsPosition(let positionID):
             if let position = perpsPositions[positionID],
                let market = PerpsMarketDAO.shared.market(marketID: position.marketID)

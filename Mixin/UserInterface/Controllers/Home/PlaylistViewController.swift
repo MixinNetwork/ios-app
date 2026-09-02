@@ -121,12 +121,12 @@ class PlaylistViewController: ResizablePopupViewController {
     }
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
-        let window = AppDelegate.current.mainWindow
+        let totalHeight = presentingViewController?.view.bounds.height ?? view.window?.bounds.height ?? UIScreen.main.bounds.height
         switch size {
         case .expanded, .unavailable:
-            return window.bounds.height - window.safeAreaInsets.top
+            return totalHeight - view.windowSafeAreaInsets.top
         case .compressed:
-            return floor(window.bounds.height / 3 * 2)
+            return floor(totalHeight / 3 * 2)
         }
     }
     

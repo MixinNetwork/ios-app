@@ -124,7 +124,7 @@ final class DepositLinkPreviewViewController: UIViewController {
         )
         navigationController?.presentingViewController?.dismiss(animated: true) {
             let receiverSelector = MessageReceiverViewController.instance(content: .appCard(.v1(content)))
-            UIApplication.homeNavigationController?.pushViewController(receiverSelector, animated: true)
+            UIApplication.shared.homeNavigationController?.pushViewController(receiverSelector, animated: true)
         }
     }
     

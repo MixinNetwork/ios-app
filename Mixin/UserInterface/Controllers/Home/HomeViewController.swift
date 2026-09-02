@@ -115,7 +115,7 @@ final class HomeViewController: UIViewController {
     }
     
     @IBAction func scanQRCode() {
-        UIApplication.homeNavigationController?.pushQRCodeScannerViewController()
+        UIApplication.shared.homeNavigationController?.pushQRCodeScannerViewController()
     }
     
     @IBAction func showSearchAction() {
@@ -170,7 +170,7 @@ final class HomeViewController: UIViewController {
     }
     
     @objc private func dataDidChange() {
-        guard view?.isVisibleInScreen ?? false else {
+        guard view.window != nil else {
             needRefresh = true
             return
         }
@@ -396,7 +396,7 @@ extension HomeViewController {
                 return
             }
             WebSocketService.shared.disconnect()
-            AppDelegate.current.mainWindow.rootViewController = UpdateViewController()
+            self.view.window?.rootViewController = UpdateViewController()
         }
     }
     
@@ -572,7 +572,7 @@ extension HomeViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.exit_group(), style: .destructive, handler: { (_) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             ConversationAPI.exitConversation(conversationId: conversationId) { [weak self](result) in
                 switch result {
                 case .success:
@@ -607,7 +607,7 @@ extension HomeViewController {
             await MainActor.run {
                 guard
                     let self,
-                    let tabBarController = UIApplication.homeContainerViewController?.homeTabBarController,
+                    let tabBarController = UIApplication.shared.homeContainerViewController?.homeTabBarController,
                     tabBarController.navigationController?.topViewController == tabBarController,
                     tabBarController.selectedViewController == self,
                     self.presentedViewController == nil

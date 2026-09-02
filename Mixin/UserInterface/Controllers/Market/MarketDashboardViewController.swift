@@ -703,7 +703,7 @@ extension MarketDashboardViewController {
     }
     
     @objc private func scanQRCode(_ sender: Any) {
-        UIApplication.homeNavigationController?.pushQRCodeScannerViewController()
+        UIApplication.shared.homeNavigationController?.pushQRCodeScannerViewController()
     }
     
     @objc private func openSettings(_ sender: Any) {

@@ -45,7 +45,7 @@ class ConversationTableView: UITableView {
     private var bottomContentOffset: CGPoint {
         let y = contentSize.height
             + adjustedContentInset.bottom
-            - AppDelegate.current.mainWindow.bounds.height
+            - bounds.height
         return CGPoint(x: 0, y: max(-contentInset.top, y))
     }
     

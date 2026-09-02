@@ -348,7 +348,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
         }
         presentingViewController?.dismiss(animated: true) { [onDismiss] in
             onDismiss?()
-            UIApplication.homeNavigationController?.pushViewController(trade, animated: true)
+            UIApplication.shared.homeNavigationController?.pushViewController(trade, animated: true)
         }
     }
     
@@ -415,7 +415,7 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
             return
         }
         presentingViewController?.dismiss(animated: true) {
-            UIApplication.homeNavigationController?.pushViewController(next, animated: true)
+            UIApplication.shared.homeNavigationController?.pushViewController(next, animated: true)
         }
     }
     

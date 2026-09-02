@@ -20,7 +20,7 @@ final class PinMessagesPreviewViewController: StaticMessagesViewController {
     
     private var layoutWidth: CGFloat {
         Queue.main.autoSync {
-            AppDelegate.current.mainWindow.bounds.width
+            view.bounds.width
         }
     }
     

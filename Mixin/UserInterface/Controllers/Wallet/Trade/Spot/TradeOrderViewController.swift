@@ -275,7 +275,7 @@ extension TradeOrderViewController: PillActionView.Delegate {
             }
         case .cancelOrder:
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             RouteAPI.cancelLimitOrder(id: viewModel.orderID) { result in
                 switch result {
                 case .success(let order):
@@ -293,7 +293,7 @@ extension TradeOrderViewController: PillActionView.Delegate {
                 return
             }
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             let oneSideStablecoinPair = OneSideStablecoinPair(order: viewModel)
             let focusAssetID, focusAssetSymbol, buyAction, sellAction: String
             if let pair = oneSideStablecoinPair {

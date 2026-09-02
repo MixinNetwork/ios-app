@@ -24,10 +24,12 @@ class ViewPanningController {
     
     private var panRecognizer: UIPanGestureRecognizer!
     
-    private weak var overlaysCoordinator = UIApplication.homeContainerViewController?.overlaysCoordinator
+    private weak var overlaysCoordinator = UIApplication.shared.homeContainerViewController?.overlaysCoordinator
     
     private var centerRestriction: CGRect {
-        let superview = view.superview ?? AppDelegate.current.mainWindow
+        guard let superview = view.superview ?? view.window else {
+            return .zero
+        }
         let halfContentWidth = view.frame.size.width / 2
         let halfContentHeight = view.frame.size.height / 2
         let contentInsets = UIEdgeInsets(top: halfContentHeight,

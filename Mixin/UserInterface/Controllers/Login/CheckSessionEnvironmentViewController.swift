@@ -149,8 +149,8 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         Logger.login.info(category: "CheckSessionEnv", message: "Check environments")
         if AppGroupUserDefaults.isClockSkewed {
             Logger.login.info(category: "CheckSessionEnv", message: "Clock skewed")
-            while UIApplication.shared.keyWindow?.subviews.last is BottomSheetView {
-                UIApplication.shared.keyWindow?.subviews.last?.removeFromSuperview()
+            if presentedViewController != nil {
+                dismiss(animated: false)
             }
             let clockSkew = ClockSkewViewController()
             reload(content: clockSkew)
@@ -286,7 +286,9 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         }
         AccountVerificationIntent.current = nil
         
-        AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(initialTab: initialTab)
+        DispatchQueue.main.async {
+            self.view.window?.rootViewController = HomeContainerViewController(initialTab: initialTab)
+        }
         
         if intent != nil {
             assert(MixinKeys.testAccountPrefix != nil)

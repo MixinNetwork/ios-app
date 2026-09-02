@@ -635,7 +635,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     }
     
     @IBAction func scanQRCode() {
-        UIApplication.homeNavigationController?.pushQRCodeScannerViewController()
+        UIApplication.shared.homeNavigationController?.pushQRCodeScannerViewController()
     }
     
     @IBAction func moreAction(_ sender: Any) {
@@ -1107,7 +1107,7 @@ extension WalletViewController: WalletReferralCell.Delegate {
     }
     
     func walletReferralCellDidSelectLearnMore(_ cell: WalletReferralCell) {
-        UIApplication.homeNavigationController?.presentReferralPage()
+        UIApplication.shared.homeNavigationController?.presentReferralPage()
         BadgeManager.shared.setHasViewed(identifier: .referral)
     }
     

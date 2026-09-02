@@ -438,7 +438,7 @@ class PayWindow: BottomSheetView {
         pinField.resignFirstResponder()
         processing = false
         dismissPopupController(animated: true)
-        guard let navigationController = UIApplication.homeNavigationController else {
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return
         }
         var viewControllers = navigationController.viewControllers.filter { (viewController) -> Bool in

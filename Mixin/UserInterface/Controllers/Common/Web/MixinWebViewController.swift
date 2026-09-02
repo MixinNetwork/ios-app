@@ -64,7 +64,7 @@ final class MixinWebViewController: WebViewController {
         loadingFailureViewIfLoaded = view
         return view
     }()
-    private lazy var clipSwitcher = UIApplication.homeContainerViewController?.clipSwitcher
+    private lazy var clipSwitcher = UIApplication.shared.homeContainerViewController?.clipSwitcher
     private lazy var web3Worker = Web3Worker(webView: webView,
                                              evmChain: defaultEVMChain,
                                              solanaChain: .solana)
@@ -200,7 +200,7 @@ final class MixinWebViewController: WebViewController {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         DispatchQueue.global().async { [weak self] in
             guard let developerUserId = Self.syncUser(userId: app.appId, hud: hud)?.appCreatorId else {
                 return
@@ -230,7 +230,7 @@ final class MixinWebViewController: WebViewController {
         guard
             let switcher = clipSwitcher,
             !switcher.isMaximumLimitReached,
-            let container = UIApplication.homeContainerViewController,
+            let container = UIApplication.shared.homeContainerViewController,
             let navigationController,
             let index = navigationController.viewControllers.firstIndex(of: self)
         else {
@@ -625,14 +625,14 @@ extension MixinWebViewController {
             DispatchQueue.main.async {
                 let vc = UserProfileViewController(user: user)
                 vc.updateUserFromRemoteAfterReloaded = updateUserFromRemoteAfterReloaded
-                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                UIApplication.shared.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }
     }
     
     private func scanQRCodeOnCurrentPage() {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         let config = WKSnapshotConfiguration()
         config.rect = webView.frame
         config.snapshotWidth = NSNumber(value: Int(webView.frame.width))

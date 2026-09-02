@@ -49,9 +49,17 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
         showContentViewConstraint.priority = .defaultLow
         hideContentViewConstraint.priority = .defaultHigh
         titleLabel.text = albumItem.album.name
-        actionBarHeightConstraint.constant = AppDelegate.current.mainWindow.safeAreaInsets.bottom
+        actionBarHeightConstraint.constant = view.windowSafeAreaInsets.bottom
             + actionBarContentHeightConstraint.constant
         updateStickerActionButton()
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        let newBottomConstant = view.windowSafeAreaInsets.bottom + actionBarContentHeightConstraint.constant
+        if actionBarHeightConstraint.constant != newBottomConstant {
+            actionBarHeightConstraint.constant = newBottomConstant
+        }
     }
     
     override func viewWillLayoutSubviews() {
@@ -73,8 +81,8 @@ class StickersAlbumPreviewViewController: ResizablePopupViewController {
         case .compressed:
             countOfRows = CGFloat(defaultCountOfRows)
         }
-        let window = AppDelegate.current.mainWindow
-        let maxHeight = window.bounds.height - window.safeAreaInsets.top
+        let totalHeight = presentingViewController?.view.bounds.height ?? view.window?.bounds.height ?? UIScreen.main.bounds.height
+        let maxHeight = totalHeight - view.windowSafeAreaInsets.top
         let collectionViewHeight = countOfRows * (flowLayout.itemSize.height + flowLayout.minimumLineSpacing) - flowLayout.minimumLineSpacing
         let contentHeight = titleBarHeightConstraint.constant
             + actionBarHeightConstraint.constant

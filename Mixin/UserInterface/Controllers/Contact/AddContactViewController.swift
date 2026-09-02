@@ -60,8 +60,7 @@ extension AddContactViewController {
         } else {
             title = R.string.localizable.settings()
         }
-        let window = AccessPhoneContactHintWindow.instance()
-        window.button.setTitle(title, for: .normal)
+        let window = AccessPhoneContactHintWindow(buttonTitle: title)
         window.action = {
             if isNotDetermined {
                 ContactsManager.shared.store.requestAccess(for: .contacts, completionHandler: { (granted, error) in
@@ -83,10 +82,10 @@ extension AddContactViewController {
                     }
                 })
             } else {
-                UIApplication.openAppSettings()
+                UIApplication.shared.openAppSettings()
             }
         }
-        window.presentPopupControllerAnimated()
+        present(window, animated: true)
     }
     
 }

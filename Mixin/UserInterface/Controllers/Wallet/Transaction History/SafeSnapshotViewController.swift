@@ -146,7 +146,7 @@ final class SafeSnapshotViewController: TransactionViewController {
             return
         }
         becomeFirstResponder()
-        AppDelegate.current.mainWindow.addDismissMenuResponder()
+        (view.window as? Window)?.addDismissMenuResponder()
         UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
     }
     

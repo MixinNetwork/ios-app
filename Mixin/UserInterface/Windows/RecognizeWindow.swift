@@ -1,20 +1,30 @@
 import UIKit
 
-class RecognizeWindow: BottomSheetView {
+final class RecognizeWindow: UIViewController {
     
     @IBOutlet weak var contentTextView: UITextView!
     @IBOutlet weak var copyButton: UIButton!
     @IBOutlet weak var actionButton: RoundedButton!
     @IBOutlet weak var actionButtonBottomConstraint: NSLayoutConstraint!
     
+    private let text: String
     private var validURL: URL?
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        contentTextView.delegate = self
+    init(text: String) {
+        self.text = text
+        let nib = R.nib.recognizeWindow
+        super.init(nibName: nib.name, bundle: nib.bundle)
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
+        modalPresentationStyle = .custom
     }
     
-    func presentWindow(text: String) {
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        contentTextView.delegate = self
         contentTextView.text = text
         if textIsValidURL, let url = URL(string: text) {
             validURL = url
@@ -25,7 +35,6 @@ class RecognizeWindow: BottomSheetView {
         } else {
             actionButtonBottomConstraint.constant = copyButton.bounds.height
         }
-        presentPopupControllerAnimated()
     }
     
     @IBAction func buttonAction(_ sender: Any) {
@@ -41,36 +50,31 @@ class RecognizeWindow: BottomSheetView {
     }
     
     @IBAction func dismissAction(_ sender: Any) {
-        dismissPopupController(animated: true)
-    }
-    
-    class func instance() -> RecognizeWindow {
-        return Bundle.main.loadNibNamed("RecognizeWindow", owner: nil, options: nil)?.first as! RecognizeWindow
+        dismiss(animated: true)
     }
     
     private var textIsValidURL: Bool {
-        guard let text = contentTextView.text,
-              let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue),
-              let match = detector.firstMatch(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count)) else {
-            return false
-        }
-        return match.range.length == text.utf16.count
+        let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        let match = detector?.firstMatch(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count))
+        return match?.range.length == text.utf16.count
     }
     
     private func copyContent() {
         UIPasteboard.general.string = contentTextView.text
-        dismissPopupController(animated: true)
-        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
+        dismiss(animated: true) {
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
+        }
     }
     
     @discardableResult private func open(_ url: URL) -> Bool {
-        guard let navigationController = UIApplication.homeNavigationController else {
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return true
         }
-        dismissPopupController(animated: true)
-        navigationController.pushWebViewController(
-            context: .init(conversationID: "", initialURL: url)
-        )
+        dismiss(animated: true) {
+            navigationController.pushWebViewController(
+                context: .init(conversationID: "", initialURL: url)
+            )
+        }
         return false
     }
     

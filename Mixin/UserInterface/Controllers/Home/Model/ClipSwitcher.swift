@@ -22,7 +22,7 @@ final class ClipSwitcher {
     }()
     
     private var minimizedController: MinimizedClipSwitcherViewController? {
-        let container = UIApplication.homeContainerViewController
+        let container = UIApplication.shared.homeContainerViewController
         return container?.minimizedClipSwitcherViewController
     }
     

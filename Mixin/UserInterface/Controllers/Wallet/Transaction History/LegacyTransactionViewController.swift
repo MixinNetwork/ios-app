@@ -82,7 +82,7 @@ class LegacyTransactionViewController: UIViewController {
             return
         }
         becomeFirstResponder()
-        AppDelegate.current.mainWindow.addDismissMenuResponder()
+        (view.window as? Window)?.addDismissMenuResponder()
         UIMenuController.shared.showMenu(from: amountLabel, rect: amountLabel.bounds)
     }
     
@@ -161,7 +161,8 @@ extension LegacyTransactionViewController {
     }
     
     private func layoutTableHeaderView() {
-        let targetSize = CGSize(width: AppDelegate.current.mainWindow.bounds.width,
+        let width = tableView.bounds.width > 0 ? tableView.bounds.width : (view.bounds.width > 0 ? view.bounds.width : UIScreen.main.bounds.width)
+        let targetSize = CGSize(width: width,
                                 height: UIView.layoutFittingExpandedSize.height)
         tableHeaderView.frame.size.height = tableHeaderView.systemLayoutSizeFitting(targetSize).height
     }

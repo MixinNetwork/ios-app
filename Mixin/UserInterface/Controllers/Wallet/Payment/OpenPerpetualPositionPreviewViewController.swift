@@ -228,7 +228,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     )
                     tableView.setContentOffset(.zero, animated: true)
                     loadFinishedTrayView()
-                    if let navigationController = UIApplication.homeNavigationController {
+                    if let navigationController = UIApplication.shared.homeNavigationController {
                         var viewControllers = navigationController.viewControllers
                         viewControllers.removeAll { viewController in
                             viewController is OpenPerpsPositionViewController

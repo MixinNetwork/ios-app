@@ -45,7 +45,7 @@ final class PhoneContactsSettingViewController: SettingsTableViewController {
             return
         }
         let hud = self.hud
-        hud.show(style: .busy, text: "", on: navigationController.view)
+        hud.show(style: .busy, text: "")
         PhoneContactAPI.upload(contacts: contacts, completion: { [weak self](result) in
             switch result {
             case .success:

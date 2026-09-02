@@ -172,7 +172,7 @@ extension StickerManagerViewController {
     
     private func load(itemProvider: NSItemProvider) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         let hideHud = {
             DispatchQueue.main.async {
                 hud.hide()

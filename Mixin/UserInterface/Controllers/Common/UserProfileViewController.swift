@@ -99,8 +99,9 @@ final class UserProfileViewController: ProfileViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if let coordinator = transitionCoordinator, let imageView = avatarPreviewImageView, let backgroundView = avatarPreviewBackgroundView {
+            let containerHeight = backgroundView.bounds.height
             coordinator.animate(alongsideTransition: { (context) in
-                imageView.frame.origin.y = AppDelegate.current.mainWindow.bounds.height
+                imageView.frame.origin.y = containerHeight
                 backgroundView.effect = nil
                 for view in backgroundView.contentView.subviews {
                     view.alpha = 0
@@ -123,11 +124,14 @@ final class UserProfileViewController: ProfileViewController {
         guard let image = avatarImageView.image else {
             return
         }
-        let window = AppDelegate.current.mainWindow
+        guard let window = view.window else {
+            return
+        }
         let initialFrame = avatarImageView.convert(avatarImageView.bounds, to: window)
     
         let backgroundView = UIVisualEffectView(effect: nil)
         backgroundView.frame = window.bounds
+        backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         window.addSubview(backgroundView)
         avatarPreviewBackgroundView = backgroundView
              
@@ -139,7 +143,7 @@ final class UserProfileViewController: ProfileViewController {
         backgroundView.contentView.addSubview(dismissButton)
         dismissButton.snp.makeConstraints { (make) in
             make.width.height.equalTo(24)
-            make.top.equalTo(window.safeAreaInsets.top + 10)
+            make.top.equalTo(backgroundView.safeAreaLayoutGuide.snp.top).offset(10)
             make.left.equalTo(20)
         }
         
@@ -175,7 +179,7 @@ final class UserProfileViewController: ProfileViewController {
     override func updateMuteInterval(inSeconds interval: Int64) {
         let userId = user.userId
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: ConversationCategory.CONTACT.rawValue, participants: [ParticipantRequest(userId: userId, role: "")], duration: interval, announcement: nil, randomID: nil)
         ConversationAPI.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
             switch result {
@@ -221,7 +225,7 @@ final class UserProfileViewController: ProfileViewController {
         becomeFirstResponder()
         subtitleLabel.highlightIdentityNumber = true
         if let highlightedRect = subtitleLabel.highlightedRect {
-            AppDelegate.current.mainWindow.addDismissMenuResponder()
+            (view.window as? Window)?.addDismissMenuResponder()
             UIMenuController.shared.showMenu(from: subtitleLabel, rect: highlightedRect)
         }
     }
@@ -248,7 +252,7 @@ extension UserProfileViewController: AvatarPickerControllerDelegate {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: view)
+        hud.show(style: .busy, text: "")
         AccountAPI.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
             switch result {
             case let .success(account):
@@ -302,7 +306,7 @@ extension UserProfileViewController {
     }
     
     @objc func sendMessage() {
-        guard let navigationController = UIApplication.homeNavigationController else {
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return
         }
         if let vc = navigationController.viewControllers.last as? ConversationViewController, vc.dataSource?.category == .contact && vc.dataSource?.conversation.ownerId == user.userId {
@@ -311,7 +315,7 @@ extension UserProfileViewController {
         }
         let vc = ConversationViewController.instance(ownerUser: user)
         checkedDismiss(animated: true) { _ in
-            UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+            UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: vc)
         }
     }
     
@@ -326,7 +330,7 @@ extension UserProfileViewController {
     @objc func editMyName() {
         presentEditNameController(title: R.string.localizable.edit_name(), text: user.fullName, placeholder: R.string.localizable.name()) { (name) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             AccountAPI.update(fullName: name) { (result) in
                 switch result {
                 case let .success(account):
@@ -362,11 +366,11 @@ extension UserProfileViewController {
         let userId = user.userId
         let userVerified = user.isVerified
         checkedDismiss(animated: true) { _ in
-            guard let navigationController = UIApplication.homeNavigationController else {
+            guard let navigationController = UIApplication.shared.homeNavigationController else {
                 return
             }
             let conversationId: String
-            if let vc = UIApplication.homeNavigationController?.viewControllers.last as? ConversationViewController {
+            if let vc = UIApplication.shared.homeNavigationController?.viewControllers.last as? ConversationViewController {
                 conversationId = vc.conversationId
             } else {
                 conversationId = self.conversationId
@@ -393,7 +397,7 @@ extension UserProfileViewController {
             reporter.report(event: .sendTokenSelect, tags: ["method": location.asEventMethod])
             reporter.report(event: .sendRecipient, tags: ["type": "contact"])
             let inputAmount = TransferInputAmountViewController(tokenItem: token, receiver: .user(user))
-            UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
+            UIApplication.shared.homeNavigationController?.pushViewController(inputAmount, animated: true)
         }
         dismissAndPresent(selector)
     }
@@ -402,7 +406,7 @@ extension UserProfileViewController {
         let userId = user.userId
         presentEditNameController(title: R.string.localizable.edit_name(), text: user.fullName, placeholder: R.string.localizable.name()) { [weak self] (name) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             UserAPI.remarkFriend(userId: userId, full_name: name) { [weak self] (result) in
                 switch result {
                 case let .success(response):
@@ -481,7 +485,7 @@ extension UserProfileViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: removeTitle, style: .destructive, handler: { (_) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             UserAPI.removeFriend(userId: userId, completion: { [weak self] (result) in
                 switch result {
                 case let .success(response):
@@ -503,7 +507,7 @@ extension UserProfileViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.block(), style: .destructive, handler: { (_) in
             self.relationshipView.isBusy = true
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             UserAPI.blockUser(userId: userId) { [weak self] (result) in
                 switch result {
                 case let .success(response):
@@ -522,7 +526,7 @@ extension UserProfileViewController {
     @objc func unblockUser() {
         relationshipView.isBusy = true
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         UserAPI.unblockUser(userId: user.userId) { [weak self] (result) in
             switch result {
             case let .success(response):
@@ -542,7 +546,7 @@ extension UserProfileViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.report(), style: .destructive, handler: { (_) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             DispatchQueue.global().async {
                 switch UserAPI.reportUser(userId: userId) {
                 case let .success(user):
@@ -572,7 +576,7 @@ extension UserProfileViewController {
             dismissAndPushController(expireIn: expireIn)
         } else {
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             let request = ConversationRequest(
                 conversationId: conversationId,
                 name: nil,
@@ -599,8 +603,9 @@ extension UserProfileViewController {
         guard let imageView = avatarPreviewImageView, let backgroundView = avatarPreviewBackgroundView else {
             return
         }
+        let containerHeight = backgroundView.bounds.height
         UIView.animate(withDuration: 0.3) {
-            imageView.frame.origin.y = AppDelegate.current.mainWindow.bounds.height
+            imageView.frame.origin.y = containerHeight
             backgroundView.effect = nil
             for view in backgroundView.contentView.subviews {
                 view.alpha = 0
@@ -937,7 +942,7 @@ extension UserProfileViewController {
             reloadMenu(groups: [])
         }
         
-        view.frame.size.width = AppDelegate.current.mainWindow.bounds.width
+        view.frame.size.width = view.superview?.bounds.width ?? (view.window?.bounds.width ?? UIScreen.main.bounds.width)
         updatePreferredContentSizeHeight(size: size)
         
         if updateUserFromRemoteAfterReloaded {

@@ -211,7 +211,11 @@ final class ConversationInputViewController: UIViewController {
     
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        guard UIApplication.shared.isPortrait else {
+        guard
+            let window = view.window,
+            let scene = window.windowScene,
+            scene.interfaceOrientation.isPortrait
+        else {
             return
         }
         let diff = view.safeAreaInsets.bottom - lastSafeAreaInsetsBottom
@@ -537,8 +541,7 @@ extension ConversationInputViewController {
         let keyboardWillBeInvisible = (screenHeight - endFrame.origin.y) <= 1
         guard
             textView.isFirstResponder ||
-            (keyboardWillBeInvisible && customInputViewController == nil) ||
-            ((presentedViewController?.isBeingDismissed ?? false) && !(presentedViewController is QLPreviewController))
+            (customInputViewController == nil && (keyboardWillBeInvisible || ((presentedViewController?.isBeingDismissed ?? false) && !(presentedViewController is QLPreviewController))))
         else {
             return
         }

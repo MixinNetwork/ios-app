@@ -24,7 +24,7 @@ class MinimizedClipSwitcherViewController: HomeOverlayViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let switcher = UIApplication.homeContainerViewController?.clipSwitcher {
+        if let switcher = UIApplication.shared.homeContainerViewController?.clipSwitcher {
             let action = #selector(ClipSwitcher.showFullscreenSwitcher)
             button.addTarget(switcher, action: action, for: .touchUpInside)
         }

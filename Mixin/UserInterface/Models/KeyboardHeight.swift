@@ -1,4 +1,4 @@
-import CoreGraphics
+import UIKit
 
 struct KeyboardHeight {
     
@@ -16,8 +16,13 @@ struct KeyboardHeight {
      iPhone 6.7”:                       428 x 926 pt Keyboard: 346
      */
     
-    static let `default`: CGFloat = {
-        if AppDelegate.current.mainWindow.safeAreaInsets.bottom > 1 {
+    static var `default`: CGFloat {
+        let hasHomeIndicator = if let window = UIApplication.shared.firstWindowScene?.keyWindow {
+            window.safeAreaInsets.bottom > 1
+        } else {
+            false
+        }
+        if hasHomeIndicator {
             if ScreenHeight.current <= .medium {
                 return 319
             } else if ScreenHeight.current <= .long {
@@ -34,11 +39,16 @@ struct KeyboardHeight {
                 return 271
             }
         }
-    }()
+    }
     
-    static let minReasonable = `default` - 44
-    static let maxReasonable = `default` + 44
+    static var minReasonable: CGFloat {
+        `default` - 44
+    }
     
-    static var last = `default`
+    static var maxReasonable: CGFloat {
+        `default` + 44
+    }
+    
+    static var last: CGFloat = `default`
     
 }

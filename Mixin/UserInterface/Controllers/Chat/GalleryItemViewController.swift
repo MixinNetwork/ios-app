@@ -37,7 +37,7 @@ class GalleryItemViewController: UIViewController {
     }
     
     var galleryViewController: GalleryViewController? {
-        return UIApplication.homeContainerViewController?.galleryViewController
+        return UIApplication.shared.homeContainerViewController?.galleryViewController
     }
     
     var isReusable: Bool {

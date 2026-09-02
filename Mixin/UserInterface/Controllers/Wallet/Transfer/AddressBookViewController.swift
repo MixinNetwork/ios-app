@@ -83,7 +83,7 @@ final class AddressBookViewController: UIViewController {
     @IBAction func newAddressAction() {
         presentingViewController?.dismiss(animated: true) { [token] in
             let input: AddressInfoInputViewController = .newAddress(token: token)
-            UIApplication.homeNavigationController?.pushViewController(input, animated: true)
+            UIApplication.shared.homeNavigationController?.pushViewController(input, animated: true)
         }
     }
     

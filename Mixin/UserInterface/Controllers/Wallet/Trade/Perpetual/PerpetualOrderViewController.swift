@@ -294,7 +294,7 @@ extension PerpetualOrderViewController: PillActionView.Delegate {
                 )
             }
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             Referral.loadAvailableCode { [weak self] code in
                 hud.hide()
                 let share = PopupShareViewController(

@@ -242,7 +242,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                     )
                     tableView.setContentOffset(.zero, animated: true)
                     loadFinishedTrayView()
-                    guard let navigation = UIApplication.homeNavigationController else {
+                    guard let navigation = UIApplication.shared.homeNavigationController else {
                         return
                     }
                     if let trade = navigation.viewControllers.last as? TradeViewController {

@@ -261,7 +261,7 @@ extension ShareMarketContentViewController: ModernShareContentViewController {
             action: .forward
         )
         presentingViewController?.dismiss(animated: true) {
-            UIApplication.homeContainerViewController?.present(confirmation, animated: true)
+            UIApplication.shared.homeContainerViewController?.present(confirmation, animated: true)
         }
     }
     

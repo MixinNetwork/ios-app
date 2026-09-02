@@ -130,7 +130,7 @@ extension AppearanceSettingsViewController {
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.settings(), style: .default, handler: { (_) in
-            UIApplication.openAppSettings()
+            UIApplication.shared.openAppSettings()
         }))
         present(alert, animated: true, completion: nil)
     }
@@ -146,7 +146,7 @@ extension AppearanceSettingsViewController {
             selectedCurrencyCode: Currency.current.code
         ) { currency in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             AccountAPI.preferences(preferenceRequest: UserPreferenceRequest(fiat_currency: currency.code), completion: { [weak self] (result) in
                 switch result {
                 case .success(let account):

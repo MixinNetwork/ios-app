@@ -107,7 +107,7 @@ final class OutputsViewController: UITableViewController {
     
     @objc private func resync(_ sender: Any) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         self.hud = hud
         DispatchQueue.global().async {
             if let token = self.token {

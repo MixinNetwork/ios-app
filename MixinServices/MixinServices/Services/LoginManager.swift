@@ -16,9 +16,9 @@ public var myFullname: String {
 public final class LoginManager {
     
     public static let shared = LoginManager()
-    public static let accountDidChangeNotification = Notification.Name("one.mixin.services.account.did.change")
-    public static let didLogoutNotification = Notification.Name("one.mixin.services.did.logout")
-
+    public static let accountDidChangeNotification = Notification.Name("one.mixin.services.LoginManager.AccountChange")
+    public static let didLogoutNotification = Notification.Name("one.mixin.services.LoginManager.Logout")
+    
     public var inDeviceTransfer = false
     public var loggedOutInDeviceTransfer = false
     

@@ -192,7 +192,7 @@ final class AuthenticationViewController: UIViewController {
         
         view.layoutIfNeeded()
         
-        AppDelegate.current.mainWindow.endEditing(true)
+        view.window?.endEditing(true)
         let center = NotificationCenter.default
         center.addObserver(self,
                            selector: #selector(keyboardWillAppear),
@@ -213,7 +213,7 @@ final class AuthenticationViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        AppDelegate.current.mainWindow.endEditing(true)
+        view.window?.endEditing(true)
     }
     
     func beginPINInputting() {
@@ -347,7 +347,7 @@ final class AuthenticationViewController: UIViewController {
         intent.authenticationViewControllerWillDismiss(self)
         presentingViewController?.dismiss(animated: true) {
             let pinSettings = PinSettingsViewController()
-            UIApplication.homeNavigationController?.pushViewController(pinSettings, animated: true)
+            UIApplication.shared.homeNavigationController?.pushViewController(pinSettings, animated: true)
         }
     }
     

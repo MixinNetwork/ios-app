@@ -24,7 +24,7 @@ extension ExploreSearchViewController where Self: UIViewController {
     }
     
     func pushTokenViewController(token: MixinTokenItem) {
-        guard let navigationController = UIApplication.homeNavigationController else {
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return
         }
         let viewController = MixinTokenViewController(token: token)
@@ -33,7 +33,7 @@ extension ExploreSearchViewController where Self: UIViewController {
     }
     
     func pushConversationViewController(userItem: UserItem) {
-        guard let navigationController = UIApplication.homeNavigationController else {
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return
         }
         let vc = ConversationViewController.instance(ownerUser: userItem)
@@ -42,7 +42,7 @@ extension ExploreSearchViewController where Self: UIViewController {
     }
     
     func presentDapp(app: Web3Dapp) {
-        guard let navigationController = UIApplication.homeNavigationController else {
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return
         }
         let context = MixinWebContext(conversationID: "", initialURL: app.homeURL)

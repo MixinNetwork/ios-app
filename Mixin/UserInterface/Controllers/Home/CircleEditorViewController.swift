@@ -165,7 +165,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
     
     @objc private func save(_ sender: Any) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
 
         let newMembers = Set<CircleMember>(selections)
         let intersectMembers = oldMembers.intersection(newMembers)

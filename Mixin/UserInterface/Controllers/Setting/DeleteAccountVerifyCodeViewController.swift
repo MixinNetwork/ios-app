@@ -77,9 +77,8 @@ extension DeleteAccountVerifyCodeViewController {
             }
             switch result {
             case .success:
-                DeleteAccountConfirmWindow
-                    .instance(verificationID: self.context.verificationID)
-                    .presentPopupControllerAnimated()
+                let window = DeleteAccountConfirmWindow(verificationID: self.context.verificationID)
+                self.present(window, animated: true)
             case let .failure(error):
                 self.verificationCodeField.clear()
                 PINVerificationFailureHandler.handle(error: error) { [weak self] (description) in

@@ -27,7 +27,7 @@ extension WalletSearchMixinTokenHandler: WalletSearchMixinTokenController.Delega
             walletSearchMixinTokenController(controller, didSelectToken: token)
         } else {
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             DispatchQueue.global().async { [weak self] in
                 func report(error: Error) {
                     DispatchQueue.main.sync {

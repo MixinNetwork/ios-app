@@ -398,7 +398,7 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
             }
             
             await MainActor.run {
-                guard let homeContainer = UIApplication.homeContainerViewController else {
+                guard let homeContainer = UIApplication.shared.homeContainerViewController else {
                     return
                 }
                 guard isBalanceSufficient else {

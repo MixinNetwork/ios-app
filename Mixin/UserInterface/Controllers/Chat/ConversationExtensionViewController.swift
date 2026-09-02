@@ -100,20 +100,20 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
             let ext = fixedExtensions[indexPath.row]
             switch ext {
             case .camera:
-                UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
+                UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
                 conversationViewController?.presentCamera()
             case .file:
-                UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
+                UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
                 conversationViewController?.presentDocumentPicker()
             case .transfer:
                 conversationViewController?.showTransfer()
             case .contact:
                 conversationViewController?.showContactSelector()
             case .call:
-                UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
+                UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
                 conversationViewController?.callOwnerUserIfPresent()
             case .groupCall:
-                UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
+                UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
                 conversationViewController?.startOrJoinGroupCall()
             case .location:
                 conversationViewController?.showLocationPicker()
@@ -125,7 +125,7 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
             let app = apps[indexPath.row - fixedExtensions.count].app
             if let conversationId = composer?.conversationId {
                 let verified = UserDAO.shared.isVerified(userID: app.appId)
-                UIApplication.homeNavigationController?.pushWebViewController(
+                UIApplication.shared.homeNavigationController?.pushWebViewController(
                     context: .init(conversationID: conversationId, app: app, isAppVerified: verified),
                 )
             }

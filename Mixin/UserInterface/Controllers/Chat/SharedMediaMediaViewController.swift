@@ -128,7 +128,7 @@ extension SharedMediaMediaViewController: UICollectionViewDelegate {
         guard let item = dataSource.item(at: indexPath), let cell = collectionView.cellForItem(at: indexPath) as? SharedMediaCell else {
             return
         }
-        if let galleryViewController = UIApplication.homeContainerViewController?.galleryViewController {
+        if let galleryViewController = UIApplication.shared.homeContainerViewController?.galleryViewController {
             galleryViewController.conversationId = conversationId
             galleryViewController.show(item: item, from: cell)
         }
@@ -147,7 +147,7 @@ extension SharedMediaMediaViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
-        guard UIApplication.homeContainerViewController?.pipController?.item != item else {
+        guard UIApplication.shared.homeContainerViewController?.pipController?.item != item else {
             return
         }
         setCell(of: item.messageId, contentViewHidden: true)

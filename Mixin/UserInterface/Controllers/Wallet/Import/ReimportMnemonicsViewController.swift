@@ -110,36 +110,34 @@ final class ReimportMnemonicsViewController: InputBIP39MnemonicsViewController {
                 address.chainID == ChainID.pearl
             }
             var pendingUpdateAddresses: [CreateSigningWalletRequest.SignedAddress] = []
-            let index = try? SequentialWalletPathGenerator.maxIndex(
+            let index = try SequentialWalletPathGenerator.maxIndex(
                 paths: addresses.compactMap(\.path)
             )
-            if let index {
-                if !hasBitcoinAddress {
-                    let path = try DerivationPath.bitcoin(index: index)
-                    let derivation = try mnemonics.checkedDerivationForBitcoin(path: path)
-                    let bitcoinAddress = try CreateSigningWalletRequest.SignedAddress(
-                        destination: derivation.address,
-                        chainID: ChainID.bitcoin,
-                        path: path.string,
-                        userID: myUserId
-                    ) { message in
-                        try Bitcoin.sign(message: message, with: derivation.privateKey)
-                    }
-                    pendingUpdateAddresses.append(bitcoinAddress)
+            if !hasBitcoinAddress {
+                let path = try DerivationPath.bitcoin(index: index)
+                let derivation = try mnemonics.checkedDerivationForBitcoin(path: path)
+                let bitcoinAddress = try CreateSigningWalletRequest.SignedAddress(
+                    destination: derivation.address,
+                    chainID: ChainID.bitcoin,
+                    path: path.string,
+                    userID: myUserId
+                ) { message in
+                    try Bitcoin.sign(message: message, with: derivation.privateKey)
                 }
-                if !hasPearlAddress {
-                    let path = try DerivationPath.pearl(index: index)
-                    let derivation = try mnemonics.checkedDerivationForPearl(path: path)
-                    let pearlAddress = try CreateSigningWalletRequest.SignedAddress(
-                        destination: derivation.address,
-                        chainID: ChainID.pearl,
-                        path: path.string,
-                        userID: myUserId
-                    ) { message in
-                        try Pearl.sign(message: message, with: derivation.privateKey)
-                    }
-                    pendingUpdateAddresses.append(pearlAddress)
+                pendingUpdateAddresses.append(bitcoinAddress)
+            }
+            if !hasPearlAddress {
+                let path = try DerivationPath.pearl(index: index)
+                let derivation = try mnemonics.checkedDerivationForPearl(path: path)
+                let pearlAddress = try CreateSigningWalletRequest.SignedAddress(
+                    destination: derivation.address,
+                    chainID: ChainID.pearl,
+                    path: path.string,
+                    userID: myUserId
+                ) { message in
+                    try Pearl.sign(message: message, with: derivation.privateKey)
                 }
+                pendingUpdateAddresses.append(pearlAddress)
             }
             let encryptedMnemonics = try EncryptedBIP39Mnemonics(
                 mnemonics: mnemonics,

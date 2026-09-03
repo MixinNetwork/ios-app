@@ -225,8 +225,7 @@ extension AppCardV1MessageCell {
                     addArrangedSubview(marginStackView)
                     self.descriptionLabel = descriptionLabel
                 }
-                descriptionLabel.text = description
-                descriptionLabel.additionalLinksMap = content.descriptionLinks
+                descriptionLabel.setText(description, additionalLinks: content.descriptionLinks)
             } else {
                 descriptionLabel?.isHidden = true
             }

@@ -85,7 +85,10 @@ final class MixinWebViewController: WebViewController {
                 assertionFailure()
                 return nil
             }
-            return .init(address: address, chainID: chainID, rpcURL: chain.rpcServerURL)
+            guard let rpcServerURL = chain.rpcServerURL else {
+                return nil
+            }
+            return .init(address: address, chainID: chainID, rpcURL: rpcServerURL)
         }()
         let solanaConfig: Script.SolanaConfig? = {
             if let address = Web3AddressDAO.shared.currentSelectedWalletAddress(chainID: ChainID.solana) {

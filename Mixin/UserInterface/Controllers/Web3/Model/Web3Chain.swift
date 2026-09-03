@@ -54,12 +54,12 @@ final class Web3Chain {
     let chainID: String
     let feeTokenAssetID: String
     let name: String
-    let failsafeRPCServerURL: URL
+    let failsafeRPCServerURL: URL?
     let caip2: Blockchain
     
     private(set) var dapps: [Web3Dapp] = []
     
-    var rpcServerURL: URL {
+    var rpcServerURL: URL? {
         if let string = AppGroupUserDefaults.web3RPCURL[chainID],
            let url = URL(string: string)
         {
@@ -72,7 +72,7 @@ final class Web3Chain {
     private init(
         specification: KindSpecification, mixinChainID: String,
         feeTokenAssetID: String, name: String,
-        failsafeRPCServerURL: URL, caip2: Blockchain
+        failsafeRPCServerURL: URL?, caip2: Blockchain
     ) {
         let kind: Kind = switch specification {
         case .bitcoin:
@@ -213,8 +213,8 @@ extension Web3Chain {
         mixinChainID: ChainID.pearl,
         feeTokenAssetID: AssetID.pearl,
         name: "Pearl",
-        failsafeRPCServerURL: URL(string: "https://bitcoin-rpc.publicnode.com")!,
-        caip2: Blockchain("bip122:e1bf305c0d49397d85bd55b9eaadafba")!
+        failsafeRPCServerURL: nil,
+        caip2: Blockchain("bip122:a18d3093b7ff618f0cdd073fa3d10374")!
     )
     
     static let ethereum = Web3Chain.evm(

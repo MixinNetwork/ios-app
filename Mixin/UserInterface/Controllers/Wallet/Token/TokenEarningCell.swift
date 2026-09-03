@@ -7,7 +7,7 @@ final class TokenEarningCell: UITableViewCell {
     @IBOutlet weak var infoStackView: UIStackView!
     
     private weak var totalAmountView: ItemView!
-    private weak var pendingEarningView: ItemView!
+    private weak var yesterdayEarningsView: ItemView!
     private weak var rewardRateView: ItemView!
     
     override func awakeFromNib() {
@@ -26,16 +26,16 @@ final class TokenEarningCell: UITableViewCell {
         infoStackView.addArrangedSubview(totalAmountView)
         self.totalAmountView = totalAmountView
         
-        let pendingEarningView = ItemView()
-        pendingEarningView.imageView.image = R.image.earn_pending_earning()
-        pendingEarningView.titleLabel.text = R.string.localizable.earn_pending_earning()
-        pendingEarningView.valueLabel.setFont(
+        let yesterdayEarningsView = ItemView()
+        yesterdayEarningsView.imageView.image = R.image.earn_pending_earning()
+        yesterdayEarningsView.titleLabel.text = R.string.localizable.earn_yesterday_earnings()
+        yesterdayEarningsView.valueLabel.setFont(
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )
-        pendingEarningView.valueLabel.textColor = R.color.text_quaternary()
-        infoStackView.addArrangedSubview(pendingEarningView)
-        self.pendingEarningView = pendingEarningView
+        yesterdayEarningsView.valueLabel.textColor = R.color.text_quaternary()
+        infoStackView.addArrangedSubview(yesterdayEarningsView)
+        self.yesterdayEarningsView = yesterdayEarningsView
         
         let rewardRateView = ItemView()
         rewardRateView.imageView.image = R.image.earn_reward_rate()
@@ -52,7 +52,7 @@ final class TokenEarningCell: UITableViewCell {
     func load(earning: TokenEarningViewModel) {
         totalEarningsValueLabel.text = earning.totalEarnings
         totalAmountView.valueLabel.text = earning.totalAmount
-        pendingEarningView.valueLabel.text = earning.pendingEarning
+        yesterdayEarningsView.valueLabel.text = earning.yesterdayEarnings
         if let rate = earning.rewardRate {
             rewardRateView.valueLabel.text = rate
             rewardRateView.isHidden = false

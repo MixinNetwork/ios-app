@@ -451,7 +451,11 @@ extension ChainCategorizedTokenSelectorViewController {
         }
         
         static func web3Chains(ids: Set<String>) -> OrderedSet<Group> {
-            let groups: [Group] = Web3Chain.all.filter { chain in
+            let allGroupingChains: [Web3Chain] = [
+                .bitcoin, .ethereum, .solana, .bnbSmartChain, .base,
+                .polygon, .arbitrumOne, .opMainnet, .avalancheCChain, .hyperEVM,
+            ]
+            let groups: [Group] = allGroupingChains.filter { chain in
                 ids.contains(chain.chainID)
             }.map { chain in
                     .byChain(Chain(id: chain.chainID, name: chain.name))

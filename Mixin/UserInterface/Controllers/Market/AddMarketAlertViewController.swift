@@ -280,19 +280,11 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
             return
         }
         var controllers = navigationController.viewControllers
-        var goesToAllMarketAlerts = false
         controllers.removeAll { viewController in
-            if viewController is AllMarketAlertsViewController {
-                goesToAllMarketAlerts = true
-            }
-            return viewController is MarketAlertViewController
+            viewController is MarketAlertViewController
             || viewController is AddMarketAlertViewController
         }
-        let alerts = if goesToAllMarketAlerts {
-            AllMarketAlertsViewController()
-        } else {
-            CoinMarketAlertsViewController(coin: coin)
-        }
+        let alerts = AllMarketAlertsViewController(initialCoin: coin)
         controllers.append(alerts)
         navigationController.setViewControllers(controllers, animated: true)
     }

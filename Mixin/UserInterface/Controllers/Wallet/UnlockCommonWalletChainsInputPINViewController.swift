@@ -18,6 +18,7 @@ final class UnlockCommonWalletChainsInputPINViewController: FullscreenPINValidat
             do {
                 try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                 await MainActor.run {
+                    AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                     Logger.web3.info(category: "UnlockChainsInputPIN", message: "Finished")
                     (navigationController as? UnlockCommonWalletChainsNavigationController)?.onSuccess?()
                     navigationController?.presentingViewController?.dismiss(animated: true)

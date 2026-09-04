@@ -18,21 +18,16 @@ class TextLabel: CoreTextLabel {
         
     }
     
-    private class Layer: CALayer {
-        
-        override func action(forKey event: String) -> CAAction? {
-            return nil
-        }
-        
-    }
-    
     override static var layerClass: AnyClass {
-        return Layer.self
+        Layer.self
     }
     
-    var text = "" {
-        didSet {
-            typesetIfNeeded(oldValue: oldValue, newValue: text)
+    var text: String {
+        get {
+            textStorage
+        }
+        set {
+            setText(newValue, additionalLinks: [:])
         }
     }
     
@@ -48,7 +43,7 @@ class TextLabel: CoreTextLabel {
         }
     }
     
-    var linkColor: UIColor = .systemTint {
+    var linkColor: UIColor = .theme {
         didSet {
             typesetIfNeeded(oldValue: oldValue, newValue: linkColor)
         }
@@ -78,12 +73,6 @@ class TextLabel: CoreTextLabel {
         }
     }
     
-    var additionalLinksMap: [NSRange: URL] = [:] {
-        didSet {
-            typesetIfNeeded(oldValue: oldValue, newValue: additionalLinksMap)
-        }
-    }
-    
     var detectLinks = true {
         didSet {
             typesetIfNeeded(oldValue: oldValue, newValue: detectLinks)
@@ -93,12 +82,6 @@ class TextLabel: CoreTextLabel {
     var maxLineCount: Int = .max {
         didSet {
             typesetIfNeeded(oldValue: oldValue, newValue: maxLineCount)
-        }
-    }
-    
-    var boldRanges: [NSRange] = [] {
-        didSet {
-            typesetIfNeeded(oldValue: oldValue, newValue: boldRanges)
         }
     }
     
@@ -119,6 +102,8 @@ class TextLabel: CoreTextLabel {
     private let linkBackgroundCornerRadius: CGFloat =  4
     
     private var textSize: CGSize = .zero
+    private var textStorage = ""
+    private var additionalLinks: [NSRange: URL] = [:]
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -133,10 +118,29 @@ class TextLabel: CoreTextLabel {
         }
     }
     
+    func setText(_ text: String, additionalLinks: [NSRange: URL]) {
+        let textChanged = self.textStorage != text
+        let linksChanged = self.additionalLinks != additionalLinks
+        guard textChanged || linksChanged else {
+            return
+        }
+        self.textStorage = text
+        self.additionalLinks = additionalLinks
+        typeset()
+    }
+    
 }
 
 // MARK: - Private works
 extension TextLabel {
+    
+    private class Layer: CALayer {
+        
+        override func action(forKey event: String) -> CAAction? {
+            nil
+        }
+        
+    }
     
     private func typesetIfNeeded(oldValue: CGFloat, newValue: CGFloat, epsilon: CGFloat = 0.1) {
         guard abs(oldValue - newValue) > epsilon else {
@@ -202,14 +206,6 @@ extension TextLabel {
         let fullRange = NSRange(location: 0, length: str.mutableString.length)
         str.setAttributes(attr, range: fullRange)
         
-        if let boldFontDescriptor = descriptor.withSymbolicTraits(.traitBold) {
-            let boldFont = CTFontCreateWithFontDescriptor(boldFontDescriptor as CTFontDescriptor, 0, nil)
-            for range in boldRanges {
-                str.removeAttribute(.ctFont, range: range)
-                str.addAttributes([.ctFont: boldFont], range: range)
-            }
-        }
-        
         var linksMap: [NSRange: URL]
         if detectLinks {
             linksMap = [:]
@@ -219,11 +215,11 @@ extension TextLabel {
                 }
                 linksMap[result.range] = url
             }
-            for (range, url) in additionalLinksMap {
+            for (range, url) in additionalLinks {
                 linksMap[range] = url
             }
         } else {
-            linksMap = additionalLinksMap
+            linksMap = additionalLinks
         }
         for range in linksMap.keys {
             str.setCTForegroundColor(linkColor, for: range)
@@ -240,6 +236,8 @@ extension TextLabel {
         guard !text.isEmpty else {
             content = nil
             textSize = .zero
+            invalidateIntrinsicContentSize()
+            setNeedsDisplay()
             return
         }
         let layoutSize = CGSize(width: bounds.width, height: UIView.layoutFittingExpandedSize.height)

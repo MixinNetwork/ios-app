@@ -4,8 +4,8 @@ import MixinServices
 struct StyledAssetChange {
     
     enum AmountStyle {
-        case income
-        case outcome
+        case incoming
+        case outgoing
         case plain
         case gray
     }

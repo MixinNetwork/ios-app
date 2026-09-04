@@ -72,7 +72,7 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
                         Decimal.FormatStyle.number
                             .locale(.current)
                             .grouping(.never)
-                            .sign(strategy: .always())
+                            .sign(strategy: .always(includingZero: false))
                             .precision(.fractionLength(0...8))
                             .rounded(rule: .towardZero)
                     )

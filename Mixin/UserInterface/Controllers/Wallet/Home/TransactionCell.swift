@@ -121,7 +121,7 @@ final class TransactionCell: UICollectionViewCell {
                         Decimal.FormatStyle.number
                             .locale(.current)
                             .grouping(.never)
-                            .sign(strategy: .always())
+                            .sign(strategy: .always(includingZero: false))
                             .precision(.fractionLength(0...8))
                             .rounded(rule: .towardZero)
                     )

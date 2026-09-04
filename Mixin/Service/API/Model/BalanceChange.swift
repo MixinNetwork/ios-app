@@ -15,7 +15,7 @@ struct BalanceChange: Decodable, Token {
     
     let assetID: String
     let assetKey: String
-    let amount: String
+    let amount: String // Positive for incoming, negative for outgoing
     let name: String
     let symbol: String
     let iconURL: String
@@ -24,7 +24,10 @@ struct BalanceChange: Decodable, Token {
     init(token: Web3TokenItem, amount: Decimal, from: String) {
         self.assetID = token.assetID
         self.assetKey = token.assetKey
-        self.amount = amount.formatted(token.canonicalFormatStyle)
+        self.amount = amount.formatted(
+            token.canonicalFormatStyle
+                .sign(strategy: amount < 0 ? .always() : .never)
+        )
         self.name = token.name
         self.symbol = token.symbol
         self.iconURL = token.iconURL

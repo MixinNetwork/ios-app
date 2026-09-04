@@ -31,20 +31,29 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
                 } else {
                     try reviewNativeTransaction(
                         transaction,
-                        bitcoinOutputIDsOccupiedByOtherTransactions: Set(
-                            transactions.compactMap { (tx) -> Bitcoin.DecodedTransaction? in
-                                guard tx.chainID == ChainID.bitcoin && tx.hash != transaction.hash else {
+                        utxoOutputIDsOccupiedByOtherTransactions: Set(
+                            transactions.compactMap { (tx) -> [String]? in
+                                guard tx.hash != transaction.hash else {
                                     return nil
                                 }
-                                do {
-                                    return try Bitcoin.decode(transaction: tx.raw)
-                                } catch {
-                                    Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "Decode txn: \(error)")
+                                if tx.chainID == ChainID.bitcoin {
+                                    do {
+                                        return try Bitcoin.decode(transaction: tx.raw).inputs.map(\.outputID)
+                                    } catch {
+                                        Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "Decode btc txn: \(error)")
+                                        return nil
+                                    }
+                                } else if tx.chainID == ChainID.pearl {
+                                    do {
+                                        return try Pearl.decode(transaction: tx.raw).inputs.map(\.outputID)
+                                    } catch {
+                                        Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "Decode pearl txn: \(error)")
+                                        return nil
+                                    }
+                                } else {
                                     return nil
                                 }
-                            }.flatMap { tx in
-                                tx.inputs.map(\.outputID)
-                            }
+                            }.flatMap { $0 }
                         )
                     )
                 }
@@ -88,7 +97,7 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
     
     private func reviewNativeTransaction(
         _ transaction: Web3RawTransaction,
-        bitcoinOutputIDsOccupiedByOtherTransactions: @autoclosure () -> Set<String>,
+        utxoOutputIDsOccupiedByOtherTransactions: @autoclosure () -> Set<String>,
     ) throws {
         let result = RouteAPI.transaction(
             chainID: transaction.chainID,
@@ -100,7 +109,7 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
             Logger.web3.debug(category: "ReviewPendingWeb3RawTxn", message: "Txn still pending \(transaction.hash)")
         case let .success(transaction) where transaction.chainID == ChainID.bitcoin && transaction.state.knownCase == .notFound:
             Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "BTC Txn not found \(transaction.hash)")
-            let outputIDsOccupiedByOtherTransactions = bitcoinOutputIDsOccupiedByOtherTransactions()
+            let outputIDsOccupiedByOtherTransactions = utxoOutputIDsOccupiedByOtherTransactions()
             try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
                 let txn = try Bitcoin.decode(transaction: transaction.raw)
                 
@@ -123,8 +132,31 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
                     db: db
                 )
             }
-            // XXX: Using hardcoded asset id. Safe for now
             let refresh = SyncWeb3OutputJob(assetID: AssetID.btc, walletID: walletID)
+            ConcurrentJobQueue.shared.addJob(job: refresh)
+        case let .success(transaction) where transaction.chainID == ChainID.pearl && transaction.state.knownCase == .notFound:
+            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Pearl Txn not found \(transaction.hash)")
+            let outputIDsOccupiedByOtherTransactions = utxoOutputIDsOccupiedByOtherTransactions()
+            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
+                let txn = try Pearl.decode(transaction: transaction.raw)
+                
+                for input in txn.inputs where !outputIDsOccupiedByOtherTransactions.contains(input.outputID) {
+                    try Web3OutputDAO.shared.delete(id: input.outputID, db: db)
+                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete Pearl Input: <id: \(input.outputID), Txid: \(input.txid), vout: \(input.vout)>")
+                }
+                for (vout, output) in txn.outputs.enumerated() where output.address == transaction.account {
+                    let id = Web3Output.pearlOutputID(txid: transaction.hash, vout: vout)
+                    try Web3OutputDAO.shared.delete(id: id, db: db)
+                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete Pearl Output: <id: \(id), Txid: \(transaction.hash), vout: \(vout)>")
+                }
+                try Web3TransactionDAO.shared.setTransactionStatusNotFound(
+                    hash: transaction.hash,
+                    chainID: transaction.chainID,
+                    address: transaction.account,
+                    db: db
+                )
+            }
+            let refresh = SyncWeb3OutputJob(assetID: AssetID.pearl, walletID: walletID)
             ConcurrentJobQueue.shared.addJob(job: refresh)
         case let .success(transaction):
             // Delete not pending raw txn

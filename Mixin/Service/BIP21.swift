@@ -9,7 +9,8 @@ struct BIP21 {
         guard let components = URLComponents(string: string) else {
             return nil
         }
-        guard components.scheme?.lowercased() == "bitcoin" else {
+        let scheme = components.scheme?.lowercased()
+        guard scheme == "bitcoin" || scheme == "pearl" else {
             return nil
         }
         let amountValue = components.queryItems?.first(where: { $0.name == "amount" })?.value

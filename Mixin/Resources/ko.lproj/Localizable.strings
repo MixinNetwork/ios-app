@@ -366,7 +366,7 @@
 "combine_and_forward" = "결합 및 전달";
 "common_wallet" = "공용지갑";
 "common_wallet_index" = "공용 지갑 %@";
-"common_wallet_now_supports_btc" = "이제 Common Wallet에서 비트코인을 지원합니다";
+"common_wallet_now_supports_chain" = "이제 Common Wallet에서 %@을 지원합니다";
 "complete" = "완료";
 "completed" = "완료됨";
 "compress_database" = "데이터베이스 압축";

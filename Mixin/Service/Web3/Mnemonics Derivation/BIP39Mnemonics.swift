@@ -85,12 +85,14 @@ extension BIP39Mnemonics {
     
     struct DerivedWallet {
         let bitcoin: Derivation
+        let pearl: Derivation
         let evm: Derivation
         let solana: Derivation
     }
     
     enum DerivationError: Error {
         case mismatchedBitcoinAddress
+        case mismatchedPearlAddress
         case mismatchedEVMAddress
         case mismatchedSolanaAddress
     }
@@ -99,15 +101,33 @@ extension BIP39Mnemonics {
         var error: NSError?
         let privateKey = try Bitcoin.privateKey(mnemonics: joinedPhrases, path: path.string)
         let address = try Bitcoin.segwitAddress(privateKey: privateKey)
-        let redundantAddress = BlockchainGenerateBitcoinSegwitAddressFromMnemonic(
+        let crossCheckAddress = BlockchainGenerateBitcoinSegwitAddressFromMnemonic(
             joinedPhrases,
             path.string,
             &error
         )
         if let error {
             throw error
-        } else if address != redundantAddress {
+        } else if address != crossCheckAddress {
             throw DerivationError.mismatchedBitcoinAddress
+        } else {
+            return Derivation(privateKey: privateKey, address: address, path: path)
+        }
+    }
+    
+    func checkedDerivationForPearl(path: DerivationPath) throws -> Derivation {
+        var error: NSError?
+        let privateKey = try Pearl.privateKey(mnemonics: joinedPhrases, path: path.string)
+        let address = try Pearl.address(privateKey: privateKey)
+        let crossCheckAddress = BlockchainGeneratePearlAddressFromMnemonic(
+            joinedPhrases,
+            path.string,
+            &error
+        )
+        if let error {
+            throw error
+        } else if address != crossCheckAddress {
+            throw DerivationError.mismatchedPearlAddress
         } else {
             return Derivation(privateKey: privateKey, address: address, path: path)
         }
@@ -119,14 +139,14 @@ extension BIP39Mnemonics {
         let keyStorage = InPlaceKeyStorage(raw: privateKey.key)
         let account = try EthereumAccount(keyStorage: keyStorage)
         let evmAddress = account.address.toChecksumAddress()
-        let redundantEVMAddress = BlockchainGenerateEvmAddressFromMnemonic(
+        let crossCheckEVMAddress = BlockchainGenerateEvmAddressFromMnemonic(
             joinedPhrases,
             path.string,
             &error
         )
         if let error {
             throw error
-        } else if evmAddress != redundantEVMAddress {
+        } else if evmAddress != crossCheckEVMAddress {
             throw DerivationError.mismatchedEVMAddress
         }
         return Derivation(privateKey: privateKey.key, address: evmAddress, path: path)
@@ -136,14 +156,14 @@ extension BIP39Mnemonics {
         var error: NSError?
         let solanaKey = ed25519MasterKey.deriveUsingEd25519(path: path)
         let solanaAddress = try Solana.publicKey(seed: solanaKey.key)
-        let redundantSolanaAddress = BlockchainGenerateSolanaAddressFromMnemonic(
+        let crossCheckSolanaAddress = BlockchainGenerateSolanaAddressFromMnemonic(
             joinedPhrases,
             path.string,
             &error
         )
         if let error {
             throw error
-        } else if solanaAddress != redundantSolanaAddress {
+        } else if solanaAddress != crossCheckSolanaAddress {
             throw DerivationError.mismatchedSolanaAddress
         }
         return Derivation(privateKey: solanaKey.key, address: solanaAddress, path: path)
@@ -154,6 +174,9 @@ extension BIP39Mnemonics {
             let bitcoinPath = try DerivationPath.bitcoin(index: index)
             let bitcoinDerivation = try checkedDerivationForBitcoin(path: bitcoinPath)
             
+            let pearlPath = try DerivationPath.pearl(index: index)
+            let pearlDerivation = try checkedDerivationForPearl(path: pearlPath)
+            
             let evmPath = try DerivationPath.evm(index: index)
             let evmDerivation = try checkedDerivationForEVM(path: evmPath)
             
@@ -162,6 +185,7 @@ extension BIP39Mnemonics {
             
             return DerivedWallet(
                 bitcoin: bitcoinDerivation,
+                pearl: pearlDerivation,
                 evm: evmDerivation,
                 solana: solanaDerivation
             )

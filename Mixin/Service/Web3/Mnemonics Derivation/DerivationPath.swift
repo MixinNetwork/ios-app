@@ -50,6 +50,14 @@ extension DerivationPath {
         try NSRegularExpression(pattern: #"^m\/84'\/0'\/0'\/0\/(\d+)$"#, options: [])
     }
     
+    static func pearl<Integer: FixedWidthInteger>(index: Integer) throws -> DerivationPath {
+        try DerivationPath(string: "m/86'/808276'/0'/0/\(index)")
+    }
+    
+    static func pearlPathRegex() throws -> NSRegularExpression {
+        try NSRegularExpression(pattern: #"^m\/86'\/808276'\/0'\/0\/(\d+)$"#, options: [])
+    }
+    
     static func evm<Integer: FixedWidthInteger>(index: Integer) throws -> DerivationPath {
         try DerivationPath(string: "m/44'/60'/0'/0/\(index)")
     }

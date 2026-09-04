@@ -9,6 +9,12 @@ struct CreateWalletResponse: Codable {
         case unavailable
     }
     
+    enum PearlAvailability {
+        case notInvolved
+        case available
+        case unavailable
+    }
+    
     let wallet: Web3Wallet
     let addresses: [Web3Address]
     
@@ -19,6 +25,18 @@ struct CreateWalletResponse: Codable {
                 address.chainID == ChainID.bitcoin
             }
             return hasBitcoinAddress ? .available : .unavailable
+        case .importedPrivateKey, .watchAddress, .none:
+            return .notInvolved
+        }
+    }
+    
+    var pearlAvailability: PearlAvailability {
+        switch wallet.category.knownCase {
+        case .classic, .importedMnemonic:
+            let hasPearlAddress = addresses.contains { address in
+                address.chainID == ChainID.pearl
+            }
+            return hasPearlAddress ? .available : .unavailable
         case .importedPrivateKey, .watchAddress, .none:
             return .notInvolved
         }

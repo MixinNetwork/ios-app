@@ -366,7 +366,7 @@
 "combine_and_forward" = "Combine and forward";
 "common_wallet" = "Common Wallet";
 "common_wallet_index" = "Common Wallet %@";
-"common_wallet_now_supports_btc" = "Common Wallet now supports Bitcoin";
+"common_wallet_now_supports_chain" = "Common Wallet now supports %@";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Compress Database";

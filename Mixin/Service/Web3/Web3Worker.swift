@@ -74,12 +74,17 @@ final class Web3Worker {
                 send(error: "Account Locked", to: request)
                 return
             }
+            guard let rpcServerURL = chain.rpcServerURL else {
+                showAutoHiddenHud(style: .error, text: "RPC Unavailable")
+                send(error: "RPC Unavailable", to: request)
+                return
+            }
             let setConfig = """
             var config = {
                 ethereum: {
                     address: "\(address)",
                     chainId: \(chainID),
-                    rpcUrl: "\(chain.rpcServerURL)"
+                    rpcUrl: "\(rpcServerURL)"
                 }
             };
             mixinwallet.ethereum.setConfig(config);

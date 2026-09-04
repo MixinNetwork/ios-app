@@ -92,6 +92,8 @@ final class ReimportMnemonicsViewController: InputBIP39MnemonicsViewController {
                 let derivedAddress = switch kind {
                 case .bitcoin:
                     try mnemonics.checkedDerivationForBitcoin(path: path).address
+                case .pearl:
+                    try mnemonics.checkedDerivationForPearl(path: path).address
                 case .evm:
                     try mnemonics.checkedDerivationForEVM(path: path).address
                 case .solana:
@@ -104,13 +106,14 @@ final class ReimportMnemonicsViewController: InputBIP39MnemonicsViewController {
             let hasBitcoinAddress = addresses.contains { address in
                 address.chainID == ChainID.bitcoin
             }
-            let pendingUpdateAddresses: [CreateSigningWalletRequest.SignedAddress]?
-            if hasBitcoinAddress {
-                pendingUpdateAddresses = nil
-            } else {
-                let index = try SequentialWalletPathGenerator.maxIndex(
-                    paths: addresses.compactMap(\.path)
-                )
+            let hasPearlAddress = addresses.contains { address in
+                address.chainID == ChainID.pearl
+            }
+            var pendingUpdateAddresses: [CreateSigningWalletRequest.SignedAddress] = []
+            let index = try SequentialWalletPathGenerator.maxIndex(
+                paths: addresses.compactMap(\.path)
+            )
+            if !hasBitcoinAddress {
                 let path = try DerivationPath.bitcoin(index: index)
                 let derivation = try mnemonics.checkedDerivationForBitcoin(path: path)
                 let bitcoinAddress = try CreateSigningWalletRequest.SignedAddress(
@@ -121,7 +124,20 @@ final class ReimportMnemonicsViewController: InputBIP39MnemonicsViewController {
                 ) { message in
                     try Bitcoin.sign(message: message, with: derivation.privateKey)
                 }
-                pendingUpdateAddresses = [bitcoinAddress]
+                pendingUpdateAddresses.append(bitcoinAddress)
+            }
+            if !hasPearlAddress {
+                let path = try DerivationPath.pearl(index: index)
+                let derivation = try mnemonics.checkedDerivationForPearl(path: path)
+                let pearlAddress = try CreateSigningWalletRequest.SignedAddress(
+                    destination: derivation.address,
+                    chainID: ChainID.pearl,
+                    path: path.string,
+                    userID: myUserId
+                ) { message in
+                    try Pearl.sign(message: message, with: derivation.privateKey)
+                }
+                pendingUpdateAddresses.append(pearlAddress)
             }
             let encryptedMnemonics = try EncryptedBIP39Mnemonics(
                 mnemonics: mnemonics,
@@ -129,7 +145,7 @@ final class ReimportMnemonicsViewController: InputBIP39MnemonicsViewController {
             )
             importable = Importable(
                 encryptedMnemonics: encryptedMnemonics,
-                addresses: pendingUpdateAddresses
+                addresses: pendingUpdateAddresses.isEmpty ? nil : pendingUpdateAddresses
             )
             errorDescriptionLabel.isHidden = true
             confirmButton.isEnabled = true

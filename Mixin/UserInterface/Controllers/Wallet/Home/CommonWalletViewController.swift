@@ -268,6 +268,8 @@ final class CommonWalletViewController: WalletViewController {
                     switch kind {
                     case .bitcoin:
                         importedSecret = .privateKey(privateKey, .bitcoin)
+                    case .pearl:
+                        importedSecret = .privateKey(privateKey, .pearl)
                     case .evm:
                         importedSecret = .privateKey(privateKey, .evm)
                     case .solana:

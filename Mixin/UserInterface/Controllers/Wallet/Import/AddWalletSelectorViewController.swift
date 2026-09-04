@@ -218,7 +218,12 @@ final class AddWalletSelectorViewController: UIViewController {
                 return
             }
             let addresses = wallets.flatMap { wallet in
-                [wallet.bitcoin.address, wallet.evm.address, wallet.solana.address]
+                [
+                    wallet.bitcoin.address,
+                    wallet.pearl.address,
+                    wallet.evm.address,
+                    wallet.solana.address,
+                ]
             }
             RouteAPI.assets(searchAddresses: addresses, queue: .global()) { result in
                 switch result {
@@ -229,11 +234,13 @@ final class AddWalletSelectorViewController: UIViewController {
                     }
                     let newCandidates: [WalletCandidate] = wallets.compactMap { wallet in
                         let bitcoinTokens = tokens[wallet.bitcoin.address] ?? []
+                        let pearlTokens = tokens[wallet.pearl.address] ?? []
                         let evmTokens = tokens[wallet.evm.address] ?? []
                         let solanaTokens = tokens[wallet.solana.address] ?? []
-                        let allTokens = bitcoinTokens + evmTokens + solanaTokens
+                        let allTokens = bitcoinTokens + pearlTokens + evmTokens + solanaTokens
                         
                         let name = walletNames[wallet.bitcoin.address]
+                        ?? walletNames[wallet.pearl.address]
                         ?? walletNames[wallet.evm.address]
                         ?? walletNames[wallet.solana.address]
                         
@@ -242,6 +249,7 @@ final class AddWalletSelectorViewController: UIViewController {
                         } else {
                             return WalletCandidate(
                                 bitcoinWallet: wallet.bitcoin,
+                                pearlWallet: wallet.pearl,
                                 evmWallet: wallet.evm,
                                 solanaWallet: wallet.solana,
                                 tokens: allTokens,

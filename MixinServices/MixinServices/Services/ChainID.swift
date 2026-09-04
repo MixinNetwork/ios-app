@@ -4,6 +4,7 @@ public enum ChainID {
     
     public static let bitcoin = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
     public static let lightning = "59c09123-95cc-3ffd-a659-0f9169074cee"
+    public static let pearl = "e1bf305c-0d49-397d-85bd-55b9eaadafba"
     
     public static let solana = "64692c23-8971-4cf4-84a7-4dd1271dd887"
     public static let litecoin = "76c802a2-7c88-447f-a93e-c29c9e5dd9c8"

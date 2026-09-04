@@ -366,7 +366,7 @@
 "combine_and_forward" = "Объединить и переслать";
 "common_wallet" = "Общий кошелек";
 "common_wallet_index" = "Обычный кошелек %@";
-"common_wallet_now_supports_btc" = "Общий кошелек теперь поддерживает биткойны";
+"common_wallet_now_supports_chain" = "Общий кошелек теперь поддерживает %@";
 "complete" = "Завершено";
 "completed" = "Завершено";
 "compress_database" = "Сжать базу данных";

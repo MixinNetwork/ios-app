@@ -366,7 +366,7 @@
 "combine_and_forward" = "まとめて転送";
 "common_wallet" = "共通ウォレット";
 "common_wallet_index" = "共通ウォレット%@";
-"common_wallet_now_supports_btc" = "共通ウォレットがビットコインをサポートするようになりました";
+"common_wallet_now_supports_chain" = "共通ウォレットが%@をサポートするようになりました";
 "complete" = "完了";
 "completed" = "完了";
 "compress_database" = "データの圧縮";

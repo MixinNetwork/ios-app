@@ -366,7 +366,7 @@
 "combine_and_forward" = "合併轉發";
 "common_wallet" = "普通錢包";
 "common_wallet_index" = "普通錢包 %@";
-"common_wallet_now_supports_btc" = "普通錢包現已支援比特幣";
+"common_wallet_now_supports_chain" = "普通錢包現已支援 %@";
 "complete" = "完成";
 "completed" = "已完成";
 "compress_database" = "壓縮資料庫";

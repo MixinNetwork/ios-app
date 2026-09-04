@@ -95,7 +95,12 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                 return
             }
             let addresses = wallets.flatMap { wallet in
-                [wallet.bitcoin.address, wallet.evm.address, wallet.solana.address]
+                [
+                    wallet.bitcoin.address,
+                    wallet.pearl.address,
+                    wallet.evm.address,
+                    wallet.solana.address,
+                ]
             }
             switch behavior {
             case .alwaysNavigateToSelector:
@@ -118,11 +123,13 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                     }
                     var candidates: [WalletCandidate] = wallets.compactMap { wallet in
                         let bitcoinTokens = tokens[wallet.bitcoin.address] ?? []
+                        let pearlTokens = tokens[wallet.pearl.address] ?? []
                         let evmTokens = tokens[wallet.evm.address] ?? []
                         let solanaTokens = tokens[wallet.solana.address] ?? []
-                        let allTokens = bitcoinTokens + evmTokens + solanaTokens
+                        let allTokens = bitcoinTokens + pearlTokens + evmTokens + solanaTokens
                         
                         let name = walletNames[wallet.bitcoin.address]
+                        ?? walletNames[wallet.pearl.address]
                         ?? walletNames[wallet.evm.address]
                         ?? walletNames[wallet.solana.address]
                         
@@ -131,6 +138,7 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                         } else {
                             return WalletCandidate(
                                 bitcoinWallet: wallet.bitcoin,
+                                pearlWallet: wallet.pearl,
                                 evmWallet: wallet.evm,
                                 solanaWallet: wallet.solana,
                                 tokens: allTokens,
@@ -141,11 +149,13 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                     if candidates.isEmpty {
                         let wallet = wallets[0]
                         let name = walletNames[wallet.bitcoin.address]
+                        ?? walletNames[wallet.pearl.address]
                         ?? walletNames[wallet.evm.address]
                         ?? walletNames[wallet.solana.address]
                         candidates = [
                             .empty(
                                 bitcoinWallet: wallet.bitcoin,
+                                pearlWallet: wallet.pearl,
                                 evmWallet: wallet.evm,
                                 solanaWallet: wallet.solana,
                                 importedAsName: name

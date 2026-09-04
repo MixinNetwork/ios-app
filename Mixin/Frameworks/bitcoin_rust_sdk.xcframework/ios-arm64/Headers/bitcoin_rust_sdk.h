@@ -46,6 +46,10 @@ extern const size_t BITCOIN_PRIVATE_KEY_LENGTH;
 
 extern const uint64_t BITCOIN_P2WPKH_DUST;
 
+extern const size_t PEARL_PRIVATE_KEY_LENGTH;
+
+extern const uint64_t PEARL_P2TR_DUST;
+
 void bitcoin_free_string(const char *ptr);
 
 void bitcoin_free_bytes(uint8_t *ptr, size_t len);
@@ -95,3 +99,32 @@ enum BitcoinErrorCode bitcoin_decode_p2wpkh_transaction(const char *tx,
                                                         size_t *out_inputs_len,
                                                         struct BitcoinTransactionOutput **out_outputs,
                                                         size_t *out_outputs_len);
+
+bool pearl_is_valid_address(const char *input);
+
+enum BitcoinErrorCode pearl_address(const unsigned char *key_bytes,
+                                    size_t key_len,
+                                    const char **out);
+
+enum BitcoinErrorCode pearl_private_key_bytes_from_mnemonics(const char *mnemonic,
+                                                             const char *derivation_path,
+                                                             uint8_t **out_ptr,
+                                                             size_t *out_len);
+
+enum BitcoinErrorCode pearl_sign_taproot_transaction(const struct BitcoinUTXO *utxos_ptr,
+                                                     size_t utxos_len,
+                                                     const char *receiver_address,
+                                                     uint64_t send_amount,
+                                                     uint64_t fee,
+                                                     const uint8_t *privkey_bytes,
+                                                     size_t privkey_len,
+                                                     const char **out_tx_hex,
+                                                     size_t *out_tx_vsize,
+                                                     const char **out_txid,
+                                                     uint64_t *out_change_amount);
+
+enum BitcoinErrorCode pearl_decode_taproot_transaction(const char *tx,
+                                                       struct BitcoinUTXO **out_inputs,
+                                                       size_t *out_inputs_len,
+                                                       struct BitcoinTransactionOutput **out_outputs,
+                                                       size_t *out_outputs_len);

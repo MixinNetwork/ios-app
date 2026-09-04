@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UnlockBitcoinViewController" customModule="Mixin" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UnlockCommonWalletChainsViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="featureStackView" destination="sw6-v6-bIk" id="F0V-nS-wWH"/>
+                <outlet property="iconImageView" destination="j8G-PX-dDX" id="GM0-jj-8T1"/>
                 <outlet property="mainTitleLabel" destination="SHN-qe-GDs" id="vzI-ZB-5Ob"/>
                 <outlet property="unlockButton" destination="b5p-cn-5QM" id="Q3h-5Y-J8R"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -26,16 +27,22 @@
                     <rect key="frame" x="0.0" y="0.0" width="393" height="699.66666666666663"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qwv-FO-UoR">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="556.66666666666663"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="557"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bitcoin_unlock_intro" translatesAutoresizingMaskIntoConstraints="NO" id="ImT-WM-kQJ">
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="unlock_chain_background" translatesAutoresizingMaskIntoConstraints="NO" id="ImT-WM-kQJ">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="251"/>
                                 </imageView>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="j8G-PX-dDX">
+                                    <rect key="frame" x="144" y="108.33333333333331" width="105" height="104.66666666666669"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="j8G-PX-dDX" secondAttribute="height" id="S3j-1b-tTt"/>
+                                    </constraints>
+                                </imageView>
                                 <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="345" placeholderIntrinsicHeight="223.00000000000006" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="sw6-v6-bIk">
-                                    <rect key="frame" x="24" y="333.66666666666669" width="345" height="223.00000000000006"/>
+                                    <rect key="frame" x="24" y="334" width="345" height="223"/>
                                 </stackView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Common Wallet now supports Bitcoin" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SHN-qe-GDs" userLabel="Title Label">
-                                    <rect key="frame" x="36" y="250.99999999999997" width="321" height="52.666666666666657"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="53" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SHN-qe-GDs" userLabel="Title Label">
+                                    <rect key="frame" x="36" y="251" width="321" height="53"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
                                     <color key="textColor" name="text"/>
                                     <nil key="highlightedColor"/>
@@ -43,12 +50,15 @@
                             </subviews>
                             <color key="backgroundColor" name="background"/>
                             <constraints>
+                                <constraint firstItem="j8G-PX-dDX" firstAttribute="centerX" secondItem="ImT-WM-kQJ" secondAttribute="centerX" id="0RO-j4-amD"/>
                                 <constraint firstAttribute="trailing" secondItem="ImT-WM-kQJ" secondAttribute="trailing" id="5fO-4U-23b"/>
                                 <constraint firstItem="ImT-WM-kQJ" firstAttribute="top" secondItem="qwv-FO-UoR" secondAttribute="top" id="AMS-kE-LPV"/>
                                 <constraint firstItem="ImT-WM-kQJ" firstAttribute="leading" secondItem="qwv-FO-UoR" secondAttribute="leading" id="Khu-ho-WY4"/>
                                 <constraint firstItem="sw6-v6-bIk" firstAttribute="top" secondItem="SHN-qe-GDs" secondAttribute="bottom" constant="30" id="Lfq-dP-zGY"/>
+                                <constraint firstItem="j8G-PX-dDX" firstAttribute="centerY" secondItem="ImT-WM-kQJ" secondAttribute="centerY" multiplier="160:125" id="TzI-R4-4Ab"/>
                                 <constraint firstAttribute="bottom" secondItem="sw6-v6-bIk" secondAttribute="bottom" id="ZIS-xr-etT"/>
                                 <constraint firstAttribute="trailing" secondItem="sw6-v6-bIk" secondAttribute="trailing" constant="24" id="cEh-NZ-mAq"/>
+                                <constraint firstItem="j8G-PX-dDX" firstAttribute="width" secondItem="ImT-WM-kQJ" secondAttribute="width" multiplier="100:375" id="iea-Or-Ov7"/>
                                 <constraint firstAttribute="trailing" secondItem="SHN-qe-GDs" secondAttribute="trailing" constant="36" id="mpB-M1-3S3"/>
                                 <constraint firstItem="sw6-v6-bIk" firstAttribute="leading" secondItem="qwv-FO-UoR" secondAttribute="leading" constant="24" id="n8L-cI-2Gk"/>
                                 <constraint firstItem="SHN-qe-GDs" firstAttribute="leading" secondItem="qwv-FO-UoR" secondAttribute="leading" constant="36" id="r6v-bf-fDY"/>
@@ -98,7 +108,7 @@
         </view>
     </objects>
     <resources>
-        <image name="bitcoin_unlock_intro" width="375" height="251"/>
+        <image name="unlock_chain_background" width="375" height="251"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

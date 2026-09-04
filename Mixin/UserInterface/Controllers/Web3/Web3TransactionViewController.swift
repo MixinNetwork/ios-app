@@ -608,6 +608,44 @@ extension Web3TransactionViewController {
                     )
                 }
             }
+        case .pearl:
+            DispatchQueue.global().async { [wallet, weak self] in
+                let speedUpOperation: Web3TransferOperation?
+                let cancelOperation: Web3TransferOperation?
+                if let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID),
+                   let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash)
+                {
+                    do {
+                        speedUpOperation = try PearlSpeedUpOperation(
+                            wallet: wallet,
+                            fromAddress: fromAddress,
+                            transaction: rawTransaction
+                        )
+                    } catch {
+                        Logger.general.debug(category: "Web3Txn", message: "Speed up failed: \(error)")
+                        speedUpOperation = nil
+                    }
+                    do {
+                        cancelOperation = try PearlCancelOperation(
+                            wallet: wallet,
+                            fromAddress: fromAddress,
+                            transaction: rawTransaction
+                        )
+                    } catch {
+                        Logger.general.debug(category: "Web3Txn", message: "Cancel failed: \(error)")
+                        cancelOperation = nil
+                    }
+                } else {
+                    speedUpOperation = nil
+                    cancelOperation = nil
+                }
+                DispatchQueue.main.async {
+                    self?.reloadHeaderView(
+                        speedUpOperation: speedUpOperation,
+                        cancelOperation: cancelOperation
+                    )
+                }
+            }
         case .evm:
             DispatchQueue.global().async { [wallet, weak self] in
                 let speedUpOperation: Web3TransferOperation?

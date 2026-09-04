@@ -243,7 +243,7 @@ public final class Web3TokenDAO: Web3DAO {
         guard let walletID = tokens.first?.walletID else {
             return
         }
-        let outputBasedAssetIDs: Set<String> = [AssetID.btc]
+        let outputBasedAssetIDs: Set<String> = [AssetID.btc, AssetID.pearl]
         db.write { db in
             let walletCategory: Web3Wallet.Category? = try {
                 let value = try String.fetchOne(

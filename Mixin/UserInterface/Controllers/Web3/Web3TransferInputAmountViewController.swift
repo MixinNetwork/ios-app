@@ -9,6 +9,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     private var feeCalculatingTask: Task<Void, Error>?
     private var fee: Web3TransferOperation.Fee?
     private var bitcoinFeeCalculator: Bitcoin.P2WPKHFeeCalculator?
+    private var pearlFeeCalculator: Pearl.TaprootFeeCalculator?
     private var solanaFeeCalculatingOperation: SolanaTransferToAddressOperation?
     
     init(payment: Web3SendingTokenToAddressPayment) {
@@ -64,7 +65,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
         tokenBalanceLabel.text = payment.token.localizedBalanceWithSymbol
         addFeeView()
         switch payment.chain.specification {
-        case .bitcoin:
+        case .bitcoin, .pearl:
             // Will reload later in `reloadviews(inputAmount:)`
             break
         case .evm, .solana:
@@ -80,7 +81,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     override func reloadViews(inputAmount: Decimal) {
         super.reloadViews(inputAmount: inputAmount)
         switch payment.chain.specification {
-        case .bitcoin:
+        case .bitcoin, .pearl:
             feeCalculatingTask?.cancel()
             reloadFee(payment: payment, transferAmount: inputAmount)
         case .evm, .solana:
@@ -99,6 +100,11 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                 switch payment.chain.specification {
                 case .bitcoin:
                     operation = try BitcoinTransferToAddressOperation(
+                        payment: payment,
+                        decimalAmount: amount
+                    )
+                case .pearl:
+                    operation = try PearlTransferToAddressOperation(
                         payment: payment,
                         decimalAmount: amount
                     )
@@ -166,7 +172,10 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
             return
         }
         let multiplier = self.multiplier(tag: sender.tag)
-        if let bitcoinFeeCalculator, multiplier == 1 {
+        if let pearlFeeCalculator, multiplier == 1 {
+            let maxAmount = pearlFeeCalculator.exhaustingOutputsTransferAmount()
+            replaceAmount(maxAmount)
+        } else if let bitcoinFeeCalculator, multiplier == 1 {
             let maxAmount = bitcoinFeeCalculator.exhaustingOutputsTransferAmount()
             replaceAmount(maxAmount)
         } else {
@@ -186,6 +195,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
         enum TransferAmountFailure {
             case solanaRentExemption(Solana.RentExemptionFailedReason)
             case bitcoinDust
+            case pearlDust
         }
         
         let transferAmountFailure: TransferAmountFailure?
@@ -213,6 +223,12 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
             if payment.chain == .bitcoin {
                 if tokenAmount < Bitcoin.spendingDust {
                     transferAmountFailure = .bitcoinDust
+                } else {
+                    transferAmountFailure = nil
+                }
+            } else if payment.chain == .pearl {
+                if tokenAmount < Pearl.spendingDust {
+                    transferAmountFailure = .pearlDust
                 } else {
                     transferAmountFailure = nil
                 }
@@ -253,6 +269,16 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                 insufficientBalanceLabel.text = R.string.localizable.send_token_minimum_amount(
                     CurrencyFormatter.localizedString(
                         from: Bitcoin.spendingDust,
+                        format: .precision,
+                        sign: .never,
+                        symbol: .custom(payment.token.symbol)
+                    )
+                )
+                removeAddFeeButton()
+            case .pearlDust:
+                insufficientBalanceLabel.text = R.string.localizable.send_token_minimum_amount(
+                    CurrencyFormatter.localizedString(
+                        from: Pearl.spendingDust,
                         format: .precision,
                         sign: .never,
                         symbol: .custom(payment.token.symbol)
@@ -333,6 +359,7 @@ extension Web3TransferInputAmountViewController {
         transferAmount: Decimal,
     ) {
         let bitcoinFeeCalculator = self.bitcoinFeeCalculator
+        let pearlFeeCalculator = self.pearlFeeCalculator
         feeCalculatingTask = Task {
             do {
                 let fee: Web3TransferOperation.Fee
@@ -372,6 +399,45 @@ extension Web3TransferInputAmountViewController {
                     }
                     await MainActor.run {
                         self.bitcoinFeeCalculator = calculator
+                        self.pearlFeeCalculator = nil
+                        self.solanaFeeCalculatingOperation = nil
+                    }
+                case .pearl:
+                    let feeToken = try payment.chain.feeToken(
+                        walletID: payment.wallet.walletID
+                    )
+                    guard let feeToken else {
+                        throw FeeEstimationError.missingFeeToken(payment.chain.feeTokenAssetID)
+                    }
+                    let outputs = Web3OutputDAO.shared.outputs(
+                        address: payment.fromAddress.destination,
+                        assetID: payment.token.assetID,
+                        status: [.unspent, .pending]
+                    )
+                    let calculator: Pearl.TaprootFeeCalculator
+                    if let pearlFeeCalculator {
+                        calculator = pearlFeeCalculator
+                    } else {
+                        let info = try await RouteAPI.pearlNetworkInfo(feeRate: nil)
+                        calculator = Pearl.TaprootFeeCalculator(
+                            outputs: outputs,
+                            rate: info.decimalFeeRate,
+                            minimum: info.minimalFee
+                        )
+                    }
+                    do {
+                        let feeResult = try calculator.calculate(
+                            transferAmount: transferAmount == 0 ? 1 * .satoshi : transferAmount
+                        )
+                        fee = .native(token: feeToken, amount: feeResult.feeAmount)
+                    } catch Pearl.TaprootFeeCalculator.CalculateError.insufficientOutputs(let feeAmount) {
+                        fee = .native(token: feeToken, amount: feeAmount)
+                    } catch {
+                        throw error
+                    }
+                    await MainActor.run {
+                        self.pearlFeeCalculator = calculator
+                        self.bitcoinFeeCalculator = nil
                         self.solanaFeeCalculatingOperation = nil
                     }
                 case .evm(let chainID):
@@ -384,6 +450,7 @@ extension Web3TransferInputAmountViewController {
                     fee = try await operation.reloadFee()
                     await MainActor.run {
                         self.bitcoinFeeCalculator = nil
+                        self.pearlFeeCalculator = nil
                         self.solanaFeeCalculatingOperation = nil
                     }
                 case .solana:
@@ -395,6 +462,7 @@ extension Web3TransferInputAmountViewController {
                     fee = try await operation.reloadFee()
                     await MainActor.run {
                         self.bitcoinFeeCalculator = nil
+                        self.pearlFeeCalculator = nil
                         self.solanaFeeCalculatingOperation = operation
                     }
                 }

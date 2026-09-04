@@ -93,6 +93,10 @@ extension Web3Output {
         "\(txid):\(vout)".uuidDigest()
     }
     
+    public static func pearlOutputID<Interger: FixedWidthInteger>(txid: String, vout: Interger) -> String {
+        "\(txid):\(vout)".uuidDigest()
+    }
+    
 }
 
 extension Web3Output: CustomDebugStringConvertible {

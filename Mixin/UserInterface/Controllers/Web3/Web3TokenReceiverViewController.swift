@@ -190,6 +190,10 @@ extension Web3TokenReceiverViewController {
                     assetID: payment.token.assetID,
                     chainID: chainID
                 )
+                DepositEntryDAO.shared.replace(
+                    entries: entries,
+                    forChainWith: payment.token.chainID
+                )
                 if let entry = entries.first(where: { $0.chainID == chainID && $0.isPrimary }) {
                     let payment = Web3SendingTokenToAddressPayment(
                         payment: payment,

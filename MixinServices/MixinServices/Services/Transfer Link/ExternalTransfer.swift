@@ -9,6 +9,7 @@ public struct ExternalTransfer {
     
     private static let supportedAssetIDs = [
         "bitcoin"   : AssetID.btc,
+        "pearl"     : AssetID.pearl,
         "ethereum"  : AssetID.eth,
         "litecoin"  : AssetID.ltc,
         "dash"      : AssetID.dash,

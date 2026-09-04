@@ -9,6 +9,7 @@ final class Web3Chain {
     enum Kind: CaseIterable {
         
         case bitcoin
+        case pearl
         case evm
         case solana
         
@@ -16,6 +17,8 @@ final class Web3Chain {
             switch self {
             case .bitcoin:
                 [.bitcoin]
+            case .pearl:
+                [.pearl]
             case .evm:
                 [.ethereum, .polygon, .bnbSmartChain, .base, .arbitrumOne, .opMainnet, .avalancheCChain, .hyperEVM]
             case .solana:
@@ -26,6 +29,8 @@ final class Web3Chain {
         static func singleKindWallet(chainIDs: Set<String>) -> Kind? {
             if chainIDs.contains(ChainID.bitcoin) {
                 .bitcoin
+            } else if chainIDs.contains(ChainID.pearl) {
+                .pearl
             } else if chainIDs.contains(ChainID.ethereum) {
                 .evm
             } else if chainIDs.contains(ChainID.solana) {
@@ -39,6 +44,7 @@ final class Web3Chain {
     
     enum KindSpecification {
         case bitcoin
+        case pearl
         case evm(chainID: Int)
         case solana
     }
@@ -48,12 +54,12 @@ final class Web3Chain {
     let chainID: String
     let feeTokenAssetID: String
     let name: String
-    let failsafeRPCServerURL: URL
+    let failsafeRPCServerURL: URL?
     let caip2: Blockchain
     
     private(set) var dapps: [Web3Dapp] = []
     
-    var rpcServerURL: URL {
+    var rpcServerURL: URL? {
         if let string = AppGroupUserDefaults.web3RPCURL[chainID],
            let url = URL(string: string)
         {
@@ -66,11 +72,13 @@ final class Web3Chain {
     private init(
         specification: KindSpecification, mixinChainID: String,
         feeTokenAssetID: String, name: String,
-        failsafeRPCServerURL: URL, caip2: Blockchain
+        failsafeRPCServerURL: URL?, caip2: Blockchain
     ) {
         let kind: Kind = switch specification {
         case .bitcoin:
                 .bitcoin
+        case .pearl:
+                .pearl
         case .evm:
                 .evm
         case .solana:
@@ -179,7 +187,7 @@ extension Web3Chain {
     
     static let all: [Web3Chain] = {
         let chains: [Web3Chain] = [
-            .bitcoin, .ethereum, .solana, .bnbSmartChain, .base,
+            .bitcoin, .pearl, .ethereum, .solana, .bnbSmartChain, .base,
             .polygon, .arbitrumOne, .opMainnet, .avalancheCChain, .hyperEVM,
         ]
         // Make sure all chains are included
@@ -198,6 +206,15 @@ extension Web3Chain {
         name: "Bitcoin",
         failsafeRPCServerURL: URL(string: "https://bitcoin-rpc.publicnode.com")!,
         caip2: Blockchain("bip122:000000000019d6689c085ae165831e93")!
+    )
+    
+    static let pearl = Web3Chain(
+        specification: .pearl,
+        mixinChainID: ChainID.pearl,
+        feeTokenAssetID: AssetID.pearl,
+        name: "Pearl",
+        failsafeRPCServerURL: nil,
+        caip2: Blockchain("bip122:a18d3093b7ff618f0cdd073fa3d10374")!
     )
     
     static let ethereum = Web3Chain.evm(

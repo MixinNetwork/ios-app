@@ -16,6 +16,7 @@ final class CommonWalletPendingTransactionLoader {
             ReviewPendingWeb3RawTransactionJob(walletID: walletID),
             ReviewPendingWeb3TransactionJob(walletID: walletID),
             SyncWeb3OutputJob(assetID: AssetID.btc, walletID: walletID),
+            SyncWeb3OutputJob(assetID: AssetID.pearl, walletID: walletID),
         ]
         reviewPendingTransactionJobID = jobs[1].getJobId()
         for job in jobs {

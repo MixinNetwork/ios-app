@@ -57,7 +57,7 @@ class Web3SignOperation {
             let signature: String
             do {
                 switch chain.kind {
-                case .bitcoin:
+                case .bitcoin, .pearl:
                     throw SigningError.unsupportedChain
                 case .evm:
                     let account = try await wallet.ethereumAccount(pin: pin, address: address)
@@ -161,7 +161,7 @@ final class Web3SignWithWalletConnectOperation: Web3SignOperation {
     override func send(signature: String) async {
         do {
             let response = switch chain.kind {
-            case .bitcoin:
+            case .bitcoin, .pearl:
                 throw SigningError.unsupportedChain
             case .evm:
                 RPCResult.response(AnyCodable(signature))
@@ -231,7 +231,7 @@ final class Web3SignWithBrowserWalletOperation: Web3SignOperation {
     override func send(signature: String) async {
         do {
             switch chain.kind {
-            case .bitcoin:
+            case .bitcoin, .pearl:
                 throw SigningError.unsupportedChain
             case .evm:
                 try await sendImpl?(signature)

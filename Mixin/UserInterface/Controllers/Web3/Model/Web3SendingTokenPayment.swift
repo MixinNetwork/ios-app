@@ -30,7 +30,8 @@ class Web3SendingTokenPayment {
             (ChainID.bnbSmartChain,     "0x0000000000000000000000000000000000000000"),
             (ChainID.avalancheCChain,   "0x0000000000000000000000000000000000000000"),
             (ChainID.hyperEVM,          "0x0000000000000000000000000000000000000000"),
-            (ChainID.bitcoin,           "c6d0c728-2624-429b-8e0d-d9d19b6592fa"):
+            (ChainID.bitcoin,           "c6d0c728-2624-429b-8e0d-d9d19b6592fa"),
+            (ChainID.pearl,             "e1bf305c-0d49-397d-85bd-55b9eaadafba"):
             true
         default:
             false

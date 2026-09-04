@@ -68,7 +68,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                             sign: .always,
                             symbol: .custom(sendToken.symbol)
                         ),
-                        amountStyle: .plain
+                        amountStyle: .outgoing
                     ),
                     StyledAssetChange(
                         token: receiveToken,
@@ -78,7 +78,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                             sign: .always,
                             symbol: .custom(receiveToken.symbol)
                         ),
-                        amountStyle: .income
+                        amountStyle: .incoming
                     ),
                 ]
             ),

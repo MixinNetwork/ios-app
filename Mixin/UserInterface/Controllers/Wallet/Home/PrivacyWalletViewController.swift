@@ -55,6 +55,7 @@ final class PrivacyWalletViewController: WalletViewController {
             ChainDAO.chainsDidChangeNotification,
             TokenExtraDAO.tokenVisibilityDidChangeNotification,
             UTXOService.balanceDidUpdateNotification,
+            SafeSnapshotDAO.snapshotDidSaveNotification,
         ].map { name in
             NotificationCenter.default.publisher(for: name)
         }

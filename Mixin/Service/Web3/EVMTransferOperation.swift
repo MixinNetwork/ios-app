@@ -503,9 +503,9 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
                 data: data
             )
         }
-        let simulation: TransactionSimulation = .balanceChange(
+        let simulation: TransactionSimulation = .byLocal(
             token: payment.token,
-            amount: decimalAmount,
+            amount: -decimalAmount,
             from: payment.fromAddress.destination,
         )
         let isFeeWaived = payment.toAddressLabel?.isFeeWaived() ?? false

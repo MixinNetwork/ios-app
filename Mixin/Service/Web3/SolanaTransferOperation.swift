@@ -273,9 +273,9 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         guard let amount = payment.token.nativeAmount(decimalAmount: decimalAmount) else {
             throw InitError.invalidAmount(decimalAmount)
         }
-        let simulation: TransactionSimulation = .balanceChange(
+        let simulation: TransactionSimulation = .byLocal(
             token: payment.token,
-            amount: decimalAmount,
+            amount: -decimalAmount,
             from: payment.fromAddress.destination
         )
         let isFeeWaived = payment.toAddressLabel?.isFeeWaived() ?? false

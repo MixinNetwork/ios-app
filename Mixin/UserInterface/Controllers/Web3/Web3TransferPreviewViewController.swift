@@ -420,8 +420,10 @@ extension Web3TransferPreviewViewController {
             if let row = simulationRows.first {
                 self.replaceRow(at: index, with: row)
             }
-            if simulationRows.count == 2 {
-                self.insertRow(simulationRows[1], at: index + 1)
+            if simulationRows.count > 1 {
+                for i in 1..<simulationRows.count {
+                    self.insertRow(simulationRows[i], at: index + i)
+                }
             }
         }
     }
@@ -429,7 +431,7 @@ extension Web3TransferPreviewViewController {
     private func makeRows(simulation: TransactionSimulation) -> [Row] {
         var rows: [Row] = []
         
-        if let approve = simulation.approves?.first {
+        for approve in simulation.approves ?? [] {
             let token = Web3TokenDAO.shared.token(
                 walletID: operation.wallet.walletID,
                 assetID: approve.assetID
@@ -463,7 +465,7 @@ extension Web3TransferPreviewViewController {
                 rows.append(
                     .web3Amount(
                         caption: R.string.localizable.preauthorize_amount(),
-                        content: .limited(token: tokenAmount, fiatMoney: fiatMoneyAmount),
+                        content: .limited(token: tokenAmount, fiatMoney: fiatMoneyAmount, style: .outgoing),
                         token: token ?? approve,
                         chain: token?.chain
                     )
@@ -472,28 +474,26 @@ extension Web3TransferPreviewViewController {
         }
         
         let changes = simulation.balanceChanges ?? []
-        if changes.count == 1 {
-            let amount = Decimal(string: changes[0].amount, locale: .enUSPOSIX)
+        if changes.count == 1, let change = changes.first {
+            let decimalAmount = Decimal(string: change.amount, locale: .enUSPOSIX)
             let token = Web3TokenDAO.shared.token(
                 walletID: operation.wallet.walletID,
-                assetID: changes[0].assetID
+                assetID: change.assetID
             )
-            
-            let tokenAmount = if let amount, let token {
-                amount.formatted(
+            let tokenAmount = if let decimalAmount, let token {
+                decimalAmount.formatted(
                     Decimal.FormatStyle.number
                         .locale(.current)
                         .grouping(.automatic)
-                        .sign(strategy: .never)
+                        .sign(strategy: .always(includingZero: false))
                         .precision(.fractionLength(0...Int(token.precision)))
                 )
             } else {
-                changes[0].amount
+                change.amount
             }
-            
-            let fiatMoneyAmount: String? = if let token, let amount {
+            let fiatMoneyAmount: String? = if let token, let decimalAmount {
                 CurrencyFormatter.localizedString(
-                    from: amount * token.decimalUSDPrice * Currency.current.decimalRate,
+                    from: abs(decimalAmount) * token.decimalUSDPrice * Currency.current.decimalRate,
                     format: .fiatMoneyPrecision,
                     sign: .never,
                     symbol: .currencySymbol
@@ -501,10 +501,16 @@ extension Web3TransferPreviewViewController {
             } else {
                 nil
             }
+            let style: StyledAssetChange.AmountStyle
+            if let decimalAmount, decimalAmount != 0 {
+                style = decimalAmount > 0 ? .incoming : .outgoing
+            } else {
+                style = .plain
+            }
             rows.append(
                 .web3Amount(
                     caption: R.string.localizable.estimated_balance_change(),
-                    content: .limited(token: tokenAmount, fiatMoney: fiatMoneyAmount),
+                    content: .limited(token: tokenAmount, fiatMoney: fiatMoneyAmount, style: style),
                     token: token,
                     chain: token?.chain
                 )
@@ -516,22 +522,17 @@ extension Web3TransferPreviewViewController {
                     CurrencyFormatter.localizedString(
                         from: decimalAmount,
                         format: .precision,
-                        sign: .always,
+                        sign: .whenNotZero,
                         symbol: .custom(change.symbol)
                     )
                 } else {
                     change.amount
                 }
-                let style: StyledAssetChange.AmountStyle = if let decimalAmount {
-                    if decimalAmount > 0 {
-                        .income
-                    } else if decimalAmount == 0 {
-                        .plain
-                    } else {
-                        .outcome
-                    }
+                let style: StyledAssetChange.AmountStyle
+                if let decimalAmount, decimalAmount != 0 {
+                    style = decimalAmount > 0 ? .incoming : .outgoing
                 } else {
-                    .plain
+                    style = .plain
                 }
                 return StyledAssetChange(
                     token: change,

@@ -240,16 +240,7 @@ extension Web3TransactionViewController {
         let token: Web3Token?
         let amount: NSAttributedString
         
-        init(token: Web3Token?, amount: Decimal, pending: Bool) {
-            let amountColor = if pending {
-                R.color.text()!
-            } else {
-                if amount >= 0 {
-                    R.color.market_green()!
-                } else {
-                    R.color.market_red()!
-                }
-            }
+        init(token: Web3Token?, amount: Decimal, color: UIColor) {
             let precision = token?.precision ?? 8
             let amount = NSMutableAttributedString(
                 string: amount.formatted(
@@ -262,7 +253,7 @@ extension Web3TransactionViewController {
                 ),
                 attributes: [
                     .font: UIFont.preferredFont(forTextStyle: .callout),
-                    .foregroundColor: amountColor,
+                    .foregroundColor: color,
                 ]
             )
             if let symbol = token?.symbol {
@@ -341,6 +332,7 @@ extension Web3TransactionViewController {
     }
     
     private func reloadData() {
+        let (sendAmountColor, receiveAmountColor) = transaction.amountColors()
         if let transfer = transaction.simpleTransfer {
             let simpleHeaderView = tableView.tableHeaderView as? SimpleWeb3TransactionTableHeaderView
             ?? R.nib.simpleWeb3TransactionTableHeaderView(withOwner: nil)!
@@ -375,18 +367,12 @@ extension Web3TransactionViewController {
                 simpleHeaderView.nowValueLabel.isHidden = true
                 simpleHeaderView.thenValueLabel.isHidden = true
             }
-            simpleHeaderView.amountLabel.textColor = switch transaction.status {
-            case .success where !transfer.directionalAmount.isZero:
-                switch transaction.transactionType.knownCase {
-                case .transferIn:
-                    R.color.market_green()
-                case .transferOut:
-                    R.color.market_red()
-                default:
-                    R.color.text_tertiary()
-                }
-            default:
-                R.color.text_tertiary()
+            simpleHeaderView.amountLabel.textColor = if transfer.directionalAmount == 0 {
+                Web3Transaction.Color.unavailable
+            } else if transfer.directionalAmount > 0 {
+                transaction.amountColors().receive
+            } else {
+                transaction.amountColors().send
             }
             simpleHeaderView.amountLabel.text = transfer.localizedAmountString
             simpleHeaderView.statusLabel.load(status: transaction.status)
@@ -497,16 +483,18 @@ extension Web3TransactionViewController {
         } else {
             switch transaction.transactionType.knownCase {
             case .transferIn, .transferOut, .swap, .none, .unknown:
-                let tokens = Web3TokenDAO.shared.tokens(walletID: wallet.walletID, ids: transaction.allAssetIDs)
-                    .reduce(into: [:]) { result, token in
-                        result[token.assetID] = token
-                    }
-                let pending = transaction.status == .pending
+                let tokens = Web3TokenDAO.shared.tokens(
+                    walletID: wallet.walletID,
+                    ids: transaction.allAssetIDs
+                ).reduce(into: [:]) { result, token in
+                    result[token.assetID] = token
+                }
+                let (sendColor, receiveColor) = transaction.amountColors()
                 let changes = transaction.assetChanges.map { change in
                     AssetChange(
                         token: tokens[change.assetID],
                         amount: change.amount,
-                        pending: pending
+                        color: change.amount >= 0 ? receiveColor : sendColor,
                     )
                 }
                 if changes.isEmpty {

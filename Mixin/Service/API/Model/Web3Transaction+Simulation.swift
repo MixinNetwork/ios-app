@@ -35,11 +35,13 @@ extension Web3Transaction {
         var receiveChanges: [BalanceChange] = []
         var sendChanges: [BalanceChange] = []
         for change in simulation?.balanceChanges ?? [] {
-            let isSending = change.from == myAddress
-            if isSending {
+            let amount = Decimal(string: change.amount, locale: .enUSPOSIX) ?? 0
+            if amount < 0 {
                 sendChanges.append(change)
-            } else {
+            } else if amount > 0 {
                 receiveChanges.append(change)
+            } else {
+                // zero amount as invalid
             }
         }
         
@@ -68,7 +70,7 @@ extension Web3Transaction {
             receivers = receiveChanges.map { change in
                 Web3Transaction.Receiver(
                     assetID: change.assetID,
-                    amount: change.amount,
+                    absoluteAmountFrom: change.amount,
                     to: myAddress
                 )
             }
@@ -77,7 +79,7 @@ extension Web3Transaction {
             senders = sendChanges.map { change in
                 Web3Transaction.Sender(
                     assetID: change.assetID,
-                    amount: change.amount,
+                    absoluteAmountFrom: change.amount,
                     from: myAddress
                 )
             }
@@ -87,21 +89,33 @@ extension Web3Transaction {
             senders = sendChanges.map { change in
                 Web3Transaction.Sender(
                     assetID: change.assetID,
-                    amount: change.amount,
+                    absoluteAmountFrom: change.amount,
                     from: myAddress
                 )
             }
             receivers = receiveChanges.map { change in
                 Web3Transaction.Receiver(
                     assetID: change.assetID,
-                    amount: change.amount,
+                    absoluteAmountFrom: change.amount,
                     to: myAddress
                 )
             }
             approvals = nil
         case .approval:
-            senders = nil
-            receivers = nil
+            senders = sendChanges.map { change in
+                Web3Transaction.Sender(
+                    assetID: change.assetID,
+                    absoluteAmountFrom: change.amount,
+                    from: myAddress
+                )
+            }
+            receivers = receiveChanges.map { change in
+                Web3Transaction.Receiver(
+                    assetID: change.assetID,
+                    absoluteAmountFrom: change.amount,
+                    to: myAddress
+                )
+            }
             approvals = simulation?.approves?.map { approve in
                 switch approve.amount {
                 case .unlimited:

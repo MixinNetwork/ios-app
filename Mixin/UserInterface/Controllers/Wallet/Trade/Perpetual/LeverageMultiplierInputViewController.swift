@@ -30,7 +30,7 @@ final class LeverageMultiplierInputViewController: UIViewController {
         self.side = side
         self.maxMultiplier = maxMultiplier
         self.marginAmount = marginAmount
-        self.multiplier = currentMultiplier
+        self.multiplier = min(maxMultiplier, max(1, currentMultiplier))
         let nib = R.nib.leverageMultiplierInputView
         super.init(nibName: nib.name, bundle: nib.bundle)
         modalPresentationStyle = .custom
@@ -57,14 +57,33 @@ final class LeverageMultiplierInputViewController: UIViewController {
         slider.minimumValue = 1
         slider.maximumValue = maxMultiplierNumber.floatValue
         slider.value = (multiplier as NSDecimalNumber).floatValue
-        let markingLabels = markingStackView.arrangedSubviews.map({ $0 as! UILabel })
-        assert(markingLabels.count > 2)
-        markingLabels[0].text = PerpetualLeverage.stringRepresentation(multiplier: 1)
-        markingLabels[markingLabels.count - 1].text = PerpetualLeverage.stringRepresentation(multiplier: maxMultiplier)
-        let scale = maxMultiplierNumber.intValue / (markingLabels.count - 1)
-        for i in 1..<markingLabels.count - 1 {
-            markingLabels[i].text = PerpetualLeverage.stringRepresentation(multiplier: scale * i)
+        
+        let markings: [String]
+        if maxMultiplier <= 1 {
+            markings = []
+        } else if maxMultiplier <= 7 {
+            markings = (1...maxMultiplierNumber.intValue).map { multiplier in
+                PerpetualLeverage.stringRepresentation(multiplier: multiplier)
+            }
+        } else {
+            let count = 5
+            let scale = maxMultiplierNumber.intValue / (count - 1)
+            var list = [PerpetualLeverage.stringRepresentation(multiplier: 1)]
+            for i in 1..<count - 1 {
+                list.append(PerpetualLeverage.stringRepresentation(multiplier: scale * i))
+            }
+            list.append(PerpetualLeverage.stringRepresentation(multiplier: maxMultiplier))
+            markings = list
         }
+        for marking in markings {
+            let label = UILabel()
+            label.font = .systemFont(ofSize: 12, weight: .medium)
+            label.textColor = R.color.text()
+            label.textAlignment = .center
+            label.text = marking
+            markingStackView.addArrangedSubview(label)
+        }
+        
         for label: UILabel in [profitSimulationLabel, liquidationSimulationLabel] {
             label.font = UIFontMetrics.default.scaledFont(
                 for: .monospacedDigitSystemFont(ofSize: 12, weight: .regular)
@@ -96,7 +115,7 @@ final class LeverageMultiplierInputViewController: UIViewController {
     }
     
     @IBAction func decreaseMultiplierBy1(_ sender: Any) {
-        multiplier -= 1
+        multiplier = max(1, multiplier - 1)
         slider.value = NSDecimalNumber(decimal: multiplier).floatValue
         updateViews(multiplier: multiplier)
     }
@@ -104,7 +123,7 @@ final class LeverageMultiplierInputViewController: UIViewController {
     @IBAction func decreaseMultiplierBy5(_ sender: UILongPressGestureRecognizer) {
         switch sender.state {
         case .began:
-            multiplier = max(0, multiplier - 5)
+            multiplier = max(1, multiplier - 5)
             slider.value = NSDecimalNumber(decimal: multiplier).floatValue
             updateViews(multiplier: multiplier)
         default:
@@ -113,7 +132,7 @@ final class LeverageMultiplierInputViewController: UIViewController {
     }
     
     @IBAction func increaseMultiplierBy1(_ sender: Any) {
-        multiplier += 1
+        multiplier = min(maxMultiplier, multiplier + 1)
         slider.value = NSDecimalNumber(decimal: multiplier).floatValue
         updateViews(multiplier: multiplier)
     }

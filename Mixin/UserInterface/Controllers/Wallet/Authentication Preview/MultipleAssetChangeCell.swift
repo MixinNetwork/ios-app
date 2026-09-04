@@ -51,9 +51,9 @@ final class MultipleAssetChangeCell: UITableViewCell {
                 rowView.networkLabel.text = nil
             }
             rowView.amountLabel.textColor = switch change.amountStyle {
-            case .income:
+            case .incoming:
                 R.color.market_green()
-            case .outcome:
+            case .outgoing:
                 R.color.market_red()
             case .plain:
                 R.color.text()
@@ -75,9 +75,9 @@ final class MultipleAssetChangeCell: UITableViewCell {
             rowView.amountLabel.text = change.amount
             rowView.networkLabel.text = change.token?.chain?.name
             rowView.amountLabel.textColor = switch style {
-            case .income:
+            case .incoming:
                 R.color.market_green()
-            case .outcome:
+            case .outgoing:
                 R.color.market_red()
             case .plain:
                 R.color.text()

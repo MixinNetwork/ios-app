@@ -13,7 +13,7 @@ struct TransactionSimulation {
         self.approves = approves
     }
     
-    static func balanceChange(
+    static func byLocal(
         token: Web3TokenItem,
         amount: Decimal,
         from: String,

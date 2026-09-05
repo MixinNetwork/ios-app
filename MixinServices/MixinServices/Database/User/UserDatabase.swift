@@ -168,6 +168,7 @@ public final class UserDatabase: Database {
             .init(key: .quoteContent, constraints: "BLOB"),
             .init(key: .createdAt, constraints: "TEXT NOT NULL"),
             .init(key: .albumId, constraints: "TEXT"),
+            .init(key: .caption, constraints: "TEXT"),
         ]),
         ColumnMigratableTableDefinition<MessageHistory>(constraints: nil, columns: [
             .init(key: .messageId, constraints: "TEXT PRIMARY KEY"),
@@ -997,6 +998,13 @@ public final class UserDatabase: Database {
         migrator.registerMigration("index_optimization_safe_snapshots_2") { db in
             try db.execute(sql: "DROP INDEX IF EXISTS index_safe_snapshots_pending")
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS index_safe_snapshots_type_asset_id_created_at ON safe_snapshots(type, asset_id, created_at)")
+        }
+        
+        migrator.registerMigration("message_caption") { db in
+            let messageInfos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(messages)")
+            if !messageInfos.map(\.name).contains("caption") {
+                try db.execute(sql: "ALTER TABLE messages ADD COLUMN caption TEXT")
+            }
         }
         
         return migrator

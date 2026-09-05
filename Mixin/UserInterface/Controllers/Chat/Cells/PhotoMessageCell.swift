@@ -8,10 +8,12 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
     
     let operationButton: NetworkOperationButton! = ModernNetworkOperationButton(type: .custom)
     let expiredHintLabel = UILabel()
+    let captionLabel = TextMessageLabel()
     
     override func prepareForReuse() {
         super.prepareForReuse()
         contentImageView.sd_cancelCurrentImageLoad()
+        captionLabel.isHidden = true
     }
     
     override func prepare() {
@@ -19,6 +21,8 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         expiredHintLabel.adjustsFontForContentSizeCategory = true
         prepareOperationButtonAndExpiredHintLabel()
         operationButton.addTarget(self, action: #selector(networkOperationAction(_:)), for: .touchUpInside)
+        captionLabel.backgroundColor = .clear
+        messageContentView.addSubview(captionLabel)
     }
     
     override func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {
@@ -36,6 +40,17 @@ class PhotoMessageCell: PhotoRepresentableMessageCell, AttachmentExpirationHinti
         if let viewModel = viewModel as? PhotoMessageViewModel {
             reloadMedia(viewModel: viewModel)
             updateOperationButtonAndExpiredHintLabel()
+            if viewModel.hasCaption {
+                captionLabel.frame = viewModel.captionLabelFrame
+                captionLabel.content = viewModel.captionContent
+                captionLabel.highlightPaths = viewModel.highlightPaths
+                captionLabel.isHidden = false
+                captionLabel.setNeedsDisplay()
+                trailingInfoBackgroundView.isHidden = true
+            } else {
+                captionLabel.isHidden = true
+                trailingInfoBackgroundView.isHidden = false
+            }
         }
     }
     

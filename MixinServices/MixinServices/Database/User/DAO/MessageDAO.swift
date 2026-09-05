@@ -51,7 +51,7 @@ public final class MessageDAO: UserDatabaseDAO {
         su.full_name as sharedUserFullName, su.identity_number as sharedUserIdentityNumber, 
         su.avatar_url as sharedUserAvatarUrl, su.app_id as sharedUserAppId,
         su.is_verified as sharedUserIsVerified, su.membership as sharedUserMembership,
-        m.quote_message_id, m.quote_content,
+        m.quote_message_id, m.quote_content, m.caption,
         mm.mentions, mm.has_read as hasMentionRead,
         CASE WHEN (SELECT 1 FROM pin_messages WHERE message_id = m.id) IS NULL THEN 0 ELSE 1 END AS pinned,
         alb.added as isStickerAdded, m.album_id, em.expire_in as expire_in
@@ -934,7 +934,7 @@ extension MessageDAO {
     }
     
     public func updateMediaMessage(mediaData: TransferAttachmentData, status: String, messageId: String, category: String, conversationId: String, mediaStatus: MediaStatus, messageSource: String, silentNotification: Bool) {
-        let assignments = [
+        var assignments = [
             Message.column(of: .content).set(to: mediaData.attachmentId),
             Message.column(of: .mediaMimeType).set(to: mediaData.mimeType),
             Message.column(of: .mediaSize).set(to: mediaData.size),
@@ -949,6 +949,9 @@ extension MessageDAO {
             Message.column(of: .name).set(to: mediaData.name),
             Message.column(of: .status).set(to: status)
         ]
+        if let caption = mediaData.caption {
+            assignments.append(Message.column(of: .caption).set(to: caption))
+        }
         updateRedecryptMessage(assignments: assignments,
                                messageId: messageId,
                                category: category,
@@ -1102,6 +1105,7 @@ extension MessageDAO {
                                      category: message.category,
                                      content: message.content,
                                      name: message.name,
+                                     caption: message.caption,
                                      children: children)
             let arguments = StatementArguments([
                 uuidTokenString(uuidString: message.conversationId),

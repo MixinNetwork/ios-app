@@ -9,7 +9,11 @@ extension MessageItem {
         } else if category.hasSuffix("_STICKER") {
             return R.string.localizable.sticker()
         } else if category.hasSuffix("_IMAGE") {
-            return R.string.localizable.photo()
+            if let caption = caption, !caption.isEmpty {
+                return mentionedFullnameReplacedCaption
+            } else {
+                return R.string.localizable.photo()
+            }
         } else if category.hasSuffix("_VIDEO") {
             return R.string.localizable.video()
         } else if category.hasSuffix("_LIVE") {

@@ -114,6 +114,9 @@ class BitcoinTransferOperation: Web3TransferOperation {
             )
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
                 try rawTransaction.save(db)
+                if let id = (self as? BitcoinRBFOperation)?.previousChangeOutputID {
+                    try Web3OutputDAO.shared.delete(id: id, db: db)
+                }
                 try Web3OutputDAO.shared.sign(
                     outputIDs: spendingOutputs.map(\.id),
                     save: signedTransaction.changeOutput,
@@ -214,6 +217,7 @@ class BitcoinRBFOperation: BitcoinTransferOperation {
     fileprivate let previousFeeRate: String
     fileprivate let decimalPreviousFeeRate: Decimal
     fileprivate let previousSpentOutputs: [Web3Output]
+    fileprivate let previousChangeOutputID: String?
     fileprivate let availableOutputs: [Web3Output]
     
     init(
@@ -222,7 +226,8 @@ class BitcoinRBFOperation: BitcoinTransferOperation {
         rawTransaction: Web3RawTransaction,
         decodedTransaction: Bitcoin.DecodedTransaction,
         newToAddress: String,
-        newSendAmount: Decimal
+        newSendAmount: Decimal,
+        previousChangeOutputID: String?,
     ) throws {
         let previousFeeRate = rawTransaction.nonce
         let decimalPreviousFeeRate = Decimal(string: previousFeeRate, locale: .enUSPOSIX)
@@ -254,6 +259,7 @@ class BitcoinRBFOperation: BitcoinTransferOperation {
         self.previousFeeRate = previousFeeRate
         self.decimalPreviousFeeRate = decimalPreviousFeeRate
         self.previousSpentOutputs = spentOutputs
+        self.previousChangeOutputID = previousChangeOutputID
         self.availableOutputs = availableOutputs
         try super.init(
             wallet: wallet,
@@ -303,6 +309,7 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
             decodedTransaction: tx,
             newToAddress: transferOutput.address,
             newSendAmount: Decimal(transferOutput.value) * .satoshi,
+            previousChangeOutputID: changeOutputID,
         )
     }
     
@@ -356,8 +363,6 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         case unexpectedChange
     }
     
-    private let previousChangeOutputID: String?
-    
     init(
         wallet: Web3Wallet,
         fromAddress: Web3Address,
@@ -385,14 +390,14 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
             throw InitError.spentChangeOutput
         }
         
-        self.previousChangeOutputID = changeOutputID
         try super.init(
             wallet: wallet,
             fromAddress: fromAddress,
             rawTransaction: transaction,
             decodedTransaction: tx,
             newToAddress: fromAddress.destination,
-            newSendAmount: -1
+            newSendAmount: -1,
+            previousChangeOutputID: changeOutputID,
         )
     }
     

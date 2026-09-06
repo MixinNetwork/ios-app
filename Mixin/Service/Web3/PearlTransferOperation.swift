@@ -186,7 +186,8 @@ final class PearlTransferToAddressOperation: PearlTransferOperation {
         let calculator = Pearl.TaprootFeeCalculator(
             outputs: allOutputs,
             rate: info.decimalFeeRate,
-            minimum: info.minimalFee
+            minimum: info.minimalFee,
+            rbfContext: nil,
         )
         let result = try calculator.calculate(transferAmount: sendAmount)
         let fee = Fee.native(token: payment.token, amount: result.feeAmount)
@@ -321,7 +322,8 @@ final class PearlSpeedUpOperation: PearlRBFOperation {
                 let calculator = Pearl.TaprootFeeCalculator(
                     outputs: availableOutputs,
                     rate: decimalPreviousFeeRate,
-                    minimum: info.minimalFee
+                    minimum: info.minimalFee,
+                    rbfContext: nil
                 )
                 let result = try calculator.calculate(transferAmount: sendAmount)
                 Logger.web3.info(category: "PearlSpeedUp", message: "Already speedy")
@@ -334,7 +336,11 @@ final class PearlSpeedUpOperation: PearlRBFOperation {
                 let calculator = Pearl.TaprootFeeCalculator(
                     outputs: availableOutputs,
                     rate: info.decimalFeeRate,
-                    minimum: max(info.minimalFee, previousFeeAmount)
+                    minimum: max(info.minimalFee, previousFeeAmount),
+                    rbfContext: .init(
+                        originalFee: previousFeeAmount,
+                        incrementalFee: info.incrementalFee,
+                    ),
                 )
                 let result = try calculator.calculate(transferAmount: sendAmount)
                 Logger.web3.info(category: "PearlSpeedUp", message: "Using \(result)")
@@ -406,12 +412,14 @@ final class PearlCancelOperation: PearlRBFOperation {
         let calculator = Pearl.TaprootFeeCalculator(
             outputs: availableOutputs,
             rate: info.decimalFeeRate,
-            minimum: info.minimalFee
+            minimum: info.minimalFee,
+            rbfContext: .init(
+                originalFee: previousFeeAmount,
+                incrementalFee: info.incrementalFee
+            ),
         )
         let result = try calculator.calculateCancellation(
             requiredOutputIDs: Set(previousSpentOutputs.map(\.id)),
-            originalFee: previousFeeAmount,
-            incrementalFee: info.incrementalFee
         )
         Logger.web3.info(category: "PearlCancel", message: "Using \(result)")
         let fee = Fee.native(token: token, amount: result.feeAmount)

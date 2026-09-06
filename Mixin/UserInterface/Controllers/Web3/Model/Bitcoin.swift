@@ -283,6 +283,17 @@ extension Bitcoin {
             case insufficientOutputs(feeAmount: Decimal)
         }
         
+        struct RBFContext {
+            
+            let originalFee: Decimal
+            let incrementalFee: Decimal
+            
+            func fee(size: Decimal) -> Decimal {
+                originalFee + size * incrementalFee * .satoshi
+            }
+            
+        }
+        
         struct Result: CustomDebugStringConvertible {
             
             let transferAmount: Decimal
@@ -298,11 +309,18 @@ extension Bitcoin {
         private let allOutputs: [Web3Output]
         private let rate: Decimal
         private let minimum: Decimal
+        private let rbfContext: RBFContext?
         
-        init(outputs: [Web3Output], rate: Decimal, minimum: Decimal) {
+        init(
+            outputs: [Web3Output],
+            rate: Decimal,
+            minimum: Decimal,
+            rbfContext: RBFContext?,
+        ) {
             self.allOutputs = outputs
             self.rate = rate
             self.minimum = minimum
+            self.rbfContext = rbfContext
         }
         
         func calculate(transferAmount: Decimal) throws(CalculateError) -> Result {
@@ -317,14 +335,22 @@ extension Bitcoin {
                         numberOfInputs: spendingOutputs.count,
                         numberOfOutputs: 2
                     )
-                    return max(minimum, size * rate * .satoshi)
+                    var fee = max(minimum, size * rate * .satoshi)
+                    if let rbfFee = rbfContext?.fee(size: size) {
+                        fee = max(fee, rbfFee)
+                    }
+                    return fee
                 }()
                 let feeWithoutChange = {
                     let size = vSize(
                         numberOfInputs: spendingOutputs.count,
                         numberOfOutputs: 1
                     )
-                    return max(minimum, size * rate * .satoshi)
+                    var fee = max(minimum, size * rate * .satoshi)
+                    if let rbfFee = rbfContext?.fee(size: size) {
+                        fee = max(fee, rbfFee)
+                    }
+                    return fee
                 }()
                 // utxoAmount could be between 0 and ∞
                 // 0 - (transferAmount + feeWithoutChange) - (transferAmount + feeWithChange + changeDust) - ∞
@@ -355,8 +381,6 @@ extension Bitcoin {
         
         func calculateCancellation(
             requiredOutputIDs: Set<String>,
-            originalFee: Decimal,
-            incrementalFee: Decimal
         ) throws -> Result {
             var spendingOutputs: [Web3Output] = []
             var additionalOutputs: [Web3Output] = []
@@ -372,11 +396,10 @@ extension Bitcoin {
             
             while true {
                 let size = vSize(numberOfInputs: spendingOutputs.count, numberOfOutputs: 1)
-                let requiredFee = max(
-                    size * rate * .satoshi,
-                    originalFee + size * incrementalFee * .satoshi,
-                    minimum
-                )
+                var requiredFee = max(minimum, size * rate * .satoshi)
+                if let rbfFee = rbfContext?.fee(size: size) {
+                    requiredFee = max(requiredFee, rbfFee)
+                }
                 if spendingAmount > requiredFee {
                     return Result(
                         transferAmount: spendingAmount - requiredFee,

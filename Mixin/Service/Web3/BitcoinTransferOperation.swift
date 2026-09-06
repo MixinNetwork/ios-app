@@ -187,6 +187,7 @@ final class BitcoinTransferToAddressOperation: BitcoinTransferOperation {
             outputs: allOutputs,
             rate: info.decimalFeeRate,
             minimum: info.minimalFee,
+            rbfContext: nil,
         )
         let result = try calculator.calculate(transferAmount: sendAmount)
         let fee = Fee.native(token: payment.token, amount: result.feeAmount)
@@ -322,6 +323,7 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
                     outputs: availableOutputs,
                     rate: decimalPreviousFeeRate,
                     minimum: info.minimalFee,
+                    rbfContext: nil,
                 )
                 let result = try calculator.calculate(transferAmount: sendAmount)
                 Logger.web3.info(category: "BTCSpeedUp", message: "Already speedy")
@@ -335,6 +337,10 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
                     outputs: availableOutputs,
                     rate: info.decimalFeeRate,
                     minimum: max(info.minimalFee, previousFeeAmount),
+                    rbfContext: .init(
+                        originalFee: previousFeeAmount,
+                        incrementalFee: info.incrementalFee
+                    ),
                 )
                 let result = try calculator.calculate(transferAmount: sendAmount)
                 Logger.web3.info(category: "BTCSpeedUp", message: "Using \(result)")
@@ -407,11 +413,13 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
             outputs: availableOutputs,
             rate: info.decimalFeeRate,
             minimum: info.minimalFee,
+            rbfContext: .init(
+                originalFee: previousFeeAmount,
+                incrementalFee: info.incrementalFee
+            ),
         )
         let result = try calculator.calculateCancellation(
             requiredOutputIDs: Set(previousSpentOutputs.map(\.id)),
-            originalFee: previousFeeAmount,
-            incrementalFee: info.incrementalFee
         )
         Logger.web3.info(category: "BTCCancel", message: "Using \(result)")
         let fee = Fee.native(token: token, amount: result.feeAmount)

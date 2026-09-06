@@ -295,17 +295,22 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
             throw InitError.invalidOutputsCount
         }
         
-        var changeOutputID: String?
-        var transferOutput: Bitcoin.DecodedTransaction.Output?
-        for (i, output) in tx.outputs.enumerated() {
-            if output.address == fromAddress.destination {
-                changeOutputID = Web3Output.bitcoinOutputID(txid: transaction.hash, vout: i)
-            } else {
-                transferOutput = output
-            }
-        }
-        
-        guard let transferOutput else {
+        let transferOutput: Bitcoin.DecodedTransaction.Output
+        let changeOutputID: String?
+        let myAddress = fromAddress.destination
+        if tx.outputs.count == 1 {
+            transferOutput = tx.outputs[0]
+            changeOutputID = nil
+        } else if tx.outputs[0].address == myAddress && tx.outputs[1].address == myAddress {
+            transferOutput = tx.outputs[0]
+            changeOutputID = Web3Output.bitcoinOutputID(txid: transaction.hash, vout: 1)
+        } else if tx.outputs[0].address == myAddress {
+            transferOutput = tx.outputs[1]
+            changeOutputID = Web3Output.bitcoinOutputID(txid: transaction.hash, vout: 0)
+        } else if tx.outputs[1].address == myAddress {
+            transferOutput = tx.outputs[0]
+            changeOutputID = Web3Output.bitcoinOutputID(txid: transaction.hash, vout: 1)
+        } else {
             throw InitError.missingTransferOutput
         }
         if let id = changeOutputID, !Web3OutputDAO.shared.isOutputAvailable(id: id) {

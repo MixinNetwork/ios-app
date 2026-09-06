@@ -39,6 +39,7 @@ enum Bitcoin {
         
         let inputs: [Input]
         let outputs: [Output]
+        let isReplaceable: Bool
         
     }
     
@@ -193,12 +194,14 @@ enum Bitcoin {
             var inputsLen: Int = 0
             var outputsPtr: UnsafeMutablePointer<BitcoinTransactionOutput>? = nil
             var outputsLen: Int = 0
+            var isReplaceable: Bool = false
             let result: BitcoinErrorCode = bitcoin_decode_p2wpkh_transaction(
                 transaction,
                 &inputsPtr,
                 &inputsLen,
                 &outputsPtr,
                 &outputsLen,
+                &isReplaceable,
             )
             guard result == BitcoinErrorCodeSuccess, let inputsPtr, let outputsPtr else {
                 throw BitcoinError.code(result)
@@ -230,7 +233,11 @@ enum Bitcoin {
             }
             bitcoin_free_transaction_outputs(outputsPtr, outputsLen)
             
-            return DecodedTransaction(inputs: inputs, outputs: outputs)
+            return DecodedTransaction(
+                inputs: inputs,
+                outputs: outputs,
+                isReplaceable: isReplaceable,
+            )
         }
     }
     

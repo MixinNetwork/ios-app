@@ -220,6 +220,7 @@ class BitcoinRBFOperation: BitcoinTransferOperation {
         case missingTransferOutput
         case invalidCancellation
         case spentChangeOutput
+        case notReplaceable
     }
     
     fileprivate let previousInputsAmount: Decimal
@@ -239,6 +240,9 @@ class BitcoinRBFOperation: BitcoinTransferOperation {
         newSendAmount: Decimal,
         previousChangeOutputID: String?,
     ) throws {
+        guard decodedTransaction.isReplaceable else {
+            throw InitError.notReplaceable
+        }
         let previousFeeRate = rawTransaction.nonce
         let decimalPreviousFeeRate = Decimal(string: previousFeeRate, locale: .enUSPOSIX)
         guard let decimalPreviousFeeRate else {
@@ -291,6 +295,9 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
         transaction: Web3RawTransaction,
     ) throws {
         let tx = try Bitcoin.decode(transaction: transaction.raw)
+        guard tx.isReplaceable else {
+            throw InitError.notReplaceable
+        }
         guard tx.outputs.count == 1 || tx.outputs.count == 2 else {
             throw InitError.invalidOutputsCount
         }
@@ -389,6 +396,9 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         transaction: Web3RawTransaction,
     ) throws {
         let tx = try Bitcoin.decode(transaction: transaction.raw)
+        guard tx.isReplaceable else {
+            throw InitError.notReplaceable
+        }
         guard tx.outputs.count == 1 || tx.outputs.count == 2 else {
             throw InitError.invalidOutputsCount
         }

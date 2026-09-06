@@ -182,19 +182,28 @@ final class BitcoinTransferToAddressOperation: BitcoinTransferOperation {
     }
     
     override func reloadFee() async throws -> Fee {
+        let fee: Fee
         let info = try await RouteAPI.bitcoinNetworkInfo(feeRate: nil)
-        let calculator = Bitcoin.P2WPKHFeeCalculator(
-            outputs: allOutputs,
-            rate: info.decimalFeeRate,
-            minimum: info.minimalFee,
-            rbfContext: nil,
-        )
-        let result = try calculator.calculate(transferAmount: sendAmount)
-        let fee = Fee.native(token: payment.token, amount: result.feeAmount)
-        await MainActor.run {
-            self.fee = fee
-            self.spendingOutputs = result.spendingOutputs
-            self.state = .ready
+        do {
+            let calculator = Bitcoin.P2WPKHFeeCalculator(
+                outputs: allOutputs,
+                rate: info.decimalFeeRate,
+                minimum: info.minimalFee,
+                rbfContext: nil,
+            )
+            let result = try calculator.calculate(transferAmount: sendAmount)
+            fee = Fee.native(token: payment.token, amount: result.feeAmount)
+            await MainActor.run {
+                self.fee = fee
+                self.spendingOutputs = result.spendingOutputs
+                self.state = .ready
+            }
+        } catch let .insufficientOutputs(feeAmount) {
+            fee = Fee.native(token: payment.token, amount: feeAmount)
+            await MainActor.run {
+                self.fee = fee
+                self.state = .unavailable(reason: R.string.localizable.insufficient_balance())
+            }
         }
         return fee
     }

@@ -223,7 +223,6 @@ class BitcoinRBFOperation: BitcoinTransferOperation {
         case notReplaceable
     }
     
-    fileprivate let previousInputsAmount: Decimal
     fileprivate let previousFeeAmount: Decimal
     fileprivate let previousFeeRate: String
     fileprivate let decimalPreviousFeeRate: Decimal
@@ -268,7 +267,6 @@ class BitcoinRBFOperation: BitcoinTransferOperation {
         let outputsAmount = Decimal(decodedTransaction.outputs.map(\.value).reduce(0, +)) * .satoshi
         let previousFeeAmount = inputsAmount - outputsAmount
         
-        self.previousInputsAmount = inputsAmount
         self.previousFeeAmount = previousFeeAmount
         self.previousFeeRate = previousFeeRate
         self.decimalPreviousFeeRate = decimalPreviousFeeRate
@@ -432,25 +430,34 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
     }
     
     override func reloadFee() async throws -> Fee {
+        let fee: Fee
         let info = try await RouteAPI.bitcoinNetworkInfo(feeRate: previousFeeRate)
-        let calculator = Bitcoin.P2WPKHFeeCalculator(
-            outputs: availableOutputs,
-            rate: info.decimalFeeRate,
-            minimum: info.minimalFee,
-            rbfContext: .init(
-                originalFee: previousFeeAmount,
-                incrementalFee: info.incrementalFee
-            ),
-        )
-        let result = try calculator.calculateCancellation(
-            requiredOutputIDs: Set(previousSpentOutputs.map(\.id)),
-        )
-        Logger.web3.info(category: "BTCCancel", message: "Using \(result)")
-        let fee = Fee.native(token: token, amount: result.feeAmount)
-        await MainActor.run {
-            self.spendingOutputs = result.spendingOutputs
-            self.fee = fee
-            self.state = .ready
+        do {
+            let calculator = Bitcoin.P2WPKHFeeCalculator(
+                outputs: availableOutputs,
+                rate: info.decimalFeeRate,
+                minimum: info.minimalFee,
+                rbfContext: .init(
+                    originalFee: previousFeeAmount,
+                    incrementalFee: info.incrementalFee
+                ),
+            )
+            let result = try calculator.calculateCancellation(
+                requiredOutputIDs: Set(previousSpentOutputs.map(\.id)),
+            )
+            Logger.web3.info(category: "BTCCancel", message: "Using \(result)")
+            fee = Fee.native(token: token, amount: result.feeAmount)
+            await MainActor.run {
+                self.spendingOutputs = result.spendingOutputs
+                self.fee = fee
+                self.state = .ready
+            }
+        } catch let .insufficientOutputs(feeAmount) {
+            fee = Fee.native(token: token, amount: feeAmount)
+            await MainActor.run {
+                self.fee = fee
+                self.state = .unavailable(reason: R.string.localizable.insufficient_balance())
+            }
         }
         return fee
     }
@@ -465,7 +472,10 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         await MainActor.run {
             state = .signing
         }
-        let sendAmount = previousInputsAmount - fee.amount
+        let totalInputsAmount = spendingOutputs.reduce(0) { (amount, output) in
+            amount + output.decimalAmount
+        }
+        let sendAmount = totalInputsAmount - fee.amount
         let signedTransaction: Bitcoin.SignedTransaction
         do {
             Logger.web3.info(category: "BTCCancel", message: "Start")

@@ -388,7 +388,7 @@ extension Bitcoin {
         
         func calculateCancellation(
             requiredOutputIDs: Set<String>,
-        ) throws -> Result {
+        ) throws(CalculateError) -> Result {
             var spendingOutputs: [Web3Output] = []
             var additionalOutputs: [Web3Output] = []
             var spendingAmount: Decimal = 0
@@ -407,7 +407,7 @@ extension Bitcoin {
                 if let rbfFee = rbfContext?.fee(size: size) {
                     requiredFee = max(requiredFee, rbfFee)
                 }
-                if spendingAmount > requiredFee {
+                if spendingAmount >= requiredFee + Bitcoin.changeDust {
                     return Result(
                         transferAmount: spendingAmount - requiredFee,
                         feeAmount: requiredFee,

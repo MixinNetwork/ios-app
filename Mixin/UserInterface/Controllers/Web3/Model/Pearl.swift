@@ -386,7 +386,7 @@ extension Pearl {
         
         func calculateCancellation(
             requiredOutputIDs: Set<String>,
-        ) throws -> Result {
+        ) throws(CalculateError) -> Result {
             var spendingOutputs: [Web3Output] = []
             var additionalOutputs: [Web3Output] = []
             var spendingAmount: Decimal = 0
@@ -405,7 +405,7 @@ extension Pearl {
                 if let rbfFee = rbfContext?.fee(size: size) {
                     requiredFee = max(requiredFee, rbfFee)
                 }
-                if spendingAmount > requiredFee {
+                if spendingAmount >= requiredFee + Pearl.changeDust {
                     return Result(
                         transferAmount: spendingAmount - requiredFee,
                         feeAmount: requiredFee,

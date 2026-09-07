@@ -307,20 +307,13 @@ extension AppDelegate : AppsFlyerLibDelegate {
 
     // Handle Organic/Non-organic installation
     func onConversionDataSuccess(_ conversionInfo: [AnyHashable : Any]) {
-        guard let status = conversionInfo["af_status"] as? String else {
-            return
-        }
-
-        reporter.updateUserProperty(key: "af_source", value: status)
-        if status == "Non-organic" {
-            if let mediaSource = conversionInfo["media_source"] as? String, !mediaSource.isEmpty {
-                reporter.updateUserProperty(key: "af_media_source", value: mediaSource)
-            }
-            
-            if let campaign = conversionInfo["campaign"] as? String, !campaign.isEmpty {
-                reporter.updateUserProperty(key: "af_campaign", value: campaign)
-            }
-        }
+        let status = conversionInfo["af_status"] as? String
+        let mediaSource = conversionInfo["media_source"] as? String
+        let campaign = conversionInfo["campaign"] as? String
+        
+        reporter.updateUserProperty(key: "af_source", value: status ?? "")
+        reporter.updateUserProperty(key: "af_media_source", value: mediaSource ?? "")
+        reporter.updateUserProperty(key: "af_campaign", value: campaign ?? "")
         Logger.general.debug(category: "AppsFlyer", message: "status \(conversionInfo)")
     }
  

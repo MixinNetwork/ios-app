@@ -98,7 +98,8 @@ enum BitcoinErrorCode bitcoin_decode_p2wpkh_transaction(const char *tx,
                                                         struct BitcoinUTXO **out_inputs,
                                                         size_t *out_inputs_len,
                                                         struct BitcoinTransactionOutput **out_outputs,
-                                                        size_t *out_outputs_len);
+                                                        size_t *out_outputs_len,
+                                                        bool *out_is_replaceable);
 
 bool pearl_is_valid_address(const char *input);
 
@@ -127,4 +128,5 @@ enum BitcoinErrorCode pearl_decode_taproot_transaction(const char *tx,
                                                        struct BitcoinUTXO **out_inputs,
                                                        size_t *out_inputs_len,
                                                        struct BitcoinTransactionOutput **out_outputs,
-                                                       size_t *out_outputs_len);
+                                                       size_t *out_outputs_len,
+                                                       bool *out_is_replaceable);

@@ -39,6 +39,7 @@ enum Pearl {
         
         let inputs: [Input]
         let outputs: [Output]
+        let isReplaceable: Bool
         
     }
     
@@ -193,12 +194,14 @@ enum Pearl {
             var inputsLen: Int = 0
             var outputsPtr: UnsafeMutablePointer<BitcoinTransactionOutput>? = nil
             var outputsLen: Int = 0
+            var isReplaceable: Bool = false
             let result: BitcoinErrorCode = pearl_decode_taproot_transaction(
                 transaction,
                 &inputsPtr,
                 &inputsLen,
                 &outputsPtr,
-                &outputsLen
+                &outputsLen,
+                &isReplaceable,
             )
             guard result == BitcoinErrorCodeSuccess, let inputsPtr, let outputsPtr else {
                 throw PearlError.code(result)
@@ -230,7 +233,11 @@ enum Pearl {
             }
             bitcoin_free_transaction_outputs(outputsPtr, outputsLen)
             
-            return DecodedTransaction(inputs: inputs, outputs: outputs)
+            return DecodedTransaction(
+                inputs: inputs,
+                outputs: outputs,
+                isReplaceable: isReplaceable,
+            )
         }
     }
     
@@ -283,6 +290,17 @@ extension Pearl {
             case insufficientOutputs(feeAmount: Decimal)
         }
         
+        struct RBFContext {
+            
+            let originalFee: Decimal
+            let incrementalFee: Decimal
+            
+            func fee(size: Decimal) -> Decimal {
+                originalFee + size * incrementalFee * .satoshi
+            }
+            
+        }
+        
         struct Result: CustomDebugStringConvertible {
             
             let transferAmount: Decimal
@@ -298,11 +316,18 @@ extension Pearl {
         private let allOutputs: [Web3Output]
         private let rate: Decimal
         private let minimum: Decimal
+        private let rbfContext: RBFContext?
         
-        init(outputs: [Web3Output], rate: Decimal, minimum: Decimal) {
+        init(
+            outputs: [Web3Output],
+            rate: Decimal,
+            minimum: Decimal,
+            rbfContext: RBFContext?,
+        ) {
             self.allOutputs = outputs
             self.rate = rate
             self.minimum = minimum
+            self.rbfContext = rbfContext
         }
         
         func calculate(transferAmount: Decimal) throws(CalculateError) -> Result {
@@ -317,14 +342,22 @@ extension Pearl {
                         numberOfInputs: spendingOutputs.count,
                         numberOfOutputs: 2
                     )
-                    return max(minimum, size * rate * .satoshi)
+                    var fee = max(minimum, size * rate * .satoshi)
+                    if let rbfFee = rbfContext?.fee(size: size) {
+                        fee = max(fee, rbfFee)
+                    }
+                    return fee
                 }()
                 let feeWithoutChange = {
                     let size = vSize(
                         numberOfInputs: spendingOutputs.count,
                         numberOfOutputs: 1
                     )
-                    return max(minimum, size * rate * .satoshi)
+                    var fee = max(minimum, size * rate * .satoshi)
+                    if let rbfFee = rbfContext?.fee(size: size) {
+                        fee = max(fee, rbfFee)
+                    }
+                    return fee
                 }()
                 if utxoAmount < transferAmount + feeWithoutChange {
                     continue
@@ -353,9 +386,7 @@ extension Pearl {
         
         func calculateCancellation(
             requiredOutputIDs: Set<String>,
-            originalFee: Decimal,
-            incrementalFee: Decimal
-        ) throws -> Result {
+        ) throws(CalculateError) -> Result {
             var spendingOutputs: [Web3Output] = []
             var additionalOutputs: [Web3Output] = []
             var spendingAmount: Decimal = 0
@@ -370,12 +401,11 @@ extension Pearl {
             
             while true {
                 let size = vSize(numberOfInputs: spendingOutputs.count, numberOfOutputs: 1)
-                let requiredFee = max(
-                    size * rate * .satoshi,
-                    originalFee + size * incrementalFee * .satoshi,
-                    minimum
-                )
-                if spendingAmount > requiredFee {
+                var requiredFee = max(minimum, size * rate * .satoshi)
+                if let rbfFee = rbfContext?.fee(size: size) {
+                    requiredFee = max(requiredFee, rbfFee)
+                }
+                if spendingAmount >= requiredFee + Pearl.changeDust {
                     return Result(
                         transferAmount: spendingAmount - requiredFee,
                         feeAmount: requiredFee,

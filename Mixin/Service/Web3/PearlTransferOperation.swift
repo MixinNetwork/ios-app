@@ -114,6 +114,9 @@ class PearlTransferOperation: Web3TransferOperation {
             )
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
                 try rawTransaction.save(db)
+                if let id = (self as? PearlRBFOperation)?.previousChangeOutputID {
+                    try Web3OutputDAO.shared.delete(id: id, db: db)
+                }
                 try Web3OutputDAO.shared.sign(
                     outputIDs: spendingOutputs.map(\.id),
                     save: signedTransaction.changeOutput,
@@ -179,18 +182,28 @@ final class PearlTransferToAddressOperation: PearlTransferOperation {
     }
     
     override func reloadFee() async throws -> Fee {
+        let fee: Fee
         let info = try await RouteAPI.pearlNetworkInfo(feeRate: nil)
-        let calculator = Pearl.TaprootFeeCalculator(
-            outputs: allOutputs,
-            rate: info.decimalFeeRate,
-            minimum: info.minimalFee
-        )
-        let result = try calculator.calculate(transferAmount: sendAmount)
-        let fee = Fee.native(token: payment.token, amount: result.feeAmount)
-        await MainActor.run {
-            self.fee = fee
-            self.spendingOutputs = result.spendingOutputs
-            self.state = .ready
+        do {
+            let calculator = Pearl.TaprootFeeCalculator(
+                outputs: allOutputs,
+                rate: info.decimalFeeRate,
+                minimum: info.minimalFee,
+                rbfContext: nil,
+            )
+            let result = try calculator.calculate(transferAmount: sendAmount)
+            fee = Fee.native(token: payment.token, amount: result.feeAmount)
+            await MainActor.run {
+                self.fee = fee
+                self.spendingOutputs = result.spendingOutputs
+                self.state = .ready
+            }
+        } catch let .insufficientOutputs(feeAmount) {
+            fee = Fee.native(token: payment.token, amount: feeAmount)
+            await MainActor.run {
+                self.fee = fee
+                self.state = .unavailable(reason: R.string.localizable.insufficient_balance())
+            }
         }
         return fee
     }
@@ -207,13 +220,14 @@ class PearlRBFOperation: PearlTransferOperation {
         case missingTransferOutput
         case invalidCancellation
         case spentChangeOutput
+        case notReplaceable
     }
     
-    fileprivate let previousInputsAmount: Decimal
     fileprivate let previousFeeAmount: Decimal
     fileprivate let previousFeeRate: String
     fileprivate let decimalPreviousFeeRate: Decimal
     fileprivate let previousSpentOutputs: [Web3Output]
+    fileprivate let previousChangeOutputID: String?
     fileprivate let availableOutputs: [Web3Output]
     
     init(
@@ -222,8 +236,12 @@ class PearlRBFOperation: PearlTransferOperation {
         rawTransaction: Web3RawTransaction,
         decodedTransaction: Pearl.DecodedTransaction,
         newToAddress: String,
-        newSendAmount: Decimal
+        newSendAmount: Decimal,
+        previousChangeOutputID: String?,
     ) throws {
+        guard decodedTransaction.isReplaceable else {
+            throw InitError.notReplaceable
+        }
         let previousFeeRate = rawTransaction.nonce
         let decimalPreviousFeeRate = Decimal(string: previousFeeRate, locale: .enUSPOSIX)
         guard let decimalPreviousFeeRate else {
@@ -249,11 +267,11 @@ class PearlRBFOperation: PearlTransferOperation {
         let outputsAmount = Decimal(decodedTransaction.outputs.map(\.value).reduce(0, +)) * .satoshi
         let previousFeeAmount = inputsAmount - outputsAmount
         
-        self.previousInputsAmount = inputsAmount
         self.previousFeeAmount = previousFeeAmount
         self.previousFeeRate = previousFeeRate
         self.decimalPreviousFeeRate = decimalPreviousFeeRate
         self.previousSpentOutputs = spentOutputs
+        self.previousChangeOutputID = previousChangeOutputID
         self.availableOutputs = availableOutputs
         try super.init(
             wallet: wallet,
@@ -275,21 +293,29 @@ final class PearlSpeedUpOperation: PearlRBFOperation {
         transaction: Web3RawTransaction
     ) throws {
         let tx = try Pearl.decode(transaction: transaction.raw)
+        guard tx.isReplaceable else {
+            throw InitError.notReplaceable
+        }
         guard tx.outputs.count == 1 || tx.outputs.count == 2 else {
             throw InitError.invalidOutputsCount
         }
         
-        var changeOutputID: String?
-        var transferOutput: Pearl.DecodedTransaction.Output?
-        for (i, output) in tx.outputs.enumerated() {
-            if output.address == fromAddress.destination {
-                changeOutputID = Web3Output.pearlOutputID(txid: transaction.hash, vout: i)
-            } else {
-                transferOutput = output
-            }
-        }
-        
-        guard let transferOutput else {
+        let transferOutput: Pearl.DecodedTransaction.Output
+        let changeOutputID: String?
+        let myAddress = fromAddress.destination
+        if tx.outputs.count == 1 {
+            transferOutput = tx.outputs[0]
+            changeOutputID = nil
+        } else if tx.outputs[0].address == myAddress && tx.outputs[1].address == myAddress {
+            transferOutput = tx.outputs[0]
+            changeOutputID = Web3Output.pearlOutputID(txid: transaction.hash, vout: 1)
+        } else if tx.outputs[0].address == myAddress {
+            transferOutput = tx.outputs[1]
+            changeOutputID = Web3Output.pearlOutputID(txid: transaction.hash, vout: 0)
+        } else if tx.outputs[1].address == myAddress {
+            transferOutput = tx.outputs[0]
+            changeOutputID = Web3Output.pearlOutputID(txid: transaction.hash, vout: 1)
+        } else {
             throw InitError.missingTransferOutput
         }
         if let id = changeOutputID, !Web3OutputDAO.shared.isOutputAvailable(id: id) {
@@ -302,7 +328,8 @@ final class PearlSpeedUpOperation: PearlRBFOperation {
             rawTransaction: transaction,
             decodedTransaction: tx,
             newToAddress: transferOutput.address,
-            newSendAmount: Decimal(transferOutput.value) * .satoshi
+            newSendAmount: Decimal(transferOutput.value) * .satoshi,
+            previousChangeOutputID: changeOutputID,
         )
     }
     
@@ -314,7 +341,8 @@ final class PearlSpeedUpOperation: PearlRBFOperation {
                 let calculator = Pearl.TaprootFeeCalculator(
                     outputs: availableOutputs,
                     rate: decimalPreviousFeeRate,
-                    minimum: info.minimalFee
+                    minimum: info.minimalFee,
+                    rbfContext: nil
                 )
                 let result = try calculator.calculate(transferAmount: sendAmount)
                 Logger.web3.info(category: "PearlSpeedUp", message: "Already speedy")
@@ -327,7 +355,11 @@ final class PearlSpeedUpOperation: PearlRBFOperation {
                 let calculator = Pearl.TaprootFeeCalculator(
                     outputs: availableOutputs,
                     rate: info.decimalFeeRate,
-                    minimum: max(info.minimalFee, previousFeeAmount)
+                    minimum: max(info.minimalFee, previousFeeAmount),
+                    rbfContext: .init(
+                        originalFee: previousFeeAmount,
+                        incrementalFee: info.incrementalFee,
+                    ),
                 )
                 let result = try calculator.calculate(transferAmount: sendAmount)
                 Logger.web3.info(category: "PearlSpeedUp", message: "Using \(result)")
@@ -356,14 +388,15 @@ final class PearlCancelOperation: PearlRBFOperation {
         case unexpectedChange
     }
     
-    private let previousChangeOutputID: String?
-    
     init(
         wallet: Web3Wallet,
         fromAddress: Web3Address,
         transaction: Web3RawTransaction
     ) throws {
         let tx = try Pearl.decode(transaction: transaction.raw)
+        guard tx.isReplaceable else {
+            throw InitError.notReplaceable
+        }
         guard tx.outputs.count == 1 || tx.outputs.count == 2 else {
             throw InitError.invalidOutputsCount
         }
@@ -385,35 +418,46 @@ final class PearlCancelOperation: PearlRBFOperation {
             throw InitError.spentChangeOutput
         }
         
-        self.previousChangeOutputID = changeOutputID
         try super.init(
             wallet: wallet,
             fromAddress: fromAddress,
             rawTransaction: transaction,
             decodedTransaction: tx,
             newToAddress: fromAddress.destination,
-            newSendAmount: -1
+            newSendAmount: -1,
+            previousChangeOutputID: changeOutputID,
         )
     }
     
     override func reloadFee() async throws -> Fee {
+        let fee: Fee
         let info = try await RouteAPI.pearlNetworkInfo(feeRate: previousFeeRate)
-        let calculator = Pearl.TaprootFeeCalculator(
-            outputs: availableOutputs,
-            rate: info.decimalFeeRate,
-            minimum: info.minimalFee
-        )
-        let result = try calculator.calculateCancellation(
-            requiredOutputIDs: Set(previousSpentOutputs.map(\.id)),
-            originalFee: previousFeeAmount,
-            incrementalFee: info.incrementalFee
-        )
-        Logger.web3.info(category: "PearlCancel", message: "Using \(result)")
-        let fee = Fee.native(token: token, amount: result.feeAmount)
-        await MainActor.run {
-            self.spendingOutputs = result.spendingOutputs
-            self.fee = fee
-            self.state = .ready
+        do {
+            let calculator = Pearl.TaprootFeeCalculator(
+                outputs: availableOutputs,
+                rate: info.decimalFeeRate,
+                minimum: info.minimalFee,
+                rbfContext: .init(
+                    originalFee: previousFeeAmount,
+                    incrementalFee: info.incrementalFee
+                ),
+            )
+            let result = try calculator.calculateCancellation(
+                requiredOutputIDs: Set(previousSpentOutputs.map(\.id)),
+            )
+            Logger.web3.info(category: "PearlCancel", message: "Using \(result)")
+            fee = Fee.native(token: token, amount: result.feeAmount)
+            await MainActor.run {
+                self.spendingOutputs = result.spendingOutputs
+                self.fee = fee
+                self.state = .ready
+            }
+        } catch let .insufficientOutputs(feeAmount) {
+            fee = Fee.native(token: token, amount: feeAmount)
+            await MainActor.run {
+                self.fee = fee
+                self.state = .unavailable(reason: R.string.localizable.insufficient_balance())
+            }
         }
         return fee
     }
@@ -428,7 +472,10 @@ final class PearlCancelOperation: PearlRBFOperation {
         await MainActor.run {
             state = .signing
         }
-        let sendAmount = previousInputsAmount - fee.amount
+        let totalInputsAmount = spendingOutputs.reduce(0) { (amount, output) in
+            amount + output.decimalAmount
+        }
+        let sendAmount = totalInputsAmount - fee.amount
         let signedTransaction: Pearl.SignedTransaction
         do {
             Logger.web3.info(category: "PearlCancel", message: "Start")

@@ -385,6 +385,7 @@ extension Web3TransferInputAmountViewController {
                             outputs: outputs,
                             rate: info.decimalFeeRate,
                             minimum: info.minimalFee,
+                            rbfContext: nil,
                         )
                     }
                     do {
@@ -422,7 +423,8 @@ extension Web3TransferInputAmountViewController {
                         calculator = Pearl.TaprootFeeCalculator(
                             outputs: outputs,
                             rate: info.decimalFeeRate,
-                            minimum: info.minimalFee
+                            minimum: info.minimalFee,
+                            rbfContext: nil,
                         )
                     }
                     do {

@@ -188,7 +188,8 @@ extension Web3Chain {
     static let all: [Web3Chain] = {
         let chains: [Web3Chain] = [
             .bitcoin, .pearl, .ethereum, .solana, .bnbSmartChain, .base,
-            .polygon, .arbitrumOne, .opMainnet, .avalancheCChain, .hyperEVM, .xLayer,
+            .polygon, .arbitrumOne, .opMainnet, .avalancheCChain, .hyperEVM,
+            .xLayer,
         ]
         // Make sure all chains are included
         let allChains = Kind.allCases.reduce(into: []) { results, kind in

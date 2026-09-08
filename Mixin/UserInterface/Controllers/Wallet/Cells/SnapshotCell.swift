@@ -79,35 +79,28 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
                 progressLayer?.isHidden = true
                 setTitle(snapshot.deposit?.sender)
             }
-            amountLabel.textColor = R.color.text_tertiary()!
         default:
             progressLayer?.isHidden = true
             if let deposit = snapshot.deposit {
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_deposit()
                 setTitle(deposit.compactSender)
-                updateAmountTitleColor(amount: snapshot.decimalAmount)
             } else if let withdrawal = snapshot.withdrawal {
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_withdrawal()
                 setTitle(withdrawal.compactReceiver)
-                if withdrawal.hash.isEmpty {
-                    amountLabel.textColor = R.color.text_tertiary()!
-                } else {
-                    updateAmountTitleColor(amount: snapshot.decimalAmount)
-                }
             } else if let userID = snapshot.opponentUserID, let name = snapshot.opponentFullname, let url = snapshot.opponentAvatarURL {
                 iconImageView.imageView.contentMode = .scaleAspectFill
                 iconImageView.setImage(with: url, userId: userID, name: name)
                 setTitle(snapshot.opponentFullname)
-                updateAmountTitleColor(amount: snapshot.decimalAmount)
             } else {
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_anonymous()
                 setTitle(nil)
-                updateAmountTitleColor(amount: snapshot.decimalAmount)
             }
         }
+        amountLabel.textColor = snapshot.amountColor()
+        
         if snapshot.isInscription {
             let amount: Decimal = snapshot.decimalAmount > 0 ? 1 : -1
             amountLabel.text = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .always)
@@ -140,14 +133,6 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
         } else {
             titleLabel.text = .notApplicable
             titleLabel.textColor = R.color.text_tertiary()!
-        }
-    }
-    
-    private func updateAmountTitleColor(amount: Decimal) {
-        if amount < 0 {
-            amountLabel.textColor = R.color.market_red()
-        } else {
-            amountLabel.textColor = R.color.market_green()
         }
     }
     

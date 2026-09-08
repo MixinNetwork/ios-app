@@ -163,9 +163,9 @@ final class PearlTransferToAddressOperation: PearlTransferOperation {
             assetID: payment.token.assetID,
             status: [.unspent, .pending]
         )
-        let simulation: TransactionSimulation = .balanceChange(
+        let simulation: TransactionSimulation = .byLocal(
             token: payment.token,
-            amount: decimalAmount,
+            amount: -decimalAmount,
             from: payment.fromAddress.destination
         )
         let isFeeWaived = payment.toAddressLabel?.isFeeWaived() ?? false

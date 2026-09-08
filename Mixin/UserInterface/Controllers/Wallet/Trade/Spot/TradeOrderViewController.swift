@@ -95,7 +95,7 @@ final class TradeOrderViewController: UITableViewController {
             case .paid:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
                 cell.titleLabel.text = R.string.localizable.swap_order_paid().uppercased()
-                cell.reloadData(changes: [viewModel.paying], style: .outcome)
+                cell.reloadData(changes: [viewModel.paying], style: .outgoing)
                 cell.contentTopConstraint.constant = 20
                 cell.contentLeadingConstraint.constant = 16
                 cell.contentTrailingConstraint.constant = 16
@@ -108,7 +108,7 @@ final class TradeOrderViewController: UITableViewController {
                     cell.reloadData(changes: viewModel.receivings, style: .gray)
                 case .success:
                     cell.titleLabel.text = R.string.localizable.swap_order_received().uppercased()
-                    cell.reloadData(changes: viewModel.receivings, style: .income)
+                    cell.reloadData(changes: viewModel.receivings, style: .incoming)
                 }
                 cell.contentTopConstraint.constant = 10
                 cell.contentLeadingConstraint.constant = 16

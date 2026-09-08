@@ -103,7 +103,7 @@ final class SafeSnapshotViewController: TransactionViewController {
             let value = fiatMoneyValue(amount: snapshot.decimalAmount, usdPrice: token.decimalUSDPrice)
             fiatMoneyValueLabel.text = R.string.localizable.value_now(value) + "\n "
         }
-        updateAmountLabelColor()
+        amountLabel.textColor = snapshot.amountColor()
         layoutTableHeaderView()
         
         reloadRows()
@@ -394,23 +394,8 @@ extension SafeSnapshotViewController {
             }
             DispatchQueue.main.async {
                 self.snapshot = item
-                self.updateAmountLabelColor()
+                self.amountLabel.textColor = item.amountColor()
                 self.reloadRows()
-            }
-        }
-    }
-    
-    private func updateAmountLabelColor() {
-        switch SafeSnapshot.SnapshotType(rawValue: snapshot.type) {
-        case .pending:
-            amountLabel.textColor = R.color.text_tertiary()!
-        default:
-            if let withdrawal = snapshot.withdrawal, withdrawal.hash.isEmpty {
-                amountLabel.textColor = R.color.text_tertiary()!
-            } else if snapshot.amount.hasMinusPrefix {
-                amountLabel.textColor = R.color.market_red()
-            } else {
-                amountLabel.textColor = R.color.market_green()
             }
         }
     }

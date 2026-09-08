@@ -489,7 +489,18 @@ extension Web3TransferPreviewViewController {
                         .precision(.fractionLength(0...Int(token.precision)))
                 )
             } else {
-                change.amount
+                // `Decimal.FormatStyle` returns broken results when precision is undefined
+                // Prefers raw value without localization over a trimmed one
+                // Tested on iOS 18.7
+                if change.amount.hasPrefix("+")
+                    || change.amount.hasPrefix("-")
+                    || change.amount.isEmpty
+                    || change.amount == "0"
+                {
+                    change.amount
+                } else {
+                    "+" + change.amount
+                }
             }
             let fiatMoneyAmount: String? = if let token, let decimalAmount {
                 CurrencyFormatter.localizedString(

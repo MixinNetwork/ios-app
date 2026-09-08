@@ -1778,6 +1778,7 @@
 		94FCC9A82FD7053E00AA6AA7 /* CommonWalletImportedSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCC9A72FD7053A00AA6AA7 /* CommonWalletImportedSecret.swift */; };
 		94FCC9F22FD7C03900AA6AA7 /* WalletOverviewFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCC9F12FD7C03300AA6AA7 /* WalletOverviewFooterView.swift */; };
 		94FD2181304EA0E100A4F59A /* Web3Transaction+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FD2180304EA0DE00A4F59A /* Web3Transaction+Display.swift */; };
+		94FD2210304FFDCB00A4F59A /* SafeSnapshot+Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FD220F304FFDC600A4F59A /* SafeSnapshot+Display.swift */; };
 		94FD6B5B2F9F356F00DFCDCA /* PerpetualMarketSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FD6B5A2F9F356F00DFCDCA /* PerpetualMarketSelectorView.xib */; };
 		94FE0C4F2B3083CA006DEFC5 /* SendingDestinationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */; };
 		94FE0C502B3083CA006DEFC5 /* SendingDestinationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FE0C4E2B3083CA006DEFC5 /* SendingDestinationCell.xib */; };
@@ -3822,6 +3823,7 @@
 		94FCC9A72FD7053A00AA6AA7 /* CommonWalletImportedSecret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonWalletImportedSecret.swift; sourceTree = "<group>"; };
 		94FCC9F12FD7C03300AA6AA7 /* WalletOverviewFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletOverviewFooterView.swift; sourceTree = "<group>"; };
 		94FD2180304EA0DE00A4F59A /* Web3Transaction+Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Transaction+Display.swift"; sourceTree = "<group>"; };
+		94FD220F304FFDC600A4F59A /* SafeSnapshot+Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SafeSnapshot+Display.swift"; sourceTree = "<group>"; };
 		94FD6B5A2F9F356F00DFCDCA /* PerpetualMarketSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpetualMarketSelectorView.xib; sourceTree = "<group>"; };
 		94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingDestinationCell.swift; sourceTree = "<group>"; };
 		94FE0C4E2B3083CA006DEFC5 /* SendingDestinationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SendingDestinationCell.xib; sourceTree = "<group>"; };
@@ -4229,6 +4231,7 @@
 				948513782E432285008D6FDB /* Web3Wallet+Account.swift */,
 				944F547E2E45F99F0064A9A2 /* WatchingAddresses.swift */,
 				948D42912FDA921900575015 /* AttributedAmount.swift */,
+				94FD220F304FFDC600A4F59A /* SafeSnapshot+Display.swift */,
 				94FD2180304EA0DE00A4F59A /* Web3Transaction+Display.swift */,
 			);
 			path = Models;
@@ -9025,6 +9028,7 @@
 				940BAE222629741C00FFF753 /* MixinAuthorizationsContentViewController.swift in Sources */,
 				94F7BCE22D2B9ED700BA27D9 /* TradeInputAccessoryView.swift in Sources */,
 				942816A4301B8EB3009C8CA1 /* WatchlistRecommendationFooterView.swift in Sources */,
+				94FD2210304FFDCB00A4F59A /* SafeSnapshot+Display.swift in Sources */,
 				94C5A8932B2157CE00201CDA /* Payment.swift in Sources */,
 				7B8261D124D9548E00A39635 /* PINVerificationFailureHandler.swift in Sources */,
 				9449775F2F0A8E0100472465 /* BitcoinTransferOperation.swift in Sources */,

@@ -332,7 +332,6 @@ extension Web3TransactionViewController {
     }
     
     private func reloadData() {
-        let (sendAmountColor, receiveAmountColor) = transaction.amountColors()
         if let transfer = transaction.simpleTransfer {
             let simpleHeaderView = tableView.tableHeaderView as? SimpleWeb3TransactionTableHeaderView
             ?? R.nib.simpleWeb3TransactionTableHeaderView(withOwner: nil)!

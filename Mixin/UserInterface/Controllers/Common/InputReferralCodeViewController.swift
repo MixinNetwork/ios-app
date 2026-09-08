@@ -16,7 +16,8 @@ final class InputReferralCodeViewController: UIViewController {
     
     private let initialCode: String?
     private let codeCharacters = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
-    private let codeCount = 8
+    private let codeCount = 6
+    private let legacyCodeCount = 8
     
     private var isBusy = false {
         didSet {
@@ -155,7 +156,7 @@ final class InputReferralCodeViewController: UIViewController {
     
     @objc private func detectCode() {
         if let code = codeField.text,
-           code.count == codeCount,
+           code.count == codeCount || code.count == legacyCodeCount,
            code.unicodeScalars.allSatisfy(codeCharacters.contains(_:))
         {
             confirmButton.isEnabled = true
@@ -181,7 +182,7 @@ extension InputReferralCodeViewController: UITextFieldDelegate {
         }
         let text = (textField.text ?? "") as NSString
         let newText = text.replacingCharacters(in: range, with: string)
-        return newText.count <= codeCount
+        return newText.count <= legacyCodeCount
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

@@ -13,11 +13,6 @@ struct GaslessTransactionProposal: Decodable {
         case evm(GaslessTransactionEVMPayload)
     }
     
-    private static let supportedEVMChainID: Set<String> = [
-        ChainID.ethereum, ChainID.polygon, ChainID.bnbSmartChain,
-        ChainID.base, ChainID.arbitrumOne, ChainID.opMainnet
-    ]
-    
     let chainID: String
     let payload: Payload
     
@@ -35,7 +30,7 @@ struct GaslessTransactionProposal: Decodable {
             }
             self.chainID = chainID
             self.payload = .solana(tx)
-        } else if Self.supportedEVMChainID.contains(chainID) {
+        } else if Web3Chain.Kind.evm.chains.map(\.chainID).contains(chainID) {
             let payload = try container.decode(GaslessTransactionEVMPayload.self, forKey: .payload)
             self.chainID = chainID
             self.payload = .evm(payload)

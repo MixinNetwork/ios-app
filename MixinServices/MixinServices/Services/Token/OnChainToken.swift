@@ -48,6 +48,8 @@ extension OnChainToken {
             "Arbitrum"
         case ChainID.hyperEVM:
             "HyperEVM"
+        case ChainID.xLayer:
+            "X Layer"
         default:
             chain?.name
         }

@@ -199,6 +199,38 @@ public final class PerpsMarketDAO: PerpsDAO {
         }
     }
     
+    public func markets(
+        keyword: String,
+        limit: Int?,
+    ) -> [FavorablePerpetualMarket] {
+        var sql = """
+        SELECT m.*,
+            ifnull(f.is_favored, FALSE) AS \(FavorablePerpetualMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
+        FROM markets m
+            LEFT JOIN favorites f ON m.market_id = f.market_id
+        WHERE (m.display_symbol LIKE :keyword OR m.token_symbol LIKE :keyword)
+        ORDER BY CAST(m.volume AS REAL) DESC,
+            m.token_symbol ASC,
+            m.display_symbol ASC
+        """
+        if let limit {
+            sql += "\nLIMIT \(limit)"
+        }
+        return db.select(with: sql, arguments: ["keyword": "%\(keyword)%"])
+    }
+    
+    public func favorableMarket(marketID: String) -> FavorablePerpetualMarket? {
+        let sql = """
+        SELECT m.*,
+            ifnull(f.is_favored, FALSE) AS \(FavorablePerpetualMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
+        FROM markets m
+            LEFT JOIN favorites f ON m.market_id = f.market_id
+        WHERE m.market_id = ?
+        LIMIT 1
+        """
+        return db.select(with: sql, arguments: [marketID])
+    }
+    
     public func deleteAll() {
         db.write { db in
             try db.execute(sql: "DELETE FROM markets")

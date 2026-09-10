@@ -1,32 +1,18 @@
 import UIKit
-import GRDB
 import MixinServices
 
 final class SearchMarketViewController: UIViewController {
     
     @IBOutlet weak var searchBoxView: SearchBoxView!
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var contentWrapperView: UIView!
     
-    private let queue = OperationQueue()
-    
-    private var lastSearchFieldText: String?
-    private var searchResults: [FavorableMarket] = []
-    private var lastKeyword: String?
-    
-    private var trimmedKeyword: String? {
-        guard let text = searchBoxView.textField.text else {
-            return nil
-        }
-        let trimmed = text.trimmingCharacters(in: .whitespaces)
-        if trimmed.isEmpty {
-            return nil
-        } else {
-            return trimmed
-        }
-    }
+    private let recommendationViewController = SearchMarketRecommendationViewController()
+    private let resultsViewController = SearchMarketResultsViewController()
     
     init() {
-        super.init(nibName: nil, bundle: nil)
+        let nib = R.nib.searchMarketView
+        super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
     required init?(coder: NSCoder) {
@@ -36,139 +22,108 @@ final class SearchMarketViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        searchBoxView.textField.rightViewMode = .always
         searchBoxView.textField.addTarget(
             self,
-            action: #selector(searchKeyword(_:)),
+            action: #selector(textFieldDidChange(_:)),
             for: .editingChanged
         )
+        updateCancelButtonTarget(parent: parent)
+        
+        addChild(resultsViewController)
+        contentWrapperView.addSubview(resultsViewController.view)
+        resultsViewController.view.snp.makeEdgesEqualToSuperview()
+        resultsViewController.didMove(toParent: self)
+        resultsViewController.view.isHidden = true
+        
+        addChild(recommendationViewController)
+        contentWrapperView.addSubview(recommendationViewController.view)
+        recommendationViewController.view.snp.makeEdgesEqualToSuperview()
+        recommendationViewController.didMove(toParent: self)
+        recommendationViewController.view.isHidden = false
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         searchBoxView.textField.becomeFirstResponder()
-        
-        tableView.backgroundColor = R.color.background()!
-        tableView.keyboardDismissMode = .onDrag
-        tableView.rowHeight = 70
-        tableView.separatorStyle = .none
-        tableView.register(R.nib.marketCoinCell)
-        tableView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
-        tableView.dataSource = self
-        tableView.delegate = self
-        
-        queue.maxConcurrentOperationCount = 1
     }
     
-    @IBAction func cancelSearching(_ sender: Any) {
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         searchBoxView.textField.resignFirstResponder()
-        (parent as? MarketDashboardViewController)?.cancelSearching(animated: true)
     }
     
-    @objc private func searchKeyword(_ sender: Any) {
-        guard let keyword = trimmedKeyword?.lowercased() else {
-            queue.cancelAllOperations()
-            lastKeyword = nil
-            searchBoxView.isBusy = false
-            tableView.reloadData()
-            return
-        }
-        guard keyword != lastKeyword else {
-            searchBoxView.isBusy = false
-            return
-        }
-        queue.cancelAllOperations()
-        searchBoxView.isBusy = true
-        let op = BlockOperation()
-        op.addExecutionBlock { [unowned op] in
-            Thread.sleep(forTimeInterval: 0.5)
-            guard !op.isCancelled else {
-                return
-            }
-            let localSearchResults = MarketDAO.shared.markets(keyword: keyword, limit: nil)
-            DispatchQueue.main.sync {
-                guard !op.isCancelled else {
-                    return
-                }
-                self.lastKeyword = keyword
-                self.searchResults = localSearchResults
-                self.reloadTableViewData(showEmptyIndicatorIfEmpty: false)
-                self.searchBoxView.isBusy = false
-            }
-            
-            guard !op.isCancelled else {
-                return
-            }
-            Logger.general.debug(category: "ExploreAggregatedSearch", message: "Search remote markets for: \(keyword)")
-            RouteAPI.markets(keyword: keyword, queue: .global()) { result in
-                switch result {
-                case .failure:
-                    break
-                case .success(let markets):
-                    MarketDAO.shared.save(markets: markets, dataSource: .other)
-                    var remoteMarkets = markets.reduce(into: [:]) { results, market in
-                        results[market.coinID] = market
-                    }
-                    let combinedSearchResults = localSearchResults.map { market in
-                        if let remoteMarket = remoteMarkets.removeValue(forKey: market.coinID) {
-                            FavorableMarket(market: remoteMarket, isFavorite: market.isFavorite)
-                        } else {
-                            market
-                        }
-                    } + remoteMarkets.values.map { market in
-                        FavorableMarket(market: market, isFavorite: false)
-                    }
-                    DispatchQueue.main.async {
-                        guard keyword == self.lastKeyword else {
-                            return
-                        }
-                        Logger.general.debug(category: "ExploreAggregatedSearch", message: "Showing remote markets for: \(markets.map(\.symbol))")
-                        self.searchResults = combinedSearchResults
-                        self.reloadTableViewData(showEmptyIndicatorIfEmpty: true)
-                    }
-                }
-            }
-        }
-        queue.addOperation(op)
+    override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
+        updateCancelButtonTarget(parent: parent)
     }
     
-    private func reloadTableViewData(showEmptyIndicatorIfEmpty: Bool) {
-        tableView.reloadData()
-        if showEmptyIndicatorIfEmpty {
-            tableView.checkEmpty(
-                dataCount: searchResults.count,
-                text: R.string.localizable.no_results(),
-                photo: R.image.emptyIndicator.ic_search_result()!
-            )
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        let keyword = (textField.text ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if keyword.isEmpty {
+            searchBoxView.isBusy = false
+            recommendationViewController.view.isHidden = false
+            resultsViewController.view.isHidden = true
+            resultsViewController.clear()
         } else {
-            tableView.removeEmptyIndicator()
+            searchBoxView.isBusy = true
+            recommendationViewController.view.isHidden = true
+            resultsViewController.view.isHidden = false
+            resultsViewController.search(keyword: keyword) { [weak searchBoxView] in
+                searchBoxView?.isBusy = false
+            }
         }
     }
     
-}
-
-extension SearchMarketViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        searchResults.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.market_coin, for: indexPath)!
-        let result = searchResults[indexPath.row]
-        cell.load(market: result)
-        return cell
-    }
-    
-}
-
-extension SearchMarketViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+    func viewCrypto(_ market: FavorableMarket) {
         searchBoxView.textField.resignFirstResponder()
-        let market = searchResults[indexPath.row]
+        AppGroupUserDefaults.User.insertRecentMarketSearch(
+            .crypto(coinID: market.coinID)
+        )
         let controller = MarketViewController(market: market)
         navigationController?.pushViewController(controller, animated: true)
         reporter.report(
             event: .marketDetail,
-            tags: ["type": "spot", "source": "markets_search"]
+            tags: [
+                "type": "spot",
+                "source": "markets_search",
+            ],
         )
+    }
+    
+    func viewPerpetual(_ market: PerpetualMarket) {
+        searchBoxView.textField.resignFirstResponder()
+        AppGroupUserDefaults.User.insertRecentMarketSearch(
+            .perps(marketID: market.marketID)
+        )
+        let viewModel = PerpetualMarketViewModel(market: market)
+        let controller = PerpetualMarketViewController(
+            wallet: .privacy,
+            viewModel: viewModel,
+        )
+        navigationController?.pushViewController(controller, animated: true)
+        reporter.report(
+            event: .marketDetail,
+            tags: [
+                "type": "perps",
+                "source": "markets_search",
+            ],
+        )
+    }
+    
+    private func updateCancelButtonTarget(parent: UIViewController?) {
+        guard let cancelButton else {
+            return
+        }
+        cancelButton.removeTarget(nil, action: nil, for: .touchUpInside)
+        if let parent = parent as? MarketDashboardViewController {
+            cancelButton.addTarget(
+                parent,
+                action: #selector(MarketDashboardViewController.cancelSearching(_:)),
+                for: .touchUpInside
+            )
+        }
     }
     
 }

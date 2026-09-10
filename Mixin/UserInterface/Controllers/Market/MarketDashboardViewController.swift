@@ -410,6 +410,12 @@ final class MarketDashboardViewController: UIViewController {
             name: Currency.currentCurrencyDidChangeNotification,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(cancelSearchingSilently),
+            name: dismissSearchNotification,
+            object: nil
+        )
         reloadData(
             category: category,
             subCategoryIndex: subCategoryIndex,
@@ -485,26 +491,8 @@ final class MarketDashboardViewController: UIViewController {
         )
     }
     
-    func cancelSearching(animated: Bool) {
-        guard let searchViewController, let searchViewCenterYConstraint else {
-            return
-        }
-        let removeSearch = {
-            searchViewController.willMove(toParent: nil)
-            searchViewController.view.removeFromSuperview()
-            searchViewController.removeFromParent()
-        }
-        if animated {
-            searchViewCenterYConstraint.constant = hiddenSearchTopMargin
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-                searchViewController.view.alpha = 0
-            } completion: { _ in
-                removeSearch()
-            }
-        } else {
-            removeSearch()
-        }
+    @objc func cancelSearching(_ sender: Any) {
+        hideSearch(endEditing: true, animate: true)
     }
     
     func reloadData(
@@ -622,6 +610,35 @@ final class MarketDashboardViewController: UIViewController {
         )
     }
     
+    private func hideSearch(endEditing: Bool, animate: Bool) {
+        guard
+            let searchViewController,
+            let searchViewCenterYConstraint,
+            searchViewController.parent != nil
+        else {
+            return
+        }
+        if endEditing {
+            searchViewController.view.endEditing(true)
+        }
+        searchViewCenterYConstraint.constant = hiddenSearchTopMargin
+        let layout = {
+            self.view.layoutIfNeeded()
+            searchViewController.view.alpha = 0
+        }
+        let remove = { (_: Bool) in
+            searchViewController.willMove(toParent: nil)
+            searchViewController.view.removeFromSuperview()
+            searchViewController.removeFromParent()
+        }
+        if animate {
+            UIView.animate(withDuration: 0.3, animations: layout, completion: remove)
+        } else {
+            layout()
+            remove(true)
+        }
+    }
+    
     private func reportingSecondaryTabName(index: Int) -> String? {
         switch category {
         case .watchlist:
@@ -700,6 +717,10 @@ extension MarketDashboardViewController {
         }
         self.searchViewController = searchViewController
         self.searchViewCenterYConstraint = searchViewCenterYConstraint
+    }
+    
+    @objc private func cancelSearchingSilently(_ notification: Notification) {
+        hideSearch(endEditing: false, animate: false)
     }
     
     @objc private func scanQRCode(_ sender: Any) {

@@ -1085,6 +1085,8 @@
 		945C591A2DC215F60024F6DE /* MembershipCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945C59182DC215F60024F6DE /* MembershipCell.xib */; };
 		945D48102D8956040093E30D /* WalletSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D480F2D8956000093E30D /* WalletSummary.swift */; };
 		945D867B2C21754A0066C61D /* CGSize+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D867A2C21754A0066C61D /* CGSize+Constants.swift */; };
+		945DA950305193BD0088A584 /* Web3ChainUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945DA94F305193BD0088A584 /* Web3ChainUpdate.swift */; };
+		945DA97A3051940B0088A584 /* Web3Dapp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945DA9793051940B0088A584 /* Web3Dapp.swift */; };
 		945E18372F62F054003434AA /* PerpsManualLongPositionLiquidationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E18302F62F04A003434AA /* PerpsManualLongPositionLiquidationView.swift */; };
 		945ED2B22B28342A00C138BF /* WithdrawPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */; };
 		945F833C2A3748A4008C5CE5 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 945F831D2A3748A4008C5CE5 /* GCDWebServerResponse.m */; };
@@ -1508,7 +1510,6 @@
 		94C6AA0B280D36940011AB02 /* AttachmentDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */; };
 		94C886122BA2D5460039F723 /* ConnectWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */; };
 		94C8BDBE2E3B5FB1001EA5C8 /* WalletIdentifyingNavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C8BDBD2E3B5FAD001EA5C8 /* WalletIdentifyingNavigationTitleView.swift */; };
-		94C8C4842C11A1A100993027 /* Web3API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C8C4832C11A1A100993027 /* Web3API.swift */; };
 		94C8C49D2C11A29C00993027 /* PriorityFee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C8C49C2C11A29C00993027 /* PriorityFee.swift */; };
 		94C93C8D2C94880600A31591 /* ExtendedKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C93C872C94880600A31591 /* ExtendedKey.swift */; };
 		94C93C8E2C94880600A31591 /* P2PKH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C93C882C94880600A31591 /* P2PKH.swift */; };
@@ -3118,6 +3119,8 @@
 		945C59182DC215F60024F6DE /* MembershipCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipCell.xib; sourceTree = "<group>"; };
 		945D480F2D8956000093E30D /* WalletSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSummary.swift; sourceTree = "<group>"; };
 		945D867A2C21754A0066C61D /* CGSize+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Constants.swift"; sourceTree = "<group>"; };
+		945DA94F305193BD0088A584 /* Web3ChainUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ChainUpdate.swift; sourceTree = "<group>"; };
+		945DA9793051940B0088A584 /* Web3Dapp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3Dapp.swift; sourceTree = "<group>"; };
 		945E18302F62F04A003434AA /* PerpsManualLongPositionLiquidationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualLongPositionLiquidationView.swift; sourceTree = "<group>"; };
 		945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawPaymentOperation.swift; sourceTree = "<group>"; };
 		945F831B2A3748A4008C5CE5 /* GCDWebServerFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFunctions.h; sourceTree = "<group>"; };
@@ -3554,7 +3557,6 @@
 		94C6AA0A280D36940011AB02 /* AttachmentDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AttachmentDiagnosticView.xib; sourceTree = "<group>"; };
 		94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectWalletViewController.swift; sourceTree = "<group>"; };
 		94C8BDBD2E3B5FAD001EA5C8 /* WalletIdentifyingNavigationTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletIdentifyingNavigationTitleView.swift; sourceTree = "<group>"; };
-		94C8C4832C11A1A100993027 /* Web3API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3API.swift; sourceTree = "<group>"; };
 		94C8C49C2C11A29C00993027 /* PriorityFee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityFee.swift; sourceTree = "<group>"; };
 		94C93C872C94880600A31591 /* ExtendedKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedKey.swift; sourceTree = "<group>"; };
 		94C93C882C94880600A31591 /* P2PKH.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = P2PKH.swift; sourceTree = "<group>"; };
@@ -5089,7 +5091,6 @@
 		941F1F5A299CC3B80063FFB6 /* Web3 */ = {
 			isa = PBXGroup;
 			children = (
-				94C8C4A12C11A2A200993027 /* API */,
 				94C93C8B2C94880600A31591 /* Mnemonics Derivation */,
 				942F4728299CDF1800528759 /* URLSessionWebSocketFactory.swift */,
 				942F472A299CDF8100528759 /* Web3SignerFactory.swift */,
@@ -5679,15 +5680,6 @@
 				94728C882FB6E828004F087F /* PerpsManualOrderSideControl.swift */,
 			);
 			path = Utilities;
-			sourceTree = "<group>";
-		};
-		94C8C4A12C11A2A200993027 /* API */ = {
-			isa = PBXGroup;
-			children = (
-				94C8C49C2C11A29C00993027 /* PriorityFee.swift */,
-				94C8C4832C11A1A100993027 /* Web3API.swift */,
-			);
-			path = API;
 			sourceTree = "<group>";
 		};
 		94C93C8B2C94880600A31591 /* Mnemonics Derivation */ = {
@@ -6730,6 +6722,8 @@
 			children = (
 				7BC96DE4241779F70047471D /* ExternalApiError.swift */,
 				DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */,
+				945DA9793051940B0088A584 /* Web3Dapp.swift */,
+				945DA94F305193BD0088A584 /* Web3ChainUpdate.swift */,
 				94525B332C4E3B91008BA7A8 /* RouteTokenSource.swift */,
 				94525B782C503B3D008BA7A8 /* Slippage.swift */,
 				94525BFB2C50812D008BA7A8 /* BalancedSwapToken.swift */,
@@ -6743,6 +6737,7 @@
 				94428D612CA24B0200157E93 /* MarketAlert+Description.swift */,
 				9420F2ED2DAF8A7F00434E0D /* BalanceChange.swift */,
 				946485612DB774C60034D7AF /* TransactionSimulation.swift */,
+				94C8C49C2C11A29C00993027 /* PriorityFee.swift */,
 				9482FEA62F8F69C1006A463A /* Web3Transaction+Simulation.swift */,
 				9420F2E62DAF895D00434E0D /* RichWeb3RawTransaction.swift */,
 				9414D3522E06914700F38028 /* RouteProfile.swift */,
@@ -7988,6 +7983,7 @@
 				94DC229F2D072F76006501B3 /* DesktopSessionValidationViewController.swift in Sources */,
 				94E066B22F5B156D0090F1BA /* PerpetualLeverage.swift in Sources */,
 				7BBD2792221E7C9E0047E7D1 /* CheckmarkView.swift in Sources */,
+				945DA97A3051940B0088A584 /* Web3Dapp.swift in Sources */,
 				94F2F9502DEF2C7E0013B820 /* ReloadMembershipOrderJob.swift in Sources */,
 				94E979672D0C16C300FFCC12 /* LoginPINValidationViewController.swift in Sources */,
 				7BB8E2D124529E910098B1E8 /* AppearanceSettingsViewController.swift in Sources */,
@@ -8106,6 +8102,7 @@
 				DFD15C701FB5ACE7004B45CE /* UICollationExtension.swift in Sources */,
 				7B95860F2369599800F1F6E1 /* ProfileViewController.swift in Sources */,
 				7BD38B6020BEA03200D06E5C /* WaveformView.swift in Sources */,
+				945DA950305193BD0088A584 /* Web3ChainUpdate.swift in Sources */,
 				94C56D3E2C560DD6009F3AB8 /* CircularProgressView.swift in Sources */,
 				94F8970A3021FDA000897E4F /* ReloadWatchlistRecommendationJob.swift in Sources */,
 				94DF7D5928DC0F17006E415B /* Acknowledgement.swift in Sources */,
@@ -8546,7 +8543,6 @@
 				9404AD392F5DA65A007FC231 /* BulletinText.swift in Sources */,
 				948668A42CF912B20032B9BE /* BadgeDotView.swift in Sources */,
 				9482FE782F8E5424006A463A /* SignedEVMGaslessTransactionProposal.swift in Sources */,
-				94C8C4842C11A1A100993027 /* Web3API.swift in Sources */,
 				DF46B4051FA9B48500243A8B /* ContactsManager.swift in Sources */,
 				7B1456921FCC186E001B6DED /* TextMessageViewModel.swift in Sources */,
 				940A3C762EB61D36001A458F /* TradeOrderCell.swift in Sources */,

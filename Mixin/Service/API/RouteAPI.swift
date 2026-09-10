@@ -544,7 +544,10 @@ extension RouteAPI {
 // MARK: - Web3 Wallets
 extension RouteAPI {
     
-    static func dapps(queue: DispatchQueue, completion: @escaping (MixinAPI.Result<[Web3ChainUpdate]>) -> Void) {
+    static func dapps(
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[Web3ChainUpdate]>) -> Void
+    ) {
         request(method: .get, path: "/web3/dapps", queue: queue, completion: completion)
     }
     

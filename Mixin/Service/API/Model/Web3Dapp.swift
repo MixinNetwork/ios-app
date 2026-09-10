@@ -1,6 +1,6 @@
 import Foundation
 
-public final class Web3Dapp: Decodable {
+final class Web3Dapp: Decodable {
     
     enum CodingKeys: String, CodingKey {
         case name
@@ -9,18 +9,18 @@ public final class Web3Dapp: Decodable {
         case category
     }
     
-    public let name: String
-    public let homeURL: URL
-    public let iconURL: URL
-    public let category: String
+    let name: String
+    let homeURL: URL
+    let iconURL: URL
+    let category: String
     
-    public var host: String {
+    var host: String {
         homeURL.host ?? homeURL.absoluteString
     }
     
     private lazy var lowercasedName = name.lowercased()
     
-    public func matches(keyword: String) -> Bool {
+    func matches(keyword: String) -> Bool {
         let lowercasedKeyword = keyword.lowercased()
         return lowercasedName.contains(lowercasedKeyword)
     }
@@ -29,7 +29,7 @@ public final class Web3Dapp: Decodable {
 
 extension Web3Dapp: Equatable {
     
-    public static func == (lhs: Web3Dapp, rhs: Web3Dapp) -> Bool {
+    static func == (lhs: Web3Dapp, rhs: Web3Dapp) -> Bool {
         lhs.name == rhs.name
     }
     
@@ -37,7 +37,7 @@ extension Web3Dapp: Equatable {
 
 extension Web3Dapp: Hashable {
     
-    public func hash(into hasher: inout Hasher) {
+    func hash(into hasher: inout Hasher) {
         hasher.combine(name)
     }
     

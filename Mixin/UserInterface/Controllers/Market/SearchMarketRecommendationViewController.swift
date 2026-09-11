@@ -19,6 +19,7 @@ final class SearchMarketRecommendationViewController: UIViewController {
     }
     
     private let queue = DispatchQueue(label: "one.mixin.market.SearchMarketRecommendation")
+    private let trendingItemsCount = 30
     
     private weak var collectionView: UICollectionView!
     
@@ -78,7 +79,7 @@ final class SearchMarketRecommendationViewController: UIViewController {
                 )
                 section.boundarySupplementaryItems = [header]
                 section.interGroupSpacing = 12
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 12, trailing: 0)
                 return section
             case .trending:
                 let itemSize = NSCollectionLayoutSize(
@@ -92,7 +93,7 @@ final class SearchMarketRecommendationViewController: UIViewController {
                 )
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(
-                    top: 16,
+                    top: 8,
                     leading: 0,
                     bottom: 20,
                     trailing: 0,
@@ -101,7 +102,7 @@ final class SearchMarketRecommendationViewController: UIViewController {
                 let header = NSCollectionLayoutBoundarySupplementaryItem(
                     layoutSize: NSCollectionLayoutSize(
                         widthDimension: .fractionalWidth(1),
-                        heightDimension: .estimated(41),
+                        heightDimension: .estimated(57),
                     ),
                     elementKind: UICollectionView.elementKindSectionHeader,
                     alignment: .top,
@@ -159,7 +160,7 @@ final class SearchMarketRecommendationViewController: UIViewController {
     }
     
     @objc func reloadData() {
-        queue.async { [weak self] in
+        queue.async { [weak self, trendingItemsCount] in
             guard let self else {
                 return
             }
@@ -182,18 +183,18 @@ final class SearchMarketRecommendationViewController: UIViewController {
             let trendingCrypto = MarketDAO.shared.markets(
                 category: .trending,
                 order: Market.Ordering(field: .rowid, direction: .ascending),
-                limit: 5
+                limit: trendingItemsCount
             )
             let trendingPerps = PerpsMarketDAO.shared.availableMarkets(
                 category: .all,
                 ordering: .init(field: .score, direction: .descending),
-                limit: 5
+                limit: trendingItemsCount
             )
             DispatchQueue.main.async {
                 self.recentSearches = recentSearches
                 self.trendingCryptoMarkets = trendingCrypto
                 self.trendingPerpsMarkets = trendingPerps
-                self.collectionView.contentInset.top = recentSearches.isEmpty ? 20 : 0
+                self.collectionView.contentInset.top = recentSearches.isEmpty ? 12 : 0
                 self.collectionView.reloadData()
             }
         }

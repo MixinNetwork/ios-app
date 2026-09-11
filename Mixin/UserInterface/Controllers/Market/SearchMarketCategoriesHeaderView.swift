@@ -72,7 +72,8 @@ final class SearchMarketCategoriesHeaderView: UICollectionReusableView {
         stackView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.trailing.lessThanOrEqualToSuperview().offset(-20).priority(999)
-            make.top.bottom.equalToSuperview()
+            make.top.equalToSuperview().offset(8)
+            make.bottom.equalToSuperview().offset(-8)
         }
     }
     

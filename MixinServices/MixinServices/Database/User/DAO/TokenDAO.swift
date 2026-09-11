@@ -80,7 +80,7 @@ public final class TokenDAO: UserDatabaseDAO {
         if !assetIDs.isEmpty {
             query.append(literal: " AND t.asset_id IN \(assetIDs)")
         }
-        query.append(sql: " ORDER BY te.balance DESC LIMIT 1")
+        query.append(sql: " ORDER BY CAST(te.balance AS REAL) DESC LIMIT 1")
         return db.select(with: query)
     }
     

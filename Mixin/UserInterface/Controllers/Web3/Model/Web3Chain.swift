@@ -223,7 +223,7 @@ extension Web3Chain {
         mixinChainID: ChainID.ethereum,
         feeTokenAssetID: AssetID.eth,
         name: "Ethereum",
-        failsafeRPCServerURL: URL(string: "https://cloudflare-eth.com")!
+        failsafeRPCServerURL: URL(string: "https://ethereum-rpc.publicnode.com")!
     )
     
     static let polygon = Web3Chain.evm(
@@ -231,7 +231,7 @@ extension Web3Chain {
         mixinChainID: ChainID.polygon,
         feeTokenAssetID: AssetID.matic,
         name: "Polygon",
-        failsafeRPCServerURL: URL(string: "https://polygon-rpc.com")!
+        failsafeRPCServerURL: URL(string: "https://polygon.drpc.org")!
     )
     
     static let bnbSmartChain = Web3Chain.evm(
@@ -239,7 +239,7 @@ extension Web3Chain {
         mixinChainID: ChainID.bnbSmartChain,
         feeTokenAssetID: AssetID.bnb,
         name: "BSC",
-        failsafeRPCServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!
+        failsafeRPCServerURL: URL(string: "https://bsc-dataseed.bnbchain.org")!
     )
     
     static let base = Web3Chain.evm(
@@ -247,7 +247,7 @@ extension Web3Chain {
         mixinChainID: ChainID.base,
         feeTokenAssetID: AssetID.baseETH,
         name: "Base",
-        failsafeRPCServerURL: URL(string: "https://base.llamarpc.com")!
+        failsafeRPCServerURL: URL(string: "https://mainnet.base.org")!
     )
     
     static let arbitrumOne = Web3Chain.evm(
@@ -255,7 +255,7 @@ extension Web3Chain {
         mixinChainID: ChainID.arbitrumOne,
         feeTokenAssetID: AssetID.arbitrumOneETH,
         name: "Arbitrum One",
-        failsafeRPCServerURL: URL(string: "https://arbitrum.llamarpc.com")!
+        failsafeRPCServerURL: URL(string: "https://arb1.arbitrum.io/rpc")!
     )
     
     static let opMainnet = Web3Chain.evm(
@@ -263,7 +263,7 @@ extension Web3Chain {
         mixinChainID: ChainID.opMainnet,
         feeTokenAssetID: AssetID.opMainnetETH,
         name: "OP Mainnet",
-        failsafeRPCServerURL: URL(string: "https://optimism.llamarpc.com")!
+        failsafeRPCServerURL: URL(string: "https://mainnet.optimism.io")!
     )
     
     static let avalancheCChain = Web3Chain.evm(
@@ -322,23 +322,25 @@ extension Web3Chain {
 extension Web3Chain {
     
     static func synchronize() {
-        Web3API.dapps(queue: .global()) { result in
+        RouteAPI.dapps(queue: .global()) { result in
             switch result {
             case .success(let updates):
                 Logger.web3.info(category: "Web3Chain", message: "Loaded \(updates.count) updates")
                 var rpcURLs: [String: String] = [:]
                 var dapps: [String: [Web3Dapp]] = [:]
                 for update in updates {
-                    rpcURLs[update.chainID] = update.rpc.absoluteString
+                    rpcURLs[update.chainID] = update.rpcURLs
+                        .lazy
+                        .compactMap { string in
+                            URL(string: string)?.absoluteString
+                        }
+                        .first
                     dapps[update.chainID] = update.dapps
                 }
                 DispatchQueue.main.async {
                     AppGroupUserDefaults.web3RPCURL = rpcURLs
                     for chain in Web3Chain.all {
-                        guard let dapps = dapps[chain.chainID] else {
-                            continue
-                        }
-                        chain.dapps = dapps
+                        chain.dapps = dapps[chain.chainID] ?? []
                     }
                 }
             case .failure(.httpTransport(.requestAdaptationFailed)):

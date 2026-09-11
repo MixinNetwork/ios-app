@@ -1087,6 +1087,7 @@
 		945D867B2C21754A0066C61D /* CGSize+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D867A2C21754A0066C61D /* CGSize+Constants.swift */; };
 		945DA950305193BD0088A584 /* Web3ChainUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945DA94F305193BD0088A584 /* Web3ChainUpdate.swift */; };
 		945DA97A3051940B0088A584 /* Web3Dapp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945DA9793051940B0088A584 /* Web3Dapp.swift */; };
+		945DAF843052B9F30088A584 /* SearchMarketCategoriesHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945DAF833052B9F20088A584 /* SearchMarketCategoriesHeaderView.swift */; };
 		945E18372F62F054003434AA /* PerpsManualLongPositionLiquidationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E18302F62F04A003434AA /* PerpsManualLongPositionLiquidationView.swift */; };
 		945ED2B22B28342A00C138BF /* WithdrawPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */; };
 		945F833C2A3748A4008C5CE5 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 945F831D2A3748A4008C5CE5 /* GCDWebServerResponse.m */; };
@@ -1183,6 +1184,7 @@
 		9468E0562E30E10400EB79C0 /* CreateWalletRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E0552E30E10000EB79C0 /* CreateWalletRequest.swift */; };
 		9468E06D2E30E16A00EB79C0 /* CreateWalletResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E0602E30E13800EB79C0 /* CreateWalletResponse.swift */; };
 		9468E08D2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E08C2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift */; };
+		9469B6563052D8EA00E704A3 /* SearchMarketResultsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9469B6553052D8E900E704A3 /* SearchMarketResultsHeaderView.swift */; };
 		946AFC102FDBED8100E97E34 /* PerpsManualFundingRatePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946AFC0F2FDBED8100E97E34 /* PerpsManualFundingRatePageView.swift */; };
 		946B6F2425E974B500A95C40 /* CacheableAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B6F2325E974B500A95C40 /* CacheableAsset.swift */; };
 		946B9FBB2B0493E800DB4DC1 /* WalletHintViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B9FB92B0493E800DB4DC1 /* WalletHintViewController.swift */; };
@@ -1201,8 +1203,8 @@
 		946D1B362EF29FA600E572F2 /* SyncWeb3AddressJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D1B352EF29FA600E572F2 /* SyncWeb3AddressJob.swift */; };
 		946E055A2CBE52FF004B264E /* ExploreRecentSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05582CBE52FF004B264E /* ExploreRecentSearchCell.swift */; };
 		946E055B2CBE52FF004B264E /* ExploreRecentSearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946E05592CBE52FF004B264E /* ExploreRecentSearchCell.xib */; };
-		946E05732CBE7CFB004B264E /* MarketCoinCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05712CBE7CFB004B264E /* MarketCoinCell.swift */; };
-		946E05742CBE7CFB004B264E /* MarketCoinCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946E05722CBE7CFB004B264E /* MarketCoinCell.xib */; };
+		946E05732CBE7CFB004B264E /* MarketSearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05712CBE7CFB004B264E /* MarketSearchResultCell.swift */; };
+		946E05742CBE7CFB004B264E /* MarketSearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946E05722CBE7CFB004B264E /* MarketSearchResultCell.xib */; };
 		946E05922CBFD67B004B264E /* ExploreSearchCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05912CBFD67B004B264E /* ExploreSearchCategoryViewController.swift */; };
 		946E059D2CBFD846004B264E /* ExploreSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05992CBFD841004B264E /* ExploreSearchViewController.swift */; };
 		946E059F2CBFEE85004B264E /* SearchNavigationControllerChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */; };
@@ -1545,6 +1547,10 @@
 		94CF4E122CDDEE8B005B69D4 /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CF4E112CDDEE86005B69D4 /* LoginNavigationController.swift */; };
 		94D07AF72DF1883400FDF38E /* MaliciousWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D07AF62DF1882C00FDF38E /* MaliciousWarningView.swift */; };
 		94D07AFF2DF1883D00FDF38E /* MaliciousWarningView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D07AFE2DF1883D00FDF38E /* MaliciousWarningView.xib */; };
+		94D0A0022E72000100ACC49B /* SearchMarketRecommendationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0A0012E72000100ACC49B /* SearchMarketRecommendationViewController.swift */; };
+		94D0A0042E72000200ACC49B /* SearchMarketResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0A0032E72000200ACC49B /* SearchMarketResultsViewController.swift */; };
+		94D0A0062E72000300ACC49B /* RecentMarketSearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D0A0052E72000300ACC49B /* RecentMarketSearchCell.xib */; };
+		94D0A0082E72000400ACC49B /* RecentMarketSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0A0072E72000400ACC49B /* RecentMarketSearchCell.swift */; };
 		94D0B8892FF6302C002A8170 /* BuyTokenMethodSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0B8882FF63024002A8170 /* BuyTokenMethodSelectorViewController.swift */; };
 		94D0B8922FF63217002A8170 /* BuyTokenMethodCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D0B8912FF63217002A8170 /* BuyTokenMethodCell.xib */; };
 		94D0B8932FF63217002A8170 /* BuyTokenMethodCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0B8902FF63217002A8170 /* BuyTokenMethodCell.swift */; };
@@ -3121,6 +3127,7 @@
 		945D867A2C21754A0066C61D /* CGSize+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Constants.swift"; sourceTree = "<group>"; };
 		945DA94F305193BD0088A584 /* Web3ChainUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ChainUpdate.swift; sourceTree = "<group>"; };
 		945DA9793051940B0088A584 /* Web3Dapp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3Dapp.swift; sourceTree = "<group>"; };
+		945DAF833052B9F20088A584 /* SearchMarketCategoriesHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMarketCategoriesHeaderView.swift; sourceTree = "<group>"; };
 		945E18302F62F04A003434AA /* PerpsManualLongPositionLiquidationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualLongPositionLiquidationView.swift; sourceTree = "<group>"; };
 		945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawPaymentOperation.swift; sourceTree = "<group>"; };
 		945F831B2A3748A4008C5CE5 /* GCDWebServerFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFunctions.h; sourceTree = "<group>"; };
@@ -3235,6 +3242,7 @@
 		9468E0552E30E10000EB79C0 /* CreateWalletRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateWalletRequest.swift; sourceTree = "<group>"; };
 		9468E0602E30E13800EB79C0 /* CreateWalletResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateWalletResponse.swift; sourceTree = "<group>"; };
 		9468E08C2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationBasedBusyButton.swift; sourceTree = "<group>"; };
+		9469B6553052D8E900E704A3 /* SearchMarketResultsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMarketResultsHeaderView.swift; sourceTree = "<group>"; };
 		946AFC0F2FDBED8100E97E34 /* PerpsManualFundingRatePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualFundingRatePageView.swift; sourceTree = "<group>"; };
 		946B6F2325E974B500A95C40 /* CacheableAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAsset.swift; sourceTree = "<group>"; };
 		946B9FB92B0493E800DB4DC1 /* WalletHintViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHintViewController.swift; sourceTree = "<group>"; };
@@ -3253,8 +3261,8 @@
 		946D1B352EF29FA600E572F2 /* SyncWeb3AddressJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncWeb3AddressJob.swift; sourceTree = "<group>"; };
 		946E05582CBE52FF004B264E /* ExploreRecentSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreRecentSearchCell.swift; sourceTree = "<group>"; };
 		946E05592CBE52FF004B264E /* ExploreRecentSearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreRecentSearchCell.xib; sourceTree = "<group>"; };
-		946E05712CBE7CFB004B264E /* MarketCoinCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketCoinCell.swift; sourceTree = "<group>"; };
-		946E05722CBE7CFB004B264E /* MarketCoinCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketCoinCell.xib; sourceTree = "<group>"; };
+		946E05712CBE7CFB004B264E /* MarketSearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketSearchResultCell.swift; sourceTree = "<group>"; };
+		946E05722CBE7CFB004B264E /* MarketSearchResultCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketSearchResultCell.xib; sourceTree = "<group>"; };
 		946E05912CBFD67B004B264E /* ExploreSearchCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchCategoryViewController.swift; sourceTree = "<group>"; };
 		946E05992CBFD841004B264E /* ExploreSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchViewController.swift; sourceTree = "<group>"; };
 		946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationControllerChild.swift; sourceTree = "<group>"; };
@@ -3592,6 +3600,10 @@
 		94CF4E112CDDEE86005B69D4 /* LoginNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNavigationController.swift; sourceTree = "<group>"; };
 		94D07AF62DF1882C00FDF38E /* MaliciousWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaliciousWarningView.swift; sourceTree = "<group>"; };
 		94D07AFE2DF1883D00FDF38E /* MaliciousWarningView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaliciousWarningView.xib; sourceTree = "<group>"; };
+		94D0A0012E72000100ACC49B /* SearchMarketRecommendationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMarketRecommendationViewController.swift; sourceTree = "<group>"; };
+		94D0A0032E72000200ACC49B /* SearchMarketResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMarketResultsViewController.swift; sourceTree = "<group>"; };
+		94D0A0052E72000300ACC49B /* RecentMarketSearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecentMarketSearchCell.xib; sourceTree = "<group>"; };
+		94D0A0072E72000400ACC49B /* RecentMarketSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentMarketSearchCell.swift; sourceTree = "<group>"; };
 		94D0B8882FF63024002A8170 /* BuyTokenMethodSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyTokenMethodSelectorViewController.swift; sourceTree = "<group>"; };
 		94D0B8902FF63217002A8170 /* BuyTokenMethodCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyTokenMethodCell.swift; sourceTree = "<group>"; };
 		94D0B8912FF63217002A8170 /* BuyTokenMethodCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BuyTokenMethodCell.xib; sourceTree = "<group>"; };
@@ -5174,10 +5186,16 @@
 				942816D4301BA29F009C8CA1 /* MarketDisplaySettingCell.xib */,
 				942816D3301BA29F009C8CA1 /* MarketDisplaySettingCell.swift */,
 				942816CB301BA13C009C8CA1 /* MarketDisplaySettingsViewController.swift */,
-				946E05722CBE7CFB004B264E /* MarketCoinCell.xib */,
-				946E05712CBE7CFB004B264E /* MarketCoinCell.swift */,
 				9447316F2E71A2AD00ACC49B /* SearchMarketView.xib */,
 				944731672E71A17200ACC49B /* SearchMarketViewController.swift */,
+				94D0A0052E72000300ACC49B /* RecentMarketSearchCell.xib */,
+				94D0A0072E72000400ACC49B /* RecentMarketSearchCell.swift */,
+				945DAF833052B9F20088A584 /* SearchMarketCategoriesHeaderView.swift */,
+				94D0A0012E72000100ACC49B /* SearchMarketRecommendationViewController.swift */,
+				9469B6553052D8E900E704A3 /* SearchMarketResultsHeaderView.swift */,
+				94D0A0032E72000200ACC49B /* SearchMarketResultsViewController.swift */,
+				946E05722CBE7CFB004B264E /* MarketSearchResultCell.xib */,
+				946E05712CBE7CFB004B264E /* MarketSearchResultCell.swift */,
 				9426DE992FC48A95009B924E /* ShareMarketContentView.xib */,
 				9426DE982FC48A95009B924E /* ShareMarketContentViewController.swift */,
 				9438EDB42FAB8C980030C00E /* MarketStatistics.swift */,
@@ -7499,7 +7517,7 @@
 				7B082D16242C9D5F00C5E163 /* MultipleSelectionActionView.xib in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				94D0FF7F2BEB7F9100E3947F /* InscriptionContentCell.xib in Resources */,
-				946E05742CBE7CFB004B264E /* MarketCoinCell.xib in Resources */,
+				946E05742CBE7CFB004B264E /* MarketSearchResultCell.xib in Resources */,
 				7C2DEFF12824FCF500758208 /* ic_time_animation_dark@3x.gif in Resources */,
 				94F2375D2C691D5C0057D1AB /* TokenPriceChartCell.xib in Resources */,
 				944C60FE2B6A899700C7DF06 /* AuthenticationPreviewHeaderView.xib in Resources */,
@@ -7677,6 +7695,7 @@
 				7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */,
 				9447315A2E71867200ACC49B /* HomeNavigationTitleView.xib in Resources */,
 				944731702E71A2AD00ACC49B /* SearchMarketView.xib in Resources */,
+				94D0A0062E72000300ACC49B /* RecentMarketSearchCell.xib in Resources */,
 				94F0A1A72E3BB0AD001732B8 /* AuthenticationPreviewWalletCell.xib in Resources */,
 				94D635D43020A069006F2C4F /* favorite_large.png in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
@@ -8640,7 +8659,7 @@
 				940A3C112EB33AFA001A458F /* TradePriceInputCell.swift in Sources */,
 				DFAD89982418EE0500836EDD /* RecoverMediaJob.swift in Sources */,
 				7BFDB73920DA41E3005673CC /* Quote.swift in Sources */,
-				946E05732CBE7CFB004B264E /* MarketCoinCell.swift in Sources */,
+				946E05732CBE7CFB004B264E /* MarketSearchResultCell.swift in Sources */,
 				948E276B29D2A521002BFCE1 /* NetworkFeeOption.swift in Sources */,
 				942D90F02B05F8FE00E81358 /* NetworkFeeCell.swift in Sources */,
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
@@ -8962,6 +8981,9 @@
 				944D17932F6199C3008BBA92 /* ClosePerpsReceiveCell.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
 				944731682E71A17A00ACC49B /* SearchMarketViewController.swift in Sources */,
+				94D0A0082E72000400ACC49B /* RecentMarketSearchCell.swift in Sources */,
+				94D0A0022E72000100ACC49B /* SearchMarketRecommendationViewController.swift in Sources */,
+				94D0A0042E72000200ACC49B /* SearchMarketResultsViewController.swift in Sources */,
 				94425FE72DD498FB003F46DF /* MaliciousTokenWarningCell.swift in Sources */,
 				7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */,
 				942FB8972C8AE09000C8025C /* ShareInscriptionViewController.swift in Sources */,
@@ -9296,6 +9318,7 @@
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				94FB2E0A2F504D9200F85AB4 /* PerpetualPlaceholderCell.swift in Sources */,
 				944731522E71866400ACC49B /* HomeNavigationTitleView.swift in Sources */,
+				945DAF843052B9F30088A584 /* SearchMarketCategoriesHeaderView.swift in Sources */,
 				946331B12C6227D500C54B76 /* TransactionHistoryFilterView.swift in Sources */,
 				7CEB736029DBC639006FB5B2 /* DeviceTransferUser.swift in Sources */,
 				7BA9D9EE226F114700255943 /* HomeSearchViewController.swift in Sources */,
@@ -9365,6 +9388,7 @@
 				94FCC9652FD6F39000AA6AA7 /* PrivacyWalletPendingDepositObserver.swift in Sources */,
 				7BD97DD52179DD3400FAE490 /* WebRTCClient.swift in Sources */,
 				DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */,
+				9469B6563052D8EA00E704A3 /* SearchMarketResultsHeaderView.swift in Sources */,
 				94647C7028D243B100684CFA /* TIPNode+Description.swift in Sources */,
 				7B5E9B4424370ABB000AE24E /* CircleProfileMenuItemView.swift in Sources */,
 				94001FA930472BA00098128B /* UnlockableCommonWalletChain.swift in Sources */,

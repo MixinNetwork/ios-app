@@ -3,6 +3,19 @@ import MixinServices
 
 final class PlainTokenIconView: UIImageView {
     
+    var reportsNoIntrinsicContentSize = false
+    
+    override var intrinsicContentSize: CGSize {
+        if reportsNoIntrinsicContentSize {
+            CGSize(
+                width: UIView.noIntrinsicMetric,
+                height: UIView.noIntrinsicMetric,
+            )
+        } else {
+            super.intrinsicContentSize
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         layer.masksToBounds = true

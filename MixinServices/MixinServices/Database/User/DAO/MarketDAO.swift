@@ -25,6 +25,7 @@ public final class MarketDAO: UserDatabaseDAO {
     public func markets(
         category: Market.QueryCategory,
         order: Market.Ordering,
+        limit: Int? = nil
     ) -> [FavorableMarket] {
         let marketColumns: [String] = Market.CodingKeys.allCases.compactMap { key in
             if key == .marketCapRank {
@@ -99,6 +100,11 @@ public final class MarketDAO: UserDatabaseDAO {
         case .addedAt:
             sql.append("\nORDER BY mf.created_at \(direction), mf.rowid ASC")
         }
+        
+        if let limit {
+            sql.append("\nLIMIT \(limit)")
+        }
+        
         return db.select(with: sql)
     }
     
@@ -121,7 +127,9 @@ public final class MarketDAO: UserDatabaseDAO {
         FROM markets m
             LEFT JOIN market_favored mf ON m.coin_id = mf.coin_id
         WHERE (m.name LIKE :keyword OR m.symbol LIKE :keyword)
-        ORDER BY CAST(m.market_cap_rank AS REAL) ASC
+        ORDER BY CAST(m.total_volume AS REAL) DESC,
+            m.symbol ASC,
+            m.name ASC
         """
         if let limit {
             sql += "\nLIMIT \(limit)"

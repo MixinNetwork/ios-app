@@ -40,6 +40,7 @@ final class SearchMarketResultsHeaderView: UICollectionReusableView {
             string: R.string.localizable.more(),
             scalingByFontSize: 14
         )
+        config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
         let moreButton = UIButton(configuration: config)
         moreButton.titleLabel?.adjustsFontForContentSizeCategory = true
         moreButton.addTarget(
@@ -49,8 +50,7 @@ final class SearchMarketResultsHeaderView: UICollectionReusableView {
         )
         addSubview(moreButton)
         moreButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-20)
-            make.centerY.equalToSuperview()
+            make.top.bottom.trailing.equalToSuperview()
             make.leading.greaterThanOrEqualTo(titleLabel.snp.trailing).offset(8)
         }
         self.moreButton = moreButton

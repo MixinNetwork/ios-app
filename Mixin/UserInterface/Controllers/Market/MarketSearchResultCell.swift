@@ -10,6 +10,7 @@ final class MarketSearchResultCell: UICollectionViewCell {
     
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var symbolLabel: UILabel!
+    @IBOutlet weak var perpsLabel: InsetLabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
@@ -20,6 +21,14 @@ final class MarketSearchResultCell: UICollectionViewCell {
         for label in [priceLabel, subtitleLabel, changeLabel] {
             label?.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         }
+        perpsLabel.setFont(
+            scaledFor: .systemFont(ofSize: 12, weight: .medium),
+            adjustForContentSize: true
+        )
+        perpsLabel.layer.cornerRadius = 4
+        perpsLabel.layer.masksToBounds = true
+        perpsLabel.contentInset = UIEdgeInsets(top: 1, left: 3, bottom: 1, right: 3)
+        perpsLabel.text = R.string.localizable.perp()
     }
     
     override func prepareForReuse() {
@@ -30,6 +39,7 @@ final class MarketSearchResultCell: UICollectionViewCell {
     func load(market: Market, subtitle: Subtitle) {
         iconView.setIcon(market: market)
         symbolLabel.text = market.symbol
+        perpsLabel.isHidden = true
         priceLabel.text = market.localizedPrice
         subtitleLabel.text = switch subtitle {
         case .name:
@@ -43,7 +53,8 @@ final class MarketSearchResultCell: UICollectionViewCell {
     
     func load(market: PerpetualMarket) {
         iconView.setIcon(urlString: market.iconURL)
-        symbolLabel.text = market.displaySymbol
+        symbolLabel.text = market.tokenSymbol
+        perpsLabel.isHidden = false
         priceLabel.text = market.localizedPrice
         subtitleLabel.text = R.string.localizable.volume_label(market.prettyVolume)
         changeLabel.text = market.changePercentage

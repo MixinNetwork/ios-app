@@ -191,7 +191,7 @@ final class SearchMarketResultsViewController: UIViewController {
                 return
             }
             let localCrypto = MarketDAO.shared.markets(keyword: keyword, limit: nil)
-            let localPerps = PerpsMarketDAO.shared.markets(keyword: keyword, limit: nil)
+            let localPerps = PerpsMarketDAO.shared.availableMarkets(keyword: keyword, limit: nil)
             DispatchQueue.main.async {
                 guard let self, self.lastKeyword == keyword else {
                     return

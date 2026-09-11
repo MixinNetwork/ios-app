@@ -199,7 +199,7 @@ public final class PerpsMarketDAO: PerpsDAO {
         }
     }
     
-    public func markets(
+    public func availableMarkets(
         keyword: String,
         limit: Int?,
     ) -> [FavorablePerpetualMarket] {
@@ -208,7 +208,8 @@ public final class PerpsMarketDAO: PerpsDAO {
             ifnull(f.is_favored, FALSE) AS \(FavorablePerpetualMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
         FROM markets m
             LEFT JOIN favorites f ON m.market_id = f.market_id
-        WHERE (m.display_symbol LIKE :keyword OR m.token_symbol LIKE :keyword)
+        WHERE CAST(m.volume AS REAL) > 0
+            AND (m.display_symbol LIKE :keyword OR m.token_symbol LIKE :keyword)
         ORDER BY CAST(m.volume AS REAL) DESC,
             m.token_symbol ASC,
             m.display_symbol ASC

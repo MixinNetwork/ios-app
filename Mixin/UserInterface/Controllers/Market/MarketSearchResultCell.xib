@@ -32,14 +32,21 @@
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="nTs-qA-LfD">
                                 <rect key="frame" x="0.0" y="0.0" width="222" height="19"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="USDT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ui5-k2-ioZ">
-                                        <rect key="frame" x="0.0" y="0.0" width="202.66666666666666" height="19"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="USDT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ui5-k2-ioZ">
+                                        <rect key="frame" x="0.0" y="0.0" width="42.333333333333336" height="19"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="$1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="koc-LS-1ll">
-                                        <rect key="frame" x="206.66666666666669" y="1" width="15.333333333333343" height="17"/>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="Perp" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3YI-it-1rQ" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="44.333333333333329" y="2.333333333333333" width="0.0" height="14.333333333333336"/>
+                                        <color key="backgroundColor" name="background_secondary"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                        <color key="textColor" name="text_tertiary"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="$1" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="koc-LS-1ll">
+                                        <rect key="frame" x="46.333333333333329" y="1" width="175.66666666666669" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
@@ -80,6 +87,7 @@
             <connections>
                 <outlet property="changeLabel" destination="CeJ-Oo-1Fb" id="sv1-aD-rR4"/>
                 <outlet property="iconView" destination="bIL-4J-hPR" id="eBu-O7-Rcb"/>
+                <outlet property="perpsLabel" destination="3YI-it-1rQ" id="ULD-Jt-i4L"/>
                 <outlet property="priceLabel" destination="koc-LS-1ll" id="Roh-HV-nxV"/>
                 <outlet property="subtitleLabel" destination="b4P-zd-Lcr" id="B98-I0-2i6"/>
                 <outlet property="symbolLabel" destination="ui5-k2-ioZ" id="haW-ek-TlD"/>
@@ -90,6 +98,9 @@
     <resources>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

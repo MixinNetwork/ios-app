@@ -181,7 +181,7 @@ final class SearchMarketRecommendationViewController: UIViewController {
             }
             let trendingCrypto = MarketDAO.shared.markets(
                 category: .trending,
-                order: Market.Ordering(field: .volume, direction: .descending),
+                order: Market.Ordering(field: .rowid, direction: .ascending),
                 limit: 5
             )
             let trendingPerps = PerpsMarketDAO.shared.availableMarkets(

@@ -31,5 +31,6 @@ public enum ChainID {
     public static let avalancheCChain = "1f67ac58-87ba-3571-9781-e9413c046f34"
     public static let hyperEVM = "36d23d9e-bf4e-3ede-a12d-26f1f1f9fd2f"
     public static let xLayer = "37f5a4d1-905f-3b34-8291-c37438c7dcfc"
+    public static let robinhood = "b304e03d-d004-3102-875b-8266f8407a1a"
     
 }

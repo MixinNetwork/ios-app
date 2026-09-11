@@ -50,6 +50,8 @@ extension OnChainToken {
             "HyperEVM"
         case ChainID.xLayer:
             "X Layer"
+        case ChainID.robinhood:
+            "Robinhood"
         default:
             chain?.name
         }

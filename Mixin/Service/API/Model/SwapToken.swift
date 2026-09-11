@@ -93,6 +93,8 @@ extension SwapToken {
             "HyperEVM"
         case ChainID.xLayer:
             "X Layer"
+        case ChainID.robinhood:
+            "Robinhood"
         case ChainID.ton:
             "TON"
         default:

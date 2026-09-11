@@ -442,6 +442,7 @@ extension ChainCategorizedTokenSelectorViewController {
                 Chain(id: ChainID.hyperEVM, name: "HyperEVM"),
                 Chain(id: ChainID.xLayer, name: "X Layer"),
                 Chain(id: ChainID.ton, name: "TON"),
+                Chain(id: ChainID.robinhood, name: "Robinhood"),
             ]
             let groups: [Group] = all.filter { chain in
                 ids.contains(chain.id)
@@ -455,7 +456,7 @@ extension ChainCategorizedTokenSelectorViewController {
             let allGroupingChains: [Web3Chain] = [
                 .bitcoin, .ethereum, .solana, .bnbSmartChain, .base,
                 .polygon, .arbitrumOne, .opMainnet, .avalancheCChain,
-                .hyperEVM, .xLayer,
+                .hyperEVM, .xLayer, .robinhood,
             ]
             let groups: [Group] = allGroupingChains.filter { chain in
                 ids.contains(chain.chainID)

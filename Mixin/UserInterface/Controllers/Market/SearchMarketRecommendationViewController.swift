@@ -194,7 +194,6 @@ final class SearchMarketRecommendationViewController: UIViewController {
                 self.recentSearches = recentSearches
                 self.trendingCryptoMarkets = trendingCrypto
                 self.trendingPerpsMarkets = trendingPerps
-                self.collectionView.contentInset.top = recentSearches.isEmpty ? 12 : 0
                 self.collectionView.reloadData()
             }
         }

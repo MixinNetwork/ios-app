@@ -41,16 +41,8 @@ final class SearchMarketViewController: UIViewController {
         recommendationViewController.view.snp.makeEdgesEqualToSuperview()
         recommendationViewController.didMove(toParent: self)
         recommendationViewController.view.isHidden = false
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        
         searchBoxView.textField.becomeFirstResponder()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        searchBoxView.textField.resignFirstResponder()
     }
     
     override func willMove(toParent parent: UIViewController?) {

@@ -15,8 +15,6 @@ class TextMessageViewModel: DetailInfoMessageViewModel {
         return .chatText
     }
     
-    private static let phoneNumberDetector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.phoneNumber.rawValue)
-    
     var content: CoreTextLabel.Content?
     var contentLabelFrame = CGRect.zero
     var highlightPaths = [UIBezierPath]()

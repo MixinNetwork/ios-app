@@ -1508,6 +1508,9 @@ extension ConversationViewController: UITableViewDataSource {
         if let cell = cell as? TextMessageCell {
             cell.contentLabel.delegate = self
         }
+        if let cell = cell as? PhotoMessageCell {
+            cell.captionLabel.delegate = self
+        }
         if let cell = cell as? AppButtonGroupMessageCell {
             cell.appButtonDelegate = self
         }
@@ -1986,10 +1989,11 @@ extension ConversationViewController {
         } else if category.hasSuffix("_CONTACT") || category.hasSuffix("_LIVE") {
             actions = [.reply, .forward, .delete]
         } else if category.hasSuffix("_IMAGE") {
+            let hasCaption = !(message.caption?.isEmpty ?? true)
             if mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue {
-                actions = [.addToStickers, .reply, .forward, .delete]
+                actions = hasCaption ? [.addToStickers, .reply, .forward, .copy, .delete] : [.addToStickers, .reply, .forward, .delete]
             } else {
-                actions = [.reply, .delete]
+                actions = hasCaption ? [.reply, .copy, .delete] : [.reply, .delete]
             }
         } else if category.hasSuffix("_DATA") || category.hasSuffix("_VIDEO") || category.hasSuffix("_AUDIO") {
             if mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue {
@@ -2051,6 +2055,8 @@ extension ConversationViewController {
         case .copy:
             if ["_TEXT", "_POST"].contains(where: message.category.hasSuffix(_:)) {
                 UIPasteboard.general.string = message.content
+            } else if message.category.hasSuffix("_IMAGE") {
+                UIPasteboard.general.string = message.caption
             }
         case .delete:
             beginMultipleSelection(on: indexPath, intent: .delete)
@@ -2294,11 +2300,14 @@ extension ConversationViewController {
     }
     
     private func setCell(_ cell: PhotoRepresentableMessageCell, contentViewHidden hidden: Bool) {
-        var contentViews = [
+        var contentViews: [UIView] = [
             cell.contentImageView,
-            cell.timeLabel,
-            cell.statusImageView
         ]
+        let isQuotedOrHasCaption = cell.viewModel?.quotedMessageViewModel != nil || ((cell.viewModel as? ImageMessageViewModel)?.hasCaption ?? false)
+        if !isQuotedOrHasCaption {
+            contentViews.append(cell.timeLabel)
+            contentViews.append(cell.statusImageView)
+        }
         if let cell = cell as? AttachmentExpirationHintingMessageCell {
             contentViews.append(cell.operationButton)
         }

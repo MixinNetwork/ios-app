@@ -74,6 +74,7 @@ public final class MessageItem {
     
     public var isStickerAdded: Bool?
     public var albumId: String?
+    public var caption: String?
 
     public var expireIn: Int64?
     
@@ -99,6 +100,7 @@ public final class MessageItem {
     }()
     
     public lazy var mentionedFullnameReplacedContent = makeMentionedFullnameReplacedContent()
+    public lazy var mentionedFullnameReplacedCaption = makeMentionedFullnameReplacedCaption()
     public lazy var markdownControlCodeRemovedContent = makeMarkdownControlCodeRemovedContent()
     
     public lazy var location: Location? = {
@@ -142,7 +144,7 @@ public final class MessageItem {
         expireIn != nil
     }
     
-    public init(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, mediaLocalIdentifier: String? = nil, thumbImage: String? = nil, thumbUrl: String? = nil, status: String, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, createdAt: String, actionName: String? = nil, userFullName: String? = nil, userIdentityNumber: String? = nil, userAvatarUrl: String? = nil, appId: String? = nil, tokenIcon: String? = nil, tokenName: String? = nil, tokenSymbol: String? = nil, snapshotAmount: String? = nil, snapshotAssetId: String? = nil, snapshotType: String? = nil, snapshotMemo: String? = nil, participantFullName: String? = nil, participantUserId: String? = nil, assetUrl: String? = nil, assetType: String? = nil, assetWidth: Int? = nil, assetHeight: Int? = nil, assetCategory: String? = nil, sharedUserId: String? = nil, sharedUserFullName: String? = nil, sharedUserIdentityNumber: String? = nil, sharedUserAvatarUrl: String? = nil, sharedUserAppId: String? = nil, sharedUserIsVerified: Bool? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, mentionsJson: Data? = nil, hasMentionRead: Bool? = nil, isPinned: Bool? = nil, isStickerAdded: Bool? = nil, albumId: String? = nil, expireIn: Int64? = nil) {
+    public init(messageId: String, conversationId: String, userId: String, category: String, content: String? = nil, mediaUrl: String? = nil, mediaMimeType: String? = nil, mediaSize: Int64? = nil, mediaDuration: Int64? = nil, mediaWidth: Int? = nil, mediaHeight: Int? = nil, mediaHash: String? = nil, mediaKey: Data? = nil, mediaDigest: Data? = nil, mediaStatus: String? = nil, mediaWaveform: Data? = nil, mediaLocalIdentifier: String? = nil, thumbImage: String? = nil, thumbUrl: String? = nil, status: String, participantId: String? = nil, snapshotId: String? = nil, name: String? = nil, stickerId: String? = nil, createdAt: String, actionName: String? = nil, userFullName: String? = nil, userIdentityNumber: String? = nil, userAvatarUrl: String? = nil, appId: String? = nil, tokenIcon: String? = nil, tokenName: String? = nil, tokenSymbol: String? = nil, snapshotAmount: String? = nil, snapshotAssetId: String? = nil, snapshotType: String? = nil, snapshotMemo: String? = nil, participantFullName: String? = nil, participantUserId: String? = nil, assetUrl: String? = nil, assetType: String? = nil, assetWidth: Int? = nil, assetHeight: Int? = nil, assetCategory: String? = nil, sharedUserId: String? = nil, sharedUserFullName: String? = nil, sharedUserIdentityNumber: String? = nil, sharedUserAvatarUrl: String? = nil, sharedUserAppId: String? = nil, sharedUserIsVerified: Bool? = nil, quoteMessageId: String? = nil, quoteContent: Data? = nil, mentionsJson: Data? = nil, hasMentionRead: Bool? = nil, isPinned: Bool? = nil, isStickerAdded: Bool? = nil, albumId: String? = nil, expireIn: Int64? = nil, caption: String? = nil) {
         self.messageId = messageId
         self.conversationId = conversationId
         self.userId = userId
@@ -201,6 +203,7 @@ public final class MessageItem {
         self.isStickerAdded = isStickerAdded
         self.albumId = albumId
         self.expireIn = expireIn
+        self.caption = caption
     }
     
     public convenience init(category: String, conversationId: String, createdAt: String) {
@@ -289,6 +292,7 @@ extension MessageItem: Codable, MixinFetchableRecord {
         case albumId = "album_id"
         
         case expireIn = "expire_in"
+        case caption
     }
     
 }
@@ -309,6 +313,19 @@ extension MessageItem: MentionedFullnameReplaceable {
     
     public var contentBeforeReplacingMentionedFullname: String? {
         content
+    }
+    
+    public func makeMentionedFullnameReplacedCaption() -> String {
+        guard let mentions = mentions, let caption = caption else {
+            return caption ?? ""
+        }
+        var replaced = caption
+        for mention in sortedMentions {
+            let target = "\(Mention.prefix)\(mention.key)"
+            let replacement = "\(Mention.prefix)\(mention.value)"
+            replaced = replaced.replacingOccurrences(of: target, with: replacement)
+        }
+        return replaced
     }
     
 }

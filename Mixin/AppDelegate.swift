@@ -296,7 +296,14 @@ extension AppDelegate {
             do {
                 try await AppsFlyerLib.shared().start()
             } catch {
-                reporter.report(error: error)
+                let nsError = error as NSError
+                if nsError.domain == "com.appsflyer.sdk.event" && nsError.code == 10 {
+                    // AppsFlyer throttles session starts via `minTimeBetweenSessions`, which this
+                    // method can hit when called again shortly after a previous call.
+                    Logger.general.info(category: "AppsFlyer", message: "Start throttled: \(error)")
+                } else {
+                    reporter.report(error: error)
+                }
             }
         }
     }

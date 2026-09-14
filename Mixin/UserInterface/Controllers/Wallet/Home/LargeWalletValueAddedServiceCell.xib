@@ -24,15 +24,20 @@
                     <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="cEZ-M8-xoM">
                         <rect key="frame" x="70" y="20" width="245" height="46"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Qcy-6M-MaH">
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Qcy-6M-MaH">
                                 <rect key="frame" x="0.0" y="0.0" width="245" height="16.333333333333332"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Cash Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CYl-xj-JSX">
-                                        <rect key="frame" x="0.0" y="0.0" width="229" height="16.333333333333332"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <color key="textColor" name="text_secondary"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="n4q-2D-tY8">
+                                        <rect key="frame" x="0.0" y="0.0" width="225" height="16.333333333333332"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Cash Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CYl-xj-JSX">
+                                                <rect key="frame" x="0.0" y="0.0" width="225" height="16.333333333333332"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <color key="textColor" name="text_secondary"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
                                     <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="external_indicator_arrow_bold" translatesAutoresizingMaskIntoConstraints="NO" id="e0U-G6-d2B">
                                         <rect key="frame" x="229" y="0.33333333333333215" width="16" height="16"/>
                                         <color key="tintColor" name="icon_tint_tertiary"/>
@@ -64,9 +69,15 @@
                                         </subviews>
                                     </stackView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ffm-X2-0in">
-                                        <rect key="frame" x="81" y="0.0" width="164" height="21.666666666666668"/>
+                                        <rect key="frame" x="81" y="0.0" width="98" height="21.666666666666668"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="62" placeholderIntrinsicHeight="16" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9gC-pX-Z3m" userLabel="APY Label" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="183" y="3" width="62" height="16"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -83,11 +94,12 @@
                 </constraints>
             </collectionViewCellContentView>
             <connections>
+                <outlet property="apyLabel" destination="9gC-pX-Z3m" id="bEr-1K-n3r"/>
                 <outlet property="balanceLabel" destination="7rt-l8-RGy" id="uJh-Wu-KQ6"/>
                 <outlet property="iconImageView" destination="ZuK-N6-7M4" id="cyf-14-ozx"/>
-                <outlet property="subtitleStackView" destination="i55-Oc-LaI" id="W6R-Qv-HGa"/>
                 <outlet property="symbolLabel" destination="wwP-YS-247" id="YWf-Kc-A4V"/>
                 <outlet property="titleLabel" destination="CYl-xj-JSX" id="LQI-Le-wJs"/>
+                <outlet property="titleStackView" destination="n4q-2D-tY8" id="L1n-bA-9tK"/>
             </connections>
             <point key="canvasLocation" x="5" y="154"/>
         </collectionViewCell>

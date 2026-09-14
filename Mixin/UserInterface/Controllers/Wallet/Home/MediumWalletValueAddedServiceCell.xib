@@ -18,37 +18,40 @@
                 <rect key="frame" x="0.0" y="0.0" width="162" height="96"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="d7J-Cc-PcN">
-                        <rect key="frame" x="20" y="16" width="122" height="44"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="xqf-9f-m86">
+                        <rect key="frame" x="16" y="16" width="130" height="12"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Cash Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g1I-Ub-9yD">
-                                <rect key="frame" x="0.0" y="0.0" width="78.666666666666671" height="14.333333333333334"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" text="Cash Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g1I-Ub-9yD">
+                                <rect key="frame" x="0.0" y="0.0" width="130" height="12"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" name="text_tertiary"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" alignment="firstBaseline" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="PCw-Bd-yxe">
-                                <rect key="frame" x="0.0" y="22.333333333333336" width="76.666666666666671" height="21.666666666666664"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1,000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BaV-BF-2TZ">
-                                        <rect key="frame" x="0.0" y="0.0" width="47.333333333333336" height="21.666666666666668"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                        <color key="textColor" name="text"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="USD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VyE-MB-3m2">
-                                        <rect key="frame" x="51.333333333333329" y="5.6666666666666652" width="25.333333333333329" height="14.333333333333336"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                        <color key="textColor" name="text"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </stackView>
                         </subviews>
                     </stackView>
-                    <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="62" placeholderIntrinsicHeight="infinite" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Wk4-v4-tay">
-                        <rect key="frame" x="20" y="70" width="62" height="10"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="firstBaseline" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="PCw-Bd-yxe">
+                        <rect key="frame" x="16" y="34" width="130" height="20"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="1,000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BaV-BF-2TZ">
+                                <rect key="frame" x="0.0" y="0.0" width="47.333333333333336" height="20"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="USD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VyE-MB-3m2">
+                                <rect key="frame" x="51.333333333333321" y="5.6666666666666652" width="78.666666666666686" height="14.333333333333336"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                     </stackView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="62" placeholderIntrinsicHeight="16" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wk4-v4-tay" userLabel="APY Label" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="16" y="64" width="62" height="16"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                     <imageView userInteractionEnabled="NO" contentMode="center" verticalHuggingPriority="251" image="external_indicator_arrow_bold" translatesAutoresizingMaskIntoConstraints="NO" id="kG8-07-EEs">
                         <rect key="frame" x="126" y="64" width="16" height="16"/>
                         <color key="tintColor" name="icon_tint_tertiary"/>
@@ -61,20 +64,24 @@
                 <color key="backgroundColor" name="background"/>
                 <constraints>
                     <constraint firstItem="kG8-07-EEs" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Wk4-v4-tay" secondAttribute="trailing" constant="4" id="52c-oB-qYs"/>
-                    <constraint firstItem="Wk4-v4-tay" firstAttribute="top" secondItem="d7J-Cc-PcN" secondAttribute="bottom" constant="10" id="5Vm-Cb-DVF"/>
+                    <constraint firstItem="xqf-9f-m86" firstAttribute="top" secondItem="8uC-O5-TJz" secondAttribute="top" constant="16" id="5bI-ps-dWi"/>
+                    <constraint firstAttribute="trailing" secondItem="xqf-9f-m86" secondAttribute="trailing" constant="16" id="ALH-pw-S6L"/>
+                    <constraint firstItem="PCw-Bd-yxe" firstAttribute="top" secondItem="xqf-9f-m86" secondAttribute="bottom" constant="6" id="CI7-og-yYw"/>
                     <constraint firstAttribute="trailing" secondItem="kG8-07-EEs" secondAttribute="trailing" constant="20" id="IJL-6o-vd2"/>
-                    <constraint firstAttribute="trailing" secondItem="d7J-Cc-PcN" secondAttribute="trailing" constant="20" id="Voy-VZ-0IL"/>
                     <constraint firstAttribute="bottom" secondItem="Wk4-v4-tay" secondAttribute="bottom" constant="16" id="WTP-cg-70p"/>
-                    <constraint firstItem="d7J-Cc-PcN" firstAttribute="top" secondItem="8uC-O5-TJz" secondAttribute="top" constant="16" id="j30-hs-vll"/>
-                    <constraint firstItem="d7J-Cc-PcN" firstAttribute="leading" secondItem="8uC-O5-TJz" secondAttribute="leading" constant="20" id="kP1-7G-I52"/>
+                    <constraint firstItem="xqf-9f-m86" firstAttribute="leading" secondItem="8uC-O5-TJz" secondAttribute="leading" constant="16" id="daQ-JG-2aX"/>
+                    <constraint firstItem="PCw-Bd-yxe" firstAttribute="leading" secondItem="8uC-O5-TJz" secondAttribute="leading" constant="16" id="iJH-UV-ToW"/>
+                    <constraint firstAttribute="trailing" secondItem="PCw-Bd-yxe" secondAttribute="trailing" constant="16" id="jjb-w3-aCF"/>
                     <constraint firstAttribute="bottom" secondItem="kG8-07-EEs" secondAttribute="bottom" constant="16" id="lHQ-Pu-FAR"/>
-                    <constraint firstItem="Wk4-v4-tay" firstAttribute="leading" secondItem="8uC-O5-TJz" secondAttribute="leading" constant="20" id="zp5-Wo-CXQ"/>
+                    <constraint firstItem="Wk4-v4-tay" firstAttribute="top" secondItem="PCw-Bd-yxe" secondAttribute="bottom" constant="10" id="mUT-Iw-9Ac"/>
+                    <constraint firstItem="Wk4-v4-tay" firstAttribute="leading" secondItem="8uC-O5-TJz" secondAttribute="leading" constant="16" id="zp5-Wo-CXQ"/>
                 </constraints>
             </collectionViewCellContentView>
             <connections>
                 <outlet property="amountLabel" destination="BaV-BF-2TZ" id="Kcz-RD-GUB"/>
-                <outlet property="descriptionStackView" destination="Wk4-v4-tay" id="mfo-bb-tEY"/>
+                <outlet property="apyLabel" destination="Wk4-v4-tay" id="a3y-Db-OWS"/>
                 <outlet property="titleLabel" destination="g1I-Ub-9yD" id="WEV-T3-I00"/>
+                <outlet property="titleStackView" destination="xqf-9f-m86" id="9oU-00-yEk"/>
             </connections>
             <point key="canvasLocation" x="-431" y="154"/>
         </collectionViewCell>

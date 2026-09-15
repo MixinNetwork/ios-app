@@ -233,7 +233,9 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                         viewControllers.removeAll { viewController in
                             viewController is OpenPerpsPositionViewController
                         }
-                        if !(viewControllers.last is PerpetualMarketViewController) {
+                        if context.presentMarketViewOnSuccess,
+                           !(viewControllers.last is PerpetualMarketViewController)
+                        {
                             let market = PerpetualMarketViewController(
                                 wallet: context.wallet,
                                 viewModel: context.viewModel,

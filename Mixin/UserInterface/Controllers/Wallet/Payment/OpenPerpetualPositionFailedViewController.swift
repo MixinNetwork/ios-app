@@ -7,17 +7,20 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
     private let marketViewModel: PerpetualMarketViewModel
     private let openedPosition: PerpetualPositionItem
     private let leaderPosition: TradeURL.LeaderPosition
+    private let presentMarketViewOnSuccess: Bool
     
     init(
         wallet: Wallet,
         viewModel: PerpetualMarketViewModel,
         openedPosition: PerpetualPositionItem,
         leaderPosition: TradeURL.LeaderPosition,
+        presentMarketViewOnSuccess: Bool,
     ) {
         self.wallet = wallet
         self.marketViewModel = viewModel
         self.openedPosition = openedPosition
         self.leaderPosition = leaderPosition
+        self.presentMarketViewOnSuccess = presentMarketViewOnSuccess
         super.init(wallet: wallet, warnings: [])
     }
     
@@ -134,7 +137,7 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
         )
         presentingViewController?.dismiss(
             animated: true
-        ) { [wallet, marketViewModel, leaderPosition, positionViewModel] in
+        ) { [wallet, marketViewModel, leaderPosition, positionViewModel, presentMarketViewOnSuccess] in
             guard let margin = positionViewModel.decimalMargin else {
                 return
             }
@@ -144,6 +147,7 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
                 positionViewModel: positionViewModel,
                 openedMargin: margin,
                 leaderPosition: leaderPosition,
+                presentMarketViewOnSuccess: presentMarketViewOnSuccess,
             )
             UIApplication.shared.homeContainerViewController?.present(addPosition, animated: true)
         }

@@ -388,6 +388,7 @@ final class PerpetualMarketViewController: UIViewController {
         let open = OpenPerpsPositionViewController(
             wallet: wallet,
             side: .long,
+            presentMarketViewOnSuccess: true,
             viewModel: viewModel,
             leaderPosition: nil
         )
@@ -398,6 +399,7 @@ final class PerpetualMarketViewController: UIViewController {
         let open = OpenPerpsPositionViewController(
             wallet: wallet,
             side: .short,
+            presentMarketViewOnSuccess: true,
             viewModel: viewModel,
             leaderPosition: nil
         )
@@ -416,7 +418,8 @@ final class PerpetualMarketViewController: UIViewController {
             marketViewModel: viewModel,
             positionViewModel: positionViewModel,
             openedMargin: margin,
-            leaderPosition: nil
+            leaderPosition: nil,
+            presentMarketViewOnSuccess: true,
         )
         present(addPosition, animated: true)
     }

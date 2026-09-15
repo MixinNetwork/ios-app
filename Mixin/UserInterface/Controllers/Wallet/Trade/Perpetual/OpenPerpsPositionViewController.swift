@@ -49,6 +49,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     
     private let wallet: Wallet
     private let side: PerpetualOrderSide
+    private let presentMarketViewOnSuccess: Bool
     private let marketLoader: PerpetualMarketLoader
     private let amountValidator: AmountValidator
     private let multipliers: [Multiplier]
@@ -92,6 +93,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     init(
         wallet: Wallet,
         side: PerpetualOrderSide,
+        presentMarketViewOnSuccess: Bool,
         viewModel: PerpetualMarketViewModel,
         leaderPosition: TradeURL.LeaderPosition?,
     ) {
@@ -106,6 +108,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         
         self.wallet = wallet
         self.side = side
+        self.presentMarketViewOnSuccess = presentMarketViewOnSuccess
         self.marketLoader = PerpetualMarketLoader(
             request: .single(marketID: viewModel.market.marketID),
             timeInterval: 3,
@@ -357,6 +360,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
             liquidationPrice: liquidationPrice,
             takeProfitPrice: takeProfitPrice,
             stopLossPrice: stopLossPrice,
+            presentMarketViewOnSuccess: presentMarketViewOnSuccess,
             onDismissAfterSuccess: nil,
         )
         sender.isBusy = true

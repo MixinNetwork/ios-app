@@ -29,6 +29,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
     private let marketViewModel: PerpetualMarketViewModel
     private let positionViewModel: PerpetualPositionViewModel
     private let openedMargin: Decimal
+    private let presentMarketViewOnSuccess: Bool
     private let leverageMultiplier: Decimal
     private let amountValidator: AmountValidator
     private let liquidationPriceBeforeAdding: String
@@ -60,11 +61,13 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
         positionViewModel: PerpetualPositionViewModel,
         openedMargin: Decimal,
         leaderPosition: TradeURL.LeaderPosition?,
+        presentMarketViewOnSuccess: Bool,
     ) {
         self.wallet = wallet
         self.marketViewModel = marketViewModel
         self.positionViewModel = positionViewModel
         self.openedMargin = openedMargin
+        self.presentMarketViewOnSuccess = presentMarketViewOnSuccess
         self.leverageMultiplier = Decimal(positionViewModel.leverageMultiplier)
         self.amountValidator = AmountValidator(market: marketViewModel.market)
         self.liquidationPriceBeforeAdding = positionViewModel.decimalLiquidationPrice?.formatted(
@@ -221,6 +224,7 @@ final class AddPerpsPositionViewController: PerpsMarginInputViewController {
             liquidationPrice: liquidationPrice,
             takeProfitPrice: nil,
             stopLossPrice: nil,
+            presentMarketViewOnSuccess: presentMarketViewOnSuccess,
             onDismissAfterSuccess: { [weak self] in
                 self?.presentingViewController?.dismiss(animated: true)
             },

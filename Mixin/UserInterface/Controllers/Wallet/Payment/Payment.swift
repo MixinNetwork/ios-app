@@ -194,6 +194,7 @@ extension Payment {
         let liquidationPrice: Decimal
         let takeProfitPrice: Decimal?
         let stopLossPrice: Decimal?
+        let presentMarketViewOnSuccess: Bool
         let onDismissAfterSuccess: (() -> Void)?
         
     }

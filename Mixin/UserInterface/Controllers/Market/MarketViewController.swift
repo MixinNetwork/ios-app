@@ -510,6 +510,7 @@ final class MarketViewController: UIViewController {
             next = OpenPerpsPositionViewController(
                 wallet: .privacy,
                 side: side,
+                presentMarketViewOnSuccess: true,
                 viewModel: viewModel,
                 leaderPosition: nil
             )

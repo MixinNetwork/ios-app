@@ -1898,6 +1898,7 @@
 "unrecognized_codes" = "인식할 수 없는 코드";
 "unsigned_message" = "서명되지 않은 메시지";
 "until_date" = "%@까지";
+"up_to_apy" = "최대 %@ APY";
 "update" = "업데이트";
 "update_mixin" = "Mixin 업데이트";
 "update_now" = "지금 업데이트";

@@ -1898,6 +1898,7 @@
 "unrecognized_codes" = "Нераспознанные коды";
 "unsigned_message" = "НЕПОДПИСАННОЕ СООБЩЕНИЕ";
 "until_date" = "До %@";
+"up_to_apy" = "До %@ APY";
 "update" = "Обновить";
 "update_mixin" = "Обновить Mixin";
 "update_now" = "Обновить сейчас";

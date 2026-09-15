@@ -1898,6 +1898,7 @@
 "unrecognized_codes" = "Unrecognized codes";
 "unsigned_message" = "UNSIGNED MESSAGE";
 "until_date" = "Until %@";
+"up_to_apy" = "Up to %@ APY";
 "update" = "Update";
 "update_mixin" = "Update Mixin";
 "update_now" = "Update Now";

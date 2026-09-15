@@ -1898,6 +1898,7 @@
 "unrecognized_codes" = "未識別的連結";
 "unsigned_message" = "待簽名訊息";
 "until_date" = "至%@";
+"up_to_apy" = "最高年化 %@";
 "update" = "升級";
 "update_mixin" = "升級 Mixin";
 "update_now" = "立即更新";

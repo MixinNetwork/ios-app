@@ -1898,6 +1898,7 @@
 "unrecognized_codes" = "不明なコード";
 "unsigned_message" = "未署名のメッセージ";
 "until_date" = "%@まで";
+"up_to_apy" = "最大 %@ APY";
 "update" = "アップデート";
 "update_mixin" = "Mixinのアップデート";
 "update_now" = "今すぐ更新";

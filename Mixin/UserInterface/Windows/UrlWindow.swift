@@ -96,16 +96,7 @@ class UrlWindow {
                         }
                     }
                 case let .perpsAction(leaderPosition):
-                    let presentMarketViewOnSuccess = switch source {
-                    case .webView, .conversation:
-                        false
-                    default:
-                        true
-                    }
-                    checkLeaderPosition(
-                        leaderPosition: leaderPosition,
-                        presentMarketViewOnSuccess: presentMarketViewOnSuccess
-                    )
+                    checkLeaderPosition(leaderPosition: leaderPosition)
                 case let .trade(designatedTrading, input, output):
                     let trading: TradeViewController.Trading
                     if let designatedTrading {
@@ -1620,10 +1611,7 @@ extension UrlWindow {
         }
     }
     
-    private static func checkLeaderPosition(
-        leaderPosition: TradeURL.LeaderPosition,
-        presentMarketViewOnSuccess: Bool,
-    ) {
+    private static func checkLeaderPosition(leaderPosition: TradeURL.LeaderPosition) {
         enum LoadTokenError: Error {
             case noMarginToken
             case insufficientBalance(BalanceRequirement)
@@ -1651,7 +1639,7 @@ extension UrlWindow {
                         viewModel: viewModel,
                         openedPosition: openedPosition,
                         leaderPosition: leaderPosition,
-                        presentMarketViewOnSuccess: presentMarketViewOnSuccess,
+                        presentMarketViewOnSuccess: false,
                     )
                     navigationController.present(failure, animated: true)
                 } else if let leverage = leaderPosition.leverage, let margin = leaderPosition.margin {
@@ -1701,7 +1689,7 @@ extension UrlWindow {
                                 liquidationPrice: liquidationPrice,
                                 takeProfitPrice: nil,
                                 stopLossPrice: nil,
-                                presentMarketViewOnSuccess: presentMarketViewOnSuccess,
+                                presentMarketViewOnSuccess: false,
                                 onDismissAfterSuccess: nil,
                             )
                             RouteAPI.openPerpsOrder(orderRequest: request) { result in
@@ -1753,7 +1741,7 @@ extension UrlWindow {
                     let open = OpenPerpsPositionViewController(
                         wallet: wallet,
                         side: leaderPosition.side,
-                        presentMarketViewOnSuccess: presentMarketViewOnSuccess,
+                        presentMarketViewOnSuccess: true,
                         viewModel: viewModel,
                         leaderPosition: leaderPosition
                     )

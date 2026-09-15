@@ -42,13 +42,14 @@ extension MediumWalletValueAddedServiceCell: WalletValueAddedServiceCell {
     func load(account: CashAccount?) {
         titleLabel.text = R.string.localizable.cash_balance()
         tokensViewIfLoaded?.isHidden = true
-        apyLabel.isHidden = false
         if let account {
             amountLabel.text = account.decimalBalance.formatted(balanceFormatStyle)
             apyLabel.text = account.displayAPY
+            apyLabel.alpha = 1
         } else {
             amountLabel.text = "-"
-            apyLabel.text = ""
+            apyLabel.text = "-"
+            apyLabel.alpha = 0
         }
     }
     
@@ -78,9 +79,10 @@ extension MediumWalletValueAddedServiceCell: WalletValueAddedServiceCell {
         }
         if let apy = account?.maxAPY {
             apyLabel.text = R.string.localizable.up_to_apy(apy)
-            apyLabel.isHidden = false
+            apyLabel.alpha = 1
         } else {
-            apyLabel.isHidden = true
+            apyLabel.text = "-"
+            apyLabel.alpha = 0
         }
     }
     

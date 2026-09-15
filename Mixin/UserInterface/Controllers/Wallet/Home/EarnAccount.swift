@@ -31,6 +31,8 @@ struct EarnAccount {
             }
             let rates = product.annualRates.compactMap { rate in
                 Decimal(string: rate, locale: .enUSPOSIX)
+            }.filter { rate in
+                rate > 0
             }
             if let productMaxAPY = rates.max() {
                 if let currentMaxAPY = maxAPY {

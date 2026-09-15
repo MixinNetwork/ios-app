@@ -97,7 +97,7 @@ class UrlWindow {
                     }
                 case let .perpsAction(leaderPosition):
                     let presentMarketViewOnSuccess = switch source {
-                    case .webView:
+                    case .webView, .conversation:
                         false
                     default:
                         true

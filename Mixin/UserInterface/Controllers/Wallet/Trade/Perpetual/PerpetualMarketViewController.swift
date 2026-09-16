@@ -44,11 +44,7 @@ final class PerpetualMarketViewController: UIViewController {
             if viewModel.openInterest != nil {
                 infos.append(.openInterest)
             }
-            if viewModel.market.fundingIntervalHours != 0,
-               viewModel.nextFundingAt.timeIntervalSinceNow > 0
-            {
-                infos.append(.fundingRate)
-            }
+            infos.append(.fundingRate)
             return infos
         }
         
@@ -856,7 +852,12 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
                 return cell
             case .fundingRate:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perp_market_funding_rate, for: indexPath)!
-                cell.titleLabel.text = R.string.localizable.perps_funding_title_interval(viewModel.market.fundingIntervalHours).uppercased()
+                let title = if viewModel.market.fundingIntervalHours > 0 {
+                    R.string.localizable.perps_funding_title_interval(viewModel.market.fundingIntervalHours)
+                } else {
+                    R.string.localizable.funding_rate()
+                }
+                cell.titleLabel.text = title.uppercased()
                 cell.contentLabel.text = viewModel.fundingRate
                 cell.delegate = self
                 cell.startCountDown(

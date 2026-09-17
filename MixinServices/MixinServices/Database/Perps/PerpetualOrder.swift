@@ -27,6 +27,8 @@ public class PerpetualOrder: Codable, DatabaseColumnConvertible, MixinFetchableR
     public enum OrderType: String {
         case open
         case increasePosition = "increase_position"
+        case increaseMargin = "increase_margin"
+        case decreaseMargin = "decrease_margin"
         case close
     }
     

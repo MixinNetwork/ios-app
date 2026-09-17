@@ -43,6 +43,14 @@ final class PerpetualOrderViewController: UIViewController {
                 if let fee = viewModel.feeAmount {
                     infos.append(.fee(fee))
                 }
+            case let .increaseMargin(payAmount), let .decreaseMargin(payAmount):
+                infos.append(.general(
+                    title: R.string.localizable.amount().uppercased(),
+                    content: payAmount
+                ))
+                if let fee = viewModel.feeAmount {
+                    infos.append(.fee(fee))
+                }
             case let .close(pnl, closePrice):
                 infos.append(.pnl(value: pnl.aggregated, color: pnl.color))
                 if let fee = viewModel.feeAmount {
@@ -284,7 +292,7 @@ extension PerpetualOrderViewController: PillActionView.Delegate {
         case .share:
             let dataSource: SharePerpetualPositionDataSource
             switch viewModel.type {
-            case .open, .increase:
+            case .open, .increase, .increaseMargin, .decreaseMargin:
                 return
             case .close(let pnl, let closePrice):
                 dataSource = SharePerpetualPositionDataSource(

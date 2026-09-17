@@ -45,8 +45,14 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.error_too_many_wallets()
         case .unsupportedWatchAddress:
             return R.string.localizable.error_watch_address_not_supported()
+        case .perpsOrderMarginTooLow:
+            return R.string.localizable.error_perps_order_value_too_small("10650")
+        case .perpsOrderSizeTooLow:
+            return R.string.localizable.error_perps_order_value_too_small("10654")
         case .alreadyHadPosition:
             return R.string.localizable.error_already_had_open_position()
+        case .perpPositionSizeExceedsLeverageLimit:
+            return R.string.localizable.error_perps_position_size_exceeds_leverage_limit()
         case .referralCodeNotFound:
             return R.string.localizable.error_invalid_referral_code()
         case .alreadyBondedReferralCode:

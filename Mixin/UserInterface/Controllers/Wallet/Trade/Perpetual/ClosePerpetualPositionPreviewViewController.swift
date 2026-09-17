@@ -6,6 +6,8 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
     private let viewModels: [PerpetualPositionViewModel]
     private let wallet: Wallet
     
+    private var hasSucceeded = false
+    
     init?(
         viewModels: [PerpetualPositionViewModel]
     ) {
@@ -83,15 +85,13 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             )
             
             let totalWeightedROE: Decimal = viewModels.reduce(0) { result, viewModel in
-                if let margin = viewModel.decimalMargin,
-                   let roe = viewModel.decimalROE
-                {
-                    result + margin * roe
+                if let roe = viewModel.decimalROE {
+                    result + viewModel.decimalMargin * roe
                 } else {
                     result
                 }
             }
-            let totalMargin = viewModels.compactMap(\.decimalMargin).reduce(0, +)
+            let totalMargin = viewModels.map(\.decimalMargin).reduce(0, +)
             if totalMargin > 0 {
                 let aggregatedROE = totalWeightedROE / totalMargin
                 let roe = PercentageFormatter.string(
@@ -125,7 +125,9 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
     
     override func close(_ sender: Any) {
         super.close(sender)
-        reporter.report(event: .tradePerpsClosePreviewCancel)
+        if !hasSucceeded {
+            reporter.report(event: .tradePerpsClosePreviewCancel)
+        }
     }
     
     override func performAction(with pin: String) {
@@ -164,6 +166,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {
                     canDismissInteractively = true
+                    hasSucceeded = true
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(
                         title: R.string.localizable.position_closed(),

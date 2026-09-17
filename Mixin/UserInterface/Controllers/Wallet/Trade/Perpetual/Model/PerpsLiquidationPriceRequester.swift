@@ -42,7 +42,7 @@ final class OpenPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceReq
                 try Task.checkCancellation()
                 do {
                     let price = try await RouteAPI.perpsLiquidationPrice(
-                        request: .open(marketID: marketID, side: side, leverage: leverage),
+                        action: .open(marketID: marketID, side: side, leverage: leverage),
                         amount: amount
                     )
                     try Task.checkCancellation()
@@ -67,12 +67,25 @@ final class OpenPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceReq
     
 }
 
-final class AddPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceRequester {
+final class EditPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceRequester {
     
-    private let positionID: String
+    enum Action {
+        case increasePosition
+        case increaseMargin
+        case decreaseMargin
+    }
     
-    init(positionID: String) {
-        self.positionID = positionID
+    private let action: RouteAPI.LiquidationPriceAction
+    
+    init(positionID: String, action: Action) {
+        self.action = switch action {
+        case .increasePosition:
+                .increasePosition(positionID: positionID)
+        case .increaseMargin:
+                .increaseMargin(positionID: positionID)
+        case .decreaseMargin:
+                .decreaseMargin(positionID: positionID)
+        }
     }
     
     @MainActor
@@ -82,13 +95,13 @@ final class AddPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceRequ
         onFailure: @escaping @MainActor (Error) -> Void,
     ) {
         task?.cancel()
-        task = Task { [debounceInterval, positionID] in
+        task = Task { [debounceInterval, action] in
             while LoginManager.shared.isLoggedIn {
                 try await Task.sleep(nanoseconds: debounceInterval * NSEC_PER_MSEC)
                 try Task.checkCancellation()
                 do {
                     let price = try await RouteAPI.perpsLiquidationPrice(
-                        request: .add(positionID: positionID),
+                        action: action,
                         amount: amount
                     )
                     try Task.checkCancellation()

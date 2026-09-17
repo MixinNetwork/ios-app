@@ -10,10 +10,13 @@ enum UserOperationAnalytics {
         case spotMarketDetail   = "spot_market_detail"
         case tradeDetail        = "trade_detail"
         case assetDetail        = "asset_detail"
-        case perpsMarginInput   = "perps_margin_input"
+        case url                = "url"
         case transfer           = "transfer"
         case withdraw           = "withdraw"
         case scheme             = "scheme"
+        case perpsMarginInput   = "perps_margin_input"
+        case perpsMarketDetailAdd           = "perps_market_detail_add"
+        case perpsMarketDetailBottomMenu    = "perps_market_detail_bottom_menu"
     }
     
     static var tradeSource: TradeSource?

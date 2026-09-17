@@ -399,7 +399,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     }
     
     override func reportMarginTokenSelection(tags: [String : String]) {
-        reporter.report(event: .tradePerpsOpenMarginSelect, tags: tags)
+        reporter.report(event: .tradePerpsOpenTokenSelect, tags: tags)
     }
     
     @objc private func presentCustomerService(_ sender: Any) {

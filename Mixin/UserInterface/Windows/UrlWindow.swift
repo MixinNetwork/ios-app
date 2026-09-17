@@ -1663,7 +1663,7 @@ extension UrlWindow {
                                 throw LoadTokenError.insufficientBalance(requirement)
                             }
                             let liquidationPrice = try await RouteAPI.perpsLiquidationPrice(
-                                request: .open(marketID: marketID, side: side, leverage: leverage),
+                                action: .open(marketID: marketID, side: side, leverage: leverage),
                                 amount: margin
                             )
                             let request = OpenPerpetualOrderRequest(

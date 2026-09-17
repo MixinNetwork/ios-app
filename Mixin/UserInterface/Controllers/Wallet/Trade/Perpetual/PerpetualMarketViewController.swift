@@ -402,22 +402,39 @@ final class PerpetualMarketViewController: UIViewController {
         navigationController?.pushViewController(open, animated: true)
     }
     
-    @objc private func addPosition(_ sender: UIButton) {
-        guard
-            let positionViewModel = openPositionViewModel,
-            let margin = positionViewModel.decimalMargin
-        else {
-            return
+    @objc private func adjustPosition(_ sender: UIButton) {
+        let adjustment = PerpPositionAdjustmentSelectorViewController()
+        adjustment.onSelected = { [weak self] adjustment in
+            guard let self else {
+                return
+            }
+            guard let positionViewModel = self.openPositionViewModel else {
+                return
+            }
+            switch adjustment.behavior {
+            case .increase:
+                UserOperationAnalytics.tradeSource = .perpsMarketDetailAdd
+                let addPosition = AddToPerpsPositionViewController(
+                    wallet: wallet,
+                    adding: adjustment.target,
+                    marketViewModel: viewModel,
+                    positionViewModel: positionViewModel,
+                    leaderPosition: nil,
+                    presentMarketViewOnSuccess: true,
+                )
+                self.present(addPosition, animated: true)
+            case .decrease:
+                UserOperationAnalytics.tradeSource = .perpsMarketDetailBottomMenu
+                let reduce = ReduceToPerpsPositionViewController(
+                    wallet: wallet,
+                    reducing: adjustment.target,
+                    marketViewModel: viewModel,
+                    positionViewModel: positionViewModel,
+                )
+                self.present(reduce, animated: true)
+            }
         }
-        let addPosition = AddPerpsPositionViewController(
-            wallet: wallet,
-            marketViewModel: viewModel,
-            positionViewModel: positionViewModel,
-            openedMargin: margin,
-            leaderPosition: nil,
-            presentMarketViewOnSuccess: true,
-        )
-        present(addPosition, animated: true)
+        present(adjustment, animated: true)
     }
     
     @objc private func closePosition(_ sender: UIButton) {
@@ -602,7 +619,6 @@ final class PerpetualMarketViewController: UIViewController {
     private func setupTakeProfit(positionViewModel: PerpetualPositionViewModel) {
         guard
             editingLock == nil,
-            let margin = positionViewModel.decimalMargin,
             let entryPrice = positionViewModel.decimalEntryPrice,
             let liquidationPrice = positionViewModel.decimalLiquidationPrice
         else {
@@ -611,7 +627,7 @@ final class PerpetualMarketViewController: UIViewController {
         let editor = EditPerpClosingConditionViewController(
             viewModel: viewModel,
             side: positionViewModel.side,
-            margin: margin,
+            margin: positionViewModel.decimalMargin,
             behavior: .takeProfit,
             leverage: Decimal(positionViewModel.leverageMultiplier),
             orderState: .open(entryPrice: entryPrice), 
@@ -649,7 +665,6 @@ final class PerpetualMarketViewController: UIViewController {
     private func setupStopLoss(positionViewModel: PerpetualPositionViewModel) {
         guard
             editingLock == nil,
-            let margin = positionViewModel.decimalMargin,
             let entryPrice = positionViewModel.decimalEntryPrice,
             let liquidationPrice = positionViewModel.decimalLiquidationPrice
         else {
@@ -658,7 +673,7 @@ final class PerpetualMarketViewController: UIViewController {
         let editor = EditPerpClosingConditionViewController(
             viewModel: viewModel,
             side: positionViewModel.side,
-            margin: margin,
+            margin: positionViewModel.decimalMargin,
             behavior: .stopLoss,
             leverage: Decimal(positionViewModel.leverageMultiplier),
             orderState: .open(entryPrice: entryPrice),
@@ -738,13 +753,17 @@ final class PerpetualMarketViewController: UIViewController {
                     config.baseBackgroundColor = MarketColor.rising.uiColor
                     config.baseForegroundColor = .white
                     config.attributedTitle = AttributedString(
-                        R.string.localizable.add_position(),
+                        R.string.localizable.perps_adjust(),
                         attributes: actionView.mediumFontAttributes
                     )
                     actionView.leftButton.configuration = config
                 }
                 actionView.leftButton.removeTarget(self, action: nil, for: .touchUpInside)
-                actionView.leftButton.addTarget(self, action: #selector(addPosition(_:)), for: .touchUpInside)
+                actionView.leftButton.addTarget(
+                    self,
+                    action: #selector(adjustPosition(_:)),
+                    for: .touchUpInside
+                )
                 if var config = actionView.rightButton.configuration {
                     config.baseBackgroundColor = R.color.theme()!
                     config.baseForegroundColor = .white

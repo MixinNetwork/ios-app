@@ -13,6 +13,8 @@ struct PerpetualOrderViewModel {
     enum OrderType {
         case open(payAmount: String)
         case increase(payAmount: String)
+        case increaseMargin(payAmount: String)
+        case decreaseMargin(payAmount: String)
         case close(pnl: PnL, closePrice: String)
     }
     
@@ -110,6 +112,22 @@ struct PerpetualOrderViewModel {
                     R.string.localizable.added_short()
                 }
             }
+        case .increaseMargin:
+            self.type = .increaseMargin(payAmount: payAmount ?? "")
+            self.title = switch order.status.knownCase {
+            case .rejected:
+                R.string.localizable.perps_adding_margin_failed()
+            default:
+                R.string.localizable.perps_add_margin()
+            }
+        case .decreaseMargin:
+            self.type = .decreaseMargin(payAmount: payAmount ?? "")
+            self.title = switch order.status.knownCase {
+            case .rejected:
+                R.string.localizable.perps_reducing_margin_failed()
+            default:
+                R.string.localizable.perps_reduce_margin()
+            }
         case .close:
             let decimalClosePrice = Decimal(string: order.closePrice, locale: .enUSPOSIX)
             let realizedPnL = Decimal(string: order.realizedPnL, locale: .enUSPOSIX) ?? 0
@@ -156,7 +174,7 @@ struct PerpetualOrderViewModel {
                     R.string.localizable.closed_short()
                 }
             }
-        default:
+        case .none:
             assertionFailure("Unknown order type")
             return nil
         }
@@ -167,7 +185,7 @@ struct PerpetualOrderViewModel {
         default:
             self.status = .normal
             switch order.orderType.knownCase {
-            case .open, .increasePosition:
+            case .open, .increasePosition, .increaseMargin, .decreaseMargin:
                 self.actions = [.viewMarket]
             case .close:
                 self.actions = [.tradeAgain, .share]

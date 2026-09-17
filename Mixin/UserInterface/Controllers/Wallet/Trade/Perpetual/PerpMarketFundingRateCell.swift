@@ -68,7 +68,11 @@ final class PerpMarketFundingRateCell: UICollectionViewCell {
         }
         let remaining = max(0, nextFundingDate.timeIntervalSinceNow)
         countDownLabel.text = PerpsFundingRateDurationFormatter.string(from: remaining)
-        let progress = min(1, max(0, remaining / totalInterval))
+        let progress: Double = if totalInterval == 0 {
+            0
+        } else {
+            min(1, max(0, remaining / totalInterval))
+        }
         progressView.setProgress(progress, animationDuration: nil)
         if remaining <= 0 {
             timer.invalidate()

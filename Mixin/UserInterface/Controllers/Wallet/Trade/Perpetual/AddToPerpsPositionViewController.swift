@@ -467,9 +467,15 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
         case let .valid(price, isBalanceSufficient):
             self.liquidationPriceAfterAdding = price
             liquidationPriceActivityIndicator.stopAnimating()
-            liquidationPriceContentLabel.text = price.formatted(
+            let after = price.formatted(
                 marketViewModel.userDisplayPriceFormatStyle
             )
+            liquidationPriceContentLabel.text = switch target {
+            case .position:
+                after
+            case .margin:
+                liquidationPriceBeforeAdding + " → " + after
+            }
             liquidationPriceContentLabel.alpha = 1
             addButton.isEnabled = isBalanceSufficient && !isAdding
         }

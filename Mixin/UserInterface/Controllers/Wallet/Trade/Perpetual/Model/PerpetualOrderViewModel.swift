@@ -12,7 +12,7 @@ struct PerpetualOrderViewModel {
     
     enum OrderType {
         case open(payAmount: String)
-        case increase(payAmount: String)
+        case increasePosition(payAmount: String)
         case increaseMargin(payAmount: String)
         case decreaseMargin(payAmount: String)
         case close(pnl: PnL, closePrice: String)
@@ -55,20 +55,22 @@ struct PerpetualOrderViewModel {
     let leverageMultiplier: Int
     let leverage: String
     let displaySymbol: String?
+    let absoluteDecimalQuantity: Decimal
     let quantity: String
     let tokenSymbol: String?
     let orderValueInToken: String
     let entryPrice: String
     let date: String
     let feeAmount: String?
+    let decimalPayAmount: Decimal
     let priceFormatStyle: Decimal.FormatStyle.Currency
     let offset: String
     
     init?(wallet: Wallet, order: PerpetualOrderItem) {
-        let decimalPayAmount = Decimal(string: order.payAmount, locale: .enUSPOSIX)
-        let payAmount = decimalPayAmount?.formatted(order.priceFormatStyle)
+        let decimalPayAmount = Decimal(string: order.payAmount, locale: .enUSPOSIX) ?? 0
+        let payAmount = decimalPayAmount.formatted(order.priceFormatStyle)
         let side = PerpetualOrderSide(rawValue: order.side) ?? .short
-        let quantity = abs(Decimal(string: order.quantity, locale: .enUSPOSIX) ?? 0)
+        let absoluteQuantity = abs(Decimal(string: order.quantity, locale: .enUSPOSIX) ?? 0)
         let entryPrice = Decimal(string: order.entryPrice, locale: .enUSPOSIX)
         let leverage = PerpetualLeverage.stringRepresentation(multiplier: order.leverage)
         
@@ -77,7 +79,7 @@ struct PerpetualOrderViewModel {
         self.positionID = order.positionID
         switch order.orderType.knownCase {
         case .open:
-            self.type = .open(payAmount: payAmount ?? "")
+            self.type = .open(payAmount: payAmount)
             self.title = switch side {
             case .long:
                 switch order.status.knownCase {
@@ -95,7 +97,7 @@ struct PerpetualOrderViewModel {
                 }
             }
         case .increasePosition:
-            self.type = .increase(payAmount: payAmount ?? "")
+            self.type = .increasePosition(payAmount: payAmount)
             self.title = switch side {
             case .long:
                 switch order.status.knownCase {
@@ -113,7 +115,7 @@ struct PerpetualOrderViewModel {
                 }
             }
         case .increaseMargin:
-            self.type = .increaseMargin(payAmount: payAmount ?? "")
+            self.type = .increaseMargin(payAmount: payAmount)
             self.title = switch order.status.knownCase {
             case .rejected:
                 R.string.localizable.perps_adding_margin_failed()
@@ -121,7 +123,7 @@ struct PerpetualOrderViewModel {
                 R.string.localizable.perps_add_margin()
             }
         case .decreaseMargin:
-            self.type = .decreaseMargin(payAmount: payAmount ?? "")
+            self.type = .decreaseMargin(payAmount: payAmount)
             self.title = switch order.status.knownCase {
             case .rejected:
                 R.string.localizable.perps_reducing_margin_failed()
@@ -206,14 +208,15 @@ struct PerpetualOrderViewModel {
         self.leverageMultiplier = order.leverage
         self.leverage = leverage
         self.displaySymbol = order.displaySymbol
+        self.absoluteDecimalQuantity = absoluteQuantity
         self.quantity = CurrencyFormatter.localizedString(
-            from: quantity,
+            from: absoluteQuantity,
             format: .precision,
             sign: .never,
         )
         self.tokenSymbol = order.tokenSymbol
         self.orderValueInToken = CurrencyFormatter.localizedString(
-            from: quantity,
+            from: absoluteQuantity,
             format: .precision,
             sign: .never,
             symbol: .custom(order.tokenSymbol)
@@ -241,6 +244,7 @@ struct PerpetualOrderViewModel {
         } else {
             self.feeAmount = nil
         }
+        self.decimalPayAmount = decimalPayAmount
         self.priceFormatStyle = order.priceFormatStyle
         self.offset = order.updatedAt
     }

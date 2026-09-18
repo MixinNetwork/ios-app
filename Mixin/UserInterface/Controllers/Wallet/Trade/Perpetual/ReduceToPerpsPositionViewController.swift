@@ -285,6 +285,12 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             name: PerpsPositionDAO.perpsPositionDidChangeNotification,
             object: nil,
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationDidBecomeActive),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil,
+        )
         valueTextField.becomeFirstResponder()
     }
     
@@ -409,6 +415,13 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             }
         )
         present(preview, animated: true)
+    }
+    
+    @objc private func applicationDidBecomeActive() {
+        guard viewIfLoaded?.window != nil, presentedViewController == nil else {
+            return
+        }
+        valueTextField.becomeFirstResponder()
     }
     
     @objc private func reloadMarket(_ notification: Notification) {

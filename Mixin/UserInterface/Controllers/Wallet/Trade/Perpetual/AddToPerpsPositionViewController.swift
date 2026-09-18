@@ -194,6 +194,12 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
             name: PerpsPositionDAO.perpsPositionDidChangeNotification,
             object: nil,
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationDidBecomeActive),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil,
+        )
         marginAmountTextField.becomeFirstResponder()
     }
     
@@ -316,6 +322,13 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                 self?.handlePayment(context: context, response: response)
             }
         }
+    }
+    
+    @objc private func applicationDidBecomeActive() {
+        guard viewIfLoaded?.window != nil, presentedViewController == nil else {
+            return
+        }
+        marginAmountTextField.becomeFirstResponder()
     }
     
     @objc private func reloadMarket(_ notification: Notification) {

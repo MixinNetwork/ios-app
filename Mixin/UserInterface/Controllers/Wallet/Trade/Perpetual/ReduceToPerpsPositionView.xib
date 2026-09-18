@@ -15,7 +15,7 @@
                 <outlet property="alternativeValueLabel" destination="gib-sV-HmB" id="19t-dY-QF9"/>
                 <outlet property="cancelButton" destination="V7i-at-j61" id="Q6z-ii-L3I"/>
                 <outlet property="decreaseMultiplierButton" destination="nwm-iV-y6C" id="2vm-oy-BFT"/>
-                <outlet property="errorDescriptionLabel" destination="0Cc-45-tPy" id="x1T-Uc-28n"/>
+                <outlet property="errorDescriptionButton" destination="0Cc-45-tPy" id="x1T-Uc-28n"/>
                 <outlet property="increaseMultiplierButton" destination="P70-rC-iEd" id="dNA-3E-r4F"/>
                 <outlet property="inputBackgroundView" destination="hS7-wT-Jr6" id="p5u-Bv-KlN"/>
                 <outlet property="liquidationPriceActivityIndicator" destination="KEk-Ed-oel" id="gan-BA-tTg"/>
@@ -78,12 +78,17 @@
                                                 </imageView>
                                             </subviews>
                                         </stackView>
-                                        <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Max removable 50%" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Cc-45-tPy">
-                                            <rect key="frame" x="16" y="137.33333333333331" width="321" height="14"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                            <color key="textColor" name="market_red"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <button opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Cc-45-tPy">
+                                            <rect key="frame" x="16" y="125.33333333333331" width="321" height="54"/>
+                                            <buttonConfiguration key="configuration" style="plain" title="Max removable 50%">
+                                                <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="12" trailing="0.0"/>
+                                                <color key="baseForegroundColor" name="market_red"/>
+                                            </buttonConfiguration>
+                                            <connections>
+                                                <action selector="inputMaximumRemovable:" destination="-1" eventType="touchUpInside" id="max-removable-action"/>
+                                            </connections>
+                                        </button>
                                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="xua-ar-gf3">
                                             <rect key="frame" x="16" y="179.33333333333331" width="321" height="34"/>
                                             <connections>
@@ -145,12 +150,12 @@
                                         <constraint firstItem="0Cc-45-tPy" firstAttribute="leading" secondItem="hS7-wT-Jr6" secondAttribute="leading" constant="16" id="LRP-tT-16V"/>
                                         <constraint firstItem="xua-ar-gf3" firstAttribute="leading" secondItem="hS7-wT-Jr6" secondAttribute="leading" constant="16" id="Lae-go-lN4"/>
                                         <constraint firstItem="Iml-Mv-mdd" firstAttribute="top" secondItem="hS7-wT-Jr6" secondAttribute="top" constant="44" id="Mua-Rd-GZo"/>
-                                        <constraint firstItem="xua-ar-gf3" firstAttribute="top" secondItem="0Cc-45-tPy" secondAttribute="bottom" constant="28" id="RzR-Aw-NHN"/>
+                                        <constraint firstItem="xua-ar-gf3" firstAttribute="top" secondItem="0Cc-45-tPy" secondAttribute="bottom" id="RzR-Aw-NHN"/>
                                         <constraint firstItem="pC6-jx-HxP" firstAttribute="top" secondItem="xua-ar-gf3" secondAttribute="bottom" constant="8" id="TLI-Eu-POC"/>
                                         <constraint firstAttribute="trailing" secondItem="pC6-jx-HxP" secondAttribute="trailing" constant="8" id="Uci-U3-j99"/>
                                         <constraint firstItem="nwm-iV-y6C" firstAttribute="centerY" secondItem="Iml-Mv-mdd" secondAttribute="centerY" id="UfS-hI-ICq"/>
                                         <constraint firstAttribute="trailing" secondItem="xua-ar-gf3" secondAttribute="trailing" constant="16" id="W9p-5c-VPK"/>
-                                        <constraint firstItem="0Cc-45-tPy" firstAttribute="top" secondItem="af8-42-ylv" secondAttribute="bottom" constant="12" id="hCA-mf-BEs"/>
+                                        <constraint firstItem="0Cc-45-tPy" firstAttribute="top" secondItem="af8-42-ylv" secondAttribute="bottom" id="hCA-mf-BEs"/>
                                         <constraint firstItem="P70-rC-iEd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Iml-Mv-mdd" secondAttribute="trailing" id="hEj-1d-0jk"/>
                                         <constraint firstItem="P70-rC-iEd" firstAttribute="centerY" secondItem="Iml-Mv-mdd" secondAttribute="centerY" id="hIM-3E-Iqr"/>
                                         <constraint firstAttribute="trailing" secondItem="P70-rC-iEd" secondAttribute="trailing" priority="750" constant="60" id="j1D-tL-2i9"/>
@@ -385,7 +390,7 @@
             <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

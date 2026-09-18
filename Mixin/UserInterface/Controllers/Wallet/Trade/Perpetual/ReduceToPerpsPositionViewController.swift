@@ -12,7 +12,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
     @IBOutlet weak var alternativeValueLabel: UILabel!
     @IBOutlet weak var swapValueDisplayImageView: UIImageView!
     @IBOutlet weak var swapValueDisplayButton: UIButton!
-    @IBOutlet weak var errorDescriptionLabel: UILabel!
+    @IBOutlet weak var errorDescriptionButton: UIButton!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var markingStackView: UIStackView!
     
@@ -56,6 +56,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
     private var input = Input(mode: .byPercentage, value: 0)
     private var amountDisplay: AmountDisplay = .byPercentage
     private var validatedAmount: Decimal?
+    private var maximumRemovableAmount: Decimal?
     
     private var absoluteAmount: Decimal {
         switch input.mode {
@@ -162,6 +163,20 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         )
         updateValueTextFieldAccessories()
         updateValueViews(updatingValueTextField: false)
+        if var config = errorDescriptionButton.configuration {
+            config.titleAlignment = .center
+            config.titleLineBreakMode = .byTruncatingTail
+            config.titleTextAttributesTransformer = .init { incoming in
+                var outgoing = incoming
+                outgoing.font = .preferredFont(forTextStyle: .caption1)
+                return outgoing
+            }
+            errorDescriptionButton.configuration = config
+        }
+        if let label = errorDescriptionButton.titleLabel {
+            label.adjustsFontForContentSizeCategory = true
+            label.numberOfLines = 0
+        }
         swapValueDisplayImageView.image = R.image.swap_transposition()!
             .withRenderingMode(.alwaysTemplate)
         for _ in markingPercentages {
@@ -331,6 +346,17 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         liquidationPriceRequester.cancelLastRequest()
         presentingViewController?.dismiss(animated: true)
         reporter.report(event: .tradePerpsReduceMarginCancel)
+    }
+    
+    @IBAction func inputMaximumRemovable(_ sender: UIButton) {
+        guard let maximumRemovableAmount else {
+            return
+        }
+        input = Input(mode: .byAmount, value: maximumRemovableAmount)
+        updateValueTextFieldAccessories()
+        updateValueViews(updatingValueTextField: true)
+        updateMarkingButtons()
+        updateDescriptions(requestLiquidationPrice: true)
     }
     
     @IBAction func reduce(_ sender: Any) {
@@ -766,14 +792,18 @@ extension ReduceToPerpsPositionViewController {
             )
         }
         showError(description: R.string.localizable.max_removable(value))
+        maximumRemovableAmount = amount
+        errorDescriptionButton.isEnabled = true
     }
     
     private func showError(description: String?) {
+        maximumRemovableAmount = nil
+        errorDescriptionButton.isEnabled = false
         if let description {
-            errorDescriptionLabel.text = description
-            errorDescriptionLabel.alpha = 1
+            errorDescriptionButton.configuration?.title = description
+            errorDescriptionButton.alpha = 1
         } else {
-            errorDescriptionLabel.alpha = 0
+            errorDescriptionButton.alpha = 0
         }
     }
     

@@ -19,19 +19,22 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
     
     override var marginToken: MixinTokenItem? {
         didSet {
-            updateDescriptions(marginAmount: marginAmount)
+            updateDescriptions(
+                marginAmount: marginAmount,
+                requestLiquidationPrice: true
+            )
         }
     }
     
     private let wallet: Wallet
     private let target: PerpPositionAdjustmentTarget
-    private let marketViewModel: PerpetualMarketViewModel
-    private let positionViewModel: PerpetualPositionViewModel
     private let presentMarketViewOnSuccess: Bool
-    private let leverageMultiplier: Decimal
-    private let liquidationPriceBeforeAdding: String
     private let liquidationPriceRequester: EditPerpsPositionLiquidationPriceRequester
     
+    private var marketViewModel: PerpetualMarketViewModel
+    private var positionViewModel: PerpetualPositionViewModel
+    private var leverageMultiplier: Decimal
+    private var liquidationPriceBeforeAdding: String
     private var liquidationPriceAfterAdding: Decimal?
     
     private var isAdding = false {
@@ -74,11 +77,11 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
         self.target = target
         self.marketViewModel = marketViewModel
         self.positionViewModel = positionViewModel
-        self.presentMarketViewOnSuccess = presentMarketViewOnSuccess
-        self.leverageMultiplier = Decimal(positionViewModel.leverageMultiplier)
         self.liquidationPriceBeforeAdding = positionViewModel.decimalLiquidationPrice?.formatted(
             marketViewModel.userDisplayPriceFormatStyle
         ) ?? "-"
+        self.leverageMultiplier = Decimal(positionViewModel.leverageMultiplier)
+        self.presentMarketViewOnSuccess = presentMarketViewOnSuccess
         self.liquidationPriceRequester = switch target {
         case .position:
             EditPerpsPositionLiquidationPriceRequester(
@@ -123,29 +126,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
             )
             targetTitleLabel.text = R.string.localizable.margin()
         }
-        titleView.subtitleLabel.attributedText = {
-            let currentPrice = marketViewModel.price
-            let text = NSMutableAttributedString(
-                string: R.string.localizable.auto_close_subtitle_after_open(
-                    positionViewModel.entryPrice,
-                    currentPrice
-                ),
-                attributes: [.foregroundColor: R.color.text_quaternary()!]
-            )
-            if let range = text.string.range(of: positionViewModel.entryPrice) {
-                text.setAttributes(
-                    [.foregroundColor: R.color.text_tertiary()!],
-                    range: NSRange(range, in: text.string)
-                )
-            }
-            if let range = text.string.range(of: currentPrice, options: .backwards) {
-                text.setAttributes(
-                    [.foregroundColor: R.color.text_tertiary()!],
-                    range: NSRange(range, in: text.string)
-                )
-            }
-            return text
-        }()
+        updateSubtitle()
         titleView.closeButton.addTarget(
             self,
             action: #selector(cancel(_:)),
@@ -163,7 +144,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
         }
         liquidationPriceTitleLabel.text = R.string.localizable.liquidation_price()
         liquidationPriceActivityIndicator.style = .custom(diameter: 10, lineWidth: 2)
-        updateDescriptions(marginAmount: marginAmount)
+        updateDescriptions(marginAmount: marginAmount, requestLiquidationPrice: marginAmount != 0)
         
         actionWrapperView.snp.makeConstraints { make in
             make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
@@ -194,17 +175,30 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
             addButton.configuration = config
         }
         addButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadMarket(_:)),
+            name: PerpsMarketDAO.marketsDidUpdateNotification,
+            object: nil,
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadPosition),
+            name: PerpsPositionDAO.perpsPositionDidChangeNotification,
+            object: nil,
+        )
         marginAmountTextField.becomeFirstResponder()
     }
     
     override func editMarginAmount(_ textField: UITextField) {
         super.editMarginAmount(textField)
-        updateDescriptions(marginAmount: marginAmount)
+        updateDescriptions(marginAmount: marginAmount, requestLiquidationPrice: true)
     }
     
     override func inputAmount(withBalanceMultipliedBy balanceMultiplier: Decimal) {
         super.inputAmount(withBalanceMultipliedBy: balanceMultiplier)
-        updateDescriptions(marginAmount: marginAmount)
+        updateDescriptions(marginAmount: marginAmount, requestLiquidationPrice: true)
     }
     
     override func inputTokenBalance(_ sender: Any) {
@@ -318,7 +312,69 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
         }
     }
     
-    private func updateDescriptions(marginAmount: Decimal) {
+    @objc private func reloadMarket(_ notification: Notification) {
+        guard
+            let market = notification.userInfo?[PerpsMarketDAO.UserInfoKey.market] as? PerpetualMarket,
+            market.marketID == marketViewModel.market.marketID
+        else {
+            return
+        }
+        let viewModel = PerpetualMarketViewModel(market: market)
+        marketViewModel = viewModel
+        updateSubtitle()
+        updateDescriptions(marginAmount: marginAmount, requestLiquidationPrice: false)
+    }
+    
+    @objc private func reloadPosition() {
+        let positionID = positionViewModel.positionID
+        DispatchQueue.global().async { [weak self, wallet] in
+            guard let position = PerpsPositionDAO.shared.position(positionID: positionID) else {
+                return
+            }
+            let viewModel = PerpetualPositionViewModel(wallet: wallet, position: position)
+            DispatchQueue.main.async { [weak self] in
+                guard let self else {
+                    return
+                }
+                self.positionViewModel = viewModel
+                self.liquidationPriceBeforeAdding = viewModel.decimalLiquidationPrice?.formatted(
+                    self.marketViewModel.userDisplayPriceFormatStyle
+                ) ?? "-"
+                self.leverageMultiplier = Decimal(viewModel.leverageMultiplier)
+                self.updateSubtitle()
+                self.updateDescriptions(marginAmount: self.marginAmount, requestLiquidationPrice: false)
+            }
+        }
+    }
+    
+    private func updateSubtitle() {
+        let currentPrice = marketViewModel.price
+        let text = NSMutableAttributedString(
+            string: R.string.localizable.auto_close_subtitle_after_open(
+                positionViewModel.entryPrice,
+                currentPrice
+            ),
+            attributes: [.foregroundColor: R.color.text_quaternary()!]
+        )
+        if let range = text.string.range(of: positionViewModel.entryPrice) {
+            text.setAttributes(
+                [.foregroundColor: R.color.text_tertiary()!],
+                range: NSRange(range, in: text.string)
+            )
+        }
+        if let range = text.string.range(of: currentPrice, options: .backwards) {
+            text.setAttributes(
+                [.foregroundColor: R.color.text_tertiary()!],
+                range: NSRange(range, in: text.string)
+            )
+        }
+        titleView.subtitleLabel.attributedText = text
+    }
+    
+    private func updateDescriptions(
+        marginAmount: Decimal,
+        requestLiquidationPrice: Bool,
+    ) {
         switch target {
         case .position:
             let before = CurrencyFormatter.localizedString(
@@ -370,27 +426,29 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                 targetContentLabel.text = before
             }
         }
-
-        guard marginAmount != 0, let marginToken else {
-            liquidationPriceRequester.cancelLastRequest()
-            show(liquidationPrice: .invalid)
-            showError(description: nil)
-            return
-        }
-        let isBalanceSufficient = marginAmount <= marginToken.decimalBalance
-        liquidationPriceRequester.request(
-            amount: marginAmount
-        ) { [weak self] price in
-            self?.show(liquidationPrice: .valid(price: price, isBalanceSufficient: isBalanceSufficient))
-        } onFailure: { [weak self] error in
-            guard let self else {
-                return
+        
+        if requestLiquidationPrice {
+            if marginAmount != 0, let marginToken {
+                let isBalanceSufficient = marginAmount <= marginToken.decimalBalance
+                liquidationPriceRequester.request(
+                    amount: marginAmount
+                ) { [weak self] price in
+                    self?.show(liquidationPrice: .valid(price: price, isBalanceSufficient: isBalanceSufficient))
+                } onFailure: { [weak self] error in
+                    guard let self else {
+                        return
+                    }
+                    self.show(liquidationPrice: .invalid)
+                    self.showError(description: error.localizedDescription)
+                }
+                show(liquidationPrice: .busy)
+                showError(description: isBalanceSufficient ? nil : R.string.localizable.insufficient_balance())
+            } else {
+                liquidationPriceRequester.cancelLastRequest()
+                show(liquidationPrice: .invalid)
+                showError(description: nil)
             }
-            self.show(liquidationPrice: .invalid)
-            self.showError(description: error.localizedDescription)
         }
-        show(liquidationPrice: .busy)
-        showError(description: isBalanceSufficient ? nil : R.string.localizable.insufficient_balance())
     }
     
     private func show(liquidationPrice: LiquidationPrice) {
@@ -413,7 +471,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                 marketViewModel.userDisplayPriceFormatStyle
             )
             liquidationPriceContentLabel.alpha = 1
-            addButton.isEnabled = isBalanceSufficient
+            addButton.isEnabled = isBalanceSufficient && !isAdding
         }
     }
     

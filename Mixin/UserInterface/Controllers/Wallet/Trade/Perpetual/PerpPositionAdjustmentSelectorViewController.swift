@@ -21,12 +21,27 @@ final class PerpPositionAdjustmentSelectorViewController: UIViewController {
     var onSelected: ((Adjustment) -> Void)?
     
     private let sections: [Section] = [.margin, .position, .introduction]
+    private let titleViewHeight: CGFloat = 70
+    
+    private weak var collectionView: UICollectionView!
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        modalPresentationStyle = .custom
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = R.color.background_secondary()
+        view.layer.cornerRadius = 13
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        view.layer.masksToBounds = true
         
-        let titleViewHeight: CGFloat = 70
         let titleView = PopupTitleView()
         titleView.backgroundColor = R.color.background_secondary()
         titleView.titleLabel.text = R.string.localizable.perps_adjust_title()
@@ -66,7 +81,7 @@ final class PerpPositionAdjustmentSelectorViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 28, bottom: 10, trailing: 28)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 28, bottom: 40, trailing: 28)
                 return section
             }
         }
@@ -81,8 +96,9 @@ final class PerpPositionAdjustmentSelectorViewController: UIViewController {
         )
         collectionView.backgroundColor = R.color.background_secondary()
         collectionView.isScrollEnabled = true
-        collectionView.alwaysBounceVertical = true
+        collectionView.alwaysBounceVertical = false
         view.addSubview(collectionView)
+        self.collectionView = collectionView
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(titleView.snp.bottom)
             make.leading.trailing.bottom.equalToSuperview()
@@ -97,6 +113,21 @@ final class PerpPositionAdjustmentSelectorViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.layoutIfNeeded()
+        let contentHeight = titleViewHeight
+            + collectionView.contentSize.height
+            + collectionView.adjustedContentInset.vertical
+        let containerHeight = presentationController?.containerView?.bounds.height
+            ?? presentingViewController?.view.bounds.height
+            ?? view.bounds.height
+        let height = min(contentHeight, containerHeight - view.windowSafeAreaInsets.top)
+        if abs(preferredContentSize.height - height) > 0.5 {
+            preferredContentSize.height = height
+        }
     }
     
     @objc private func close(_ sender: Any) {

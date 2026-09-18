@@ -56,7 +56,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
     
     private var markingButtons: [UIButton] = []
     private var input = Input(mode: .byPercentage, value: 0)
-    private var amountDisplay: AmountDisplay = .byPercentage
+    private var amountDisplay: AmountDisplay
     private var validatedAmount: Decimal?
     private var maximumRemovableAmount: Decimal?
     
@@ -94,13 +94,6 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         self.target = target
         self.marketViewModel = marketViewModel
         self.positionViewModel = positionViewModel
-        self.liquidationPriceBeforeReducing = positionViewModel.decimalLiquidationPrice?.formatted(
-            marketViewModel.userDisplayPriceFormatStyle
-        ) ?? "-"
-        self.markingAmounts = Input.markingAmounts(
-            margin: positionViewModel.decimalMargin,
-            percentages: markingPercentages
-        )
         switch target {
         case .margin:
             self.liquidationPriceRequester = EditPerpsPositionLiquidationPriceRequester(
@@ -115,6 +108,16 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             )
         }
         self.markingPercentages = markingPercentages
+        self.liquidationPriceBeforeReducing = positionViewModel.decimalLiquidationPrice?.formatted(
+            marketViewModel.userDisplayPriceFormatStyle
+        ) ?? "-"
+        self.markingAmounts = Input.markingAmounts(
+            margin: positionViewModel.decimalMargin,
+            percentages: markingPercentages
+        )
+        self.amountDisplay = AppGroupUserDefaults.Wallet.reducePerpsPositionAmountDisplay
+            .flatMap(AmountDisplay.init(rawValue:))
+        ?? .byPercentage
         let nib = R.nib.reduceToPerpsPositionView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -453,6 +456,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         case .byPercentage:
                 .byAmount
         }
+        AppGroupUserDefaults.Wallet.reducePerpsPositionAmountDisplay = amountDisplay.rawValue
         updateValueTextFieldAccessories()
         updateValueViews(updatingValueTextField: true)
         updateMarkingButtons()
@@ -526,9 +530,9 @@ extension ReduceToPerpsPositionViewController: UITextFieldDelegate {
 
 extension ReduceToPerpsPositionViewController {
     
-    private enum AmountDisplay {
-        case byAmount
-        case byPercentage
+    private enum AmountDisplay: Int {
+        case byAmount       = 0
+        case byPercentage   = 1
     }
     
     private struct Input {

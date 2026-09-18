@@ -31,6 +31,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
     private let liquidationPriceRequester: EditPerpsPositionLiquidationPriceRequester
     private let leftSignLabel = UILabel()
     private let rightSignLabel = UILabel()
+    private let valuePlaceholderColor = R.color.text_quaternary()!
     private let markingPercentages: [Decimal]
     
     private let absoluteAmountUserInputSimulationFormatter = Decimal.FormatStyle.number
@@ -150,8 +151,9 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         valueTextField.leftView = leftSignLabel
         valueTextField.rightView = rightSignLabel
         valueTextField.delegate = self
-        valueTextField.placeholder = Decimal(0).formatted(
-            absoluteAmountUserInputSimulationFormatter
+        valueTextField.attributedPlaceholder = NSAttributedString(
+            string: Decimal(0).formatted(absoluteAmountUserInputSimulationFormatter),
+            attributes: [.foregroundColor: valuePlaceholderColor],
         )
         swapValueDisplayButton.addTarget(
             self,
@@ -249,7 +251,6 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         }
         for label in [leftSignLabel, rightSignLabel] {
             label.font = valueTextField.font
-            label.textColor = valueTextField.textColor
         }
     }
     
@@ -653,6 +654,9 @@ extension ReduceToPerpsPositionViewController {
                 symbol: .dollarSign
             )
         }
+        let signColor = valueTextField.hasText ? valueTextField.textColor : valuePlaceholderColor
+        leftSignLabel.textColor = signColor
+        rightSignLabel.textColor = signColor
         slider.value = NSDecimalNumber(decimal: min(1, max(0, percentage))).floatValue
         decreaseMultiplierButton.isEnabled = absoluteAmount > 0
         increaseMultiplierButton.isEnabled = absoluteAmount < positionViewModel.decimalMargin

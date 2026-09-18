@@ -6,7 +6,7 @@ import MixinServices
 final class PrivacyWalletViewController: WalletViewController {
     
     private let dataLoadingQueue = DispatchQueue(label: "one.mixin.messenger.PrivacyWallet")
-    private let initialPositionLoader = PerpetualPositionLoader(
+    private let positionDiscoveryLoader = PerpetualPositionLoader(
         walletID: Wallet.privacy.tradingWalletID
     )
     
@@ -84,9 +84,6 @@ final class PrivacyWalletViewController: WalletViewController {
             object: nil
         )
         
-        // Reload once in case of launching on new device for the first time
-        initialPositionLoader.reload()
-        
         reloadData()
     }
     
@@ -99,7 +96,11 @@ final class PrivacyWalletViewController: WalletViewController {
             }
         }
         pendingDepositObserver?.reloadPendingDeposits()
-        perpsPositionLoader?.start()
+        if let loader = perpsPositionLoader {
+            loader.start()
+        } else {
+            positionDiscoveryLoader.reload()
+        }
         perpsTopMoverLoader?.start()
     }
     

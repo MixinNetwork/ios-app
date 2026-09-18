@@ -40,6 +40,10 @@ public final class PerpsPositionDAO: PerpsDAO {
         return value == 1
     }
     
+    public func position(positionID: String) -> PerpetualPositionItem? {
+        db.select(with: Self.itemSQL + "WHERE p.position_id = ?", arguments: [positionID])
+    }
+    
     public func position(marketID: String) -> PerpetualPositionItem? {
         db.select(with: Self.itemSQL + "WHERE p.market_id = ?", arguments: [marketID])
     }

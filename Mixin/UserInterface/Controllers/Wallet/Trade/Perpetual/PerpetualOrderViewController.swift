@@ -29,7 +29,7 @@ final class PerpetualOrderViewController: UIViewController {
         switch viewModel.status {
         case .normal:
             switch viewModel.type {
-            case let .open(payAmount), let .increase(payAmount):
+            case let .open(payAmount):
                 infos.append(contentsOf: [
                     .general(
                         title: R.string.localizable.entry_price().uppercased(),
@@ -43,6 +43,39 @@ final class PerpetualOrderViewController: UIViewController {
                 if let fee = viewModel.feeAmount {
                     infos.append(.fee(fee))
                 }
+            case .increasePosition:
+                let payAmount = abs(viewModel.decimalPayAmount).formatted(
+                    viewModel.priceFormatStyle.sign(strategy: .always())
+                )
+                infos.append(contentsOf: [
+                    .general(
+                        title: R.string.localizable.entry_price().uppercased(),
+                        content: viewModel.entryPrice
+                    ),
+                    .general(
+                        title: R.string.localizable.amount().uppercased(),
+                        content: payAmount
+                    ),
+                ])
+                if let fee = viewModel.feeAmount {
+                    infos.append(.fee(fee))
+                }
+            case .increaseMargin:
+                let payAmount = abs(viewModel.decimalPayAmount).formatted(
+                    viewModel.priceFormatStyle.sign(strategy: .always())
+                )
+                infos.append(.general(
+                    title: R.string.localizable.amount().uppercased(),
+                    content: payAmount
+                ))
+            case .decreaseMargin:
+                let payAmount = (-abs(viewModel.decimalPayAmount)).formatted(
+                    viewModel.priceFormatStyle.sign(strategy: .always())
+                )
+                infos.append(.general(
+                    title: R.string.localizable.amount().uppercased(),
+                    content: payAmount
+                ))
             case let .close(pnl, closePrice):
                 infos.append(.pnl(value: pnl.aggregated, color: pnl.color))
                 if let fee = viewModel.feeAmount {
@@ -284,7 +317,7 @@ extension PerpetualOrderViewController: PillActionView.Delegate {
         case .share:
             let dataSource: SharePerpetualPositionDataSource
             switch viewModel.type {
-            case .open, .increase:
+            case .open, .increasePosition, .increaseMargin, .decreaseMargin:
                 return
             case .close(let pnl, let closePrice):
                 dataSource = SharePerpetualPositionDataSource(

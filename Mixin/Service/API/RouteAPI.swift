@@ -166,9 +166,11 @@ extension RouteAPI {
         
     }
     
-    enum LiquidationPriceRequest {
+    enum LiquidationPriceAction {
         case open(marketID: String, side: PerpetualOrderSide, leverage: Int)
-        case add(positionID: String)
+        case increasePosition(positionID: String)
+        case increaseMargin(positionID: String)
+        case decreaseMargin(positionID: String)
     }
     
     static func perpsMarkets(
@@ -293,6 +295,44 @@ extension RouteAPI {
         )
     }
     
+    static func increasePerpsMargin(
+        positionID: String,
+        assetID: String,
+        amount: String,
+        destination: String?,
+        completion: @escaping (MixinAPI.Result<OpenPerpetualOrderResponse>) -> Void
+    ) {
+        var params = [
+            "type": "increase",
+            "asset_id": assetID,
+            "amount": amount,
+        ]
+        if let destination {
+            params["destination"] = destination
+        }
+        request(
+            method: .post,
+            path: "/perps/positions/\(positionID)/margin",
+            with: params,
+            completion: completion,
+        )
+    }
+    
+    @discardableResult
+    static func decreasePerpsMargin(
+        positionID: String,
+        amount: String,
+    ) async throws -> Empty {
+        try await request(
+            method: .post,
+            path: "/perps/positions/\(positionID)/margin",
+            with: [
+                "type": "decrease",
+                "amount": amount,
+            ],
+        )
+    }
+    
     static func increasePerpsPosition(
         positionID: String,
         assetID: String,
@@ -355,7 +395,7 @@ extension RouteAPI {
     }
     
     static func perpsLiquidationPrice(
-        request: LiquidationPriceRequest,
+        action: LiquidationPriceAction,
         amount: Decimal,
     ) async throws -> Decimal {
         struct Price: Decodable {
@@ -370,11 +410,15 @@ extension RouteAPI {
         
         let amount = amount.formatted(MixinToken.transferCanonicalFormatStyle)
         var path = "/perps/markets/liquidation-price?amount=\(amount)"
-        switch request {
+        switch action {
         case let .open(marketID, side, leverage):
-            path += "&market_id=\(marketID)&side=\(side.rawValue)&leverage=\(leverage)"
-        case let .add(positionID):
-            path += "&position_id=\(positionID)"
+            path += "&action=open&market_id=\(marketID)&side=\(side.rawValue)&leverage=\(leverage)"
+        case let .increasePosition(positionID):
+            path += "&action=increase_position&position_id=\(positionID)"
+        case let .increaseMargin(positionID):
+            path += "&action=increase_margin&position_id=\(positionID)"
+        case let .decreaseMargin(positionID):
+            path += "&action=decrease_margin&position_id=\(positionID)"
         }
         let result: Price = try await Self.request(method: .get, path: path)
         if let liquidationPrice = Decimal(string: result.liquidationPrice, locale: .enUSPOSIX) {

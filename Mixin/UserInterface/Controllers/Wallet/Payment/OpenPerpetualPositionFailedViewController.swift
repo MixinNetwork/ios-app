@@ -138,14 +138,11 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
         presentingViewController?.dismiss(
             animated: true
         ) { [wallet, marketViewModel, leaderPosition, positionViewModel, presentMarketViewOnSuccess] in
-            guard let margin = positionViewModel.decimalMargin else {
-                return
-            }
-            let addPosition = AddPerpsPositionViewController(
+            let addPosition = AddToPerpsPositionViewController(
                 wallet: wallet,
+                adding: .position,
                 marketViewModel: marketViewModel,
                 positionViewModel: positionViewModel,
-                openedMargin: margin,
                 leaderPosition: leaderPosition,
                 presentMarketViewOnSuccess: presentMarketViewOnSuccess,
             )

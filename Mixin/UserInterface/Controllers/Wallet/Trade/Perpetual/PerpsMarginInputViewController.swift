@@ -46,38 +46,6 @@ class PerpsMarginInputViewController: UIViewController {
             )
             marginTokenDepositButton.isHidden = token.decimalBalance > 0
             marginTokenNameLabel.text = token.name
-            if marginAmountTextField.inputAccessoryView == nil {
-                let accessoryView = TradeInputAccessoryView(
-                    frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 44)
-                )
-                accessoryView.items = [
-                    .init(title: "25%") { [weak self] in
-                        guard let self else {
-                            return
-                        }
-                        self.inputAmount(withBalanceMultipliedBy: 0.25)
-                        self.reportPercentageInput(percent: "25%")
-                    },
-                    .init(title: "50%") { [weak self] in
-                        guard let self else {
-                            return
-                        }
-                        self.inputAmount(withBalanceMultipliedBy: 0.5)
-                        self.reportPercentageInput(percent: "50%")
-                    },
-                    .init(title: R.string.localizable.max()) { [weak self] in
-                        guard let self else {
-                            return
-                        }
-                        self.inputAmount(withBalanceMultipliedBy: 1)
-                        self.reportPercentageInput(percent: "max")
-                    },
-                ]
-                accessoryView.onDone = { [weak textField=marginAmountTextField] in
-                    textField?.resignFirstResponder()
-                }
-                marginAmountTextField.inputAccessoryView = accessoryView
-            }
         }
     }
     

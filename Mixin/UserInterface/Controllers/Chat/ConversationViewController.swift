@@ -856,6 +856,7 @@ final class ConversationViewController: UIViewController {
                 navigationController?.pushViewController(post, animated: true)
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 conversationInputViewController.dismiss()
+                UserOperationAnalytics.tradeSource = .url
                 open(url: .aboutEncryption)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 conversationInputViewController.dismiss()
@@ -1753,10 +1754,12 @@ extension ConversationViewController: AppButtonDelegate {
         }
         if let appButtons = message.appButtons {
             if index < appButtons.count {
+                UserOperationAnalytics.tradeSource = .url
                 openAction(action: appButtons[index].action, sendUserId: message.userId)
             }
         } else if case let .v1(content) = message.appCard {
             if index < content.actions.count {
+                UserOperationAnalytics.tradeSource = .appCard
                 openAction(action: content.actions[index].action,
                            sendUserId: message.userId,
                            shareable: content.isShareable)
@@ -1807,6 +1810,7 @@ extension ConversationViewController: UITextViewDelegate {
     // Works for UITextView in AnnouncementBadgeContentView
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         if !openUrlOutsideApplication(URL) {
+            UserOperationAnalytics.tradeSource = .url
             open(url: URL)
         }
         return false
@@ -2639,6 +2643,7 @@ extension ConversationViewController {
                     }
                 }
                 DispatchQueue.main.async {
+                    UserOperationAnalytics.tradeSource = .appCard
                     if let app {
                         self?.open(
                             url: appCard.action,
@@ -2651,6 +2656,7 @@ extension ConversationViewController {
                 }
             }
         } else {
+            UserOperationAnalytics.tradeSource = .appCard
             openAction(action: action, sendUserId: sendUserId, shareable: isShareable)
         }
     }
@@ -2897,6 +2903,7 @@ extension ConversationViewController {
         guard !openUrlOutsideApplication(url) else {
             return
         }
+        UserOperationAnalytics.tradeSource = .url
         open(url: url)
     }
     
@@ -2906,6 +2913,7 @@ extension ConversationViewController {
         }
         let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.open_url(), style: .default, handler: { [weak self](_) in
+            UserOperationAnalytics.tradeSource = .url
             self?.open(url: url)
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.copy(), style: .default, handler: { (_) in

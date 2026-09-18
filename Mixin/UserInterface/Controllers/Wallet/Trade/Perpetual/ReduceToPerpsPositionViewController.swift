@@ -710,7 +710,7 @@ extension ReduceToPerpsPositionViewController {
                     sign: .never,
                     symbol: .dollarSign
                 )
-                targetContentLabel.text = before + " → " + after
+                targetContentLabel.text = PerpPositionAdjustment.change(from: before, to: after)
             } else {
                 targetContentLabel.text = before
             }

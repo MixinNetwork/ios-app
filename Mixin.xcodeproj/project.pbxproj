@@ -1192,6 +1192,7 @@
 		9468E06D2E30E16A00EB79C0 /* CreateWalletResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E0602E30E13800EB79C0 /* CreateWalletResponse.swift */; };
 		9468E08D2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E08C2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift */; };
 		9469B6563052D8EA00E704A3 /* SearchMarketResultsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9469B6553052D8E900E704A3 /* SearchMarketResultsHeaderView.swift */; };
+		946A025D305D817A00E2218D /* PerpPositionAdjustment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946A025C305D817300E2218D /* PerpPositionAdjustment.swift */; };
 		946AFC102FDBED8100E97E34 /* PerpsManualFundingRatePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946AFC0F2FDBED8100E97E34 /* PerpsManualFundingRatePageView.swift */; };
 		946B6F2425E974B500A95C40 /* CacheableAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B6F2325E974B500A95C40 /* CacheableAsset.swift */; };
 		946B9FBB2B0493E800DB4DC1 /* WalletHintViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946B9FB92B0493E800DB4DC1 /* WalletHintViewController.swift */; };
@@ -3257,6 +3258,7 @@
 		9468E0602E30E13800EB79C0 /* CreateWalletResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateWalletResponse.swift; sourceTree = "<group>"; };
 		9468E08C2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationBasedBusyButton.swift; sourceTree = "<group>"; };
 		9469B6553052D8E900E704A3 /* SearchMarketResultsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMarketResultsHeaderView.swift; sourceTree = "<group>"; };
+		946A025C305D817300E2218D /* PerpPositionAdjustment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpPositionAdjustment.swift; sourceTree = "<group>"; };
 		946AFC0F2FDBED8100E97E34 /* PerpsManualFundingRatePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualFundingRatePageView.swift; sourceTree = "<group>"; };
 		946B6F2325E974B500A95C40 /* CacheableAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAsset.swift; sourceTree = "<group>"; };
 		946B9FB92B0493E800DB4DC1 /* WalletHintViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHintViewController.swift; sourceTree = "<group>"; };
@@ -5929,6 +5931,7 @@
 				94A8095B2FB1C1B100755E1A /* PerpsAutoClosingCondition.swift */,
 				9431E23F2FCD706500B20838 /* PerpsLiquidationPriceRequester.swift */,
 				94C45E9E302F3C4B0097EE8D /* PerpsFundingRateDurationFormatter.swift */,
+				946A025C305D817300E2218D /* PerpPositionAdjustment.swift */,
 				94073C65305BA5AD004767E3 /* PerpPositionAdjustmentTarget.swift */,
 			);
 			path = Model;
@@ -8993,6 +8996,7 @@
 				94F6F4682EBDE6A000D15424 /* Web3OrderDAO+Query.swift in Sources */,
 				DF9E66E5205B9AF300F1A0B9 /* HiddenTokensViewController.swift in Sources */,
 				7B915F6A215F315A00A562C6 /* StickersCollectionViewController.swift in Sources */,
+				946A025D305D817A00E2218D /* PerpPositionAdjustment.swift in Sources */,
 				94834ACC2FE949E000A0AADF /* LogCell.swift in Sources */,
 				94E35CA3298B836300ADB40D /* WalletConnectService.swift in Sources */,
 				7B3D46B62088BCA300A0C19C /* GroupAnnouncementViewController.swift in Sources */,

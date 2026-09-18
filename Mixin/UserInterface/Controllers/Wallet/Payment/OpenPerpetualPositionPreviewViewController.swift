@@ -101,11 +101,12 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 sign: .never,
                 symbol: .custom(context.viewModel.market.tokenSymbol)
             )
+            let change = PerpPositionAdjustment.change(from: before, to: after)
             rows.append(.doubleLineInfo(
                 caption: .amount,
                 primary: amount,
                 secondary: .plain(
-                    R.string.localizable.add_position_total_size() + " " + before + " → " + after
+                    R.string.localizable.add_position_total_size() + " " + change
                 ),
             ))
         case let .increaseMargin(margin):
@@ -122,11 +123,12 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 sign: .never,
                 symbol: .dollarSign
             )
+            let change = PerpPositionAdjustment.change(from: before, to: after)
             rows.append(.doubleLineInfo(
                 caption: .amount,
                 primary: amount,
                 secondary: .plain(
-                    R.string.localizable.perps_total_margin() + " " + before + " → " + after
+                    R.string.localizable.perps_total_margin() + " " + change
                 ),
             ))
         }

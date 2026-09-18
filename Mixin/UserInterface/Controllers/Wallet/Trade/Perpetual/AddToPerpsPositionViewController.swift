@@ -397,7 +397,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                     sign: .never,
                     symbol: .dollarSign
                 ) + ")"
-                targetContentLabel.text = before + " → " + after
+                targetContentLabel.text = PerpPositionAdjustment.change(from: before, to: after)
             } else {
                 let value = CurrencyFormatter.localizedString(
                     from: positionViewModel.decimalQuantity * marketViewModel.decimalPrice,
@@ -421,7 +421,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                     sign: .never,
                     symbol: .dollarSign
                 )
-                targetContentLabel.text = before + " → " + after
+                targetContentLabel.text = PerpPositionAdjustment.change(from: before, to: after)
             } else {
                 targetContentLabel.text = before
             }
@@ -474,7 +474,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
             case .position:
                 after
             case .margin:
-                liquidationPriceBeforeAdding + " → " + after
+                PerpPositionAdjustment.change(from: liquidationPriceBeforeAdding, to: after)
             }
             liquidationPriceContentLabel.alpha = 1
             addButton.isEnabled = isBalanceSufficient && !isAdding

@@ -14,10 +14,12 @@ final class ReduceToPerpsPositionViewController: UIViewController {
     @IBOutlet weak var swapValueDisplayButton: UIButton!
     @IBOutlet weak var errorDescriptionButton: UIButton!
     @IBOutlet weak var slider: UISlider!
-    @IBOutlet weak var markingStackView: UIStackView!
+    @IBOutlet weak var markingContainerView: UIView!
     
     @IBOutlet weak var targetTitleLabel: UILabel!
     @IBOutlet weak var targetContentLabel: UILabel!
+    @IBOutlet weak var introductTargetIconView: UIImageView!
+    @IBOutlet weak var introductTargetButton: UIButton!
     @IBOutlet weak var liquidationPriceTitleLabel: UILabel!
     @IBOutlet weak var liquidationPriceContentLabel: UILabel!
     @IBOutlet weak var liquidationPriceActivityIndicator: ActivityIndicatorView!
@@ -137,6 +139,8 @@ final class ReduceToPerpsPositionViewController: UIViewController {
                 marketViewModel.market.tokenSymbol
             )
             targetTitleLabel.text = R.string.localizable.margin()
+            introductTargetIconView.isHidden = true
+            introductTargetButton.isHidden = true
         case .position:
             assertionFailure("Not ready")
         }
@@ -179,7 +183,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         }
         swapValueDisplayImageView.image = R.image.swap_transposition()!
             .withRenderingMode(.alwaysTemplate)
-        for _ in markingPercentages {
+        for (index, percentage) in markingPercentages.enumerated() {
             var config: UIButton.Configuration = .plain()
             config.titleTextAttributesTransformer = .init { incoming in
                 var outgoing = incoming
@@ -188,15 +192,42 @@ final class ReduceToPerpsPositionViewController: UIViewController {
                 )
                 return outgoing
             }
-            config.baseForegroundColor = R.color.text_secondary()
-            config.contentInsets = .zero
+            config.baseForegroundColor = R.color.text_tertiary()
+            config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 4, bottom: 8, trailing: 4)
             let button = UIButton(configuration: config)
             button.addTarget(
                 self,
                 action: #selector(selectMarking(_:)),
                 for: .touchUpInside
             )
-            markingStackView.addArrangedSubview(button)
+            markingContainerView.addSubview(button)
+            button.snp.makeConstraints { make in
+                make.top.bottom.equalToSuperview()
+            }
+            switch index {
+            case 0:
+                button.configuration?.contentInsets.leading = 16
+                button.snp.makeConstraints { make in
+                    make.leading.equalToSuperview()
+                }
+            case markingPercentages.count - 1:
+                button.configuration?.contentInsets.trailing = 16
+                button.snp.makeConstraints { make in
+                    make.trailing.equalToSuperview()
+                }
+            default:
+                let positionGuide = UILayoutGuide()
+                markingContainerView.addLayoutGuide(positionGuide)
+                positionGuide.snp.makeConstraints { make in
+                    make.leading.equalTo(slider.snp.leading)
+                    make.width.equalTo(slider.snp.width)
+                        .multipliedBy(CGFloat(NSDecimalNumber(decimal: percentage).doubleValue))
+                    make.top.bottom.equalTo(markingContainerView)
+                }
+                button.snp.makeConstraints { make in
+                    make.centerX.equalTo(positionGuide.snp.trailing)
+                }
+            }
             markingButtons.append(button)
             button.titleLabel?.adjustsFontForContentSizeCategory = true
         }

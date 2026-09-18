@@ -7,6 +7,8 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
     
     @IBOutlet weak var targetTitleLabel: UILabel!
     @IBOutlet weak var targetContentLabel: UILabel!
+    @IBOutlet weak var introduceTargetIconView: UIImageView!
+    @IBOutlet weak var introduceTargetButton: UIButton!
     @IBOutlet weak var liquidationPriceTitleLabel: UILabel!
     @IBOutlet weak var liquidationPriceContentLabel: UILabel!
     @IBOutlet weak var liquidationPriceActivityIndicator: ActivityIndicatorView!
@@ -118,6 +120,8 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                 marketViewModel.market.tokenSymbol
             )
             targetTitleLabel.text = R.string.localizable.position_size()
+            introduceTargetIconView.isHidden = false
+            introduceTargetButton.isHidden = false
         case .margin:
             reporter.report(event: .tradePerpsAddMarginStart, tags: tags)
             titleView.titleLabel.text = R.string.localizable.perps_add_margin_title(
@@ -125,6 +129,8 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                 marketViewModel.market.tokenSymbol
             )
             targetTitleLabel.text = R.string.localizable.margin()
+            introduceTargetIconView.isHidden = true
+            introduceTargetButton.isHidden = true
         }
         updateSubtitle()
         titleView.closeButton.addTarget(

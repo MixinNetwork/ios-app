@@ -26,11 +26,13 @@ public final class CollectibleAPI: MixinAPI {
         PINEncryptor.encrypt(pin: pin, tipBody: {
             try TIPBody.signCollectibleRequest(id: requestId)
         }, onFailure: completion) { (encryptedPin) in
-            self.request(method: .post,
-                         path: Path.sign(id: requestId),
-                         parameters: ["pin_base64": encryptedPin],
-                         options: .disableRetryOnRequestSigningTimeout,
-                         completion: completion)
+            self.request(
+                method: .post,
+                path: Path.sign(id: requestId),
+                parameters: ["pin_base64": encryptedPin],
+                options: [.disableRetryOnRequestSigningTimeout],
+                completion: completion
+            )
         }
     }
     
@@ -38,11 +40,13 @@ public final class CollectibleAPI: MixinAPI {
         PINEncryptor.encrypt(pin: pin, tipBody: {
             try TIPBody.unlockCollectibleRequest(id: requestId)
         }, onFailure: completion) { (encryptedPin) in
-            self.request(method: .post,
-                         path: Path.unlock(id: requestId),
-                         parameters: ["pin_base64": encryptedPin],
-                         options: .disableRetryOnRequestSigningTimeout,
-                         completion: completion)
+            self.request(
+                method: .post,
+                path: Path.unlock(id: requestId),
+                parameters: ["pin_base64": encryptedPin],
+                options: [.disableRetryOnRequestSigningTimeout],
+                completion: completion
+            )
         }
     }
     

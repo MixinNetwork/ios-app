@@ -6,6 +6,7 @@ public enum MixinAPIError: Error {
     case foundNilResult
     
     case invalidJSON(Error)
+    case unknownRawResponse
     case invalidServerPinToken
     case invalidPath
     case httpTransport(AFError)

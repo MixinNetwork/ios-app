@@ -8,26 +8,24 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
         case bot
     }
     
-    var wantsNavigationSearchBox: Bool {
-        true
-    }
-    
-    var navigationSearchBoxInsets: UIEdgeInsets {
-        UIEdgeInsets(top: 0, left: backButtonWidth, bottom: 0, right: cancelButton.frame.width + cancelButtonRightMargin)
+    var searchTextField: UITextField! {
+        searchBoxView.textField
     }
     
     private let category: Category
+    private let inheritedKeyword: String?
     private let queue = OperationQueue()
+    private let searchBoxView = SearchBoxView()
     private let cancelButton = SearchCancelButton()
-    
-    private var lastKeyword: String?
-    private var lastSearchFieldText: String?
-    private var models: [Any] = []
     
     private weak var tableView: UITableView!
     
-    init(category: Category) {
+    private var lastKeyword: String?
+    private var models: [Any] = []
+    
+    init(category: Category, keyword: String?) {
         self.category = category
+        self.inheritedKeyword = keyword
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -38,8 +36,22 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = ""
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
+        navigationItem.titleView = searchBoxView
+        navigationItem.rightBarButtonItem = {
+            let item = UIBarButtonItem(customView: cancelButton)
+            if #available(iOS 26.0, *) {
+                item.hidesSharedBackground = true
+            }
+            return item
+        }()
+        searchBoxView.textField.delegate = self
+        searchBoxView.textField.rightViewMode = .always
+        searchTextField.addTarget(
+            self,
+            action: #selector(searchAction(_:)),
+            for: .editingChanged
+        )
+        searchTextField.text = inheritedKeyword
         if let exploreViewController {
             cancelButton.addTarget(
                 exploreViewController,
@@ -83,16 +95,9 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
         searchAction(self)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
-        navigationSearchBoxView.isBusy = !queue.operations.isEmpty
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         searchTextField.resignFirstResponder()
-        searchTextField.removeTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -113,13 +118,13 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
             tableView.tableHeaderView?.isHidden = true
             tableView.removeEmptyIndicator()
             lastKeyword = nil
-            navigationSearchBoxView.isBusy = false
+            searchBoxView.isBusy = false
             return
         }
         guard keyword != lastKeyword else {
             return
         }
-        navigationSearchBoxView.isBusy = true
+        searchBoxView.isBusy = true
         let category = self.category
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op, weak self] in
@@ -149,7 +154,7 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
                 self.models = models
                 self.reloadTableViewData(showEmptyIndicatorIfEmpty: false)
                 self.lastKeyword = keyword
-                self.navigationSearchBoxView?.isBusy = false
+                self.searchBoxView.isBusy = false
             }
         }
         queue.addOperation(op)
@@ -200,6 +205,7 @@ extension ExploreSearchCategoryViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        searchTextField.resignFirstResponder()
         let model = models[indexPath.row]
         switch category {
         case .asset:
@@ -209,6 +215,15 @@ extension ExploreSearchCategoryViewController: UITableViewDelegate {
             let result = models[indexPath.row] as! UserSearchResult
             pushConversationViewController(userItem: result.user)
         }
+    }
+    
+}
+
+extension ExploreSearchCategoryViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
     }
     
 }

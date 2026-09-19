@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-protocol ExploreSearchViewController: SearchNavigationControllerChild {
+protocol ExploreSearchViewController {
     var searchTextField: UITextField! { get }
 }
 

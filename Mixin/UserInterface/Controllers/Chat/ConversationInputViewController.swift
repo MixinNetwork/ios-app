@@ -31,6 +31,8 @@ final class ConversationInputViewController: UIViewController {
     @IBOutlet weak var quotePreviewWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var textViewRightAccessoryWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var inputBarLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var inputBarTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingTextViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingRightActionsStackLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var endEditingTextViewTrailingConstraint: NSLayoutConstraint!
@@ -38,6 +40,7 @@ final class ConversationInputViewController: UIViewController {
     @IBOutlet weak var audioInputContainerWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var customInputContainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var customInputContainerMinHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var customInputContainerTopConstraint: NSLayoutConstraint!
     
     lazy var extensionViewController = R.storyboard.chat.extension()!
     lazy var stickersViewController = R.storyboard.chat.stickerInput()!
@@ -52,9 +55,13 @@ final class ConversationInputViewController: UIViewController {
     }
     
     var regularHeight: CGFloat {
-        return quotePreviewWrapperHeightConstraint.constant
+        var height = quotePreviewWrapperHeightConstraint.constant
             + inputBarView.frame.height
             + customInputHeight
+        if #available(iOS 26, *) {
+            height += 8
+        }
+        return height
     }
     
     var maximizedHeight: CGFloat {
@@ -170,6 +177,13 @@ final class ConversationInputViewController: UIViewController {
         textView.textContainer.lineFragmentPadding = 0
         if #unavailable(iOS 26) {
             textView.inputAccessoryView = interactiveDismissResponder
+        } else {
+            view.backgroundColor = .clear
+            unblockButton.layer.masksToBounds = true
+            deleteConversationButton.layer.masksToBounds = true
+            inputBarLeadingConstraint.constant = 16
+            inputBarTrailingConstraint.constant = 16
+            customInputContainerTopConstraint.constant = 8
         }
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         textView.placeholderLabel.adjustsFontSizeToFitWidth = true
@@ -231,17 +245,63 @@ final class ConversationInputViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         if height != .minimized {
-            customInputContainerHeightConstraint.constant = view.frame.height
+            var constant = view.frame.height
                 - quotePreviewWrapperHeightConstraint.constant
                 - inputBarView.frame.height
+            if #available(iOS 26, *) {
+                constant -= 8
+            }
+            customInputContainerHeightConstraint.constant = constant
+        }
+        if audioViewController.isRecording, inputBarView.bounds.width > 0 {
+            audioInputContainerWidthConstraint.constant = inputBarView.bounds.width
+        }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateIntegralPanelCornerRadius()
+    }
+    
+    private func updateIntegralPanelCornerRadius() {
+        guard #available(iOS 26, *) else { return }
+        let radius = inputBarView.frame.height / 2
+        guard radius > 0 else { return }
+        let isQuoting = quote != nil
+        if isQuoting {
+            quotePreviewView.layer.cornerRadius = radius
+            quotePreviewView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            quotePreviewView.clipsToBounds = true
+            quotePreviewView.layer.masksToBounds = true
+            quotePreviewView.superview?.layer.cornerRadius = radius
+            quotePreviewView.superview?.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            quotePreviewView.superview?.clipsToBounds = true
+            quotePreviewView.superview?.layer.masksToBounds = true
+            
+            inputBarView.layer.cornerRadius = radius
+            inputBarView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        } else {
+            inputBarView.layer.cornerRadius = radius
+            inputBarView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        }
+        if unblockButton.frame.height > 0 {
+            unblockButton.layer.cornerRadius = unblockButton.frame.height / 2
+        }
+        if deleteConversationButton.frame.height > 0 {
+            deleteConversationButton.layer.cornerRadius = deleteConversationButton.frame.height / 2
         }
     }
     
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
         super.preferredContentSizeDidChange(forChildContentContainer: container)
         if (container as? UIViewController) == audioViewController {
-            let isExpanding = container.preferredContentSize.width > audioInputContainerWidthConstraint.constant
-            audioInputContainerWidthConstraint.constant = container.preferredContentSize.width
+            let targetWidth: CGFloat = if inputBarView.bounds.width > 0 {
+                min(container.preferredContentSize.width, inputBarView.bounds.width)
+            } else {
+                container.preferredContentSize.width
+            }
+            let isExpanding = targetWidth > audioInputContainerWidthConstraint.constant
+            audioInputContainerWidthConstraint.constant = targetWidth
             if isExpanding {
                 UIView.animate(withDuration: 0.3) {
                     self.inputBarView.layoutIfNeeded()
@@ -565,6 +625,8 @@ extension ConversationInputViewController {
                 - endFrame.origin.y
             if #unavailable(iOS 26) {
                 height -= interactiveDismissResponder.height
+            } else {
+                height += 8
             }
             height = max(minimizedHeight, height)
             if view.frame.height != height {
@@ -575,7 +637,11 @@ extension ConversationInputViewController {
     
     @objc private func keyboardWillHide(_ notification: Notification) {
         UIView.performWithoutAnimation {
-            self.view.backgroundColor = .background
+            if #available(iOS 26, *) {
+                self.view.backgroundColor = .clear
+            } else {
+                self.view.backgroundColor = .background
+            }
         }
     }
     
@@ -734,7 +800,11 @@ extension ConversationInputViewController: UITextViewDelegate {
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
-        view.backgroundColor = .background
+        if #available(iOS 26, *) {
+            view.backgroundColor = .clear
+        } else {
+            view.backgroundColor = .background
+        }
         return true
     }
     
@@ -1115,6 +1185,7 @@ extension ConversationInputViewController {
                     interactiveDismissResponder.height += quotePreviewHeight
                 }
             }
+            updateIntegralPanelCornerRadius()
             if textView.isFirstResponder || customInputViewController != nil {
                 if oldValue == nil {
                     setPreferredContentHeight(preferredContentHeight + quotePreviewHeight, animated: true)
@@ -1129,6 +1200,7 @@ extension ConversationInputViewController {
             }
             let newHeight = preferredContentHeight - quotePreviewHeight
             quotePreviewWrapperHeightConstraint.constant = 0
+            updateIntegralPanelCornerRadius()
             setPreferredContentHeight(newHeight, animated: true)
         }
     }

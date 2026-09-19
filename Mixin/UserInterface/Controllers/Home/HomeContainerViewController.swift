@@ -65,14 +65,14 @@ final class HomeContainerViewController: UIViewController {
         isShowingGallery && galleryViewController.parent != nil
     }
     
-    init(initialTab: HomeTabBarController.ChildID) {
-        let homeTabBarController = HomeTabBarController(initialChild: initialTab)
+    init(initialTab: HomeTabBarController.InitialTab) {
+        let homeTabBarController = HomeTabBarController(initialTab: initialTab)
         self.homeTabBarController = homeTabBarController
         self.homeNavigationController = HomeNavigationController(rootViewController: homeTabBarController)
         switch initialTab {
         case .chat:
             refreshAccountAfterViewAppears = false
-        case .wallet, .market, .more:
+        case .wallet:
             refreshAccountAfterViewAppears = true
         }
         super.init(nibName: nil, bundle: nil)
@@ -175,7 +175,7 @@ final class HomeContainerViewController: UIViewController {
     }
     
     func showWalletViewController() {
-        homeTabBarController.switchTo(child: .wallet)
+        homeTabBarController.showWallet()
     }
     
     func presentMyQRCode() {

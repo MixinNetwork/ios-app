@@ -280,7 +280,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         }
     }
     
-    private func finishChecking(initialTab: HomeTabBarController.ChildID) {
+    private func finishChecking(initialTab: HomeTabBarController.InitialTab) {
         Logger.redirectLogsToLogin = false
         
         let intent = AccountVerificationIntent.current

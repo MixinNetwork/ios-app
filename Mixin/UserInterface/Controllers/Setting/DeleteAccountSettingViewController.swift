@@ -139,7 +139,7 @@ extension DeleteAccountSettingViewController {
     private func presentWallet() {
         UIApplication.shared.homeNavigationController?.popToRootViewController(animated: false)
         if let tabBarController = UIApplication.shared.homeContainerViewController?.homeTabBarController {
-            tabBarController.switchTo(child: .wallet)
+            tabBarController.showWallet()
             if let container = tabBarController.selectedViewController as? WalletContainerViewController {
                 container.switchToWalletSummary(animated: false)
             }

@@ -1173,7 +1173,6 @@
 		94658CA82B34829B00F5EB21 /* OutputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94658CA62B34829B00F5EB21 /* OutputCell.swift */; };
 		94658CA92B34829B00F5EB21 /* OutputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94658CA72B34829B00F5EB21 /* OutputCell.xib */; };
 		94658CAB2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94658CAA2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift */; };
-		94658CB92B358E3100F5EB21 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94658CB82B358E3100F5EB21 /* TabBar.swift */; };
 		94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94659DA925C13793003403E5 /* DevicePerformance.swift */; };
 		9465E6122E6CE172005974C6 /* DepositLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9465E6112E6CE172005974C6 /* DepositLinkView.xib */; };
 		9465E61A2E6CE18D005974C6 /* DepositLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9465E6192E6CE18D005974C6 /* DepositLinkView.swift */; };
@@ -3229,7 +3228,6 @@
 		94658CA62B34829B00F5EB21 /* OutputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputCell.swift; sourceTree = "<group>"; };
 		94658CA72B34829B00F5EB21 /* OutputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OutputCell.xib; sourceTree = "<group>"; };
 		94658CAA2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealPublicSpendKeyViewController.swift; sourceTree = "<group>"; };
-		94658CB82B358E3100F5EB21 /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		94659DA925C13793003403E5 /* DevicePerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DevicePerformance.swift; sourceTree = "<group>"; };
 		9465E6112E6CE172005974C6 /* DepositLinkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositLinkView.xib; sourceTree = "<group>"; };
 		9465E6192E6CE18D005974C6 /* DepositLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositLinkView.swift; sourceTree = "<group>"; };
@@ -4582,7 +4580,6 @@
 				9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */,
 				9406978625E7F30800E7FDA0 /* PlaylistSlider.swift */,
 				947B36B225DEB79100146111 /* PlaylistView.xib */,
-				94658CB82B358E3100F5EB21 /* TabBar.swift */,
 				94B5777C2B5E755100AE576E /* SeparatorHeaderFooterView.swift */,
 				94E82DBB2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib */,
 				943BC66E2BCD7227003FA778 /* Web3NoAssetView.xib */,
@@ -7957,7 +7954,6 @@
 				7BA9D9C8226DE71E00255943 /* NavigationAvatarIconView.swift in Sources */,
 				94463C53298D690F00E63547 /* AuthenticationFailureView.swift in Sources */,
 				94C5BDD52D685FCD0012F840 /* WalletCell.swift in Sources */,
-				94658CB92B358E3100F5EB21 /* TabBar.swift in Sources */,
 				94051FA42E812D64005B3A16 /* DepositFilter.swift in Sources */,
 				94FB8E0E2D1ACB32002DCA20 /* TradeTokenCell.swift in Sources */,
 				94BDBFBF2FFE1613009A7F76 /* SignInWithMnemonicsViewController.swift in Sources */,

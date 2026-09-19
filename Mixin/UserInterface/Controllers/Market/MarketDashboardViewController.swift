@@ -424,7 +424,6 @@ final class MarketDashboardViewController: UIViewController {
             scheduleRemoteLoader: true,
             debugReason: "Initial",
         )
-        allDataLoader.start()
         DispatchQueue.global(qos: .background).async {
             MarketDAO.shared.deleteOrphanRecords()
         }
@@ -433,6 +432,16 @@ final class MarketDashboardViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isViewAppearing = true
+        if allDataLoader.isFinished() {
+            let loader = AllDataLoader(
+                excludingCategory: category,
+                excludingSubCategoryIndex: subCategoryIndex
+            )
+            self.allDataLoader = loader
+            loader.start()
+        } else {
+            Logger.general.debug(category: "MarketDashboard", message: "Skip all data reloading")
+        }
         marketLoader?.start()
         perpsMarketLoader?.start()
         NotificationCenter.default.removeObserver(
@@ -833,24 +842,6 @@ extension MarketDashboardViewController {
                 scheduleRemoteLoader: false,
                 debugReason: "ChangePeriodUpdate",
             )
-        }
-    }
-    
-}
-
-// MARK: - HomeTabBarControllerChild
-extension MarketDashboardViewController: HomeTabBarControllerChild {
-    
-    func viewControllerDidSwitchToFront() {
-        if allDataLoader.isFinished() {
-            let loader = AllDataLoader(
-                excludingCategory: category,
-                excludingSubCategoryIndex: subCategoryIndex
-            )
-            self.allDataLoader = loader
-            loader.start()
-        } else {
-            Logger.general.debug(category: "MarketDashboard", message: "Skip all data reloading")
         }
     }
     

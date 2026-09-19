@@ -22,14 +22,21 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         imageWrapperView.position = cell.contentImageWrapperView.position
         imageWrapperView.frame = bounds
         imageWrapperView.layoutIfNeeded()
-        accessoryContainerView.transform = .identity
-        accessoryContainerView.alpha = 1
-        accessoryContainerView.frame = bounds
-        timeLabel.text = viewModel.time
-        timeLabel.frame = cell.contentView.convert(viewModel.timeFrame, to: cell.contentImageWrapperView)
-        statusImageView.image = viewModel.statusImage?.image(traitCollection: traitCollection)
-        statusImageView.tintColor = viewModel.statusTintColor
-        statusImageView.frame = cell.contentView.convert(viewModel.statusFrame, to: cell.contentImageWrapperView)
+        
+        let isQuotedOrHasCaption = viewModel.quotedMessageViewModel != nil || viewModel.hasCaption
+        if isQuotedOrHasCaption {
+            accessoryContainerView.isHidden = true
+        } else {
+            accessoryContainerView.isHidden = false
+            accessoryContainerView.transform = .identity
+            accessoryContainerView.alpha = 1
+            accessoryContainerView.frame = bounds
+            timeLabel.text = viewModel.time
+            timeLabel.frame = cell.contentView.convert(viewModel.timeFrame, to: cell.contentImageWrapperView)
+            statusImageView.image = viewModel.statusImage?.image(traitCollection: traitCollection)
+            statusImageView.tintColor = viewModel.statusTintColor
+            statusImageView.frame = cell.contentView.convert(viewModel.statusFrame, to: cell.contentImageWrapperView)
+        }
         loadMask(viewModel: viewModel)
     }
     
@@ -69,9 +76,11 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         animate(animations: {
             self.frame = frame
             self.imageWrapperView.frame = self.bounds
-            self.accessoryContainerView.center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
-            self.accessoryContainerView.transform = CGAffineTransform(scaleX: scale, y: scale)
-            self.accessoryContainerView.alpha = 0
+            if !self.accessoryContainerView.isHidden {
+                self.accessoryContainerView.center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
+                self.accessoryContainerView.transform = CGAffineTransform(scaleX: scale, y: scale)
+                self.accessoryContainerView.alpha = 0
+            }
         })
     }
     
@@ -83,18 +92,24 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
         guard let viewModel = cell.viewModel as? PhotoRepresentableMessageViewModel else {
             return
         }
-        let scale = bounds.width / cell.contentImageWrapperView.frame.width
-        accessoryContainerView.transform = .identity
-        accessoryContainerView.bounds.size = cell.contentImageWrapperView.bounds.size
-        timeLabel.text = viewModel.time
-        timeLabel.frame = cell.contentView.convert(viewModel.timeFrame, to: cell.contentImageWrapperView)
-        statusImageView.image = viewModel.statusImage?.image(traitCollection: traitCollection)
-        statusImageView.tintColor = viewModel.statusTintColor
-        statusImageView.frame = cell.contentView.convert(viewModel.statusFrame, to: cell.contentImageWrapperView)
-        
-        accessoryContainerView.transform = CGAffineTransform(scaleX: scale, y: scale)
-        accessoryContainerView.center = CGPoint(x: bounds.midX, y: bounds.midY)
-        accessoryContainerView.alpha = 0
+        let isQuotedOrHasCaption = viewModel.quotedMessageViewModel != nil || viewModel.hasCaption
+        if isQuotedOrHasCaption {
+            accessoryContainerView.isHidden = true
+        } else {
+            accessoryContainerView.isHidden = false
+            let scale = bounds.width / cell.contentImageWrapperView.frame.width
+            accessoryContainerView.transform = .identity
+            accessoryContainerView.bounds.size = cell.contentImageWrapperView.bounds.size
+            timeLabel.text = viewModel.time
+            timeLabel.frame = cell.contentView.convert(viewModel.timeFrame, to: cell.contentImageWrapperView)
+            statusImageView.image = viewModel.statusImage?.image(traitCollection: traitCollection)
+            statusImageView.tintColor = viewModel.statusTintColor
+            statusImageView.frame = cell.contentView.convert(viewModel.statusFrame, to: cell.contentImageWrapperView)
+            
+            accessoryContainerView.transform = CGAffineTransform(scaleX: scale, y: scale)
+            accessoryContainerView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+            accessoryContainerView.alpha = 0
+        }
         
         let frame = cell.contentImageWrapperView.convert(cell.contentImageWrapperView.bounds, to: superview)
         let bounds = CGRect(origin: .zero, size: frame.size)
@@ -104,9 +119,11 @@ class GalleryTransitionFromMessageCellView: GalleryTransitionView {
             self.transform = .identity
             self.frame = frame
             self.imageWrapperView.frame = bounds
-            self.accessoryContainerView.transform = .identity
-            self.accessoryContainerView.center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
-            self.accessoryContainerView.alpha = 1
+            if !self.accessoryContainerView.isHidden {
+                self.accessoryContainerView.transform = .identity
+                self.accessoryContainerView.center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
+                self.accessoryContainerView.alpha = 1
+            }
         }, completion: {
         })
     }

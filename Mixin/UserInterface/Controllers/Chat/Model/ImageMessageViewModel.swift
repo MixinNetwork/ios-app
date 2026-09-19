@@ -33,6 +33,10 @@ class ImageMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInf
         .white
     }
     
+    var hasCaption: Bool {
+        false
+    }
+    
     var fullnameHeight: CGFloat {
         style.contains(.fullname) ? fullnameFrame.height : 0
     }
@@ -75,6 +79,18 @@ class ImageMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInf
                 + quotedMessageViewModel.contentSize.height
                 + Self.quotingMessageMargin.vertical
                 + photoFrame.height
+            let backgroundSize = CGSize(width: Self.bubbleWidth, height: backgroundHeight)
+            backgroundImageFrame = CGRect(origin: bubbleOrigin, size: backgroundSize)
+        } else if hasCaption {
+            let x: CGFloat
+            if style.contains(.received) {
+                x = bubbleOrigin.x + Self.quotingMessageMargin.trailing
+            } else {
+                x = bubbleOrigin.x + Self.quotingMessageMargin.leading
+            }
+            let y = bubbleOrigin.y + Self.quotingMessageMargin.top + 2
+            photoFrame.origin = CGPoint(x: x, y: y)
+            let backgroundHeight = Self.quotingMessageMargin.vertical + photoFrame.height
             let backgroundSize = CGSize(width: Self.bubbleWidth, height: backgroundHeight)
             backgroundImageFrame = CGRect(origin: bubbleOrigin, size: backgroundSize)
         } else {

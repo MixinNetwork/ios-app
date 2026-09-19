@@ -13,6 +13,7 @@ public struct TransferAttachmentData: Encodable {
     public let name: String?
     public let duration: Int64?
     public let waveform: Data?
+    public let caption: String?
     public let createdAt: String?
     public let isShareable: Bool?
     
@@ -28,11 +29,12 @@ public struct TransferAttachmentData: Encodable {
         case name
         case duration
         case waveform
+        case caption
         case createdAt = "created_at"
         case isShareable = "shareable"
     }
     
-    public init(key: Data?, digest: Data?, attachmentId: String, mimeType: String?, width: Int?, height: Int?, size: Int64, thumbnail: String?, name: String?, duration: Int64?, waveform: Data?, createdAt: String?, isShareable: Bool?) {
+    public init(key: Data?, digest: Data?, attachmentId: String, mimeType: String?, width: Int?, height: Int?, size: Int64, thumbnail: String?, name: String?, duration: Int64?, waveform: Data?, caption: String? = nil, createdAt: String?, isShareable: Bool?) {
         self.key = key
         self.digest = digest
         self.attachmentId = attachmentId
@@ -44,6 +46,7 @@ public struct TransferAttachmentData: Encodable {
         self.name = name
         self.duration = duration
         self.waveform = waveform
+        self.caption = caption
         self.createdAt = createdAt
         self.isShareable = isShareable
     }
@@ -65,6 +68,7 @@ extension TransferAttachmentData: Decodable {
         name = try container.decodeIfPresent(String.self, forKey: .name)
         duration = try Self.safeDecodeInt64(container: container, key: .duration)
         waveform = try container.decodeIfPresent(Data.self, forKey: .waveform)
+        caption = try container.decodeIfPresent(String.self, forKey: .caption)
         createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
         isShareable = try container.decodeIfPresent(Bool.self, forKey: .isShareable)
     }

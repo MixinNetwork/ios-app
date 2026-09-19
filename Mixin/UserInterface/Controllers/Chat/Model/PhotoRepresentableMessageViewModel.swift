@@ -26,7 +26,7 @@ class PhotoRepresentableMessageViewModel: ImageMessageViewModel {
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         let ratio = contentRatio.width / contentRatio.height
-        if quotedMessageViewModel == nil {
+        if quotedMessageViewModel == nil && !hasCaption {
             let photoHeight = min(maxPresentationHeight, round(Self.bubbleWidth / ratio))
             photoFrame.size = CGSize(width: Self.bubbleWidth, height: photoHeight)
         } else {

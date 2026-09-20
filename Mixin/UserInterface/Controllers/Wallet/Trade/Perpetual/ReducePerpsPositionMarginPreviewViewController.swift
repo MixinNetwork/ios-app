@@ -53,7 +53,8 @@ final class ReducePerpsPositionMarginPreviewViewController: WalletIdentifyingAut
             let count = CurrencyFormatter.localizedString(
                 from: reducingMargin,
                 format: .precision,
-                sign: .always
+                sign: .always,
+                symbol: .custom(token.symbol),
             )
             rows.append(.estimatedReceive(token: token, count: count, pnl: nil))
         }

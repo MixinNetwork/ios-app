@@ -93,6 +93,8 @@ extension MixinTokenItem: OnChainToken {
             "X Layer"
         case ChainID.robinhood:
             "Robinhood"
+        case ChainID.arc:
+            "Arc"
         case ChainID.ton:
             "TON"
         default:

@@ -52,6 +52,8 @@ extension OnChainToken {
             "X Layer"
         case ChainID.robinhood:
             "Robinhood"
+        case ChainID.arc:
+            "Arc"
         default:
             chain?.name
         }

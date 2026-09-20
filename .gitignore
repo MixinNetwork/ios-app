@@ -57,6 +57,7 @@ Mixin-Keys.plist
 R.generated.swift
 ApiKeys.plist
 
+.agents/
 .codegraph/
 .gemini/
 AGENTS.md

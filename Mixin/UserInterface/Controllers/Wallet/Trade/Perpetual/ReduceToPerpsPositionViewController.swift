@@ -622,11 +622,9 @@ extension ReduceToPerpsPositionViewController {
         case .byAmount:
             sign = "$"
             position = .currency
-            valueTextField.keyboardType = .decimalPad
         case .byPercentage:
             sign = "%"
             position = .percentage
-            valueTextField.keyboardType = .numberPad
         }
         switch position {
         case .left:

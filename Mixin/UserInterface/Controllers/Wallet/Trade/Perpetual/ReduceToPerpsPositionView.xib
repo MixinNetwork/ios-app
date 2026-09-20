@@ -60,7 +60,7 @@
                                             <rect key="frame" x="171.66666666666666" y="44" width="10" height="58"/>
                                             <color key="textColor" name="text"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="48"/>
-                                            <textInputTraits key="textInputTraits"/>
+                                            <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                             <connections>
                                                 <action selector="valueEditingChanged:" destination="-1" eventType="editingChanged" id="vfr-Bb-NEj"/>
                                             </connections>

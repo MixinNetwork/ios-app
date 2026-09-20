@@ -640,8 +640,11 @@
 "error_number_reached_limit" = "ОШИБКА 20132: число достигло предела.";
 "error_opponent_not_registered_to_safe" = "ОШИБКА 10404: оппонент использует более раннюю версию, вы можете напомнить ему об обновлении.";
 "error_payment_capture_failed" = "ОШИБКА 10603: не удалось получить платеж.";
-"error_perps_order_value_too_small" = "ОШИБКА %@: Размер позиции слишком мал.";
+"error_perps_margin_too_small" = "ОШИБКА 10650: Сумма маржи слишком мала";
+"error_perps_margin_too_small_value" = "ОШИБКА 10650: Сумма маржи должна составлять не менее %@";
 "error_perps_position_size_exceeds_leverage_limit" = "ОШИБКА 10655: Размер позиции превышает лимит для выбранного кредитного плеча. Уменьшите сумму или кредитное плечо.";
+"error_perps_position_size_too_small" = "ОШИБКА 10654: Стоимость позиции слишком мала";
+"error_perps_position_size_too_small_value" = "ОШИБКА 10654: Стоимость позиции должна составлять не менее %@";
 "error_phone_invalid_format" = "ОШИБКА 20110: Неверный номер телефона";
 "error_phone_sms_delivery" = "ОШИБКА 10003: Не удалось доставить SMS";
 "error_phone_verification_code_expired" = "ОШИБКА 20114: Срок действия кода подтверждения телефона истек";
@@ -1209,6 +1212,8 @@
 "perps_add_position_description" = "Увеличьте позицию, чтобы увеличить потенциальную прибыль и убытки";
 "perps_add_position_title" = "Увеличить позицию в %1$@ %2$@";
 "perps_add_to_position" = "Увеличить позицию";
+"perps_added_margin" = "Маржа добавлена";
+"perps_added_position" = "Позиция увеличена";
 "perps_adding_margin" = "Добавление маржи";
 "perps_adding_margin_failed" = "Не удалось добавить маржу";
 "perps_adjust" = "Изменить";
@@ -1254,6 +1259,7 @@
 "perps_position_size_pnl_2" = "Меньший размер, меньший PnL";
 "perps_position_tip" = "Увеличение позиции повышает прибыль и риски";
 "perps_product" = "Рынок";
+"perps_realized_pnl" = "Реализованная прибыль/убыток";
 "perps_receive" = "Получить";
 "perps_reduce_margin" = "Уменьшить маржу";
 "perps_reduce_margin_description" = "Выведите избыточную маржу, чтобы освободить средства, сохранив позицию";
@@ -1261,6 +1267,7 @@
 "perps_reduce_position" = "Уменьшить позицию";
 "perps_reduce_position_description" = "Частично закройте позицию, чтобы зафиксировать прибыль или ограничить убытки";
 "perps_reduce_position_title" = "Уменьшить позицию для %1$@ %2$@";
+"perps_reduced_margin" = "Маржа уменьшена";
 "perps_reducing_margin" = "Уменьшение маржи";
 "perps_reducing_margin_failed" = "Не удалось уменьшить маржу";
 "perps_scene_sl_triggered" = "Триггерный стоп-лосс: контроль потерь";

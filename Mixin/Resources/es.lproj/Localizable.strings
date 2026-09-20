@@ -640,8 +640,11 @@
 "error_number_reached_limit" = "ERROR 20132: El número ha llegado al límite.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: El oponente está usando una versión anterior, puedes recordarle que actualice";
 "error_payment_capture_failed" = "ERROR 10603: Error en la captura del pago";
-"error_perps_order_value_too_small" = "ERROR %@: El tamaño de la posición es demasiado pequeño.";
+"error_perps_margin_too_small" = "ERROR 10650: El margen es demasiado bajo";
+"error_perps_margin_too_small_value" = "ERROR 10650: El margen debe tener un valor mínimo de %@";
 "error_perps_position_size_exceeds_leverage_limit" = "ERROR 10655: El tamaño de la posición supera el límite para el apalancamiento seleccionado. Reduzca el importe o el apalancamiento.";
+"error_perps_position_size_too_small" = "ERROR 10654: El valor de la posición es demasiado bajo";
+"error_perps_position_size_too_small_value" = "ERROR 10654: La posición debe tener un valor mínimo de %@";
 "error_phone_invalid_format" = "ERROR 20110: Número de teléfono no válido";
 "error_phone_sms_delivery" = "ERROR 10003: Error al entregar SMS";
 "error_phone_verification_code_expired" = "ERROR 20114: Código de verificación del teléfono caducado";
@@ -1209,6 +1212,8 @@
 "perps_add_position_description" = "Aumenta tu posición para ampliar las ganancias y pérdidas potenciales";
 "perps_add_position_title" = "Añadir posición a %1$@ %2$@";
 "perps_add_to_position" = "Aumentar posición";
+"perps_added_margin" = "Margen añadido";
+"perps_added_position" = "Posición aumentada";
 "perps_adding_margin" = "Añadiendo margen";
 "perps_adding_margin_failed" = "No se pudo añadir margen";
 "perps_adjust" = "Ajustar";
@@ -1254,6 +1259,7 @@
 "perps_position_size_pnl_2" = "Tamaño más pequeño, PnL más pequeño";
 "perps_position_tip" = "Aumentar la posición amplifica las ganancias y los riesgos";
 "perps_product" = "Mercado";
+"perps_realized_pnl" = "PnL realizado";
 "perps_receive" = "Recibir";
 "perps_reduce_margin" = "Reducir margen";
 "perps_reduce_margin_description" = "Retira el margen excedente para liberar fondos sin cambiar tu posición";
@@ -1261,6 +1267,7 @@
 "perps_reduce_position" = "Reducir posición";
 "perps_reduce_position_description" = "Cierra parcialmente tu posición para asegurar ganancias o limitar pérdidas";
 "perps_reduce_position_title" = "Reducir posición para %1$@ %2$@";
+"perps_reduced_margin" = "Margen reducido";
 "perps_reducing_margin" = "Reduciendo margen";
 "perps_reducing_margin_failed" = "No se pudo reducir el margen";
 "perps_scene_sl_triggered" = "Activar stop-loss: controlar las pérdidas";

@@ -640,8 +640,11 @@
 "error_number_reached_limit" = "錯誤 20132： 已達到上限";
 "error_opponent_not_registered_to_safe" = "錯誤 10404: 對方客戶端版本過低，請提醒對方更新客戶端到最新版本";
 "error_payment_capture_failed" = "錯誤 10603: 支付確認失敗";
-"error_perps_order_value_too_small" = "錯誤 %@: 倉位規模太小，請調整後重試。";
+"error_perps_margin_too_small" = "錯誤 10650：保證金太少";
+"error_perps_margin_too_small_value" = "錯誤 10650：保證金至少 %@";
 "error_perps_position_size_exceeds_leverage_limit" = "錯誤 10655：倉位規模超過當前槓桿檔位限制，請降低金額或槓桿。";
+"error_perps_position_size_too_small" = "錯誤 10654：倉位價值太少";
+"error_perps_position_size_too_small_value" = "錯誤 10654：倉位價值至少 %@";
 "error_phone_invalid_format" = "錯誤 20110：手機號碼不合法";
 "error_phone_sms_delivery" = "錯誤 10003：傳送簡訊失敗";
 "error_phone_verification_code_expired" = "錯誤 20114：驗證碼已過期";
@@ -1209,6 +1212,8 @@
 "perps_add_position_description" = "增加倉位，放大潛在收益與虧損";
 "perps_add_position_title" = "%1$@ %2$@ 增加倉位";
 "perps_add_to_position" = "增加倉位";
+"perps_added_margin" = "已增加保證金";
+"perps_added_position" = "已加倉";
 "perps_adding_margin" = "正在新增保證金";
 "perps_adding_margin_failed" = "新增保證金失敗";
 "perps_adjust" = "調整";
@@ -1254,6 +1259,7 @@
 "perps_position_size_pnl_2" = "倉位越小，盈虧金額越小";
 "perps_position_tip" = "加倉會放大收益和風險";
 "perps_product" = "合約";
+"perps_realized_pnl" = "已實現盈虧";
 "perps_receive" = "收到";
 "perps_reduce_margin" = "減少保證金";
 "perps_reduce_margin_description" = "減少多餘保證金，在保持持倉的同時釋放資金";
@@ -1261,6 +1267,7 @@
 "perps_reduce_position" = "減少倉位";
 "perps_reduce_position_description" = "部分平倉，鎖定收益或減少虧損";
 "perps_reduce_position_title" = "%1$@ %2$@ 減少倉位";
+"perps_reduced_margin" = "已減少保證金";
 "perps_reducing_margin" = "正在減少保證金";
 "perps_reducing_margin_failed" = "減少保證金失敗";
 "perps_scene_sl_triggered" = "觸發止損：控制虧損";

@@ -640,8 +640,11 @@
 "error_number_reached_limit" = "ERROR 20132: The number has reached the limit.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
 "error_payment_capture_failed" = "ERROR 10603: Payment capture failed";
-"error_perps_order_value_too_small" = "ERROR %@: Position size is too small.";
+"error_perps_margin_too_small" = "ERROR 10650: Margin is too small";
+"error_perps_margin_too_small_value" = "ERROR 10650: Margin must have minimum value of %@";
 "error_perps_position_size_exceeds_leverage_limit" = "ERROR 10655: Position size exceeds the limit for the selected leverage. Reduce the amount or leverage.";
+"error_perps_position_size_too_small" = "ERROR 10654: Position size is too small";
+"error_perps_position_size_too_small_value" = "ERROR 10654: Position must have minimum size of %@";
 "error_phone_invalid_format" = "ERROR 20110: Invalid mobile number";
 "error_phone_sms_delivery" = "ERROR 10003: Failed to deliver SMS";
 "error_phone_verification_code_expired" = "ERROR 20114: Expired verification code";
@@ -1209,6 +1212,8 @@
 "perps_add_position_description" = "Increase your position for greater potential gains and losses";
 "perps_add_position_title" = "Add Position to %1$@ %2$@";
 "perps_add_to_position" = "Add to Position";
+"perps_added_margin" = "Added Margin";
+"perps_added_position" = "Added Position";
 "perps_adding_margin" = "Adding Margin";
 "perps_adding_margin_failed" = "Failed to Add Margin";
 "perps_adjust" = "Adjust";
@@ -1254,6 +1259,7 @@
 "perps_position_size_pnl_2" = "Smaller size, smaller PnL";
 "perps_position_tip" = "Increase position for more gains and losses";
 "perps_product" = "Market";
+"perps_realized_pnl" = "Realized PnL";
 "perps_receive" = "Receive";
 "perps_reduce_margin" = "Reduce Margin";
 "perps_reduce_margin_description" = "Withdraw excess margin to free up funds while maintaining your position";
@@ -1261,6 +1267,7 @@
 "perps_reduce_position" = "Reduce Position";
 "perps_reduce_position_description" = "Partially close to lock in profits or limit losses";
 "perps_reduce_position_title" = "Reduce Position for %1$@ %2$@";
+"perps_reduced_margin" = "Reduced Margin";
 "perps_reducing_margin" = "Reducing Margin";
 "perps_reducing_margin_failed" = "Failed to Reduce Margin";
 "perps_scene_sl_triggered" = "Trigger stop-loss: Control losses";

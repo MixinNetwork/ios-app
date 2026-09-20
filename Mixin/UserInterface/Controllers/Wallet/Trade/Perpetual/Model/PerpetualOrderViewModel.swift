@@ -104,14 +104,14 @@ struct PerpetualOrderViewModel {
                 case .rejected:
                     R.string.localizable.added_long_failed()
                 default:
-                    R.string.localizable.added_long()
+                    R.string.localizable.perps_added_position()
                 }
             case .short:
                 switch order.status.knownCase {
                 case .rejected:
                     R.string.localizable.added_short_failed()
                 default:
-                    R.string.localizable.added_short()
+                    R.string.localizable.perps_added_position()
                 }
             }
         case .increaseMargin:
@@ -120,7 +120,7 @@ struct PerpetualOrderViewModel {
             case .rejected:
                 R.string.localizable.perps_adding_margin_failed()
             default:
-                R.string.localizable.perps_add_margin()
+                R.string.localizable.perps_added_margin()
             }
         case .decreaseMargin:
             self.type = .decreaseMargin(payAmount: payAmount)
@@ -128,7 +128,7 @@ struct PerpetualOrderViewModel {
             case .rejected:
                 R.string.localizable.perps_reducing_margin_failed()
             default:
-                R.string.localizable.perps_reduce_margin()
+                R.string.localizable.perps_reduced_margin()
             }
         case .close:
             let decimalClosePrice = Decimal(string: order.closePrice, locale: .enUSPOSIX)

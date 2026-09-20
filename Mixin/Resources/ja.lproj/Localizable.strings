@@ -640,8 +640,11 @@
 "error_number_reached_limit" = "エラー 20132：数が上限に達しています";
 "error_opponent_not_registered_to_safe" = "エラー 10404: 相手は以前のバージョンを使用しています。アップデートするよう通知できます。";
 "error_payment_capture_failed" = "エラー 10603: 支払いの取得に失敗しました";
-"error_perps_order_value_too_small" = "エラー %@：ポジションサイズが小さすぎます。";
+"error_perps_margin_too_small" = "エラー 10650: マージンが少なすぎます";
+"error_perps_margin_too_small_value" = "エラー 10650: マージンは最低 %@ 必要です";
 "error_perps_position_size_exceeds_leverage_limit" = "エラー 10655：ポジションサイズが選択したレバレッジの上限を超えています。金額またはレバレッジを下げてください。";
+"error_perps_position_size_too_small" = "エラー 10654: ポジション価値が小さすぎます";
+"error_perps_position_size_too_small_value" = "エラー 10654: ポジション価値は最低 %@ 必要です";
 "error_phone_invalid_format" = "エラー 20110：無効な電話番号です";
 "error_phone_sms_delivery" = "エラー 10003：SMSの送信に失敗しました";
 "error_phone_verification_code_expired" = "エラー 20114：電話番号認証コードの有効期限が切れています";
@@ -1209,6 +1212,8 @@
 "perps_add_position_description" = "ポジションを増やし、潜在的な利益と損失を拡大します";
 "perps_add_position_title" = "%1$@ %2$@ にポジションを追加";
 "perps_add_to_position" = "ポジションを追加";
+"perps_added_margin" = "証拠金追加";
+"perps_added_position" = "ポジション追加";
 "perps_adding_margin" = "証拠金を追加中";
 "perps_adding_margin_failed" = "証拠金の追加に失敗しました";
 "perps_adjust" = "調整";
@@ -1254,6 +1259,7 @@
 "perps_position_size_pnl_2" = "サイズが小さく、損益が小さい";
 "perps_position_tip" = "ポジションを増やすと利益とリスクが拡大します";
 "perps_product" = "市場";
+"perps_realized_pnl" = "実現損益";
 "perps_receive" = "受け取る";
 "perps_reduce_margin" = "証拠金を減らす";
 "perps_reduce_margin_description" = "ポジションを維持しながら余剰証拠金を引き出し、資金を確保します";
@@ -1261,6 +1267,7 @@
 "perps_reduce_position" = "ポジションを減らす";
 "perps_reduce_position_description" = "ポジションを一部決済して利益を確定、または損失を抑えます";
 "perps_reduce_position_title" = "%1$@ %2$@ のポジションを減らす";
+"perps_reduced_margin" = "証拠金減額";
 "perps_reducing_margin" = "証拠金を減らしています";
 "perps_reducing_margin_failed" = "証拠金の減少に失敗しました";
 "perps_scene_sl_triggered" = "トリガーストップロス: 損失のコントロール";

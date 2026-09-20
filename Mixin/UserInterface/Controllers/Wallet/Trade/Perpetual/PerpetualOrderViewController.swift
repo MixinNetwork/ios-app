@@ -256,7 +256,7 @@ extension PerpetualOrderViewController: UICollectionViewDataSource {
                 return cell
             case let .pnl(value, color):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_compact_info, for: indexPath)!
-                cell.titleLabel.text = R.string.localizable.pnl()
+                cell.titleLabel.text = R.string.localizable.perps_realized_pnl()
                 cell.infoButton.isHidden = true
                 cell.contentLabel.text = value
                 cell.contentLabel.marketColor = color

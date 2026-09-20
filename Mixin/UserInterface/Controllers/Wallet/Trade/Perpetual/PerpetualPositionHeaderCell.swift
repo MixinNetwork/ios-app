@@ -53,13 +53,15 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
             titleLabel.textColor = R.color.market_green()
         case .increaseMargin:
             titleLabel.text = abs(viewModel.decimalPayAmount).formatted(
-                viewModel.priceFormatStyle.sign(strategy: .always())
+                PerpetualOrderViewModel.editPositionPayAmountStyle
+                    .sign(strategy: .always())
             )
             titleLabel.textColor = R.color.market_green()
             symbolLabel.isHidden = true
         case .decreaseMargin:
             titleLabel.text = (-abs(viewModel.decimalPayAmount)).formatted(
-                viewModel.priceFormatStyle.sign(strategy: .always())
+                PerpetualOrderViewModel.editPositionPayAmountStyle
+                    .sign(strategy: .always())
             )
             titleLabel.textColor = R.color.market_red()
             symbolLabel.isHidden = true

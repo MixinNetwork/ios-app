@@ -813,8 +813,12 @@ extension ReduceToPerpsPositionViewController {
             reduceButton.isEnabled = false
         case let .valid(price):
             liquidationPriceActivityIndicator.stopAnimating()
-            liquidationPriceContentLabel.text = price.formatted(
+            let after = price.formatted(
                 marketViewModel.userDisplayPriceFormatStyle
+            )
+            liquidationPriceContentLabel.text = PerpPositionAdjustment.change(
+                from: liquidationPriceBeforeReducing,
+                to: after,
             )
             liquidationPriceContentLabel.alpha = 1
             reduceButton.isEnabled = true

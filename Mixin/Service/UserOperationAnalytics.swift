@@ -15,8 +15,7 @@ enum UserOperationAnalytics {
         case withdraw           = "withdraw"
         case scheme             = "scheme"
         case perpsMarginInput   = "perps_margin_input"
-        case perpsMarketDetailAdd           = "perps_market_detail_add"
-        case perpsMarketDetailBottomMenu    = "perps_market_detail_bottom_menu"
+        case perpsMarketDetailAdjust           = "perps_market_detail_adjust"
     }
     
     static var tradeSource: TradeSource?

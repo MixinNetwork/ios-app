@@ -413,7 +413,7 @@ final class PerpetualMarketViewController: UIViewController {
             }
             switch adjustment.behavior {
             case .increase:
-                UserOperationAnalytics.tradeSource = .perpsMarketDetailAdd
+                UserOperationAnalytics.tradeSource = .perpsMarketDetailAdjust
                 let addPosition = AddToPerpsPositionViewController(
                     wallet: wallet,
                     adding: adjustment.target,
@@ -424,7 +424,7 @@ final class PerpetualMarketViewController: UIViewController {
                 )
                 self.present(addPosition, animated: true)
             case .decrease:
-                UserOperationAnalytics.tradeSource = .perpsMarketDetailBottomMenu
+                UserOperationAnalytics.tradeSource = .perpsMarketDetailAdjust
                 let reduce = ReduceToPerpsPositionViewController(
                     wallet: wallet,
                     reducing: adjustment.target,

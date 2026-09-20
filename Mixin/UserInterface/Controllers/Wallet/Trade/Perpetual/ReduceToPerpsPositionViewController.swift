@@ -822,11 +822,20 @@ extension ReduceToPerpsPositionViewController {
     }
     
     private func showMaximumRemovable(_ amount: Decimal) {
+        var reducingAmount: Decimal = 0
+        if amount < 0.01 {
+            reducingAmount = amount
+        } else {
+            withUnsafePointer(to: amount) { amount in
+                NSDecimalRound(&reducingAmount, amount, 2, .down)
+            }
+        }
+        
         let value: String
         switch amountDisplay {
         case .byAmount:
             value = CurrencyFormatter.localizedString(
-                from: amount,
+                from: reducingAmount,
                 format: .precision,
                 sign: .never,
                 symbol: .dollarSign
@@ -840,7 +849,7 @@ extension ReduceToPerpsPositionViewController {
             )
         }
         showError(description: R.string.localizable.max_removable(value))
-        maximumRemovableAmount = amount
+        maximumRemovableAmount = reducingAmount
         errorDescriptionButton.isEnabled = true
     }
     

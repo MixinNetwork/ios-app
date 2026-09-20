@@ -3,6 +3,11 @@ import MixinServices
 
 final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
     
+    enum Source {
+        case leader(TradeURL.LeaderPosition)
+        case addMargin(Decimal?)
+    }
+    
     @IBOutlet weak var titleView: EditPerpsPositionTitleView!
     
     @IBOutlet weak var targetTitleLabel: UILabel!
@@ -72,7 +77,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
         adding target: PerpPositionAdjustmentTarget,
         marketViewModel: PerpetualMarketViewModel,
         positionViewModel: PerpetualPositionViewModel,
-        leaderPosition: TradeURL.LeaderPosition?,
+        source: Source?,
         presentMarketViewOnSuccess: Bool,
     ) {
         self.wallet = wallet
@@ -96,8 +101,20 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                 action: .increaseMargin,
             )
         }
+        
         let nib = R.nib.addToPerpsPositionView
-        super.init(leaderPosition: leaderPosition, nibName: nib.name, bundle: nib.bundle)
+        switch source {
+        case .leader(let leaderPosition):
+            super.init(leaderPosition: leaderPosition, nibName: nib.name, bundle: nib.bundle)
+        case .addMargin(let value):
+            if let value {
+                super.init(marginAmount: value, nibName: nib.name, bundle: nib.bundle)
+            } else {
+                fallthrough
+            }
+        case nil:
+            super.init(leaderPosition: nil, nibName: nib.name, bundle: nib.bundle)
+        }
     }
     
     required init?(coder: NSCoder) {

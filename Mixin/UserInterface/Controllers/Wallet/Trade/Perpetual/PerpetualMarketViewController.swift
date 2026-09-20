@@ -419,7 +419,7 @@ final class PerpetualMarketViewController: UIViewController {
                     adding: adjustment.target,
                     marketViewModel: viewModel,
                     positionViewModel: positionViewModel,
-                    leaderPosition: nil,
+                    source: nil,
                     presentMarketViewOnSuccess: true,
                 )
                 self.present(addPosition, animated: true)

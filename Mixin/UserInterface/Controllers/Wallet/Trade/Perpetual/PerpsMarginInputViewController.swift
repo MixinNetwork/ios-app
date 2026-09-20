@@ -61,6 +61,16 @@ class PerpsMarginInputViewController: UIViewController {
         super.init(nibName: nibName, bundle: bundle)
     }
     
+    init(
+        marginAmount: Decimal,
+        nibName: String?,
+        bundle: Bundle?,
+    ) {
+        self.leaderPosition = nil
+        self.marginAmount = marginAmount
+        super.init(nibName: nibName, bundle: bundle)
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("Storyboard not supported")
     }

@@ -143,7 +143,7 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
                 adding: .position,
                 marketViewModel: marketViewModel,
                 positionViewModel: positionViewModel,
-                leaderPosition: leaderPosition,
+                source: .leader(leaderPosition),
                 presentMarketViewOnSuccess: presentMarketViewOnSuccess,
             )
             UIApplication.shared.homeContainerViewController?.present(addPosition, animated: true)

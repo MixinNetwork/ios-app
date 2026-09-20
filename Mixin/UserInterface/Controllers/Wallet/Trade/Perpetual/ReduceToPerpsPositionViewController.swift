@@ -826,34 +826,62 @@ extension ReduceToPerpsPositionViewController {
     }
     
     private func showMaximumRemovable(_ amount: Decimal) {
-        var reducingAmount: Decimal = 0
-        if amount < 0.01 {
-            reducingAmount = amount
-        } else {
-            withUnsafePointer(to: amount) { amount in
-                NSDecimalRound(&reducingAmount, amount, 2, .down)
-            }
-        }
-        
         let value: String
+        let removableAmount: Decimal
         switch amountDisplay {
         case .byAmount:
+            var reducingAmount: Decimal = 0
+            if amount < 0.01 {
+                reducingAmount = amount
+            } else {
+                withUnsafePointer(to: amount) { amount in
+                    NSDecimalRound(&reducingAmount, amount, 2, .down)
+                }
+            }
             value = CurrencyFormatter.localizedString(
                 from: reducingAmount,
                 format: .precision,
                 sign: .never,
                 symbol: .dollarSign
             )
+            removableAmount = reducingAmount
         case .byPercentage:
+            let hasInputFractionals: Bool
+            if var inputPercentage = Decimal(string: valueTextField.text ?? "", locale: .current) {
+                var integralPart: Decimal = 0
+                NSDecimalRound(&integralPart, &inputPercentage, 0, .down)
+                hasInputFractionals = inputPercentage != integralPart
+            } else {
+                hasInputFractionals = false
+            }
+            
             let margin = positionViewModel.decimalMargin
+            let recommendedPercentage = {
+                let percentage = margin > 0 ? amount / margin : 0
+                let scale = hasInputFractionals || percentage < 0.01 ? 4 : 2
+                var roundedPercentage: Decimal = 0
+                withUnsafePointer(to: percentage) { percentage in
+                    NSDecimalRound(&roundedPercentage, percentage, scale, .down)
+                }
+                return roundedPercentage
+            }()
+            
             value = PercentageFormatter.string(
-                from: margin > 0 ? amount / margin : 0,
+                from: recommendedPercentage,
                 format: .pretty,
                 sign: .never
             )
+            removableAmount = {
+                let amount = margin * recommendedPercentage
+                var roundedAmount: Decimal = 0
+                withUnsafePointer(to: amount) { amount in
+                    NSDecimalRound(&roundedAmount, amount, Int(MixinToken.internalPrecision), .down)
+                }
+                return roundedAmount
+            }()
         }
         showError(description: R.string.localizable.max_removable(value))
-        maximumRemovableAmount = reducingAmount
+        maximumRemovableAmount = removableAmount
         errorDescriptionButton.isEnabled = true
     }
     

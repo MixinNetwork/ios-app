@@ -435,9 +435,8 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(reportingTags: ["source": "perps_open_position"])
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "perps_open_position"])
     }
     
     @objc private func reloadMarket(_ notification: Notification) {

@@ -245,9 +245,11 @@ final class TIPFullscreenInputViewController: UIViewController {
     }
     
     @objc func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        let customerService = CustomerServiceViewController(
+            presentLoginLogsOnLongPressingTitle: true,
+            reportingTags: ["source": "tip_\(action.debugDescription)"],
+        )
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "tip_\(action.debugDescription)"])
     }
     
 }

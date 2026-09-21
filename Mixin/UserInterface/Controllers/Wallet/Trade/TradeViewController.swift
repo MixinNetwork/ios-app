@@ -201,16 +201,16 @@ final class TradeViewController: UIViewController {
         let trading = self.trading
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.contact_support(), style: .default, handler: { _ in
-            let customerService = CustomerServiceViewController()
-            self.present(customerService, animated: true)
-            switch trading {
+            let source = switch trading {
             case .simpleSpot:
-                reporter.report(event: .customerServiceDialog, tags: ["source": "trade_simple_home_menu"])
+                "trade_simple_home_menu"
             case .advancedSpot:
-                reporter.report(event: .customerServiceDialog, tags: ["source": "trade_advanced_home_menu"])
+                "trade_advanced_home_menu"
             case .perpetualFutures:
-                reporter.report(event: .customerServiceDialog, tags: ["source": "perps_home_menu"])
+                "perps_home_menu"
             }
+            let customerService = CustomerServiceViewController(reportingTags: ["source": source])
+            self.present(customerService, animated: true)
         }))
         switch trading {
         case .simpleSpot, .advancedSpot:

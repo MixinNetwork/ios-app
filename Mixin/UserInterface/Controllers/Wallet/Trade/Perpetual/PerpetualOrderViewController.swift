@@ -174,9 +174,8 @@ final class PerpetualOrderViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(reportingTags: ["source": "perps_position"])
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "perps_position"])
     }
     
     private func viewMarket() {

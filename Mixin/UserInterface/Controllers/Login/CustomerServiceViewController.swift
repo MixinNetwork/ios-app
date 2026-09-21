@@ -1,11 +1,17 @@
 import UIKit
+import MixinServices
 
 final class CustomerServiceViewController: PopupTitledWebViewController {
     
     private let presentLoginLogsOnLongPressingTitle: Bool
+    private let reportingTags: [String: String]?
     
-    init(presentLoginLogsOnLongPressingTitle: Bool = false) {
+    init(
+        presentLoginLogsOnLongPressingTitle: Bool = false,
+        reportingTags: [String: String]?,
+    ) {
         self.presentLoginLogsOnLongPressingTitle = presentLoginLogsOnLongPressingTitle
+        self.reportingTags = reportingTags
         super.init(
             title: R.string.localizable.mixin_support(),
             subtitle: R.string.localizable.ask_me_anything(),
@@ -19,6 +25,9 @@ final class CustomerServiceViewController: PopupTitledWebViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let reportingTags {
+            reporter.report(event: .customerServiceDialog, tags: reportingTags)
+        }
         if presentLoginLogsOnLongPressingTitle {
             let presentLogRecognizer = UILongPressGestureRecognizer(
                 target: self,

@@ -119,9 +119,11 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        let customerService = CustomerServiceViewController(
+            presentLoginLogsOnLongPressingTitle: true,
+            reportingTags: ["source": "login_sms_verify"],
+        )
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source":"login_sms_verify"])
     }
     
 }

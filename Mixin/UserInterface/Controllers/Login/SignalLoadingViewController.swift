@@ -41,9 +41,11 @@ final class SignalLoadingViewController: LoginLoadingViewController, CheckSessio
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        let customerService = CustomerServiceViewController(
+            presentLoginLogsOnLongPressingTitle: true,
+            reportingTags: ["source": "signal_loading"],
+        )
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "signal_loading"])
     }
     
     private func syncSignalKeys() {

@@ -375,9 +375,8 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(reportingTags: ["source": "perps_market"])
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "perps_market"])
     }
     
     @objc private func openLongPosition(_ sender: UIButton) {

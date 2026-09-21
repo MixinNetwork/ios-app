@@ -771,7 +771,8 @@ extension ReduceToPerpsPositionViewController {
         if requestLiquidationPrice {
             show(liquidationPrice: .busy)
             liquidationPriceRequester.request(
-                amount: reducingAmount
+                amount: reducingAmount,
+                symbol: nil,
             ) { [weak self] price in
                 guard let self else {
                     return
@@ -784,14 +785,11 @@ extension ReduceToPerpsPositionViewController {
                     return
                 }
                 self.show(liquidationPrice: .invalid)
-                if case let .response(error) = error as? MixinAPIError,
-                   case .exceedsMaxRemovableMargin = error,
-                   case let .string(value) = error.extra?.value(at: ["available_margin"]),
-                   let decimalValue = Decimal(string: value, locale: .enUSPOSIX)
-                {
-                    self.showMaximumRemovable(decimalValue)
-                } else {
-                    self.showError(description: error.localizedDescription)
+                switch error {
+                case .exceedsMaxRemovableMargin(let value):
+                    self.showMaximumRemovable(value)
+                case .other(let description):
+                    self.showError(description: description)
                 }
             }
         }

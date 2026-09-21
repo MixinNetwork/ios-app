@@ -1254,6 +1254,7 @@
 "perps_margin_submitted" = "保證金調整已提交";
 "perps_margin_tip" = "新增保證金可降低強平風險";
 "perps_markets" = "市場";
+"perps_maximum_leverage" = "當前金額支援的最大槓桿為 %dx";
 "perps_position_size_overview" = "當前合約的倉位規模由「金額 × 槓桿」計算得出，表示本次交易所控制的資產規模。";
 "perps_position_size_pnl_1" = "倉位越大，盈虧金額越大";
 "perps_position_size_pnl_2" = "倉位越小，盈虧金額越小";

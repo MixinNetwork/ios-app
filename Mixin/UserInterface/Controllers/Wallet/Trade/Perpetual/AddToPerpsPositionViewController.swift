@@ -467,7 +467,8 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
             if marginAmount != 0, let marginToken {
                 let isBalanceSufficient = marginAmount <= marginToken.decimalBalance
                 liquidationPriceRequester.request(
-                    amount: marginAmount
+                    amount: marginAmount,
+                    symbol: marginToken.symbol,
                 ) { [weak self] price in
                     self?.show(liquidationPrice: .valid(price: price, isBalanceSufficient: isBalanceSufficient))
                 } onFailure: { [weak self] error in

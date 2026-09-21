@@ -315,14 +315,16 @@ extension PerpsMarginInputViewController {
             maxAmount = Decimal(string: market.maxAmount, locale: .enUSPOSIX)
         }
         
-        func validate(amount: Decimal, symbol: String) -> Result {
-            if amount < minAmount {
+        func validate(amount: Decimal, token: MixinTokenItem) -> Result {
+            if amount > token.decimalBalance {
+                return .invalid(reason: R.string.localizable.insufficient_balance())
+            } else if amount < minAmount {
                 let min = CurrencyFormatter.localizedString(from: minAmount, format: .precision, sign: .never)
-                let reason = R.string.localizable.single_transaction_should_be_greater_than(min, symbol)
+                let reason = R.string.localizable.single_transaction_should_be_greater_than(min, token.symbol)
                 return .invalid(reason: reason)
             } else if let maxAmount, amount > maxAmount {
                 let max = CurrencyFormatter.localizedString(from: maxAmount, format: .precision, sign: .never)
-                let reason = R.string.localizable.single_transaction_should_be_less_than(max, symbol)
+                let reason = R.string.localizable.single_transaction_should_be_less_than(max, token.symbol)
                 return .invalid(reason: reason)
             } else {
                 return .valid

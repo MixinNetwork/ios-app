@@ -60,7 +60,7 @@ public final class AccountAPI: MixinAPI {
             method: .post,
             path: Path.verifications,
             parameters: parameters,
-            options: .authIndependent,
+            options: [.authIndependent],
             completion: completion
         )
     }
@@ -83,7 +83,7 @@ public final class AccountAPI: MixinAPI {
             method: .post,
             path: Path.verifications,
             parameters: parameters,
-            options: .authIndependent,
+            options: [.authIndependent],
             completion: completion
         )
     }
@@ -144,7 +144,7 @@ public final class AccountAPI: MixinAPI {
             method: .post,
             path: Path.verifications(id: verificationId),
             parameters: parameters,
-            options: .authIndependent,
+            options: [.authIndependent],
             completion: completion
         )
     }
@@ -165,7 +165,7 @@ public final class AccountAPI: MixinAPI {
             method: .post,
             path: Path.verifications(id: verificationID),
             parameters: parameters,
-            options: .authIndependent,
+            options: [.authIndependent],
             completion: completion
         )
     }
@@ -187,11 +187,13 @@ public final class AccountAPI: MixinAPI {
                 "pin": pin,
                 "salt_base64": salt,
             ]
-            self.request(method: .post,
-                         path: Path.verifications(id: verificationID),
-                         parameters: parameters,
-                         options: .disableRetryOnRequestSigningTimeout,
-                         completion: completion)
+            self.request(
+                method: .post,
+                path: Path.verifications(id: verificationID),
+                parameters: parameters,
+                options: [.disableRetryOnRequestSigningTimeout],
+                completion: completion
+            )
         }
     }
     
@@ -245,11 +247,13 @@ public final class AccountAPI: MixinAPI {
         PINEncryptor.encrypt(pin: pin, tipBody: {
             try TIPBody.verify(timestamp: timestamp)
         }, onFailure: completion) { (encryptedPin) in
-            self.request(method: .post,
-                         path: Path.verifyPin,
-                         parameters: ["pin_base64": encryptedPin, "timestamp": timestamp],
-                         options: .disableRetryOnRequestSigningTimeout,
-                         completion: completion)
+            self.request(
+                method: .post,
+                path: Path.verifyPin,
+                parameters: ["pin_base64": encryptedPin, "timestamp": timestamp],
+                options: [.disableRetryOnRequestSigningTimeout],
+                completion: completion
+            )
         }
     }
     
@@ -263,7 +267,12 @@ public final class AccountAPI: MixinAPI {
     
     static func updatePIN(request pinRequest: PINRequest) async throws -> Account {
         try await withCheckedThrowingContinuation { continuation in
-            request(method: .post, path: Path.updatePin, parameters: pinRequest, options: .disableRetryOnRequestSigningTimeout) { result in
+            request(
+                method: .post,
+                path: Path.updatePin,
+                parameters: pinRequest,
+                options: [.disableRetryOnRequestSigningTimeout]
+            ) { result in
                 continuation.resume(with: result)
             }
         }
@@ -311,11 +320,13 @@ public final class AccountAPI: MixinAPI {
                 "session_id": sessionID,
                 "pin_base64": encryptedPin,
             ]
-            request(method: .post,
-                    path: "/logout",
-                    parameters: parameters,
-                    options: .disableRetryOnRequestSigningTimeout,
-                    completion: completion)
+            request(
+                method: .post,
+                path: "/logout",
+                parameters: parameters,
+                options: [.disableRetryOnRequestSigningTimeout],
+                completion: completion
+            )
         }
     }
     
@@ -324,11 +335,13 @@ public final class AccountAPI: MixinAPI {
         code: String,
         completion: @escaping (MixinAPI.Result<Empty>) -> Void
     ) {
-        request(method: .post,
-                path: Path.verifications(id: verificationID),
-                parameters: VerificationRequest.deactivate(code: code),
-                options: .disableRetryOnRequestSigningTimeout,
-                completion: completion)
+        request(
+            method: .post,
+            path: Path.verifications(id: verificationID),
+            parameters: VerificationRequest.deactivate(code: code),
+            options: [.disableRetryOnRequestSigningTimeout],
+            completion: completion
+        )
     }
     
     public static func deactiveAccount(
@@ -349,11 +362,13 @@ public final class AccountAPI: MixinAPI {
             if let verificationID {
                 parameters["verification_id"] = verificationID
             }
-            request(method: .post,
-                    path: Path.deactivate,
-                    parameters: parameters,
-                    options: .disableRetryOnRequestSigningTimeout,
-                    completion: completion)
+            request(
+                method: .post,
+                path: Path.deactivate,
+                parameters: parameters,
+                options: [.disableRetryOnRequestSigningTimeout],
+                completion: completion
+            )
         }
     }
     
@@ -381,7 +396,7 @@ public final class AccountAPI: MixinAPI {
                 method: .post,
                 path: "/me/salt_export",
                 parameters: parameters,
-                options: .disableRetryOnRequestSigningTimeout,
+                options: [.disableRetryOnRequestSigningTimeout],
                 completion: completion
             )
         }

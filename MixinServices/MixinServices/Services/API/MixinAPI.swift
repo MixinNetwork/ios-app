@@ -6,18 +6,15 @@ open class MixinAPI {
     
     public typealias Result<Response: Decodable> = Swift.Result<Response, MixinAPIError>
     
-    public struct Options: OptionSet {
-        
-        public static let authIndependent = Options(rawValue: 1 << 0)
-        public static let disableRetryOnRequestSigningTimeout = Options(rawValue: 1 << 1)
-        
-        public let rawValue: UInt
-        
-        public init(rawValue: UInt) {
-            self.rawValue = rawValue
-        }
-        
+    public enum Option: Sendable, Hashable {
+        case authIndependent
+        case disableRetryOnRequestSigningTimeout
+        case requestID(String)
+        case timeoutInterval(TimeInterval)
+        case rawResponseObject
     }
+    
+    public typealias Options = [Option]
     
     public enum PINEncryptor {
         
@@ -69,7 +66,13 @@ extension MixinAPI {
         }
         return try await withCheckedThrowingContinuation { continuation in
             request(makeRequest: { (session) -> DataRequest in
-                session.request(url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
+                session.request(
+                    url,
+                    method: method,
+                    parameters: parameters,
+                    encoder: JSONParameterEncoder.default,
+                    requestModifier: { options.apply(to: &$0) },
+                )
             }, options: options, isAsync: true, queue: queue, completion: { result in
                 continuation.resume(with: result)
             })
@@ -93,7 +96,13 @@ extension MixinAPI {
             return nil
         }
         return request(makeRequest: { (session) -> DataRequest in
-            session.request(url, method: method, parameters: parameters, encoder: JSONParameterEncoder.default)
+            session.request(
+                url,
+                method: method,
+                parameters: parameters,
+                encoder: JSONParameterEncoder.default,
+                requestModifier: { options.apply(to: &$0) },
+            )
         }, options: options, isAsync: true, queue: queue, completion: completion)
     }
     
@@ -111,7 +120,13 @@ extension MixinAPI {
         }
         return try await withCheckedThrowingContinuation { continuation in
             request(makeRequest: { (session) -> DataRequest in
-                session.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default)
+                session.request(
+                    url,
+                    method: method,
+                    parameters: parameters,
+                    encoding: JSONEncoding.default,
+                    requestModifier: { options.apply(to: &$0) },
+                )
             }, options: options, isAsync: true, queue: queue, completion: { result in
                 continuation.resume(with: result)
             })
@@ -135,7 +150,13 @@ extension MixinAPI {
             return nil
         }
         return request(makeRequest: { (session) -> DataRequest in
-            session.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default)
+            session.request(
+                url,
+                method: method,
+                parameters: parameters,
+                encoding: JSONEncoding.default,
+                requestModifier: { options.apply(to: &$0) },
+            )
         }, options: options, isAsync: true, queue: queue, completion: completion)
     }
     
@@ -179,6 +200,10 @@ extension MixinAPI {
     
     private struct ResponseObject<Response: Decodable>: Decodable {
         let data: Response?
+        let error: MixinAPIResponseError?
+    }
+    
+    private struct RawResponseObjectError: Decodable {
         let error: MixinAPIResponseError?
     }
     
@@ -280,22 +305,45 @@ extension MixinAPI {
                             return
                         }
                     }
-                    do {
-                        let responseObject = try JSONDecoder.default.decode(ResponseObject<Response>.self, from: data)
-                        if let data = responseObject.data {
-                            completion(.success(data))
-                        } else if case .some(.unauthorized) = responseObject.error {
-                            handleDeauthorization(response: response.response)
-                        } else if let error = responseObject.error {
-                            Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)")
-                            completion(.failure(.response(error)))
+                    if options.contains(.rawResponseObject) {
+                        if let object = try? JSONDecoder.default.decode(RawResponseObjectError.self, from: data),
+                           let error = object.error
+                        {
+                            switch error {
+                            case .unauthorized:
+                                handleDeauthorization(response: response.response)
+                            default:
+                                Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)")
+                                completion(.failure(.response(error)))
+                            }
                         } else {
-                            completion(.success(try JSONDecoder.default.decode(Response.self, from: data)))
+                            do {
+                                let responseObject = try JSONDecoder.default.decode(Response.self, from: data)
+                                completion(.success(responseObject))
+                            } catch {
+                                Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed to decode response: \(error)")
+                                reporter.report(error: error)
+                                completion(.failure(.unknownRawResponse))
+                            }
                         }
-                    } catch {
-                        Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed to decode response: \(error)")
-                        reporter.report(error: error)
-                        completion(.failure(.invalidJSON(error)))
+                    } else {
+                        do {
+                            let responseObject = try JSONDecoder.default.decode(ResponseObject<Response>.self, from: data)
+                            if let data = responseObject.data {
+                                completion(.success(data))
+                            } else if case .some(.unauthorized) = responseObject.error {
+                                handleDeauthorization(response: response.response)
+                            } else if let error = responseObject.error {
+                                Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)")
+                                completion(.failure(.response(error)))
+                            } else {
+                                completion(.success(try JSONDecoder.default.decode(Response.self, from: data)))
+                            }
+                        } catch {
+                            Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed to decode response: \(error)")
+                            reporter.report(error: error)
+                            completion(.failure(.invalidJSON(error)))
+                        }
                     }
                 case let .failure(error):
                     Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)" )
@@ -327,6 +375,23 @@ extension MixinAPI {
                 && codes.contains(nsError.code)
         } else {
             return false
+        }
+    }
+    
+}
+
+fileprivate extension Collection where Element == MixinAPI.Option {
+    
+    fileprivate func apply(to request: inout URLRequest) {
+        for option in self {
+            switch option {
+            case .authIndependent, .disableRetryOnRequestSigningTimeout, .rawResponseObject:
+                break
+            case let .requestID(requestID):
+                request.setValue(requestID, forHTTPHeaderField: "X-Request-Id")
+            case let .timeoutInterval(timeoutInterval):
+                request.timeoutInterval = timeoutInterval
+            }
         }
     }
     

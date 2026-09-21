@@ -26,12 +26,12 @@ class Web3SendingTokenPayment {
             (ChainID.arbitrumOne,       "0x0000000000000000000000000000000000000000"),
             (ChainID.opMainnet,         "0x0000000000000000000000000000000000000000"),
             (ChainID.polygon,           "0x0000000000000000000000000000000000000000"),
-            (ChainID.polygon,           "0x0000000000000000000000000000000000001010"),
             (ChainID.bnbSmartChain,     "0x0000000000000000000000000000000000000000"),
             (ChainID.avalancheCChain,   "0x0000000000000000000000000000000000000000"),
             (ChainID.hyperEVM,          "0x0000000000000000000000000000000000000000"),
             (ChainID.xLayer,            "0x0000000000000000000000000000000000000000"),
             (ChainID.robinhood,         "0x0000000000000000000000000000000000000000"),
+            (ChainID.arc,               "0x0000000000000000000000000000000000000000"),
             (ChainID.bitcoin,           "c6d0c728-2624-429b-8e0d-d9d19b6592fa"),
             (ChainID.pearl,             "e1bf305c-0d49-397d-85bd-55b9eaadafba"):
             true

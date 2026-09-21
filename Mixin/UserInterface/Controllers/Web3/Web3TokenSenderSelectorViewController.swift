@@ -44,14 +44,6 @@ final class Web3TokenSenderSelectorViewController: UIViewController {
     
 }
 
-extension Web3TokenSenderSelectorViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension Web3TokenSenderSelectorViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

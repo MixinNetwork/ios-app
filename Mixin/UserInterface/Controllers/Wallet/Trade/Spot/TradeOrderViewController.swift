@@ -234,14 +234,6 @@ final class TradeOrderViewController: UITableViewController {
     
 }
 
-extension TradeOrderViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension TradeOrderViewController: PillActionView.Delegate {
     
     func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {

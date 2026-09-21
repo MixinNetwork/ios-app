@@ -6,18 +6,45 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
     @IBOutlet weak var segmentsCollectionView: UICollectionView!
     @IBOutlet weak var contentContainerView: UIView!
     
-    private let hiddenSearchTopMargin: CGFloat = -28
-    
     private lazy var botsViewController = ExploreBotsViewController()
     private lazy var collectiblesViewController = CollectiblesViewController()
-    
-    private weak var searchViewController: UIViewController?
-    private weak var searchViewCenterYConstraint: NSLayoutConstraint?
     
     private weak var selectedViewController: UIViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let titleLabel = UILabel()
+        titleLabel.text = R.string.localizable.more()
+        titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+        titleLabel.textColor = R.color.text()
+        let titleItem = UIBarButtonItem(customView: titleLabel)
+        if #available(iOS 26.0, *) {
+            titleItem.hidesSharedBackground = true
+        }
+        navigationItem.leftBarButtonItem = titleItem
+        
+        let searchItem = UIBarButtonItem.tintedIcon(
+            image: R.image.ic_title_search(),
+            target: self,
+            action: #selector(search(_:)),
+        )
+        let scanItem = UIBarButtonItem.tintedIcon(
+            image: R.image.ic_app_category_scan(),
+            target: self,
+            action: #selector(scanQRCode(_:)),
+        )
+        let settingItem = UIBarButtonItem.tintedIcon(
+            image: R.image.ic_sticker_setting(),
+            target: self,
+            action: #selector(openSettings(_:)),
+        )
+        navigationItem.rightBarButtonItems = [
+            settingItem,
+            scanItem,
+            searchItem,
+        ]
+        
         segmentsCollectionView.register(R.nib.exploreSegmentCell)
         if let layout = segmentsCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .horizontal
@@ -59,14 +86,10 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
         switch segment {
         case .explore:
             let searchViewController = ExploreAggregatedSearchViewController()
-            let navigationController = SearchNavigationViewController()
-            navigationController.viewControllers = [searchViewController]
-            presentSearch(with: navigationController)
-            searchViewController.searchTextField.becomeFirstResponder()
+            navigationController?.pushViewController(searchViewController, animated: true)
         case .collectibles:
             let searchViewController = SearchCollectibleViewController()
-            presentSearch(with: searchViewController)
-            searchViewController.searchBoxView.textField.becomeFirstResponder()
+            navigationController?.pushViewController(searchViewController, animated: true)
         }
     }
     
@@ -80,36 +103,20 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
     }
     
     @objc func cancelSearching(_ sender: Any) {
-        hideSearch(endEditing: true, animate: true)
+        navigationController?.popToViewController(self, animated: true)
     }
     
     @objc private func cancelSearchingSilently(_ notification: Notification) {
-        hideSearch(endEditing: false, animate: false)
-    }
-    
-    func hideSearch(endEditing: Bool, animate: Bool) {
-        guard let searchViewController, let searchViewCenterYConstraint, searchViewController.parent != nil else {
+        guard let navigationController else {
             return
         }
-        if endEditing {
-            searchViewController.view.endEditing(true)
+        let viewControllers = navigationController.viewControllers.filter {
+            !($0 is ExploreSearchViewController || $0 is SearchCollectibleViewController)
         }
-        searchViewCenterYConstraint.constant = hiddenSearchTopMargin
-        let layout = {
-            self.view.layoutIfNeeded()
-            searchViewController.view.alpha = 0
+        guard viewControllers.count != navigationController.viewControllers.count else {
+            return
         }
-        let remove = { (_: Bool) in
-            searchViewController.willMove(toParent: nil)
-            searchViewController.view.removeFromSuperview()
-            searchViewController.removeFromParent()
-        }
-        if animate {
-            UIView.animate(withDuration: 0.3, animations: layout, completion: remove)
-        } else {
-            layout()
-            remove(true)
-        }
+        navigationController.setViewControllers(viewControllers, animated: false)
     }
     
     func perform(action: ExploreAction) {
@@ -163,27 +170,6 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
         let item = UserItem.createUser(from: user)
         let profile = UserProfileViewController(user: item)
         present(profile, animated: true, completion: nil)
-    }
-    
-    func presentSearch(with searchViewController: UIViewController) {
-        addChild(searchViewController)
-        searchViewController.view.alpha = 0
-        view.addSubview(searchViewController.view)
-        searchViewController.view.snp.makeConstraints { make in
-            make.size.centerX.equalToSuperview()
-        }
-        let searchViewCenterYConstraint = searchViewController.view.centerYAnchor
-            .constraint(equalTo: view.centerYAnchor, constant: hiddenSearchTopMargin)
-        searchViewCenterYConstraint.isActive = true
-        searchViewController.didMove(toParent: self)
-        view.layoutIfNeeded()
-        searchViewCenterYConstraint.constant = 0
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-            searchViewController.view.alpha = 1
-        }
-        self.searchViewController = searchViewController
-        self.searchViewCenterYConstraint = searchViewCenterYConstraint
     }
     
     func openApp(user: User) {

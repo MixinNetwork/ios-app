@@ -83,9 +83,15 @@ final class QRCodeScannerViewController: UIViewController, PopupNavigationAnimat
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
         sessionQueue.async { [session] in
             session.startRunning()
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -174,14 +180,6 @@ final class QRCodeScannerViewController: UIViewController, PopupNavigationAnimat
         UIView.animate(withDuration: 0.3) {
             self.focusIndicator.alpha = 0.6
         }
-    }
-    
-}
-
-extension QRCodeScannerViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .hide
     }
     
 }

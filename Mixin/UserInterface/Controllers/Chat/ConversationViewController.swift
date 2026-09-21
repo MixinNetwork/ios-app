@@ -9,11 +9,13 @@ final class ConversationViewController: UIViewController {
     static var positions = [String: Position]()
     static var allowReportSingleMessage = false
     
-    @IBOutlet weak var navigationBarView: UIView!
-    @IBOutlet weak var navigationBarContentView: UIView!
-    @IBOutlet weak var wallpaperImageView: WallpaperImageView!
+    @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var opponentUserBadgeView: SDAnimatedImageView!
+    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var loadingView: ActivityIndicatorView!
+    
+    @IBOutlet weak var wallpaperImageView: WallpaperImageView!
     @IBOutlet weak var tableView: ConversationTableView!
     @IBOutlet weak var accessoryButtonsWrapperView: HittestBypassWrapperView!
     @IBOutlet weak var mentionWrapperView: UIView!
@@ -24,14 +26,7 @@ final class ConversationViewController: UIViewController {
     @IBOutlet weak var announcementBadgeView: UIView!
     @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var inputWrapperTopShadowView: TopShadowView!
-    @IBOutlet weak var avatarImageView: AvatarImageView!
-    @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var loadingView: ActivityIndicatorView!
-    @IBOutlet weak var titleStackView: UIStackView!
     
-    @IBOutlet weak var navigationBarTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var titleViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var mentionWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var accessoryButtonsWrapperTopConstraint: NSLayoutConstraint!
@@ -101,6 +96,8 @@ final class ConversationViewController: UIViewController {
     private var pinnedMessageIds = Set<String>()
     private var lastMentionCandidate: String?
     
+    private weak var titleView: UIView!
+    private weak var avatarImageView: AvatarImageView!
     private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
     private weak var groupCallIndicatorViewIfLoaded: GroupCallIndicatorView?
     private weak var membershipButton: UIButton?
@@ -151,18 +148,6 @@ final class ConversationViewController: UIViewController {
         return indicator
     }()
     
-    private lazy var cancelSelectionButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.backgroundColor = .background
-        button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16),
-                                   adjustForContentSize: true)
-        button.setTitleColor(.theme, for: .normal)
-        button.setTitle(R.string.localizable.cancel(), for: .normal)
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        button.addTarget(self, action: #selector(endMultipleSelection), for: .touchUpInside)
-        return button
-    }()
-    
     private lazy var pinMessageBannerView: PinMessageBannerView = {
         let banner = R.nib.pinMessageBannerView(withOwner: nil)!
         banner.isHidden = true
@@ -173,7 +158,7 @@ final class ConversationViewController: UIViewController {
             view.addSubview(banner)
         }
         banner.snp.makeConstraints { make in
-            make.top.equalTo(navigationBarView.snp.bottom)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.left.right.equalTo(0)
             make.height.equalTo(pinMessageBannerHeight)
         }
@@ -229,16 +214,16 @@ final class ConversationViewController: UIViewController {
     
     private var maxInputWrapperHeight: CGFloat {
         view.bounds.height
-            - navigationBarView.frame.height
+            - view.safeAreaInsets.top
             - minInputWrapperTopMargin
     }
     
     private var groupCallIndicatorCenterYLimitation: (min: CGFloat, max: CGFloat) {
         let min: CGFloat
         if let banner = pinMessageBannerViewIfLoaded, !banner.isHidden {
-            min = navigationBarView.frame.maxY + pinMessageBannerHeight + 33
+            min = view.safeAreaInsets.top + pinMessageBannerHeight + 33
         } else {
-            min = view.safeAreaInsets.top + titleViewHeightConstraint.constant + 30
+            min = view.safeAreaInsets.top + 30
         }
         let max = inputWrapperView.frame.minY - 30
         return (min, max)
@@ -280,6 +265,33 @@ final class ConversationViewController: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let titleView = R.nib.conversationTitleView(withOwner: self)!
+        let avatarImageView = AvatarImageView()
+        avatarImageView.layer.cornerRadius = 18
+        avatarImageView.layer.masksToBounds = true
+        navigationItem.standardAppearance = .general
+        navigationItem.scrollEdgeAppearance = .general
+        navigationItem.compactAppearance = .general
+        navigationItem.compactScrollEdgeAppearance = .general
+        navigationItem.titleView = titleView
+        navigationItem.rightBarButtonItem = {
+            let avatarButton = UIButton(type: .custom)
+            avatarButton.addSubview(avatarImageView)
+            avatarImageView.isUserInteractionEnabled = false
+            avatarImageView.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.width.height.equalTo(36)
+            }
+            avatarButton.snp.makeConstraints { make in
+                make.width.height.equalTo(36)
+            }
+            avatarButton.addTarget(self, action: #selector(profileAction(_:)), for: .touchUpInside)
+            return UIBarButtonItem(customView: avatarButton)
+        }()
+        self.titleView = titleView
+        self.avatarImageView = avatarImageView
+        
         wallpaperImageView.snp.makeConstraints { (make) in
             make.height.equalTo(UIScreen.main.bounds.height)
         }
@@ -632,7 +644,6 @@ final class ConversationViewController: UIViewController {
                 } else {
                     newHeight = min(newHeight, regularInputWrapperHeight)
                 }
-                updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: inputWrapperHeight, newHeight: newHeight)
                 inputWrapperHeight = newHeight
                 view.layoutIfNeeded()
             }
@@ -1017,7 +1028,7 @@ final class ConversationViewController: UIViewController {
         }
         switch change.action {
         case let .updateGroupIcon(iconUrl):
-            avatarImageView?.setGroupImage(with: iconUrl)
+            avatarImageView.setGroupImage(with: iconUrl)
         case .update:
             hideLoading()
         case let .updateConversation(conversation):
@@ -1106,7 +1117,7 @@ final class ConversationViewController: UIViewController {
         }
         if let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) {
             let cellFrame = tableView.convert(tableView.rectForRow(at: indexPath), to: view)
-            let isCellInvisible = cellFrame.minY < navigationBarView.frame.height
+            let isCellInvisible = cellFrame.minY < view.safeAreaInsets.top
                 || cellFrame.maxY > view.bounds.height - inputWrapperView.frame.height
             if isCellInvisible {
                 tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
@@ -1135,7 +1146,8 @@ final class ConversationViewController: UIViewController {
             tableView.deselectRow(at: indexPath, animated: true)
         })
         tableView.allowsMultipleSelection = false
-        cancelSelectionButton.removeFromSuperview()
+        navigationItem.setHidesBackButton(false, animated: true)
+        navigationItem.setLeftBarButton(nil, animated: true)
         
         showInputWrapperConstraint.priority = .defaultHigh
         hideInputWrapperConstraint.priority = .defaultLow
@@ -1424,14 +1436,6 @@ final class ConversationViewController: UIViewController {
     
 }
 
-// MARK: - NavigationBarStyling
-extension ConversationViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .hide
-    }
-    
-}
 
 // MARK: - UIGestureRecognizerDelegate
 extension ConversationViewController: UIGestureRecognizerDelegate {
@@ -2114,7 +2118,7 @@ extension ConversationViewController {
             if membershipButton == nil {
                 let button = UIButton()
                 button.addTarget(self, action: #selector(buyOpponentMembership(_:)), for: .touchUpInside)
-                navigationBarContentView.addSubview(button)
+                titleView.addSubview(button)
                 button.snp.makeConstraints { make in
                     make.width.height.equalTo(30)
                     make.center.equalTo(opponentUserBadgeView)
@@ -2140,32 +2144,6 @@ extension ConversationViewController {
                 weakSelf.conversationInputViewController.deleteConversationButton.isHidden = isParticipant
                 weakSelf.conversationInputViewController.inputBarView.isHidden = false
                 weakSelf.subtitleLabel.text = R.string.localizable.participants_count("\(count)")
-            }
-        }
-    }
-    
-    private func updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: CGFloat, newHeight: CGFloat) {
-        let diff = newHeight - oldHeight
-        if conversationInputViewController.isMaximizable && newHeight > conversationInputViewController.regularHeight {
-            let top = navigationBarTopConstraint.constant + diff
-            let maxTop = navigationBarView.frame.height
-            let navigationBarTop = min(maxTop, max(0, top))
-            navigationBarTopConstraint.constant = navigationBarTop
-            tableView.contentInset.top = max(view.safeAreaInsets.top, navigationBarView.frame.height - navigationBarTop)
-            tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
-            if !statusBarHidden {
-                UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
-                    self.statusBarHidden = true
-                }, completion: nil)
-            }
-        } else {
-            navigationBarTopConstraint.constant = 0
-            tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
-            tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
-            if statusBarHidden {
-                UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
-                    self.statusBarHidden = false
-                }, completion: nil)
             }
         }
     }
@@ -2255,8 +2233,7 @@ extension ConversationViewController {
     }
     
     private func updateNavigationBarHeightAndTableViewTopInset() {
-        titleViewTopConstraint.constant = max(20, view.safeAreaInsets.top)
-        tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
+        tableView.contentInset.top = view.safeAreaInsets.top
         tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
     }
     
@@ -2343,7 +2320,7 @@ extension ConversationViewController {
         view.insertSubview(userHandleViewController.view, belowSubview: inputWrapperView)
         userHandleViewController.view.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(navigationBarView.snp.bottom)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.bottom.equalTo(inputWrapperView.snp.top)
         }
         userHandleViewController.didMove(toParent: self)
@@ -2352,14 +2329,14 @@ extension ConversationViewController {
     private func beginMultipleSelection(on indexPath: IndexPath, intent: MultipleSelectionIntent) {
         conversationInputViewController.textView.resignFirstResponder()
         conversationInputViewController.audioViewController.cancelIfRecording()
-        UIView.performWithoutAnimation {
-            navigationBarView.addSubview(cancelSelectionButton)
-            cancelSelectionButton.snp.makeConstraints { (make) in
-                make.leading.bottom.equalToSuperview()
-                make.height.equalTo(56)
-            }
-            navigationBarView.layoutIfNeeded()
-        }
+        navigationItem.setHidesBackButton(true, animated: true)
+        let cancelItem = UIBarButtonItem(
+            title: R.string.localizable.cancel(),
+            style: .plain,
+            target: self,
+            action: #selector(endMultipleSelection),
+        )
+        navigationItem.setLeftBarButton(cancelItem, animated: true)
         tableView.allowsMultipleSelection = true
         for cell in tableView.visibleCells {
             guard let cell = cell as? MessageCell, let viewModel = cell.viewModel else {
@@ -2419,7 +2396,6 @@ extension ConversationViewController {
     private func updateTableViewBottomInsetWithBottomBarHeight(old: CGFloat, new: CGFloat, animated: Bool) {
         
         func layout() {
-            updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: old, newHeight: new)
             let bottomInset: CGFloat = if #available(iOS 26, *) {
                 new
             } else {
@@ -2820,7 +2796,7 @@ extension ConversationViewController {
             self?.dataSource?.queue.async {
                 SendMessageService.shared.sendMessage(message: message, ownerUser: developUser, isGroupMessage: false)
                 DispatchQueue.main.async {
-                    self?.navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
+                    self?.navigationController?.pushViewController(afterRoot: ConversationViewController.instance(ownerUser: developUser))
                 }
             }
         }

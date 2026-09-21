@@ -352,7 +352,7 @@ final class ConversationInputViewController: UIViewController {
             DispatchQueue.global().async { [weak self] in
                 ConversationDAO.shared.deleteChat(conversationId: conversationId)
                 DispatchQueue.main.async {
-                    self?.navigationController?.backToHome()
+                    self?.navigationController?.popToRootViewController(animated: true)
                 }
             }
         }))

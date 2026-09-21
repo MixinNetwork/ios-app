@@ -315,7 +315,7 @@ extension UserProfileViewController {
         }
         let vc = ConversationViewController.instance(ownerUser: user)
         checkedDismiss(animated: true) { _ in
-            UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: vc)
+            UIApplication.shared.homeNavigationController?.pushViewController(afterRoot: vc)
         }
     }
     

@@ -3,12 +3,11 @@ import Alamofire
 import GRDB
 import MixinServices
 
-final class HomeAggregatedSearchViewController: UIViewController, HomeSearchViewController {
+final class HomeAggregatedSearchViewController: UIViewController, HomeSearchViewController, SearchNavigationAnimating {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var recentAppsContainerView: UIView!
     
-    let cancelButton = SearchCancelButton()
     let searchBoxView = SearchBoxView()
     
     var searchTextField: UITextField! {
@@ -44,15 +43,20 @@ final class HomeAggregatedSearchViewController: UIViewController, HomeSearchView
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
-        navigationItem.backButtonDisplayMode = .minimal
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.configureWithOpaqueBackground()
+        navigationBarAppearance.backgroundColor = R.color.background()
+        navigationBarAppearance.shadowColor = nil
+        navigationItem.standardAppearance = navigationBarAppearance
+        navigationItem.scrollEdgeAppearance = navigationBarAppearance
+        navigationItem.compactAppearance = navigationBarAppearance
+        navigationItem.compactScrollEdgeAppearance = navigationBarAppearance
+        navigationItem.hidesBackButton = true
         navigationItem.titleView = searchBoxView
-        navigationItem.rightBarButtonItem = {
-            let item = UIBarButtonItem(customView: cancelButton)
-            if #available(iOS 26.0, *) {
-                item.hidesSharedBackground = true
-            }
-            return item
-        }()
+        navigationItem.rightBarButtonItem = .cancelSearch(
+            target: homeViewController,
+            action: #selector(HomeViewController.cancelSearching(_:)),
+        )
         searchTextField.delegate = self
         searchTextField.addTarget(
             self,
@@ -72,6 +76,25 @@ final class HomeAggregatedSearchViewController: UIViewController, HomeSearchView
         tableView.tableHeaderView = tableHeaderView
         tableView.dataSource = self
         tableView.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if trimmedKeyword == nil {
+            showRecentApps()
+        }
+        if isMovingToParent {
+            searchTextField.becomeFirstResponder()
+        }
+    }
+    
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        if parent == nil {
+            cancelOperation()
+            maoNameSearchRequest?.cancel()
+            quickAccess?.cancelPreviousPerformRequest()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -220,28 +243,6 @@ final class HomeAggregatedSearchViewController: UIViewController, HomeSearchView
         }
         queue.addOperation(op)
         searchBoxView.isBusy = true
-    }
-    
-    func prepareForReuse() {
-        cancelOperation()
-        showRecentApps()
-        quickAccess = nil
-        maoUser = nil
-        assets = []
-        users = []
-        conversationsByName = []
-        conversationsByMessage = []
-        tableView.reloadData()
-        lastKeyword = nil
-        if let navigationController = navigationController as? SearchNavigationViewController {
-            navigationController.viewControllers.removeAll(where: { $0 != self })
-        }
-        searchTextField.text = nil
-        searchBoxView.isBusy = false
-    }
-    
-    func willHide() {
-        quickAccess?.cancelPreviousPerformRequest()
     }
     
 }

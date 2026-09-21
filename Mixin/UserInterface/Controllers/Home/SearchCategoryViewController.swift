@@ -34,7 +34,6 @@ final class SearchCategoryViewController: UIViewController, HomeSearchViewContro
     private let category: Category
     private let inheritedKeyword: String?
     private let searchBoxView = SearchBoxView()
-    private let cancelButton = SearchCancelButton()
     private let queue = OperationQueue()
     
     private weak var tableView: UITableView!
@@ -87,14 +86,10 @@ final class SearchCategoryViewController: UIViewController, HomeSearchViewContro
         queue.maxConcurrentOperationCount = 1
         navigationItem.title = ""
         navigationItem.titleView = searchBoxView
-        navigationItem.rightBarButtonItem = {
-            let item = UIBarButtonItem(customView: cancelButton)
-            if #available(iOS 26.0, *) {
-                item.hidesSharedBackground = true
-            }
-            return item
-        }()
-        cancelButton.addTarget(homeViewController, action: #selector(HomeViewController.cancelSearching(_:)), for: .touchUpInside)
+        navigationItem.rightBarButtonItem = .cancelSearch(
+            target: homeViewController,
+            action: #selector(HomeViewController.cancelSearching(_:))
+        )
         searchTextField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
         searchTextField.delegate = self
         searchTextField.text = inheritedKeyword

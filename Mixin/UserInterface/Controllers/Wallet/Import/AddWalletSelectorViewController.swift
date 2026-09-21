@@ -293,14 +293,6 @@ final class AddWalletSelectorViewController: UIViewController {
     
 }
 
-extension AddWalletSelectorViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension AddWalletSelectorViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

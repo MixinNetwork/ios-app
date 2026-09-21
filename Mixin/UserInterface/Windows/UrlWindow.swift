@@ -347,7 +347,7 @@ class UrlWindow {
                     viewController = nil
                 }
                 if let viewController = viewController {
-                    UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: viewController)
+                    UIApplication.shared.homeNavigationController?.pushViewController(afterRoot: viewController)
                 }
             }
             if let container = UIApplication.shared.homeContainerViewController, container.galleryIsOnTopMost {
@@ -495,7 +495,7 @@ class UrlWindow {
                 func push() {
                     let vc = LegacyTransferOutViewController.instance(asset: nil, type: .contact(user))
                     if clearNavigationStack {
-                        UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: vc)
+                        UIApplication.shared.homeNavigationController?.pushViewController(afterRoot: vc)
                     } else {
                         UIApplication.shared.homeNavigationController?.pushViewController(vc, animated: true)
                     }
@@ -558,7 +558,7 @@ class UrlWindow {
             case let .addressVerified(token, destination):
                 hud.hide()
                 let inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: destination)
-                UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
+                UIApplication.shared.homeNavigationController?.pushViewController(afterRoot: inputViewController)
             case let .insufficientBalance(withdrawing, fee):
                 hud.hide()
                 let insufficient = InsufficientBalanceViewController(intent: .withdraw(withdrawing: withdrawing, fee: fee))
@@ -827,7 +827,7 @@ class UrlWindow {
                         SendMessageService.shared.sendMessage(message: message, ownerUser: user, isGroupMessage: conversation.isGroup())
                         if conversationID != onScreenConversationID {
                             let viewController = ConversationViewController.instance(ownerUser: user)
-                            UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: viewController)
+                            UIApplication.shared.homeNavigationController?.pushViewController(afterRoot: viewController)
                         }
                     }
                 }
@@ -2185,7 +2185,7 @@ extension UrlWindow {
                 hud.hide()
                 if isMember {
                     let vc = ConversationViewController.instance(conversation: ConversationItem(response: conversation))
-                    UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: vc)
+                    UIApplication.shared.homeNavigationController?.pushViewController(afterRoot: vc)
                 } else {
                     let vc = GroupProfileViewController(response: conversation, codeId: codeId, participants: participants, isMember: isMember)
                     UIApplication.shared.homeContainerViewController?.present(vc, animated: true, completion: nil)

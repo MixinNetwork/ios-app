@@ -291,14 +291,6 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
     
 }
 
-extension AddMarketAlertViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension AddMarketAlertViewController {
     
     private struct PercentageLimitation {

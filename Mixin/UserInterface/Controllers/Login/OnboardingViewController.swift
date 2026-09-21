@@ -118,9 +118,19 @@ final class OnboardingViewController: UIViewController {
         Logger.login.info(category: "Onboarding", message: "App \(Bundle.main.fullVersion) onboards, device: \(Device.current.machineName) \(ProcessInfo.processInfo.operatingSystemVersionString), id: \(Device.current.id)")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         resetBannersToCenterAndScheduleAutoScrolling()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -137,14 +147,6 @@ final class OnboardingViewController: UIViewController {
         let methods = SignInMethodSelectorViewController()
         navigationController?.pushViewController(methods, animated: true)
         Logger.login.info(category: "Onboarding", message: "Sign in")
-    }
-    
-}
-
-extension OnboardingViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .hide
     }
     
 }

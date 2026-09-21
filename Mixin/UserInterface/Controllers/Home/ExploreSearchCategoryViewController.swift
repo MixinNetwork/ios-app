@@ -16,7 +16,6 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
     private let inheritedKeyword: String?
     private let queue = OperationQueue()
     private let searchBoxView = SearchBoxView()
-    private let cancelButton = SearchCancelButton()
     
     private weak var tableView: UITableView!
     
@@ -37,13 +36,10 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
         super.viewDidLoad()
         
         navigationItem.titleView = searchBoxView
-        navigationItem.rightBarButtonItem = {
-            let item = UIBarButtonItem(customView: cancelButton)
-            if #available(iOS 26.0, *) {
-                item.hidesSharedBackground = true
-            }
-            return item
-        }()
+        navigationItem.rightBarButtonItem = .cancelSearch(
+            target: exploreViewController,
+            action: #selector(ExploreViewController.cancelSearching(_:)),
+        )
         searchBoxView.textField.delegate = self
         searchBoxView.textField.rightViewMode = .always
         searchTextField.addTarget(
@@ -52,13 +48,6 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
             for: .editingChanged
         )
         searchTextField.text = inheritedKeyword
-        if let exploreViewController {
-            cancelButton.addTarget(
-                exploreViewController,
-                action: #selector(ExploreViewController.cancelSearching(_:)),
-                for: .touchUpInside
-            )
-        }
         
         let tableView = UITableView(frame: view.bounds, style: .plain)
         view.addSubview(tableView)

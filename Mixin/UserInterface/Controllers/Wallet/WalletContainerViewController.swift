@@ -39,6 +39,7 @@ final class WalletContainerViewController: UIViewController {
             width: view.bounds.width,
             height: view.bounds.height
         )
+        updateNavigationItem(from: summary, animated: animated)
         transition(
             from: wallet,
             to: summary,
@@ -73,6 +74,7 @@ final class WalletContainerViewController: UIViewController {
         addChild(viewController)
         viewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         viewController.view.frame = view.bounds
+        updateNavigationItem(from: viewController, animated: true)
         transition(
             from: summary,
             to: viewController,
@@ -96,6 +98,46 @@ final class WalletContainerViewController: UIViewController {
         child.view.snp.makeEdgesEqualToSuperview()
         child.didMove(toParent: self)
         self.viewController = child
+        updateNavigationItem(from: child, animated: false)
+    }
+    
+    private func updateNavigationItem(
+        from child: UIViewController,
+        animated: Bool,
+    ) {
+        let sourceItem = child.navigationItem
+        let update = {
+            self.navigationItem.title = sourceItem.title ?? ""
+            self.navigationItem.titleView = sourceItem.titleView
+            self.navigationItem.leftBarButtonItems = sourceItem.leftBarButtonItems
+            self.navigationItem.rightBarButtonItems = sourceItem.rightBarButtonItems
+            self.navigationItem.hidesBackButton = sourceItem.hidesBackButton
+            self.navigationItem.backBarButtonItem = sourceItem.backBarButtonItem
+        }
+        guard let navigationBar = navigationController?.navigationBar else {
+            UIView.performWithoutAnimation(update)
+            return
+        }
+        UIView.performWithoutAnimation {
+            navigationBar.layoutIfNeeded()
+        }
+        let updateAndLayout = {
+            UIView.performWithoutAnimation {
+                update()
+                navigationBar.layoutIfNeeded()
+            }
+        }
+        if animated {
+            UIView.transition(
+                with: navigationBar,
+                duration: 0.5,
+                options: [.transitionCrossDissolve, .overdampedCurve],
+                animations: updateAndLayout,
+                completion: nil,
+            )
+        } else {
+            updateAndLayout()
+        }
     }
     
 }

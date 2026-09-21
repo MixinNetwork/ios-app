@@ -7,6 +7,7 @@
 //
 
 import Testing
+import UIKit
 import CommonCrypto
 import CryptoKit
 import TIP

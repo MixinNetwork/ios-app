@@ -20,11 +20,11 @@ extension HomeSearchViewController where Self: UIViewController {
     }
     
     var homeViewController: HomeViewController? {
-        parent?.parent as? HomeViewController
+        navigationController?.viewControllers.first(where: { $0 is HomeViewController }) as? HomeViewController
     }
     
     var homeNavigationController: UINavigationController? {
-        homeViewController?.navigationController
+        navigationController
     }
     
     func pushViewController(keyword: String?, result: SearchResult) {

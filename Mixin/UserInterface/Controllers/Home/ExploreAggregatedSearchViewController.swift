@@ -2,7 +2,7 @@ import UIKit
 import GRDB
 import MixinServices
 
-final class ExploreAggregatedSearchViewController: UIViewController, ExploreSearchViewController {
+final class ExploreAggregatedSearchViewController: UIViewController, ExploreSearchViewController, SearchNavigationAnimating {
     
     private enum Section: Int, CaseIterable {
         case quickAccess
@@ -21,7 +21,6 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
     }
     
     private let searchBoxView = SearchBoxView()
-    private let cancelButton = SearchCancelButton()
     private let queue = OperationQueue()
     private let recommendationViewController = ExploreSearchRecommendationViewController()
     private let maxResultsCount = 3
@@ -45,15 +44,13 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.hidesBackButton = true
         navigationItem.backButtonDisplayMode = .minimal
         navigationItem.titleView = searchBoxView
-        navigationItem.rightBarButtonItem = {
-            let item = UIBarButtonItem(customView: cancelButton)
-            if #available(iOS 26.0, *) {
-                item.hidesSharedBackground = true
-            }
-            return item
-        }()
+        navigationItem.rightBarButtonItem = .cancelSearch(
+            target: exploreViewController,
+            action: #selector(ExploreViewController.cancelSearching(_:)),
+        )
         searchBoxView.textField.delegate = self
         searchBoxView.textField.rightViewMode = .always
         searchTextField.addTarget(
@@ -61,13 +58,6 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
             action: #selector(searchKeyword(_:)),
             for: .editingChanged
         )
-        if let exploreViewController {
-            cancelButton.addTarget(
-                exploreViewController,
-                action: #selector(ExploreViewController.cancelSearching(_:)),
-                for: .touchUpInside
-            )
-        }
         
         let tableView = UITableView(frame: view.bounds, style: .grouped)
         view.addSubview(tableView)
@@ -93,6 +83,21 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         recommendationViewController.didMove(toParent: self)
         
         queue.maxConcurrentOperationCount = 1
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isMovingToParent {
+            searchTextField.becomeFirstResponder()
+        }
+    }
+    
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        if parent == nil {
+            queue.cancelAllOperations()
+            quickAccess?.cancelPreviousPerformRequest()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

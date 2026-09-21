@@ -156,14 +156,6 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
     
 }
 
-extension SignInWithMobileNumberViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension SignInWithMobileNumberViewController: Captcha.Reporting {
     
     var reportingContent: (event: Reporter.Event, type: String?) {

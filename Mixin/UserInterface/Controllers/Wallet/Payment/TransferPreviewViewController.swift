@@ -268,7 +268,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
                     }
                 } else {
                     if opponent.isCreatedByMessenger {
-                        while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+                        while viewControllers.count > 1 {
                             viewControllers.removeLast()
                         }
                         viewControllers.append(ConversationViewController.instance(ownerUser: opponent))

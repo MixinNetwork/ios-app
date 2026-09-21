@@ -13,6 +13,36 @@ final class HomeTabBarController: UITabBarController {
     private let marketDashboardViewController = MarketDashboardViewController()
     private let exploreViewController = ExploreViewController()
     
+    private lazy var chatNavigationController = HomeNavigationController(
+        rootViewController: homeViewController,
+    )
+    private lazy var walletNavigationController = HomeNavigationController(
+        rootViewController: walletContainerViewController,
+    )
+    private lazy var marketNavigationController = HomeNavigationController(
+        rootViewController: marketDashboardViewController,
+    )
+    private lazy var exploreNavigationController = HomeNavigationController(
+        rootViewController: exploreViewController,
+    )
+    
+    var selectedNavigationController: HomeNavigationController {
+        loadViewIfNeeded()
+        return selectedViewController as? HomeNavigationController ?? chatNavigationController
+    }
+    
+    override var childForStatusBarHidden: UIViewController? {
+        selectedViewController
+    }
+    
+    override var childForStatusBarStyle: UIViewController? {
+        selectedViewController
+    }
+    
+    override var childForHomeIndicatorAutoHidden: UIViewController? {
+        selectedViewController
+    }
+    
     private lazy var unlockableWalletChain: UnlockableCommonWalletChain? = {
         if Web3WalletDAO.shared
             .chainUnavailableWallets(chainID: ChainID.bitcoin)
@@ -71,35 +101,35 @@ final class HomeTabBarController: UITabBarController {
         tabBar.standardAppearance = appearance
         tabBar.scrollEdgeAppearance = appearance
         
-        homeViewController.tabBarItem = UITabBarItem(
+        chatNavigationController.tabBarItem = UITabBarItem(
             title: R.string.localizable.chats(),
             image: R.image.home_tab_chat(),
             selectedImage: R.image.home_tab_chat_selected(),
         )
-        walletContainerViewController.tabBarItem = UITabBarItem(
+        walletNavigationController.tabBarItem = UITabBarItem(
             title: R.string.localizable.wallets(),
             image: R.image.home_tab_wallet(),
             selectedImage: R.image.home_tab_wallet_selected(),
         )
-        marketDashboardViewController.tabBarItem = UITabBarItem(
+        marketNavigationController.tabBarItem = UITabBarItem(
             title: R.string.localizable.markets(),
             image: R.image.home_tab_market(),
             selectedImage: R.image.home_tab_market_selected(),
         )
-        exploreViewController.tabBarItem = UITabBarItem(
+        exploreNavigationController.tabBarItem = UITabBarItem(
             title: R.string.localizable.more(),
             image: R.image.home_tab_more(),
             selectedImage: R.image.home_tab_more_selected(),
         )
         viewControllers = [
-            homeViewController,
-            walletContainerViewController,
-            marketDashboardViewController,
-            exploreViewController,
+            chatNavigationController,
+            walletNavigationController,
+            marketNavigationController,
+            exploreNavigationController,
         ]
         customizableViewControllers = nil
         if pendingInitialWalletValidation {
-            selectedViewController = walletContainerViewController
+            selectedViewController = walletNavigationController
         }
         updateSelectionAppearance()
         
@@ -129,17 +159,17 @@ final class HomeTabBarController: UITabBarController {
     
     @objc private func reloadItemBadges() {
         if BadgeManager.shared.hasViewed(identifier: .moreTab) {
-            exploreViewController.tabBarItem.badgeValue = nil
+            exploreNavigationController.tabBarItem.badgeValue = nil
         } else {
-            exploreViewController.tabBarItem.badgeValue = "●"
+            exploreNavigationController.tabBarItem.badgeValue = "●"
         }
     }
     
     private func selectWallet() {
-        guard selectedViewController !== walletContainerViewController else {
+        guard selectedViewController !== walletNavigationController else {
             return
         }
-        selectedViewController = walletContainerViewController
+        selectedViewController = walletNavigationController
         updateSelectionAppearance()
     }
     
@@ -147,8 +177,9 @@ final class HomeTabBarController: UITabBarController {
         guard let selectedViewController else {
             return
         }
-        title = selectedViewController === homeViewController ? "Mixin" : selectedViewController.tabBarItem.title
-        if selectedViewController === exploreViewController {
+        setNeedsStatusBarAppearanceUpdate()
+        setNeedsUpdateOfHomeIndicatorAutoHidden()
+        if selectedViewController === exploreNavigationController {
             BadgeManager.shared.setHasViewed(identifier: .moreTab)
         }
     }
@@ -199,19 +230,19 @@ extension HomeTabBarController: UITabBarControllerDelegate {
     ) -> Bool {
         let method: String
         switch viewController {
-        case homeViewController:
+        case chatNavigationController:
             method = "chats"
-        case walletContainerViewController:
+        case walletNavigationController:
             method = "wallets"
-        case marketDashboardViewController:
+        case marketNavigationController:
             method = "markets"
-        case exploreViewController:
+        case exploreNavigationController:
             method = "more"
         default:
             return false
         }
         reporter.report(event: .homeTabSwitch, tags: ["method": method])
-        return viewController !== walletContainerViewController || shouldSelectWallet()
+        return viewController !== walletNavigationController || shouldSelectWallet()
     }
     
     func tabBarController(
@@ -219,14 +250,6 @@ extension HomeTabBarController: UITabBarControllerDelegate {
         didSelect viewController: UIViewController,
     ) {
         updateSelectionAppearance()
-    }
-    
-}
-
-extension HomeTabBarController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .hide
     }
     
 }

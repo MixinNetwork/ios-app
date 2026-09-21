@@ -1,4 +1,5 @@
 import Foundation
+import MixinServices
 
 struct TradeURL {
     
@@ -12,7 +13,8 @@ struct TradeURL {
     
     enum TradingType {
         case perpsMarket(id: String)
-        case perpsAction(LeaderPosition)
+        case perpsOpen(LeaderPosition)
+        case perpsAddMargin(marketID: String, value: Decimal?)
         case trade(trading: TradeViewController.Trading?, input: String?, output: String?)
     }
     
@@ -36,7 +38,8 @@ struct TradeURL {
             self.type = .trade(trading: .advancedSpot, input: input, output: output)
         case "perps":
             if let market = items["market"] {
-                if items["action"] == "open",
+                let action = items["action"]
+                if action == "open",
                    let side = items["side"],
                    let side = PerpetualOrderSide(rawValue: side)
                 {
@@ -63,7 +66,20 @@ struct TradeURL {
                         margin: margin,
                         id: items["leader_position"],
                     )
-                    self.type = .perpsAction(position)
+                    self.type = .perpsOpen(position)
+                } else if action == "add_margin" {
+                    var value: Decimal?
+                    if let margin = items["margin"],
+                       let decimalMargin = Decimal(string: margin, locale: .enUSPOSIX),
+                       decimalMargin > 0
+                    {
+                        value = withUnsafePointer(to: decimalMargin) { margin in
+                            var rounded: Decimal = 0
+                            NSDecimalRound(&rounded, margin, Int(MixinToken.internalPrecision), .down)
+                            return rounded
+                        }
+                    }
+                    self.type = .perpsAddMargin(marketID: market, value: value)
                 } else {
                     self.type = .perpsMarket(id: market)
                 }

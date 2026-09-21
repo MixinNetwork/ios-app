@@ -95,8 +95,34 @@ class UrlWindow {
                             hud.scheduleAutoHidden()
                         }
                     }
-                case let .perpsAction(leaderPosition):
+                case let .perpsOpen(leaderPosition):
                     checkLeaderPosition(leaderPosition: leaderPosition)
+                case let .perpsAddMargin(marketID, value):
+                    let hud = Hud()
+                    hud.show(style: .busy, text: "")
+                    if let market = PerpsMarketDAO.shared.market(marketID: marketID),
+                       let position = PerpsPositionDAO.shared.position(marketID: marketID)
+                    {
+                        let wallet: Wallet = .privacy
+                        let marketViewModel = PerpetualMarketViewModel(market: market)
+                        let positionViewModel = PerpetualPositionViewModel(
+                            wallet: wallet,
+                            position: position
+                        )
+                        let addPosition = AddToPerpsPositionViewController(
+                            wallet: wallet,
+                            adding: .margin,
+                            marketViewModel: marketViewModel,
+                            positionViewModel: positionViewModel,
+                            source: .addMargin(value),
+                            presentMarketViewOnSuccess: true,
+                        )
+                        UIApplication.shared.homeContainerViewController?.present(addPosition, animated: true)
+                        hud.hide()
+                    } else {
+                        hud.set(style: .error, text: R.string.localizable.not_found())
+                        hud.scheduleAutoHidden()
+                    }
                 case let .trade(designatedTrading, input, output):
                     let trading: TradeViewController.Trading
                     if let designatedTrading {
@@ -1663,7 +1689,7 @@ extension UrlWindow {
                                 throw LoadTokenError.insufficientBalance(requirement)
                             }
                             let liquidationPrice = try await RouteAPI.perpsLiquidationPrice(
-                                request: .open(marketID: marketID, side: side, leverage: leverage),
+                                action: .open(marketID: marketID, side: side, leverage: leverage),
                                 amount: margin
                             )
                             let request = OpenPerpetualOrderRequest(

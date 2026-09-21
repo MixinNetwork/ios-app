@@ -5,7 +5,7 @@ final class PerpetualActivityCell: UICollectionViewCell {
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var leverageLabel: LeverageLabel!
-    @IBOutlet weak var valueLabel: UILabel!
+    @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
     
     override func awakeFromNib() {
@@ -14,7 +14,7 @@ final class PerpetualActivityCell: UICollectionViewCell {
             scaledFor: .condensed(size: 12),
             adjustForContentSize: true
         )
-        for label: UILabel in [valueLabel, changeLabel] {
+        for label: UILabel in [subtitleLabel, changeLabel] {
             label.setFont(
                 scaledFor: .systemFont(ofSize: 14),
                 adjustForContentSize: true
@@ -31,7 +31,7 @@ final class PerpetualActivityCell: UICollectionViewCell {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
         titleLabel.text = viewModel.directionWithSymbol
         leverageLabel.text = viewModel.leverage
-        valueLabel.text = viewModel.orderValueInToken
+        subtitleLabel.text = viewModel.orderValueInToken
         leverageLabel.color = .neutral
         changeLabel.text = R.string.localizable.perp_state_opening()
         changeLabel.textColor = R.color.text_tertiary()
@@ -40,7 +40,12 @@ final class PerpetualActivityCell: UICollectionViewCell {
     func load(viewModel: PerpetualOrderViewModel) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
         titleLabel.text = viewModel.title
-        valueLabel.text = viewModel.orderValueInToken
+        switch viewModel.type {
+        case .open, .close:
+            subtitleLabel.text = viewModel.orderValueInToken
+        case .increasePosition, .increaseMargin, .decreaseMargin:
+            subtitleLabel.text = viewModel.directionWithSymbol
+        }
         switch viewModel.status {
         case .normal:
             switch viewModel.side {
@@ -54,7 +59,7 @@ final class PerpetualActivityCell: UICollectionViewCell {
         }
         leverageLabel.text = viewModel.leverage
         switch viewModel.type {
-        case let .open(payAmount), let .increase(payAmount):
+        case let .open(payAmount), let .increasePosition(payAmount), let .increaseMargin(payAmount), let .decreaseMargin(payAmount):
             switch viewModel.status {
             case .normal:
                 changeLabel.textColor = R.color.text()

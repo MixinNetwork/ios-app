@@ -6,6 +6,8 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
     private let context: Payment.PerpsContext
     private let operation: TransferPaymentOperation
     
+    private var hasSucceeded = false
+    
     init(
         context: Payment.PerpsContext,
         operation: TransferPaymentOperation,
@@ -27,26 +29,13 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         tableHeaderView.titleLabel.text = switch context.operation {
         case .open:
             R.string.localizable.confirm_opening_position()
-        case .increase:
+        case .increasePosition:
             R.string.localizable.confirm_adding_position()
+        case .increaseMargin:
+            R.string.localizable.perps_confirm_add_margin()
         }
         tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixin)
         
-        let multiplier = PerpetualLeverage.stringRepresentation(
-            multiplier: context.leverageMultiplier
-        )
-        let direction = switch context.side {
-        case .long:
-            R.string.localizable.long_asset(multiplier)
-        case .short:
-            R.string.localizable.short_asset(multiplier)
-        }
-        let profit = PerpetualChangeSimulation.profit(
-            side: context.side,
-            margin: operation.amount,
-            leverageMultiplier: context.leverageMultiplier,
-            priceChangePercent: 0.01
-        )
         let amount = CurrencyFormatter.localizedString(
             from: operation.amount,
             format: .precision,
@@ -60,21 +49,89 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 name: context.viewModel.market.displaySymbol,
                 side: context.side,
                 leverage: nil
-            )]),
-            .doubleLineInfo(
-                caption: .string(R.string.localizable.direction()),
-                primary: direction,
-                secondary: .plain(profit),
-            ),
-            .info(
-                caption: .string(R.string.localizable.amount()),
-                content: amount
-            ),
-            .info(
-                caption: .string(R.string.localizable.entry_price()),
-                content: context.viewModel.price
-            ),
+            )])
         ]
+        let liquidationMargin: Decimal
+        switch context.operation {
+        case .open:
+            liquidationMargin = operation.amount
+            let multiplier = PerpetualLeverage.stringRepresentation(
+                multiplier: context.leverageMultiplier
+            )
+            let direction = switch context.side {
+            case .long:
+                R.string.localizable.long_asset(multiplier)
+            case .short:
+                R.string.localizable.short_asset(multiplier)
+            }
+            let profit = PerpetualChangeSimulation.profit(
+                side: context.side,
+                margin: operation.amount,
+                leverageMultiplier: context.leverageMultiplier,
+                priceChangePercent: 0.01
+            )
+            rows.append(contentsOf: [
+                .doubleLineInfo(
+                    caption: .string(R.string.localizable.direction()),
+                    primary: direction,
+                    secondary: .plain(profit),
+                ),
+                .info(
+                    caption: .string(R.string.localizable.amount()),
+                    content: amount
+                ),
+                .info(
+                    caption: .string(R.string.localizable.entry_price()),
+                    content: context.viewModel.price
+                ),
+            ])
+        case let .increasePosition(quantity, margin):
+            liquidationMargin = margin + operation.amount
+            let before = CurrencyFormatter.localizedString(
+                from: quantity,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(context.viewModel.market.tokenSymbol)
+            )
+            let afterQuantity = quantity +
+                operation.amount * context.leverageMultiplier / context.viewModel.decimalPrice
+            let after = CurrencyFormatter.localizedString(
+                from: afterQuantity,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(context.viewModel.market.tokenSymbol)
+            )
+            let change = PerpPositionAdjustment.change(from: before, to: after)
+            rows.append(.doubleLineInfo(
+                caption: .amount,
+                primary: amount,
+                secondary: .plain(
+                    R.string.localizable.add_position_total_size() + " " + change
+                ),
+            ))
+        case let .increaseMargin(margin):
+            liquidationMargin = margin + operation.amount
+            let before = CurrencyFormatter.localizedString(
+                from: margin,
+                format: .fiatMoneyPretty,
+                sign: .never,
+                symbol: .dollarSign
+            )
+            let after = CurrencyFormatter.localizedString(
+                from: margin + operation.amount,
+                format: .fiatMoneyPretty,
+                sign: .never,
+                symbol: .dollarSign
+            )
+            let change = PerpPositionAdjustment.change(from: before, to: after)
+            rows.append(.doubleLineInfo(
+                caption: .amount,
+                primary: amount,
+                secondary: .plain(
+                    R.string.localizable.perps_total_margin() + " " + change
+                ),
+            ))
+        }
         
         if let takeProfitPrice = context.takeProfitPrice {
             let price = takeProfitPrice.formatted(
@@ -161,7 +218,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         )
         let liquidation = PerpetualChangeSimulation.liquidation(
             side: context.side,
-            margin: operation.amount,
+            margin: liquidationMargin,
             entryPrice: context.viewModel.decimalPrice,
             liquidationPrice: context.liquidationPrice,
         )
@@ -192,18 +249,24 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         switch context.operation {
         case .open:
             reporter.report(event: .tradePerpsOpenPreviewConfirm)
-        case .increase:
-            reporter.report(event: .tradePerpsAddPreviewConfirm)
+        case .increasePosition:
+            reporter.report(event: .tradePerpsAddPositionPreviewConfirm)
+        case .increaseMargin:
+            reporter.report(event: .tradePerpsAddMarginPreviewConfirm)
         }
     }
     
     override func close(_ sender: Any) {
         super.close(sender)
-        switch context.operation {
-        case .open:
-            reporter.report(event: .tradePerpsOpenPreviewCancel)
-        case .increase:
-            reporter.report(event: .tradePerpsAddPreviewCancel)
+        if !hasSucceeded {
+            switch context.operation {
+            case .open:
+                reporter.report(event: .tradePerpsOpenPreviewCancel)
+            case .increasePosition:
+                reporter.report(event: .tradePerpsAddPositionPreviewCancel)
+            case .increaseMargin:
+                reporter.report(event: .tradePerpsAddMarginPreviewCancel)
+            }
         }
     }
     
@@ -221,11 +284,20 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {
                     canDismissInteractively = true
+                    hasSucceeded = true
                     tableHeaderView.setIcon(progress: .success)
-                    layoutTableHeaderView(
-                        title: R.string.localizable.position_submitted(),
-                        subtitle: R.string.localizable.position_submitted_description()
-                    )
+                    switch context.operation {
+                    case .open, .increasePosition:
+                        layoutTableHeaderView(
+                            title: R.string.localizable.position_submitted(),
+                            subtitle: R.string.localizable.position_submitted_description()
+                        )
+                    case .increaseMargin:
+                        layoutTableHeaderView(
+                            title: R.string.localizable.perps_margin_submitted(),
+                            subtitle: R.string.localizable.position_submitted_description()
+                        )
+                    }
                     tableView.setContentOffset(.zero, animated: true)
                     loadFinishedTrayView()
                     if let navigationController = UIApplication.shared.homeNavigationController {
@@ -260,8 +332,10 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                                 "asset_level": Reporter.assetLevel(decimalUSDPrice: operation.token.decimalUSDPrice, decimalAmount: operation.amount),
                             ]
                         )
-                    case .increase:
-                        reporter.report(event: .tradePerpsAddEnd)
+                    case .increasePosition:
+                        reporter.report(event: .tradePerpsAddPositionEnd)
+                    case .increaseMargin:
+                        reporter.report(event: .tradePerpsAddMarginEnd)
                     }
                 }
             } catch {
@@ -273,7 +347,12 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
-                    let title = R.string.localizable.position_opening_failed()
+                    let title = switch context.operation {
+                    case .open, .increasePosition:
+                        R.string.localizable.position_opening_failed()
+                    case .increaseMargin:
+                        R.string.localizable.perps_adding_margin_failed()
+                    }
                     layoutTableHeaderView(
                         title: title,
                         subtitle: errorDescription,

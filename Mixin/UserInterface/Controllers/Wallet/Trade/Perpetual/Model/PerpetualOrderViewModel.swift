@@ -12,7 +12,9 @@ struct PerpetualOrderViewModel {
     
     enum OrderType {
         case open(payAmount: String)
-        case increase(payAmount: String)
+        case increasePosition(absolutePayAmount: String)
+        case increaseMargin(absolutePayAmount: String)
+        case decreaseMargin(absolutePayAmount: String)
         case close(pnl: PnL, closePrice: String)
     }
     
@@ -53,20 +55,21 @@ struct PerpetualOrderViewModel {
     let leverageMultiplier: Int
     let leverage: String
     let displaySymbol: String?
+    let absoluteDecimalQuantity: Decimal
     let quantity: String
     let tokenSymbol: String?
     let orderValueInToken: String
     let entryPrice: String
     let date: String
     let feeAmount: String?
+    let decimalPayAmount: Decimal
     let priceFormatStyle: Decimal.FormatStyle.Currency
     let offset: String
     
     init?(wallet: Wallet, order: PerpetualOrderItem) {
-        let decimalPayAmount = Decimal(string: order.payAmount, locale: .enUSPOSIX)
-        let payAmount = decimalPayAmount?.formatted(order.priceFormatStyle)
+        let decimalPayAmount = Decimal(string: order.payAmount, locale: .enUSPOSIX) ?? 0
         let side = PerpetualOrderSide(rawValue: order.side) ?? .short
-        let quantity = abs(Decimal(string: order.quantity, locale: .enUSPOSIX) ?? 0)
+        let absoluteQuantity = abs(Decimal(string: order.quantity, locale: .enUSPOSIX) ?? 0)
         let entryPrice = Decimal(string: order.entryPrice, locale: .enUSPOSIX)
         let leverage = PerpetualLeverage.stringRepresentation(multiplier: order.leverage)
         
@@ -75,7 +78,8 @@ struct PerpetualOrderViewModel {
         self.positionID = order.positionID
         switch order.orderType.knownCase {
         case .open:
-            self.type = .open(payAmount: payAmount ?? "")
+            let payAmount = decimalPayAmount.formatted(order.priceFormatStyle)
+            self.type = .open(payAmount: payAmount)
             self.title = switch side {
             case .long:
                 switch order.status.knownCase {
@@ -93,22 +97,47 @@ struct PerpetualOrderViewModel {
                 }
             }
         case .increasePosition:
-            self.type = .increase(payAmount: payAmount ?? "")
+            let payAmount = decimalPayAmount.formatted(
+                Self.editPositionPayAmountStyle.sign(strategy: .never)
+            )
+            self.type = .increasePosition(absolutePayAmount: payAmount)
             self.title = switch side {
             case .long:
                 switch order.status.knownCase {
                 case .rejected:
                     R.string.localizable.added_long_failed()
                 default:
-                    R.string.localizable.added_long()
+                    R.string.localizable.perps_added_position()
                 }
             case .short:
                 switch order.status.knownCase {
                 case .rejected:
                     R.string.localizable.added_short_failed()
                 default:
-                    R.string.localizable.added_short()
+                    R.string.localizable.perps_added_position()
                 }
+            }
+        case .increaseMargin:
+            let payAmount = decimalPayAmount.formatted(
+                Self.editPositionPayAmountStyle.sign(strategy: .never)
+            )
+            self.type = .increaseMargin(absolutePayAmount: payAmount)
+            self.title = switch order.status.knownCase {
+            case .rejected:
+                R.string.localizable.perps_adding_margin_failed()
+            default:
+                R.string.localizable.perps_added_margin()
+            }
+        case .decreaseMargin:
+            let payAmount = decimalPayAmount.formatted(
+                Self.editPositionPayAmountStyle.sign(strategy: .never)
+            )
+            self.type = .decreaseMargin(absolutePayAmount: payAmount)
+            self.title = switch order.status.knownCase {
+            case .rejected:
+                R.string.localizable.perps_reducing_margin_failed()
+            default:
+                R.string.localizable.perps_reduced_margin()
             }
         case .close:
             let decimalClosePrice = Decimal(string: order.closePrice, locale: .enUSPOSIX)
@@ -156,7 +185,7 @@ struct PerpetualOrderViewModel {
                     R.string.localizable.closed_short()
                 }
             }
-        default:
+        case .none:
             assertionFailure("Unknown order type")
             return nil
         }
@@ -167,7 +196,7 @@ struct PerpetualOrderViewModel {
         default:
             self.status = .normal
             switch order.orderType.knownCase {
-            case .open, .increasePosition:
+            case .open, .increasePosition, .increaseMargin, .decreaseMargin:
                 self.actions = [.viewMarket]
             case .close:
                 self.actions = [.tradeAgain, .share]
@@ -188,14 +217,15 @@ struct PerpetualOrderViewModel {
         self.leverageMultiplier = order.leverage
         self.leverage = leverage
         self.displaySymbol = order.displaySymbol
+        self.absoluteDecimalQuantity = absoluteQuantity
         self.quantity = CurrencyFormatter.localizedString(
-            from: quantity,
+            from: absoluteQuantity,
             format: .precision,
             sign: .never,
         )
         self.tokenSymbol = order.tokenSymbol
         self.orderValueInToken = CurrencyFormatter.localizedString(
-            from: quantity,
+            from: absoluteQuantity,
             format: .precision,
             sign: .never,
             symbol: .custom(order.tokenSymbol)
@@ -223,8 +253,20 @@ struct PerpetualOrderViewModel {
         } else {
             self.feeAmount = nil
         }
+        self.decimalPayAmount = decimalPayAmount
         self.priceFormatStyle = order.priceFormatStyle
         self.offset = order.updatedAt
+    }
+    
+}
+
+extension PerpetualOrderViewModel {
+    
+    static var editPositionPayAmountStyle: Decimal.FormatStyle.Currency {
+        .currency(code: "USD")
+        .presentation(.narrow)
+        .precision(.fractionLength(0...Int(MixinToken.internalPrecision)))
+        .rounded(rule: .towardZero)
     }
     
 }

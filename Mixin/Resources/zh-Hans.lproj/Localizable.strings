@@ -1212,8 +1212,8 @@
 "perps_add_position_description" = "增加仓位，放大潜在收益与亏损";
 "perps_add_position_title" = "%1$@ %2$@ 增加仓位";
 "perps_add_to_position" = "增加仓位";
-"perps_added_margin" = "已增加保证金";
-"perps_added_position" = "已加仓";
+"perps_added_margin" = "增加保证金";
+"perps_added_position" = "加仓";
 "perps_adding_margin" = "正在添加保证金";
 "perps_adding_margin_failed" = "添加保证金失败";
 "perps_adjust" = "调整";
@@ -1267,7 +1267,7 @@
 "perps_reduce_position" = "减少仓位";
 "perps_reduce_position_description" = "部分平仓，锁定收益或减少亏损";
 "perps_reduce_position_title" = "%1$@ %2$@ 减少仓位";
-"perps_reduced_margin" = "已减少保证金";
+"perps_reduced_margin" = "减少保证金";
 "perps_reducing_margin" = "正在减少保证金";
 "perps_reducing_margin_failed" = "减少保证金失败";
 "perps_scene_sl_triggered" = "触发止损：控制亏损";

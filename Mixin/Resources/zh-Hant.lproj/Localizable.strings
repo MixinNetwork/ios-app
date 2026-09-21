@@ -1212,8 +1212,8 @@
 "perps_add_position_description" = "增加倉位，放大潛在收益與虧損";
 "perps_add_position_title" = "%1$@ %2$@ 增加倉位";
 "perps_add_to_position" = "增加倉位";
-"perps_added_margin" = "已增加保證金";
-"perps_added_position" = "已加倉";
+"perps_added_margin" = "增加保證金";
+"perps_added_position" = "加倉";
 "perps_adding_margin" = "正在新增保證金";
 "perps_adding_margin_failed" = "新增保證金失敗";
 "perps_adjust" = "調整";
@@ -1267,7 +1267,7 @@
 "perps_reduce_position" = "減少倉位";
 "perps_reduce_position_description" = "部分平倉，鎖定收益或減少虧損";
 "perps_reduce_position_title" = "%1$@ %2$@ 減少倉位";
-"perps_reduced_margin" = "已減少保證金";
+"perps_reduced_margin" = "減少保證金";
 "perps_reducing_margin" = "正在減少保證金";
 "perps_reducing_margin_failed" = "減少保證金失敗";
 "perps_scene_sl_triggered" = "觸發止損：控制虧損";

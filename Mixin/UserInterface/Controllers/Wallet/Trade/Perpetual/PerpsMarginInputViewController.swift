@@ -300,39 +300,6 @@ extension PerpsMarginInputViewController: AddTokenMethodSelectorViewController.D
 
 extension PerpsMarginInputViewController {
     
-    final class AmountValidator {
-        
-        enum Result {
-            case valid
-            case invalid(reason: String)
-        }
-        
-        private let minAmount: Decimal
-        private let maxAmount: Decimal?
-        
-        init(market: PerpetualMarket) {
-            minAmount = Decimal(string: market.minAmount, locale: .enUSPOSIX) ?? 1
-            maxAmount = Decimal(string: market.maxAmount, locale: .enUSPOSIX)
-        }
-        
-        func validate(amount: Decimal, token: MixinTokenItem) -> Result {
-            if amount > token.decimalBalance {
-                return .invalid(reason: R.string.localizable.insufficient_balance())
-            } else if amount < minAmount {
-                let min = CurrencyFormatter.localizedString(from: minAmount, format: .precision, sign: .never)
-                let reason = R.string.localizable.single_transaction_should_be_greater_than(min, token.symbol)
-                return .invalid(reason: reason)
-            } else if let maxAmount, amount > maxAmount {
-                let max = CurrencyFormatter.localizedString(from: maxAmount, format: .precision, sign: .never)
-                let reason = R.string.localizable.single_transaction_should_be_less_than(max, token.symbol)
-                return .invalid(reason: reason)
-            } else {
-                return .valid
-            }
-        }
-        
-    }
-    
     private final class MarginAmountPrecisionValidator: NSObject, UITextFieldDelegate {
         
         var precision = MixinToken.internalPrecision

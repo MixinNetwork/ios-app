@@ -91,8 +91,10 @@ final class BuyTokenMethodSelectorViewController: PopupSelectorViewController, U
     // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        onSelected?(methods[indexPath.row])
-        close(tableView)
+        let method = methods[indexPath.row]
+        presentingViewController?.dismiss(animated: true) { [onSelected] in
+            onSelected?(method)
+        }
     }
     
 }

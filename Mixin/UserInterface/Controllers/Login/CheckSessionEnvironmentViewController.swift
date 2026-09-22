@@ -205,9 +205,11 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        let customerService = CustomerServiceViewController(
+            presentLoginLogsOnLongPressingTitle: true,
+            reportingTags: ["source": "check_session_env"],
+        )
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "check_session_env"])
     }
     
     @objc private func reloadAccountThenCheck() {

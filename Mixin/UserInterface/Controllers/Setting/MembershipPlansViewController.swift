@@ -164,9 +164,8 @@ final class MembershipPlansViewController: UIViewController {
         } else if let detail = selectedPlanDetails, products[detail.appleSubscriptionID] != nil {
             buy(detail: detail)
         } else {
-            let customerService = CustomerServiceViewController()
+            let customerService = CustomerServiceViewController(reportingTags: ["source": "membership_plans"])
             present(customerService, animated: true)
-            reporter.report(event: .customerServiceDialog, tags: ["source": "membership_plans"])
         }
     }
     

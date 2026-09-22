@@ -30,10 +30,6 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = .customerService(
-            target: self,
-            action: #selector(presentCustomerService(_:))
-        )
         imageViewTopConstraint.constant = switch ScreenHeight.current {
         case .short:
             40
@@ -82,9 +78,11 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        let customerService = CustomerServiceViewController(
+            presentLoginLogsOnLongPressingTitle: true,
+            reportingTags: ["source": "login_mnemonic_phrase"],
+        )
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "login_mnemonic_phrase"])
     }
     
     @objc private func login(_ sender: Any) {
@@ -131,6 +129,7 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     }
     
     private func showLoading() {
+        navigationItem.rightBarButtonItem = nil
         titleLabel.text = switch action {
         case .signInWithMixinMnemonics, .signInWithBIP39Mnemonics:
             R.string.localizable.signing_in_to_your_account()
@@ -146,6 +145,10 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     }
     
     private func showError(_ description: String) {
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         switch action {
         case .signInWithMixinMnemonics, .signInWithBIP39Mnemonics:
             titleLabel.text = R.string.localizable.signing_in_to_your_account()

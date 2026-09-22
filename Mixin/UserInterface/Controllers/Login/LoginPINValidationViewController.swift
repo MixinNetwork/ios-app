@@ -58,9 +58,11 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        let customerService = CustomerServiceViewController(
+            presentLoginLogsOnLongPressingTitle: true,
+            reportingTags: ["source": "login_pin_verify"],
+        )
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "login_pin_verify"])
     }
     
     @objc private func presentMoreActions(_ sender: Any) {

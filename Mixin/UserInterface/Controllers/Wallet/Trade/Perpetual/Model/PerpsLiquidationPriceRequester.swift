@@ -5,6 +5,11 @@ class PerpsLiquidationPriceRequester {
     
     enum LiquidationPriceError {
         
+        enum Intent {
+            case open
+            case edit
+        }
+        
         case exceedsMaxRemovableMargin(Decimal)
         case other(description: String)
         
@@ -24,7 +29,7 @@ class PerpsLiquidationPriceRequester {
             }
         }
         
-        init(error: Error, marginSymbol: String?) {
+        init(error: Error, intent: Intent, marginSymbol: String?) {
             guard case let .response(error) = error as? MixinAPIError else {
                 self = .other(description: error.localizedDescription)
                 return
@@ -40,7 +45,6 @@ class PerpsLiquidationPriceRequester {
                 }
             case .perpPositionSizeExceedsLeverageLimit:
                 let maxAmount: Decimal
-                let maxLeverage: Int
                 if case let .string(value) = error.extra?.value(at: ["max_amount"]),
                    let decimalValue = Decimal(string: value, locale: .enUSPOSIX)
                 {
@@ -48,39 +52,34 @@ class PerpsLiquidationPriceRequester {
                 } else {
                     maxAmount = 0
                 }
-                if case let .number(value) = error.extra?.value(at: ["max_leverage"]) {
-                    maxLeverage = Int(value)
-                } else {
-                    maxLeverage = 0
-                }
-                if maxAmount == 0 && maxLeverage == 0 {
-                    self = .other(description: error.localizedDescription)
-                } else if maxAmount == 0 {
-                    self = .other(
-                        description: R.string.localizable.perps_maximum_leverage(maxLeverage)
-                    )
-                } else if maxLeverage == 0 {
-                    if let symbol = marginSymbol {
-                        let max = CurrencyFormatter.localizedString(
+                let description: String
+                switch intent {
+                case .open:
+                    if maxAmount > 0, let symbol = marginSymbol {
+                        let amount = CurrencyFormatter.localizedString(
                             from: maxAmount,
                             format: .precision,
-                            sign: .never
+                            sign: .never,
+                            symbol: .custom(symbol),
                         )
-                        let description = R.string.localizable.single_transaction_should_be_less_than(max, symbol)
-                        self = .other(description: description)
+                        description = R.string.localizable.error_perps_position_size_exceeds_leverage_limit_value(amount)
                     } else {
-                        self = .other(description: error.localizedDescription)
+                        description = R.string.localizable.error_perps_position_size_exceeds_leverage_limit()
                     }
-                } else if let symbol = marginSymbol {
-                    let amount = R.string.localizable.single_transaction_should_be_less_than(
-                        CurrencyFormatter.localizedString(from: maxAmount, format: .precision, sign: .never),
-                        symbol
-                    )
-                    let leverage = R.string.localizable.perps_maximum_leverage(maxLeverage)
-                    self = .other(description: amount + "\n" + leverage)
-                } else {
-                    self = .other(description: error.localizedDescription)
+                case .edit:
+                    if maxAmount > 0, let symbol = marginSymbol {
+                        let amount = CurrencyFormatter.localizedString(
+                            from: maxAmount,
+                            format: .precision,
+                            sign: .never,
+                            symbol: .custom(symbol),
+                        )
+                        description = R.string.localizable.error_perps_position_size_exceeds_leverage_limit_add(amount)
+                    } else {
+                        description = R.string.localizable.error_perps_position_size_exceeds_leverage_limit_cannot_add()
+                    }
                 }
+                self = .other(description: description)
             default:
                 self = .other(description: error.localizedDescription)
             }
@@ -142,7 +141,7 @@ final class OpenPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceReq
                     Logger.general.error(category: "OpenPerpsPosition", message: "\(error)")
                     try await Task.sleep(nanoseconds: failRetryInterval * NSEC_PER_SEC)
                 } catch {
-                    let error = LiquidationPriceError(error: error, marginSymbol: symbol)
+                    let error = LiquidationPriceError(error: error, intent: .open, marginSymbol: symbol)
                     await MainActor.run {
                         onFailure(error)
                     }
@@ -203,7 +202,7 @@ final class EditPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceReq
                     Logger.general.error(category: "AddPerpsPosition", message: "\(error)")
                     try await Task.sleep(nanoseconds: failRetryInterval * NSEC_PER_SEC)
                 } catch {
-                    let error = LiquidationPriceError(error: error, marginSymbol: symbol)
+                    let error = LiquidationPriceError(error: error, intent: .edit, marginSymbol: symbol)
                     await MainActor.run {
                         onFailure(error)
                     }

@@ -643,6 +643,9 @@
 "error_perps_margin_too_small" = "ОШИБКА 10650: Сумма маржи слишком мала";
 "error_perps_margin_too_small_value" = "ОШИБКА 10650: Сумма маржи должна составлять не менее %@";
 "error_perps_position_size_exceeds_leverage_limit" = "ОШИБКА 10655: Размер позиции превышает лимит для выбранного кредитного плеча. Уменьшите сумму или кредитное плечо.";
+"error_perps_position_size_exceeds_leverage_limit_add" = "ОШИБКА 10655: Сумма открытия позиции превышает максимальный лимит %@. Уменьшите сумму.";
+"error_perps_position_size_exceeds_leverage_limit_cannot_add" = "ОШИБКА 10655: Невозможно увеличить позицию.";
+"error_perps_position_size_exceeds_leverage_limit_value" = "ОШИБКА 10655: Сумма открытия позиции превышает максимальный лимит %@. Уменьшите сумму или кредитное плечо.";
 "error_perps_position_size_too_small" = "ОШИБКА 10654: Стоимость позиции слишком мала";
 "error_perps_position_size_too_small_value" = "ОШИБКА 10654: Стоимость позиции должна составлять не менее %@";
 "error_phone_invalid_format" = "ОШИБКА 20110: Неверный номер телефона";

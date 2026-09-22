@@ -643,6 +643,9 @@
 "error_perps_margin_too_small" = "エラー 10650: マージンが少なすぎます";
 "error_perps_margin_too_small_value" = "エラー 10650: マージンは最低 %@ 必要です";
 "error_perps_position_size_exceeds_leverage_limit" = "エラー 10655：ポジションサイズが選択したレバレッジの上限を超えています。金額またはレバレッジを下げてください。";
+"error_perps_position_size_exceeds_leverage_limit_add" = "エラー 10655：新規建玉の金額が上限の%@を超えています。金額を下げてください。";
+"error_perps_position_size_exceeds_leverage_limit_cannot_add" = "エラー 10655：建玉を追加できません。";
+"error_perps_position_size_exceeds_leverage_limit_value" = "エラー 10655：新規建玉の金額が上限の%@を超えています。金額またはレバレッジを下げてください。";
 "error_perps_position_size_too_small" = "エラー 10654: ポジション価値が小さすぎます";
 "error_perps_position_size_too_small_value" = "エラー 10654: ポジション価値は最低 %@ 必要です";
 "error_phone_invalid_format" = "エラー 20110：無効な電話番号です";

@@ -643,6 +643,9 @@
 "error_perps_margin_too_small" = "错误 10650：保证金太少";
 "error_perps_margin_too_small_value" = "错误 10650：保证金至少 %@";
 "error_perps_position_size_exceeds_leverage_limit" = "错误 10655：仓位规模超过当前杠杆档位限制，请降低金额或杠杆。";
+"error_perps_position_size_exceeds_leverage_limit_add" = "错误 10655：开仓金额超出最大限额 %@，请减少金额。";
+"error_perps_position_size_exceeds_leverage_limit_cannot_add" = "错误 10655：无法加仓。";
+"error_perps_position_size_exceeds_leverage_limit_value" = "错误 10655：开仓金额超出最大限额 %@，请减少金额或降低杠杆。";
 "error_perps_position_size_too_small" = "错误 10654：仓位价值太少";
 "error_perps_position_size_too_small_value" = "错误 10654：仓位价值至少 %@";
 "error_phone_invalid_format" = "错误 20110：手机号码不合法";

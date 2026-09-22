@@ -26,7 +26,7 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
         {
             Logger.general.info(category: "HomeNavigationController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
             if UIApplication.shared.applicationState == .active {
-                WebSocketService.shared.connect(firstConnect: true)
+                WebSocketService.shared.connect()
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
                 ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
             }

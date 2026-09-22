@@ -42,6 +42,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     private lazy var navigationBarAppearanceUpdater = NavigationBarStyle.AppearanceUpdater()
     
     private weak var retryButton: UIButton?
+    private weak var launchCoverView: UIView?
     
     private var account: Account
     private var isAccountFresh: Bool
@@ -111,7 +112,14 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         navigationBar.setItems([navigationItem], animated: false)
         
         if AccountVerificationIntent.current == nil {
-            // Permissive path for app relauncch
+            // Permissive path for app relaunch
+            let coverView = UIView()
+            coverView.backgroundColor = view.backgroundColor
+            coverView.accessibilityViewIsModal = true
+            view.addSubview(coverView)
+            coverView.snp.makeEdgesEqualToSuperview()
+            launchCoverView = coverView
+            
             check()
         } else {
             // Strict path for login
@@ -516,6 +524,7 @@ extension CheckSessionEnvironmentViewController {
     
     private func reload(content: UIViewController) {
         removeContentViewController()
+        launchCoverView?.removeFromSuperview()
         addChild(content)
         view.addSubview(content.view)
         content.view.snp.makeEdgesEqualToSuperview()
@@ -535,6 +544,7 @@ extension CheckSessionEnvironmentViewController {
         description: String,
         retryWithSelector retrySelector: Selector
     ) {
+        launchCoverView?.removeFromSuperview()
         activityIndicator.stopAnimating()
         descriptionLabel.text = description
         descriptionLabel.textColor = R.color.error_red()

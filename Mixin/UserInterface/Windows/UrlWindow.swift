@@ -216,6 +216,7 @@ class UrlWindow {
             case .buy:
                 let buy = BuyTokenInputAmountViewController(wallet: .privacy)
                 UIApplication.shared.homeNavigationController?.pushViewController(buy, animated: true)
+                reporter.report(event: .buyStart, tags: ["wallet": "main", "source": "url"])
                 return true
             case .unknown:
                 if source.isExternal && url.scheme == MixinURL.scheme {

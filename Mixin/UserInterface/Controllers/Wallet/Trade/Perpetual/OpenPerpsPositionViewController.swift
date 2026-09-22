@@ -535,6 +535,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
                         liquidationPrice: price,
                     )
                     self?.show(liquidationPrice: .valid(input))
+                    self?.showError(description: nil)
                 } onFailure: { [weak self] error in
                     guard let self else {
                         return
@@ -543,7 +544,6 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
                     self.showError(description: error.localizedDescription)
                 }
                 show(liquidationPrice: .busy)
-                showError(description: nil)
             case .invalid(let reason):
                 liquidationPriceRequester.cancelLastRequest()
                 show(liquidationPrice: .invalid)

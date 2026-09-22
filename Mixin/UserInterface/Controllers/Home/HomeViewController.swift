@@ -223,7 +223,7 @@ final class HomeViewController: UIViewController {
             return
         }
         if progress >= 100 {
-            if WebSocketService.shared.isRealConnected {
+            if WebSocketService.shared.isConnected {
                 titleButton.setTitle(topLeftTitle, for: .normal)
                 connectingView.stopAnimating()
             } else {
@@ -231,7 +231,7 @@ final class HomeViewController: UIViewController {
                 connectingView.startAnimating()
                 WebSocketService.shared.connectIfNeeded()
             }
-        } else if WebSocketService.shared.isRealConnected {
+        } else if WebSocketService.shared.isConnected {
             let title = R.string.localizable.syncing_progress(progress)
             titleButton.setTitle(title, for: .normal)
             connectingView.startAnimating()

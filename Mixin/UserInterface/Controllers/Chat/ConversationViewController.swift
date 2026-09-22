@@ -2733,7 +2733,6 @@ extension ConversationViewController {
             let info: Logger.UserInfo = [
                 "isReachable": ReachabilityManger.shared.isReachable,
                 "isConnected": WebSocketService.shared.isConnected,
-                "isRealConnected": WebSocketService.shared.isRealConnected
             ]
             Logger.conversation(id: conversationId).info(category: "Report", message: "Exported logs", userInfo: info)
             guard let targetUrl = Logger.export(conversationID: conversationId), FileManager.default.fileSize(targetUrl.path) > 0 else {
@@ -2760,7 +2759,7 @@ extension ConversationViewController {
                     return
                 }
             }
-            Logger.conversation(id: conversationId).info(category: "Report", message: "isReachable:\(ReachabilityManger.shared.isReachable), isConnected:\(WebSocketService.shared.isConnected), isRealConnected:\(WebSocketService.shared.isRealConnected)")
+            Logger.conversation(id: conversationId).info(category: "Report", message: "isReachable:\(ReachabilityManger.shared.isReachable), isConnected:\(WebSocketService.shared.isConnected)")
             
             if let message = message {
                 var log = "[Message][\(message.messageId)][\(message.category)][\(message.status)]...userId:\(message.userId)"

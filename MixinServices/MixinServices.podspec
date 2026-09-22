@@ -32,7 +32,6 @@ Mixin Core Services.
   s.dependency 'SDWebImage'
   s.dependency 'Zip'
   s.dependency 'libsignal-protocol-c'
-  s.dependency 'SocketRocket'
   s.dependency 'GRDB.swift'
   s.dependency 'Sodium'
 

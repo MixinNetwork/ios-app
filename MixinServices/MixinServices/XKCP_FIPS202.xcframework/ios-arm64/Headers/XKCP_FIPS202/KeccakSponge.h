@@ -39,27 +39,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
     int prefix##_SpongeAbsorbLastFewBits(prefix##_SpongeInstance *spongeInstance, unsigned char delimitedData); \
     int prefix##_SpongeSqueeze(prefix##_SpongeInstance *spongeInstance, unsigned char *data, size_t dataByteLen);
 
-#ifdef XKCP_has_KeccakP200
-    #include "KeccakP-200-SnP.h"
-    XKCP_DeclareSpongeStructure(KeccakWidth200, KeccakP200_stateSizeInBytes, KeccakP200_stateAlignment)
-    XKCP_DeclareSpongeFunctions(KeccakWidth200)
-    #define XKCP_has_Sponge_Keccak_width200
-#endif
-
-#ifdef XKCP_has_KeccakP400
-    #include "KeccakP-400-SnP.h"
-    XKCP_DeclareSpongeStructure(KeccakWidth400, KeccakP400_stateSizeInBytes, KeccakP400_stateAlignment)
-    XKCP_DeclareSpongeFunctions(KeccakWidth400)
-    #define XKCP_has_Sponge_Keccak_width400
-#endif
-
-#ifdef XKCP_has_KeccakP800
-    #include "KeccakP-800-SnP.h"
-    XKCP_DeclareSpongeStructure(KeccakWidth800, KeccakP800_stateSizeInBytes, KeccakP800_stateAlignment)
-    XKCP_DeclareSpongeFunctions(KeccakWidth800)
-    #define XKCP_has_Sponge_Keccak_width800
-#endif
-
 #ifdef XKCP_has_KeccakP1600
     #include "KeccakP-1600-SnP.h"
     XKCP_DeclareSpongeStructure(KeccakWidth1600, KeccakP1600_state)

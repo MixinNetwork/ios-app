@@ -3,3 +3,5 @@
 #define XKCP_has_Sponge_Keccak
 #define XKCP_has_FIPS202
 #define XKCP_has_KeccakP1600
+#define KeccakP1600_plain64_implementation_config "all rounds unrolled"
+#define KeccakP1600_plain64_fullUnrolling

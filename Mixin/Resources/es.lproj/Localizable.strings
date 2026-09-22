@@ -1257,7 +1257,6 @@
 "perps_margin_submitted" = "Ajuste de margen enviado";
 "perps_margin_tip" = "Añadir margen reduce el riesgo de liquidación";
 "perps_markets" = "Mercados";
-"perps_maximum_leverage" = "El apalancamiento máximo para este importe es de %dx.";
 "perps_position_size_overview" = "El tamaño representa el valor total de su posición, calculado como margen × apalancamiento.";
 "perps_position_size_pnl_1" = "Tamaño más grande, PnL más grande";
 "perps_position_size_pnl_2" = "Tamaño más pequeño, PnL más pequeño";

@@ -643,6 +643,9 @@
 "error_perps_margin_too_small" = "ERROR 10650: Margin is too small";
 "error_perps_margin_too_small_value" = "ERROR 10650: Margin must have minimum value of %@";
 "error_perps_position_size_exceeds_leverage_limit" = "ERROR 10655: Position size exceeds the limit for the selected leverage. Reduce the amount or leverage.";
+"error_perps_position_size_exceeds_leverage_limit_add" = "ERROR 10655: Amount exceeds the %@ limit. Reduce the amount.";
+"error_perps_position_size_exceeds_leverage_limit_cannot_add" = "ERROR 10655: Cannot add to the position.";
+"error_perps_position_size_exceeds_leverage_limit_value" = "ERROR 10655: Amount exceeds the %@ limit. Reduce the amount or leverage.";
 "error_perps_position_size_too_small" = "ERROR 10654: Position size is too small";
 "error_perps_position_size_too_small_value" = "ERROR 10654: Position must have minimum size of %@";
 "error_phone_invalid_format" = "ERROR 20110: Invalid mobile number";

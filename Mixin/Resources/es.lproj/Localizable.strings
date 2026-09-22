@@ -643,6 +643,9 @@
 "error_perps_margin_too_small" = "ERROR 10650: El margen es demasiado bajo";
 "error_perps_margin_too_small_value" = "ERROR 10650: El margen debe tener un valor mínimo de %@";
 "error_perps_position_size_exceeds_leverage_limit" = "ERROR 10655: El tamaño de la posición supera el límite para el apalancamiento seleccionado. Reduzca el importe o el apalancamiento.";
+"error_perps_position_size_exceeds_leverage_limit_add" = "ERROR 10655: El importe de apertura supera el límite máximo de %@. Reduzca el importe.";
+"error_perps_position_size_exceeds_leverage_limit_cannot_add" = "ERROR 10655: No se puede ampliar la posición.";
+"error_perps_position_size_exceeds_leverage_limit_value" = "ERROR 10655: El importe de apertura supera el límite máximo de %@. Reduzca el importe o el apalancamiento.";
 "error_perps_position_size_too_small" = "ERROR 10654: El valor de la posición es demasiado bajo";
 "error_perps_position_size_too_small_value" = "ERROR 10654: La posición debe tener un valor mínimo de %@";
 "error_phone_invalid_format" = "ERROR 20110: Número de teléfono no válido";

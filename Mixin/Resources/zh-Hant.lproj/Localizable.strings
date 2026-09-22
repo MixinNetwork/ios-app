@@ -643,6 +643,9 @@
 "error_perps_margin_too_small" = "錯誤 10650：保證金太少";
 "error_perps_margin_too_small_value" = "錯誤 10650：保證金至少 %@";
 "error_perps_position_size_exceeds_leverage_limit" = "錯誤 10655：倉位規模超過當前槓桿檔位限制，請降低金額或槓桿。";
+"error_perps_position_size_exceeds_leverage_limit_add" = "錯誤 10655：開倉金額超出最大限額 %@，請減少金額。";
+"error_perps_position_size_exceeds_leverage_limit_cannot_add" = "錯誤 10655：無法加倉。";
+"error_perps_position_size_exceeds_leverage_limit_value" = "錯誤 10655：開倉金額超出最大限額 %@，請減少金額或降低槓桿。";
 "error_perps_position_size_too_small" = "錯誤 10654：倉位價值太少";
 "error_perps_position_size_too_small_value" = "錯誤 10654：倉位價值至少 %@";
 "error_phone_invalid_format" = "錯誤 20110：手機號碼不合法";

@@ -643,6 +643,9 @@
 "error_perps_margin_too_small" = "오류 10650: 마진이 너무 적습니다";
 "error_perps_margin_too_small_value" = "오류 10650: 마진은 최소 %@ 이상이어야 합니다";
 "error_perps_position_size_exceeds_leverage_limit" = "오류 10655: 포지션 크기가 선택한 레버리지 한도를 초과했습니다. 금액 또는 레버리지를 낮추세요.";
+"error_perps_position_size_exceeds_leverage_limit_add" = "오류 10655: 포지션 개설 금액이 최대 한도 %@을(를) 초과했습니다. 금액을 낮추세요.";
+"error_perps_position_size_exceeds_leverage_limit_cannot_add" = "오류 10655: 포지션을 추가할 수 없습니다.";
+"error_perps_position_size_exceeds_leverage_limit_value" = "오류 10655: 포지션 개설 금액이 최대 한도 %@을(를) 초과했습니다. 금액 또는 레버리지를 낮추세요.";
 "error_perps_position_size_too_small" = "오류 10654: 포지션 가치가 너무 작습니다";
 "error_perps_position_size_too_small_value" = "오류 10654: 포지션 가치는 최소 %@ 이상이어야 합니다";
 "error_phone_invalid_format" = "오류 20110: 잘못된 휴대폰 번호";

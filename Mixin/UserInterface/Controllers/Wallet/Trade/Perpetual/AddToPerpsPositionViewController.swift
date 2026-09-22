@@ -464,23 +464,31 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
         }
         
         if requestLiquidationPrice {
+            liquidationPriceRequester.cancelLastRequest()
             if marginAmount != 0, let marginToken {
-                let isBalanceSufficient = marginAmount <= marginToken.decimalBalance
-                liquidationPriceRequester.request(
-                    amount: marginAmount
-                ) { [weak self] price in
-                    self?.show(liquidationPrice: .valid(price: price, isBalanceSufficient: isBalanceSufficient))
-                } onFailure: { [weak self] error in
-                    guard let self else {
-                        return
+                if marginAmount > marginToken.decimalBalance {
+                    show(liquidationPrice: .invalid)
+                    showError(description: R.string.localizable.insufficient_balance())
+                } else {
+                    liquidationPriceRequester.request(
+                        amount: marginAmount,
+                        symbol: marginToken.symbol,
+                    ) { [weak self] price in
+                        guard let self else {
+                            return
+                        }
+                        self.show(liquidationPrice: .valid(price: price))
+                        self.showError(description: nil)
+                    } onFailure: { [weak self] error in
+                        guard let self else {
+                            return
+                        }
+                        self.show(liquidationPrice: .invalid)
+                        self.showError(description: error.localizedDescription)
                     }
-                    self.show(liquidationPrice: .invalid)
-                    self.showError(description: error.localizedDescription)
+                    show(liquidationPrice: .busy)
                 }
-                show(liquidationPrice: .busy)
-                showError(description: isBalanceSufficient ? nil : R.string.localizable.insufficient_balance())
             } else {
-                liquidationPriceRequester.cancelLastRequest()
                 show(liquidationPrice: .invalid)
                 showError(description: nil)
             }
@@ -500,7 +508,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
             liquidationPriceActivityIndicator.startAnimating()
             liquidationPriceContentLabel.alpha = 0
             addButton.isEnabled = false
-        case let .valid(price, isBalanceSufficient):
+        case let .valid(price):
             self.liquidationPriceAfterAdding = price
             liquidationPriceActivityIndicator.stopAnimating()
             let after = price.formatted(
@@ -511,7 +519,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                 to: after,
             )
             liquidationPriceContentLabel.alpha = 1
-            addButton.isEnabled = isBalanceSufficient && !isAdding
+            addButton.isEnabled = !isAdding
         }
     }
     
@@ -570,7 +578,7 @@ extension AddToPerpsPositionViewController {
     private enum LiquidationPrice {
         case invalid
         case busy
-        case valid(price: Decimal, isBalanceSufficient: Bool)
+        case valid(price: Decimal)
     }
     
 }

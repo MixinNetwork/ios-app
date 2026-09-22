@@ -323,7 +323,7 @@
                     <viewLayoutGuide key="frameLayoutGuide" id="RVu-6Y-J9S"/>
                 </scrollView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zzr-fx-od5">
-                    <rect key="frame" x="8" y="702" width="377" height="0.0"/>
+                    <rect key="frame" x="36" y="702" width="321" height="0.0"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" name="market_red"/>
                     <nil key="highlightedColor"/>
@@ -388,14 +388,14 @@
             <color key="backgroundColor" name="background_secondary"/>
             <constraints>
                 <constraint firstItem="bsX-ca-gz4" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="8Xn-hy-KV7"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Zzr-fx-od5" secondAttribute="trailing" constant="8" id="NT2-5s-chb"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Zzr-fx-od5" secondAttribute="trailing" constant="36" id="NT2-5s-chb"/>
                 <constraint firstAttribute="bottom" secondItem="3b9-nb-UKz" secondAttribute="bottom" priority="1" constant="34" placeholder="YES" id="RgY-16-ew1"/>
                 <constraint firstItem="ztB-1h-zOB" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="SSE-TB-Et3"/>
                 <constraint firstItem="3b9-nb-UKz" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Yv9-II-Zx3"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="3b9-nb-UKz" secondAttribute="bottom" id="a9f-g5-uSE"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="3b9-nb-UKz" secondAttribute="trailing" id="beI-N0-fNb"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="ztB-1h-zOB" secondAttribute="trailing" id="bsk-mB-1uy"/>
-                <constraint firstItem="Zzr-fx-od5" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="8" id="dgK-71-NHn"/>
+                <constraint firstItem="Zzr-fx-od5" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="36" id="dgK-71-NHn"/>
                 <constraint firstItem="bsX-ca-gz4" firstAttribute="top" secondItem="ztB-1h-zOB" secondAttribute="bottom" id="iKG-DN-4aJ"/>
                 <constraint firstItem="3b9-nb-UKz" firstAttribute="top" secondItem="Zzr-fx-od5" secondAttribute="bottom" id="jaY-mj-uS6"/>
                 <constraint firstItem="ztB-1h-zOB" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="lPg-pM-bLd"/>
@@ -434,7 +434,7 @@
             <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

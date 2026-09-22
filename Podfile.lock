@@ -170,6 +170,8 @@ PODS:
     - SDWebImage
     - SocketRocket
     - Sodium
+    - TIP
+    - XKCP_FIPS202
     - Zip
   - MixinServices/Tests (0.1.0):
     - Alamofire
@@ -179,6 +181,8 @@ PODS:
     - SDWebImage
     - SocketRocket
     - Sodium
+    - TIP
+    - XKCP_FIPS202
     - Zip
   - nanopb (3.30910.0):
     - nanopb/decode (= 3.30910.0)
@@ -205,6 +209,8 @@ PODS:
   - SnapKit (5.7.1)
   - SocketRocket (0.7.1)
   - Sodium (0.9.1)
+  - TIP (0.1.0)
+  - XKCP_FIPS202 (0.1.0)
   - Zip (2.1.2)
 
 DEPENDENCIES:
@@ -221,6 +227,8 @@ DEPENDENCIES:
   - SDWebImageLottieCoder
   - SDWebImageSVGCoder
   - SnapKit
+  - TIP (from `./MixinServices`)
+  - XKCP_FIPS202 (from `./MixinServices`)
 
 SPEC REPOS:
   trunk:
@@ -265,6 +273,10 @@ EXTERNAL SOURCES:
     :path: "./MixinServices"
   PhoneNumberKit:
     :git: https://github.com/marmelroy/PhoneNumberKit
+  TIP:
+    :path: "./MixinServices"
+  XKCP_FIPS202:
+    :path: "./MixinServices"
 
 CHECKOUT OPTIONS:
   libsignal-protocol-c:
@@ -299,7 +311,7 @@ SPEC CHECKSUMS:
   librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
-  MixinServices: 876e624081b77b32768b995a931555e7105722a4
+  MixinServices: 756f68cb950d94551843a4b261f134dd17cca4b8
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PhoneNumberKit: f46890fd77c0cb44131e3b8e5a0543573222da2e
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
@@ -310,8 +322,10 @@ SPEC CHECKSUMS:
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Sodium: 23d11554ecd556196d313cf6130d406dfe7ac6da
+  TIP: c779b90d16118df0024942af649983133c840ad7
+  XKCP_FIPS202: 0ff950b84c765144c2d3f39017e80ab84bab953b
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: 6405cd1530268368186a48256f1bbcb288a35972
+PODFILE CHECKSUM: 33cacbca59694f461d27ee4fd7af4cd3bdf54c86
 
 COCOAPODS: 1.17.0

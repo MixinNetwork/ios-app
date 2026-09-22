@@ -1,4 +1,4 @@
-framework module "TIP" {
+module TIP {
 	header "ref.h"
     header "Tip.objc.h"
     header "Kernel.objc.h"

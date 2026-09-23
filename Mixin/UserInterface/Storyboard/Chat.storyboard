@@ -377,13 +377,13 @@
                         <outlet property="inputWrapperTopShadowView" destination="EPj-zh-jw3" id="yWC-Dn-CTu"/>
                         <outlet property="inputWrapperView" destination="6MP-pq-xci" id="Hyt-Ue-uBz"/>
                         <outlet property="loadingView" destination="pcl-Ex-irR" id="Xco-m3-g7P"/>
-                        <outlet property="membershipIconView" destination="D0q-66-7hJ" id="8pn-O8-gFb"/>
                         <outlet property="mentionCountLabel" destination="kbn-FY-Imd" id="RV4-Xa-k4T"/>
                         <outlet property="mentionWrapperHeightConstraint" destination="aKJ-9Q-iGJ" id="cel-lN-hb9"/>
                         <outlet property="mentionWrapperView" destination="gq7-57-99M" id="jmT-ro-pep"/>
                         <outlet property="navigationBarContentView" destination="tke-V3-5nw" id="nIL-xl-1ea"/>
                         <outlet property="navigationBarTopConstraint" destination="xX2-tz-12Y" id="T58-kq-Ugw"/>
                         <outlet property="navigationBarView" destination="Zve-bN-jsA" id="829-Qa-Uo7"/>
+                        <outlet property="opponentUserBadgeView" destination="D0q-66-7hJ" id="8pn-O8-gFb"/>
                         <outlet property="scrollToBottomButton" destination="hzm-Vh-1BZ" id="i8J-ga-GD1"/>
                         <outlet property="scrollToBottomWrapperHeightConstraint" destination="iai-L8-XoW" id="F9Z-Pn-XNa"/>
                         <outlet property="scrollToBottomWrapperView" destination="enU-Jm-AWl" id="kR8-6F-tEk"/>
@@ -1998,7 +1998,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -13,7 +13,7 @@ final class ConversationViewController: UIViewController {
     @IBOutlet weak var navigationBarContentView: UIView!
     @IBOutlet weak var wallpaperImageView: WallpaperImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var membershipIconView: SDAnimatedImageView!
+    @IBOutlet weak var opponentUserBadgeView: SDAnimatedImageView!
     @IBOutlet weak var tableView: ConversationTableView!
     @IBOutlet weak var accessoryButtonsWrapperView: HittestBypassWrapperView!
     @IBOutlet weak var mentionWrapperView: UIView!
@@ -2088,35 +2088,38 @@ extension ConversationViewController {
 extension ConversationViewController {
     
     private func updateNavigationBar() {
-        let membershipIcon: UIImage?
+        let badgeImage: UIImage?
+        let showsMembershipIcon: Bool
         if dataSource.category == .group {
             let conversation = dataSource.conversation
             titleLabel.text = conversation.name
             avatarImageView.setGroupImage(with: conversation.iconUrl)
-            membershipIcon = nil
+            badgeImage = nil
+            showsMembershipIcon = false
         } else if let user = ownerUser {
             subtitleLabel.text = user.identityNumber
             titleLabel.text = user.fullName
             avatarImageView.setImage(with: user)
-            membershipIcon = user.membership?.badgeImage
+            badgeImage = user.badgeImage
+            showsMembershipIcon = user.membership?.badgeImage != nil
         } else {
-            membershipIcon = nil
+            badgeImage = nil
+            showsMembershipIcon = false
         }
-        if let membershipIcon {
-            membershipIconView.image = membershipIcon
-            membershipIconView.isHidden = false
+        opponentUserBadgeView.image = badgeImage
+        opponentUserBadgeView.isHidden = badgeImage == nil
+        if showsMembershipIcon {
             if membershipButton == nil {
                 let button = UIButton()
                 button.addTarget(self, action: #selector(buyOpponentMembership(_:)), for: .touchUpInside)
                 navigationBarContentView.addSubview(button)
                 button.snp.makeConstraints { make in
                     make.width.height.equalTo(30)
-                    make.center.equalTo(membershipIconView)
+                    make.center.equalTo(opponentUserBadgeView)
                 }
                 membershipButton = button
             }
         } else {
-            membershipIconView.isHidden = true
             membershipButton?.removeFromSuperview()
         }
     }

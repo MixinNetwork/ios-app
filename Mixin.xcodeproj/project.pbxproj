@@ -1822,7 +1822,6 @@
 		ABE865BE23F2455800C0167D /* AuthorizationScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE865BD23F2455800C0167D /* AuthorizationScope.swift */; };
 		ABE865C123F260FE00C0167D /* PermissionsActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABE865BF23F260FE00C0167D /* PermissionsActionCell.xib */; };
 		ABE865C223F260FE00C0167D /* PermissionsActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE865C023F260FE00C0167D /* PermissionsActionCell.swift */; };
-		B0E08305E8F4B7331E8294E7 /* Sodium in Frameworks */ = {isa = PBXBuildFile; productRef = 81951AFAEC8B448C603101A2 /* Sodium */; };
 		B107FD9A1DBD0F62DEE16ACC /* SDWebImageLottieCoder in Frameworks */ = {isa = PBXBuildFile; productRef = F0A2554BEE2F20225F5FAFA8 /* SDWebImageLottieCoder */; };
 		B2835F729F8108B867D97B5C /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3C0B5B11F62194E6A43E28E5 /* FirebaseCrashlytics */; };
 		B8B6487C0AE89133B0181A12 /* libwebp in Frameworks */ = {isa = PBXBuildFile; productRef = 6C32415C65564CDC7EFDE84A /* libwebp */; };
@@ -1998,7 +1997,6 @@
 		E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */; };
 		E1E4D3D2AE8111FEA2F9C942 /* RecalledMessage+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D875CB7B470C4D1A8D3D47 /* RecalledMessage+Description.swift */; };
 		E636A3C1E7A35DBB45A6B40B /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 4E21266170FCFF12BB5636C3 /* SDWebImage */; };
-		EAE2E495ACF5C5DA37805A61 /* Clibsodium in Frameworks */ = {isa = PBXBuildFile; productRef = A461D6961459E2FBE19A96BA /* Clibsodium */; };
 		F5042C6E34AC6C051213FF2D /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = BA719E6D3A59F03CF3261729 /* Alamofire */; };
 		F946BC09D1952262A0B41050 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = BDD925B03BDD82943615F6A4 /* FirebaseCore */; };
 /* End PBXBuildFile section */
@@ -4098,8 +4096,6 @@
 				87B2FCDB4190CDE4BA1F5FA3 /* Bugsnag in Frameworks */,
 				DFB18A96C9D7447F355E968D /* GRDB in Frameworks */,
 				E636A3C1E7A35DBB45A6B40B /* SDWebImage in Frameworks */,
-				B0E08305E8F4B7331E8294E7 /* Sodium in Frameworks */,
-				EAE2E495ACF5C5DA37805A61 /* Clibsodium in Frameworks */,
 				094EE1FF13DF3C55B0BB34AB /* Zip in Frameworks */,
 				5D0D127A826494F159C4F6AF /* libsignal-protocol-c in Frameworks */,
 				4AB7F2FE23869488D7B4D29F /* TIP in Frameworks */,
@@ -7171,8 +7167,6 @@
 				8DAE613A7F420488C4C3EDE2 /* Bugsnag */,
 				BAB4BB68419DD7A5AEAA73C7 /* GRDB */,
 				4E21266170FCFF12BB5636C3 /* SDWebImage */,
-				81951AFAEC8B448C603101A2 /* Sodium */,
-				A461D6961459E2FBE19A96BA /* Clibsodium */,
 				B7536589F5323E0BA6DB99C4 /* Zip */,
 				35839F3E11248C17BCAAEEFA /* libsignal-protocol-c */,
 				1E1E9C2B317A5B58128EB908 /* TIP */,
@@ -7345,7 +7339,6 @@
 				FA73DB3C2968BFA404FE6085 /* XCRemoteSwiftPackageReference "bugsnag-cocoa" */,
 				D259924AF4DB6F7A03591CFD /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 				85A43E6A3999AB5270F8CC80 /* XCRemoteSwiftPackageReference "SDWebImage" */,
-				D85FD1DBF9965CED92813B1F /* XCRemoteSwiftPackageReference "swift-sodium" */,
 				48CD57C75761376F4792CD3D /* XCRemoteSwiftPackageReference "Zip" */,
 				D0012F1075F0719179A767A7 /* XCRemoteSwiftPackageReference "libsignal-protocol-c" */,
 				3D8704AEF1D395E68D3EE887 /* XCRemoteSwiftPackageReference "librlottie-Xcode" */,
@@ -10214,15 +10207,6 @@
 				minimumVersion = 6.29.3;
 			};
 		};
-		D85FD1DBF9965CED92813B1F /* XCRemoteSwiftPackageReference "swift-sodium" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/jedisct1/swift-sodium.git";
-			requirement = {
-				kind = versionRange;
-				maximumVersion = 999.0.0;
-				minimumVersion = 0.9.1;
-			};
-		};
 		FA73DB3C2968BFA404FE6085 /* XCRemoteSwiftPackageReference "bugsnag-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bugsnag/bugsnag-cocoa.git";
@@ -10291,11 +10275,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MixinServices;
 		};
-		81951AFAEC8B448C603101A2 /* Sodium */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D85FD1DBF9965CED92813B1F /* XCRemoteSwiftPackageReference "swift-sodium" */;
-			productName = Sodium;
-		};
 		8DAE613A7F420488C4C3EDE2 /* Bugsnag */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FA73DB3C2968BFA404FE6085 /* XCRemoteSwiftPackageReference "bugsnag-cocoa" */;
@@ -10357,11 +10336,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 77A8F6D16AC3A412DC8C7F5E /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */;
 			productName = SDWebImageSVGCoder;
-		};
-		A461D6961459E2FBE19A96BA /* Clibsodium */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D85FD1DBF9965CED92813B1F /* XCRemoteSwiftPackageReference "swift-sodium" */;
-			productName = Clibsodium;
 		};
 		A52627F6436E72A082FD1998 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;

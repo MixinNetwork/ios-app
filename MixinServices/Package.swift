@@ -28,10 +28,6 @@ let package = Package(
             "5.21.7"..<"999.0.0",
         ),
         .package(
-            url: "https://github.com/jedisct1/swift-sodium.git",
-            "0.9.1"..<"999.0.0",
-        ),
-        .package(
             url: "https://github.com/marmelroy/Zip.git",
             "2.1.2"..<"999.0.0",
         ),
@@ -77,7 +73,6 @@ let package = Package(
                 .product(name: "Bugsnag", package: "bugsnag-cocoa"),
                 .product(name: "GRDB", package: "GRDB.swift"),
                 .product(name: "SDWebImage", package: "SDWebImage"),
-                .product(name: "Sodium", package: "swift-sodium"),
                 .product(name: "Zip", package: "Zip"),
                 .product(name: "libsignal-protocol-c", package: "libsignal-protocol-c"),
             ],

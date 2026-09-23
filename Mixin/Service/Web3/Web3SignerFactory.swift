@@ -1,7 +1,7 @@
 import Foundation
 import XKCP_FIPS202
 import secp256k1
-import ReownWalletKit
+import WalletConnectSigner
 
 struct Web3CryptoProvider: CryptoProvider {
     

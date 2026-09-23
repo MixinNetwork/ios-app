@@ -1724,7 +1724,7 @@
 		94ED2FB92E26455C00B99837 /* DerivationPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED2FB82E26455900B99837 /* DerivationPath.swift */; };
 		94ED2FEC2E2650EE00B99837 /* AddWalletPINValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED2FEB2E2650EE00B99837 /* AddWalletPINValidationViewController.swift */; };
 		94ED306B2E269B4F00B99837 /* MixinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED30692E269B4E00B99837 /* MixinTests.swift */; };
-		94ED938A2E37592700A3E337 /* ReownWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = 94ED93892E37592700A3E337 /* ReownWalletKit */; };
+		94ED938A2E37592700A3E337 /* WalletConnect in Frameworks */ = {isa = PBXBuildFile; productRef = 94ED93892E37592700A3E337 /* WalletConnect */; };
 		94EDD6142D0C495A00BF55EE /* GeneralAppearanceNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EDD6132D0C495100BF55EE /* GeneralAppearanceNavigationController.swift */; };
 		94EE1AB92B48518D00BE9AD1 /* TemporaryAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1AB82B48518D00BE9AD1 /* TemporaryAddress.swift */; };
 		94EE1ABE2B4851E600BE9AD1 /* WithdrawableAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */; };
@@ -4079,7 +4079,7 @@
 				273A5E0C1F95EA5100AE802F /* Contacts.framework in Frameworks */,
 				94341BFA2862F302009C9147 /* libopus.xcframework in Frameworks */,
 				9481C03C2A49A9AA0009DAF8 /* Starscream in Frameworks */,
-				94ED938A2E37592700A3E337 /* ReownWalletKit in Frameworks */,
+				94ED938A2E37592700A3E337 /* WalletConnect in Frameworks */,
 				94D916EF2DC0C45E009B8A7F /* StoreKit.framework in Frameworks */,
 				1B92B8E60B19F116E808E88C /* MixinServices in Frameworks */,
 				F946BC09D1952262A0B41050 /* FirebaseCore in Frameworks */,
@@ -7151,7 +7151,7 @@
 				94787E172A7C071E00BB0124 /* QRCode */,
 				94881FAB2AD035ED00CA7A29 /* RswiftLibrary */,
 				9479B7842BBBE589002A2C4F /* web3.swift */,
-				94ED93892E37592700A3E337 /* ReownWalletKit */,
+				94ED93892E37592700A3E337 /* WalletConnect */,
 				67872A9DDFA92A9E1A6E7F40 /* MixinServices */,
 				BDD925B03BDD82943615F6A4 /* FirebaseCore */,
 				A52627F6436E72A082FD1998 /* FirebaseAnalytics */,
@@ -10327,10 +10327,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94ED93892E37592700A3E337 /* ReownWalletKit */ = {
+		94ED93892E37592700A3E337 /* WalletConnect */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 94ED93882E37592700A3E337 /* XCRemoteSwiftPackageReference "reown-swift" */;
-			productName = ReownWalletKit;
+			productName = WalletConnect;
 		};
 		970A7220911FCED8F41E8DD2 /* SDWebImageSVGCoder */ = {
 			isa = XCSwiftPackageProductDependency;

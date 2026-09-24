@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class QuotePreviewView: UIView, XibDesignable {
+final class QuotePreviewView: UIView, XibDesignable {
     
     @IBOutlet weak var indicatorView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -30,7 +30,11 @@ class QuotePreviewView: UIView, XibDesignable {
     
     func render(message: MessageItem, contentImageThumbnail: UIImage?) {
         if !isXibLoaded {
-            loadXib()
+            let contentView = loadXib()
+            if #available(iOS 26, *) {
+                backgroundColor = .clear
+                contentView?.backgroundColor = .clear
+            }
             isXibLoaded = true
             dismissButton.imageView?.contentMode = .center
         }

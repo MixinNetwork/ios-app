@@ -218,7 +218,7 @@
                                 <constraints>
                                     <constraint firstItem="EPj-zh-jw3" firstAttribute="bottom" secondItem="6MP-pq-xci" secondAttribute="top" id="1b5-by-K4O"/>
                                     <constraint firstItem="EPj-zh-jw3" firstAttribute="leading" secondItem="6MP-pq-xci" secondAttribute="leading" id="4Od-pl-q5l"/>
-                                    <constraint firstAttribute="height" constant="50" id="MMR-mR-ES3"/>
+                                    <constraint firstAttribute="height" priority="999" constant="50" id="MMR-mR-ES3"/>
                                     <constraint firstAttribute="trailing" secondItem="EPj-zh-jw3" secondAttribute="trailing" id="WDE-Bd-iVU"/>
                                 </constraints>
                             </view>
@@ -282,7 +282,7 @@
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xzK-O3-aqw">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
                                 <subviews>
-                                    <view alpha="0.0" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Mr-O8-dtq" customClass="QuotePreviewView" customModule="Mixin" customModuleProvider="target">
+                                    <view clipsSubviews="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Mr-O8-dtq" customClass="QuotePreviewView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                                         <color key="backgroundColor" name="background"/>
                                         <constraints>
@@ -321,11 +321,6 @@
                                         <inset key="scrollIndicatorInsets" minX="0.0" minY="16" maxX="0.0" maxY="16"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="18"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
                                     </textView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Hc-pE-gbi">
                                         <rect key="frame" x="240" y="7" width="36" height="36"/>

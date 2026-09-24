@@ -95,6 +95,7 @@ final class ConversationViewController: UIViewController {
     private var canPinMessages = false
     private var pinnedMessageIds = Set<String>()
     private var lastMentionCandidate: String?
+    private var keyboardInputConstraints: [NSLayoutConstraint] = []
     
     private weak var titleView: UIView!
     private weak var avatarImageView: AvatarImageView!
@@ -209,6 +210,18 @@ final class ConversationViewController: UIViewController {
                 userHandleViewController.view.isHidden = false
                 inputWrapperTopShadowView.alpha = 1
             }
+        }
+    }
+    
+    private var followsKeyboard: Bool {
+        !keyboardInputConstraints.isEmpty && inputWrapperHeightConstraint.priority == .almostInexist
+    }
+    
+    private var bottomBarSeparatorHeight: CGFloat {
+        if #available(iOS 26, *) {
+            0
+        } else {
+            MessageViewModel.bottomSeparatorHeight
         }
     }
     
@@ -357,6 +370,38 @@ final class ConversationViewController: UIViewController {
             make.edges.equalToSuperview()
         })
         conversationInputViewController.didMove(toParent: self)
+        if #available(iOS 17, *) {
+            let guide = view.keyboardLayoutGuide
+            guide.usesBottomSafeArea = false
+            let bottom = conversationInputViewController.inputBarView.bottomAnchor
+            let keyboardConstraint = bottom.constraint(
+                equalTo: guide.topAnchor,
+                constant: -conversationInputViewController.keyboardSpacing,
+            )
+            keyboardConstraint.priority = .defaultHigh
+            keyboardInputConstraints = [
+                keyboardConstraint,
+                bottom.constraint(
+                    lessThanOrEqualTo: guide.topAnchor,
+                    constant: -conversationInputViewController.keyboardSpacing
+                ),
+                bottom.constraint(
+                    lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor
+                ),
+                bottom.constraint(
+                    lessThanOrEqualTo: view.bottomAnchor,
+                    constant: -conversationInputViewController.minimumBottomSpacing,
+                ),
+            ]
+            updateInputLayoutMode()
+        }
+        if #available(iOS 26, *) {
+            let interaction = UIScrollEdgeElementContainerInteraction()
+            interaction.scrollView = tableView
+            interaction.edge = .bottom
+            inputWrapperView.addInteraction(interaction)
+            tableView.bottomEdgeEffect.style = .soft
+        }
         if dataSource.category == .group {
             updateSubtitleAndInputBar()
             conversationInputViewController.detectsMentionToken = true
@@ -450,6 +495,18 @@ final class ConversationViewController: UIViewController {
             dataSource?.cancelMessageProcessing()
         }
         SendMessageService.shared.sendReadMessages(conversationId: conversationId)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard followsKeyboard else {
+            return
+        }
+        let height = view.bounds.maxY - inputWrapperView.frame.minY
+        guard abs(tableView.contentInset.bottom - height - bottomBarSeparatorHeight) > 0.1 else {
+            return
+        }
+        updateTableViewBottomInset(bottomBarHeight: height)
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -598,11 +655,10 @@ final class ConversationViewController: UIViewController {
     }
     
     @objc func resizeInputWrapperAction(_ recognizer: ResizeInputWrapperGestureRecognizer) {
-        let location = if #available(iOS 26, *) {
-            recognizer.location(in: conversationInputViewController.customInputContainerView)
-        } else {
-            recognizer.location(in: inputWrapperView)
+        if #available(iOS 17, *), !conversationInputViewController.hasCustomInput {
+            return
         }
+        let location = recognizer.location(in: inputWrapperView)
         let verticalVelocity = recognizer.velocity(in: view).y
         let regularInputWrapperHeight = conversationInputViewController.regularHeight
         var inputWrapperHeight: CGFloat {
@@ -610,7 +666,7 @@ final class ConversationViewController: UIViewController {
                 return inputWrapperHeightConstraint.constant
             }
             set {
-                inputWrapperHeightConstraint.constant = newValue
+                conversationInputViewController.setPreferredContentHeight(newValue, animated: false)
             }
         }
         switch recognizer.state {
@@ -665,6 +721,13 @@ final class ConversationViewController: UIViewController {
                         conversationInputViewController.setPreferredContentHeightAnimated(.regular)
                     }
                 }
+            }
+        case .cancelled, .failed:
+            if recognizer.hasMovedInputWrapperDuringChangedState {
+                conversationInputViewController.setPreferredContentHeight(
+                    recognizer.inputWrapperHeightWhenBegan,
+                    animated: true,
+                )
             }
         default:
             break
@@ -1146,6 +1209,7 @@ final class ConversationViewController: UIViewController {
             tableView.deselectRow(at: indexPath, animated: true)
         })
         tableView.allowsMultipleSelection = false
+        updateInputLayoutMode()
         navigationItem.setHidesBackButton(false, animated: true)
         navigationItem.setLeftBarButton(nil, animated: true)
         
@@ -1153,9 +1217,7 @@ final class ConversationViewController: UIViewController {
         hideInputWrapperConstraint.priority = .defaultLow
         UIView.animateKeyframes(withDuration: 0.4, delay: 0, options: [], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1) {
-                let old = self.multipleSelectionActionView.frame.height
-                let new = self.inputWrapperHeightConstraint.constant
-                self.updateTableViewBottomInsetWithBottomBarHeight(old: old, new: new, animated: false)
+                self.layoutBottomBar(height: self.inputWrapperHeightConstraint.constant)
             }
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
                 self.multipleSelectionActionView.frame.origin.y = self.view.bounds.height
@@ -1265,19 +1327,58 @@ final class ConversationViewController: UIViewController {
         wallpaperImageView.wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
     }
     
-    // MARK: - Interface
+    func updateKeyboardDismissPadding(_ padding: CGFloat) {
+        guard #available(iOS 17, *) else {
+            return
+        }
+        let guide = view.keyboardLayoutGuide
+        if guide.keyboardDismissPadding != padding {
+            guide.keyboardDismissPadding = padding
+        }
+    }
+    
+    func updateInputLayoutMode() {
+        guard !keyboardInputConstraints.isEmpty else {
+            return
+        }
+        if conversationInputViewController.hasCustomInput || tableView.allowsMultipleSelection {
+            NSLayoutConstraint.deactivate(keyboardInputConstraints)
+            inputWrapperHeightConstraint.constant = max(
+                conversationInputViewController.minimizedHeight,
+                inputWrapperView.bounds.height,
+            )
+            inputWrapperHeightConstraint.priority = .almostRequired
+        } else {
+            inputWrapperHeightConstraint.priority = .almostInexist
+            NSLayoutConstraint.activate(keyboardInputConstraints)
+        }
+        view.setNeedsLayout()
+    }
+    
     func updateInputWrapper(for preferredContentHeight: CGFloat, animated: Bool) {
-        let oldHeight = inputWrapperHeightConstraint.constant
+        if followsKeyboard {
+            if animated {
+                UIView.animate(withDuration: animationDuration) { self.view.layoutIfNeeded() }
+            } else {
+                UIView.performWithoutAnimation { self.view.layoutIfNeeded() }
+            }
+            return
+        }
         let newHeight = min(maxInputWrapperHeight, preferredContentHeight)
-        let adjustInputWrapperHeight = {
-            self.inputWrapperHeightConstraint.constant = newHeight
+        inputWrapperHeightConstraint.constant = newHeight
+        let layout = {
+            self.layoutBottomBar(height: newHeight)
         }
         if animated {
-            adjustInputWrapperHeight()
+            UIView.animate(
+                withDuration: 0.5,
+                delay: 0,
+                options: .overdampedCurve,
+                animations: layout,
+            )
         } else {
-            UIView.performWithoutAnimation(adjustInputWrapperHeight)
+            layout()
         }
-        updateTableViewBottomInsetWithBottomBarHeight(old: oldHeight, new: newHeight, animated: animated)
     }
     
     func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
@@ -1443,6 +1544,9 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         switch gestureRecognizer {
         case resizeInputRecognizer:
+            if #available(iOS 17, *), !conversationInputViewController.hasCustomInput {
+                return false
+            }
             return tableView.isScrollEnabled
                 && inputWrapperHeightConstraint.constant > conversationInputViewController.minimizedHeight
         case fastReplyRecognizer:
@@ -2338,6 +2442,7 @@ extension ConversationViewController {
         )
         navigationItem.setLeftBarButton(cancelItem, animated: true)
         tableView.allowsMultipleSelection = true
+        updateInputLayoutMode()
         for cell in tableView.visibleCells {
             guard let cell = cell as? MessageCell, let viewModel = cell.viewModel else {
                 continue
@@ -2369,9 +2474,7 @@ extension ConversationViewController {
                 self.multipleSelectionActionView.frame.origin.y = y
             }
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1) {
-                let old = self.inputWrapperHeightConstraint.constant
-                let new = self.multipleSelectionActionView.preferredHeight
-                self.updateTableViewBottomInsetWithBottomBarHeight(old: old, new: new, animated: false)
+                self.layoutBottomBar(height: self.multipleSelectionActionView.preferredHeight)
             }
         }, completion: nil)
         DispatchQueue.main.async {
@@ -2393,45 +2496,48 @@ extension ConversationViewController {
         }
     }
     
-    private func updateTableViewBottomInsetWithBottomBarHeight(old: CGFloat, new: CGFloat, animated: Bool) {
-        
-        func layout() {
-            let bottomInset: CGFloat = if #available(iOS 26, *) {
-                new
+    private func layoutBottomBar(height: CGFloat) {
+        updateTableViewBottomInset(bottomBarHeight: height)
+        if view.window != nil {
+            view.layoutIfNeeded()
+        }
+    }
+    
+    private func updateTableViewBottomInset(bottomBarHeight: CGFloat) {
+        let bottomInset = bottomBarHeight + bottomBarSeparatorHeight
+        let contentOffset = tableView.contentOffset
+        let panState = tableView.panGestureRecognizer.state
+        // Capture this before changing the inset: UIKit may change its scrolling state
+        // when the keyboard takes over the drag, or clamp an overscrolled offset.
+        let preservesContentOffset = tableView.isTracking
+            || tableView.isDragging
+            || tableView.isDecelerating
+            || panState == .began
+            || panState == .changed
+            || contentOffset.y < -tableView.adjustedContentInset.top
+        var newContentOffsetY = contentOffset.y + bottomInset - tableView.contentInset.bottom
+        if isAppearanceAnimating, let focusIndexPath = dataSource?.focusIndexPath {
+            let focusRectY = tableView.rectForRow(at: focusIndexPath).origin.y
+            let availableSpace = focusRectY
+                - tableView.contentOffset.y
+                - tableView.contentInset.top
+                - ConversationDateHeaderView.height
+            if availableSpace > 0 {
+                newContentOffsetY = min(newContentOffsetY, tableView.contentOffset.y + availableSpace)
             } else {
-                new + MessageViewModel.bottomSeparatorHeight
-            }
-            
-            var newContentOffsetY = tableView.contentOffset.y + bottomInset - tableView.contentInset.bottom
-            if isAppearanceAnimating, let focusIndexPath = dataSource?.focusIndexPath {
-                let focusRectY = tableView.rectForRow(at: focusIndexPath).origin.y
-                let availableSpace = focusRectY
-                    - tableView.contentOffset.y
-                    - tableView.contentInset.top
-                    - ConversationDateHeaderView.height
-                if availableSpace > 0 {
-                    newContentOffsetY = min(newContentOffsetY, tableView.contentOffset.y + availableSpace)
-                } else {
-                    newContentOffsetY = tableView.contentOffset.y
-                }
-            }
-            tableView.contentInset.bottom = bottomInset
-            if adjustTableViewContentOffsetWhenInputWrapperHeightChanges {
-                tableView.setContentOffsetYSafely(newContentOffsetY)
-            }
-            if view.window != nil {
-                view.layoutIfNeeded()
+                newContentOffsetY = tableView.contentOffset.y
             }
         }
-        
-        tableView.verticalScrollIndicatorInsets.bottom = new - view.safeAreaInsets.bottom
-        if animated {
-            UIView.animate(withDuration: 0.5,
-                           delay: 0,
-                           options: .overdampedCurve,
-                           animations: layout)
-        } else {
-            UIView.performWithoutAnimation(layout)
+        tableView.verticalScrollIndicatorInsets.bottom = bottomBarHeight - view.safeAreaInsets.bottom
+        tableView.contentInset.bottom = bottomInset
+        if preservesContentOffset {
+            // Preserve rubber-banding as well as ordinary scrolling. The safe setter
+            // would clamp the offset and snap an overscrolled table back to its top.
+            if tableView.contentOffset != contentOffset {
+                tableView.contentOffset = contentOffset
+            }
+        } else if adjustTableViewContentOffsetWhenInputWrapperHeightChanges {
+            tableView.setContentOffsetYSafely(newContentOffsetY)
         }
     }
     

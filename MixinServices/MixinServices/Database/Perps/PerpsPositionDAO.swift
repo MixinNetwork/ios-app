@@ -68,7 +68,7 @@ public final class PerpsPositionDAO: PerpsDAO {
         try! db.writeAndReturnError { (db) -> Bool in
             let positionsBefore = try PerpetualPositionUniqueIdentifier.fetchSet(
                 db,
-                sql: "SELECT position_id, open_pay_amount FROM positions"
+                sql: "SELECT position_id, open_pay_amount, margin FROM positions"
             )
             let positionsAfter = Set(positions.map(PerpetualPositionUniqueIdentifier.init(position:)))
             if positionsBefore.isEmpty && positionsAfter.isEmpty {

@@ -1,7 +1,7 @@
 import Foundation
 import OrderedCollections
 import web3
-import ReownWalletKit
+import WalletConnectUtils
 import MixinServices
 
 final class Web3Chain {

@@ -8,7 +8,6 @@ final class MixinTokensViewController: TokensViewController {
     private var tokens: [MixinTokenItem]?
     private var earningAvailableAssetIDs: Set<String> = []
     
-    private var isDisplayingSearch = false
     private var searchTokenHandler: WalletSearchMixinTokenHandler?
     private var overviewActionHandler: PrivacyWalletOverviewActionHandler?
     private var pendingDepositObserver: PrivacyWalletPendingDepositObserver?
@@ -149,11 +148,7 @@ final class MixinTokensViewController: TokensViewController {
         modelController.delegate = searchTokenHandler
         let search = WalletSearchViewController(modelController: modelController)
         self.searchTokenHandler = searchTokenHandler
-        self.isDisplayingSearch = true
-        search.onWillDismiss = { [weak self] in
-            self?.isDisplayingSearch = false
-        }
-        search.presentAsChild(on: self)
+        navigationController?.pushViewController(search, animated: true)
     }
     
     @objc private func presentMoreMenu(_ sender: Any) {
@@ -185,14 +180,6 @@ final class MixinTokensViewController: TokensViewController {
                 self?.reloadData()
             }
         }
-    }
-    
-}
-
-extension MixinTokensViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        isDisplayingSearch ? .hide : .secondaryBackground
     }
     
 }

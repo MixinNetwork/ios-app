@@ -4,7 +4,11 @@ import MixinServices
 
 final class WalletSummaryViewController: UIViewController {
     
-    @IBOutlet weak var addWalletView: BadgeBarButtonView!
+    private lazy var addWalletView = BadgeBarButtonView(
+        image: R.image.ic_title_add()!,
+        target: self,
+        action: #selector(addWallet(_:)),
+    )
     @IBOutlet weak var categorySelectorCollectionView: UICollectionView!
     @IBOutlet weak var categorySelectorLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var categorySelectorHeightConstraint: NSLayoutConstraint!
@@ -43,9 +47,18 @@ final class WalletSummaryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addWalletView.button.setImage(R.image.ic_title_add(), for: .normal)
-        addWalletView.button.addTarget(self, action: #selector(addWallet(_:)), for: .touchUpInside)
+        let titleLabel = UILabel()
+        titleLabel.text = R.string.localizable.wallets()
+        titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+        titleLabel.textColor = R.color.text()
+        let titleItem = UIBarButtonItem(customView: titleLabel)
+        if #available(iOS 26.0, *) {
+            titleItem.hidesSharedBackground = true
+        }
+        navigationItem.leftBarButtonItem = titleItem
+        
         addWalletView.badge = BadgeManager.shared.hasViewed(identifier: .addWalletAction) ? nil : .unread
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addWalletView)
         
         categorySelectorLayout.itemSize = UICollectionViewFlowLayout.automaticSize
         categorySelectorController = CategorySelectorController(

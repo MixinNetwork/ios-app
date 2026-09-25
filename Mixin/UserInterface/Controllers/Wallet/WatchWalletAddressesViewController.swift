@@ -83,14 +83,6 @@ final class WatchWalletAddressesViewController: UIViewController {
     
 }
 
-extension WatchWalletAddressesViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension WatchWalletAddressesViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

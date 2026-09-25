@@ -4,7 +4,6 @@ import MixinServices
 final class MarketDashboardViewController: UIViewController {
     
     private let queue = OperationQueue()
-    private let hiddenSearchTopMargin: CGFloat = -28
     
     private var isViewAppearing = false
     
@@ -29,8 +28,6 @@ final class MarketDashboardViewController: UIViewController {
     private var marketLoader: MarketPeriodicRequester?
     private var perpsMarketLoader: PerpetualMarketLoader?
     
-    private weak var searchViewController: UIViewController?
-    private weak var searchViewCenterYConstraint: NSLayoutConstraint?
     private weak var addToWatchlistButton: UIButton?
     
     init() {
@@ -62,18 +59,38 @@ final class MarketDashboardViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = R.color.background()
         
-        let titleView = HomeNavigationTitleView()
-        view.addSubview(titleView)
-        titleView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(44)
+        let titleLabel = UILabel()
+        titleLabel.text = R.string.localizable.markets()
+        titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+        titleLabel.textColor = R.color.text()
+        let titleItem = UIBarButtonItem(customView: titleLabel)
+        if #available(iOS 26.0, *) {
+            titleItem.hidesSharedBackground = true
         }
-        titleView.titleLabel.text = R.string.localizable.markets()
-        titleView.searchButton.addTarget(self, action: #selector(searchCoins(_:)), for: .touchUpInside)
-        titleView.scanButton.addTarget(self, action: #selector(scanQRCode(_:)), for: .touchUpInside)
-        titleView.settingButton.addTarget(self, action: #selector(openSettings(_:)), for: .touchUpInside)
+        navigationItem.leftBarButtonItem = titleItem
+        
+        let searchItem = UIBarButtonItem.tintedIcon(
+            image: R.image.ic_title_search(),
+            target: self,
+            action: #selector(searchCoins(_:)),
+        )
+        let scanItem = UIBarButtonItem.tintedIcon(
+            image: R.image.ic_app_category_scan(),
+            target: self,
+            action: #selector(scanQRCode(_:)),
+        )
+        let settingItem = UIBarButtonItem.tintedIcon(
+            image: R.image.ic_sticker_setting(),
+            target: self,
+            action: #selector(openSettings(_:)),
+        )
+        navigationItem.rightBarButtonItems = [
+            settingItem,
+            scanItem,
+            searchItem,
+        ]
         
         let categorySelectorLayout = UICollectionViewFlowLayout()
         categorySelectorLayout.scrollDirection = .horizontal
@@ -90,7 +107,7 @@ final class MarketDashboardViewController: UIViewController {
         view.addSubview(categorySelectorCollectionView)
         categorySelectorCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(titleView.snp.bottom).offset(13)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(13)
         }
         let categorySelectorHeightConstraint = categorySelectorCollectionView.heightAnchor.constraint(equalToConstant: 44)
         categorySelectorHeightConstraint.isActive = true
@@ -410,12 +427,6 @@ final class MarketDashboardViewController: UIViewController {
             name: Currency.currentCurrencyDidChangeNotification,
             object: nil
         )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(cancelSearchingSilently),
-            name: dismissSearchNotification,
-            object: nil
-        )
         reloadData(
             category: category,
             subCategoryIndex: subCategoryIndex,
@@ -423,7 +434,6 @@ final class MarketDashboardViewController: UIViewController {
             scheduleRemoteLoader: true,
             debugReason: "Initial",
         )
-        allDataLoader.start()
         DispatchQueue.global(qos: .background).async {
             MarketDAO.shared.deleteOrphanRecords()
         }
@@ -432,6 +442,16 @@ final class MarketDashboardViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isViewAppearing = true
+        if allDataLoader.isFinished() {
+            let loader = AllDataLoader(
+                excludingCategory: category,
+                excludingSubCategoryIndex: subCategoryIndex
+            )
+            self.allDataLoader = loader
+            loader.start()
+        } else {
+            Logger.general.debug(category: "MarketDashboard", message: "Skip all data reloading")
+        }
         marketLoader?.start()
         perpsMarketLoader?.start()
         NotificationCenter.default.removeObserver(
@@ -489,10 +509,6 @@ final class MarketDashboardViewController: UIViewController {
             name: PerpsMarketDAO.unfavoriteNotification,
             object: nil
         )
-    }
-    
-    @objc func cancelSearching(_ sender: Any) {
-        hideSearch(endEditing: true, animate: true)
     }
     
     func reloadData(
@@ -610,35 +626,6 @@ final class MarketDashboardViewController: UIViewController {
         )
     }
     
-    private func hideSearch(endEditing: Bool, animate: Bool) {
-        guard
-            let searchViewController,
-            let searchViewCenterYConstraint,
-            searchViewController.parent != nil
-        else {
-            return
-        }
-        if endEditing {
-            searchViewController.view.endEditing(true)
-        }
-        searchViewCenterYConstraint.constant = hiddenSearchTopMargin
-        let layout = {
-            self.view.layoutIfNeeded()
-            searchViewController.view.alpha = 0
-        }
-        let remove = { (_: Bool) in
-            searchViewController.willMove(toParent: nil)
-            searchViewController.view.removeFromSuperview()
-            searchViewController.removeFromParent()
-        }
-        if animate {
-            UIView.animate(withDuration: 0.3, animations: layout, completion: remove)
-        } else {
-            layout()
-            remove(true)
-        }
-    }
-    
     private func reportingSecondaryTabName(index: Int) -> String? {
         switch category {
         case .watchlist:
@@ -698,29 +685,8 @@ final class MarketDashboardViewController: UIViewController {
 extension MarketDashboardViewController {
     
     @objc private func searchCoins(_ sender: Any) {
-        let searchViewController = SearchMarketViewController()
-        addChild(searchViewController)
-        searchViewController.view.alpha = 0
-        view.addSubview(searchViewController.view)
-        searchViewController.view.snp.makeConstraints { make in
-            make.size.centerX.equalToSuperview()
-        }
-        let searchViewCenterYConstraint = searchViewController.view.centerYAnchor
-            .constraint(equalTo: view.centerYAnchor, constant: hiddenSearchTopMargin)
-        searchViewCenterYConstraint.isActive = true
-        searchViewController.didMove(toParent: self)
-        view.layoutIfNeeded()
-        searchViewCenterYConstraint.constant = 0
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-            searchViewController.view.alpha = 1
-        }
-        self.searchViewController = searchViewController
-        self.searchViewCenterYConstraint = searchViewCenterYConstraint
-    }
-    
-    @objc private func cancelSearchingSilently(_ notification: Notification) {
-        hideSearch(endEditing: false, animate: false)
+        let search = SearchMarketViewController()
+        navigationController?.pushViewController(search, animated: true)
     }
     
     @objc private func scanQRCode(_ sender: Any) {
@@ -832,24 +798,6 @@ extension MarketDashboardViewController {
                 scheduleRemoteLoader: false,
                 debugReason: "ChangePeriodUpdate",
             )
-        }
-    }
-    
-}
-
-// MARK: - HomeTabBarControllerChild
-extension MarketDashboardViewController: HomeTabBarControllerChild {
-    
-    func viewControllerDidSwitchToFront() {
-        if allDataLoader.isFinished() {
-            let loader = AllDataLoader(
-                excludingCategory: category,
-                excludingSubCategoryIndex: subCategoryIndex
-            )
-            self.allDataLoader = loader
-            loader.start()
-        } else {
-            Logger.general.debug(category: "MarketDashboard", message: "Skip all data reloading")
         }
     }
     

@@ -9,6 +9,8 @@ extension WebSocketService.SendingError: LocalizedError {
             R.string.localizable.error_connection_timeout()
         case let .response(error):
             error.localizedDescription
+        case let .framing(error):
+            error.localizedDescription
         }
     }
     

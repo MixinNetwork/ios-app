@@ -154,9 +154,14 @@ public class SendMessageService: MixinService {
                                             data: nil,
                                             error: nil,
                                             fromPush: nil)
-            WebSocketService.shared.send(message: blazeMessage) { success in
+            WebSocketService.shared.request(blazeMessage, timeout: requestTimeout) { result in
                 DispatchQueue.main.async {
-                    completion(success)
+                    switch result {
+                    case .success:
+                        completion(true)
+                    case .failure:
+                        completion(false)
+                    }
                 }
             }
             Logger.general.info(category: "SendMessageService", message: "Send Command, content:\(content) conversationId:\(conversationId) sessionId:\(sessionId). BlazeMessage: \(blazeMessage)")
@@ -451,26 +456,37 @@ public class SendMessageService: MixinService {
     
     private func deliverLowPriorityMessages(blazeMessage: BlazeMessage) -> Bool {
         do {
-            return try WebSocketService.shared.respondedMessage(for: blazeMessage) != nil
-        } catch MixinAPIResponseError.unauthorized {
-            return false
-        } catch MixinAPIResponseError.forbidden {
+            _ = try WebSocketService.shared.requestSync(
+                blazeMessage,
+                timeout: requestTimeout,
+            )
             return true
         } catch {
-            switch error as? WebSocketService.SendingError {
+            switch error {
+            case let .response(error):
+                switch error {
+                case .unauthorized:
+                    return false
+                case .forbidden:
+                    return true
+                default:
+                    if error.isClientErrorResponse {
+                        Thread.sleep(forTimeInterval: 2)
+                    } else {
+                        reporter.report(error: error)
+                    }
+                }
+            case .framing:
+                return false
             case .timedOut:
                 break
-            case .response(let error) where error.isClientErrorResponse:
-                Thread.sleep(forTimeInterval: 2)
-            default:
-                reporter.report(error: error)
             }
-            
-            while LoginManager.shared.isLoggedIn && (!ReachabilityManger.shared.isReachable || !WebSocketService.shared.isConnected) {
-                Thread.sleep(forTimeInterval: 2)
-            }
-            return false
         }
+        
+        while LoginManager.shared.isLoggedIn && (!ReachabilityManger.shared.isReachable || !WebSocketService.shared.isConnected) {
+            Thread.sleep(forTimeInterval: 2)
+        }
+        return false
     }
     
     private func handlerJob(job: Job) -> Bool {
@@ -546,6 +562,8 @@ public class SendMessageService: MixinService {
                     break
                 case WebSocketService.SendingError.timedOut:
                     break
+                case WebSocketService.SendingError.framing:
+                    break
                 default:
                     var blazeMessage = ""
                     var conversationId = job.conversationId ?? ""
@@ -587,6 +605,9 @@ public class SendMessageService: MixinService {
                 }
                 
                 if case MixinAPIResponseError.invalidRequestData = error {
+                    return true
+                }
+                if case WebSocketService.SendingError.framing = error {
                     return true
                 }
             }

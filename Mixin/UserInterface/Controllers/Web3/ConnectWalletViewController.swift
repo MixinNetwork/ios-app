@@ -1,6 +1,6 @@
 import UIKit
 import web3
-import ReownWalletKit
+import WalletConnectSign
 import MixinServices
 
 final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewViewController {
@@ -132,7 +132,7 @@ final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewV
                     events: Array(events),
                     accounts: accounts
                 )
-                _ = try await WalletKit.instance.approve(
+                _ = try await Sign.instance.approve(
                     proposalId: proposal.id,
                     namespaces: sessionNamespaces
                 )
@@ -181,7 +181,7 @@ extension ConnectWalletViewController: Web3PopupViewController {
     
     func reject() {
         Task {
-            try await WalletKit.instance.rejectSession(proposalId: proposal.id, reason: .userRejected)
+            try await Sign.instance.rejectSession(proposalId: proposal.id, reason: .userRejected)
         }
     }
     

@@ -652,14 +652,6 @@ class TradeSpotViewController: UIViewController {
     
 }
 
-extension TradeSpotViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension TradeSpotViewController {
     
     private func cell(

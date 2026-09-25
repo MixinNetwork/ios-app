@@ -227,7 +227,7 @@ extension GroupProfileViewController {
                         hud.set(style: .notification, text: R.string.localizable.done())
                         hud.scheduleAutoHidden()
                         if UIApplication.shared.currentConversationId() == conversationId {
-                            UIApplication.shared.homeNavigationController?.backToHome()
+                            UIApplication.shared.homeNavigationController?.popToRootViewController(animated: true)
                         }
                     }
                 }
@@ -519,7 +519,7 @@ extension GroupProfileViewController {
             DispatchQueue.main.async {
                 self?.checkedDismiss(animated: true, completion: { _ in
                     let vc = ConversationViewController.instance(conversation: conversation)
-                    UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: vc)
+                    UIApplication.shared.homeNavigationController?.pushViewController(afterRoot: vc)
                 })
             }
         }

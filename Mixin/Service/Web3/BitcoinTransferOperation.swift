@@ -1,6 +1,5 @@
 import Foundation
 import WalletConnectSign
-import ReownWalletKit
 import MixinServices
 
 class BitcoinTransferOperation: Web3TransferOperation {

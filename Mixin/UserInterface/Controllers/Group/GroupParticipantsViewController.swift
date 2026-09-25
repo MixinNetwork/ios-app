@@ -194,7 +194,7 @@ extension GroupParticipantsViewController {
             return
         }
         let vc = ConversationViewController.instance(ownerUser: user)
-        navigationController?.pushViewController(withBackRoot: vc)
+        navigationController?.pushViewController(afterRoot: vc)
     }
     
     private func makeAdmin(userId: String) {

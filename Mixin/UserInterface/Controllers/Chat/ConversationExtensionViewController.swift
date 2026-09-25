@@ -1,5 +1,6 @@
 import UIKit
 import MixinServices
+import SnapKit
 
 class ConversationExtensionViewController: UIViewController, ConversationAccessible {
     
@@ -28,6 +29,22 @@ class ConversationExtensionViewController: UIViewController, ConversationAccessi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 26, *) {
+            view.backgroundColor = .clear
+            let effect = UIGlassEffect()
+            let effectView = UIVisualEffectView(effect: effect)
+            effectView.isUserInteractionEnabled = false
+            view.insertSubview(effectView, at: 0)
+            effectView.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+            view.layer.cornerRadius = 24
+            view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            view.clipsToBounds = true
+            effectView.layer.cornerRadius = 24
+            effectView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            effectView.clipsToBounds = true
+        }
         updateCollectionViewSectionInsetIfNeeded()
         collectionView.dataSource = self
         collectionView.delegate = self

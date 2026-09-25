@@ -1,12 +1,12 @@
 import UIKit
 import MixinServices
 
-final class SearchCollectibleViewController: UIViewController {
+final class SearchCollectibleViewController: UIViewController, SearchNavigationAnimating {
     
-    @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: LeftAlignedCollectionViewFlowLayout!
     
+    private let searchBoxView = SearchBoxView()
     private let interitemSpacing: CGFloat = 15
     private let queue = OperationQueue()
     private let initDataOperation = BlockOperation()
@@ -30,7 +30,12 @@ final class SearchCollectibleViewController: UIViewController {
         
         searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_collectible()
         searchBoxView.textField.addTarget(self, action: #selector(searchKeyword(_:)), for: .editingChanged)
-        searchBoxView.textField.becomeFirstResponder()
+        navigationItem.hidesBackButton = true
+        navigationItem.titleView = searchBoxView
+        navigationItem.rightBarButtonItem = .cancelSearch(
+            target: self,
+            action: #selector(cancelSearching(_:))
+        )
         
         collectionViewLayout.minimumInteritemSpacing = interitemSpacing
         collectionViewLayout.minimumLineSpacing = 15
@@ -54,15 +59,27 @@ final class SearchCollectibleViewController: UIViewController {
         }
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        // Cancel on navigation pops
-        (parent as? ExploreViewController)?.hideSearch(endEditing: true, animate: false)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isMovingToParent {
+            searchBoxView.textField.becomeFirstResponder()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        searchBoxView.textField.resignFirstResponder()
+    }
+    
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        if parent == nil {
+            cancelSearchOperations()
+        }
     }
     
     @IBAction func cancelSearching(_ sender: Any) {
-        searchBoxView.textField.resignFirstResponder()
-        (parent as? ExploreViewController)?.hideSearch(endEditing: true, animate: true)
+        navigationController?.popViewController(animated: true)
     }
     
     @objc private func searchKeyword(_ sender: Any) {

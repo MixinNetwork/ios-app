@@ -18,19 +18,18 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
         interactivePopOutRecognizer.delegate = self
         view.addGestureRecognizer(interactivePopOutRecognizer)
         self.delegate = self
-        
-        if AppGroupUserDefaults.Crypto.isPrekeyLoaded,
-           AppGroupUserDefaults.Crypto.isSessionSynchronized,
-           !AppGroupUserDefaults.isClockSkewed,
-           let account = LoginManager.shared.account
-        {
-            Logger.general.info(category: "HomeNavigationController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
-            if UIApplication.shared.applicationState == .active {
-                WebSocketService.shared.connect(firstConnect: true)
-                ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
-                ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
-            }
+    }
+    
+    override func pushViewController(_ viewController: UIViewController, animated: Bool) {
+        viewController.hidesBottomBarWhenPushed = !viewControllers.isEmpty
+        super.pushViewController(viewController, animated: animated)
+    }
+    
+    override func setViewControllers(_ viewControllers: [UIViewController], animated: Bool) {
+        for (index, viewController) in viewControllers.enumerated() {
+            viewController.hidesBottomBarWhenPushed = index > 0
         }
+        super.setViewControllers(viewControllers, animated: animated)
     }
     
     func pushQRCodeScannerViewController() {
@@ -39,7 +38,7 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
         }
         VideoCaptureDevice.checkAuthorization {
             let scanner = QRCodeScannerViewController()
-            self.pushViewController(withBackRoot: scanner)
+            self.pushViewController(afterRoot: scanner)
         } onDenied: { alert in
             self.present(alert, animated: true)
         }
@@ -154,18 +153,6 @@ extension HomeNavigationController: UINavigationControllerDelegate {
     
     func navigationController(
         _ navigationController: UINavigationController,
-        willShow viewController: UIViewController,
-        animated: Bool
-    ) {
-        NavigationBarStyle.updateAppearances(
-            navigationController: navigationController,
-            willShow: viewController,
-            animated: animated
-        )
-    }
-    
-    func navigationController(
-        _ navigationController: UINavigationController,
         interactionControllerFor animationController: any UIViewControllerAnimatedTransitioning
     ) -> (any UIViewControllerInteractiveTransitioning)? {
         interactivePopOutTransition
@@ -178,6 +165,10 @@ extension HomeNavigationController: UINavigationControllerDelegate {
         to toVC: UIViewController
     ) -> UIViewControllerAnimatedTransitioning? {
         switch operation {
+        case .push where toVC is SearchNavigationAnimating:
+            SearchPushAnimator()
+        case .pop where fromVC is SearchNavigationAnimating:
+            SearchPopAnimator()
         case .push where toVC is PopupNavigationAnimating:
             PopInNavigationAnimator()
         case .pop where fromVC is PopupNavigationAnimating:
@@ -192,6 +183,9 @@ extension HomeNavigationController: UINavigationControllerDelegate {
 extension HomeNavigationController: UIGestureRecognizerDelegate {
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard !(topViewController is SearchNavigationAnimating) else {
+            return false
+        }
         switch gestureRecognizer {
         case interactivePopGestureRecognizer:
             guard viewControllers.count > 1, transitionCoordinator == nil else {

@@ -9,11 +9,13 @@ final class ConversationViewController: UIViewController {
     static var positions = [String: Position]()
     static var allowReportSingleMessage = false
     
-    @IBOutlet weak var navigationBarView: UIView!
-    @IBOutlet weak var navigationBarContentView: UIView!
-    @IBOutlet weak var wallpaperImageView: WallpaperImageView!
+    @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var opponentUserBadgeView: SDAnimatedImageView!
+    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var loadingView: ActivityIndicatorView!
+    
+    @IBOutlet weak var wallpaperImageView: WallpaperImageView!
     @IBOutlet weak var tableView: ConversationTableView!
     @IBOutlet weak var accessoryButtonsWrapperView: HittestBypassWrapperView!
     @IBOutlet weak var mentionWrapperView: UIView!
@@ -24,14 +26,7 @@ final class ConversationViewController: UIViewController {
     @IBOutlet weak var announcementBadgeView: UIView!
     @IBOutlet weak var inputWrapperView: UIView!
     @IBOutlet weak var inputWrapperTopShadowView: TopShadowView!
-    @IBOutlet weak var avatarImageView: AvatarImageView!
-    @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var loadingView: ActivityIndicatorView!
-    @IBOutlet weak var titleStackView: UIStackView!
     
-    @IBOutlet weak var navigationBarTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var titleViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var mentionWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollToBottomWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var accessoryButtonsWrapperTopConstraint: NSLayoutConstraint!
@@ -100,7 +95,10 @@ final class ConversationViewController: UIViewController {
     private var canPinMessages = false
     private var pinnedMessageIds = Set<String>()
     private var lastMentionCandidate: String?
+    private var keyboardInputConstraints: [NSLayoutConstraint] = []
     
+    private weak var titleView: UIView!
+    private weak var avatarImageView: AvatarImageView!
     private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
     private weak var groupCallIndicatorViewIfLoaded: GroupCallIndicatorView?
     private weak var membershipButton: UIButton?
@@ -151,18 +149,6 @@ final class ConversationViewController: UIViewController {
         return indicator
     }()
     
-    private lazy var cancelSelectionButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.backgroundColor = .background
-        button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16),
-                                   adjustForContentSize: true)
-        button.setTitleColor(.theme, for: .normal)
-        button.setTitle(R.string.localizable.cancel(), for: .normal)
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        button.addTarget(self, action: #selector(endMultipleSelection), for: .touchUpInside)
-        return button
-    }()
-    
     private lazy var pinMessageBannerView: PinMessageBannerView = {
         let banner = R.nib.pinMessageBannerView(withOwner: nil)!
         banner.isHidden = true
@@ -173,7 +159,7 @@ final class ConversationViewController: UIViewController {
             view.addSubview(banner)
         }
         banner.snp.makeConstraints { make in
-            make.top.equalTo(navigationBarView.snp.bottom)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.left.right.equalTo(0)
             make.height.equalTo(pinMessageBannerHeight)
         }
@@ -227,18 +213,30 @@ final class ConversationViewController: UIViewController {
         }
     }
     
+    private var followsKeyboard: Bool {
+        !keyboardInputConstraints.isEmpty && inputWrapperHeightConstraint.priority == .almostInexist
+    }
+    
+    private var bottomBarSeparatorHeight: CGFloat {
+        if #available(iOS 26, *) {
+            0
+        } else {
+            MessageViewModel.bottomSeparatorHeight
+        }
+    }
+    
     private var maxInputWrapperHeight: CGFloat {
         view.bounds.height
-            - navigationBarView.frame.height
+            - view.safeAreaInsets.top
             - minInputWrapperTopMargin
     }
     
     private var groupCallIndicatorCenterYLimitation: (min: CGFloat, max: CGFloat) {
         let min: CGFloat
         if let banner = pinMessageBannerViewIfLoaded, !banner.isHidden {
-            min = navigationBarView.frame.maxY + pinMessageBannerHeight + 33
+            min = view.safeAreaInsets.top + pinMessageBannerHeight + 33
         } else {
-            min = view.safeAreaInsets.top + titleViewHeightConstraint.constant + 30
+            min = view.safeAreaInsets.top + 30
         }
         let max = inputWrapperView.frame.minY - 30
         return (min, max)
@@ -280,6 +278,33 @@ final class ConversationViewController: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let titleView = R.nib.conversationTitleView(withOwner: self)!
+        let avatarImageView = AvatarImageView()
+        avatarImageView.layer.cornerRadius = 18
+        avatarImageView.layer.masksToBounds = true
+        navigationItem.standardAppearance = .general
+        navigationItem.scrollEdgeAppearance = .general
+        navigationItem.compactAppearance = .general
+        navigationItem.compactScrollEdgeAppearance = .general
+        navigationItem.titleView = titleView
+        navigationItem.rightBarButtonItem = {
+            let avatarButton = UIButton(type: .custom)
+            avatarButton.addSubview(avatarImageView)
+            avatarImageView.isUserInteractionEnabled = false
+            avatarImageView.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.width.height.equalTo(36)
+            }
+            avatarButton.snp.makeConstraints { make in
+                make.width.height.equalTo(36)
+            }
+            avatarButton.addTarget(self, action: #selector(profileAction(_:)), for: .touchUpInside)
+            return UIBarButtonItem(customView: avatarButton)
+        }()
+        self.titleView = titleView
+        self.avatarImageView = avatarImageView
+        
         wallpaperImageView.snp.makeConstraints { (make) in
             make.height.equalTo(UIScreen.main.bounds.height)
         }
@@ -345,6 +370,38 @@ final class ConversationViewController: UIViewController {
             make.edges.equalToSuperview()
         })
         conversationInputViewController.didMove(toParent: self)
+        if #available(iOS 17, *) {
+            let guide = view.keyboardLayoutGuide
+            guide.usesBottomSafeArea = false
+            let bottom = conversationInputViewController.inputBarView.bottomAnchor
+            let keyboardConstraint = bottom.constraint(
+                equalTo: guide.topAnchor,
+                constant: -conversationInputViewController.keyboardSpacing,
+            )
+            keyboardConstraint.priority = .defaultHigh
+            keyboardInputConstraints = [
+                keyboardConstraint,
+                bottom.constraint(
+                    lessThanOrEqualTo: guide.topAnchor,
+                    constant: -conversationInputViewController.keyboardSpacing
+                ),
+                bottom.constraint(
+                    lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor
+                ),
+                bottom.constraint(
+                    lessThanOrEqualTo: view.bottomAnchor,
+                    constant: -conversationInputViewController.minimumBottomSpacing,
+                ),
+            ]
+            updateInputLayoutMode()
+        }
+        if #available(iOS 26, *) {
+            let interaction = UIScrollEdgeElementContainerInteraction()
+            interaction.scrollView = tableView
+            interaction.edge = .bottom
+            inputWrapperView.addInteraction(interaction)
+            tableView.bottomEdgeEffect.style = .soft
+        }
         if dataSource.category == .group {
             updateSubtitleAndInputBar()
             conversationInputViewController.detectsMentionToken = true
@@ -438,6 +495,18 @@ final class ConversationViewController: UIViewController {
             dataSource?.cancelMessageProcessing()
         }
         SendMessageService.shared.sendReadMessages(conversationId: conversationId)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard followsKeyboard else {
+            return
+        }
+        let height = view.bounds.maxY - inputWrapperView.frame.minY
+        guard abs(tableView.contentInset.bottom - height - bottomBarSeparatorHeight) > 0.1 else {
+            return
+        }
+        updateTableViewBottomInset(bottomBarHeight: height)
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -586,11 +655,10 @@ final class ConversationViewController: UIViewController {
     }
     
     @objc func resizeInputWrapperAction(_ recognizer: ResizeInputWrapperGestureRecognizer) {
-        let location = if #available(iOS 26, *) {
-            recognizer.location(in: conversationInputViewController.customInputContainerView)
-        } else {
-            recognizer.location(in: inputWrapperView)
+        if #available(iOS 17, *), !conversationInputViewController.hasCustomInput {
+            return
         }
+        let location = recognizer.location(in: inputWrapperView)
         let verticalVelocity = recognizer.velocity(in: view).y
         let regularInputWrapperHeight = conversationInputViewController.regularHeight
         var inputWrapperHeight: CGFloat {
@@ -598,7 +666,7 @@ final class ConversationViewController: UIViewController {
                 return inputWrapperHeightConstraint.constant
             }
             set {
-                inputWrapperHeightConstraint.constant = newValue
+                conversationInputViewController.setPreferredContentHeight(newValue, animated: false)
             }
         }
         switch recognizer.state {
@@ -622,7 +690,9 @@ final class ConversationViewController: UIViewController {
                 if newHeight < conversationInputViewController.minimizedHeight {
                     newHeight = conversationInputViewController.minimizedHeight
                     if shouldMoveDown && conversationInputViewController.view.backgroundColor == .clear {
-                        conversationInputViewController.view.backgroundColor = .background
+                        if #unavailable(iOS 26) {
+                            conversationInputViewController.view.backgroundColor = .background
+                        }
                     }
                 }
                 if conversationInputViewController.isMaximizable {
@@ -630,7 +700,6 @@ final class ConversationViewController: UIViewController {
                 } else {
                     newHeight = min(newHeight, regularInputWrapperHeight)
                 }
-                updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: inputWrapperHeight, newHeight: newHeight)
                 inputWrapperHeight = newHeight
                 view.layoutIfNeeded()
             }
@@ -652,6 +721,13 @@ final class ConversationViewController: UIViewController {
                         conversationInputViewController.setPreferredContentHeightAnimated(.regular)
                     }
                 }
+            }
+        case .cancelled, .failed:
+            if recognizer.hasMovedInputWrapperDuringChangedState {
+                conversationInputViewController.setPreferredContentHeight(
+                    recognizer.inputWrapperHeightWhenBegan,
+                    animated: true,
+                )
             }
         default:
             break
@@ -1015,7 +1091,7 @@ final class ConversationViewController: UIViewController {
         }
         switch change.action {
         case let .updateGroupIcon(iconUrl):
-            avatarImageView?.setGroupImage(with: iconUrl)
+            avatarImageView.setGroupImage(with: iconUrl)
         case .update:
             hideLoading()
         case let .updateConversation(conversation):
@@ -1104,7 +1180,7 @@ final class ConversationViewController: UIViewController {
         }
         if let indexPath = dataSource.indexPath(where: { $0.messageId == messageId }) {
             let cellFrame = tableView.convert(tableView.rectForRow(at: indexPath), to: view)
-            let isCellInvisible = cellFrame.minY < navigationBarView.frame.height
+            let isCellInvisible = cellFrame.minY < view.safeAreaInsets.top
                 || cellFrame.maxY > view.bounds.height - inputWrapperView.frame.height
             if isCellInvisible {
                 tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
@@ -1133,15 +1209,15 @@ final class ConversationViewController: UIViewController {
             tableView.deselectRow(at: indexPath, animated: true)
         })
         tableView.allowsMultipleSelection = false
-        cancelSelectionButton.removeFromSuperview()
+        updateInputLayoutMode()
+        navigationItem.setHidesBackButton(false, animated: true)
+        navigationItem.setLeftBarButton(nil, animated: true)
         
         showInputWrapperConstraint.priority = .defaultHigh
         hideInputWrapperConstraint.priority = .defaultLow
         UIView.animateKeyframes(withDuration: 0.4, delay: 0, options: [], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1) {
-                let old = self.multipleSelectionActionView.frame.height
-                let new = self.inputWrapperHeightConstraint.constant
-                self.updateTableViewBottomInsetWithBottomBarHeight(old: old, new: new, animated: false)
+                self.layoutBottomBar(height: self.inputWrapperHeightConstraint.constant)
             }
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
                 self.multipleSelectionActionView.frame.origin.y = self.view.bounds.height
@@ -1251,19 +1327,58 @@ final class ConversationViewController: UIViewController {
         wallpaperImageView.wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
     }
     
-    // MARK: - Interface
+    func updateKeyboardDismissPadding(_ padding: CGFloat) {
+        guard #available(iOS 17, *) else {
+            return
+        }
+        let guide = view.keyboardLayoutGuide
+        if guide.keyboardDismissPadding != padding {
+            guide.keyboardDismissPadding = padding
+        }
+    }
+    
+    func updateInputLayoutMode() {
+        guard !keyboardInputConstraints.isEmpty else {
+            return
+        }
+        if conversationInputViewController.hasCustomInput || tableView.allowsMultipleSelection {
+            NSLayoutConstraint.deactivate(keyboardInputConstraints)
+            inputWrapperHeightConstraint.constant = max(
+                conversationInputViewController.minimizedHeight,
+                inputWrapperView.bounds.height,
+            )
+            inputWrapperHeightConstraint.priority = .almostRequired
+        } else {
+            inputWrapperHeightConstraint.priority = .almostInexist
+            NSLayoutConstraint.activate(keyboardInputConstraints)
+        }
+        view.setNeedsLayout()
+    }
+    
     func updateInputWrapper(for preferredContentHeight: CGFloat, animated: Bool) {
-        let oldHeight = inputWrapperHeightConstraint.constant
+        if followsKeyboard {
+            if animated {
+                UIView.animate(withDuration: animationDuration) { self.view.layoutIfNeeded() }
+            } else {
+                UIView.performWithoutAnimation { self.view.layoutIfNeeded() }
+            }
+            return
+        }
         let newHeight = min(maxInputWrapperHeight, preferredContentHeight)
-        let adjustInputWrapperHeight = {
-            self.inputWrapperHeightConstraint.constant = newHeight
+        inputWrapperHeightConstraint.constant = newHeight
+        let layout = {
+            self.layoutBottomBar(height: newHeight)
         }
         if animated {
-            adjustInputWrapperHeight()
+            UIView.animate(
+                withDuration: 0.5,
+                delay: 0,
+                options: .overdampedCurve,
+                animations: layout,
+            )
         } else {
-            UIView.performWithoutAnimation(adjustInputWrapperHeight)
+            layout()
         }
-        updateTableViewBottomInsetWithBottomBarHeight(old: oldHeight, new: newHeight, animated: animated)
     }
     
     func inputTextViewDidInputMentionCandidate(_ keyword: String?) {
@@ -1422,14 +1537,6 @@ final class ConversationViewController: UIViewController {
     
 }
 
-// MARK: - NavigationBarStyling
-extension ConversationViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .hide
-    }
-    
-}
 
 // MARK: - UIGestureRecognizerDelegate
 extension ConversationViewController: UIGestureRecognizerDelegate {
@@ -1437,6 +1544,9 @@ extension ConversationViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         switch gestureRecognizer {
         case resizeInputRecognizer:
+            if #available(iOS 17, *), !conversationInputViewController.hasCustomInput {
+                return false
+            }
             return tableView.isScrollEnabled
                 && inputWrapperHeightConstraint.constant > conversationInputViewController.minimizedHeight
         case fastReplyRecognizer:
@@ -2112,7 +2222,7 @@ extension ConversationViewController {
             if membershipButton == nil {
                 let button = UIButton()
                 button.addTarget(self, action: #selector(buyOpponentMembership(_:)), for: .touchUpInside)
-                navigationBarContentView.addSubview(button)
+                titleView.addSubview(button)
                 button.snp.makeConstraints { make in
                     make.width.height.equalTo(30)
                     make.center.equalTo(opponentUserBadgeView)
@@ -2138,32 +2248,6 @@ extension ConversationViewController {
                 weakSelf.conversationInputViewController.deleteConversationButton.isHidden = isParticipant
                 weakSelf.conversationInputViewController.inputBarView.isHidden = false
                 weakSelf.subtitleLabel.text = R.string.localizable.participants_count("\(count)")
-            }
-        }
-    }
-    
-    private func updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: CGFloat, newHeight: CGFloat) {
-        let diff = newHeight - oldHeight
-        if conversationInputViewController.isMaximizable && newHeight > conversationInputViewController.regularHeight {
-            let top = navigationBarTopConstraint.constant + diff
-            let maxTop = navigationBarView.frame.height
-            let navigationBarTop = min(maxTop, max(0, top))
-            navigationBarTopConstraint.constant = navigationBarTop
-            tableView.contentInset.top = max(view.safeAreaInsets.top, navigationBarView.frame.height - navigationBarTop)
-            tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
-            if !statusBarHidden {
-                UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
-                    self.statusBarHidden = true
-                }, completion: nil)
-            }
-        } else {
-            navigationBarTopConstraint.constant = 0
-            tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
-            tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
-            if statusBarHidden {
-                UIView.animate(withDuration: 0.2, delay: 0, options: [.beginFromCurrentState], animations: {
-                    self.statusBarHidden = false
-                }, completion: nil)
             }
         }
     }
@@ -2253,8 +2337,7 @@ extension ConversationViewController {
     }
     
     private func updateNavigationBarHeightAndTableViewTopInset() {
-        titleViewTopConstraint.constant = max(20, view.safeAreaInsets.top)
-        tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
+        tableView.contentInset.top = view.safeAreaInsets.top
         tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
     }
     
@@ -2341,7 +2424,7 @@ extension ConversationViewController {
         view.insertSubview(userHandleViewController.view, belowSubview: inputWrapperView)
         userHandleViewController.view.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(navigationBarView.snp.bottom)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.bottom.equalTo(inputWrapperView.snp.top)
         }
         userHandleViewController.didMove(toParent: self)
@@ -2350,15 +2433,16 @@ extension ConversationViewController {
     private func beginMultipleSelection(on indexPath: IndexPath, intent: MultipleSelectionIntent) {
         conversationInputViewController.textView.resignFirstResponder()
         conversationInputViewController.audioViewController.cancelIfRecording()
-        UIView.performWithoutAnimation {
-            navigationBarView.addSubview(cancelSelectionButton)
-            cancelSelectionButton.snp.makeConstraints { (make) in
-                make.leading.bottom.equalToSuperview()
-                make.height.equalTo(56)
-            }
-            navigationBarView.layoutIfNeeded()
-        }
+        navigationItem.setHidesBackButton(true, animated: true)
+        let cancelItem = UIBarButtonItem(
+            title: R.string.localizable.cancel(),
+            style: .plain,
+            target: self,
+            action: #selector(endMultipleSelection),
+        )
+        navigationItem.setLeftBarButton(cancelItem, animated: true)
         tableView.allowsMultipleSelection = true
+        updateInputLayoutMode()
         for cell in tableView.visibleCells {
             guard let cell = cell as? MessageCell, let viewModel = cell.viewModel else {
                 continue
@@ -2390,9 +2474,7 @@ extension ConversationViewController {
                 self.multipleSelectionActionView.frame.origin.y = y
             }
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1) {
-                let old = self.inputWrapperHeightConstraint.constant
-                let new = self.multipleSelectionActionView.preferredHeight
-                self.updateTableViewBottomInsetWithBottomBarHeight(old: old, new: new, animated: false)
+                self.layoutBottomBar(height: self.multipleSelectionActionView.preferredHeight)
             }
         }, completion: nil)
         DispatchQueue.main.async {
@@ -2414,42 +2496,48 @@ extension ConversationViewController {
         }
     }
     
-    private func updateTableViewBottomInsetWithBottomBarHeight(old: CGFloat, new: CGFloat, animated: Bool) {
-        
-        func layout() {
-            updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: old, newHeight: new)
-            let bottomInset = new + MessageViewModel.bottomSeparatorHeight
-            
-            var newContentOffsetY = tableView.contentOffset.y + bottomInset - tableView.contentInset.bottom
-            if isAppearanceAnimating, let focusIndexPath = dataSource?.focusIndexPath {
-                let focusRectY = tableView.rectForRow(at: focusIndexPath).origin.y
-                let availableSpace = focusRectY
-                    - tableView.contentOffset.y
-                    - tableView.contentInset.top
-                    - ConversationDateHeaderView.height
-                if availableSpace > 0 {
-                    newContentOffsetY = min(newContentOffsetY, tableView.contentOffset.y + availableSpace)
-                } else {
-                    newContentOffsetY = tableView.contentOffset.y
-                }
-            }
-            tableView.contentInset.bottom = bottomInset
-            if adjustTableViewContentOffsetWhenInputWrapperHeightChanges {
-                tableView.setContentOffsetYSafely(newContentOffsetY)
-            }
-            if view.window != nil {
-                view.layoutIfNeeded()
+    private func layoutBottomBar(height: CGFloat) {
+        updateTableViewBottomInset(bottomBarHeight: height)
+        if view.window != nil {
+            view.layoutIfNeeded()
+        }
+    }
+    
+    private func updateTableViewBottomInset(bottomBarHeight: CGFloat) {
+        let bottomInset = bottomBarHeight + bottomBarSeparatorHeight
+        let contentOffset = tableView.contentOffset
+        let panState = tableView.panGestureRecognizer.state
+        // Capture this before changing the inset: UIKit may change its scrolling state
+        // when the keyboard takes over the drag, or clamp an overscrolled offset.
+        let preservesContentOffset = tableView.isTracking
+            || tableView.isDragging
+            || tableView.isDecelerating
+            || panState == .began
+            || panState == .changed
+            || contentOffset.y < -tableView.adjustedContentInset.top
+        var newContentOffsetY = contentOffset.y + bottomInset - tableView.contentInset.bottom
+        if isAppearanceAnimating, let focusIndexPath = dataSource?.focusIndexPath {
+            let focusRectY = tableView.rectForRow(at: focusIndexPath).origin.y
+            let availableSpace = focusRectY
+                - tableView.contentOffset.y
+                - tableView.contentInset.top
+                - ConversationDateHeaderView.height
+            if availableSpace > 0 {
+                newContentOffsetY = min(newContentOffsetY, tableView.contentOffset.y + availableSpace)
+            } else {
+                newContentOffsetY = tableView.contentOffset.y
             }
         }
-        
-        tableView.verticalScrollIndicatorInsets.bottom = new - view.safeAreaInsets.bottom
-        if animated {
-            UIView.animate(withDuration: 0.5,
-                           delay: 0,
-                           options: .overdampedCurve,
-                           animations: layout)
-        } else {
-            UIView.performWithoutAnimation(layout)
+        tableView.verticalScrollIndicatorInsets.bottom = bottomBarHeight - view.safeAreaInsets.bottom
+        tableView.contentInset.bottom = bottomInset
+        if preservesContentOffset {
+            // Preserve rubber-banding as well as ordinary scrolling. The safe setter
+            // would clamp the offset and snap an overscrolled table back to its top.
+            if tableView.contentOffset != contentOffset {
+                tableView.contentOffset = contentOffset
+            }
+        } else if adjustTableViewContentOffsetWhenInputWrapperHeightChanges {
+            tableView.setContentOffsetYSafely(newContentOffsetY)
         }
     }
     
@@ -2733,7 +2821,6 @@ extension ConversationViewController {
             let info: Logger.UserInfo = [
                 "isReachable": ReachabilityManger.shared.isReachable,
                 "isConnected": WebSocketService.shared.isConnected,
-                "isRealConnected": WebSocketService.shared.isRealConnected
             ]
             Logger.conversation(id: conversationId).info(category: "Report", message: "Exported logs", userInfo: info)
             guard let targetUrl = Logger.export(conversationID: conversationId), FileManager.default.fileSize(targetUrl.path) > 0 else {
@@ -2760,7 +2847,7 @@ extension ConversationViewController {
                     return
                 }
             }
-            Logger.conversation(id: conversationId).info(category: "Report", message: "isReachable:\(ReachabilityManger.shared.isReachable), isConnected:\(WebSocketService.shared.isConnected), isRealConnected:\(WebSocketService.shared.isRealConnected)")
+            Logger.conversation(id: conversationId).info(category: "Report", message: "isReachable:\(ReachabilityManger.shared.isReachable), isConnected:\(WebSocketService.shared.isConnected)")
             
             if let message = message {
                 var log = "[Message][\(message.messageId)][\(message.category)][\(message.status)]...userId:\(message.userId)"
@@ -2815,7 +2902,7 @@ extension ConversationViewController {
             self?.dataSource?.queue.async {
                 SendMessageService.shared.sendMessage(message: message, ownerUser: developUser, isGroupMessage: false)
                 DispatchQueue.main.async {
-                    self?.navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
+                    self?.navigationController?.pushViewController(afterRoot: ConversationViewController.instance(ownerUser: developUser))
                 }
             }
         }

@@ -156,7 +156,7 @@ extension NewGroupViewController {
                 }
                 weakSelf.nameTextField.resignFirstResponder()
                 let vc = ConversationViewController.instance(conversation: conversation)
-                weakSelf.navigationController?.pushViewController(withBackRoot: vc)
+                weakSelf.navigationController?.pushViewController(afterRoot: vc)
             }
         }
     }

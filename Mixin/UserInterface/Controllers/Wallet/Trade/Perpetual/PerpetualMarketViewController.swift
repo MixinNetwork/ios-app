@@ -792,14 +792,6 @@ final class PerpetualMarketViewController: UIViewController {
     
 }
 
-extension PerpetualMarketViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension PerpetualMarketViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

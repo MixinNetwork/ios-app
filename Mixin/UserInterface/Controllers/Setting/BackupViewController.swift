@@ -326,7 +326,7 @@ extension BackupViewController {
 
             SendMessageService.shared.sendMessage(message: message, ownerUser: developUser, isGroupMessage: false)
             DispatchQueue.main.async {
-                self?.navigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
+                self?.navigationController?.pushViewController(afterRoot: ConversationViewController.instance(ownerUser: developUser))
             }
         }
     }

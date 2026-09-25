@@ -6,18 +6,15 @@ final class HomeViewController: UIViewController {
     
     static var showChangePhoneNumberTips = false
     
-    @IBOutlet weak var navigationBarView: UIView!
-    @IBOutlet weak var searchContainerView: UIView!
     @IBOutlet weak var circlesContainerView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var guideView: UIView!
     @IBOutlet weak var guideLabel: UILabel!
     @IBOutlet weak var guideButton: UIButton!
-    @IBOutlet weak var connectingView: ActivityIndicatorView!
-    @IBOutlet weak var titleButton: HomeTitleButton!
-    @IBOutlet weak var myAvatarImageView: AvatarImageView!
     
-    @IBOutlet weak var searchContainerTopConstraint: NSLayoutConstraint!
+    private let connectingView = ActivityIndicatorView()
+    private let titleButton = HomeTitleButton()
+    private let myAvatarImageView = AvatarImageView()
     
     private let dragDownThreshold: CGFloat = 80
     private let dragDownIndicator = DragDownIndicator()
@@ -28,46 +25,82 @@ final class HomeViewController: UIViewController {
     private var needRefresh = true
     private var refreshing = false
     private var beginDraggingOffset: CGFloat = 0
-    private var searchViewController: SearchViewController!
-    private var searchContainerBeginTopConstant: CGFloat!
     private var loadMoreMessageThreshold = 10
     private var isEditingRow = false
     private var insufficientBalanceForEmergencyContactBulletinConfirmedDate: Date?
-    private var isShowingSearch = false
 
     private var topLeftTitle: String {
         AppGroupUserDefaults.User.circleName ?? R.string.localizable.mixin()
     }
-
-    private lazy var circlesViewController = R.storyboard.home.circles()!
     
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        if let vc = (segue.destination as? UINavigationController)?.viewControllers.first as? SearchViewController {
-            searchViewController = vc
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        connectingView.hidesWhenStopped = true
+        connectingView.tintColor = R.color.icon_tint()
+        connectingView.snp.makeConstraints { make in
+            make.width.height.equalTo(20)
+        }
         titleButton.setTitle(topLeftTitle, for: .normal)
+        titleButton.setTitleColor(R.color.text(), for: .normal)
+        titleButton.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
+        titleButton.addTarget(self, action: #selector(toggleCircles(_:)), for: .touchUpInside)
+        let titleStackView = UIStackView(arrangedSubviews: [connectingView, titleButton])
+        titleStackView.axis = .horizontal
+        titleStackView.alignment = .center
+        titleStackView.spacing = 6
+        let titleItem = UIBarButtonItem(customView: titleStackView)
+        if #available(iOS 26.0, *) {
+            titleItem.hidesSharedBackground = true
+        }
+        navigationItem.leftBarButtonItem = titleItem
+        
+        let searchItem = UIBarButtonItem.tintedIcon(
+            image: R.image.ic_title_search(),
+            target: self,
+            action: #selector(showSearchAction),
+        )
+        let scanItem = UIBarButtonItem.tintedIcon(
+            image: R.image.ic_app_category_scan(),
+            target: self,
+            action: #selector(scanQRCode),
+        )
+        
+        myAvatarImageView.titleFontSize = 12
+        let contactsButton = UIButton(type: .custom)
+        contactsButton.addSubview(myAvatarImageView)
+        myAvatarImageView.isUserInteractionEnabled = false
+        myAvatarImageView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.height.equalTo(24)
+        }
+        contactsButton.snp.makeConstraints { make in
+            make.width.height.equalTo(44)
+        }
+        contactsButton.addTarget(self, action: #selector(contactsAction(_:)), for: .touchUpInside)
+        let contactsItem = UIBarButtonItem(customView: contactsButton)
+        navigationItem.rightBarButtonItems = [
+            contactsItem,
+            scanItem,
+            searchItem,
+        ]
+        
         if let account = LoginManager.shared.account {
             myAvatarImageView.setImage(with: account)
             reporter.updateUserProperties(.all, account: account)
         }
         presentPopupTipIfNeeded()
-        searchContainerBeginTopConstant = searchContainerTopConstraint.constant
-        searchViewController.cancelButton.addTarget(self, action: #selector(cancelSearching(_:)), for: .touchUpInside)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .singleLine
         tableView.tableFooterView = UIView()
         dragDownIndicator.bounds.size = CGSize(width: 40, height: 40)
         dragDownIndicator.center = CGPoint(x: tableView.frame.width / 2, y: -40)
+        dragDownIndicator.isHidden = true
         tableView.addSubview(dragDownIndicator)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange), name: MixinServices.conversationDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dataDidChange), name: MessageDAO.didInsertMessageNotification, object: nil)
@@ -81,7 +114,7 @@ final class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(groupConversationParticipantDidChange(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(cancelSearchingSilently(_:)), name: dismissSearchNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(dismissSearch), name: dismissSearchNotification, object: nil)
         
     }
     
@@ -119,16 +152,11 @@ final class HomeViewController: UIViewController {
     }
     
     @IBAction func showSearchAction() {
-        isShowingSearch = true
-        searchViewController.prepareForReuse()
-        searchContainerTopConstraint.constant = 0
-        UIView.animate(withDuration: 0.2, animations: {
-            self.navigationBarView.alpha = 0
-            self.searchContainerView.alpha = 1
-            self.view.layoutIfNeeded()
-        }) { (_) in
-            self.searchViewController.searchTextField.becomeFirstResponder()
+        guard navigationController?.topViewController === self else {
+            return
         }
+        let search = R.storyboard.home.search()!
+        navigationController?.pushViewController(search, animated: true)
     }
     
     @IBAction func contactsAction(_ sender: Any) {
@@ -146,22 +174,9 @@ final class HomeViewController: UIViewController {
     }
     
     @IBAction func toggleCircles(_ sender: Any) {
-        if circlesContainerView.isHidden {
-            if circlesViewController.parent == nil {
-                circlesViewController.view.frame = circlesContainerView.bounds
-                circlesViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-                addChild(circlesViewController)
-                circlesContainerView.addSubview(circlesViewController.view)
-                circlesViewController.didMove(toParent: self)
-            }
-            circlesViewController.setTableViewVisible(false, animated: false, completion: nil)
-            circlesContainerView.isHidden = false
-            circlesViewController.setTableViewVisible(true, animated: true, completion: nil)
-        } else {
-            circlesViewController.setTableViewVisible(false, animated: true, completion: {
-                self.circlesContainerView.isHidden = true
-            })
-        }
+        let circles = CirclesViewController()
+        let navigation = GeneralAppearanceNavigationController(rootViewController: circles)
+        present(navigation, animated: true)
     }
     
     @objc private func applicationDidBecomeActive(_ sender: Notification) {
@@ -223,7 +238,7 @@ final class HomeViewController: UIViewController {
             return
         }
         if progress >= 100 {
-            if WebSocketService.shared.isRealConnected {
+            if WebSocketService.shared.isConnected {
                 titleButton.setTitle(topLeftTitle, for: .normal)
                 connectingView.stopAnimating()
             } else {
@@ -231,7 +246,7 @@ final class HomeViewController: UIViewController {
                 connectingView.startAnimating()
                 WebSocketService.shared.connectIfNeeded()
             }
-        } else if WebSocketService.shared.isRealConnected {
+        } else if WebSocketService.shared.isConnected {
             let title = R.string.localizable.syncing_progress(progress)
             titleButton.setTitle(title, for: .normal)
             connectingView.startAnimating()
@@ -247,13 +262,17 @@ final class HomeViewController: UIViewController {
     }
     
     @objc func cancelSearching(_ sender: Any) {
-        hideSearch(endEditing: true, animate: true)
+        navigationController?.popToViewController(self, animated: true)
     }
     
-    @objc private func cancelSearchingSilently(_ notification: Notification) {
-        if isShowingSearch {
-            hideSearch(endEditing: false, animate: false)
+    @objc func dismissSearch() {
+        guard let navigationController,
+              navigationController.viewControllers.contains(where: { $0 is HomeAggregatedSearchViewController })
+        else {
+            return
         }
+        let viewControllers = navigationController.viewControllers.filter { !($0 is HomeSearchViewController) }
+        navigationController.setViewControllers(viewControllers, animated: false)
     }
     
     @objc private func circleNameDidChange() {
@@ -263,25 +282,6 @@ final class HomeViewController: UIViewController {
     func setNeedsRefresh() {
         needRefresh = true
         fetchConversations()
-    }
-    
-    private func hideSearch(endEditing: Bool, animate: Bool) {
-        isShowingSearch = false
-        searchViewController.willHide()
-        searchContainerTopConstraint.constant = searchContainerBeginTopConstant
-        let layout = {
-            self.navigationBarView.alpha = 1
-            self.searchContainerView.alpha = 0
-            self.view.layoutIfNeeded()
-        }
-        if animate {
-            UIView.animate(withDuration: 0.2, animations: layout)
-        } else {
-            layout()
-        }
-        if endEditing {
-            view.endEditing(true)
-        }
     }
     
 }
@@ -364,19 +364,22 @@ extension HomeViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y <= -dragDownThreshold && !dragDownIndicator.isHighlighted {
+        let visibleTop = scrollView.contentOffset.y + scrollView.adjustedContentInset.top
+        let pullDistance = -visibleTop
+        // Keep the entire indicator below the navigation bar, including during bounce-back.
+        dragDownIndicator.isHidden = dragDownIndicator.frame.minY < visibleTop
+        if pullDistance >= dragDownThreshold && !dragDownIndicator.isHighlighted {
             dragDownIndicator.isHighlighted = true
             feedback.selectionChanged()
-        } else if scrollView.contentOffset.y > -dragDownThreshold && dragDownIndicator.isHighlighted {
+        } else if pullDistance < dragDownThreshold && dragDownIndicator.isHighlighted {
             dragDownIndicator.isHighlighted = false
         }
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if tableView.contentOffset.y <= -dragDownThreshold {
+        let pullDistance = -(scrollView.contentOffset.y + scrollView.adjustedContentInset.top)
+        if pullDistance >= dragDownThreshold {
             showSearchAction()
-        } else {
-            hideSearch(endEditing: true, animate: true)
         }
     }
     
@@ -608,8 +611,9 @@ extension HomeViewController {
                 guard
                     let self,
                     let tabBarController = UIApplication.shared.homeContainerViewController?.homeTabBarController,
-                    tabBarController.navigationController?.topViewController == tabBarController,
-                    tabBarController.selectedViewController == self,
+                    let navigationController = self.navigationController,
+                    tabBarController.selectedViewController == navigationController,
+                    navigationController.topViewController == self,
                     self.presentedViewController == nil
                 else {
                     return

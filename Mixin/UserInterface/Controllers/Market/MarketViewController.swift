@@ -521,14 +521,6 @@ final class MarketViewController: UIViewController {
     
 }
 
-extension MarketViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension MarketViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {

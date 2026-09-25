@@ -36,6 +36,9 @@
             <connections>
                 <outlet property="collectionView" destination="ZP0-Wb-GX7" id="V2L-DJ-iGd"/>
                 <outlet property="collectionViewLayout" destination="X0b-rs-j82" id="I9R-Ac-fjx"/>
+                <outlet property="contentBottomConstraint" destination="mUr-M7-hfs" id="bL7-7X-Y7c"/>
+                <outlet property="contentLeadingConstraint" destination="ztK-Hh-Ibg" id="cL8-8Y-Z8d"/>
+                <outlet property="contentTrailingConstraint" destination="mCE-9a-UEe" id="dT9-9Z-A9e"/>
             </connections>
             <point key="canvasLocation" x="19" y="42"/>
         </view>

@@ -14,6 +14,14 @@ class QuotePreviewView: UIView, XibDesignable {
     
     private var isXibLoaded = false
     
+    var contentEdgeInsets: UIEdgeInsets {
+        if #available(iOS 26, *) {
+            return UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 8)
+        } else {
+            return .zero
+        }
+    }
+    
     var dismissAction: (() -> Void)?
     
     @IBAction func dismissAction(_ sender: Any) {
@@ -31,6 +39,10 @@ class QuotePreviewView: UIView, XibDesignable {
         imageView.image = nil
         let tintColor = UIColor.usernameColors[message.userId.positiveHashCode() % UIColor.usernameColors.count]
         indicatorView.backgroundColor = tintColor
+        if #available(iOS 26, *) {
+            indicatorView.layer.cornerRadius = 2
+            indicatorView.layer.masksToBounds = true
+        }
         titleLabel.text = message.userFullName
         titleLabel.textColor = tintColor
         titleLabel.font = MessageFontSet.quoteTitle.scaled

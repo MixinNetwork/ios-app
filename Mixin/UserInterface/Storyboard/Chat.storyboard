@@ -410,10 +410,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="346"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xzK-O3-aqw">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xzK-O3-aqw">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
                                 <subviews>
-                                    <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Mr-O8-dtq" customClass="QuotePreviewView" customModule="Mixin" customModuleProvider="target">
+                                    <view alpha="0.0" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Mr-O8-dtq" customClass="QuotePreviewView" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                                         <color key="backgroundColor" name="background"/>
                                         <constraints>
@@ -605,14 +605,14 @@
                         <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="iAX-RP-UWF" secondAttribute="trailing" id="AAz-ww-FzX"/>
-                            <constraint firstAttribute="trailing" secondItem="xzK-O3-aqw" secondAttribute="trailing" id="BZb-Is-zcQ"/>
+                            <constraint firstItem="xzK-O3-aqw" firstAttribute="trailing" secondItem="wvu-NM-HOS" secondAttribute="trailing" id="BZb-Is-zcQ"/>
                             <constraint firstItem="4FQ-5O-gCe" firstAttribute="leading" secondItem="gsL-BX-yAJ" secondAttribute="leading" id="EpD-b9-jiU"/>
                             <constraint firstItem="iAX-RP-UWF" firstAttribute="top" secondItem="gsL-BX-yAJ" secondAttribute="top" id="FOb-IU-RHn"/>
                             <constraint firstItem="ESl-jK-Lob" firstAttribute="bottom" secondItem="wvu-NM-HOS" secondAttribute="bottom" id="LqC-8C-hWZ"/>
                             <constraint firstItem="wvu-NM-HOS" firstAttribute="leading" secondItem="cNM-Lj-lhn" secondAttribute="leading" id="QMJ-sA-gv4"/>
                             <constraint firstItem="ESl-jK-Lob" firstAttribute="top" secondItem="gsL-BX-yAJ" secondAttribute="top" id="Ugm-Cb-69C"/>
                             <constraint firstItem="iAX-RP-UWF" firstAttribute="bottom" secondItem="wvu-NM-HOS" secondAttribute="bottom" id="aY1-cd-eZi"/>
-                            <constraint firstItem="xzK-O3-aqw" firstAttribute="leading" secondItem="gsL-BX-yAJ" secondAttribute="leading" id="atE-8h-9qr"/>
+                            <constraint firstItem="xzK-O3-aqw" firstAttribute="leading" secondItem="wvu-NM-HOS" secondAttribute="leading" id="atE-8h-9qr"/>
                             <constraint firstAttribute="trailing" secondItem="ESl-jK-Lob" secondAttribute="trailing" id="d4a-8y-Ei6"/>
                             <constraint firstItem="cNM-Lj-lhn" firstAttribute="trailing" secondItem="wvu-NM-HOS" secondAttribute="trailing" id="fDz-MH-fYz"/>
                             <constraint firstItem="xzK-O3-aqw" firstAttribute="bottom" secondItem="wvu-NM-HOS" secondAttribute="top" id="iCx-dw-T9l"/>
@@ -632,11 +632,14 @@
                         <outlet property="beginEditingTextViewTrailingConstraint" destination="Cnr-xa-PEq" id="Hem-bL-PnT"/>
                         <outlet property="customInputContainerHeightConstraint" destination="sbV-IA-hxB" id="hBZ-Xo-IXu"/>
                         <outlet property="customInputContainerMinHeightConstraint" destination="Yxp-Zd-bSj" id="qUp-tt-ugm"/>
+                        <outlet property="customInputContainerTopConstraint" destination="k40-nw-0A5" id="cIt-1n-top"/>
                         <outlet property="customInputContainerView" destination="4FQ-5O-gCe" id="h76-aJ-5Ge"/>
                         <outlet property="deleteConversationButton" destination="ESl-jK-Lob" id="ZRw-ty-YAG"/>
                         <outlet property="endEditingRightActionsStackTrailingConstraint" destination="Tgt-eT-M5b" id="3Su-qz-VuZ"/>
                         <outlet property="endEditingTextViewTrailingConstraint" destination="KF3-vB-nYh" id="Sa0-hP-t4g"/>
                         <outlet property="extensionsSwitch" destination="FB6-Ob-yNa" id="Qvs-AY-sKP"/>
+                        <outlet property="inputBarLeadingConstraint" destination="QMJ-sA-gv4" id="a1b-cd-e01"/>
+                        <outlet property="inputBarTrailingConstraint" destination="fDz-MH-fYz" id="a1b-cd-e02"/>
                         <outlet property="inputBarView" destination="wvu-NM-HOS" id="aff-Mp-fI1"/>
                         <outlet property="keyboardButton" destination="5G0-uR-okU" id="nP4-6Z-Wtu"/>
                         <outlet property="photosButton" destination="mkF-v2-lFJ" id="Oif-OF-2ST"/>
@@ -1687,7 +1690,7 @@
                             <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Conversation/ic_mic" id="Zt0-eZ-yAA">
                                 <rect key="frame" x="325" y="0.0" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" name="background"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" name="icon_tint"/>
                                 <gestureRecognizers/>
                                 <constraints>
@@ -2010,7 +2013,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

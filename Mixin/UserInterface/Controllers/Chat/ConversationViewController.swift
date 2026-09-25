@@ -622,7 +622,9 @@ final class ConversationViewController: UIViewController {
                 if newHeight < conversationInputViewController.minimizedHeight {
                     newHeight = conversationInputViewController.minimizedHeight
                     if shouldMoveDown && conversationInputViewController.view.backgroundColor == .clear {
-                        conversationInputViewController.view.backgroundColor = .background
+                        if #unavailable(iOS 26) {
+                            conversationInputViewController.view.backgroundColor = .background
+                        }
                     }
                 }
                 if conversationInputViewController.isMaximizable {
@@ -2418,7 +2420,11 @@ extension ConversationViewController {
         
         func layout() {
             updateNavigationBarPositionWithInputWrapperViewHeight(oldHeight: old, newHeight: new)
-            let bottomInset = new + MessageViewModel.bottomSeparatorHeight
+            let bottomInset: CGFloat = if #available(iOS 26, *) {
+                new
+            } else {
+                new + MessageViewModel.bottomSeparatorHeight
+            }
             
             var newContentOffsetY = tableView.contentOffset.y + bottomInset - tableView.contentInset.bottom
             if isAppearanceAnimating, let focusIndexPath = dataSource?.focusIndexPath {

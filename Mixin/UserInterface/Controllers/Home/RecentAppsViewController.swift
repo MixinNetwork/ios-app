@@ -146,7 +146,7 @@ extension RecentAppsViewController: UICollectionViewDataSource {
 extension RecentAppsViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let parent = parent as? SearchViewController else {
+        guard let parent = parent as? HomeAggregatedSearchViewController else {
             return
         }
         let user = users[indexPath.row]

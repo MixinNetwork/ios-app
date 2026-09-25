@@ -30,7 +30,7 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
             su.app_id as sharedUserAppId, su.is_verified as sharedUserIsVerified, 
             su.membership as sharedUserMembership,
             m.quote_id AS quote_message_id,
-            m.quote_content, m.mentions, 1 AS hasMentionRead, 0 AS pinned
+            m.quote_content, m.caption, m.mentions, 1 AS hasMentionRead, 0 AS pinned
         FROM transcript_messages m
         LEFT JOIN users u ON m.user_id = u.user_id
         LEFT JOIN stickers st ON m.sticker_id = st.sticker_id

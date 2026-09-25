@@ -11,7 +11,7 @@ class PhotoRepresentableMessageCell: ImageMessageCell {
     }
     
     override var contentFrame: CGRect {
-        if viewModel?.quotedMessageViewModel == nil {
+        if viewModel?.quotedMessageViewModel == nil && !((viewModel as? ImageMessageViewModel)?.hasCaption ?? false) {
             return contentImageWrapperView.convert(contentImageWrapperView.bounds, to: self)
         } else {
             return backgroundImageView.frame
@@ -21,7 +21,7 @@ class PhotoRepresentableMessageCell: ImageMessageCell {
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         if let viewModel = viewModel as? PhotoRepresentableMessageViewModel {
-            if viewModel.quotedMessageViewModel == nil {
+            if viewModel.quotedMessageViewModel == nil && !viewModel.hasCaption {
                 maskingView.frame = messageContentView.bounds
                 contentImageWrapperView.frame = viewModel.photoFrame
                 maskingView.layer.cornerRadius = 0
@@ -84,7 +84,7 @@ extension PhotoRepresentableMessageCell: GalleryTransitionSource {
     }
     
     var transitionViewType: GalleryTransitionView.Type {
-        if viewModel?.quotedMessageViewModel == nil {
+        if viewModel?.quotedMessageViewModel == nil && !((viewModel as? ImageMessageViewModel)?.hasCaption ?? false) {
             return GalleryTransitionFromNonQuotingMessageCellView.self
         } else {
             return GalleryTransitionFromQuotingMessageCellView.self

@@ -67,9 +67,13 @@ extension ConversationDAO {
             FROM messages m
                 LEFT JOIN conversations c ON m.conversation_id = c.conversation_id
                 LEFT JOIN users u ON c.owner_id = u.user_id
-            WHERE m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST','ENCRYPTED_TEXT','ENCRYPTED_DATA','ENCRYPTED_POST')
+            WHERE m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST','ENCRYPTED_TEXT','ENCRYPTED_DATA','ENCRYPTED_POST','SIGNAL_IMAGE','PLAIN_IMAGE','ENCRYPTED_IMAGE')
                 AND m.status != 'FAILED'
-                AND (m.content LIKE :keyword ESCAPE '/' OR m.name LIKE :keyword ESCAPE '/')
+                AND (
+                    (m.category in ('SIGNAL_DATA','PLAIN_DATA','ENCRYPTED_DATA') AND m.name LIKE :keyword ESCAPE '/')
+                    OR (m.category in ('SIGNAL_IMAGE','PLAIN_IMAGE','ENCRYPTED_IMAGE') AND m.caption LIKE :keyword ESCAPE '/')
+                    OR (m.category in ('SIGNAL_TEXT','SIGNAL_POST','PLAIN_TEXT','PLAIN_POST','ENCRYPTED_TEXT','ENCRYPTED_POST') AND m.content LIKE :keyword ESCAPE '/')
+                )
             GROUP BY m.conversation_id
             ORDER BY c.last_message_created_at DESC
         """

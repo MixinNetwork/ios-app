@@ -63,17 +63,8 @@ public final class PerpsPositionDAO: PerpsDAO {
         db.select(with: Self.itemSQL + "ORDER BY created_at DESC")
     }
     
-    // Returns true if there's difference between old and new ones
-    public func replace(positions: [PerpetualPosition]) -> Bool {
-        try! db.writeAndReturnError { (db) -> Bool in
-            let positionsBefore = try PerpetualPositionUniqueIdentifier.fetchSet(
-                db,
-                sql: "SELECT position_id, open_pay_amount FROM positions"
-            )
-            let positionsAfter = Set(positions.map(PerpetualPositionUniqueIdentifier.init(position:)))
-            if positionsBefore.isEmpty && positionsAfter.isEmpty {
-                return false
-            }
+    public func replace(positions: [PerpetualPosition]) {
+        db.write { (db) in
             try PerpetualPosition.deleteAll(db)
             try positions.save(db)
             db.afterNextTransaction { _ in
@@ -82,7 +73,6 @@ public final class PerpsPositionDAO: PerpsDAO {
                     object: self,
                 )
             }
-            return positionsBefore != positionsAfter
         }
     }
     

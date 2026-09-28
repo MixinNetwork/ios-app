@@ -3,7 +3,12 @@ import MixinServices
 
 final class TransferPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
-    var manipulateNavigationStackOnFinished = true
+    enum NavigationStackManipulation {
+        case automatically
+        case popToWebViewController
+    }
+    
+    var navigationStackManipulationOnFinished: NavigationStackManipulation? = .automatically
     
     private let operation: TransferPaymentOperation
     private let amountDisplay: AmountIntent
@@ -251,54 +256,62 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
     }
     
     private func manipulateNavigationStackIfNeeded() {
-        guard manipulateNavigationStackOnFinished else {
+        guard let manipulation = navigationStackManipulationOnFinished else {
             return
         }
         guard let navigation = UIApplication.shared.homeNavigationController else {
             return
         }
         var viewControllers = navigation.viewControllers
-        
-        func manipulateTransferFinished() {
-            switch operation.destination {
-            case let .user(opponent):
-                if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == opponent.userId {
-                    while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
-                        viewControllers.removeLast()
-                    }
-                } else {
-                    if opponent.isCreatedByMessenger {
-                        while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
-                            viewControllers.removeLast()
-                        }
-                        viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
-                    } else if viewControllers.last is TransferInputAmountViewController {
-                        viewControllers.removeLast()
-                    }
-                }
-                navigation.setViewControllers(viewControllers, animated: false)
-            case .multisig, .mainnet:
-                if viewControllers.last is TransferInputAmountViewController {
-                    viewControllers.removeLast()
-                }
+        switch manipulation {
+        case .popToWebViewController:
+            let webIndex = viewControllers.lastIndex { viewController in
+                viewController is WebViewController
+            }
+            if let webIndex {
+                viewControllers.removeSubrange((webIndex + 1)...)
                 navigation.setViewControllers(viewControllers, animated: false)
             }
+        case .automatically:
+            if let context = inscriptionContext {
+                switch context.operation {
+                case .transfer:
+                    manipulateNavigationStackAutomatically(viewControllers: &viewControllers)
+                case .release:
+                    if let preview = viewControllers.last as? InscriptionViewController, preview.inscriptionHash == context.item.inscriptionHash {
+                        viewControllers.removeLast()
+                    } else {
+                        return
+                    }
+                }
+            } else {
+                manipulateNavigationStackAutomatically(viewControllers: &viewControllers)
+            }
+            navigation.setViewControllers(viewControllers, animated: false)
         }
-        
-        if let context = inscriptionContext {
-            switch context.operation {
-            case .transfer:
-                manipulateTransferFinished()
-            case .release:
-                if let preview = viewControllers.last as? InscriptionViewController, preview.inscriptionHash == context.item.inscriptionHash {
+    }
+    
+    private func manipulateNavigationStackAutomatically(viewControllers: inout [UIViewController]) {
+        switch operation.destination {
+        case let .user(opponent):
+            if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == opponent.userId {
+                while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
                     viewControllers.removeLast()
-                    navigation.setViewControllers(viewControllers, animated: false)
-                } else {
-                    return
+                }
+            } else {
+                if opponent.isCreatedByMessenger {
+                    while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+                        viewControllers.removeLast()
+                    }
+                    viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
+                } else if viewControllers.last is TransferInputAmountViewController {
+                    viewControllers.removeLast()
                 }
             }
-        } else {
-            manipulateTransferFinished()
+        case .multisig, .mainnet:
+            if viewControllers.last is TransferInputAmountViewController {
+                viewControllers.removeLast()
+            }
         }
     }
     

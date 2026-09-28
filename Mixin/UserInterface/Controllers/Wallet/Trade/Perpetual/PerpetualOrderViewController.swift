@@ -45,7 +45,7 @@ final class PerpetualOrderViewController: UIViewController {
                 }
             case .increasePosition:
                 let payAmount = abs(viewModel.decimalPayAmount).formatted(
-                    PerpetualOrderViewModel.editPositionPayAmountStyle
+                    PerpetualOrderViewModel.payAmountStyle
                         .sign(strategy: .always())
                 )
                 infos.append(contentsOf: [
@@ -63,7 +63,7 @@ final class PerpetualOrderViewController: UIViewController {
                 }
             case .increaseMargin:
                 let payAmount = abs(viewModel.decimalPayAmount).formatted(
-                    PerpetualOrderViewModel.editPositionPayAmountStyle
+                    PerpetualOrderViewModel.payAmountStyle
                         .sign(strategy: .always())
                 )
                 infos.append(.general(
@@ -72,7 +72,7 @@ final class PerpetualOrderViewController: UIViewController {
                 ))
             case .decreaseMargin:
                 let payAmount = (-abs(viewModel.decimalPayAmount)).formatted(
-                    PerpetualOrderViewModel.editPositionPayAmountStyle
+                    PerpetualOrderViewModel.payAmountStyle
                         .sign(strategy: .always())
                 )
                 infos.append(.general(

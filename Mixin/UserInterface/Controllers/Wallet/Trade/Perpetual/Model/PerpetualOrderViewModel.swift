@@ -68,6 +68,9 @@ struct PerpetualOrderViewModel {
     
     init?(wallet: Wallet, order: PerpetualOrderItem) {
         let decimalPayAmount = Decimal(string: order.payAmount, locale: .enUSPOSIX) ?? 0
+        let payAmount = decimalPayAmount.formatted(
+            Self.payAmountStyle.sign(strategy: .never)
+        )
         let side = PerpetualOrderSide(rawValue: order.side) ?? .short
         let absoluteQuantity = abs(Decimal(string: order.quantity, locale: .enUSPOSIX) ?? 0)
         let entryPrice = Decimal(string: order.entryPrice, locale: .enUSPOSIX)
@@ -78,7 +81,6 @@ struct PerpetualOrderViewModel {
         self.positionID = order.positionID
         switch order.orderType.knownCase {
         case .open:
-            let payAmount = decimalPayAmount.formatted(order.priceFormatStyle)
             self.type = .open(payAmount: payAmount)
             self.title = switch side {
             case .long:
@@ -97,9 +99,6 @@ struct PerpetualOrderViewModel {
                 }
             }
         case .increasePosition:
-            let payAmount = decimalPayAmount.formatted(
-                Self.editPositionPayAmountStyle.sign(strategy: .never)
-            )
             self.type = .increasePosition(absolutePayAmount: payAmount)
             self.title = switch side {
             case .long:
@@ -118,9 +117,6 @@ struct PerpetualOrderViewModel {
                 }
             }
         case .increaseMargin:
-            let payAmount = decimalPayAmount.formatted(
-                Self.editPositionPayAmountStyle.sign(strategy: .never)
-            )
             self.type = .increaseMargin(absolutePayAmount: payAmount)
             self.title = switch order.status.knownCase {
             case .rejected:
@@ -129,9 +125,6 @@ struct PerpetualOrderViewModel {
                 R.string.localizable.perps_added_margin()
             }
         case .decreaseMargin:
-            let payAmount = decimalPayAmount.formatted(
-                Self.editPositionPayAmountStyle.sign(strategy: .never)
-            )
             self.type = .decreaseMargin(absolutePayAmount: payAmount)
             self.title = switch order.status.knownCase {
             case .rejected:
@@ -262,11 +255,10 @@ struct PerpetualOrderViewModel {
 
 extension PerpetualOrderViewModel {
     
-    static var editPositionPayAmountStyle: Decimal.FormatStyle.Currency {
-        .currency(code: "USD")
-        .presentation(.narrow)
-        .precision(.fractionLength(0...Int(MixinToken.internalPrecision)))
-        .rounded(rule: .towardZero)
+    static var payAmountStyle: Decimal.FormatStyle.Currency {
+        PerpetualMarket.userDisplayPriceFormatStyle(
+            scale: Int(MixinToken.internalPrecision)
+        )
     }
     
 }

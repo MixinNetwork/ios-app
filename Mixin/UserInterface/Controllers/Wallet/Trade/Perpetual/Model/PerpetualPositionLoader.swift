@@ -51,13 +51,11 @@ final class PerpetualPositionLoader {
         ) { [walletID] result in
             switch result {
             case .success(let positions):
-                let different = PerpsPositionDAO.shared.replace(positions: positions)
-                Logger.general.debug(category: "PerpPositionLoader", message: "Loaded with difference: \(different)")
-                if different {
-                    DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
-                        let orders = SyncPerpsOrdersJob(walletID: walletID)
-                        ConcurrentJobQueue.shared.addJob(job: orders)
-                    }
+                PerpsPositionDAO.shared.replace(positions: positions)
+                Logger.general.debug(category: "PerpPositionLoader", message: "Loaded \(positions.count) positions")
+                DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
+                    let orders = SyncPerpsOrdersJob(walletID: walletID)
+                    ConcurrentJobQueue.shared.addJob(job: orders)
                 }
             case .failure(let error):
                 Logger.general.debug(category: "PerpPositionLoader", message: "\(error)")

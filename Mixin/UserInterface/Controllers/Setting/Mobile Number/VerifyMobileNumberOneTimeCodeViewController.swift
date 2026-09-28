@@ -68,6 +68,7 @@ class VerifyMobileNumberOneTimeCodeViewController: VerificationCodeViewControlle
             }
             switch result {
             case .success(let account):
+                AppGroupKeychain.encryptedSalt = nil
                 LoginManager.shared.setAccount(account)
                 self.verificationCodeField.resignFirstResponder()
                 let alert: UIAlertController

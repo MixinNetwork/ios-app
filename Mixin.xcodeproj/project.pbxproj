@@ -1759,7 +1759,7 @@
 		94F3691E2EC626BB00D28591 /* PendingTradeOrderLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F3691D2EC626B700D28591 /* PendingTradeOrderLoader.swift */; };
 		94F36AC626CA59B300AC30A5 /* PhoneNumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */; };
 		94F64FB32D64C79200234D7D /* BadgeBarButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F64FB22D64C79200234D7D /* BadgeBarButtonView.swift */; };
-		94F64FB52D64CD1E00234D7D /* BadgeBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F64FB42D64CD1E00234D7D /* BadgeBarButtonItem.swift */; };
+		94F64FB52D64CD1E00234D7D /* CompatibleBadgeBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F64FB42D64CD1E00234D7D /* CompatibleBadgeBarButtonItem.swift */; };
 		94F64FFC2D65E40100234D7D /* WalletSummaryValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F64FFA2D65E40100234D7D /* WalletSummaryValueCell.swift */; };
 		94F64FFD2D65E40100234D7D /* WalletSummaryValueCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F64FFB2D65E40100234D7D /* WalletSummaryValueCell.xib */; };
 		94F6F4682EBDE6A000D15424 /* Web3OrderDAO+Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F6F4672EBDE69500D15424 /* Web3OrderDAO+Query.swift */; };
@@ -3807,7 +3807,7 @@
 		94F3691D2EC626B700D28591 /* PendingTradeOrderLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingTradeOrderLoader.swift; sourceTree = "<group>"; };
 		94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberValidator.swift; sourceTree = "<group>"; };
 		94F64FB22D64C79200234D7D /* BadgeBarButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeBarButtonView.swift; sourceTree = "<group>"; };
-		94F64FB42D64CD1E00234D7D /* BadgeBarButtonItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeBarButtonItem.swift; sourceTree = "<group>"; };
+		94F64FB42D64CD1E00234D7D /* CompatibleBadgeBarButtonItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompatibleBadgeBarButtonItem.swift; sourceTree = "<group>"; };
 		94F64FFA2D65E40100234D7D /* WalletSummaryValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSummaryValueCell.swift; sourceTree = "<group>"; };
 		94F64FFB2D65E40100234D7D /* WalletSummaryValueCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletSummaryValueCell.xib; sourceTree = "<group>"; };
 		94F6F4672EBDE69500D15424 /* Web3OrderDAO+Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3OrderDAO+Query.swift"; sourceTree = "<group>"; };
@@ -6334,7 +6334,7 @@
 				94DD692F2C90305000B3D089 /* MarketColorTintedImageView.swift */,
 				944B5A812CFCB940000BB893 /* NavigationTitleView.swift */,
 				94F64FB22D64C79200234D7D /* BadgeBarButtonView.swift */,
-				94F64FB42D64CD1E00234D7D /* BadgeBarButtonItem.swift */,
+				94F64FB42D64CD1E00234D7D /* CompatibleBadgeBarButtonItem.swift */,
 				94F268382E15BF9300A8A1E0 /* StackedTokenIconView.swift */,
 				94CAAAB32F1F71B50022D29F /* MultilineTextButton.swift */,
 			);
@@ -8300,7 +8300,7 @@
 				7C651D8F29F68277003331A4 /* BotUserID.swift in Sources */,
 				7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */,
 				5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */,
-				94F64FB52D64CD1E00234D7D /* BadgeBarButtonItem.swift in Sources */,
+				94F64FB52D64CD1E00234D7D /* CompatibleBadgeBarButtonItem.swift in Sources */,
 				7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */,
 				DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */,
 				947E26682E2F70F200D6ECB7 /* AddWalletMethod.swift in Sources */,

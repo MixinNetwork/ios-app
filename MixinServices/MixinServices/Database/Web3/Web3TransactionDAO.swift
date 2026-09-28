@@ -78,6 +78,21 @@ public final class Web3TransactionDAO: Web3DAO {
         hash: String,
         chainID: String,
         address: String,
+    ) {
+        db.write { db in
+            try setTransactionStatusNotFound(
+                hash: hash,
+                chainID: chainID,
+                address: address,
+                db: db
+            )
+        }
+    }
+    
+    public func setTransactionStatusNotFound(
+        hash: String,
+        chainID: String,
+        address: String,
         db: GRDB.Database
     ) throws {
         let update: GRDB.SQL = """

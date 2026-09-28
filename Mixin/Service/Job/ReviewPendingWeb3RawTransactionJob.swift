@@ -96,12 +96,12 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
     }
     
     private func reviewNativeTransaction(
-        _ transaction: Web3RawTransaction,
+        _ rawTransaction: Web3RawTransaction,
         utxoOutputIDsOccupiedByOtherTransactions: @autoclosure () -> Set<String>,
     ) throws {
         let result = RouteAPI.transaction(
-            chainID: transaction.chainID,
-            hash: transaction.hash
+            chainID: rawTransaction.chainID,
+            hash: rawTransaction.hash
         )
         switch result {
         case let .success(transaction) where transaction.state.knownCase == .pending:
@@ -160,19 +160,23 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
             ConcurrentJobQueue.shared.addJob(job: refresh)
         case let .success(transaction):
             // Delete not pending raw txn
-            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Txn deleted \(transaction.hash)")
-            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
-                if transaction.state.knownCase == .notFound {
+            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete tx \(rawTransaction.hash), state: \(transaction.state.rawValue). Returned hash: \(transaction.hash), chainID: \(rawTransaction.chainID)<->\(transaction.chainID), address: \(rawTransaction.account)<->\(transaction.account)")
+            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: rawTransaction.hash) { db in
+                switch transaction.state.knownCase {
+                case .notFound:
+                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Updating to not found")
                     try Web3TransactionDAO.shared.setTransactionStatusNotFound(
-                        hash: transaction.hash,
-                        chainID: transaction.chainID,
-                        address: transaction.account,
+                        hash: rawTransaction.hash,
+                        chainID: rawTransaction.chainID,
+                        address: rawTransaction.account,
                         db: db
                     )
+                default:
+                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Not updating to not found")
                 }
             }
         case let .failure(error):
-            Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "\(transaction.hash):\n\(error)")
+            Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "\(rawTransaction.hash):\n\(error)")
         }
     }
     

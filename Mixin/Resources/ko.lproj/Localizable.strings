@@ -1292,6 +1292,7 @@
 "perps_trading_fee_pnl_1" = "포지션이 클수록 수수료가 높아집니다";
 "perps_trading_fee_pnl_2" = "포지션이 작을수록 수수료가 낮아집니다";
 "perps_trading_fee_pnl_3" = "실현 손익에는 관련 수수료가 차감되어 있습니다";
+"perps_unrealized_pnl" = "미실현 손익";
 "phone_as_key_shard" = "귀하의 휴대폰 번호는 귀하가 관리하는 MPC 지갑의 키 샤드와 연결됩니다.";
 "phone_call" = "전화 통화";
 "phone_contact" = "전화 연락처";

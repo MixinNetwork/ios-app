@@ -1292,6 +1292,7 @@
 "perps_trading_fee_pnl_1" = "Cuanto mayor sea la posición, mayores serán las comisiones";
 "perps_trading_fee_pnl_2" = "Cuanto menor sea la posición, menores serán las comisiones";
 "perps_trading_fee_pnl_3" = "Las comisiones están incluidas en su PnL realizado";
+"perps_unrealized_pnl" = "PnL no realizado";
 "phone_as_key_shard" = "Su número de teléfono móvil se asociará con un fragmento de clave de la billetera MPC administrada por usted";
 "phone_call" = "Llamada telefónica";
 "phone_contact" = "Contactos del teléfono";

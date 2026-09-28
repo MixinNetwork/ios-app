@@ -1292,6 +1292,7 @@
 "perps_trading_fee_pnl_1" = "仓位越大，手续费越高";
 "perps_trading_fee_pnl_2" = "仓位越小，手续费越低";
 "perps_trading_fee_pnl_3" = "已实现盈亏已扣除相关手续费";
+"perps_unrealized_pnl" = "未实现盈亏";
 "phone_as_key_shard" = "手机号将关联到由您管理的 MPC 钱包的一个密钥分片";
 "phone_call" = "电话呼叫";
 "phone_contact" = "手机联系人";

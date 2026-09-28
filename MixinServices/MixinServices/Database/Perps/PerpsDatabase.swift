@@ -207,6 +207,20 @@ public final class PerpsDatabase: Database {
             }
         }
         
+        migrator.registerMigration("net_pnl_roe") { db in
+            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(perps_orders)")
+            let columnNames = infos.map(\.name)
+            if !columnNames.contains("net_realized_pnl") {
+                try db.execute(sql: "ALTER TABLE `perps_orders` ADD COLUMN `net_realized_pnl` TEXT NOT NULL DEFAULT ''")
+            }
+            if !columnNames.contains("net_roe") {
+                try db.execute(sql: "ALTER TABLE `perps_orders` ADD COLUMN `net_roe` TEXT NOT NULL DEFAULT ''")
+            }
+            if !columnNames.contains("profit_share_amount") {
+                try db.execute(sql: "ALTER TABLE `perps_orders` ADD COLUMN `profit_share_amount` TEXT NOT NULL DEFAULT ''")
+            }
+        }
+        
         return migrator
     }
     

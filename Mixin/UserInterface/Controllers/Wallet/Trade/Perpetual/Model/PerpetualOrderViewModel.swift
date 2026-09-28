@@ -135,19 +135,16 @@ struct PerpetualOrderViewModel {
         case .close:
             let decimalClosePrice = Decimal(string: order.closePrice, locale: .enUSPOSIX)
             let realizedPnL: Decimal
-            if !order.netRealizedPnL.isEmpty,
-               let netRealizedPnL = Decimal(string: order.netRealizedPnL, locale: .enUSPOSIX)
-            {
-                realizedPnL = netRealizedPnL
-            } else {
-                realizedPnL = Decimal(string: order.realizedPnL, locale: .enUSPOSIX) ?? 0
-            }
             let roe: Decimal
-            if !order.netROE.isEmpty,
+            if !order.netRealizedPnL.isEmpty,
+               !order.netROE.isEmpty,
+               let netRealizedPnL = Decimal(string: order.netRealizedPnL, locale: .enUSPOSIX),
                let netROE = Decimal(string: order.netROE, locale: .enUSPOSIX)
             {
+                realizedPnL = netRealizedPnL
                 roe = netROE
             } else {
+                realizedPnL = Decimal(string: order.realizedPnL, locale: .enUSPOSIX) ?? 0
                 roe = Decimal(string: order.roe, locale: .enUSPOSIX) ?? 0
             }
             let prettyPnL = CurrencyFormatter.localizedString(

@@ -1292,6 +1292,7 @@
 "perps_trading_fee_pnl_1" = "倉位越大，手續費越高";
 "perps_trading_fee_pnl_2" = "倉位越小，手續費越低";
 "perps_trading_fee_pnl_3" = "已實現盈虧已扣除相關手續費";
+"perps_unrealized_pnl" = "未實現盈虧";
 "phone_as_key_shard" = "手機號將關聯到由您管理的 MPC 錢包的一個金鑰分片";
 "phone_call" = "電話呼叫";
 "phone_contact" = "手機聯絡人";

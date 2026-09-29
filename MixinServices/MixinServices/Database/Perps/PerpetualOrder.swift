@@ -22,6 +22,9 @@ public class PerpetualOrder: Codable, DatabaseColumnConvertible, MixinFetchableR
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case feeAmount = "fee_amount"
+        case netRealizedPnL = "net_realized_pnl"
+        case netROE = "net_roe"
+        case profitShareAmount = "profit_share_amount"
     }
     
     public enum OrderType: String {
@@ -57,6 +60,9 @@ public class PerpetualOrder: Codable, DatabaseColumnConvertible, MixinFetchableR
     public let createdAt: String
     public let updatedAt: String
     public let feeAmount: String
+    public let netRealizedPnL: String
+    public let netROE: String
+    public let profitShareAmount: String
     
 }
 

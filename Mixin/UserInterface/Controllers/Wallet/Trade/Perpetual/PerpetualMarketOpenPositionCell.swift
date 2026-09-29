@@ -100,7 +100,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         addStopLossButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
         titleLabel.text = R.string.localizable.position()
-        pnlTitleLabel.text = R.string.localizable.pnl().uppercased()
+        pnlTitleLabel.text = R.string.localizable.perps_unrealized_pnl().uppercased()
         directionTitleLabel.text = R.string.localizable.direction().uppercased()
         orderValueTitleLabel.text = R.string.localizable.position_size().uppercased()
         marginTitleLabel.text = R.string.localizable.margin().uppercased()

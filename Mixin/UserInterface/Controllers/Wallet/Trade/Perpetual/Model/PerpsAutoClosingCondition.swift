@@ -10,7 +10,7 @@ final class PerpsAutoClosingCondition {
     
     enum OrderState {
         case draft
-        case open(entryPrice: Decimal)
+        case open(entryPrice: Decimal, quantity: Decimal)
     }
     
     enum InvalidInputError: Error {
@@ -30,12 +30,16 @@ final class PerpsAutoClosingCondition {
     private(set) var percentage: Decimal
     private(set) var price: Decimal
     
+    private let orderState: OrderState
+    private let margin: Decimal
+    private let priceChangeForFullMargin: Decimal
     private let percentageDerivationScale = 2
     
     init(
         behavior: Behavior,
         side: PerpetualOrderSide,
         leverage: Decimal,
+        margin: Decimal,
         marketViewModel: PerpetualMarketViewModel,
         orderState: OrderState,
         liquidationPrice: Decimal,
@@ -43,12 +47,20 @@ final class PerpsAutoClosingCondition {
         let entryPrice: Decimal = switch orderState {
         case .draft:
             marketViewModel.decimalPrice
-        case .open(let entryPrice):
+        case .open(let entryPrice, _):
             entryPrice
         }
         self.behavior = behavior
         self.side = side
         self.leverage = leverage
+        self.orderState = orderState
+        self.margin = margin
+        self.priceChangeForFullMargin = switch orderState {
+        case .draft:
+            entryPrice / leverage
+        case .open(_, let quantity):
+            margin / quantity
+        }
         self.priceScale = marketViewModel.market.priceScale
         self.entryPrice = entryPrice
         self.currentPrice = marketViewModel.decimalPrice
@@ -64,12 +76,8 @@ final class PerpsAutoClosingCondition {
             return
         }
         try check(price: price)
-        let percentage = switch side {
-        case .long:
-            (price - entryPrice) * leverage / entryPrice
-        case .short:
-            (price - entryPrice) * leverage / entryPrice * -1
-        }
+        let longPercentage = (price - entryPrice) / priceChangeForFullMargin
+        let percentage = side == .long ? longPercentage : -longPercentage
         let roundedPercentage = withUnsafePointer(to: percentage * 100) { percentage in
             var result: Decimal = 0
             NSDecimalRound(&result, percentage, percentageDerivationScale, .plain)
@@ -94,12 +102,8 @@ final class PerpsAutoClosingCondition {
         guard percentage != 0 else {
             return nil
         }
-        let price = switch side {
-        case .long:
-            entryPrice * (1 + percentage / leverage)
-        case .short:
-            entryPrice * (1 - percentage / leverage)
-        }
+        let priceChange = percentage * priceChangeForFullMargin
+        let price = side == .long ? entryPrice + priceChange : entryPrice - priceChange
         let roundedPrice = withUnsafePointer(to: price) { price in
             var result: Decimal = 0
             NSDecimalRound(&result, price, priceScale, .plain)
@@ -193,10 +197,16 @@ extension PerpsAutoClosingCondition {
         return localizedChange
     }
     
-    func maxChange(margin: Decimal) -> String {
+    func maxChange() -> String {
         assert(margin != 0, "Only results 0")
+        let pnl: Decimal = switch orderState {
+        case .draft:
+            margin * percentage
+        case .open(_, let quantity):
+            (price - entryPrice) * quantity * (side == .long ? 1 : -1)
+        }
         var maxChange = CurrencyFormatter.localizedString(
-            from: margin * percentage,
+            from: pnl,
             format: .fiatMoneyPretty,
             sign: .always,
             symbol: .dollarSign

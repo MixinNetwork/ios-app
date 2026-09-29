@@ -1292,6 +1292,7 @@
 "perps_trading_fee_pnl_1" = "ポジションが大きいほど手数料が高くなります";
 "perps_trading_fee_pnl_2" = "ポジションが小さいほど手数料が低くなります";
 "perps_trading_fee_pnl_3" = "実現損益には関連する手数料が含まれています";
+"perps_unrealized_pnl" = "未実現損益";
 "phone_as_key_shard" = "あなたの携帯電話番号は、あなたが管理する MPC ウォレットのキーシャードに関連付けられます。";
 "phone_call" = "通話";
 "phone_contact" = "連絡帳";

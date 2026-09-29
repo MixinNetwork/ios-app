@@ -1292,6 +1292,7 @@
 "perps_trading_fee_pnl_1" = "Larger position, higher fees";
 "perps_trading_fee_pnl_2" = "Smaller position, lower fees";
 "perps_trading_fee_pnl_3" = "Fees are included in your realized PnL";
+"perps_unrealized_pnl" = "Unrealized PnL";
 "phone_as_key_shard" = "Your mobile number will be associated with a key shard of the MPC wallet managed by you";
 "phone_call" = "Phone call";
 "phone_contact" = "Phone Contacts";

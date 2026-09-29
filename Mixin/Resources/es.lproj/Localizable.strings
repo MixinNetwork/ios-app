@@ -1001,7 +1001,7 @@
 "mixin_referral" = "Mixin Referencia";
 "mixin_server_encounters_errors" = "El servidor Mixin encuentra errores";
 "mixin_support" = "Mixin";
-"mixin_version_expired_description" = "La versión actual ha caducado. Pulsa \"Actualizar\" abajo para obtener la última versión desde la tienda de aplicaciones. No desinstales la aplicación para volver a instalarla.";
+"mixin_version_expired_description" = "Esta versión ha caducado. Pulsa \"Actualizar\" abajo para obtener la última versión desde la tienda de aplicaciones. Actualiza directamente sin desinstalar la aplicación.";
 "mnemonic_login_security_tip_1" = "· Mixin es de código abierto, reproducible y auditado de forma independiente.";
 "mnemonic_login_security_tip_2" = "· Tus datos se cifran de forma segura y se almacenan localmente en tu dispositivo.";
 "mnemonic_login_security_tip_3" = "· Mixin nunca accede a tu información privada ni la comparte con terceros.";

@@ -1001,7 +1001,7 @@
 "mixin_referral" = "Mixin 紹介";
 "mixin_server_encounters_errors" = "Mixinのサーバーにエラーが発生しています";
 "mixin_support" = "Mixin のサポート";
-"mixin_version_expired_description" = "現在のバージョンは有効期限が切れています。下の「アップデート」をタップして、アプリストアから最新バージョンに更新してください。アンインストールしてから再インストールしないでください。";
+"mixin_version_expired_description" = "このバージョンは有効期限が切れています。下の「アップデート」をタップして、アプリストアから最新バージョンに更新してください。アプリをアンインストールせずに、そのまま更新してください。";
 "mnemonic_login_security_tip_1" = "· Mixinはオープンソースで、再現可能かつ独立した監査を受けています。";
 "mnemonic_login_security_tip_2" = "· データは安全に暗号化され、端末内に保存されます。";
 "mnemonic_login_security_tip_3" = "· Mixinがお客様の個人情報にアクセスしたり、第三者と共有したりすることはありません。";

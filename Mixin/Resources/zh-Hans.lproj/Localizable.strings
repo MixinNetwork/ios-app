@@ -1001,7 +1001,7 @@
 "mixin_referral" = "Mixin 邀请";
 "mixin_server_encounters_errors" = "服务器出错，请稍后重试";
 "mixin_support" = "Mixin 客服";
-"mixin_version_expired_description" = "当前版本已失效，请点击下方 \"更新\" 从应用商店更新至最新版，请不要卸载再重新安装。";
+"mixin_version_expired_description" = "当前版本已失效，点击下方「更新」前往应用商店更新至最新版。请直接更新，不要卸载再重新安装。";
 "mnemonic_login_security_tip_1" = "· Mixin 开源、可复现，并经过独立审计。";
 "mnemonic_login_security_tip_2" = "· 你的数据会被安全加密并存储在本机。";
 "mnemonic_login_security_tip_3" = "· Mixin 不会访问你的隐私信息，也不会与第三方共享。";

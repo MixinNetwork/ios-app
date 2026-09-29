@@ -1001,7 +1001,7 @@
 "mixin_referral" = "Mixin 추천";
 "mixin_server_encounters_errors" = "Mixin 서버에 오류가 발생했습니다.";
 "mixin_support" = "Mixin 지원";
-"mixin_version_expired_description" = "현재 버전은 만료되었습니다. 아래 \"업데이트\"를 눌러 앱 스토어에서 최신 버전으로 업데이트하세요. 앱을 삭제한 후 다시 설치하지 마세요.";
+"mixin_version_expired_description" = "이 버전은 만료되었습니다. 아래 \"업데이트\"를 눌러 앱 스토어에서 최신 버전으로 업데이트하세요. 앱을 삭제하지 말고 바로 업데이트하세요.";
 "mnemonic_login_security_tip_1" = "· Mixin은 오픈 소스이며, 재현 가능하고 독립적인 감사를 받았습니다.";
 "mnemonic_login_security_tip_2" = "· 데이터는 안전하게 암호화되어 기기에 로컬로 저장됩니다.";
 "mnemonic_login_security_tip_3" = "· Mixin은 개인정보에 접근하거나 제3자와 공유하지 않습니다.";

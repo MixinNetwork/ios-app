@@ -107,11 +107,11 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
         case let .success(transaction) where transaction.state.knownCase == .pending:
             // Leave pending raw txn to next loop
             Logger.web3.debug(category: "ReviewPendingWeb3RawTxn", message: "Txn still pending \(transaction.hash)")
-        case let .success(transaction) where transaction.chainID == ChainID.bitcoin && transaction.state.knownCase == .notFound:
-            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "BTC Txn not found \(transaction.hash)")
+        case let .success(transaction) where rawTransaction.chainID == ChainID.bitcoin && transaction.state.knownCase == .notFound:
+            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "BTC Txn not found \(rawTransaction.hash)")
             let outputIDsOccupiedByOtherTransactions = utxoOutputIDsOccupiedByOtherTransactions()
-            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
-                let txn = try Bitcoin.decode(transaction: transaction.raw)
+            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: rawTransaction.hash) { db in
+                let txn = try Bitcoin.decode(transaction: rawTransaction.raw)
                 
                 // Do not delete the output if it's also used in other transactions, which possibly be RBF ones.
                 // Otherwise, when `SyncWeb3OutputJob` is executed, there could be an unspent output gets inserted,
@@ -120,39 +120,39 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
                     try Web3OutputDAO.shared.delete(id: input.outputID, db: db)
                     Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete BTC Input: <id: \(input.outputID), Txid: \(input.txid), vout: \(input.vout)>")
                 }
-                for (vout, output) in txn.outputs.enumerated() where output.address == transaction.account {
-                    let id = Web3Output.bitcoinOutputID(txid: transaction.hash, vout: vout)
+                for (vout, output) in txn.outputs.enumerated() where output.address == rawTransaction.account {
+                    let id = Web3Output.bitcoinOutputID(txid: rawTransaction.hash, vout: vout)
                     try Web3OutputDAO.shared.delete(id: id, db: db)
-                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete BTC Output: <id: \(id), Txid: \(transaction.hash), vout: \(vout)>")
+                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete BTC Output: <id: \(id), Txid: \(rawTransaction.hash), vout: \(vout)>")
                 }
                 try Web3TransactionDAO.shared.setTransactionStatusNotFound(
-                    hash: transaction.hash,
-                    chainID: transaction.chainID,
-                    address: transaction.account,
+                    hash: rawTransaction.hash,
+                    chainID: rawTransaction.chainID,
+                    address: rawTransaction.account,
                     db: db
                 )
             }
             let refresh = SyncWeb3OutputJob(assetID: AssetID.btc, walletID: walletID)
             ConcurrentJobQueue.shared.addJob(job: refresh)
-        case let .success(transaction) where transaction.chainID == ChainID.pearl && transaction.state.knownCase == .notFound:
-            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Pearl Txn not found \(transaction.hash)")
+        case let .success(transaction) where rawTransaction.chainID == ChainID.pearl && transaction.state.knownCase == .notFound:
+            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Pearl Txn not found \(rawTransaction.hash)")
             let outputIDsOccupiedByOtherTransactions = utxoOutputIDsOccupiedByOtherTransactions()
-            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
-                let txn = try Pearl.decode(transaction: transaction.raw)
+            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: rawTransaction.hash) { db in
+                let txn = try Pearl.decode(transaction: rawTransaction.raw)
                 
                 for input in txn.inputs where !outputIDsOccupiedByOtherTransactions.contains(input.outputID) {
                     try Web3OutputDAO.shared.delete(id: input.outputID, db: db)
                     Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete Pearl Input: <id: \(input.outputID), Txid: \(input.txid), vout: \(input.vout)>")
                 }
-                for (vout, output) in txn.outputs.enumerated() where output.address == transaction.account {
-                    let id = Web3Output.pearlOutputID(txid: transaction.hash, vout: vout)
+                for (vout, output) in txn.outputs.enumerated() where output.address == rawTransaction.account {
+                    let id = Web3Output.pearlOutputID(txid: rawTransaction.hash, vout: vout)
                     try Web3OutputDAO.shared.delete(id: id, db: db)
-                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete Pearl Output: <id: \(id), Txid: \(transaction.hash), vout: \(vout)>")
+                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete Pearl Output: <id: \(id), Txid: \(rawTransaction.hash), vout: \(vout)>")
                 }
                 try Web3TransactionDAO.shared.setTransactionStatusNotFound(
-                    hash: transaction.hash,
-                    chainID: transaction.chainID,
-                    address: transaction.account,
+                    hash: rawTransaction.hash,
+                    chainID: rawTransaction.chainID,
+                    address: rawTransaction.account,
                     db: db
                 )
             }

@@ -157,7 +157,6 @@
 "anonymous_number" = "匿名號碼";
 "app_card_shareable_false" = "該卡片已被設定為不允許轉發";
 "app_update_short_hint" = "請從 App Store 更新 Mixin 至最新版，當前版本號 %@";
-"app_update_tips" = "當前版本（%@）已失效！請點選下方\"更新\"從 App Store 更新至最新版。";
 "appearance" = "外觀";
 "apply" = "應用";
 "apply_referral_code" = "繫結邀請碼";
@@ -1002,6 +1001,7 @@
 "mixin_referral" = "Mixin 邀請";
 "mixin_server_encounters_errors" = "伺服器出錯，請稍後重試";
 "mixin_support" = "Mixin 客服";
+"mixin_version_expired_description" = "目前版本已失效，請點選下方 \"更新\" 從應用程式商店更新至最新版，請勿解除安裝後再重新安裝。";
 "mnemonic_login_security_tip_1" = "· Mixin 開源、可復現，並經過獨立審計。";
 "mnemonic_login_security_tip_2" = "· 你的資料會被安全加密並存儲在本機。";
 "mnemonic_login_security_tip_3" = "· Mixin 不會訪問你的隱私資訊，也不會與第三方共享。";

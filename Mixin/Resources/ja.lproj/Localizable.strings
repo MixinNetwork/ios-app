@@ -157,7 +157,6 @@
 "anonymous_number" = "匿名番号";
 "app_card_shareable_false" = "このカードを共有することはできません";
 "app_update_short_hint" = "サービスを引き続き使用するには、App Store から Mixin を更新してください。現在のバージョン: %@";
-"app_update_tips" = "現在のバージョン(%@)はもう利用いただけません。App Storeで新しいバージョンを入手してください";
 "appearance" = "言語とテーマ";
 "apply" = "適用";
 "apply_referral_code" = "紹介コードを適用する";
@@ -1002,6 +1001,7 @@
 "mixin_referral" = "Mixin 紹介";
 "mixin_server_encounters_errors" = "Mixinのサーバーにエラーが発生しています";
 "mixin_support" = "Mixin のサポート";
+"mixin_version_expired_description" = "現在のバージョンは有効期限が切れています。下の「アップデート」をタップして、アプリストアから最新バージョンに更新してください。アンインストールしてから再インストールしないでください。";
 "mnemonic_login_security_tip_1" = "· Mixinはオープンソースで、再現可能かつ独立した監査を受けています。";
 "mnemonic_login_security_tip_2" = "· データは安全に暗号化され、端末内に保存されます。";
 "mnemonic_login_security_tip_3" = "· Mixinがお客様の個人情報にアクセスしたり、第三者と共有したりすることはありません。";

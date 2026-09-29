@@ -72,26 +72,43 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
     ) throws {
         let sponsorTxID = transaction.hash
         switch RouteAPI.gaslessTransaction(id: sponsorTxID) {
-        case .success(let tx):
-            if let broadcastTxHash = tx.broadcastTxHash, !broadcastTxHash.isEmpty {
-                Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Got broadcast tx hash for \(sponsorTxID)")
-                Web3TransactionDAO.shared.updateGaslessSponsorTransaction(
-                    sponsorTxID: sponsorTxID,
-                    chainID: transaction.chainID,
-                    address: transaction.account,
-                    broadcastTxHash: broadcastTxHash
-                ) { db in
-                    try Web3RawTransactionDAO.shared.updateGaslessSponsorTransaction(
-                        sponsorTxID: sponsorTxID,
-                        broadcastTxHash: broadcastTxHash,
-                        db: db
-                    )
-                }
-            } else {
-                Logger.web3.warn(category: "ReviewPendingWeb3RawTxn", message: "No broadcast tx hash")
-            }
         case .failure(let error):
             Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "\(transaction.hash):\n\(error)")
+        case .success(let tx):
+            switch tx.state.knownCase {
+            case .failed:
+                Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Gasless tx failed, updating to not found: \(sponsorTxID)")
+                try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: sponsorTxID) { db in
+                    try Web3TransactionDAO.shared.setTransactionStatusNotFound(
+                        hash: sponsorTxID,
+                        chainID: transaction.chainID,
+                        address: transaction.account,
+                        db: db,
+                    )
+                }
+            case .done:
+                if let broadcastTxHash = tx.broadcastTxHash, !broadcastTxHash.isEmpty {
+                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Got broadcast tx hash for \(sponsorTxID)")
+                    Web3TransactionDAO.shared.updateGaslessSponsorTransaction(
+                        sponsorTxID: sponsorTxID,
+                        chainID: transaction.chainID,
+                        address: transaction.account,
+                        broadcastTxHash: broadcastTxHash
+                    ) { db in
+                        try Web3RawTransactionDAO.shared.updateGaslessSponsorTransaction(
+                            sponsorTxID: sponsorTxID,
+                            broadcastTxHash: broadcastTxHash,
+                            db: db
+                        )
+                    }
+                } else {
+                    Logger.web3.warn(category: "ReviewPendingWeb3RawTxn", message: "Missing broadcast tx hash")
+                }
+            case .pending, .processing:
+                Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Still waiting for broadcast tx hash")
+            case .none:
+                Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "Unknown gasless state: \(tx.state.rawValue)")
+            }
         }
     }
     

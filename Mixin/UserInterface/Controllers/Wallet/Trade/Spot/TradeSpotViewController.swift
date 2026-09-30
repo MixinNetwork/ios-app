@@ -1263,7 +1263,7 @@ extension TradeSpotViewController {
     private func reportClientOutdated() {
         let alert = UIAlertController(
             title: R.string.localizable.update_mixin(),
-            message: R.string.localizable.app_update_tips(Bundle.main.shortVersionString),
+            message: R.string.localizable.mixin_version_expired_description(),
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: R.string.localizable.update(), style: .default, handler: { _ in

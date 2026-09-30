@@ -157,7 +157,6 @@
 "anonymous_number" = "匿名號碼";
 "app_card_shareable_false" = "該卡片已被設定為不允許轉發";
 "app_update_short_hint" = "請從 App Store 更新 Mixin 至最新版，當前版本號 %@";
-"app_update_tips" = "當前版本（%@）已失效！請點選下方\"更新\"從 App Store 更新至最新版。";
 "appearance" = "外觀";
 "apply" = "應用";
 "apply_referral_code" = "繫結邀請碼";
@@ -1002,6 +1001,7 @@
 "mixin_referral" = "Mixin 邀請";
 "mixin_server_encounters_errors" = "伺服器出錯，請稍後重試";
 "mixin_support" = "Mixin 客服";
+"mixin_version_expired_description" = "當前版本已失效，點選下方「更新」前往應用商店更新至最新版。請直接更新，不要解除安裝再重新安裝。";
 "mnemonic_login_security_tip_1" = "· Mixin 開源、可復現，並經過獨立審計。";
 "mnemonic_login_security_tip_2" = "· 你的資料會被安全加密並存儲在本機。";
 "mnemonic_login_security_tip_3" = "· Mixin 不會訪問你的隱私資訊，也不會與第三方共享。";
@@ -1292,6 +1292,7 @@
 "perps_trading_fee_pnl_1" = "倉位越大，手續費越高";
 "perps_trading_fee_pnl_2" = "倉位越小，手續費越低";
 "perps_trading_fee_pnl_3" = "已實現盈虧已扣除相關手續費";
+"perps_unrealized_pnl" = "未實現盈虧";
 "phone_as_key_shard" = "手機號將關聯到由您管理的 MPC 錢包的一個金鑰分片";
 "phone_call" = "電話呼叫";
 "phone_contact" = "手機聯絡人";

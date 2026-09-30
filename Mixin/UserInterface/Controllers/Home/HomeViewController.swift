@@ -399,7 +399,9 @@ extension HomeViewController {
                 return
             }
             WebSocketService.shared.disconnect()
-            self.view.window?.rootViewController = UpdateViewController()
+            self.view.window?.rootViewController = GeneralAppearanceNavigationController(
+                rootViewController: UpdateViewController()
+            )
         }
     }
     

@@ -89,9 +89,10 @@ final class EditPerpClosingConditionViewController: UIViewController {
             behavior: behavior,
             side: side,
             leverage: leverage,
+            margin: margin,
             marketViewModel: viewModel,
             orderState: orderState,
-            liquidationPrice: liquidationPrice
+            liquidationPrice: liquidationPrice,
         )
         self.inputContent = InputContent(
             rawValue: AppGroupUserDefaults.Wallet.perpsClosingConditionInputContent
@@ -348,9 +349,10 @@ final class EditPerpClosingConditionViewController: UIViewController {
                     behavior: previousCondition.behavior,
                     side: self.side,
                     leverage: previousCondition.leverage,
+                    margin: self.margin,
                     marketViewModel: viewModel,
                     orderState: self.orderState,
-                    liquidationPrice: previousCondition.liquidationPrice
+                    liquidationPrice: previousCondition.liquidationPrice,
                 )
                 self.reloadSubtitle(currentPrice: viewModel.price)
                 self.take(input: self.inputTextField.text)
@@ -375,7 +377,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
                 )
             }
             titleView.subtitleLabel.attributedText = text
-        case .open(let entryPrice):
+        case .open(let entryPrice, _):
             let entryPrice = entryPrice.formatted(viewModel.userDisplayPriceFormatStyle)
             let text = NSMutableAttributedString(
                 string: R.string.localizable.auto_close_subtitle_after_open(
@@ -495,7 +497,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
             if margin == 0 {
                 inputDescriptionLabel.text = R.string.localizable.auto_close_description()
             } else {
-                let maxChange = condition.maxChange(margin: margin)
+                let maxChange = condition.maxChange()
                 switch condition.behavior {
                 case .takeProfit:
                     let description = NSMutableAttributedString(

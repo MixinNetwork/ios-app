@@ -68,50 +68,67 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
     }
     
     private func reviewGaslessSponsorTransaction(
-        _ transaction: Web3RawTransaction,
+        _ rawTransaction: Web3RawTransaction,
     ) throws {
-        let sponsorTxID = transaction.hash
+        let sponsorTxID = rawTransaction.hash
         switch RouteAPI.gaslessTransaction(id: sponsorTxID) {
+        case .failure(let error):
+            Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "\(rawTransaction.hash):\n\(error)")
         case .success(let tx):
-            if let broadcastTxHash = tx.broadcastTxHash, !broadcastTxHash.isEmpty {
-                Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Got broadcast tx hash for \(sponsorTxID)")
-                Web3TransactionDAO.shared.updateGaslessSponsorTransaction(
-                    sponsorTxID: sponsorTxID,
-                    chainID: transaction.chainID,
-                    address: transaction.account,
-                    broadcastTxHash: broadcastTxHash
-                ) { db in
-                    try Web3RawTransactionDAO.shared.updateGaslessSponsorTransaction(
-                        sponsorTxID: sponsorTxID,
-                        broadcastTxHash: broadcastTxHash,
-                        db: db
+            switch tx.state.knownCase {
+            case .failed:
+                Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Gasless tx failed, updating to not found: \(sponsorTxID)")
+                try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: sponsorTxID) { db in
+                    try Web3TransactionDAO.shared.setTransactionStatusNotFound(
+                        hash: sponsorTxID,
+                        chainID: rawTransaction.chainID,
+                        address: rawTransaction.account,
+                        db: db,
                     )
                 }
-            } else {
-                Logger.web3.warn(category: "ReviewPendingWeb3RawTxn", message: "No broadcast tx hash")
+            case .done:
+                if let broadcastTxHash = tx.broadcastTxHash, !broadcastTxHash.isEmpty {
+                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Got broadcast tx hash for \(sponsorTxID)")
+                    Web3TransactionDAO.shared.updateGaslessSponsorTransaction(
+                        sponsorTxID: sponsorTxID,
+                        chainID: rawTransaction.chainID,
+                        address: rawTransaction.account,
+                        broadcastTxHash: broadcastTxHash
+                    ) { db in
+                        try Web3RawTransactionDAO.shared.updateGaslessSponsorTransaction(
+                            sponsorTxID: sponsorTxID,
+                            broadcastTxHash: broadcastTxHash,
+                            db: db
+                        )
+                    }
+                } else {
+                    Logger.web3.warn(category: "ReviewPendingWeb3RawTxn", message: "Missing broadcast tx hash")
+                }
+            case .pending, .processing:
+                Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Still waiting for broadcast tx hash")
+            case .none:
+                Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "Unknown gasless state: \(tx.state.rawValue)")
             }
-        case .failure(let error):
-            Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "\(transaction.hash):\n\(error)")
         }
     }
     
     private func reviewNativeTransaction(
-        _ transaction: Web3RawTransaction,
+        _ rawTransaction: Web3RawTransaction,
         utxoOutputIDsOccupiedByOtherTransactions: @autoclosure () -> Set<String>,
     ) throws {
         let result = RouteAPI.transaction(
-            chainID: transaction.chainID,
-            hash: transaction.hash
+            chainID: rawTransaction.chainID,
+            hash: rawTransaction.hash
         )
         switch result {
         case let .success(transaction) where transaction.state.knownCase == .pending:
             // Leave pending raw txn to next loop
             Logger.web3.debug(category: "ReviewPendingWeb3RawTxn", message: "Txn still pending \(transaction.hash)")
-        case let .success(transaction) where transaction.chainID == ChainID.bitcoin && transaction.state.knownCase == .notFound:
-            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "BTC Txn not found \(transaction.hash)")
+        case let .success(transaction) where rawTransaction.chainID == ChainID.bitcoin && transaction.state.knownCase == .notFound:
+            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "BTC Txn not found \(rawTransaction.hash)")
             let outputIDsOccupiedByOtherTransactions = utxoOutputIDsOccupiedByOtherTransactions()
-            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
-                let txn = try Bitcoin.decode(transaction: transaction.raw)
+            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: rawTransaction.hash) { db in
+                let txn = try Bitcoin.decode(transaction: rawTransaction.raw)
                 
                 // Do not delete the output if it's also used in other transactions, which possibly be RBF ones.
                 // Otherwise, when `SyncWeb3OutputJob` is executed, there could be an unspent output gets inserted,
@@ -120,39 +137,39 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
                     try Web3OutputDAO.shared.delete(id: input.outputID, db: db)
                     Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete BTC Input: <id: \(input.outputID), Txid: \(input.txid), vout: \(input.vout)>")
                 }
-                for (vout, output) in txn.outputs.enumerated() where output.address == transaction.account {
-                    let id = Web3Output.bitcoinOutputID(txid: transaction.hash, vout: vout)
+                for (vout, output) in txn.outputs.enumerated() where output.address == rawTransaction.account {
+                    let id = Web3Output.bitcoinOutputID(txid: rawTransaction.hash, vout: vout)
                     try Web3OutputDAO.shared.delete(id: id, db: db)
-                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete BTC Output: <id: \(id), Txid: \(transaction.hash), vout: \(vout)>")
+                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete BTC Output: <id: \(id), Txid: \(rawTransaction.hash), vout: \(vout)>")
                 }
                 try Web3TransactionDAO.shared.setTransactionStatusNotFound(
-                    hash: transaction.hash,
-                    chainID: transaction.chainID,
-                    address: transaction.account,
+                    hash: rawTransaction.hash,
+                    chainID: rawTransaction.chainID,
+                    address: rawTransaction.account,
                     db: db
                 )
             }
             let refresh = SyncWeb3OutputJob(assetID: AssetID.btc, walletID: walletID)
             ConcurrentJobQueue.shared.addJob(job: refresh)
-        case let .success(transaction) where transaction.chainID == ChainID.pearl && transaction.state.knownCase == .notFound:
-            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Pearl Txn not found \(transaction.hash)")
+        case let .success(transaction) where rawTransaction.chainID == ChainID.pearl && transaction.state.knownCase == .notFound:
+            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Pearl Txn not found \(rawTransaction.hash)")
             let outputIDsOccupiedByOtherTransactions = utxoOutputIDsOccupiedByOtherTransactions()
-            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
-                let txn = try Pearl.decode(transaction: transaction.raw)
+            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: rawTransaction.hash) { db in
+                let txn = try Pearl.decode(transaction: rawTransaction.raw)
                 
                 for input in txn.inputs where !outputIDsOccupiedByOtherTransactions.contains(input.outputID) {
                     try Web3OutputDAO.shared.delete(id: input.outputID, db: db)
                     Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete Pearl Input: <id: \(input.outputID), Txid: \(input.txid), vout: \(input.vout)>")
                 }
-                for (vout, output) in txn.outputs.enumerated() where output.address == transaction.account {
-                    let id = Web3Output.pearlOutputID(txid: transaction.hash, vout: vout)
+                for (vout, output) in txn.outputs.enumerated() where output.address == rawTransaction.account {
+                    let id = Web3Output.pearlOutputID(txid: rawTransaction.hash, vout: vout)
                     try Web3OutputDAO.shared.delete(id: id, db: db)
-                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete Pearl Output: <id: \(id), Txid: \(transaction.hash), vout: \(vout)>")
+                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete Pearl Output: <id: \(id), Txid: \(rawTransaction.hash), vout: \(vout)>")
                 }
                 try Web3TransactionDAO.shared.setTransactionStatusNotFound(
-                    hash: transaction.hash,
-                    chainID: transaction.chainID,
-                    address: transaction.account,
+                    hash: rawTransaction.hash,
+                    chainID: rawTransaction.chainID,
+                    address: rawTransaction.account,
                     db: db
                 )
             }
@@ -160,19 +177,23 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
             ConcurrentJobQueue.shared.addJob(job: refresh)
         case let .success(transaction):
             // Delete not pending raw txn
-            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Txn deleted \(transaction.hash)")
-            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
-                if transaction.state.knownCase == .notFound {
+            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Delete tx \(rawTransaction.hash), state: \(transaction.state.rawValue). Returned hash: \(transaction.hash), chainID: \(rawTransaction.chainID)<->\(transaction.chainID), address: \(rawTransaction.account)<->\(transaction.account)")
+            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: rawTransaction.hash) { db in
+                switch transaction.state.knownCase {
+                case .notFound:
+                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Updating to not found")
                     try Web3TransactionDAO.shared.setTransactionStatusNotFound(
-                        hash: transaction.hash,
-                        chainID: transaction.chainID,
-                        address: transaction.account,
+                        hash: rawTransaction.hash,
+                        chainID: rawTransaction.chainID,
+                        address: rawTransaction.account,
                         db: db
                     )
+                default:
+                    Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Not updating to not found")
                 }
             }
         case let .failure(error):
-            Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "\(transaction.hash):\n\(error)")
+            Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "\(rawTransaction.hash):\n\(error)")
         }
     }
     

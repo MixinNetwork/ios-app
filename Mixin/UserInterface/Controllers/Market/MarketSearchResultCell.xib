@@ -87,7 +87,7 @@
             <connections>
                 <outlet property="changeLabel" destination="CeJ-Oo-1Fb" id="sv1-aD-rR4"/>
                 <outlet property="iconView" destination="bIL-4J-hPR" id="eBu-O7-Rcb"/>
-                <outlet property="perpsLabel" destination="3YI-it-1rQ" id="ULD-Jt-i4L"/>
+                <outlet property="leverageLabel" destination="3YI-it-1rQ" id="ULD-Jt-i4L"/>
                 <outlet property="priceLabel" destination="koc-LS-1ll" id="Roh-HV-nxV"/>
                 <outlet property="subtitleLabel" destination="b4P-zd-Lcr" id="B98-I0-2i6"/>
                 <outlet property="symbolLabel" destination="ui5-k2-ioZ" id="haW-ek-TlD"/>
@@ -106,7 +106,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

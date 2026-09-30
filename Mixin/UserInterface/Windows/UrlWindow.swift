@@ -1163,6 +1163,12 @@ extension UrlWindow {
                             )
                             inputAmount.reference = paymentURL.reference
                             inputAmount.redirection = paymentURL.redirection
+                            switch source {
+                            case .webView:
+                                inputAmount.popToWebViewControllerOnTransferFinished = true
+                            default:
+                                inputAmount.popToWebViewControllerOnTransferFinished = false
+                            }
                             UIApplication.shared.homeNavigationController?.pushViewController(inputAmount, animated: true)
                         }
                         presenter.present(selector, animated: true)
@@ -1364,11 +1370,13 @@ extension UrlWindow {
                     presenter.present(preview, animated: true)
                 default:
                     let redirection = source.isExternal ? paymentURL.redirection : nil
-                    let preview = TransferPreviewViewController(issues: issues,
-                                                                operation: operation,
-                                                                amountDisplay: .byToken,
-                                                                redirection: redirection)
-                    preview.manipulateNavigationStackOnFinished = false
+                    let preview = TransferPreviewViewController(
+                        issues: issues,
+                        operation: operation,
+                        amountDisplay: .byToken,
+                        redirection: redirection
+                    )
+                    preview.navigationStackManipulationOnFinished = nil
                     presenter.present(preview, animated: true)
                 }
             }

@@ -619,6 +619,9 @@ final class PerpetualMarketViewController: UIViewController {
         guard
             editingLock == nil,
             let entryPrice = positionViewModel.decimalEntryPrice,
+            entryPrice > 0,
+            positionViewModel.decimalQuantity > 0,
+            positionViewModel.decimalMargin > 0,
             let liquidationPrice = positionViewModel.decimalLiquidationPrice
         else {
             return
@@ -629,9 +632,12 @@ final class PerpetualMarketViewController: UIViewController {
             margin: positionViewModel.decimalMargin,
             behavior: .takeProfit,
             leverage: Decimal(positionViewModel.leverageMultiplier),
-            orderState: .open(entryPrice: entryPrice), 
+            orderState: .open(
+                entryPrice: entryPrice,
+                quantity: positionViewModel.decimalQuantity,
+            ),
             liquidationPrice: liquidationPrice,
-            currentAutoClosingPrice: positionViewModel.takeProfitPrice
+            currentAutoClosingPrice: positionViewModel.takeProfitPrice,
         )
         let priceFormatStyle = viewModel.market.canonicalPriceFormatStyle
         editor.onSet = { [weak self] price in
@@ -665,6 +671,9 @@ final class PerpetualMarketViewController: UIViewController {
         guard
             editingLock == nil,
             let entryPrice = positionViewModel.decimalEntryPrice,
+            entryPrice > 0,
+            positionViewModel.decimalQuantity > 0,
+            positionViewModel.decimalMargin > 0,
             let liquidationPrice = positionViewModel.decimalLiquidationPrice
         else {
             return
@@ -675,7 +684,10 @@ final class PerpetualMarketViewController: UIViewController {
             margin: positionViewModel.decimalMargin,
             behavior: .stopLoss,
             leverage: Decimal(positionViewModel.leverageMultiplier),
-            orderState: .open(entryPrice: entryPrice),
+            orderState: .open(
+                entryPrice: entryPrice,
+                quantity: positionViewModel.decimalQuantity,
+            ),
             liquidationPrice: liquidationPrice,
             currentAutoClosingPrice: positionViewModel.stopLossPrice,
         )

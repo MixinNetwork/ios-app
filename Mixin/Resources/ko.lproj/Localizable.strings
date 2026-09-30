@@ -157,7 +157,6 @@
 "anonymous_number" = "익명번호";
 "app_card_shareable_false" = "이 카드는 공유할 수 없습니다.";
 "app_update_short_hint" = "서비스를 계속 사용하려면 App Store에서 Mixin을 업데이트하세요. 현재 버전: %@";
-"app_update_tips" = "이 버전(%@)은 더 이상 지원되지 않습니다. App Store에서 최신 버전을 다운로드하려면 아래의 '업데이트'를 탭하세요.";
 "appearance" = "외관";
 "apply" = "신청";
 "apply_referral_code" = "추천 코드 적용";
@@ -1002,6 +1001,7 @@
 "mixin_referral" = "Mixin 추천";
 "mixin_server_encounters_errors" = "Mixin 서버에 오류가 발생했습니다.";
 "mixin_support" = "Mixin 지원";
+"mixin_version_expired_description" = "이 버전은 만료되었습니다. 아래 \"업데이트\"를 눌러 앱 스토어에서 최신 버전으로 업데이트하세요. 앱을 삭제하지 말고 바로 업데이트하세요.";
 "mnemonic_login_security_tip_1" = "· Mixin은 오픈 소스이며, 재현 가능하고 독립적인 감사를 받았습니다.";
 "mnemonic_login_security_tip_2" = "· 데이터는 안전하게 암호화되어 기기에 로컬로 저장됩니다.";
 "mnemonic_login_security_tip_3" = "· Mixin은 개인정보에 접근하거나 제3자와 공유하지 않습니다.";
@@ -1292,6 +1292,7 @@
 "perps_trading_fee_pnl_1" = "포지션이 클수록 수수료가 높아집니다";
 "perps_trading_fee_pnl_2" = "포지션이 작을수록 수수료가 낮아집니다";
 "perps_trading_fee_pnl_3" = "실현 손익에는 관련 수수료가 차감되어 있습니다";
+"perps_unrealized_pnl" = "미실현 손익";
 "phone_as_key_shard" = "귀하의 휴대폰 번호는 귀하가 관리하는 MPC 지갑의 키 샤드와 연결됩니다.";
 "phone_call" = "전화 통화";
 "phone_contact" = "전화 연락처";

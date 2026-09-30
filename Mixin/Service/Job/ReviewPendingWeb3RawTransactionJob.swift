@@ -68,12 +68,12 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
     }
     
     private func reviewGaslessSponsorTransaction(
-        _ transaction: Web3RawTransaction,
+        _ rawTransaction: Web3RawTransaction,
     ) throws {
-        let sponsorTxID = transaction.hash
+        let sponsorTxID = rawTransaction.hash
         switch RouteAPI.gaslessTransaction(id: sponsorTxID) {
         case .failure(let error):
-            Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "\(transaction.hash):\n\(error)")
+            Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "\(rawTransaction.hash):\n\(error)")
         case .success(let tx):
             switch tx.state.knownCase {
             case .failed:
@@ -81,8 +81,8 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
                 try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: sponsorTxID) { db in
                     try Web3TransactionDAO.shared.setTransactionStatusNotFound(
                         hash: sponsorTxID,
-                        chainID: transaction.chainID,
-                        address: transaction.account,
+                        chainID: rawTransaction.chainID,
+                        address: rawTransaction.account,
                         db: db,
                     )
                 }
@@ -91,8 +91,8 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
                     Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Got broadcast tx hash for \(sponsorTxID)")
                     Web3TransactionDAO.shared.updateGaslessSponsorTransaction(
                         sponsorTxID: sponsorTxID,
-                        chainID: transaction.chainID,
-                        address: transaction.account,
+                        chainID: rawTransaction.chainID,
+                        address: rawTransaction.account,
                         broadcastTxHash: broadcastTxHash
                     ) { db in
                         try Web3RawTransactionDAO.shared.updateGaslessSponsorTransaction(

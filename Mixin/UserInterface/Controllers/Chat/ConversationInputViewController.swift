@@ -33,6 +33,8 @@ final class ConversationInputViewController: UIViewController {
     @IBOutlet weak var textViewRightAccessoryWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputBarLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputBarTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var deleteConversationButtonLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var deleteConversationButtonTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingTextViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var beginEditingRightActionsStackLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var endEditingTextViewTrailingConstraint: NSLayoutConstraint!
@@ -212,6 +214,8 @@ final class ConversationInputViewController: UIViewController {
             deleteConversationButton.layer.masksToBounds = true
             inputBarLeadingConstraint.constant = 16
             inputBarTrailingConstraint.constant = 16
+            deleteConversationButtonLeadingConstraint.constant = 16
+            deleteConversationButtonTrailingConstraint.constant = 16
             customInputContainerTopConstraint.constant = keyboardSpacing
             textView.textContainerInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
         } else {

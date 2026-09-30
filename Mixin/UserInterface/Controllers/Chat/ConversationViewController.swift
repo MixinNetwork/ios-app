@@ -1098,6 +1098,8 @@ final class ConversationViewController: UIViewController {
             if !conversation.name.isEmpty {
                 titleLabel.text = conversation.name
                 dataSource?.conversation.name = conversation.name
+                titleView?.invalidateIntrinsicContentSize()
+                navigationController?.navigationBar.setNeedsLayout()
             }
             if let dataSource = dataSource, dataSource.category == .group {
                 dataSource.conversation.announcement = conversation.announcement
@@ -2206,13 +2208,23 @@ extension ConversationViewController {
             avatarImageView.setGroupImage(with: conversation.iconUrl)
             badgeImage = nil
             showsMembershipIcon = false
+            if let count = numberOfParticipants {
+                subtitleLabel.text = R.string.localizable.participants_count("\(count)")
+                subtitleLabel.alpha = 1
+            } else {
+                subtitleLabel.text = R.string.localizable.participants_count("")
+                subtitleLabel.alpha = 0
+            }
         } else if let user = ownerUser {
             subtitleLabel.text = user.identityNumber
+            subtitleLabel.alpha = 1
             titleLabel.text = user.fullName
             avatarImageView.setImage(with: user)
             badgeImage = user.badgeImage
             showsMembershipIcon = user.membership?.badgeImage != nil
         } else {
+            subtitleLabel.text = nil
+            subtitleLabel.alpha = 1
             badgeImage = nil
             showsMembershipIcon = false
         }
@@ -2240,14 +2252,20 @@ extension ConversationViewController {
             let count = ParticipantDAO.shared.getParticipantCount(conversationId: conversationId)
             let isParticipant = ParticipantDAO.shared.userId(myUserId, isParticipantOfConversationId: conversationId)
             DispatchQueue.main.sync {
-                guard let weakSelf = self else {
+                guard let self else {
                     return
                 }
-                weakSelf.numberOfParticipants = count
-                weakSelf.isMember = isParticipant
-                weakSelf.conversationInputViewController.deleteConversationButton.isHidden = isParticipant
-                weakSelf.conversationInputViewController.inputBarView.isHidden = false
-                weakSelf.subtitleLabel.text = R.string.localizable.participants_count("\(count)")
+                let countChanged = self.numberOfParticipants != count
+                self.numberOfParticipants = count
+                self.isMember = isParticipant
+                self.conversationInputViewController.deleteConversationButton.isHidden = isParticipant
+                self.conversationInputViewController.inputBarView.isHidden = false
+                if countChanged || self.subtitleLabel.alpha == 0 {
+                    self.subtitleLabel.text = R.string.localizable.participants_count("\(count)")
+                    self.subtitleLabel.alpha = 1
+                    self.titleView?.invalidateIntrinsicContentSize()
+                    self.navigationController?.navigationBar.setNeedsLayout()
+                }
             }
         }
     }
@@ -2706,6 +2724,8 @@ extension ConversationViewController {
     private func hideLoading() {
         loadingView.stopAnimating()
         titleStackView.isHidden = false
+        titleView?.invalidateIntrinsicContentSize()
+        navigationController?.navigationBar.setNeedsLayout()
     }
     
     private func openAppCard(appCard: AppCardData, sendUserId: String) {

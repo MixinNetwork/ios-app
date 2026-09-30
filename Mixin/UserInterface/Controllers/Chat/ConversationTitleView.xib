@@ -28,7 +28,7 @@
                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-ro-wst">
                             <rect key="frame" x="75" y="0.0" width="50" height="0.0"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-la-bel">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="750" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-la-bel">
                                     <rect key="frame" x="0.0" y="0.0" width="50" height="0.0"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                     <color key="textColor" name="text"/>
@@ -43,7 +43,7 @@
                                 </imageView>
                             </subviews>
                         </stackView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sub-la-bel">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="750" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sub-la-bel">
                             <rect key="frame" x="75" y="1" width="50" height="35"/>
                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                             <color key="textColor" name="text_tertiary"/>
@@ -66,17 +66,14 @@
             <constraints>
                 <constraint firstItem="loa-di-ngv" firstAttribute="centerX" secondItem="con-te-ntv" secondAttribute="centerX" id="loa-ce-ntx"/>
                 <constraint firstItem="loa-di-ngv" firstAttribute="centerY" secondItem="con-te-ntv" secondAttribute="centerY" id="loa-ce-nty"/>
-                <constraint firstAttribute="bottom" secondItem="ttl-st-ack" secondAttribute="bottom" id="stk-bo-ttm"/>
+                <constraint firstAttribute="bottom" secondItem="ttl-st-ack" secondAttribute="bottom" constant="4" id="stk-bo-ttm"/>
                 <constraint firstItem="ttl-st-ack" firstAttribute="leading" secondItem="con-te-ntv" secondAttribute="leading" id="stk-le-adg"/>
-                <constraint firstItem="ttl-st-ack" firstAttribute="top" secondItem="con-te-ntv" secondAttribute="top" id="stk-to-ped"/>
+                <constraint firstItem="ttl-st-ack" firstAttribute="top" secondItem="con-te-ntv" secondAttribute="top" constant="4" id="stk-to-ped"/>
                 <constraint firstAttribute="trailing" secondItem="ttl-st-ack" secondAttribute="trailing" id="stk-tr-alg"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="contentBottomConstraint" destination="stk-bo-ttm" id="RZf-W6-8GS"/>
                 <outlet property="contentLeadingConstraint" destination="stk-le-adg" id="ssr-7V-ouV"/>
-                <outlet property="contentStackView" destination="ttl-st-ack" id="cnt-stk-out"/>
-                <outlet property="contentTopConstraint" destination="stk-to-ped" id="8ou-Lo-xGB"/>
                 <outlet property="contentTrailingConstraint" destination="stk-tr-alg" id="dMA-0L-21f"/>
             </connections>
             <point key="canvasLocation" x="-240" y="28"/>

@@ -74,6 +74,47 @@ public final class Web3TransactionDAO: Web3DAO {
         }
     }
     
+    public func setPendingTransactionStatus(
+        hash: String,
+        chainID: String,
+        address: String,
+        state: String,
+    ) {
+        db.write { db in
+            let update: GRDB.SQL = """
+            UPDATE transactions
+            SET status = \(state)
+            WHERE transaction_hash = \(hash)
+                AND chain_id = \(chainID)
+                AND address = \(address)
+                AND status = \(Web3RawTransaction.State.pending.rawValue)
+            """
+            try db.execute(literal: update)
+            
+            let select: GRDB.SQL = """
+            SELECT *
+            FROM transactions
+            WHERE transaction_hash = \(hash)
+                AND chain_id = \(chainID)
+                AND address = \(address)
+            """
+            let (sql, arguments) = try select.build(db)
+            let transaction = try? Web3Transaction.fetchOne(db, sql: sql, arguments: arguments)
+            
+            if let transaction {
+                db.afterNextTransaction { _ in
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(
+                            name: Self.transactionDidUpdateNotification,
+                            object: self,
+                            userInfo: [Self.UserInfoKey.transactions: [transaction]]
+                        )
+                    }
+                }
+            }
+        }
+    }
+    
     public func setTransactionStatusNotFound(
         hash: String,
         chainID: String,

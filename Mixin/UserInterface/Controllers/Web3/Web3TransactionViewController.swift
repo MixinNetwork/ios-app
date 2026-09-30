@@ -47,6 +47,34 @@ final class Web3TransactionViewController: TransactionViewController {
             object: nil
         )
         reloadData()
+        if transaction.status == .pending {
+            // This additional refresh repairs transaction records for some users whose failed gasless
+            // transactions remain pending indefinitely due to a mismatch in `account` field.
+            // It updates the status of these transactions without affecting normal ones.
+            let hash = transaction.transactionHash
+            let chainID = transaction.chainID
+            let address = transaction.address
+            Task.detached {
+                do {
+                    let rawTx = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash)
+                    if let rawTx, rawTx.isGaslessSponsorTransaction {
+                        Logger.web3.info(category: "Web3TxView", message: "Skip additional refresh for gasless tx: \(hash)")
+                        return
+                    }
+                    Logger.web3.info(category: "Web3TxView", message: "Additional refresh for pending tx: \(hash)")
+                    let tx = try await RouteAPI.transaction(chainID: chainID, hash: hash)
+                    Logger.web3.info(category: "Web3TxView", message: "Refreshed hash: \(tx.hash), state: \(tx.state.rawValue), cid: \(chainID)<->\(tx.chainID), address: \(address)<->\(tx.account)")
+                    Web3TransactionDAO.shared.setPendingTransactionStatus(
+                        hash: hash,
+                        chainID: chainID,
+                        address: address,
+                        state: tx.state.rawValue,
+                    )
+                } catch {
+                    Logger.web3.info(category: "Web3TxView", message: "Additional refresh failed: \(error)")
+                }
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

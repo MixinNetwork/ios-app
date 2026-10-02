@@ -185,14 +185,6 @@ final class DepositViewController: UIViewController {
     
 }
 
-extension DepositViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension DepositViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

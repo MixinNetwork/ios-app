@@ -2,8 +2,6 @@ import UIKit
 
 final class LoginNavigationController: GeneralAppearanceNavigationController {
     
-    private let appearanceUpdater = NavigationBarStyle.AppearanceUpdater()
-    
     init() {
         let onboarding = OnboardingViewController()
         super.init(rootViewController: onboarding)
@@ -15,7 +13,6 @@ final class LoginNavigationController: GeneralAppearanceNavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.delegate = appearanceUpdater
         let presentLogRecognizer = UILongPressGestureRecognizer(
             target: self,
             action: #selector(presentLog(_:))

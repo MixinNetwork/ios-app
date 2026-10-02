@@ -47,26 +47,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7BE0202F24D7D46D00C3F884"
-               BuildableName = "MixinUITests.xctest"
-               BlueprintName = "MixinUITests"
-               ReferencedContainer = "container:Mixin.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "945FBD1D257D0A3100C3E92D"
-               BuildableName = "DatabaseTests.xctest"
-               BlueprintName = "DatabaseTests"
-               ReferencedContainer = "container:Mixin.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "94ED30592E269B2A00B99837"
                BuildableName = "MixinTests.xctest"
                BlueprintName = "MixinTests"

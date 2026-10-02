@@ -69,6 +69,16 @@ final class InscriptionViewController: UIViewController {
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
     @IBAction func goBack(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
@@ -321,14 +331,6 @@ final class InscriptionViewController: UIViewController {
                 self.appendOwner(row: .owners(items, threshold: threshold))
             }
         }
-    }
-    
-}
-
-extension InscriptionViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .hide
     }
     
 }

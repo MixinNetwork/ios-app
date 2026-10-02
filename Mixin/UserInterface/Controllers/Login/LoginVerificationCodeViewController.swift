@@ -83,8 +83,13 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
         SignalProtocol.shared.initSignal()
         let code = verificationCodeField.text
         let registrationID = Int(SignalProtocol.shared.getRegistrationId())
-        let sessionKey = Ed25519PrivateKey()
-        login(code: code, registrationId: registrationID, sessionKey: sessionKey)
+        do {
+            let sessionKey = try Ed25519PrivateKey()
+            login(code: code, registrationId: registrationID, sessionKey: sessionKey)
+        } catch {
+            Logger.login.error(category: "LoginVerificationCode", message: "\(error)")
+            alert(error.localizedDescription)
+        }
     }
     
     func login(code: String, registrationId: Int, sessionKey: Ed25519PrivateKey) {

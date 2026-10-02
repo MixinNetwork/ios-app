@@ -13,7 +13,6 @@ final class Web3TokensViewController: TokensViewController {
     private var watchingAddresses: WatchingAddresses?
     private var tokens: [Web3TokenItem]?
     
-    private var isDisplayingSearch = false
     private var searchTokenHandler: WalletSearchWeb3TokenHandler?
     private var overviewActionHandler: CommonWalletOverviewActionHandler?
     private var pendingTransactionObserver: CommonWalletPendingTransactionLoader?
@@ -268,11 +267,7 @@ final class Web3TokensViewController: TokensViewController {
         modelController.delegate = searchTokenHandler
         let search = WalletSearchViewController(modelController: modelController)
         self.searchTokenHandler = searchTokenHandler
-        self.isDisplayingSearch = true
-        search.onWillDismiss = { [weak self] in
-            self?.isDisplayingSearch = false
-        }
-        search.presentAsChild(on: self)
+        navigationController?.pushViewController(search, animated: true)
     }
     
     @objc private func presentMoreMenu(_ sender: Any) {
@@ -295,14 +290,6 @@ final class Web3TokensViewController: TokensViewController {
             reporter.report(event: .hideAsset, tags: ["wallet": "web3", "source": "token_list"])
             Web3TokenExtraDAO.shared.hide(walletID: token.walletID, assetID: token.assetID)
         }
-    }
-    
-}
-
-extension Web3TokensViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        isDisplayingSearch ? .hide : .secondaryBackground
     }
     
 }

@@ -128,13 +128,13 @@ class DeviceTransferProgressViewController: UIViewController, CheckSessionEnviro
         case .server(_, .desktop):
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             alert(hint) { _ in
-                self.navigationController?.backToHome()
+                self.navigationController?.popToRootViewController(animated: true)
             }
         case .client(_, .desktop):
             navigationController?.interactivePopGestureRecognizer?.isEnabled = true
             NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: nil)
             alert(hint) { _ in
-                self.navigationController?.backToHome()
+                self.navigationController?.popToRootViewController(animated: true)
             }
         case .client(_, .phone):
             AppGroupUserDefaults.Account.canRestoreFromPhone = false

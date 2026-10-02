@@ -1,15 +1,9 @@
 import UIKit
 import MixinServices
 
-class CirclesViewController: UIViewController {
+final class CirclesViewController: UIViewController {
     
-    @IBOutlet weak var navigationBarView: UIView!
-    @IBOutlet weak var toggleCirclesButton: UIButton!
-    @IBOutlet weak var tableBackgroundButton: UIButton!
-    @IBOutlet weak var tableView: UITableView!
-    
-    @IBOutlet weak var showTableViewConstraint: NSLayoutConstraint!
-    @IBOutlet weak var hideTableViewConstraint: NSLayoutConstraint!
+    private weak var tableView: UITableView!
     
     private lazy var tableFooterView: CirclesTableFooterView = {
         let view = R.nib.circlesTableFooterView(withOwner: nil)!
@@ -25,8 +19,6 @@ class CirclesViewController: UIViewController {
     private var embeddedCircles = CircleDAO.shared.embeddedCircles()
     private var userCircles: [CircleItem] = []
     private var currentCircleIndexPath: IndexPath?
-    private var needRefresh = true
-    private var refreshing = false
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -34,32 +26,47 @@ class CirclesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let title = AppGroupUserDefaults.User.circleName ?? R.string.localizable.mixin()
-        toggleCirclesButton.setTitle(title, for: .normal)
-        let tableHeaderView = InfiniteTopView()
-        tableHeaderView.frame.size.height = 0
-        tableView.tableHeaderView = tableHeaderView
+        
+        title = R.string.localizable.circles()
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .add,
+            target: self,
+            action: #selector(addCircle(_:))
+        )
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .close,
+            target: self,
+            action: #selector(done(_:))
+        )
+        
+        view.backgroundColor = R.color.background()
+        let tableView = UITableView(frame: view.bounds)
+        tableView.backgroundColor = R.color.background()
+        view.addSubview(tableView)
+        tableView.snp.makeEdgesEqualToSuperview()
+        self.tableView = tableView
+        
         tableView.register(R.nib.circleCell)
+        tableView.rowHeight = 70
+        tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.delegate = self
         reloadCircles()
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: CircleDAO.circleDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: CircleConversationDAO.circleConversationsDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: MixinServices.conversationDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadUserCircle), name: MessageDAO.didInsertMessageNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadCircles),
+            name: CircleDAO.circleDidChangeNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadCircles),
+            name: CircleConversationDAO.circleConversationsDidChangeNotification,
+            object: nil
+        )
     }
     
-    override func didMove(toParent parent: UIViewController?) {
-        super.didMove(toParent: parent)
-        if let parent = parent as? HomeViewController {
-            let action = #selector(HomeViewController.toggleCircles(_:))
-            for button in [tableFooterView.button, toggleCirclesButton, tableBackgroundButton] {
-                button!.addTarget(parent, action: action, for: .touchUpInside)
-            }
-        }
-    }
-    
-    @IBAction func newCircleAction(_ sender: Any) {
+    @objc private func addCircle(_ sender: Any) {
         let addCircle = R.string.localizable.add_circle()
         let add = R.string.localizable.add()
         editNameController.present(title: addCircle, actionTitle: add) { (alert) in
@@ -70,39 +77,30 @@ class CirclesViewController: UIViewController {
         }
     }
     
-    @objc func reloadUserCircle() {
-        guard tableBackgroundButton != nil else {
-            return
-        }
-        if tableBackgroundButton.alpha == 1 {
-            reloadCircles()
-        } else {
-            needRefresh = true
-        }
+    @objc private func done(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true)
     }
     
-    func setTableViewVisible(_ visible: Bool, animated: Bool, completion: (() -> Void)?) {
-        if visible {
-            showTableViewConstraint.priority = .defaultHigh
-            hideTableViewConstraint.priority = .defaultLow
-            if needRefresh {
-                reloadCircles()
+    @objc private func reloadCircles() {
+        DispatchQueue.global().async { [weak self] in
+            let embeddedCircles = CircleDAO.shared.embeddedCircles()
+            let circles = CircleDAO.shared.circles()
+            DispatchQueue.main.async {
+                if let self = self {
+                    self.embeddedCircles = embeddedCircles
+                    self.userCircles = circles
+                    self.tableView.reloadData()
+                    self.tableFooterView.showsHintLabel = circles.isEmpty
+                    self.tableView.tableFooterView = self.tableFooterView
+                    let indexPath: IndexPath
+                    if let circleId = AppGroupUserDefaults.User.circleId, let row = circles.firstIndex(where: { $0.circleId == circleId }) {
+                        indexPath = IndexPath(row: row, section: 1)
+                    } else {
+                        indexPath = IndexPath(row: 0, section: 0)
+                    }
+                    self.setRow(at: indexPath, isCurrent: true)
+                }
             }
-        } else {
-            showTableViewConstraint.priority = .defaultLow
-            hideTableViewConstraint.priority = .defaultHigh
-        }
-        let work = {
-            self.view.layoutIfNeeded()
-            self.tableBackgroundButton.alpha = visible ? 1 : 0
-        }
-        if animated {
-            UIView.animate(withDuration: 0.3, animations: work) { (_) in
-                completion?()
-            }
-        } else {
-            work()
-            completion?()
         }
     }
     
@@ -160,6 +158,7 @@ extension CirclesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true) 
         switchToCircle(at: indexPath, dismissAfterFinished: true)
+        presentingViewController?.dismiss(animated: true)
     }
     
 }
@@ -261,7 +260,6 @@ extension CirclesViewController {
             case .success(let circle):
                 if circle.circleId == AppGroupUserDefaults.User.circleId {
                     AppGroupUserDefaults.User.circleName = circle.name
-                    self.toggleCirclesButton.setTitle(circle.name, for: .normal)
                 }
                 DispatchQueue.global().async {
                     CircleDAO.shared.save(circle: circle)
@@ -277,70 +275,17 @@ extension CirclesViewController {
             }
         })
     }
-
-    private func reloadCircles() {
-        guard LoginManager.shared.isLoggedIn else {
-            return
-        }
-        guard !refreshing else {
-            needRefresh = true
-            return
-        }
-        refreshing = true
-        needRefresh = false
-
-        DispatchQueue.global().async { [weak self] in
-            let embeddedCircles = CircleDAO.shared.embeddedCircles()
-            let circles = CircleDAO.shared.circles()
-            DispatchQueue.main.async {
-                if let self = self {
-                    self.embeddedCircles = embeddedCircles
-                    self.userCircles = circles
-                    self.tableView.reloadData()
-                    self.tableFooterView.showsHintLabel = circles.isEmpty
-                    self.tableView.tableFooterView = self.tableFooterView
-                    self.tableView.layoutIfNeeded()
-                    let cellsHeight = CGFloat(circles.count + 1) * self.tableView.rowHeight
-                    let height = max(self.tableFooterView.contentView.frame.height,
-                                     self.tableView.frame.height - self.tableView.adjustedContentInset.vertical - cellsHeight)
-                    self.tableFooterView.frame.size.height = height
-                    self.tableView.tableFooterView = self.tableFooterView
-                    let indexPath: IndexPath
-                    if let circleId = AppGroupUserDefaults.User.circleId, let row = circles.firstIndex(where: { $0.circleId == circleId }) {
-                        indexPath = IndexPath(row: row, section: 1)
-                    } else {
-                        indexPath = IndexPath(row: 0, section: 0)
-                    }
-                    self.setRow(at: indexPath, isCurrent: true)
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.33, execute: {
-                    self?.refreshing = false
-                    if self?.needRefresh ?? false {
-                        self?.reloadCircles()
-                    }
-                })
-            }
-        }
-    }
     
     private func switchToCircle(at indexPath: IndexPath, dismissAfterFinished: Bool) {
         let section = Section(rawValue: indexPath.section)!
-        let circleName: String
         switch section {
         case .embedded:
             AppGroupUserDefaults.User.circleId = nil
             AppGroupUserDefaults.User.circleName = nil
-            circleName = R.string.localizable.mixin()
         case .user:
             let circle = userCircles[indexPath.row]
             AppGroupUserDefaults.User.circleId = circle.circleId
             AppGroupUserDefaults.User.circleName = circle.name
-            circleName = circle.name
-        }
-        UIView.performWithoutAnimation {
-            toggleCirclesButton.setTitle(circleName, for: .normal)
-            navigationBarView.setNeedsLayout()
-            navigationBarView.layoutIfNeeded()
         }
         if let home = parent as? HomeViewController {
             home.setNeedsRefresh()

@@ -29,7 +29,12 @@ final class CaptchaViewController: UIViewController {
         navigationBar.items = [navigationItem]
         view.addSubview(navigationBar)
         navigationBar.snp.makeConstraints { (make) in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            if #available(iOS 26, *) {
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                    .offset(10)
+            } else {
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            }
             make.leading.trailing.equalToSuperview()
         }
     }

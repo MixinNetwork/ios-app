@@ -39,7 +39,6 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     private(set) weak var contentViewController: UIViewController?
     
     private lazy var restoreChatNavigationHandler = RestoreChatNavigationHandler()
-    private lazy var navigationBarAppearanceUpdater = NavigationBarStyle.AppearanceUpdater()
     
     private weak var retryButton: UIButton?
     private weak var launchCoverView: UIView?
@@ -101,8 +100,8 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         view.backgroundColor = R.color.background_secondary()
         
         let navigationBar = UINavigationBar()
-        navigationBar.standardAppearance = .secondaryBackgroundColor
-        navigationBar.scrollEdgeAppearance = .secondaryBackgroundColor
+        navigationBar.standardAppearance = .general
+        navigationBar.scrollEdgeAppearance = .transparent
         topStackView.addArrangedSubview(navigationBar)
         let navigationItem = UINavigationItem()
         navigationItem.rightBarButtonItem = .customerService(
@@ -165,7 +164,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         } else if account.hasEmptyName {
             Logger.login.info(category: "CheckSessionEnv", message: "Create username")
             let username = UsernameViewController()
-            let navigationController = SecondaryAppearanceNavigationController(rootViewController: username)
+            let navigationController = GeneralAppearanceNavigationController(rootViewController: username)
             reload(content: navigationController)
         } else if AppGroupUserDefaults.Account.canRestoreFromPhone {
             Logger.login.info(category: "CheckSessionEnv", message: "Restore chat")
@@ -180,7 +179,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         } else if !SignalLoadingViewController.isLoaded {
             Logger.login.info(category: "CheckSessionEnv", message: "Load Signal")
             let signalLoading = SignalLoadingViewController()
-            let navigationController = SecondaryAppearanceNavigationController(rootViewController: signalLoading)
+            let navigationController = GeneralAppearanceNavigationController(rootViewController: signalLoading)
             reload(content: navigationController)
         } else if !account.hasPIN {
             Logger.login.info(category: "CheckSessionEnv", message: "Create PIN for account: \(account.userID)")
@@ -280,7 +279,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         }
     }
     
-    private func finishChecking(initialTab: HomeTabBarController.ChildID) {
+    private func finishChecking(initialTab: HomeTabBarController.InitialTab) {
         Logger.redirectLogsToLogin = false
         
         let intent = AccountVerificationIntent.current
@@ -495,7 +494,6 @@ extension CheckSessionEnvironmentViewController {
                     })
                 )
                 let navigation = GeneralAppearanceNavigationController(rootViewController: fetch)
-                navigation.delegate = navigationBarAppearanceUpdater
                 reload(content: navigation)
             } catch {
                 Logger.login.error(category: "CheckSessionEnv", message: "Import failed: \(error)")

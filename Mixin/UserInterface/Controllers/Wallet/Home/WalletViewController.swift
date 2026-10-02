@@ -5,11 +5,6 @@ import MixinServices
 
 class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking {
     
-    @IBOutlet weak var titleView: UIView!
-    @IBOutlet weak var titleInfoStackView: UIStackView!
-    @IBOutlet weak var walletSwitchImageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    
     let itemsCount = 3
     let perpsTopMoversCount = 4
     
@@ -34,6 +29,10 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     
     var walletActionHandler: (any WalletActionHandler)?
     
+    private(set) weak var titleView: UIView!
+    private(set) weak var titleInfoStackView: UIStackView!
+    private(set) weak var walletSwitchImageView: UIImageView!
+    private(set) weak var titleLabel: UILabel!
     private(set) weak var collectionView: UICollectionView!
     
     private(set) var isViewAppearing = false
@@ -68,6 +67,70 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let walletSwitchImageView = UIImageView(image: R.image.hamburger())
+        walletSwitchImageView.tintColor = R.color.icon_tint()
+        walletSwitchImageView.contentMode = .center
+        walletSwitchImageView.snp.makeConstraints { make in
+            make.width.equalTo(24)
+        }
+        let titleLabel = UILabel()
+        titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+        titleLabel.textColor = R.color.text()
+        let titleInfoStackView = UIStackView(
+            arrangedSubviews: [walletSwitchImageView, titleLabel]
+        )
+        titleInfoStackView.axis = .horizontal
+        titleInfoStackView.alignment = .center
+        titleInfoStackView.spacing = 8
+        titleInfoStackView.addArrangedSubview(walletSwitchImageView)
+        titleInfoStackView.addArrangedSubview(titleLabel)
+        let titleView = UIView()
+        titleView.addSubview(titleInfoStackView)
+        titleInfoStackView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        let switchButton = UIButton(type: .custom)
+        switchButton.addTarget(
+            self,
+            action: #selector(switchFromWallets(_:)),
+            for: .touchUpInside
+        )
+        titleView.addSubview(switchButton)
+        switchButton.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        let titleItem = UIBarButtonItem(customView: titleView)
+        if #available(iOS 26.0, *) {
+            titleItem.hidesSharedBackground = true
+        }
+        navigationItem.leftBarButtonItem = titleItem
+        self.titleView = titleView
+        self.titleInfoStackView = titleInfoStackView
+        self.walletSwitchImageView = walletSwitchImageView
+        self.titleLabel = titleLabel
+        
+        let searchItem = UIBarButtonItem.tintedIcon(
+            image: R.image.ic_title_search(),
+            target: self,
+            action: #selector(searchAction(_:)),
+        )
+        let scanItem = UIBarButtonItem.tintedIcon(
+            image: R.image.ic_app_category_scan(),
+            target: self,
+            action: #selector(scanQRCode),
+        )
+        let moreItem = UIBarButtonItem.tintedIcon(
+            image: R.image.ic_title_more(),
+            target: self,
+            action: #selector(moreAction(_:)),
+        )
+        navigationItem.rightBarButtonItems = [
+            moreItem,
+            scanItem,
+            searchItem,
+        ]
+        
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.interSectionSpacing = 10
         let layout = UICollectionViewCompositionalLayout(
@@ -359,12 +422,11 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
             forDecorationViewOfKind: TradeSectionBackgroundView.elementKind
         )
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-        collectionView.backgroundColor = R.color.background_secondary()
+        collectionView.backgroundColor = .clear
         collectionView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 20, right: 0)
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(titleView.snp.bottom)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.edges.equalToSuperview()
         }
         let emptyWalletInstructionRegistration = UICollectionView.CellRegistration<EmptyWalletInstructionCell, Void>(
             cellNib: UINib(resource: R.nib.emptyWalletInstructionCell)
@@ -1004,14 +1066,6 @@ extension WalletViewController: EmptyWalletInstructionCell.Delegate {
     
     func emptyWalletInstructionCellRequestToReceive(_ cell: EmptyWalletInstructionCell) {
         walletActionHandler?.receive()
-    }
-    
-}
-
-extension WalletViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .hide
     }
     
 }

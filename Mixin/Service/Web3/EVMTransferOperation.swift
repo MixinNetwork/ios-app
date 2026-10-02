@@ -1,7 +1,7 @@
 import Foundation
 import BigInt
 import web3
-import ReownWalletKit
+import WalletConnectSign
 import MixinServices
 
 class EVMTransferOperation: Web3TransferOperation {
@@ -390,7 +390,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
     
     override func respond(hash: String) async throws {
         let response = RPCResult.response(AnyCodable(hash))
-        try await WalletKit.instance.respond(
+        try await Sign.instance.respond(
             topic: request.topic,
             requestId: request.id,
             response: response
@@ -400,7 +400,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
     override func reject() {
         Task {
             let error = JSONRPCError(code: 0, message: "User rejected")
-            try await WalletKit.instance.respond(
+            try await Sign.instance.respond(
                 topic: request.topic,
                 requestId: request.id,
                 response: .error(error)

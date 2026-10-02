@@ -8,7 +8,7 @@ extension MessageDAO {
         var results = [MessageSearchResult]()
         
         var sql = """
-        SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.identity_number, u.membership
+        SELECT m.id, m.category, m.content, m.caption, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.identity_number, u.membership
         FROM messages m LEFT JOIN users u ON m.user_id = u.user_id
         """
         let arguments: StatementArguments
@@ -31,9 +31,13 @@ extension MessageDAO {
         } else {
             sql += """
                 WHERE conversation_id = :cid
-                    AND m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST','ENCRYPTED_TEXT','ENCRYPTED_DATA','ENCRYPTED_POST')
+                    AND m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST','ENCRYPTED_TEXT','ENCRYPTED_DATA','ENCRYPTED_POST','SIGNAL_IMAGE','PLAIN_IMAGE','ENCRYPTED_IMAGE')
                     AND m.status != 'FAILED'
-                    AND (m.content LIKE :keyword ESCAPE '/' OR m.name LIKE :keyword ESCAPE '/')
+                    AND (
+                        (m.category in ('SIGNAL_DATA','PLAIN_DATA','ENCRYPTED_DATA') AND m.name LIKE :keyword ESCAPE '/')
+                        OR (m.category in ('SIGNAL_IMAGE','PLAIN_IMAGE','ENCRYPTED_IMAGE') AND m.caption LIKE :keyword ESCAPE '/')
+                        OR (m.category in ('SIGNAL_TEXT','SIGNAL_POST','PLAIN_TEXT','PLAIN_POST','ENCRYPTED_TEXT','ENCRYPTED_POST') AND m.content LIKE :keyword ESCAPE '/')
+                    )
             """
             if let location = location, let rowId: Int = UserDatabase.current.select(column: .rowID, from: Message.self, where: Message.column(of: .messageId) == location) {
                 sql += "\nAND m.ROWID < \(rowId)"
@@ -56,6 +60,7 @@ extension MessageDAO {
                         messageId: row[counter.advancedValue] ?? "",
                         category: row[counter.advancedValue] ?? "",
                         content: row[counter.advancedValue] ?? "",
+                        caption: row[counter.advancedValue],
                         createdAt: row[counter.advancedValue] ?? "",
                         userId: row[counter.advancedValue] ?? "",
                         fullname: row[counter.advancedValue] ?? "",

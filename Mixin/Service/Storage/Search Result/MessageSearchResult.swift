@@ -16,12 +16,24 @@ class MessageSearchResult: SearchResult {
     let createdAt: String
     
     private let content: String
+    private let caption: String?
+    private let category: String
     private let keyword: String
     
     init(
-        conversationId: String, messageId: String, category: String, content: String, createdAt: String,
-        userId: String, fullname: String, avatarUrl: String, isVerified: Bool, identityNumber: String?,
-        membership: User.Membership?, keyword: String
+        conversationId: String,
+        messageId: String,
+        category: String,
+        content: String,
+        caption: String?,
+        createdAt: String,
+        userId: String,
+        fullname: String,
+        avatarUrl: String,
+        isVerified: Bool,
+        identityNumber: String?,
+        membership: User.Membership?,
+        keyword: String
     ) {
         self.conversationId = conversationId
         self.messageId = messageId
@@ -32,7 +44,9 @@ class MessageSearchResult: SearchResult {
         } else {
             self.specializedCategory = nil
         }
+        self.category = category
         self.content = content
+        self.caption = caption
         self.userId = userId
         self.userFullname = fullname
         self.createdAt = createdAt
@@ -43,32 +57,56 @@ class MessageSearchResult: SearchResult {
             identityNumber: identityNumber
         )
         let superscript = createdAt.toUTCDate().timeAgo()
-        super.init(iconUrl: avatarUrl,
-                   badgeImage: badgeImage,
-                   superscript: superscript)
+        super.init(
+            iconUrl: avatarUrl,
+            badgeImage: badgeImage,
+            superscript: superscript
+        )
     }
     
     override func updateTitleAndDescription() {
-        title = SearchResult.attributedText(text: userFullname,
-                                            textAttributes: SearchResult.titleAttributes,
-                                            keyword: keyword,
-                                            keywordAttributes: SearchResult.highlightedTitleAttributes)
+        title = SearchResult.attributedText(
+            text: userFullname,
+            textAttributes: SearchResult.titleAttributes,
+            keyword: keyword,
+            keywordAttributes: SearchResult.highlightedTitleAttributes
+        )
         
         if let category = specializedCategory {
             switch category {
             case .data:
-                description = NSAttributedString(string: R.string.localizable.content_file(),
-                                                 attributes: SearchResult.normalDescriptionAttributes)
+                description = NSAttributedString(
+                    string: R.string.localizable.content_file(),
+                    attributes: SearchResult.normalDescriptionAttributes
+                )
             case .transcript:
-                description = NSAttributedString(string: R.string.localizable.content_transcript(),
-                                                 attributes: SearchResult.normalDescriptionAttributes)
+                description = NSAttributedString(
+                    string: R.string.localizable.content_transcript(),
+                    attributes: SearchResult.normalDescriptionAttributes
+                )
+            }
+        } else if category.hasSuffix("_IMAGE") {
+            if let caption = caption, !caption.isEmpty {
+                description = SearchResult.attributedText(
+                    text: caption,
+                    textAttributes: SearchResult.largerDescriptionAttributes,
+                    keyword: keyword,
+                    keywordAttributes: SearchResult.highlightedLargerDescriptionAttributes
+                )
+            } else {
+                description = NSAttributedString(
+                    string: R.string.localizable.content_photo(),
+                    attributes: SearchResult.normalDescriptionAttributes
+                )
             }
         } else {
             // TODO: Tokenize
-            description = SearchResult.attributedText(text: content,
-                                                      textAttributes: SearchResult.largerDescriptionAttributes,
-                                                      keyword: keyword,
-                                                      keywordAttributes: SearchResult.highlightedLargerDescriptionAttributes)
+            description = SearchResult.attributedText(
+                text: content,
+                textAttributes: SearchResult.largerDescriptionAttributes,
+                keyword: keyword,
+                keywordAttributes: SearchResult.highlightedLargerDescriptionAttributes
+            )
         }
     }
     

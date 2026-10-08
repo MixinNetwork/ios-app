@@ -1477,12 +1477,25 @@ extension RouteAPI {
                 }
                 switch result {
                 case .success:
-                    if let duration = response.metrics?.taskInterval.duration, duration > 1 {
+                    if let metrics = response.metrics, metrics.taskInterval.duration > 1 {
+                        let total = String(format: "%.2f", metrics.taskInterval.duration)
+                        // From request sent to first response byte, including one network round trip
+                        let server: String
+                        if let transaction = metrics.transactionMetrics.last,
+                           let requestEnd = transaction.requestEndDate,
+                           let responseStart = transaction.responseStartDate
+                        {
+                            server = String(format: "%.2f", responseStart.timeIntervalSince(requestEnd)) + "s"
+                        } else {
+                            server = "unknown"
+                        }
                         Logger.route.warn(
                             category: "RouteAPI",
-                            message: "\(method.rawValue) \(url) took \(duration)s",
+                            message: "\(method.rawValue) \(url) took \(total)s, server: \(server)",
                         )
                     }
+                case .failure(.httpTransport(.explicitlyCancelled)):
+                    break
                 case .failure(let error):
                     Logger.route.error(
                         category: "RouteAPI",

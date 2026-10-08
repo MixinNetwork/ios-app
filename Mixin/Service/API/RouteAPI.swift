@@ -1477,7 +1477,7 @@ extension RouteAPI {
                 }
                 switch result {
                 case .success:
-                    if let duration = response.metrics?.taskInterval.duration, duration > 0.5 {
+                    if let duration = response.metrics?.taskInterval.duration, duration > 1 {
                         Logger.route.warn(
                             category: "RouteAPI",
                             message: "\(method.rawValue) \(url) took \(duration)s",

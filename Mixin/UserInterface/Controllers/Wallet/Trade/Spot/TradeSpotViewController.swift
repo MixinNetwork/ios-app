@@ -1380,8 +1380,7 @@ extension TradeSpotViewController {
                 self?.reloadData(swappableTokens: tokens)
             case .failure(.requiresUpdate):
                 self?.reportClientOutdated()
-            case .failure(let error):
-                Logger.general.debug(category: "Trade", message: "\(error)")
+            case .failure:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     self?.reloadTokens()
                 }
@@ -1398,8 +1397,8 @@ extension TradeSpotViewController {
                 DispatchQueue.main.async {
                     self?.stockTokens = tokens
                 }
-            case .failure(let error):
-                Logger.general.debug(category: "Trade", message: "\(error)")
+            case .failure:
+                break
             }
         }
     }

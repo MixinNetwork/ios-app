@@ -11,6 +11,7 @@ public enum Logger: Equatable {
     case conversation(id: String)
     case tip
     case web3
+    case route
     case login
     
     public static func migrate() {
@@ -57,7 +58,7 @@ public enum Logger: Equatable {
     }
     
     public static func export(conversationID: String?) -> URL? {
-        var subsystems = [general, database, call, tip, web3, login]
+        var subsystems = [general, database, call, tip, web3, route, login]
         if let conversationID {
             subsystems.append(conversation(id: conversationID))
         }
@@ -152,6 +153,8 @@ extension Logger {
             AppGroupContainer.logUrl.appendingPathComponent("tip.log")
         case .web3:
             AppGroupContainer.logUrl.appendingPathComponent("wc.log")
+        case .route:
+            AppGroupContainer.logUrl.appendingPathComponent("route.log")
         case .login:
             AppGroupContainer.loginLogURL
         }

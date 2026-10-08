@@ -173,7 +173,6 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                         self?.navigationController?.pushViewController(replacingCurrent: selector, animated: true)
                     }
                 case let .failure(error):
-                    Logger.general.debug(category: "AddWallet", message: "\(error)")
                     DispatchQueue.main.async {
                         self?.showError(error.localizedDescription)
                     }

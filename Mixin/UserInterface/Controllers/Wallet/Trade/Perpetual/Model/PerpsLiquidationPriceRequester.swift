@@ -138,7 +138,6 @@ final class OpenPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceReq
                 } catch is CancellationError {
                     // Ignore
                 } catch let error as MixinAPIError where error.worthRetrying {
-                    Logger.general.error(category: "OpenPerpsPosition", message: "\(error)")
                     try await Task.sleep(nanoseconds: failRetryInterval * NSEC_PER_SEC)
                 } catch {
                     let error = LiquidationPriceError(error: error, intent: .open, marginSymbol: symbol)
@@ -199,7 +198,6 @@ final class EditPerpsPositionLiquidationPriceRequester: PerpsLiquidationPriceReq
                 } catch is CancellationError {
                     // Ignore
                 } catch let error as MixinAPIError where error.worthRetrying {
-                    Logger.general.error(category: "AddPerpsPosition", message: "\(error)")
                     try await Task.sleep(nanoseconds: failRetryInterval * NSEC_PER_SEC)
                 } catch {
                     let error = LiquidationPriceError(error: error, intent: .edit, marginSymbol: symbol)

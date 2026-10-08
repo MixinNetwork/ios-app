@@ -26,8 +26,7 @@ final class ReloadMarketAlertsJob: AsynchronousJob {
                 } else {
                     self.reloadInexistCoinsIfNeeded(alerts: alerts)
                 }
-            case let .failure(error):
-                Logger.general.debug(category: "ReloadMarketAlerts", message: "\(error)")
+            case .failure:
                 DispatchQueue.global().asyncAfter(deadline: .now() + 1, execute: self.reloadAlerts)
             }
         }
@@ -52,8 +51,7 @@ final class ReloadMarketAlertsJob: AsynchronousJob {
                     MarketDAO.shared.save(markets: markets, dataSource: .other)
                     MarketAlertDAO.shared.replace(alerts: alerts)
                     self.finishJob()
-                case let .failure(error):
-                    Logger.general.debug(category: "ReloadMarketAlerts", message: "\(error)")
+                case .failure:
                     DispatchQueue.global().asyncAfter(deadline: .now() + 1) {
                         self.reloadInexistCoinsIfNeeded(alerts: alerts)
                     }

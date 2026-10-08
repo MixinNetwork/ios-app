@@ -423,7 +423,7 @@ extension WebSocketService: WebSocketConnectionDelegate {
         guard let message = try? BlazeMessageFramer.decompressAndDecode(data: data) else {
             return
         }
-        let wasResolved = requestManager.resolve(with: message)
+        requestManager.resolve(with: message)
         if let error = message.error {
             if case .unauthorized = error, message.action == BlazeMessageAction.error.rawValue, !AppGroupUserDefaults.isClockSkewed {
                 LoginManager.shared.logout(reason: "WS access unauthorized: \(message.id)")
@@ -431,7 +431,7 @@ extension WebSocketService: WebSocketConnectionDelegate {
         } else if message.data != nil {
             if message.isReceiveMessageAction() {
                 ReceiveMessageService.shared.receiveMessage(blazeMessage: message)
-            } else if !wasResolved {
+            } else {
                 guard let data = message.toBlazeMessageData() else {
                     return
                 }

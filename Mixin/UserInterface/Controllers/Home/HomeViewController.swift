@@ -175,6 +175,9 @@ final class HomeViewController: UIViewController {
     
     @IBAction func toggleCircles(_ sender: Any) {
         let circles = CirclesViewController()
+        circles.onCircleSelected = { [weak self] in
+            self?.setNeedsRefresh()
+        }
         let navigation = GeneralAppearanceNavigationController(rootViewController: circles)
         present(navigation, animated: true)
     }

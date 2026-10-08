@@ -3,6 +3,8 @@ import MixinServices
 
 final class CirclesViewController: UIViewController {
     
+    var onCircleSelected: (() -> Void)?
+    
     private weak var tableView: UITableView!
     
     private lazy var tableFooterView: CirclesTableFooterView = {
@@ -156,8 +158,7 @@ extension CirclesViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true) 
-        switchToCircle(at: indexPath, dismissAfterFinished: true)
+        switchToCircle(at: indexPath)
         presentingViewController?.dismiss(animated: true)
     }
     
@@ -212,7 +213,7 @@ extension CirclesViewController {
                         CircleDAO.shared.delete(circleId: circle.circleId)
                         DispatchQueue.main.sync {
                             let indexPath = IndexPath(row: 0, section: Section.embedded.rawValue)
-                            self.switchToCircle(at: indexPath, dismissAfterFinished: false)
+                            self.switchToCircle(at: indexPath)
                             self.reloadCircles()
                             hud.set(style: .notification, text: R.string.localizable.deleted())
                             hud.scheduleAutoHidden()
@@ -276,7 +277,7 @@ extension CirclesViewController {
         })
     }
     
-    private func switchToCircle(at indexPath: IndexPath, dismissAfterFinished: Bool) {
+    private func switchToCircle(at indexPath: IndexPath) {
         let section = Section(rawValue: indexPath.section)!
         switch section {
         case .embedded:
@@ -287,12 +288,7 @@ extension CirclesViewController {
             AppGroupUserDefaults.User.circleId = circle.circleId
             AppGroupUserDefaults.User.circleName = circle.name
         }
-        if let home = parent as? HomeViewController {
-            home.setNeedsRefresh()
-            if dismissAfterFinished {
-                home.toggleCircles(self)
-            }
-        }
+        onCircleSelected?()
         setRow(at: indexPath, isCurrent: true)
     }
     

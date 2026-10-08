@@ -64,6 +64,8 @@ final class ConversationViewController: UIViewController {
         }
     }()
     
+    private let lastMessageBottomMarginHeight: CGFloat = 10
+    
     private let showScrollToBottomButtonThreshold: CGFloat = 150
     private let loadMoreMessageThreshold = 20
     private let animationDuration: TimeInterval = 0.3
@@ -215,14 +217,6 @@ final class ConversationViewController: UIViewController {
     
     private var followsKeyboard: Bool {
         !keyboardInputConstraints.isEmpty && inputWrapperHeightConstraint.priority == .almostInexist
-    }
-    
-    private var bottomBarSeparatorHeight: CGFloat {
-        if #available(iOS 26, *) {
-            0
-        } else {
-            MessageViewModel.bottomSeparatorHeight
-        }
     }
     
     private var maxInputWrapperHeight: CGFloat {
@@ -503,7 +497,7 @@ final class ConversationViewController: UIViewController {
             return
         }
         let height = view.bounds.maxY - inputWrapperView.frame.minY
-        guard abs(tableView.contentInset.bottom - height - bottomBarSeparatorHeight) > 0.1 else {
+        guard abs(tableView.contentInset.bottom - height - lastMessageBottomMarginHeight) > 0.1 else {
             return
         }
         updateTableViewBottomInset(bottomBarHeight: height)
@@ -2522,7 +2516,7 @@ extension ConversationViewController {
     }
     
     private func updateTableViewBottomInset(bottomBarHeight: CGFloat) {
-        let bottomInset = bottomBarHeight + bottomBarSeparatorHeight
+        let bottomInset = bottomBarHeight + lastMessageBottomMarginHeight
         let contentOffset = tableView.contentOffset
         let panState = tableView.panGestureRecognizer.state
         // Capture this before changing the inset: UIKit may change its scrolling state

@@ -177,8 +177,8 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                             remoteResults: [],
                             comparator: comparator,
                         )
-                    case .failure(let error):
-                        Logger.general.debug(category: "SwapWeb3TokenSelector", message: "\(error)")
+                    case .failure:
+                        break
                     }
                 }
             }

@@ -493,8 +493,7 @@ extension TokenViewController {
                 DispatchQueue.main.async {
                     self?.reloadMarket(result: .invalid)
                 }
-            case .failure(let error):
-                Logger.general.debug(category: "MarketView", message: "\(error)")
+            case .failure:
                 DispatchQueue.global().asyncAfter(deadline: .now() + 3) { [weak self] in
                     self?.loadMarketsFromRemote(assetID: assetID)
                 }

@@ -47,6 +47,7 @@ extension RouteAPI {
         completion: @escaping (MixinAPI.Result<[SwapToken.Codable]>) -> Void
     ) -> Request? {
         guard let encodedKeyword = keyword.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+            Logger.route.error(category: "RouteAPI", message: "Token search failed: \(MixinAPIError.invalidPath)")
             completion(.failure(.invalidPath))
             return nil
         }
@@ -430,6 +431,7 @@ extension RouteAPI {
                     debugDescription: "Invalid price"
                 )
             )
+            Logger.route.error(category: "RouteAPI", message: "GET \(path) failed: \(error)")
             throw MixinAPIError.invalidJSON(error)
         }
     }
@@ -1070,11 +1072,16 @@ extension RouteAPI {
             path: "/web3/rpc?chain_id=\(ChainID.solana)",
             with: ["method": "getLatestBlockhash"]
         )
-        guard let data = result.data(using: .utf8) else {
-            throw RPCError.invalidResponse
+        do {
+            guard let data = result.data(using: .utf8) else {
+                throw RPCError.invalidResponse
+            }
+            let response = try JSONDecoder.default.decode(Response.self, from: data)
+            return response.blockhash
+        } catch {
+            Logger.route.error(category: "RouteAPI", message: "Decode getLatestBlockhash failed: \(error)")
+            throw error
         }
-        let response = try JSONDecoder.default.decode(Response.self, from: data)
-        return response.blockhash
     }
     
     static func solanaAccountExists(pubkey: String) async throws -> Bool {
@@ -1107,10 +1114,15 @@ extension RouteAPI {
                 ],
             ]
         )
-        guard let data = result.data(using: .utf8) else {
-            throw RPCError.invalidResponse
+        do {
+            guard let data = result.data(using: .utf8) else {
+                throw RPCError.invalidResponse
+            }
+            return try JSONDecoder.default.decode(SolanaAccountInfo.self, from: data)
+        } catch {
+            Logger.route.error(category: "RouteAPI", message: "Decode getAccountInfo failed: \(error)")
+            throw error
         }
-        return try JSONDecoder.default.decode(SolanaAccountInfo.self, from: data)
     }
     
 }
@@ -1339,7 +1351,13 @@ extension RouteAPI {
             encoder: .json,
             interceptor: interceptor
         )
-        return request(dataRequest, queue: queue, completion: completion)
+        return request(
+            dataRequest,
+            method: method,
+            url: url,
+            queue: queue,
+            completion: completion,
+        )
     }
     
     @discardableResult
@@ -1364,7 +1382,13 @@ extension RouteAPI {
             encoding: JSONEncoding.default,
             interceptor: interceptor
         )
-        return request(dataRequest, queue: queue, completion: completion)
+        return request(
+            dataRequest,
+            method: method,
+            url: url,
+            queue: queue,
+            completion: completion,
+        )
     }
     
     static func request<Response>(
@@ -1391,15 +1415,11 @@ extension RouteAPI {
             interceptor: interceptor
         )
         
-        request(dataRequest, queue: .global()) { theResult in
+        request(dataRequest, method: method, url: url, queue: .global()) { theResult in
             result = theResult
             semaphore.signal()
         }
         semaphore.wait()
-        
-        if case let .failure(error) = result, error.isTransportTimedOut {
-            Logger.general.error(category: "RouteAPI", message: "Sync request timed out with: \(error), timeout: \(requestTimeout)")
-        }
         
         return result
     }
@@ -1433,25 +1453,43 @@ extension RouteAPI {
     @discardableResult
     private static func request<Response>(
         _ request: DataRequest,
+        method: HTTPMethod,
+        url: String,
         queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
         request.validate(statusCode: 200...299)
             .responseDecodable(of: ResponseObject<Response>.self, queue: queue) { response in
+                let result: MixinAPI.Result<Response>
                 switch response.result {
                 case .success(let response):
                     if let data = response.data {
-                        completion(.success(data))
+                        result = .success(data)
                     } else if let error = response.error {
-                        completion(.failure(.response(error)))
+                        result = .failure(.response(error))
                     } else if Response.self == Empty.self {
-                        completion(.success(Empty.value as! Response))
+                        result = .success(Empty.value as! Response)
                     } else {
-                        completion(.failure(.emptyResponse))
+                        result = .failure(.emptyResponse)
                     }
                 case .failure(let error):
-                    completion(.failure(.httpTransport(error)))
+                    result = .failure(.httpTransport(error))
                 }
+                switch result {
+                case .success:
+                    if let duration = response.metrics?.taskInterval.duration, duration > 0.5 {
+                        Logger.route.warn(
+                            category: "RouteAPI",
+                            message: "\(method.rawValue) \(url) took \(duration)s",
+                        )
+                    }
+                case .failure(let error):
+                    Logger.route.error(
+                        category: "RouteAPI",
+                        message: "\(method.rawValue) \(url) failed: \(error)",
+                    )
+                }
+                completion(result)
             }
     }
     

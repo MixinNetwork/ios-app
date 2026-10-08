@@ -39,8 +39,7 @@ final class ReloadGlobalMarketJob: AsynchronousJob {
                 }
                 Logger.general.debug(category: "ReloadGlobalMarketJob", message: "Updated")
                 self.finishJob()
-            case let .failure(error):
-                Logger.general.debug(category: "ReloadGlobalMarketJob", message: "\(error)")
+            case .failure:
                 DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: self.reload)
             }
         }

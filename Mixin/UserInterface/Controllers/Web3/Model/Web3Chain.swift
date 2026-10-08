@@ -354,8 +354,7 @@ extension Web3Chain {
             case .failure(.httpTransport(.requestAdaptationFailed)):
                 // Logout
                 break
-            case .failure(let error):
-                Logger.web3.info(category: "Web3Chain", message: "Failed to load: \(error)")
+            case .failure:
                 DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: synchronize)
             }
         }

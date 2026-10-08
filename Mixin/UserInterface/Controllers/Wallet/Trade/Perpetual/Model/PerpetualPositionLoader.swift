@@ -50,6 +50,8 @@ final class PerpetualPositionLoader {
             queue: .global()
         ) { [walletID] result in
             switch result {
+            case .failure:
+                break
             case .success(let positions):
                 PerpsPositionDAO.shared.replace(positions: positions)
                 Logger.general.debug(category: "PerpPositionLoader", message: "Loaded \(positions.count) positions")
@@ -57,8 +59,6 @@ final class PerpetualPositionLoader {
                     let orders = SyncPerpsOrdersJob(walletID: walletID)
                     ConcurrentJobQueue.shared.addJob(job: orders)
                 }
-            case .failure(let error):
-                Logger.general.debug(category: "PerpPositionLoader", message: "\(error)")
             }
         }
     }

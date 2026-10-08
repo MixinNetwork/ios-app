@@ -88,8 +88,8 @@ final class SpotTradingManualViewController: ManualViewController {
                     self.quote.price = receiveAmount
                     self.scheduleCountDownTimer()
                 }
-            case .failure(let error):
-                Logger.general.debug(category: "SpotTradingManual", message: "\(error)")
+            case .failure:
+                break
             }
         }
     }

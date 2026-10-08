@@ -434,6 +434,7 @@ final class MarketDashboardViewController: UIViewController {
             scheduleRemoteLoader: true,
             debugReason: "Initial",
         )
+        allDataLoader.start()
         DispatchQueue.global(qos: .background).async {
             MarketDAO.shared.deleteOrphanRecords()
         }

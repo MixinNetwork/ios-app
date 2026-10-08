@@ -76,7 +76,7 @@ final class WebSocketConnection: NSObject {
             self.isConnected = false
             
             let task = self.session.webSocketTask(with: request)
-            task.maximumMessageSize = BlazeMessageFramer.maxPayloadSize
+            task.maximumMessageSize = Int.max
             self.currentTask = task
             
             task.resume()

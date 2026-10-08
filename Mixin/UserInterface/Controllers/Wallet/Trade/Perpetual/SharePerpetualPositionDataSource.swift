@@ -51,7 +51,7 @@ struct SharePerpetualPositionDataSource {
         closePrice: String,
     ) {
         self.title = viewModel.directionWithSymbol
-        self.iconURL = viewModel.iconURL
+        self.iconURL = viewModel.order.iconURL
         self.pnl = pnl.receivingAmount
         self.roe = pnl.percentage
         self.color = pnl.color
@@ -59,11 +59,11 @@ struct SharePerpetualPositionDataSource {
         self.leverage = viewModel.leverage
         self.entryPrice = viewModel.entryPrice
         self.trailingPrice = .closePrice(closePrice)
-        self.marketID = viewModel.marketID
-        self.tokenSymbol = viewModel.tokenSymbol
-        self.displaySymbol = viewModel.displaySymbol
+        self.marketID = viewModel.order.marketID
+        self.tokenSymbol = viewModel.order.tokenSymbol
+        self.displaySymbol = viewModel.order.displaySymbol
         self.side = viewModel.side.localizedName
-        self.leverageMultiplier = viewModel.leverageMultiplier
+        self.leverageMultiplier = viewModel.order.leverage
     }
     
 }

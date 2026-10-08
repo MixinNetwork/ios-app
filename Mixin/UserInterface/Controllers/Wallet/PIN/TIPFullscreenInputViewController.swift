@@ -65,6 +65,7 @@ final class TIPFullscreenInputViewController: UIViewController {
     private var isBusy = false {
         didSet {
             continueButton.isBusy = isBusy
+            continueButton.isEnabled = isBusy
             pinField.receivesInput = !isBusy
         }
     }

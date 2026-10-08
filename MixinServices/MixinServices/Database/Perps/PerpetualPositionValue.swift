@@ -84,17 +84,16 @@ public struct PerpetualPositionValue {
         )
     }
     
-    static func closed(pnl: String) -> PerpetualPositionValue {
-        let decimalValue = Decimal(string: pnl, locale: .enUSPOSIX) ?? 0
+    static func closed(pnl: Decimal) -> PerpetualPositionValue {
         let value = CurrencyFormatter.localizedString(
-            from: decimalValue,
+            from: pnl,
             format: .fiatMoneyPretty,
             sign: .always,
             symbol: .dollarSign
         )
-        let state = State(value: decimalValue)
+        let state = State(value: pnl)
         return PerpetualPositionValue(
-            decimalValue: decimalValue,
+            decimalValue: pnl,
             value: value,
             changeValue: nil,
             change: nil,

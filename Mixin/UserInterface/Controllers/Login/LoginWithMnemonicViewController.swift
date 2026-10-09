@@ -187,7 +187,7 @@ extension LoginWithMnemonicViewController {
     private struct LoginContext {
         let masterKey: Ed25519PrivateKey
         let verificationID: String
-        let sessionKey = Ed25519PrivateKey()
+        let sessionKey: Ed25519PrivateKey
     }
     
     private func verifySession(mnemonics: MixinMnemonics, captchaToken: CaptchaToken?) {
@@ -213,9 +213,17 @@ extension LoginWithMnemonicViewController {
             }
             switch result {
             case .success(let verification):
+                let sessionKey: Ed25519PrivateKey
+                do {
+                    sessionKey = try Ed25519PrivateKey()
+                } catch {
+                    self.showError(error.localizedDescription)
+                    return
+                }
                 let context = LoginContext(
                     masterKey: context.masterKey,
-                    verificationID: verification.id
+                    verificationID: verification.id,
+                    sessionKey: sessionKey,
                 )
                 self.loginContext = context
                 if let deactivation = verification.deactivation {

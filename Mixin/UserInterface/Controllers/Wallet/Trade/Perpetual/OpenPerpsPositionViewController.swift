@@ -608,14 +608,6 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     
 }
 
-extension OpenPerpsPositionViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension OpenPerpsPositionViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

@@ -241,14 +241,6 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     
 }
 
-extension AddressInfoInputViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension AddressInfoInputViewController: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

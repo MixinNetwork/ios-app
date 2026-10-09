@@ -52,6 +52,24 @@ final class InscriptionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.standardAppearance = .transparent
+        navigationItem.scrollEdgeAppearance = .transparent
+        navigationItem.compactAppearance = .transparent
+        navigationItem.compactScrollEdgeAppearance = .transparent
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: R.image.ic_title_back(),
+            style: .plain,
+            target: self,
+            action: #selector(goBack(_:)),
+        )
+        navigationItem.leftBarButtonItem?.tintColor = .white
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: R.image.ic_title_more(),
+            style: .plain,
+            target: self,
+            action: #selector(showMoreMenu(_:)),
+        )
+        navigationItem.rightBarButtonItem?.tintColor = .white
         tableView.register(R.nib.inscriptionContentCell)
         tableView.register(R.nib.inscriptionActionCell)
         tableView.register(R.nib.inscriptionHashCell)
@@ -69,11 +87,11 @@ final class InscriptionViewController: UIViewController {
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     
-    @IBAction func goBack(_ sender: Any) {
+    @objc private func goBack(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
     
-    @IBAction func showMoreMenu(_ sender: Any) {
+    @objc private func showMoreMenu(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         switch inscription?.inscriptionContent {
         case .image:
@@ -321,14 +339,6 @@ final class InscriptionViewController: UIViewController {
                 self.appendOwner(row: .owners(items, threshold: threshold))
             }
         }
-    }
-    
-}
-
-extension InscriptionViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .hide
     }
     
 }

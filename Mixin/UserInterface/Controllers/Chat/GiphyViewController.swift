@@ -39,7 +39,11 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
         (collectionView.collectionViewLayout as? TilingCollectionViewFlowLayout)?.contentRatio = 4 / 3
         loadingIndicator.style = .large
         loadingIndicator.tintColor = R.color.text_tertiary()!
-        loadingIndicator.backgroundColor = .background
+        if #available(iOS 26, *) {
+            loadingIndicator.backgroundColor = .clear
+        } else {
+            loadingIndicator.backgroundColor = .background
+        }
         loadingIndicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         loadingIndicator.frame = view.bounds
         loadingIndicator.startAnimating()
@@ -89,7 +93,11 @@ class GiphyViewController: StickersCollectionViewController, ConversationInputAc
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerReuseId, for: indexPath)
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerReuseId, for: indexPath)
+        if #available(iOS 26, *) {
+            view.backgroundColor = .clear
+        }
+        return view
     }
     
 }

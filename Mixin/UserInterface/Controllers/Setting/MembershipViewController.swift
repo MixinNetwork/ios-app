@@ -101,14 +101,6 @@ final class MembershipViewController: UIViewController {
     
 }
 
-extension MembershipViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension MembershipViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {

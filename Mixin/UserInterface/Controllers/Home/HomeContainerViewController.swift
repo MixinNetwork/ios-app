@@ -6,7 +6,9 @@ final class HomeContainerViewController: UIViewController {
     static let viewDidAppearNotification = Notification.Name("one.mixin.messenger.HomeContainerViewController.ViewDidAppear")
     
     let homeTabBarController: HomeTabBarController
-    let homeNavigationController: HomeNavigationController
+    var homeNavigationController: HomeNavigationController {
+        homeTabBarController.selectedNavigationController
+    }
     
     let clipSwitcher = ClipSwitcher()
     let overlaysCoordinator = HomeOverlaysCoordinator()
@@ -47,7 +49,7 @@ final class HomeContainerViewController: UIViewController {
         } else if galleryIsOnTopMost {
             return galleryViewController
         } else {
-            return homeNavigationController
+            return homeTabBarController
         }
     }
     
@@ -60,19 +62,18 @@ final class HomeContainerViewController: UIViewController {
     
     private var refreshAccountAfterViewAppears: Bool
     private var navigationInteractiveGestureWasEnabled = true
+    private weak var galleryNavigationController: HomeNavigationController?
     
     var galleryIsOnTopMost: Bool {
         isShowingGallery && galleryViewController.parent != nil
     }
     
-    init(initialTab: HomeTabBarController.ChildID) {
-        let homeTabBarController = HomeTabBarController(initialChild: initialTab)
-        self.homeTabBarController = homeTabBarController
-        self.homeNavigationController = HomeNavigationController(rootViewController: homeTabBarController)
+    init(initialTab: HomeTabBarController.InitialTab) {
+        homeTabBarController = HomeTabBarController(initialTab: initialTab)
         switch initialTab {
         case .chat:
             refreshAccountAfterViewAppears = false
-        case .wallet, .market, .more:
+        case .wallet:
             refreshAccountAfterViewAppears = true
         }
         super.init(nibName: nil, bundle: nil)
@@ -89,10 +90,23 @@ final class HomeContainerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         Logger.general.info(category: "HomeContainer", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
-        addChild(homeNavigationController)
-        view.addSubview(homeNavigationController.view)
-        homeNavigationController.view.snp.makeEdgesEqualToSuperview()
-        homeNavigationController.didMove(toParent: self)
+        addChild(homeTabBarController)
+        view.addSubview(homeTabBarController.view)
+        homeTabBarController.view.snp.makeEdgesEqualToSuperview()
+        homeTabBarController.didMove(toParent: self)
+        
+        if AppGroupUserDefaults.Crypto.isPrekeyLoaded,
+           AppGroupUserDefaults.Crypto.isSessionSynchronized,
+           !AppGroupUserDefaults.isClockSkewed,
+           LoginManager.shared.account != nil
+        {
+            if UIApplication.shared.applicationState == .active {
+                WebSocketService.shared.connect()
+                ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))
+                ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
+            }
+        }
+        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(applicationWillEnterForeground(_:)),
@@ -175,7 +189,7 @@ final class HomeContainerViewController: UIViewController {
     }
     
     func showWalletViewController() {
-        homeTabBarController.switchTo(child: .wallet)
+        homeTabBarController.showWallet()
     }
     
     func presentMyQRCode() {
@@ -225,6 +239,7 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
         removeGalleryFromItsParentIfNeeded()
+        galleryNavigationController = homeNavigationController
         viewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         viewController.view.frame = view.bounds
         addChild(viewController)
@@ -242,7 +257,7 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didShow item: GalleryItem) {
-        if let recognizer = homeNavigationController.interactivePopGestureRecognizer {
+        if let recognizer = galleryNavigationController?.interactivePopGestureRecognizer {
             navigationInteractiveGestureWasEnabled = recognizer.isEnabled
             recognizer.isEnabled = false
         }
@@ -259,7 +274,8 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
         setNeedsStatusBarAppearanceUpdate()
         setNeedsUpdateOfHomeIndicatorAutoHidden()
         chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, didDismiss: item, relativeOffset: relativeOffset)
-        homeNavigationController.interactivePopGestureRecognizer?.isEnabled = navigationInteractiveGestureWasEnabled
+        galleryNavigationController?.interactivePopGestureRecognizer?.isEnabled = navigationInteractiveGestureWasEnabled
+        galleryNavigationController = nil
     }
     
     func galleryViewController(_ viewController: GalleryViewController, didCancelDismissalFor item: GalleryItem) {
@@ -300,7 +316,8 @@ extension HomeContainerViewController {
     }
     
     private func chainingDelegate(of conversationId: String) -> GalleryViewControllerDelegate? {
-        let sharedMedia = homeNavigationController.viewControllers
+        let navigationController = galleryNavigationController ?? homeNavigationController
+        let sharedMedia = navigationController.viewControllers
             .compactMap({ $0 as? SharedMediaViewController })
             .first(where: { $0.conversationId == conversationId })?
             .children
@@ -309,7 +326,7 @@ extension HomeContainerViewController {
         if let delegate = sharedMedia {
             return delegate
         }
-        let conversation = homeNavigationController.viewControllers
+        let conversation = navigationController.viewControllers
             .compactMap({ $0 as? ConversationViewController })
             .first(where: { $0.conversationId == conversationId })
         if let conversation = conversation {

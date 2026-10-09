@@ -158,7 +158,7 @@ final class WithdrawPreviewViewController: WalletIdentifyingAuthenticationPrevie
             return
         }
         var viewControllers = navigation.viewControllers
-        while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
+        while viewControllers.count > 1 {
             if viewControllers.last is MixinTokenViewController {
                 break
             }

@@ -176,14 +176,6 @@ class InputOnChainInfoViewController: UIViewController {
     
 }
 
-extension InputOnChainInfoViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension InputOnChainInfoViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {

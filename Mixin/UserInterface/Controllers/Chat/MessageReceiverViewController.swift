@@ -275,7 +275,7 @@ extension MessageReceiverViewController {
             case .user(let user):
                 vc = ConversationViewController.instance(ownerUser: user)
             }
-            navigationController?.pushViewController(withBackRoot: vc)
+            navigationController?.pushViewController(afterRoot: vc)
         } else {
             navigationController?.popViewController(animated: true)
         }

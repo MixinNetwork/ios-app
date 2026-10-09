@@ -2,7 +2,7 @@ import Foundation
 import Combine
 import OrderedCollections
 import BigInt
-import ReownWalletKit
+import WalletConnectSign
 import MixinServices
 
 fileprivate var logger: MixinServices.Logger {
@@ -35,21 +35,22 @@ final class WalletConnectService {
             icons: [],
             redirect: try! .init(native: "mixin://", universal: nil)
         )
-        WalletKit.configure(metadata: metadata, crypto: Web3CryptoProvider())
-        WalletKit.instance.sessionsPublisher
+        Pair.configure(metadata: metadata)
+        Sign.configure(crypto: Web3CryptoProvider())
+        Sign.instance.sessionsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessions in
                 self?.reloadSessions(sessions: sessions)
             }
             .store(in: &subscribes)
-        WalletKit.instance.sessionProposalPublisher
+        Sign.instance.sessionProposalPublisher
             .sink { [weak self] (proposal, context) in
                 DispatchQueue.main.async {
                     self?.show(proposal: proposal)
                 }
             }
             .store(in: &subscribes)
-        WalletKit.instance.sessionRequestPublisher
+        Sign.instance.sessionRequestPublisher
             .sink { [weak self] (request, context) in
                 self?.handle(request: request)
             }
@@ -82,7 +83,7 @@ final class WalletConnectService {
         hud.show(style: .busy, text: "")
         Task {
             do {
-                try await WalletKit.instance.pair(uri: uri)
+                try await Pair.instance.pair(uri: uri)
                 logger.info(category: "Serivce", message: "Finished pairing to: \(uri.topic)")
                 try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
                 await MainActor.run {
@@ -146,7 +147,7 @@ extension WalletConnectService {
         DispatchQueue.global().async {
             guard let wallet = Web3WalletDAO.shared.currentSelectedWallet() else {
                 Task {
-                    try await WalletKit.instance.rejectSession(
+                    try await Sign.instance.rejectSession(
                         proposalId: proposal.id,
                         reason: .unsupportedAccounts
                     )
@@ -193,7 +194,7 @@ extension WalletConnectService {
                     Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
                 Task {
-                    try await WalletKit.instance.rejectSession(
+                    try await Sign.instance.rejectSession(
                         proposalId: proposal.id,
                         reason: .unsupportedChains
                     )
@@ -212,7 +213,7 @@ extension WalletConnectService {
                     Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
                 Task {
-                    try await WalletKit.instance.rejectSession(
+                    try await Sign.instance.rejectSession(
                         proposalId: proposal.id,
                         reason: .unsupportedEvents
                     )
@@ -240,7 +241,7 @@ extension WalletConnectService {
                 logger.warn(category: "Service", message: "Missing session for topic: \(topic)")
                 Task {
                     let error = JSONRPCError(code: -1, message: "Missing session")
-                    try await WalletKit.instance.respond(topic: topic, requestId: request.id, response: .error(error))
+                    try await Sign.instance.respond(topic: topic, requestId: request.id, response: .error(error))
                 }
                 let title = R.string.localizable.request_rejected()
                 let message = R.string.localizable.session_not_found()

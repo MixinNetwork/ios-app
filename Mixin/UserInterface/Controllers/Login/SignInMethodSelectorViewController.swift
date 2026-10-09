@@ -72,14 +72,6 @@ final class SignInMethodSelectorViewController: UIViewController {
     
 }
 
-extension SignInMethodSelectorViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension SignInMethodSelectorViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

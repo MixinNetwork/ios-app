@@ -2,7 +2,7 @@ import UIKit
 import GRDB
 import MixinServices
 
-final class ExploreAggregatedSearchViewController: UIViewController, ExploreSearchViewController {
+final class ExploreAggregatedSearchViewController: UIViewController, ExploreSearchViewController, SearchNavigationAnimating {
     
     private enum Section: Int, CaseIterable {
         case quickAccess
@@ -16,22 +16,17 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         static let footer = "f"
     }
     
-    weak var tableView: UITableView!
-    
-    var wantsNavigationSearchBox: Bool {
-        true
+    var searchTextField: UITextField! {
+        searchBoxView.textField
     }
     
-    var navigationSearchBoxInsets: UIEdgeInsets {
-        UIEdgeInsets(top: 0, left: 20, bottom: 0, right: cancelButton.frame.width + cancelButtonRightMargin)
-    }
-    
-    private let cancelButton = SearchCancelButton()
+    private let searchBoxView = SearchBoxView()
     private let queue = OperationQueue()
     private let recommendationViewController = ExploreSearchRecommendationViewController()
     private let maxResultsCount = 3
     
-    private var lastSearchFieldText: String?
+    private weak var tableView: UITableView!
+    
     private var quickAccess: QuickAccessSearchResult?
     private var assetSearchResults: [AssetSearchResult] = []
     private var botSearchResults: [UserSearchResult] = []
@@ -49,15 +44,20 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = ""
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
-        if let exploreViewController {
-            cancelButton.addTarget(
-                exploreViewController,
-                action: #selector(ExploreViewController.cancelSearching(_:)),
-                for: .touchUpInside
-            )
-        }
+        navigationItem.hidesBackButton = true
+        navigationItem.backButtonDisplayMode = .minimal
+        navigationItem.titleView = searchBoxView
+        navigationItem.rightBarButtonItem = .cancelSearch(
+            target: exploreViewController,
+            action: #selector(ExploreViewController.cancelSearching(_:)),
+        )
+        searchBoxView.textField.delegate = self
+        searchBoxView.textField.rightViewMode = .always
+        searchTextField.addTarget(
+            self,
+            action: #selector(searchKeyword(_:)),
+            for: .editingChanged
+        )
         
         let tableView = UITableView(frame: view.bounds, style: .grouped)
         view.addSubview(tableView)
@@ -87,17 +87,22 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        searchTextField.addTarget(self, action: #selector(searchKeyword(_:)), for: .editingChanged)
-        navigationSearchBoxView.isBusy = !queue.operations.isEmpty
-        if let text = lastSearchFieldText {
-            searchTextField.text = text
+        if isMovingToParent {
+            searchTextField.becomeFirstResponder()
+        }
+    }
+    
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        if parent == nil {
+            queue.cancelAllOperations()
+            quickAccess?.cancelPreviousPerformRequest()
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        searchTextField.removeTarget(self, action: #selector(searchKeyword(_:)), for: .editingChanged)
-        lastSearchFieldText = searchTextField.text
+        searchTextField.resignFirstResponder()
     }
     
     @objc private func searchKeyword(_ sender: Any) {
@@ -105,18 +110,18 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
             queue.cancelAllOperations()
             quickAccess = nil
             lastKeyword = nil
-            navigationSearchBoxView.isBusy = false
+            searchBoxView.isBusy = false
             tableView.reloadData()
             recommendationViewController.view.isHidden = false
             return
         }
         guard keyword != lastKeyword else {
-            navigationSearchBoxView.isBusy = false
+            searchBoxView.isBusy = false
             return
         }
         quickAccess?.cancelPreviousPerformRequest()
         queue.cancelAllOperations()
-        navigationSearchBoxView.isBusy = true
+        searchBoxView.isBusy = true
         let limit = maxResultsCount + 1
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op] in
@@ -157,7 +162,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
                 self.botSearchResults = botSearchResults
                 self.dappSearchResults = dappSearchResults
                 self.reloadTableViewData(showEmptyIndicatorIfEmpty: false)
-                self.navigationSearchBoxView.isBusy = false
+                self.searchBoxView.isBusy = false
                 self.recommendationViewController.view.isHidden = true
             }
         }
@@ -381,11 +386,20 @@ extension ExploreAggregatedSearchViewController: SearchHeaderViewDelegate {
         case .quickAccess, .dapp:
             return
         case .asset:
-            viewController = .init(category: .asset)
+            viewController = .init(category: .asset, keyword: searchTextField.text)
         case .bot:
-            viewController = .init(category: .bot)
+            viewController = .init(category: .bot, keyword: searchTextField.text)
         }
-        searchNavigationController?.pushViewController(viewController, animated: true)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+}
+
+extension ExploreAggregatedSearchViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
     }
     
 }

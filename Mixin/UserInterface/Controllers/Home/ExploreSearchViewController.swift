@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-protocol ExploreSearchViewController: SearchNavigationControllerChild {
+protocol ExploreSearchViewController {
     var searchTextField: UITextField! { get }
 }
 
@@ -20,11 +20,11 @@ extension ExploreSearchViewController where Self: UIViewController {
     }
     
     var exploreViewController: ExploreViewController? {
-        parent?.parent as? ExploreViewController
+        navigationController?.viewControllers.first(where: { $0 is ExploreViewController }) as? ExploreViewController
     }
     
     func pushTokenViewController(token: MixinTokenItem) {
-        guard let navigationController = UIApplication.shared.homeNavigationController else {
+        guard let navigationController else {
             return
         }
         let viewController = MixinTokenViewController(token: token)
@@ -33,7 +33,7 @@ extension ExploreSearchViewController where Self: UIViewController {
     }
     
     func pushConversationViewController(userItem: UserItem) {
-        guard let navigationController = UIApplication.shared.homeNavigationController else {
+        guard let navigationController else {
             return
         }
         let vc = ConversationViewController.instance(ownerUser: userItem)
@@ -42,7 +42,7 @@ extension ExploreSearchViewController where Self: UIViewController {
     }
     
     func presentDapp(app: Web3Dapp) {
-        guard let navigationController = UIApplication.shared.homeNavigationController else {
+        guard let navigationController = navigationController as? HomeNavigationController else {
             return
         }
         let context = MixinWebContext(conversationID: "", initialURL: app.homeURL)

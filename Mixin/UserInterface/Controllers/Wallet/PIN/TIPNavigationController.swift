@@ -3,8 +3,6 @@ import MixinServices
 
 final class TIPNavigationController: GeneralAppearanceNavigationController, CheckSessionEnvironmentChild {
     
-    private let navigationBarAppearanceUpdater = NavigationBarStyle.AppearanceUpdater()
-    
     convenience init(intent: TIP.Action) {
         Logger.tip.info(category: "TIPNavigation", message: "Init with intent: \(intent)")
         let intro = TIPIntroViewController(intent: intent)
@@ -15,7 +13,6 @@ final class TIPNavigationController: GeneralAppearanceNavigationController, Chec
         Logger.tip.info(category: "TIPNavigation", message: "Init with arbitrary intro")
         super.init(rootViewController: intro)
         modalPresentationStyle = .fullScreen
-        delegate = navigationBarAppearanceUpdater
     }
     
     required init?(coder aDecoder: NSCoder) {

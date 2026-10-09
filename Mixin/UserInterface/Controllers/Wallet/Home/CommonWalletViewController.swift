@@ -101,7 +101,7 @@ final class CommonWalletViewController: WalletViewController {
         )
         modelController.delegate = searchTokenHandler
         let search = WalletSearchViewController(modelController: modelController)
-        search.presentAsChild(on: self)
+        navigationController?.pushViewController(search, animated: true)
         self.searchTokenHandler = searchTokenHandler
     }
     

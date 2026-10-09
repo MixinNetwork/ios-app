@@ -66,14 +66,6 @@ final class MembershipOrderViewController: UIViewController {
     
 }
 
-extension MembershipOrderViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension MembershipOrderViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {

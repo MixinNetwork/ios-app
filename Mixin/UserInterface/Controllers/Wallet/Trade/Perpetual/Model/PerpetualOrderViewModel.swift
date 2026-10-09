@@ -43,27 +43,20 @@ struct PerpetualOrderViewModel {
     }
     
     let wallet: Wallet
-    let marketID: String
-    let positionID: String
+    let order: PerpetualOrderItem
     let type: OrderType
     let status: Status
     let title: String
     let actions: [Action]
     let side: PerpetualOrderSide
-    let iconURL: URL?
     let directionWithSymbol: String
-    let leverageMultiplier: Int
     let leverage: String
-    let displaySymbol: String?
     let absoluteDecimalQuantity: Decimal
     let quantity: String
-    let tokenSymbol: String?
     let orderValueInToken: String
     let entryPrice: String
     let date: String
-    let feeAmount: String?
     let decimalPayAmount: Decimal
-    let priceFormatStyle: Decimal.FormatStyle.Currency
     let offset: String
     
     init?(wallet: Wallet, order: PerpetualOrderItem) {
@@ -77,8 +70,7 @@ struct PerpetualOrderViewModel {
         let leverage = PerpetualLeverage.stringRepresentation(multiplier: order.leverage)
         
         self.wallet = wallet
-        self.marketID = order.marketID
-        self.positionID = order.positionID
+        self.order = order
         switch order.orderType.knownCase {
         case .open:
             self.type = .open(payAmount: payAmount)
@@ -209,7 +201,6 @@ struct PerpetualOrderViewModel {
             }
         }
         self.side = side
-        self.iconURL = order.iconURL
         switch PerpetualOrderSide(rawValue: order.side) {
         case .long:
             self.directionWithSymbol = R.string.localizable.long_asset(order.tokenSymbol)
@@ -218,16 +209,13 @@ struct PerpetualOrderViewModel {
         default:
             self.directionWithSymbol = "\(order.side) \(order.tokenSymbol)"
         }
-        self.leverageMultiplier = order.leverage
         self.leverage = leverage
-        self.displaySymbol = order.displaySymbol
         self.absoluteDecimalQuantity = absoluteQuantity
         self.quantity = CurrencyFormatter.localizedString(
             from: absoluteQuantity,
             format: .precision,
             sign: .never,
         )
-        self.tokenSymbol = order.tokenSymbol
         self.orderValueInToken = CurrencyFormatter.localizedString(
             from: absoluteQuantity,
             format: .precision,
@@ -244,21 +232,7 @@ struct PerpetualOrderViewModel {
         } else {
             order.updatedAt
         }
-        if let decimalFee = Decimal(string: order.feeAmount, locale: .enUSPOSIX),
-           decimalFee != 0
-        {
-            self.feeAmount = (-decimalFee).formatted(
-                Decimal.FormatStyle.Currency
-                    .currency(code: "USD")
-                    .presentation(.narrow)
-                    .precision(.fractionLength(0...16))
-                    .rounded(rule: .towardZero)
-            )
-        } else {
-            self.feeAmount = nil
-        }
         self.decimalPayAmount = decimalPayAmount
-        self.priceFormatStyle = order.priceFormatStyle
         self.offset = order.updatedAt
     }
     

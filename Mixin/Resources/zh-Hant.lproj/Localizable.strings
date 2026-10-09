@@ -1262,7 +1262,7 @@
 "perps_position_size_pnl_2" = "倉位越小，盈虧金額越小";
 "perps_position_tip" = "加倉會放大收益和風險";
 "perps_product" = "合約";
-"perps_realized_pnl" = "已實現盈虧";
+"perps_realized_pnl" = "淨盈虧";
 "perps_receive" = "收到";
 "perps_reduce_margin" = "減少保證金";
 "perps_reduce_margin_description" = "減少多餘保證金，在保持持倉的同時釋放資金";
@@ -1291,8 +1291,8 @@
 "perps_trading_fee_overview" = "開倉、加倉和平倉均會產生手續費，費用按倉位價值計算，而不是按保證金計算。";
 "perps_trading_fee_pnl_1" = "倉位越大，手續費越高";
 "perps_trading_fee_pnl_2" = "倉位越小，手續費越低";
-"perps_trading_fee_pnl_3" = "已實現盈虧已扣除相關手續費";
-"perps_unrealized_pnl" = "未實現盈虧";
+"perps_trading_fee_pnl_3" = "淨盈虧已扣除相關手續費";
+"perps_unrealized_pnl" = "盈虧";
 "phone_as_key_shard" = "手機號將關聯到由您管理的 MPC 錢包的一個金鑰分片";
 "phone_call" = "電話呼叫";
 "phone_contact" = "手機聯絡人";

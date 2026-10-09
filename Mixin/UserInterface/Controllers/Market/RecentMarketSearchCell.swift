@@ -5,7 +5,7 @@ final class RecentMarketSearchCell: UICollectionViewCell {
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var perpsLabel: InsetLabel!
+    @IBOutlet weak var leverageLabel: InsetLabel!
     @IBOutlet weak var subtitleLabel: MarketColoredLabel!
     
     override func awakeFromNib() {
@@ -14,14 +14,12 @@ final class RecentMarketSearchCell: UICollectionViewCell {
         updateBorderColor()
         iconView.reportsNoIntrinsicContentSize = true
         titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-        perpsLabel.setFont(
-            scaledFor: .systemFont(ofSize: 12, weight: .medium),
-            adjustForContentSize: true
+        leverageLabel.font = UIFontMetrics.default.scaledFont(
+            for: .condensed(size: 12)
         )
-        perpsLabel.layer.cornerRadius = 4
-        perpsLabel.layer.masksToBounds = true
-        perpsLabel.contentInset = UIEdgeInsets(top: 1, left: 3, bottom: 1, right: 3)
-        perpsLabel.text = R.string.localizable.perp()
+        leverageLabel.layer.cornerRadius = 4
+        leverageLabel.layer.masksToBounds = true
+        leverageLabel.contentInset = UIEdgeInsets(top: 2, left: 3, bottom: 0, right: 3)
     }
     
     override func layoutSubviews() {

@@ -1243,6 +1243,7 @@
 "perps_intro_risk_notice_1" = "槓桿交易可能放大收益，同時也會放大虧損";
 "perps_intro_risk_notice_2" = "當保證金不足時，倉位可能被強制平倉";
 "perps_intro_risk_notice_3" = "請合理控制槓桿倍數與倉位規模，謹慎交易";
+"perps_last_price" = "最新價格";
 "perps_leverage_overview" = "槓桿用於放大倉位規模，使交易者可以用較少的資金控制更大的合約頭寸。";
 "perps_leverage_risk_notice_1" = "槓桿越高，爆倉風險越大";
 "perps_leverage_risk_notice_2" = "高槓杆下，小幅價格波動也可能導致較大虧損";
@@ -1256,6 +1257,7 @@
 "perps_margin_or_position" = "新增保證金還是增加倉位？";
 "perps_margin_submitted" = "保證金調整已提交";
 "perps_margin_tip" = "新增保證金可降低強平風險";
+"perps_mark_price" = "標記價格";
 "perps_markets" = "市場";
 "perps_position_size_overview" = "當前合約的倉位規模由「金額 × 槓桿」計算得出，表示本次交易所控制的資產規模。";
 "perps_position_size_pnl_1" = "倉位越大，盈虧金額越大";

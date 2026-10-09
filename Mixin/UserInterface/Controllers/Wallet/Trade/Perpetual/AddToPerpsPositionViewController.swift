@@ -384,7 +384,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
     }
     
     private func updateSubtitle() {
-        let currentPrice = marketViewModel.price
+        let currentPrice = marketViewModel.localizedLastPrice
         let text = NSMutableAttributedString(
             string: R.string.localizable.auto_close_subtitle_after_open(
                 positionViewModel.entryPrice,
@@ -421,14 +421,14 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
             )
             if marginAmount != 0, marginToken != nil {
                 let afterQuantity = positionViewModel.decimalQuantity +
-                    marginAmount * leverageMultiplier / marketViewModel.decimalPrice
+                    marginAmount * leverageMultiplier / marketViewModel.decimalLastPrice
                 let after = CurrencyFormatter.localizedString(
                     from: afterQuantity,
                     format: .precision,
                     sign: .never,
                     symbol: .custom(marketViewModel.market.tokenSymbol)
                 ) + " (" + CurrencyFormatter.localizedString(
-                    from: afterQuantity * marketViewModel.decimalPrice,
+                    from: afterQuantity * marketViewModel.decimalLastPrice,
                     format: .fiatMoneyPretty,
                     sign: .never,
                     symbol: .dollarSign
@@ -436,7 +436,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                 targetContentLabel.text = PerpPositionAdjustment.change(from: before, to: after)
             } else {
                 let value = CurrencyFormatter.localizedString(
-                    from: positionViewModel.decimalQuantity * marketViewModel.decimalPrice,
+                    from: positionViewModel.decimalQuantity * marketViewModel.decimalLastPrice,
                     format: .fiatMoneyPretty,
                     sign: .never,
                     symbol: .dollarSign

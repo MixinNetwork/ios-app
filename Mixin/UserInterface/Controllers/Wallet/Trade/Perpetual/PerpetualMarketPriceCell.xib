@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,25 +18,29 @@
                 <rect key="frame" x="0.0" y="0.0" width="335" height="368"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <button opaque="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FV8-Rj-brR">
+                        <rect key="frame" x="8" y="12" width="99" height="33"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <state key="normal" title="Mark Price">
+                            <color key="titleColor" name="text"/>
+                        </state>
+                        <buttonConfiguration key="configuration" style="plain" image="arrow_down_compact" imagePlacement="trailing" title="Mark Price" imagePadding="4">
+                            <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                            <directionalEdgeInsets key="contentInsets" top="8" leading="8" bottom="8" trailing="8"/>
+                            <color key="baseForegroundColor" name="icon_tint_tertiary"/>
+                        </buttonConfiguration>
+                    </button>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="qGY-tn-vsb">
-                        <rect key="frame" x="16" y="30" width="243" height="77"/>
+                        <rect key="frame" x="16" y="45" width="243" height="62"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FV8-Rj-brR">
-                                <rect key="frame" x="0.0" y="0.0" width="27.333333333333332" height="17"/>
-                                <string key="text">ETH
-#2</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" name="text"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="$3,598.56" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6UO-ZT-8RV">
-                                <rect key="frame" x="0.0" y="25" width="105" height="26.333333333333329"/>
+                                <rect key="frame" x="0.0" y="0.0" width="105" height="26.333333333333332"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
                                 <color key="textColor" name="text"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="-0.06%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="osU-FB-z0g" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="59.333333333333321" width="48.333333333333336" height="17.666666666666664"/>
+                                <rect key="frame" x="0.0" y="34.333333333333329" width="48.333333333333336" height="27.666666666666671"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" name="market_red"/>
                                 <nil key="highlightedColor"/>
@@ -88,10 +92,13 @@
                     <constraint firstAttribute="trailing" secondItem="Pf5-pn-AFm" secondAttribute="trailing" id="1gC-6d-oWG"/>
                     <constraint firstItem="BPV-hX-IIc" firstAttribute="top" relation="greaterThanOrEqual" secondItem="zXK-72-1GI" secondAttribute="bottom" constant="12" id="6Pf-Ys-dQq"/>
                     <constraint firstAttribute="bottom" secondItem="Pf5-pn-AFm" secondAttribute="bottom" constant="20" id="AoN-0F-inc"/>
-                    <constraint firstItem="qGY-tn-vsb" firstAttribute="top" secondItem="w39-xc-GJe" secondAttribute="top" constant="30" id="Dot-7P-4q8"/>
+                    <constraint firstItem="zXK-72-1GI" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="FV8-Rj-brR" secondAttribute="trailing" id="DWt-TV-MNn"/>
+                    <constraint firstItem="FV8-Rj-brR" firstAttribute="top" secondItem="w39-xc-GJe" secondAttribute="top" constant="12" id="Dot-7P-4q8"/>
                     <constraint firstItem="zXK-72-1GI" firstAttribute="leading" secondItem="qGY-tn-vsb" secondAttribute="trailing" constant="8" id="MG3-iV-6ws"/>
                     <constraint firstItem="BPV-hX-IIc" firstAttribute="top" secondItem="qGY-tn-vsb" secondAttribute="bottom" constant="12" id="PEV-XW-s7L"/>
+                    <constraint firstItem="FV8-Rj-brR" firstAttribute="leading" secondItem="w39-xc-GJe" secondAttribute="leading" constant="8" id="Pc6-8Z-pog"/>
                     <constraint firstItem="Pf5-pn-AFm" firstAttribute="leading" secondItem="w39-xc-GJe" secondAttribute="leading" id="SRw-KO-Ta6"/>
+                    <constraint firstItem="qGY-tn-vsb" firstAttribute="top" secondItem="FV8-Rj-brR" secondAttribute="bottom" id="T9b-Ws-2Qh"/>
                     <constraint firstItem="bpZ-1r-PgZ" firstAttribute="trailing" secondItem="BPV-hX-IIc" secondAttribute="trailing" id="ZkA-Zv-AEN"/>
                     <constraint firstItem="bpZ-1r-PgZ" firstAttribute="top" secondItem="BPV-hX-IIc" secondAttribute="top" id="aAg-4i-9RV"/>
                     <constraint firstItem="zXK-72-1GI" firstAttribute="top" secondItem="w39-xc-GJe" secondAttribute="top" constant="30" id="at5-Al-Cf7"/>
@@ -111,7 +118,7 @@
                 <outlet property="iconView" destination="zXK-72-1GI" id="IiG-W5-36v"/>
                 <outlet property="loadingIndicatorView" destination="bpZ-1r-PgZ" id="1aG-Oy-mEe"/>
                 <outlet property="priceLabel" destination="6UO-ZT-8RV" id="w7U-s6-nO9"/>
-                <outlet property="symbolLabel" destination="FV8-Rj-brR" id="MpT-0W-Bk4"/>
+                <outlet property="priceSelectorButton" destination="FV8-Rj-brR" id="MpT-0W-Bk4"/>
                 <outlet property="timeFrameScrollView" destination="Pf5-pn-AFm" id="jBz-k4-5TR"/>
                 <outlet property="timeFrameStackView" destination="QXD-3f-oO9" id="IRb-WY-Rhp"/>
             </connections>
@@ -119,6 +126,7 @@
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="arrow_down_compact" width="10" height="10"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

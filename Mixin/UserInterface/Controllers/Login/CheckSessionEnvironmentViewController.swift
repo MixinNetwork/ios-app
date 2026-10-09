@@ -262,6 +262,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                             reporter.report(event: .loginPINVerify, tags: ["type": "pin_upgrade"])
                         }
                     } else {
+                        CheckTIPCountersJob.isTIPCounterChecked = true
                         Logger.login.info(category: "CheckSessionEnv", message: "No interruption, start validation")
                         let validation = LoginPINValidationViewController(account: account)
                         let navigation = GeneralAppearanceNavigationController(rootViewController: validation)

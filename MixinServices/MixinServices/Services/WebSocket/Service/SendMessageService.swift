@@ -102,12 +102,7 @@ public class SendMessageService: MixinService {
     }
     
     public func sendMessage(message: Message, data: String?, immediatelySend: Bool = true, silentNotification: Bool = false, expireIn: Int64 = 0) {
-        let needsEncodeCategories: [MessageCategory] = [
-            .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT
-        ]
-        let shouldEncodeContent = needsEncodeCategories.map(\.rawValue).contains(message.category)
-        let content = shouldEncodeContent ? data?.base64Encoded() : data
-        let job = Job(message: message, data: content, silentNotification: silentNotification, expireIn: expireIn)
+        let job = Job(message: message, data: data, silentNotification: silentNotification, expireIn: expireIn)
         JobDAO.shared.insertOrIgnore(job)
         if immediatelySend {
             SendMessageService.shared.processMessages()
@@ -665,7 +660,7 @@ extension SendMessageService {
         }
         
         let needsEncodeCategories: [MessageCategory] = [
-            .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT
+            .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION
         ]
         func checkConversationAndExpireIn() throws {
             let expireIn = try checkConversationExist(conversation: conversation)
@@ -677,12 +672,28 @@ extension SendMessageService {
         }
         if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue || message.category == MessageCategory.APP_CARD.rawValue {
             try checkConversationAndExpireIn()
-            if blazeMessage.params?.data == nil {
-                if needsEncodeCategories.map(\.rawValue).contains(message.category) {
-                    blazeMessage.params?.data = message.content?.base64Encoded()
+            // Whether job data is base64 encoded can't be inferred from the current category: jobs created
+            // by older versions are encoded, while jobs of ENCRYPTED_ messages that fell back to PLAIN_ are not.
+            if message.category == MessageCategory.PLAIN_TRANSCRIPT.rawValue {
+                // Job data is the JSON array of child messages, `message.content` is only a local preview.
+                // "[" is not in the base64 alphabet, so a leading one means the data is not encoded yet.
+                if let data = blazeMessage.params?.data {
+                    if data.hasPrefix("[") {
+                        blazeMessage.params?.data = data.base64Encoded()
+                    }
                 } else {
-                    blazeMessage.params?.data = message.content
+                    blazeMessage.params?.data = message.content?.base64Encoded()
                 }
+            } else if message.category == MessageCategory.PLAIN_LIVE.rawValue {
+                // Job data of live messages is always encoded by the caller
+                if blazeMessage.params?.data == nil {
+                    blazeMessage.params?.data = message.content?.base64Encoded()
+                }
+            } else if needsEncodeCategories.map(\.rawValue).contains(message.category) {
+                // Job data is identical to `message.content`, encode the content to avoid double encoding
+                blazeMessage.params?.data = message.content?.base64Encoded()
+            } else if blazeMessage.params?.data == nil {
+                blazeMessage.params?.data = message.content
             }
         } else if message.category.hasPrefix("ENCRYPTED_") {
             // FIXME: Participant session saving may not finished after the func below returns.
@@ -706,9 +717,6 @@ extension SendMessageService {
                 let newCategory = message.category.replacingOccurrences(of: "ENCRYPTED_", with: "PLAIN_")
                 MessageDAO.shared.updateMessageCategory(newCategory, forMessageWithId: message.messageId)
                 blazeMessage.params?.category = newCategory
-                if let data = blazeMessage.params?.data, needsEncodeCategories.map(\.rawValue).contains(newCategory) {
-                    blazeMessage.params?.data = data.base64Encoded()
-                }
                 try sendMessage(blazeMessage: blazeMessage)
             }
             

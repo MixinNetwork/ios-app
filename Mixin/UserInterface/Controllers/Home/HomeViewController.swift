@@ -106,7 +106,11 @@ final class HomeViewController: UIViewController {
             present(alert, animated: true, completion: nil)
         }
         ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
-        ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
+        if CheckTIPCountersJob.isTIPCounterChecked {
+            ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
+        } else {
+            ConcurrentJobQueue.shared.addJob(job: CheckTIPCountersJob())
+        }
     }
 
     override func viewWillLayoutSubviews() {

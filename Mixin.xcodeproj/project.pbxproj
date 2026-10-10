@@ -1829,6 +1829,7 @@
 		DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1F278321A5637B009A74C6 /* BackupJob.swift */; };
 		DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */; };
 		DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2819742014669E001EE5FA /* RefreshAccountJob.swift */; };
+		F812895A30D780F10012C401 /* CheckTIPCountersJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = F812895A30D780F10012C402 /* CheckTIPCountersJob.swift */; };
 		DF2A24481FC7CFA8003A8C1E /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF2A24471FC7CF87003A8C1E /* LocalAuthentication.framework */; };
 		DF2A244C1FC7F7FF003A8C1E /* TransferMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */; };
 		DF2A24561FCBEDBC003A8C1E /* UINavigationControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2A24551FCBEDBC003A8C1E /* UINavigationControllerExtension.swift */; };
@@ -3891,6 +3892,7 @@
 		DF1F278321A5637B009A74C6 /* BackupJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupJob.swift; sourceTree = "<group>"; };
 		DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupJobQueue.swift; sourceTree = "<group>"; };
 		DF2819742014669E001EE5FA /* RefreshAccountJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshAccountJob.swift; sourceTree = "<group>"; };
+		F812895A30D780F10012C402 /* CheckTIPCountersJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckTIPCountersJob.swift; sourceTree = "<group>"; };
 		DF2A24471FC7CF87003A8C1E /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		DF2A244B1FC7F7FF003A8C1E /* TransferMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferMessageCell.swift; sourceTree = "<group>"; };
 		DF2A24551FCBEDBC003A8C1E /* UINavigationControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UINavigationControllerExtension.swift; sourceTree = "<group>"; };
@@ -7020,6 +7022,7 @@
 				DF0A0A5D24476EA000378B4F /* RefreshOffsetJob.swift */,
 				7B0BE46321A59AE400B91A1E /* RefreshTopAssetsJob.swift */,
 				DF2819742014669E001EE5FA /* RefreshAccountJob.swift */,
+				F812895A30D780F10012C402 /* CheckTIPCountersJob.swift */,
 				946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */,
 				7C104A8027D83A51004D0530 /* RefreshExternalSchemeJob.swift */,
 				94BFA9892B98546000200FC4 /* SyncSafeSnapshotJob.swift */,
@@ -8006,6 +8009,7 @@
 				7BCB8C8422BB56B8002A13CC /* DataAndStorageSettingsViewController.swift in Sources */,
 				9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */,
 				DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */,
+				F812895A30D780F10012C401 /* CheckTIPCountersJob.swift in Sources */,
 				DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */,
 				7BEED0DB244DC1F300F3A2B9 /* SettingsTableViewController.swift in Sources */,
 				945FFC8A2C3832230013DC51 /* SwapResponse.swift in Sources */,

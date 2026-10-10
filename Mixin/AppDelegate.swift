@@ -197,6 +197,7 @@ extension AppDelegate {
     }
     
     @objc func cleanForLogout() {
+        CheckTIPCountersJob.isTIPCounterChecked = false
         WKWebsiteDataStore.default().removeAuthenticationRelatedData()
         BackupJobQueue.shared.cancelAllOperations()
         WalletConnectService.shared.disconnectAllSessions()

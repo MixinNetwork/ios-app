@@ -145,7 +145,11 @@ final class HomeContainerViewController: UIViewController {
         super.viewDidAppear(animated)
         if refreshAccountAfterViewAppears {
             refreshAccountAfterViewAppears = false
-            ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
+            if CheckTIPCountersJob.isTIPCounterChecked {
+                ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
+            } else {
+                ConcurrentJobQueue.shared.addJob(job: CheckTIPCountersJob())
+            }
         }
         NotificationCenter.default.post(
             name: Self.viewDidAppearNotification,

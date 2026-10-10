@@ -1243,6 +1243,7 @@
 "perps_intro_risk_notice_1" = "El apalancamiento amplifica tanto las ganancias como las pérdidas";
 "perps_intro_risk_notice_2" = "Las posiciones pueden liquidarse si no se mantienen los requisitos de margen";
 "perps_intro_risk_notice_3" = "Administre cuidadosamente el apalancamiento y el tamaño de la posición";
+"perps_last_price" = "Último precio";
 "perps_leverage_overview" = "El apalancamiento le permite controlar una posición más grande con menos capital.";
 "perps_leverage_risk_notice_1" = "Un mayor apalancamiento aumenta el riesgo de liquidación";
 "perps_leverage_risk_notice_2" = "Con un alto apalancamiento, pequeños movimientos de precios pueden generar grandes pérdidas";
@@ -1256,6 +1257,7 @@
 "perps_margin_or_position" = "¿Añadir margen o aumentar la posición?";
 "perps_margin_submitted" = "Ajuste de margen enviado";
 "perps_margin_tip" = "Añadir margen reduce el riesgo de liquidación";
+"perps_mark_price" = "Precio de marca";
 "perps_markets" = "Mercados";
 "perps_position_size_overview" = "El tamaño representa el valor total de su posición, calculado como margen × apalancamiento.";
 "perps_position_size_pnl_1" = "Tamaño más grande, PnL más grande";

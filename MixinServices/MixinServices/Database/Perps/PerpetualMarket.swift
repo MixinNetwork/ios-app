@@ -81,8 +81,12 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
             .precision(.fractionLength(0...priceScale))
     }
     
-    public private(set) lazy var decimalPrice = Decimal(string: last, locale: .enUSPOSIX) ?? 0
-    public private(set) lazy var localizedPrice = decimalPrice.formatted(
+    public private(set) lazy var decimalMarkPrice = Decimal(string: markPrice, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var localizedMarketPrice = decimalMarkPrice.formatted(
+        PerpetualMarket.userDisplayPriceFormatStyle(scale: priceScale)
+    )
+    public private(set) lazy var decimalLastPrice = Decimal(string: last, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var localizedLastPrice = decimalLastPrice.formatted(
         PerpetualMarket.userDisplayPriceFormatStyle(scale: priceScale)
     )
     

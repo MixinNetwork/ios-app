@@ -47,7 +47,7 @@ final class PerpetualMarketCell: UICollectionViewCell {
         leverageLabel.text = viewModel.leverage
         leverageLabel.color = .neutral
         autoClosingLabel.isHidden = true
-        topRightLabel.text = viewModel.price
+        topRightLabel.text = viewModel.localizedLastPrice
         volumeLabel.text = R.string.localizable.volume_label(viewModel.volume)
         changeLabel.text = viewModel.change
         changeLabel.marketColor = viewModel.changeColor

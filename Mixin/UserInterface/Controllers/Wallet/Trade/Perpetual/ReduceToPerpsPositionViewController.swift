@@ -592,7 +592,7 @@ extension ReduceToPerpsPositionViewController {
     }
     
     private func updateSubtitle() {
-        let currentPrice = marketViewModel.price
+        let currentPrice = marketViewModel.localizedLastPrice
         let text = NSMutableAttributedString(
             string: R.string.localizable.auto_close_subtitle_after_open(
                 positionViewModel.entryPrice,

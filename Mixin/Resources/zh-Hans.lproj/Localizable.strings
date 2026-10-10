@@ -1243,6 +1243,7 @@
 "perps_intro_risk_notice_1" = "杠杆交易可能放大收益，同时也会放大亏损";
 "perps_intro_risk_notice_2" = "当保证金不足时，仓位可能被强制平仓";
 "perps_intro_risk_notice_3" = "请合理控制杠杆倍数与仓位规模，谨慎交易";
+"perps_last_price" = "最新价格";
 "perps_leverage_overview" = "杠杆用于放大仓位规模，使交易者可以用较少的资金控制更大的合约头寸。";
 "perps_leverage_risk_notice_1" = "杠杆越高，爆仓风险越大";
 "perps_leverage_risk_notice_2" = "高杠杆下，小幅价格波动也可能导致较大亏损";
@@ -1256,6 +1257,7 @@
 "perps_margin_or_position" = "添加保证金还是增加仓位？";
 "perps_margin_submitted" = "保证金调整已提交";
 "perps_margin_tip" = "添加保证金可降低强平风险";
+"perps_mark_price" = "标记价格";
 "perps_markets" = "市场";
 "perps_position_size_overview" = "当前合约的仓位规模由「金额 × 杠杆」计算得出，表示本次交易所控制的资产规模。";
 "perps_position_size_pnl_1" = "仓位越大，盈亏金额越大";

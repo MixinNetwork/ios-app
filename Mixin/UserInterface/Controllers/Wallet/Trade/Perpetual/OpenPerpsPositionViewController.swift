@@ -190,7 +190,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         case .short:
             R.string.localizable.short_asset(viewModel.market.tokenSymbol)
         }
-        priceLabel.text = R.string.localizable.current_price(viewModel.price)
+        priceLabel.text = R.string.localizable.current_price(viewModel.localizedLastPrice)
         
         let infoLabels: [UILabel] = [
             leverageTitleLabel,
@@ -448,7 +448,9 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         }
         let viewModel = PerpetualMarketViewModel(market: market)
         self.viewModel = viewModel
-        priceLabel.text = R.string.localizable.current_price(viewModel.price)
+        priceLabel.text = R.string.localizable.current_price(
+            viewModel.localizedLastPrice
+        )
         updateDescriptions(
             marginAmount: marginAmount,
             leverageMultiplier: leverageMultiplier,
@@ -562,7 +564,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         )
         let orderValue = marginAmount * leverageMultiplier
         orderValueContentLabel.text = CurrencyFormatter.localizedString(
-            from: orderValue / underlyingAsset.decimalPrice,
+            from: orderValue / underlyingAsset.decimalLastPrice,
             format: .precision,
             sign: .never,
             symbol: .custom(underlyingAsset.market.tokenSymbol)

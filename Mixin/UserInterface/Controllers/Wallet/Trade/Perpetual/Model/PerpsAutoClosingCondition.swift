@@ -46,7 +46,7 @@ final class PerpsAutoClosingCondition {
     ) {
         let entryPrice: Decimal = switch orderState {
         case .draft:
-            marketViewModel.decimalPrice
+            marketViewModel.decimalLastPrice
         case .open(let entryPrice, _):
             entryPrice
         }
@@ -63,7 +63,7 @@ final class PerpsAutoClosingCondition {
         }
         self.priceScale = marketViewModel.market.priceScale
         self.entryPrice = entryPrice
-        self.currentPrice = marketViewModel.decimalPrice
+        self.currentPrice = marketViewModel.decimalLastPrice
         self.liquidationPrice = liquidationPrice
         self.percentage = 0
         self.price = 0

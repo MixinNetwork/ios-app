@@ -9,6 +9,9 @@ class DetailInfoMessageViewModel: MessageViewModel {
     static let encryptedIconRightMargin: CGFloat = 4
     static let forwarderIconRightMargin: CGFloat = 4
     static let pinnedIconRightMargin: CGFloat = 4
+    static let phoneNumberDetector = try? NSDataDetector(
+        types: NSTextCheckingResult.CheckingType.phoneNumber.rawValue
+    )
     
     class var bubbleImageSet: BubbleImageSet.Type {
         return GeneralBubbleImageSet.self

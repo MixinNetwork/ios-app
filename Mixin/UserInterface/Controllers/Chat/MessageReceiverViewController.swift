@@ -424,6 +424,7 @@ extension MessageReceiverViewController {
             newMessage.mediaMimeType = message.mediaMimeType
             newMessage.mediaUrl = mediaUrl(from: message, transcriptId: transcriptId, with: newMessage.messageId)
             newMessage.mediaStatus = MediaStatus.PENDING.rawValue
+            newMessage.caption = message.caption
         } else if message.category.hasSuffix("_DATA") {
             newMessage.category = isSignalMessage ? MessageCategory.SIGNAL_DATA.rawValue : MessageCategory.PLAIN_DATA.rawValue
             newMessage.name = message.name

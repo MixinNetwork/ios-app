@@ -660,7 +660,7 @@ extension SendMessageService {
         }
         
         let needsEncodeCategories: [MessageCategory] = [
-            .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION
+            .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT
         ]
         func checkConversationAndExpireIn() throws {
             let expireIn = try checkConversationExist(conversation: conversation)
@@ -672,28 +672,13 @@ extension SendMessageService {
         }
         if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue || message.category == MessageCategory.APP_CARD.rawValue {
             try checkConversationAndExpireIn()
-            // Whether job data is base64 encoded can't be inferred from the current category: jobs created
-            // by older versions are encoded, while jobs of ENCRYPTED_ messages that fell back to PLAIN_ are not.
-            if message.category == MessageCategory.PLAIN_TRANSCRIPT.rawValue {
-                // Job data is the JSON array of child messages, `message.content` is only a local preview.
-                // "[" is not in the base64 alphabet, so a leading one means the data is not encoded yet.
-                if let data = blazeMessage.params?.data {
-                    if data.hasPrefix("[") {
-                        blazeMessage.params?.data = data.base64Encoded()
-                    }
-                } else {
-                    blazeMessage.params?.data = message.content?.base64Encoded()
-                }
-            } else if message.category == MessageCategory.PLAIN_LIVE.rawValue {
-                // Job data of live messages is always encoded by the caller
-                if blazeMessage.params?.data == nil {
-                    blazeMessage.params?.data = message.content?.base64Encoded()
-                }
-            } else if needsEncodeCategories.map(\.rawValue).contains(message.category) {
-                // Job data is identical to `message.content`, encode the content to avoid double encoding
-                blazeMessage.params?.data = message.content?.base64Encoded()
-            } else if blazeMessage.params?.data == nil {
-                blazeMessage.params?.data = message.content
+            // Job data of `needsEncodeCategories` is not encoded, and it differs from `message.content`
+            // for transcripts: the former is the JSON of child messages, the latter is a local preview
+            let rawContent = blazeMessage.params?.data ?? message.content
+            if needsEncodeCategories.map(\.rawValue).contains(message.category) {
+                blazeMessage.params?.data = rawContent?.base64Encoded()
+            } else {
+                blazeMessage.params?.data = rawContent
             }
         } else if message.category.hasPrefix("ENCRYPTED_") {
             // FIXME: Participant session saving may not finished after the func below returns.

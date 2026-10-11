@@ -723,7 +723,8 @@ public final class MessageDAO: UserDatabaseDAO {
     public func recallMessage(database: GRDB.Database, messageId: String, conversationId: String, category: String, status: String, actorUserId: String, quoteMessageIds: [String]) throws {
         var assignments: [ColumnAssignment] = [
             Message.column(of: .category).set(to: MessageCategory.MESSAGE_RECALL.rawValue),
-            Message.column(of: .participantId).set(to: actorUserId)
+            Message.column(of: .participantId).set(to: actorUserId),
+            Message.column(of: .caption).set(to: nil),
         ]
         
         if status == MessageStatus.UNKNOWN.rawValue || ["_TEXT", "_POST", "_LOCATION"].contains(where: category.hasSuffix(_:)) {

@@ -113,7 +113,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
         }
         
         titleView.iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        reloadSubtitle(currentPrice: viewModel.price)
+        reloadSubtitle(currentPrice: viewModel.localizedLastPrice)
         titleView.closeButton.addTarget(
             self,
             action: #selector(close(_:)),
@@ -354,7 +354,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
                     orderState: self.orderState,
                     liquidationPrice: previousCondition.liquidationPrice,
                 )
-                self.reloadSubtitle(currentPrice: viewModel.price)
+                self.reloadSubtitle(currentPrice: viewModel.localizedLastPrice)
                 self.take(input: self.inputTextField.text)
             }
         }

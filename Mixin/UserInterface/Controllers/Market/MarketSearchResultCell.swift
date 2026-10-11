@@ -52,7 +52,7 @@ final class MarketSearchResultCell: UICollectionViewCell {
         symbolLabel.text = market.tokenSymbol
         leverageLabel.isHidden = false
         leverageLabel.text = PerpetualLeverage.stringRepresentation(multiplier: market.leverage)
-        priceLabel.text = market.localizedPrice
+        priceLabel.text = market.localizedLastPrice
         subtitleLabel.text = R.string.localizable.volume_label(market.prettyVolume)
         changeLabel.text = market.changePercentage
         changeLabel.marketColor = .byValue(market.decimalChange)

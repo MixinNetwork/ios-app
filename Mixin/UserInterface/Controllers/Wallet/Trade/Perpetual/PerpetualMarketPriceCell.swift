@@ -13,7 +13,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         case candles([PerpetualCandleViewModel])
     }
     
-    @IBOutlet weak var symbolLabel: UILabel!
+    @IBOutlet weak var priceSelectorButton: UIButton!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
     @IBOutlet weak var iconView: PlainTokenIconView!
@@ -33,10 +33,16 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
-        symbolLabel.setFont(
-            scaledFor: .systemFont(ofSize: 14),
-            adjustForContentSize: true
-        )
+        priceSelectorButton.showsMenuAsPrimaryAction = true
+        priceSelectorButton.configuration?.titleTextAttributesTransformer = .init { incoming in
+            var outgoing = incoming
+            outgoing.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 14)
+            )
+            outgoing.foregroundColor = R.color.text_secondary()
+            return outgoing
+        }
+        priceSelectorButton.titleLabel?.adjustsFontForContentSizeCategory = true
         priceLabel.setFont(
             scaledFor: .systemFont(ofSize: 22, weight: .medium),
             adjustForContentSize: true
@@ -96,12 +102,15 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     }
     
     func load(viewModel: PerpetualMarketViewModel) {
-        symbolLabel.text = viewModel.market.tokenSymbol
-        priceLabel.text = viewModel.price
         changeLabel.text = viewModel.change
         changeLabel.marketColor = viewModel.changeColor
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        chartView.currentPrice = viewModel.decimalPrice
+        chartView.currentPrice = viewModel.decimalLastPrice
+    }
+    
+    func loadPrice(title: String, content: String) {
+        priceSelectorButton.configuration?.title = title
+        priceLabel.text = content
     }
     
     func load(chart: Chart, priceFormatStyle: Decimal.FormatStyle.Currency) {

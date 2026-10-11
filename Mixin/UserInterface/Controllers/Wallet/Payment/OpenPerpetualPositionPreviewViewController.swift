@@ -82,7 +82,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 ),
                 .info(
                     caption: .string(R.string.localizable.entry_price()),
-                    content: context.viewModel.price
+                    content: context.viewModel.localizedLastPrice
                 ),
             ])
         case let .increasePosition(quantity, margin):
@@ -94,7 +94,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 symbol: .custom(context.viewModel.market.tokenSymbol)
             )
             let afterQuantity = quantity +
-                operation.amount * context.leverageMultiplier / context.viewModel.decimalPrice
+                operation.amount * context.leverageMultiplier / context.viewModel.decimalLastPrice
             let after = CurrencyFormatter.localizedString(
                 from: afterQuantity,
                 format: .precision,
@@ -137,13 +137,13 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
             let price = takeProfitPrice.formatted(
                 context.viewModel.userDisplayPriceFormatStyle
             )
-            let priceChange = (takeProfitPrice - context.viewModel.decimalPrice) / context.viewModel.decimalPrice
+            let priceChange = (takeProfitPrice - context.viewModel.decimalLastPrice) / context.viewModel.decimalLastPrice
             let maxChange = PerpsAutoClosingCondition.maxChange(
                 margin: operation.amount,
                 side: context.side,
                 leverage: context.leverageMultiplier,
                 behavior: .takeProfit,
-                currentPrice: context.viewModel.decimalPrice,
+                currentPrice: context.viewModel.decimalLastPrice,
                 closingPrice: takeProfitPrice,
             )
             let simulation = R.string.localizable.price_change_take_profit(
@@ -177,13 +177,13 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
             let price = stopLossPrice.formatted(
                 context.viewModel.userDisplayPriceFormatStyle
             )
-            let priceChange = (stopLossPrice - context.viewModel.decimalPrice) / context.viewModel.decimalPrice
+            let priceChange = (stopLossPrice - context.viewModel.decimalLastPrice) / context.viewModel.decimalLastPrice
             let maxChange = PerpsAutoClosingCondition.maxChange(
                 margin: operation.amount,
                 side: context.side,
                 leverage: context.leverageMultiplier,
                 behavior: .stopLoss,
-                currentPrice: context.viewModel.decimalPrice,
+                currentPrice: context.viewModel.decimalLastPrice,
                 closingPrice: stopLossPrice,
             )
             let simulation = R.string.localizable.price_change_stop_loss(
@@ -219,7 +219,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         let liquidation = PerpetualChangeSimulation.liquidation(
             side: context.side,
             margin: liquidationMargin,
-            entryPrice: context.viewModel.decimalPrice,
+            entryPrice: context.viewModel.decimalLastPrice,
             liquidationPrice: context.liquidationPrice,
         )
         rows.append(

@@ -1243,6 +1243,7 @@
 "perps_intro_risk_notice_1" = "레버리지는 이익과 손실을 모두 증폭시킵니다.";
 "perps_intro_risk_notice_2" = "마진 요구 사항이 유지되지 않으면 포지션이 청산될 수 있습니다.";
 "perps_intro_risk_notice_3" = "레버리지와 포지션 크기를 신중하게 관리하세요.";
+"perps_last_price" = "최근 체결 가격";
 "perps_leverage_overview" = "레버리지를 사용하면 더 적은 자본으로 더 큰 포지션을 관리할 수 있습니다.";
 "perps_leverage_risk_notice_1" = "레버리지가 높을수록 청산 위험이 높아집니다.";
 "perps_leverage_risk_notice_2" = "레버리지가 높으면 작은 가격 변동으로도 큰 손실이 발생할 수 있습니다.";
@@ -1256,6 +1257,7 @@
 "perps_margin_or_position" = "증거금 추가와 포지션 추가 중 무엇을 선택할까요?";
 "perps_margin_submitted" = "증거금 조정이 제출되었습니다";
 "perps_margin_tip" = "증거금을 추가하면 강제 청산 위험이 줄어듭니다";
+"perps_mark_price" = "마크 가격";
 "perps_markets" = "시장";
 "perps_position_size_overview" = "크기는 마진 × 레버리지로 계산된 포지션의 총 가치를 나타냅니다.";
 "perps_position_size_pnl_1" = "더 큰 규모, 더 큰 손익";

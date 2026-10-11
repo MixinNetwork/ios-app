@@ -100,7 +100,7 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
         
         rows.append(.info(
             caption: .string(R.string.localizable.entry_price()),
-            content: marketViewModel.price
+            content: marketViewModel.localizedLastPrice
         ))
         
         rows.append(.wallet(caption: .sender, wallet: wallet, threshold: nil))

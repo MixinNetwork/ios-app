@@ -814,6 +814,25 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     private func updatePrice(on cell: PerpetualMarketPriceCell, by display: PriceDisplay) {
+        cell.priceSelectorButton.menu = UIMenu(children: PriceDisplay.allCases.map { display in
+            let title = switch display {
+            case .lastPrice:
+                R.string.localizable.perps_last_price()
+            case .markPrice:
+                R.string.localizable.perps_mark_price()
+            }
+            return UIAction(
+                title: title,
+                state: display == priceDisplay ? .on : .off,
+                handler: { [weak self, weak cell] _ in
+                    guard let self, let cell else {
+                        return
+                    }
+                    self.priceDisplay = display
+                    self.updatePrice(on: cell, by: display)
+                }
+            )
+        })
         switch display {
         case .lastPrice:
             cell.loadPrice(
@@ -823,7 +842,7 @@ final class PerpetualMarketViewController: UIViewController {
         case .markPrice:
             cell.loadPrice(
                 title: R.string.localizable.perps_mark_price(),
-                content: viewModel.market.localizedMarketPrice
+                content: viewModel.market.localizedMarkPrice
             )
         }
     }
@@ -874,25 +893,6 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
                 priceFormatStyle: viewModel.userDisplayPriceFormatStyle
             )
             cell.setTimeFrame(frame: selectedTimeFrame)
-            cell.priceSelectorButton.menu = UIMenu(children: PriceDisplay.allCases.map { display in
-                let title = switch display {
-                case .lastPrice:
-                    R.string.localizable.perps_last_price()
-                case .markPrice:
-                    R.string.localizable.perps_mark_price()
-                }
-                return UIAction(
-                    title: title,
-                    state: display == priceDisplay ? .on : .off,
-                    handler: { [weak self, weak cell] _ in
-                        guard let self, let cell else {
-                            return
-                        }
-                        self.priceDisplay = display
-                        self.updatePrice(on: cell, by: display)
-                    }
-                )
-            })
             cell.delegate = self
             priceCell = cell
             return cell

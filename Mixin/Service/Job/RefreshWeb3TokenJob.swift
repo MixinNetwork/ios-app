@@ -33,7 +33,6 @@ public final class RefreshWeb3TokenJob: AsynchronousJob {
             case let .success(token):
                 Web3TokenDAO.shared.save(tokens: [token], zeroOutOthers: false)
             case let .failure(error):
-                Logger.general.debug(category: "RefreshWeb3Token", message: "\(error)")
                 if error.worthReporting {
                     reporter.report(error: error)
                 }

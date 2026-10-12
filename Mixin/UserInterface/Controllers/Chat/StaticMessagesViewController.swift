@@ -88,6 +88,11 @@ class StaticMessagesViewController: UIViewController {
                 UIPasteboard.general.string = viewModel.message.content
             }
             return [copyAction]
+        } else if viewModel.message.category.hasSuffix("_IMAGE"), let caption = viewModel.message.caption, !caption.isEmpty {
+            let copyAction = UIAction(title: R.string.localizable.copy(), image: R.image.conversation.ic_action_copy()) { _ in
+                UIPasteboard.general.string = caption
+            }
+            return [copyAction]
         } else {
             return nil
         }
@@ -334,6 +339,9 @@ extension StaticMessagesViewController: UITableViewDataSource {
         }
         if let cell = cell as? TextMessageCell {
             cell.contentLabel.delegate = self
+        }
+        if let cell = cell as? PhotoMessageCell {
+            cell.captionLabel.delegate = self
         }
         if let cell = cell as? AudioMessageCell {
             cell.audioMessagePlayingManager = audioManager

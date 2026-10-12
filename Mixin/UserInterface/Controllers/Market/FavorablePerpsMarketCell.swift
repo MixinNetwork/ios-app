@@ -61,7 +61,7 @@ final class FavorablePerpsMarketCell: UICollectionViewCell {
         symbolLabel.text = market.tokenSymbol
         iconView.setIcon(tokenIconURL: URL(string: market.iconURL))
         infoLabel.text = R.string.localizable.volume_label(market.prettyVolume)
-        priceLabel.text = market.localizedPrice
+        priceLabel.text = market.localizedLastPrice
         changeLabel.text = market.changePercentage
         changeLabel.marketColor = .byValue(market.decimalChange)
         tagLabel.contentInset = UIEdgeInsets(top: 2, left: 3, bottom: 0, right: 3)

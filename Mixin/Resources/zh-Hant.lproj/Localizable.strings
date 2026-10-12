@@ -1243,6 +1243,7 @@
 "perps_intro_risk_notice_1" = "槓桿交易可能放大收益，同時也會放大虧損";
 "perps_intro_risk_notice_2" = "當保證金不足時，倉位可能被強制平倉";
 "perps_intro_risk_notice_3" = "請合理控制槓桿倍數與倉位規模，謹慎交易";
+"perps_last_price" = "最新價格";
 "perps_leverage_overview" = "槓桿用於放大倉位規模，使交易者可以用較少的資金控制更大的合約頭寸。";
 "perps_leverage_risk_notice_1" = "槓桿越高，爆倉風險越大";
 "perps_leverage_risk_notice_2" = "高槓杆下，小幅價格波動也可能導致較大虧損";
@@ -1256,13 +1257,14 @@
 "perps_margin_or_position" = "新增保證金還是增加倉位？";
 "perps_margin_submitted" = "保證金調整已提交";
 "perps_margin_tip" = "新增保證金可降低強平風險";
+"perps_mark_price" = "標記價格";
 "perps_markets" = "市場";
 "perps_position_size_overview" = "當前合約的倉位規模由「金額 × 槓桿」計算得出，表示本次交易所控制的資產規模。";
 "perps_position_size_pnl_1" = "倉位越大，盈虧金額越大";
 "perps_position_size_pnl_2" = "倉位越小，盈虧金額越小";
 "perps_position_tip" = "加倉會放大收益和風險";
 "perps_product" = "合約";
-"perps_realized_pnl" = "已實現盈虧";
+"perps_realized_pnl" = "淨盈虧";
 "perps_receive" = "收到";
 "perps_reduce_margin" = "減少保證金";
 "perps_reduce_margin_description" = "減少多餘保證金，在保持持倉的同時釋放資金";
@@ -1291,8 +1293,8 @@
 "perps_trading_fee_overview" = "開倉、加倉和平倉均會產生手續費，費用按倉位價值計算，而不是按保證金計算。";
 "perps_trading_fee_pnl_1" = "倉位越大，手續費越高";
 "perps_trading_fee_pnl_2" = "倉位越小，手續費越低";
-"perps_trading_fee_pnl_3" = "已實現盈虧已扣除相關手續費";
-"perps_unrealized_pnl" = "未實現盈虧";
+"perps_trading_fee_pnl_3" = "淨盈虧已扣除相關手續費";
+"perps_unrealized_pnl" = "盈虧";
 "phone_as_key_shard" = "手機號將關聯到由您管理的 MPC 錢包的一個金鑰分片";
 "phone_call" = "電話呼叫";
 "phone_contact" = "手機聯絡人";

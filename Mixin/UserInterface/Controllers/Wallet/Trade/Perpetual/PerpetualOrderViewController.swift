@@ -22,9 +22,27 @@ final class PerpetualOrderViewController: UIViewController {
     private let infos: [Info]
     
     init(wallet: Wallet, viewModel: PerpetualOrderViewModel) {
+        let order = viewModel.order
+        lazy var fee: String? = {
+            guard let decimalFee = Decimal(string: order.feeAmount, locale: .enUSPOSIX) else {
+                return nil
+            }
+            guard decimalFee != 0 else {
+                return nil
+            }
+            return decimalFee.formatted(
+                Decimal.FormatStyle.Currency
+                    .currency(code: "USD")
+                    .presentation(.narrow)
+                    .precision(.fractionLength(0...16))
+                    .rounded(rule: .towardZero)
+                    .sign(strategy: .never)
+            )
+        }()
+        
         var infos: [Info] = []
-        if let displaySymbol = viewModel.displaySymbol {
-            infos.append(.product(iconURL: viewModel.iconURL, name: displaySymbol))
+        if let displaySymbol = order.displaySymbol {
+            infos.append(.product(iconURL: order.iconURL, name: displaySymbol))
         }
         switch viewModel.status {
         case .normal:
@@ -40,7 +58,7 @@ final class PerpetualOrderViewController: UIViewController {
                         content: payAmount
                     ),
                 ])
-                if let fee = viewModel.feeAmount {
+                if let fee {
                     infos.append(.fee(fee))
                 }
             case .increasePosition:
@@ -58,7 +76,7 @@ final class PerpetualOrderViewController: UIViewController {
                         content: payAmount
                     ),
                 ])
-                if let fee = viewModel.feeAmount {
+                if let fee {
                     infos.append(.fee(fee))
                 }
             case .increaseMargin:
@@ -81,7 +99,7 @@ final class PerpetualOrderViewController: UIViewController {
                 ))
             case let .close(pnl, closePrice):
                 infos.append(.pnl(value: pnl.aggregated, color: pnl.color))
-                if let fee = viewModel.feeAmount {
+                if let fee {
                     infos.append(.fee(fee))
                 }
                 infos.append(contentsOf: [
@@ -179,7 +197,7 @@ final class PerpetualOrderViewController: UIViewController {
     }
     
     private func viewMarket() {
-        if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID),
+        if let market = PerpsMarketDAO.shared.market(marketID: viewModel.order.marketID),
            let navigationController
         {
             let viewModel = PerpetualMarketViewModel(market: market)

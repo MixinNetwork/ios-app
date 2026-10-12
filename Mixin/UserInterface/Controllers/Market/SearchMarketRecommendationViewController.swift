@@ -240,7 +240,7 @@ extension SearchMarketRecommendationViewController: UICollectionViewDataSource {
             switch recentSearches[indexPath.item] {
             case .crypto(let market):
                 cell.titleLabel.text = market.symbol
-                cell.perpsLabel.isHidden = true
+                cell.leverageLabel.isHidden = true
                 cell.subtitleLabel.text = market.localizedPriceChangePercentage24H
                 cell.subtitleLabel.marketColor = .byValue(
                     market.decimalPriceChangePercentage24H
@@ -248,7 +248,8 @@ extension SearchMarketRecommendationViewController: UICollectionViewDataSource {
                 cell.iconView.setIcon(market: market)
             case .perps(let market):
                 cell.titleLabel.text = market.tokenSymbol
-                cell.perpsLabel.isHidden = false
+                cell.leverageLabel.isHidden = false
+                cell.leverageLabel.text = PerpetualLeverage.stringRepresentation(multiplier: market.leverage)
                 cell.subtitleLabel.text = market.changePercentage
                 cell.subtitleLabel.marketColor = .byValue(
                     market.decimalChange

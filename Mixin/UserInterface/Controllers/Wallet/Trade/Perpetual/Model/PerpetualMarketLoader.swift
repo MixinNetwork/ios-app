@@ -52,14 +52,14 @@ final class PerpetualMarketLoader {
             ) { (timer) in
                 RouteAPI.perpsMarket(marketID: marketID, queue: .global()) { result in
                     switch result {
+                    case .failure:
+                        break
                     case .success(let market):
                         PerpsMarketDAO.shared.save(market: market)
                         let volume = Decimal(string: market.volume, locale: .enUSPOSIX) ?? 0
                         if volume.isZero {
                             timer.invalidate()
                         }
-                    case .failure(let error):
-                        Logger.general.debug(category: "PerpMarketLoader", message: "\(error)")
                     }
                 }
             }
@@ -70,6 +70,8 @@ final class PerpetualMarketLoader {
             ) { [weak self] (timer) in
                 RouteAPI.perpsMarkets(category: category, queue: .global()) { result in
                     switch result {
+                    case .failure:
+                        break
                     case .success(let markets):
                         PerpsMarketDAO.shared.save(markets: markets, dataSource: category)
                         let decision: NextRequestDecision = if let self, let delegate = self.delegate {
@@ -87,8 +89,6 @@ final class PerpetualMarketLoader {
                         case .cancel:
                             DispatchQueue.main.async(execute: timer.invalidate)
                         }
-                    case .failure(let error):
-                        Logger.general.debug(category: "PerpMarketLoader", message: "\(error)")
                     }
                 }
             }

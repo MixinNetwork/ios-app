@@ -388,8 +388,8 @@ final class MarketViewController: UIViewController {
                     DispatchQueue.main.async {
                         self?.reloadPriceChart(period: period, points: points)
                     }
-                case .failure(let error):
-                    Logger.general.debug(category: "MarketView", message: "\(error)")
+                case .failure:
+                    break
                 }
             }
         }

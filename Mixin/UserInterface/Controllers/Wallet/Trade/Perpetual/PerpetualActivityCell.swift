@@ -38,7 +38,7 @@ final class PerpetualActivityCell: UICollectionViewCell {
     }
     
     func load(viewModel: PerpetualOrderViewModel) {
-        iconView.setIcon(tokenIconURL: viewModel.iconURL)
+        iconView.setIcon(tokenIconURL: viewModel.order.iconURL)
         titleLabel.text = viewModel.title
         switch viewModel.type {
         case .open, .close:

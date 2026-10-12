@@ -1243,6 +1243,7 @@
 "perps_intro_risk_notice_1" = "レバレッジにより利益と損失の両方が増幅される";
 "perps_intro_risk_notice_2" = "証拠金要件が維持されない場合、ポジションは強制決済される場合があります";
 "perps_intro_risk_notice_3" = "レバレッジとポジションサイズを慎重に管理する";
+"perps_last_price" = "最終取引価格";
 "perps_leverage_overview" = "レバレッジを利用すると、少ない資本でより大きなポジションをコントロールできます。";
 "perps_leverage_risk_notice_1" = "レバレッジが高いと清算リスクが増加する";
 "perps_leverage_risk_notice_2" = "高いレバレッジでは、小さな価格変動が大きな損失につながる可能性があります";
@@ -1256,6 +1257,7 @@
 "perps_margin_or_position" = "証拠金を追加？それともポジションを増やす？";
 "perps_margin_submitted" = "証拠金の調整を送信しました";
 "perps_margin_tip" = "証拠金の追加は強制決済リスクを下げます";
+"perps_mark_price" = "マーク価格";
 "perps_markets" = "市場";
 "perps_position_size_overview" = "サイズは、証拠金 × レバレッジとして計算されたポジションの合計価値を表します。";
 "perps_position_size_pnl_1" = "サイズが大きくなり、損益も大きくなる";

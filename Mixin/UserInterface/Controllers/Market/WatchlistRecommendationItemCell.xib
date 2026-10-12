@@ -77,9 +77,9 @@
             <connections>
                 <outlet property="iconView" destination="vHB-Ao-eQn" id="bc7-O5-ZEO"/>
                 <outlet property="infoLabel" destination="gRh-w8-uur" id="7hT-mK-S8z"/>
+                <outlet property="leverageLabel" destination="Lax-N6-COS" id="Wch-Vj-gqS"/>
                 <outlet property="selectionImageView" destination="PuS-MY-dqk" id="I8E-XD-1ow"/>
                 <outlet property="symbolLabel" destination="N2n-qU-scB" id="KSg-po-u2d"/>
-                <outlet property="tagLabel" destination="Lax-N6-COS" id="Wch-Vj-gqS"/>
             </connections>
             <point key="canvasLocation" x="-366.41221374045801" y="153.52112676056339"/>
         </collectionViewCell>

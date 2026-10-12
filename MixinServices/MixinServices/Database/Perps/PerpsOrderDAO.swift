@@ -42,12 +42,25 @@ public final class PerpsOrderDAO: PerpsDAO {
     }
     
     public func activitiesValue() -> PerpetualPositionValue {
-        let sql = "SELECT SUM(realized_pnl) FROM perps_orders WHERE order_type = 'close'"
-        let pnl = try! db.read { (db) -> String in
-            let rows = try Row.fetchCursor(db, sql: sql)
-            let row = try rows.next()
-            return row?[0] ?? "0"
+        let sql = """
+        SELECT net_realized_pnl, realized_pnl
+        FROM perps_orders
+        WHERE order_type = 'close'
+        """
+        let values = try! db.read { db in
+            try Row.fetchAll(db, sql: sql).map { row -> Decimal in
+                let netRealizedPnL: String = row["net_realized_pnl"]
+                if !netRealizedPnL.isEmpty,
+                   let netPnL = Decimal(string: netRealizedPnL, locale: .enUSPOSIX)
+                {
+                    return netPnL
+                } else {
+                    let realizedPnL: String = row["realized_pnl"]
+                    return Decimal(string: realizedPnL, locale: .enUSPOSIX) ?? 0
+                }
+            }
         }
+        let pnl: Decimal = values.reduce(0, +)
         return .closed(pnl: pnl)
     }
     

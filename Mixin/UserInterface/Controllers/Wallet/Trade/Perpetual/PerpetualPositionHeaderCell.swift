@@ -37,12 +37,12 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
     }
     
     func load(viewModel: PerpetualOrderViewModel) {
-        iconView.setIcon(tokenIconURL: viewModel.iconURL)
+        iconView.setIcon(tokenIconURL: viewModel.order.iconURL)
         switch viewModel.type {
         case .open, .close:
             titleLabel.textColor = R.color.text()
             titleLabel.text = viewModel.quantity
-            symbolLabel.text = viewModel.tokenSymbol
+            symbolLabel.text = viewModel.order.tokenSymbol
             symbolLabel.isHidden = false
         case .increasePosition:
             titleLabel.text = CurrencyFormatter.localizedString(
@@ -51,6 +51,8 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
                 sign: .always
             )
             titleLabel.textColor = R.color.market_green()
+            symbolLabel.text = viewModel.order.tokenSymbol
+            symbolLabel.isHidden = false
         case .increaseMargin:
             titleLabel.text = abs(viewModel.decimalPayAmount).formatted(
                 PerpetualOrderViewModel.payAmountStyle

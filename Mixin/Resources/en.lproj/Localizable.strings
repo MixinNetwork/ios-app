@@ -1243,6 +1243,7 @@
 "perps_intro_risk_notice_1" = "Leverage amplifies both profits and losses";
 "perps_intro_risk_notice_2" = "Positions may be liquidated if margin requirements are not maintained";
 "perps_intro_risk_notice_3" = "Manage leverage and position size carefully";
+"perps_last_price" = "Last Price";
 "perps_leverage_overview" = "Leverage allows you to control a larger position with less capital.";
 "perps_leverage_risk_notice_1" = "Higher leverage increases liquidation risk";
 "perps_leverage_risk_notice_2" = "Under high leverage, small price movements can lead to large losses";
@@ -1256,6 +1257,7 @@
 "perps_margin_or_position" = "Add Margin or Increase Position?";
 "perps_margin_submitted" = "Margin adjustment submitted";
 "perps_margin_tip" = "Add margin to lower liquidation risk";
+"perps_mark_price" = "Mark Price";
 "perps_markets" = "Markets";
 "perps_position_size_overview" = "Size represents the total value of your position, calculated as margin × leverage.";
 "perps_position_size_pnl_1" = "Larger size, larger PnL";

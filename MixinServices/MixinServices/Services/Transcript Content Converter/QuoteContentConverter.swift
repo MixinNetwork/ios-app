@@ -62,6 +62,7 @@ public enum QuoteContentConverter {
         let sharedUserIdentityNumber: String?
         let sharedUserAvatarUrl: String?
         let mentions: String?
+        let caption: String?
         
         var messageItem: MessageItem {
             let mediaDuration: Int64?
@@ -79,53 +80,56 @@ public enum QuoteContentConverter {
             default:
                 content = self.content
             }
-            return MessageItem(messageId: messageId,
-                               conversationId: conversationId,
-                               userId: userId,
-                               category: type,
-                               content: content,
-                               mediaUrl: mediaUrl,
-                               mediaMimeType: mediaMimeType,
-                               mediaSize: mediaSize,
-                               mediaDuration: mediaDuration,
-                               mediaWidth: mediaWidth,
-                               mediaHeight: mediaHeight,
-                               mediaHash: nil,
-                               mediaKey: nil,
-                               mediaDigest: nil,
-                               mediaStatus: mediaStatus,
-                               mediaWaveform: nil,
-                               mediaLocalIdentifier: nil,
-                               thumbImage: thumbImage,
-                               thumbUrl: thumbUrl,
-                               status: status,
-                               participantId: nil,
-                               snapshotId: nil,
-                               name: mediaName,
-                               stickerId: stickerId,
-                               createdAt: createdAt,
-                               actionName: nil,
-                               userFullName: userFullName,
-                               userIdentityNumber: userIdentityNumber,
-                               userAvatarUrl: userAvatarUrl,
-                               appId: appId,
-                               participantFullName: nil,
-                               participantUserId: nil,
-                               assetUrl: assetUrl,
-                               assetType: nil,
-                               assetWidth: assetWidth,
-                               assetHeight: assetHeight,
-                               assetCategory: nil,
-                               sharedUserId: sharedUserId,
-                               sharedUserFullName: sharedUserFullName,
-                               sharedUserIdentityNumber: sharedUserIdentityNumber,
-                               sharedUserAvatarUrl: sharedUserAvatarUrl,
-                               sharedUserAppId: nil,
-                               sharedUserIsVerified: nil,
-                               quoteMessageId: nil,
-                               quoteContent: nil,
-                               mentionsJson: nil,
-                               hasMentionRead: nil)
+            return MessageItem(
+                messageId: messageId,
+                conversationId: conversationId,
+                userId: userId,
+                category: type,
+                content: content,
+                mediaUrl: mediaUrl,
+                mediaMimeType: mediaMimeType,
+                mediaSize: mediaSize,
+                mediaDuration: mediaDuration,
+                mediaWidth: mediaWidth,
+                mediaHeight: mediaHeight,
+                mediaHash: nil,
+                mediaKey: nil,
+                mediaDigest: nil,
+                mediaStatus: mediaStatus,
+                mediaWaveform: nil,
+                mediaLocalIdentifier: nil,
+                thumbImage: thumbImage,
+                thumbUrl: thumbUrl,
+                status: status,
+                participantId: nil,
+                snapshotId: nil,
+                name: mediaName,
+                stickerId: stickerId,
+                createdAt: createdAt,
+                actionName: nil,
+                userFullName: userFullName,
+                userIdentityNumber: userIdentityNumber,
+                userAvatarUrl: userAvatarUrl,
+                appId: appId,
+                participantFullName: nil,
+                participantUserId: nil,
+                assetUrl: assetUrl,
+                assetType: nil,
+                assetWidth: assetWidth,
+                assetHeight: assetHeight,
+                assetCategory: nil,
+                sharedUserId: sharedUserId,
+                sharedUserFullName: sharedUserFullName,
+                sharedUserIdentityNumber: sharedUserIdentityNumber,
+                sharedUserAvatarUrl: sharedUserAvatarUrl,
+                sharedUserAppId: nil,
+                sharedUserIsVerified: nil,
+                quoteMessageId: nil,
+                quoteContent: nil,
+                mentionsJson: nil,
+                hasMentionRead: nil,
+                caption: caption,
+            )
         }
         
         init(item i: MessageItem) {
@@ -166,6 +170,7 @@ public enum QuoteContentConverter {
             self.sharedUserFullName = i.sharedUserFullName
             self.sharedUserIdentityNumber = i.sharedUserIdentityNumber
             self.sharedUserAvatarUrl = i.sharedUserAvatarUrl
+            self.caption = i.caption
             if let json = i.mentionsJson {
                 self.mentions = String(data: json, encoding: .utf8)
             } else {

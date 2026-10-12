@@ -203,8 +203,7 @@ class PerpsMarginInputViewController: UIViewController {
                         comparator: comparator,
                     )
                 }
-            case .failure(let error):
-                Logger.general.debug(category: "OpenPerpsPosition", message: "Margin Tokens: \(error)")
+            case .failure:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                     self?.reloadMarginTokens()
                 }

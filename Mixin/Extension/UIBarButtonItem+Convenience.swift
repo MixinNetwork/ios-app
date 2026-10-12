@@ -25,15 +25,16 @@ extension UIBarButtonItem {
         return item
     }
     
-    static func busyButton(title: String?, target: Any?, action: Selector) -> UIBarButtonItem {
-        let button = BusyButton(type: .system)
-        button.setTitle(title, for: .normal)
-        button.setTitleColor(R.color.theme(), for: .normal)
-        button.setTitleColor(R.color.button_background_disabled(), for: .disabled)
-        button.titleLabel?.font = .systemFont(ofSize: 16)
-        button.addTarget(target, action: action, for: .touchUpInside)
-        let item = UIBarButtonItem(customView: button)
-        return item
+    static func busyIndicator() -> UIBarButtonItem {
+        let indicator = ActivityIndicatorView()
+        indicator.tintColor = R.color.text_tertiary()
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            indicator.widthAnchor.constraint(equalToConstant: 44),
+            indicator.heightAnchor.constraint(equalToConstant: 44),
+        ])
+        indicator.startAnimating()
+        return UIBarButtonItem(customView: indicator)
     }
     
     static func customerService(target: Any?, action: Selector) -> UIBarButtonItem {

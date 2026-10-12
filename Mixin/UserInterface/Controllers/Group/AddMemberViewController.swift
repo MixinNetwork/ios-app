@@ -3,6 +3,8 @@ import MixinServices
 
 class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell, UserSearchResult> {
     
+    private var addMemberButton: UIBarButtonItem?
+    
     private var conversationId: String? = nil
     private var alreadyInGroupUserIds = Set<String>()
     private var selectedUserIds = Set<String>()
@@ -30,8 +32,13 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
         } else {
             R.string.localizable.next()
         }
-        navigationItem.rightBarButtonItem = .busyButton(title: rightButtonTitle, target: self, action: #selector(addMember(_:)))
-        navigationItem.rightBarButtonItem?.isEnabled = false
+        addMemberButton = .button(
+            title: rightButtonTitle,
+            target: self,
+            action: #selector(addMember(_:)),
+        )
+        navigationItem.rightBarButtonItem = addMemberButton
+        addMemberButton?.isEnabled = false
         searchBoxView.textField.placeholder = R.string.localizable.setting_auth_search_hint()
         tableView.allowsMultipleSelection = true
     }
@@ -182,7 +189,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
     
     private func selectionsDidChange() {
         updateSubtitle()
-        navigationItem.rightBarButtonItem?.isEnabled = !selectedUsers.isEmpty
+        addMemberButton?.isEnabled = !selectedUsers.isEmpty
     }
     
     private func updateSubtitle() {
@@ -200,22 +207,25 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
         }
     }
     
-    @objc private func addMember(_ sender: BusyButton) {
+    @objc private func addMember(_ sender: UIBarButtonItem) {
         if let conversationId = conversationId {
             let userIds = selectedUsers.map { $0.userId }
-            sender.isBusy = true
-            ConversationAPI.addParticipant(conversationId: conversationId, participantUserIds: userIds, completion: { [weak self] (result) in
-                guard let weakSelf = self else {
+            navigationItem.rightBarButtonItem = .busyIndicator()
+            ConversationAPI.addParticipant(
+                conversationId: conversationId,
+                participantUserIds: userIds,
+            ) { [weak self] (result) in
+                guard let self else {
                     return
                 }
-                sender.isBusy = false
+                self.navigationItem.rightBarButtonItem = self.addMemberButton
                 switch result {
                 case .success:
-                    weakSelf.navigationController?.popViewController(animated: true)
+                    self.navigationController?.popViewController(animated: true)
                 case let .failure(error):
                     showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 }
-            })
+            }
         } else {
             let members = selectedUsers.map(GroupMemberCandidate.init)
             let newGroup = NewGroupViewController(members: members)

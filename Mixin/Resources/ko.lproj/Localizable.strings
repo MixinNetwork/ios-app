@@ -2027,6 +2027,7 @@
 "waiting_transaction_description" = "이체 또는 출금이 완료되지 않았습니다. 나중에 다시 시도해 주세요.";
 "wallet" = "지갑";
 "wallet_already_added" = "이 지갑은 이미 추가되었습니다.";
+"wallet_already_imported" = "이미 가져온 지갑입니다";
 "wallet_buy_option_apple_pay_or_card" = "Apple Pay 또는 카드";
 "wallet_buy_option_apple_pay_or_card_desc" = "Apple Pay, 신용카드 또는 직불카드를 사용하여 암호화폐를 즉시 구매하세요.";
 "wallet_buy_option_bank_transfer" = "은행 송금";

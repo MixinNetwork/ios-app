@@ -2027,6 +2027,7 @@
 "waiting_transaction_description" = "У вас есть перевод или снятие средств, которые не были завершены. Пожалуйста, повторите попытку позже.";
 "wallet" = "Кошелек";
 "wallet_already_added" = "Этот кошелек уже добавлен";
+"wallet_already_imported" = "Этот кошелек уже импортирован";
 "wallet_buy_option_apple_pay_or_card" = "Apple Pay или Card";
 "wallet_buy_option_apple_pay_or_card_desc" = "Используйте Apple Pay, кредитную или дебетовую карту, чтобы мгновенно покупать криптовалюту.";
 "wallet_buy_option_bank_transfer" = "Банковский перевод";

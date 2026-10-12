@@ -2027,6 +2027,7 @@
 "waiting_transaction_description" = "Tienes una transferencia o retiro que no se ha completado. Inténtelo de nuevo más tarde.";
 "wallet" = "Cartera";
 "wallet_already_added" = "Esta billetera ya ha sido agregada";
+"wallet_already_imported" = "Esta billetera ya se ha importado";
 "wallet_buy_option_apple_pay_or_card" = "Apple Pay o Tarjeta";
 "wallet_buy_option_apple_pay_or_card_desc" = "Utilice Apple Pay, tarjeta de crédito o débito para comprar criptomonedas al instante.";
 "wallet_buy_option_bank_transfer" = "Transferencia bancaria";

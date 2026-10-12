@@ -2027,6 +2027,7 @@
 "waiting_transaction_description" = "You have a transfer or withdrawal that has not been completed. Please try again later.";
 "wallet" = "Wallet";
 "wallet_already_added" = "This wallet has already been added";
+"wallet_already_imported" = "This wallet has already been imported";
 "wallet_buy_option_apple_pay_or_card" = "Apple Pay or Card";
 "wallet_buy_option_apple_pay_or_card_desc" = "Use Apple Pay, credit or debit card to buy crypto instantly.";
 "wallet_buy_option_bank_transfer" = "Bank Transfer";

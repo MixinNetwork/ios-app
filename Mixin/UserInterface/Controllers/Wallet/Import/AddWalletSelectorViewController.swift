@@ -121,7 +121,7 @@ final class AddWalletSelectorViewController: UIViewController {
         collectionView.reloadData()
         for item in candidates.indices {
             let indexPath = IndexPath(item: item, section: 0)
-            guard self.collectionView(collectionView, shouldSelectItemAt: indexPath) else {
+            guard self.candidates[item].isImportable else {
                 continue
             }
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
@@ -183,7 +183,7 @@ final class AddWalletSelectorViewController: UIViewController {
     private func selectAllCandidates() {
         for item in candidates.indices {
             let indexPath = IndexPath(item: item, section: 0)
-            guard self.collectionView(collectionView, shouldSelectItemAt: indexPath) else {
+            guard self.candidates[item].isImportable else {
                 continue
             }
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
@@ -274,7 +274,7 @@ final class AddWalletSelectorViewController: UIViewController {
                             self.nameIndices = Self.nameIndices(candidates: self.candidates, firstNameIndex: self.firstNameIndex)
                             self.collectionView.insertItems(at: newIndexPaths)
                             for indexPath in newIndexPaths {
-                                guard self.collectionView(self.collectionView, shouldSelectItemAt: indexPath) else {
+                                guard self.candidates[indexPath.item].isImportable else {
                                     continue
                                 }
                                 self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
@@ -355,7 +355,20 @@ extension AddWalletSelectorViewController: UICollectionViewDataSource {
 extension AddWalletSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        candidates[indexPath.item].isImportable
+        if candidates[indexPath.item].isImportable {
+            return true
+        } else {
+            let alert = UIAlertController(
+                title: R.string.localizable.wallet_already_imported(),
+                message: nil,
+                preferredStyle: .alert
+            )
+            alert.addAction(
+                UIAlertAction(title: R.string.localizable.got_it(), style: .cancel)
+            )
+            present(alert, animated: true)
+            return false
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

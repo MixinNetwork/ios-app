@@ -2027,6 +2027,7 @@
 "waiting_transaction_description" = "完了していない送金または出金があります。後でもう一度試してください。";
 "wallet" = "ウォレット";
 "wallet_already_added" = "このウォレットはすでに追加されています";
+"wallet_already_imported" = "このウォレットはすでにインポートされています";
 "wallet_buy_option_apple_pay_or_card" = "Apple Pay またはカード";
 "wallet_buy_option_apple_pay_or_card_desc" = "Apple Pay、クレジット カード、またはデビット カードを使用して仮想通貨をすぐに購入できます。";
 "wallet_buy_option_bank_transfer" = "銀行振込";

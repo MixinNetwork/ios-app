@@ -157,10 +157,9 @@ extension StickerInputViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedIndex = indexPath.item
         if selectedIndex == 0 {
-            let viewController = R.storyboard.chat.sticker_store()!
-            let navigationController = UINavigationController(rootViewController: viewController)
+            let store = StickerStoreViewController()
+            let navigationController = GeneralAppearanceNavigationController(rootViewController: store)
             navigationController.modalPresentationStyle = .fullScreen
-            navigationController.setNavigationBarHidden(true, animated: false)
             present(navigationController, animated: true, completion: nil)
             collectionView.selectItem(at: IndexPath(item: currentIndex, section: 0), animated: false, scrollPosition: .centeredVertically)
             if AppGroupUserDefaults.User.hasNewStickers {

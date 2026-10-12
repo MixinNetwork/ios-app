@@ -15,6 +15,7 @@ class StickerStoreBannerView: UICollectionReusableView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        collectionView.register(R.nib.stickerStoreBannerCell)
         collectionView.decelerationRate = .fast
         layout.scale = .pi / 4
         layout.minimumLineSpacing = 6

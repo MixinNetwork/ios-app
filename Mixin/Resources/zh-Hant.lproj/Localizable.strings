@@ -2027,6 +2027,7 @@
 "waiting_transaction_description" = "您有一筆轉賬或提現未完成，請稍後再試";
 "wallet" = "錢包";
 "wallet_already_added" = "這個錢包已經新增過了";
+"wallet_already_imported" = "該錢包已在錢包列表中，無需重複匯入";
 "wallet_buy_option_apple_pay_or_card" = "Apple Pay 或銀行卡";
 "wallet_buy_option_apple_pay_or_card_desc" = "使用 Apple Pay、信用卡或簽帳金融卡，立刻購買加密貨幣。";
 "wallet_buy_option_bank_transfer" = "銀行轉賬";

@@ -119,7 +119,8 @@ final class PerpetualMarketViewController: UIViewController {
             timeInterval: 3,
         )
         self.candleLoader = PerpetualCandleLoader(
-            marketID: viewModel.market.marketID
+            marketID: viewModel.market.marketID,
+            timeInterval: 5,
         )
         self.viewModel = viewModel
         self.infos = Info.availableInfos(in: viewModel)

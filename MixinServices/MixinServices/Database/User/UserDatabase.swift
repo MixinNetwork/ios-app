@@ -1007,6 +1007,35 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("jobs_unencoded_plain_data") { db in
+            // Older versions stored base64 encoded data in jobs of these categories, while
+            // data is now encoded right before delivering.
+            let jobs = try Job.fetchAll(db, sql: "SELECT * FROM jobs WHERE action = 'SEND_MESSAGE'")
+            for job in jobs {
+                var blazeMessage = job.toBlazeMessage()
+                guard let data = blazeMessage.params?.data else {
+                    continue
+                }
+                switch blazeMessage.params?.category {
+                case MessageCategory.PLAIN_TEXT.rawValue, MessageCategory.PLAIN_POST.rawValue, MessageCategory.PLAIN_LOCATION.rawValue:
+                    guard let decoded = data.base64Decoded() else {
+                        continue
+                    }
+                    blazeMessage.params?.data = decoded
+                case MessageCategory.PLAIN_TRANSCRIPT.rawValue:
+                    // Unencoded data is a JSON array of child messages, and "[" is not in the base64 alphabet
+                    guard !data.hasPrefix("["), let decoded = data.base64Decoded() else {
+                        continue
+                    }
+                    blazeMessage.params?.data = decoded
+                default:
+                    continue
+                }
+                try db.execute(sql: "UPDATE jobs SET blaze_message = ? WHERE job_id = ?",
+                               arguments: [JSONEncoder.default.encode(blazeMessage), job.jobId])
+            }
+        }
+        
         return migrator
     }
     

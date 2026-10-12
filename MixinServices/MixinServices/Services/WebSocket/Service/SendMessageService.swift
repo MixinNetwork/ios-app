@@ -102,12 +102,7 @@ public class SendMessageService: MixinService {
     }
     
     public func sendMessage(message: Message, data: String?, immediatelySend: Bool = true, silentNotification: Bool = false, expireIn: Int64 = 0) {
-        let needsEncodeCategories: [MessageCategory] = [
-            .PLAIN_TEXT, .PLAIN_POST, .PLAIN_LOCATION, .PLAIN_TRANSCRIPT
-        ]
-        let shouldEncodeContent = needsEncodeCategories.map(\.rawValue).contains(message.category)
-        let content = shouldEncodeContent ? data?.base64Encoded() : data
-        let job = Job(message: message, data: content, silentNotification: silentNotification, expireIn: expireIn)
+        let job = Job(message: message, data: data, silentNotification: silentNotification, expireIn: expireIn)
         JobDAO.shared.insertOrIgnore(job)
         if immediatelySend {
             SendMessageService.shared.processMessages()
@@ -677,12 +672,13 @@ extension SendMessageService {
         }
         if message.category.hasPrefix("PLAIN_") || message.category == MessageCategory.MESSAGE_RECALL.rawValue || message.category == MessageCategory.APP_CARD.rawValue {
             try checkConversationAndExpireIn()
-            if blazeMessage.params?.data == nil {
-                if needsEncodeCategories.map(\.rawValue).contains(message.category) {
-                    blazeMessage.params?.data = message.content?.base64Encoded()
-                } else {
-                    blazeMessage.params?.data = message.content
-                }
+            // Job data of `needsEncodeCategories` is not encoded, and it differs from `message.content`
+            // for transcripts: the former is the JSON of child messages, the latter is a local preview
+            let rawContent = blazeMessage.params?.data ?? message.content
+            if needsEncodeCategories.map(\.rawValue).contains(message.category) {
+                blazeMessage.params?.data = rawContent?.base64Encoded()
+            } else {
+                blazeMessage.params?.data = rawContent
             }
         } else if message.category.hasPrefix("ENCRYPTED_") {
             // FIXME: Participant session saving may not finished after the func below returns.
@@ -706,9 +702,6 @@ extension SendMessageService {
                 let newCategory = message.category.replacingOccurrences(of: "ENCRYPTED_", with: "PLAIN_")
                 MessageDAO.shared.updateMessageCategory(newCategory, forMessageWithId: message.messageId)
                 blazeMessage.params?.category = newCategory
-                if let data = blazeMessage.params?.data, needsEncodeCategories.map(\.rawValue).contains(newCategory) {
-                    blazeMessage.params?.data = data.base64Encoded()
-                }
                 try sendMessage(blazeMessage: blazeMessage)
             }
             

@@ -90,7 +90,7 @@ public final class AssetAPI: MixinAPI {
         }
         let result: MixinAPI.Result<[DisplayMixinToken]> = request(method: .get, path: url)
         return result.map { tokens in
-            tokens.map(\.asToken)
+            tokens.map(\.asToken).filter(\.isDisplayable)
         }
     }
     
@@ -111,7 +111,7 @@ public final class AssetAPI: MixinAPI {
             queue: queue
         ) { (result: Result<[DisplayMixinToken]>) in
             let tokenResult = result.map { tokens in
-                tokens.map(\.asToken)
+                tokens.map(\.asToken).filter(\.isDisplayable)
             }
             completion(tokenResult)
         }

@@ -352,7 +352,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         var missingAssetIDs = Set(assetIDs)
         switch wallet {
         case .privacy:
-            let localItems = TokenDAO.shared.tokenItems(with: assetIDs)
+            let localItems = TokenDAO.shared.tokenItems(with: assetIDs).filter(\.isDisplayable)
             for item in localItems {
                 missingAssetIDs.remove(item.assetID)
             }
@@ -362,7 +362,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
             
             if !missingAssetIDs.isEmpty {
                 let remoteTokens = try await SafeAPI.assets(ids: missingAssetIDs)
-                for token in remoteTokens {
+                for token in remoteTokens where token.isDisplayable {
                     let chain = ChainDAO.shared.chain(chainId: token.chainID)
                     let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                     allTokens[item.assetID] = item

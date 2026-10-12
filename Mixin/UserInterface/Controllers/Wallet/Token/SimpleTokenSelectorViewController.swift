@@ -82,7 +82,19 @@ final class SimpleTokenSelectorViewController: TokenSelectorViewController {
     }
     
     func search(keyword: String) {
-        
+        let results = tokens.filter { token in
+            token.name.localizedCaseInsensitiveContains(keyword)
+            || token.symbol.localizedCaseInsensitiveContains(keyword)
+        }
+        searchResultsKeyword = keyword
+        searchResults = results
+        collectionView.reloadData()
+        collectionView.checkEmpty(
+            dataCount: results.count,
+            text: R.string.localizable.no_results(),
+            photo: R.image.emptyIndicator.ic_search_result()!,
+        )
+        searchBoxView.isBusy = false
     }
     
     private func token(at indexPath: IndexPath) -> any Token {

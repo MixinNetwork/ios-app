@@ -14,6 +14,9 @@ final class WalletSearchMixinTokenHandler {
 extension WalletSearchMixinTokenHandler: WalletSearchMixinTokenController.Delegate {
     
     func walletSearchMixinTokenController(_ controller: WalletSearchMixinTokenController, didSelectToken token: MixinTokenItem) {
+        guard token.isDisplayable else {
+            return
+        }
         let controller = MixinTokenViewController(token: token)
         navigationController?.pushViewController(controller, animated: true)
         DispatchQueue.global().async {

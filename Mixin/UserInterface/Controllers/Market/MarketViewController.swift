@@ -425,6 +425,7 @@ final class MarketViewController: UIViewController {
         DispatchQueue.global().async { [weak self] in
             let uniqueIDs = Set(ids)
             let tokens = TokenDAO.shared.tokenItems(with: uniqueIDs)
+                .filter(\.isDisplayable)
                 .sorted { one, another in
                     one.decimalBalance > another.decimalBalance
                 }
@@ -443,7 +444,7 @@ final class MarketViewController: UIViewController {
                 Logger.general.debug(category: "MarketView", message: "Load missing asset: \(missingAssetIDs)")
                 switch SafeAPI.assets(ids: missingAssetIDs) {
                 case .success(let missingTokens):
-                    let missingTokenItems = missingTokens.map { token in
+                    let missingTokenItems = missingTokens.filter(\.isDisplayable).map { token in
                         let chain = ChainDAO.shared.chain(chainId: token.chainID)
                         return MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                     }

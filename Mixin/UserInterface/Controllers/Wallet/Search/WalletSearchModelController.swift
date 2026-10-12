@@ -26,10 +26,11 @@ final class WalletSearchMixinTokenController: WalletSearchModelController {
     func history() -> [MixinTokenItem] {
         AppGroupUserDefaults.User.assetSearchHistory
             .compactMap(TokenDAO.shared.tokenItem(assetID:))
+            .filter(\.isDisplayable)
     }
     
     func isTrendingItemAvailable(item: AssetItem) -> Bool {
-        true
+        TokenDAO.shared.tokenItem(assetID: item.assetId)?.isDisplayable ?? true
     }
     
     func localItems(keyword: String) -> [MixinTokenItem] {
@@ -45,6 +46,9 @@ final class WalletSearchMixinTokenController: WalletSearchModelController {
         let chainIDs = Set(tokens.map(\.chainID))
         var chains = ChainDAO.shared.chains(chainIDs: chainIDs)
         return tokens.compactMap { (token) -> MixinTokenItem? in
+            guard token.isDisplayable else {
+                return nil
+            }
             let chain: Chain
             if let localChain = chains[token.chainID] {
                 chain = localChain

@@ -179,7 +179,7 @@ class PerpsMarginInputViewController: UIViewController {
                         results[enumerated.element] = enumerated.offset
                     }
                 let comparator = MarginTokenComparator(orders: orders)
-                let tokens = TokenDAO.shared.tokenItems(with: assetIDs)
+                let tokens = TokenDAO.shared.tokenItems(with: assetIDs).filter(\.isDisplayable)
                     .sorted(using: comparator)
                 DispatchQueue.main.async {
                     guard let self else {
@@ -220,7 +220,7 @@ class PerpsMarginInputViewController: UIViewController {
         SafeAPI.assets(ids: assetIDs, queue: .global()) { [weak self] result in
             switch result {
             case .success(let tokens):
-                var items = existedTokens + tokens.map { token in
+                var items = existedTokens + tokens.filter(\.isDisplayable).map { token in
                     MixinTokenItem(
                         token: token,
                         balance: "0",

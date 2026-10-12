@@ -1007,6 +1007,13 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("tokens_primitive_asset_id") { db in
+            let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(tokens)").map(\.name)
+            if !columns.contains("primitive_asset_id") {
+                try db.execute(sql: "ALTER TABLE tokens ADD COLUMN primitive_asset_id TEXT")
+            }
+        }
+        
         return migrator
     }
     

@@ -3,19 +3,10 @@ import MixinServices
 
 struct PerpetualPositionViewModel {
     
-    struct EstimatedReceiving {
-        let assetID: String
-        let receivingAmount: Decimal
-        let pnlAmount: Decimal
-    }
-    
     let wallet: Wallet
-    let marketID: String
-    let positionID: String
+    let position: PerpetualPositionItem
     let side: PerpetualOrderSide
-    let iconURL: URL?
     let directionWithSymbol: String
-    let leverageMultiplier: Int
     let leverage: String
     let pnl: String
     let pnlColor: MarketColor
@@ -23,19 +14,15 @@ struct PerpetualPositionViewModel {
     let roeWithSign: String?
     let roeWithoutSign: String?
     let pnlWithROE: String
-    let displaySymbol: String?
     let decimalQuantity: Decimal
     let quantity: String
-    let tokenSymbol: String?
     let orderValueInToken: String
     let decimalEntryPrice: Decimal?
     let entryPrice: String
     let date: String
-    let priceFormatStyle: Decimal.FormatStyle.Currency
     let state: PerpetualPosition.State?
     let decimalMargin: Decimal
     let margin: String
-    let estimatedReceiving: EstimatedReceiving
     let decimalLiquidationPrice: Decimal?
     let liquidationPrice: String?
     let takeProfitPrice: Decimal?
@@ -43,9 +30,8 @@ struct PerpetualPositionViewModel {
     let orderValueInFiatMoney: String?
     
     init(wallet: Wallet, position: PerpetualPositionItem) {
-        let pnl = Decimal(string: position.unrealizedPnL, locale: .enUSPOSIX) ?? 0
+        let pnl = position.decimalUnrealizedPnL
         let decimalEntryPrice = Decimal(string: position.entryPrice, locale: .enUSPOSIX)
-        let decimalMarkPrice = Decimal(string: position.markPrice, locale: .enUSPOSIX) ?? 0
         let decimalQuantity = abs(Decimal(string: position.quantity, locale: .enUSPOSIX) ?? 0)
         let leverage = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
         let side = PerpetualOrderSide(rawValue: position.side) ?? .short
@@ -59,17 +45,14 @@ struct PerpetualPositionViewModel {
         )
         
         self.wallet = wallet
-        self.marketID = position.marketID
-        self.positionID = position.positionID
+        self.position = position
         self.side = side
-        self.iconURL = position.iconURL
         switch side {
         case .long:
             self.directionWithSymbol = R.string.localizable.long_asset(position.tokenSymbol)
         case .short:
             self.directionWithSymbol = R.string.localizable.short_asset(position.tokenSymbol)
         }
-        self.leverageMultiplier = position.leverage
         self.leverage = leverage
         self.pnl = localizedPnL
         self.pnlColor = pnl >= 0 ? .rising : .falling
@@ -92,7 +75,7 @@ struct PerpetualPositionViewModel {
             self.roeWithoutSign = roeWithoutSign
             self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
             self.orderValueInFiatMoney = CurrencyFormatter.localizedString(
-                from: decimalQuantity * decimalMarkPrice,
+                from: decimalQuantity * position.decimalMarkPrice,
                 format: .fiatMoneyPretty,
                 sign: .never,
                 symbol: .dollarSign,
@@ -104,14 +87,12 @@ struct PerpetualPositionViewModel {
             self.pnlWithROE = localizedPnL
             self.orderValueInFiatMoney = nil
         }
-        self.displaySymbol = position.displaySymbol
         self.decimalQuantity = decimalQuantity
         self.quantity = CurrencyFormatter.localizedString(
             from: decimalQuantity,
             format: .precision,
             sign: .never,
         )
-        self.tokenSymbol = position.tokenSymbol
         self.orderValueInToken = CurrencyFormatter.localizedString(
             from: decimalQuantity,
             format: .precision,
@@ -129,7 +110,6 @@ struct PerpetualPositionViewModel {
         } else {
             position.createdAt
         }
-        self.priceFormatStyle = position.priceFormatStyle
         
         self.state = position.state.knownCase
         self.decimalMargin = margin
@@ -138,11 +118,6 @@ struct PerpetualPositionViewModel {
             format: .fiatMoneyPretty,
             sign: .never,
             symbol: .dollarSign
-        )
-        self.estimatedReceiving = EstimatedReceiving(
-            assetID: position.settleAssetID,
-            receivingAmount: margin + pnl,
-            pnlAmount: pnl
         )
         if let price = position.liquidationPrice,
            !price.isEmpty,

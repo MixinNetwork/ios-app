@@ -58,7 +58,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
         var rows: [Row]
         rows = [
             .assetChanges(
-                estimated: true,
+                title: R.string.localizable.estimated_balance_change(),
                 changes: [
                     StyledAssetChange(
                         token: sendToken,

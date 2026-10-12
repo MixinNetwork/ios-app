@@ -42,6 +42,22 @@ final class MultipleAssetChangeCell: UITableViewCell {
             let rowView = rowViews[i]
             rowView.iconView.setIcon(token: change.token)
             rowView.amountLabel.text = change.amount
+            rowView.amountLabel.textColor = switch change.amountStyle {
+            case .incoming:
+                R.color.market_green()
+            case .outgoing:
+                R.color.market_red()
+            case .primary:
+                R.color.text()
+            case .secondary:
+                R.color.text_secondary()
+            case .tertiary:
+                R.color.text_tertiary()
+            }
+            rowView.amountLabel.setFont(
+                scaledFor: .systemFont(ofSize: 16, weight: .medium),
+                adjustForContentSize: true
+            )
             switch change.token {
             case let token as OnChainToken:
                 rowView.networkLabel.text = token.chain?.name
@@ -49,16 +65,6 @@ final class MultipleAssetChangeCell: UITableViewCell {
                 rowView.networkLabel.text = token.chain.name
             default:
                 rowView.networkLabel.text = nil
-            }
-            rowView.amountLabel.textColor = switch change.amountStyle {
-            case .incoming:
-                R.color.market_green()
-            case .outgoing:
-                R.color.market_red()
-            case .plain:
-                R.color.text()
-            case .gray:
-                R.color.text_tertiary()
             }
             rowView.leverageLabel?.removeFromSuperview()
         }
@@ -73,17 +79,23 @@ final class MultipleAssetChangeCell: UITableViewCell {
             let rowView = rowViews[i]
             rowView.iconView.setIcon(token: change.token)
             rowView.amountLabel.text = change.amount
-            rowView.networkLabel.text = change.token?.chain?.name
             rowView.amountLabel.textColor = switch style {
             case .incoming:
                 R.color.market_green()
             case .outgoing:
                 R.color.market_red()
-            case .plain:
+            case .primary:
                 R.color.text()
-            case .gray:
+            case .secondary:
+                R.color.text_secondary()
+            case .tertiary:
                 R.color.text_tertiary()
             }
+            rowView.amountLabel.setFont(
+                scaledFor: .systemFont(ofSize: 16, weight: .medium),
+                adjustForContentSize: true
+            )
+            rowView.networkLabel.text = change.token?.chain?.name
             rowView.leverageLabel?.removeFromSuperview()
         }
     }
@@ -102,6 +114,10 @@ final class MultipleAssetChangeCell: UITableViewCell {
         rowView.amountLabel.font = .preferredFont(forTextStyle: .callout)
         rowView.amountLabel.text = amount
         rowView.amountLabel.textColor = amountColor
+        rowView.amountLabel.setFont(
+            scaledFor: .systemFont(ofSize: 16, weight: .medium),
+            adjustForContentSize: true
+        )
         rowView.networkLabel.text = network
         rowView.leverageLabel?.removeFromSuperview()
     }
@@ -118,6 +134,10 @@ final class MultipleAssetChangeCell: UITableViewCell {
             )
             rowView.amountLabel.text = position.name
             rowView.amountLabel.textColor = R.color.text()
+            rowView.amountLabel.setFont(
+                scaledFor: .systemFont(ofSize: 16, weight: .medium),
+                adjustForContentSize: true
+            )
             if let leverage = position.leverage {
                 rowView.loadLeverageLabel(side: position.side, text: leverage)
             } else {

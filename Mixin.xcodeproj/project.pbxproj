@@ -1032,8 +1032,6 @@
 		944C61FF2B6C033500C7DF06 /* EditAddressPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C61FE2B6C033500C7DF06 /* EditAddressPreviewViewController.swift */; };
 		944C62042B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C62032B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift */; };
 		944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */; };
-		944D17932F6199C3008BBA92 /* ClosePerpsReceiveCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D17912F6199C3008BBA92 /* ClosePerpsReceiveCell.swift */; };
-		944D17942F6199C3008BBA92 /* ClosePerpsReceiveCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944D17922F6199C3008BBA92 /* ClosePerpsReceiveCell.xib */; };
 		944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */; };
 		944F53FE2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944F53FD2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift */; };
 		944F54072E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944F54062E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.xib */; };
@@ -3081,8 +3079,6 @@
 		944C61FE2B6C033500C7DF06 /* EditAddressPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAddressPreviewViewController.swift; sourceTree = "<group>"; };
 		944C62032B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPreviewDoubleButtonTrayView.swift; sourceTree = "<group>"; };
 		944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusWriter.swift; sourceTree = "<group>"; };
-		944D17912F6199C3008BBA92 /* ClosePerpsReceiveCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosePerpsReceiveCell.swift; sourceTree = "<group>"; };
-		944D17922F6199C3008BBA92 /* ClosePerpsReceiveCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClosePerpsReceiveCell.xib; sourceTree = "<group>"; };
 		944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebLoadingFailureView.xib; sourceTree = "<group>"; };
 		944F53FD2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWalletAddressesViewController.swift; sourceTree = "<group>"; };
 		944F54052E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWalletAddressesIntroductionCell.swift; sourceTree = "<group>"; };
@@ -5697,8 +5693,6 @@
 				946CBA042E9F7A950099FFCB /* CommonWalletReceiverCell.swift */,
 				940EAFC82EAE454A009B3DAA /* WaivedFeeCell.xib */,
 				940EAFC72EAE454A009B3DAA /* WaivedFeeCell.swift */,
-				944D17922F6199C3008BBA92 /* ClosePerpsReceiveCell.xib */,
-				944D17912F6199C3008BBA92 /* ClosePerpsReceiveCell.swift */,
 				9457F7712B6F4186008FC98F /* AuthenticationPreviewSingleButtonTrayView.swift */,
 				944C61F92B6BFD6F00C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.xib */,
 				944C62032B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift */,
@@ -7571,7 +7565,6 @@
 				94E681722E5ED27B003304DF /* DepositGeneralEntryCell.xib in Resources */,
 				946E98FC2FF3AF050083D89C /* LargeWalletValueAddedServiceCell.xib in Resources */,
 				94E9792D2D0B43B100FFCC12 /* UpdateView.xib in Resources */,
-				944D17942F6199C3008BBA92 /* ClosePerpsReceiveCell.xib in Resources */,
 				940FC5082F502C01000C4260 /* OpenPerpetualActionView.xib in Resources */,
 				94EC9C512F2BBD2500B3CD82 /* QRCodeScannerView.xib in Resources */,
 				94F64FFD2D65E40100234D7D /* WalletSummaryValueCell.xib in Resources */,
@@ -9012,7 +9005,6 @@
 				941C768C2F5F1FA5005B70A9 /* CandlestickChartView.swift in Sources */,
 				7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */,
 				94FCC9182FD6889900AA6AA7 /* MixinTokensViewController.swift in Sources */,
-				944D17932F6199C3008BBA92 /* ClosePerpsReceiveCell.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
 				944731682E71A17A00ACC49B /* SearchMarketViewController.swift in Sources */,
 				94D0A0082E72000400ACC49B /* RecentMarketSearchCell.swift in Sources */,

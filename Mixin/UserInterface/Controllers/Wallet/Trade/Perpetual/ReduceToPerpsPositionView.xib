@@ -16,20 +16,23 @@
                 <outlet property="cancelButton" destination="V7i-at-j61" id="Q6z-ii-L3I"/>
                 <outlet property="decreaseMultiplierButton" destination="nwm-iV-y6C" id="2vm-oy-BFT"/>
                 <outlet property="errorDescriptionButton" destination="0Cc-45-tPy" id="x1T-Uc-28n"/>
+                <outlet property="firstDescriptionContentLabel" destination="g6b-fm-1it" id="KMH-cp-SuZ"/>
+                <outlet property="firstDescriptionTitleLabel" destination="XEC-t4-ubt" id="01p-5c-pKH"/>
                 <outlet property="increaseMultiplierButton" destination="P70-rC-iEd" id="dNA-3E-r4F"/>
                 <outlet property="inputBackgroundView" destination="hS7-wT-Jr6" id="p5u-Bv-KlN"/>
-                <outlet property="introductTargetButton" destination="koH-aE-crs" id="20Y-Mq-JHo"/>
-                <outlet property="introductTargetIconView" destination="awv-6Y-Xpt" id="399-Wq-N22"/>
-                <outlet property="liquidationPriceActivityIndicator" destination="KEk-Ed-oel" id="gan-BA-tTg"/>
-                <outlet property="liquidationPriceContentLabel" destination="bgf-1d-1Jh" id="CZg-ut-nN2"/>
-                <outlet property="liquidationPriceTitleLabel" destination="7mc-Eo-nGw" id="pLk-9G-FEh"/>
                 <outlet property="markingContainerView" destination="pC6-jx-HxP" id="19w-Pr-KQN"/>
                 <outlet property="reduceButton" destination="vTz-nn-fIz" id="pgn-iS-ZNe"/>
+                <outlet property="secondDescriptionActivityIndicator" destination="KEk-Ed-oel" id="gan-BA-tTg"/>
+                <outlet property="secondDescriptionContentLabel" destination="bgf-1d-1Jh" id="CZg-ut-nN2"/>
+                <outlet property="secondDescriptionInfoButton" destination="vYl-s2-2ue" id="second-info-button"/>
+                <outlet property="thirdDescriptionView" destination="third-description" id="third-description-outlet"/>
+                <outlet property="thirdDescriptionTitleLabel" destination="third-title" id="third-title-outlet"/>
+                <outlet property="thirdDescriptionContentLabel" destination="third-content" id="third-content-outlet"/>
+                <outlet property="secondDescriptionInfoView" destination="6AI-DR-YTQ" id="x0Z-ET-1d2"/>
+                <outlet property="secondDescriptionTitleLabel" destination="7mc-Eo-nGw" id="pLk-9G-FEh"/>
                 <outlet property="slider" destination="xua-ar-gf3" id="fCn-dd-grJ"/>
                 <outlet property="swapValueDisplayButton" destination="Sgf-Ye-eIV" id="swap-value-button"/>
                 <outlet property="swapValueDisplayImageView" destination="nWd-Js-qlG" id="tCk-hx-FVw"/>
-                <outlet property="targetContentLabel" destination="g6b-fm-1it" id="KMH-cp-SuZ"/>
-                <outlet property="targetTitleLabel" destination="XEC-t4-ubt" id="01p-5c-pKH"/>
                 <outlet property="titleView" destination="ztB-1h-zOB" id="ada-cY-rWC"/>
                 <outlet property="valueTextField" destination="Iml-Mv-mdd" id="iGn-lJ-Q9R"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -175,18 +178,15 @@
                                                     <color key="textColor" name="text_tertiary"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info" translatesAutoresizingMaskIntoConstraints="NO" id="awv-6Y-Xpt">
-                                                    <rect key="frame" x="31.333333333333329" y="0.66666666666668561" width="16" height="16"/>
-                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="g6b-fm-1it">
-                                                    <rect key="frame" x="51.333333333333343" y="0.0" width="269.66666666666663" height="17"/>
+                                                    <rect key="frame" x="31.333333333333343" y="0.0" width="289.66666666666663" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="text_tertiary"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                         </stackView>
-                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="bKn-cI-CbX">
+                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="bKn-cI-CbX">
                                             <rect key="frame" x="0.0" y="33" width="321" height="17"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Liquidation Price" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7mc-Eo-nGw">
@@ -206,20 +206,25 @@
                                                 </label>
                                             </subviews>
                                         </stackView>
+                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="third-description">
+                                            <rect key="frame" x="0.0" y="0.0" width="321" height="17"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fee" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="third-title">
+                                                    <rect key="frame" x="0.0" y="0.0" width="27.333333333333332" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" name="text_tertiary"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="third-content">
+                                                    <rect key="frame" x="31.333333333333343" y="0.0" width="289.66666666666663" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" name="text_tertiary"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
                                     </subviews>
                                 </stackView>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="koH-aE-crs">
-                                    <rect key="frame" x="57.333333333333343" y="276" width="36" height="36"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" secondItem="koH-aE-crs" secondAttribute="height" id="KiW-ET-Jqc"/>
-                                        <constraint firstAttribute="width" constant="36" id="ib1-jw-2nQ"/>
-                                    </constraints>
-                                    <state key="normal" title="Button"/>
-                                    <buttonConfiguration key="configuration" style="plain"/>
-                                    <connections>
-                                        <action selector="introducePositionSize:" destination="-1" eventType="touchUpInside" id="pY9-yg-Fe3"/>
-                                    </connections>
-                                </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vYl-s2-2ue">
                                     <rect key="frame" x="138" y="309" width="36" height="36"/>
                                     <constraints>
@@ -229,7 +234,7 @@
                                     <state key="normal" title="Button"/>
                                     <buttonConfiguration key="configuration" style="plain"/>
                                     <connections>
-                                        <action selector="introduceLiquidationPrice:" destination="-1" eventType="touchUpInside" id="EES-wY-8ph"/>
+                                        <action selector="introduceSecondDescription:" destination="-1" eventType="touchUpInside" id="EES-wY-8ph"/>
                                     </connections>
                                 </button>
                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KEk-Ed-oel" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
@@ -249,12 +254,10 @@
                                 <constraint firstItem="hS7-wT-Jr6" firstAttribute="leading" secondItem="Vet-Pn-N7H" secondAttribute="leading" constant="20" id="BcD-oK-CbM"/>
                                 <constraint firstItem="KEk-Ed-oel" firstAttribute="centerY" secondItem="bgf-1d-1Jh" secondAttribute="centerY" id="DYl-zP-aKf"/>
                                 <constraint firstItem="RxC-NC-Wys" firstAttribute="top" secondItem="hS7-wT-Jr6" secondAttribute="bottom" constant="16" id="HxI-Kl-gMt"/>
-                                <constraint firstItem="koH-aE-crs" firstAttribute="centerX" secondItem="awv-6Y-Xpt" secondAttribute="centerX" id="Npx-oV-ytC"/>
                                 <constraint firstItem="vYl-s2-2ue" firstAttribute="centerY" secondItem="6AI-DR-YTQ" secondAttribute="centerY" id="VbJ-yA-WaF"/>
                                 <constraint firstItem="hS7-wT-Jr6" firstAttribute="top" secondItem="Vet-Pn-N7H" secondAttribute="top" id="WWH-Rb-IIq"/>
                                 <constraint firstItem="RxC-NC-Wys" firstAttribute="leading" secondItem="Vet-Pn-N7H" secondAttribute="leading" constant="36" id="Y1S-li-qJg"/>
                                 <constraint firstAttribute="bottom" secondItem="RxC-NC-Wys" secondAttribute="bottom" id="aDn-Br-Net"/>
-                                <constraint firstItem="koH-aE-crs" firstAttribute="centerY" secondItem="awv-6Y-Xpt" secondAttribute="centerY" id="bh0-Kh-cnd"/>
                                 <constraint firstItem="vYl-s2-2ue" firstAttribute="centerX" secondItem="6AI-DR-YTQ" secondAttribute="centerX" id="rih-K6-37F"/>
                                 <constraint firstItem="KEk-Ed-oel" firstAttribute="trailing" secondItem="bgf-1d-1Jh" secondAttribute="trailing" id="yHH-T9-0hS"/>
                             </constraints>

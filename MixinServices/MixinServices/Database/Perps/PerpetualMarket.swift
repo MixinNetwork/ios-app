@@ -32,6 +32,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
         case nextFundingAt = "next_funding_at"
         case openInterest = "open_interest"
         case tradeVolumeScore1D = "trade_volume_score_1d"
+        case quantityScale = "quantity_scale"
     }
     
     public enum Category: String, CaseIterable {
@@ -71,6 +72,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
     public let nextFundingAt: String
     public let openInterest: String
     public let tradeVolumeScore1D: Int
+    public let quantityScale: Int
     
     public var canonicalPriceFormatStyle: Decimal.FormatStyle {
         Decimal.FormatStyle.number
@@ -79,6 +81,15 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
             .sign(strategy: .never)
             .rounded(rule: .towardZero)
             .precision(.fractionLength(0...priceScale))
+    }
+    
+    public var canonicalQuantityFormatStyle: Decimal.FormatStyle {
+        Decimal.FormatStyle.number
+            .locale(.enUSPOSIX)
+            .grouping(.never)
+            .sign(strategy: .never)
+            .rounded(rule: .towardZero)
+            .precision(.fractionLength(0...quantityScale))
     }
     
     public private(set) lazy var decimalMarkPrice = Decimal(string: markPrice, locale: .enUSPOSIX) ?? 0
@@ -125,6 +136,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
         nextFundingAt: String,
         openInterest: String,
         tradeVolumeScore1D: Int,
+        quantityScale: Int,
     ) {
         self.marketID = marketID
         self.displaySymbol = displaySymbol
@@ -154,6 +166,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
         self.nextFundingAt = nextFundingAt
         self.openInterest = openInterest
         self.tradeVolumeScore1D = tradeVolumeScore1D
+        self.quantityScale = quantityScale
     }
     
 }

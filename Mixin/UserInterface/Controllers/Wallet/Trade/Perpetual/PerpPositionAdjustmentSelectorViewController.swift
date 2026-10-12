@@ -165,10 +165,8 @@ extension PerpPositionAdjustmentSelectorViewController: UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch sections[section] {
-        case .margin:
+        case .margin, .position:
             Behavior.allCases.count
-        case .position:
-            1
         case .introduction:
             1
         }
@@ -191,9 +189,16 @@ extension PerpPositionAdjustmentSelectorViewController: UICollectionViewDataSour
             return cell
         case .position:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.add_wallet_method, for: indexPath)!
-            cell.iconImageView.image = R.image.increase_position()
-            cell.titleLabel.text = R.string.localizable.perps_add_to_position()
-            cell.subtitleLabel.text = R.string.localizable.perps_add_position_description()
+            switch Behavior.allCases[indexPath.row] {
+            case .increase:
+                cell.iconImageView.image = R.image.increase_position()
+                cell.titleLabel.text = R.string.localizable.perps_add_to_position()
+                cell.subtitleLabel.text = R.string.localizable.perps_add_position_description()
+            case .decrease:
+                cell.iconImageView.image = R.image.decrease_position()
+                cell.titleLabel.text = R.string.localizable.perps_reduce_position()
+                cell.subtitleLabel.text = R.string.localizable.perps_reduce_position_description()
+            }
             return cell
         case .introduction:
             return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perp_position_adjustment_introduction, for: indexPath)!
@@ -207,17 +212,15 @@ extension PerpPositionAdjustmentSelectorViewController: UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let target: PerpPositionAdjustmentTarget
-        let behavior: Behavior
         switch sections[indexPath.section] {
         case .margin:
             target = .margin
-            behavior = Behavior.allCases[indexPath.row]
         case .position:
             target = .position
-            behavior = .increase
         case .introduction:
             return
         }
+        let behavior = Behavior.allCases[indexPath.row]
         let adjustment = Adjustment(target: target, behavior: behavior)
         presentingViewController?.dismiss(animated: true) { [onSelected] in
             onSelected?(adjustment)

@@ -643,7 +643,7 @@ final class PerpetualMarketViewController: UIViewController {
             side: positionViewModel.side,
             margin: positionViewModel.decimalMargin,
             behavior: .takeProfit,
-            leverage: Decimal(positionViewModel.leverageMultiplier),
+            leverage: Decimal(positionViewModel.position.leverage),
             orderState: .open(
                 entryPrice: entryPrice,
                 quantity: positionViewModel.decimalQuantity,
@@ -665,7 +665,7 @@ final class PerpetualMarketViewController: UIViewController {
                 .delete
             }
             RouteAPI.updatePerpsTPSL(
-                positionID: positionViewModel.positionID,
+                positionID: positionViewModel.position.positionID,
                 takeProfitPrice: price,
                 stopLossPrice: nil,
             ) { result in
@@ -695,7 +695,7 @@ final class PerpetualMarketViewController: UIViewController {
             side: positionViewModel.side,
             margin: positionViewModel.decimalMargin,
             behavior: .stopLoss,
-            leverage: Decimal(positionViewModel.leverageMultiplier),
+            leverage: Decimal(positionViewModel.position.leverage),
             orderState: .open(
                 entryPrice: entryPrice,
                 quantity: positionViewModel.decimalQuantity,
@@ -717,7 +717,7 @@ final class PerpetualMarketViewController: UIViewController {
                 .delete
             }
             RouteAPI.updatePerpsTPSL(
-                positionID: positionViewModel.positionID,
+                positionID: positionViewModel.position.positionID,
                 takeProfitPrice: nil,
                 stopLossPrice: price,
             ) { result in
@@ -1079,7 +1079,7 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
         autoClosingIntroCell?.performSuggestionButton.isEnabled = false
         cell.updateTakeProfit(busy: true)
         RouteAPI.updatePerpsTPSL(
-            positionID: positionViewModel.positionID,
+            positionID: positionViewModel.position.positionID,
             takeProfitPrice: .delete,
             stopLossPrice: nil
         ) { [weak self] result in
@@ -1107,7 +1107,7 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
         autoClosingIntroCell?.performSuggestionButton.isEnabled = false
         cell.updateStopLoss(busy: true)
         RouteAPI.updatePerpsTPSL(
-            positionID: positionViewModel.positionID,
+            positionID: positionViewModel.position.positionID,
             takeProfitPrice: nil,
             stopLossPrice: .delete
         ) { [weak self] result in

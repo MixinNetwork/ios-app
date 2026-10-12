@@ -62,11 +62,14 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
                 return StyledAssetChange(
                     token: item.token,
                     amount: amount,
-                    amountStyle: .plain
+                    amountStyle: .primary,
                 )
             }
         }
-        rows.append(.assetChanges(estimated: false, changes: changes))
+        rows.append(.assetChanges(
+            title: R.string.localizable.balance_changes(),
+            changes: changes,
+        ))
         
         let senderThreshold: Int32?
         switch operation.destination {

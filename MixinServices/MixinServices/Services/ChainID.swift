@@ -4,6 +4,7 @@ public enum ChainID {
     
     public static let bitcoin = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
     public static let lightning = "59c09123-95cc-3ffd-a659-0f9169074cee"
+    public static let pearl = "e1bf305c-0d49-397d-85bd-55b9eaadafba"
     
     public static let solana = "64692c23-8971-4cf4-84a7-4dd1271dd887"
     public static let litecoin = "76c802a2-7c88-447f-a93e-c29c9e5dd9c8"
@@ -29,5 +30,8 @@ public enum ChainID {
     public static let opMainnet = "60360611-370c-3b69-9826-b13db93f6aba"
     public static let avalancheCChain = "1f67ac58-87ba-3571-9781-e9413c046f34"
     public static let hyperEVM = "36d23d9e-bf4e-3ede-a12d-26f1f1f9fd2f"
+    public static let xLayer = "37f5a4d1-905f-3b34-8291-c37438c7dcfc"
+    public static let robinhood = "b304e03d-d004-3102-875b-8266f8407a1a"
+    public static let arc = "3f42cb95-274e-366b-9ab7-e1528d929a06"
     
 }

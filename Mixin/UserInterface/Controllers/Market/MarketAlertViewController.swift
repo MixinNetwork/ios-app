@@ -141,7 +141,7 @@ extension MarketAlertViewController: MarketAlertTokenCell.Delegate {
         to alert: MarketAlert
     ) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         RouteAPI.postAction(alertID: alert.alertID, action: action) { result in
             switch result {
             case .success:

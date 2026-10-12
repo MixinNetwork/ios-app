@@ -8,7 +8,7 @@ import MixinServices
 fileprivate let isCallKitForbidden = false
 fileprivate let listPendingMessageDelay: DispatchTimeInterval = .seconds(2)
 
-class CallService: NSObject {
+final class CallService: NSObject {
     
     enum AudioOutput {
         case builtInReceiver
@@ -447,7 +447,10 @@ extension CallService {
             content = R.string.localizable.call_failed()
         }
         Queue.main.autoAsync {
-            guard let controller = AppDelegate.current.mainWindow.rootViewController else {
+            guard
+                let scene = UIApplication.shared.firstWindowScene,
+                let controller = scene.keyWindow?.rootViewController
+            else {
                 return
             }
             switch error {
@@ -473,7 +476,7 @@ extension CallService {
             return
         }
         self.isInterfaceMinimized = minimized
-        guard let min = UIApplication.homeContainerViewController?.minimizedCallViewController else {
+        guard let min = UIApplication.shared.homeContainerViewController?.minimizedCallViewController else {
             return
         }
         guard let max = self.viewController else {
@@ -557,7 +560,7 @@ extension CallService {
                 ScreenLockManager.shared.showUnlockScreenView()
             }
         })
-        if let mini = UIApplication.homeContainerViewController?.minimizedCallViewControllerIfLoaded {
+        if let mini = UIApplication.shared.homeContainerViewController?.minimizedCallViewControllerIfLoaded {
             mini.setViewHidden(true)
             mini.updateViewSize()
             mini.panningController.placeViewNextToLastOverlayOrTopRight()
@@ -566,7 +569,7 @@ extension CallService {
     }
     
     func addViewControllerAsContainersChildIfNeeded(_ viewController: CallViewController) {
-        guard let container = UIApplication.homeContainerViewController else {
+        guard let container = UIApplication.shared.homeContainerViewController else {
             return
         }
         guard viewController.parent == nil else {
@@ -788,7 +791,7 @@ extension CallService {
         requestRecordPermission {
             self.reloadCallAdapter()
             Logger.call.info(category: "CallService", message: "Call started with UUID: \(call.uuid)")
-            if let confirmation = UIApplication.homeContainerViewController?.children.compactMap({ $0 as? GroupCallConfirmationViewController }).first {
+            if let confirmation = UIApplication.shared.homeContainerViewController?.children.compactMap({ $0 as? GroupCallConfirmationViewController }).first {
                 self.removeViewControllerAsContainersChildIfNeeded(confirmation)
                 self.showCallingInterface(call: call, animated: false)
             }

@@ -95,15 +95,15 @@ class ProfileViewController: ResizablePopupViewController {
     
     override func preferredContentHeight(forSize size: Size) -> CGFloat {
         view.layoutIfNeeded()
-        let window = AppDelegate.current.mainWindow
-        let maxHeight = window.bounds.height - window.safeAreaInsets.top
+        let totalHeight = presentingViewController?.view.bounds.height ?? view.window?.bounds.height ?? UIScreen.main.bounds.height
+        let maxHeight = totalHeight - view.windowSafeAreaInsets.top
         switch size {
         case .expanded, .unavailable:
             return maxHeight
         case .compressed:
             let point = CGPoint(x: 0, y: centerStackView.bounds.maxY)
             let contentHeight = centerStackView.convert(point, to: scrollViewContentView).y + 6
-            let height = titleViewHeightConstraint.constant + contentHeight + window.safeAreaInsets.bottom
+            let height = titleViewHeightConstraint.constant + contentHeight + view.windowSafeAreaInsets.bottom
             return min(maxHeight, height)
         }
     }
@@ -116,7 +116,7 @@ class ProfileViewController: ResizablePopupViewController {
     
     override func dismissAndPush(_ viewController: UIViewController) {
         checkedDismiss(animated: true) { presentingViewController in
-            UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
+            UIApplication.shared.homeNavigationController?.pushViewController(viewController, animated: true)
         }
     }
     
@@ -216,7 +216,7 @@ extension ProfileViewController: CoreTextLabelDelegate {
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
         let conversationId = self.conversationId
         dismiss(animated: true) {
-            guard let navigationController = UIApplication.homeNavigationController else {
+            guard let navigationController = UIApplication.shared.homeNavigationController else {
                 return
             }
             guard !self.openUrlOutsideApplication(url) else {

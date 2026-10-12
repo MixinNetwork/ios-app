@@ -167,7 +167,7 @@ class InputAmountViewController: UIViewController {
     
     @IBAction func presentAmountMenu(_ sender: Any) {
         becomeFirstResponder()
-        AppDelegate.current.mainWindow.addDismissMenuResponder()
+        (view.window as? Window)?.addDismissMenuResponder()
         let rect = amountLabel.convert(amountLabel.bounds, to: view)
         UIMenuController.shared.showMenu(from: view, rect: rect)
     }
@@ -220,9 +220,8 @@ class InputAmountViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(reportingTags: ["source": "send_amount"])
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "send_amount"])
     }
     
 }

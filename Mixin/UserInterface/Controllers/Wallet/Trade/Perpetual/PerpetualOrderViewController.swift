@@ -22,14 +22,32 @@ final class PerpetualOrderViewController: UIViewController {
     private let infos: [Info]
     
     init(wallet: Wallet, viewModel: PerpetualOrderViewModel) {
+        let order = viewModel.order
+        lazy var fee: String? = {
+            guard let decimalFee = Decimal(string: order.feeAmount, locale: .enUSPOSIX) else {
+                return nil
+            }
+            guard decimalFee != 0 else {
+                return nil
+            }
+            return decimalFee.formatted(
+                Decimal.FormatStyle.Currency
+                    .currency(code: "USD")
+                    .presentation(.narrow)
+                    .precision(.fractionLength(0...16))
+                    .rounded(rule: .towardZero)
+                    .sign(strategy: .never)
+            )
+        }()
+        
         var infos: [Info] = []
-        if let displaySymbol = viewModel.displaySymbol {
-            infos.append(.product(iconURL: viewModel.iconURL, name: displaySymbol))
+        if let displaySymbol = order.displaySymbol {
+            infos.append(.product(iconURL: order.iconURL, name: displaySymbol))
         }
         switch viewModel.status {
         case .normal:
             switch viewModel.type {
-            case let .open(payAmount), let .increase(payAmount):
+            case let .open(payAmount):
                 infos.append(contentsOf: [
                     .general(
                         title: R.string.localizable.entry_price().uppercased(),
@@ -40,12 +58,48 @@ final class PerpetualOrderViewController: UIViewController {
                         content: payAmount
                     ),
                 ])
-                if let fee = viewModel.feeAmount {
+                if let fee {
                     infos.append(.fee(fee))
                 }
+            case .increasePosition:
+                let payAmount = abs(viewModel.decimalPayAmount).formatted(
+                    PerpetualOrderViewModel.payAmountStyle
+                        .sign(strategy: .always())
+                )
+                infos.append(contentsOf: [
+                    .general(
+                        title: R.string.localizable.entry_price().uppercased(),
+                        content: viewModel.entryPrice
+                    ),
+                    .general(
+                        title: R.string.localizable.amount().uppercased(),
+                        content: payAmount
+                    ),
+                ])
+                if let fee {
+                    infos.append(.fee(fee))
+                }
+            case .increaseMargin:
+                let payAmount = abs(viewModel.decimalPayAmount).formatted(
+                    PerpetualOrderViewModel.payAmountStyle
+                        .sign(strategy: .always())
+                )
+                infos.append(.general(
+                    title: R.string.localizable.amount().uppercased(),
+                    content: payAmount
+                ))
+            case .decreaseMargin:
+                let payAmount = (-abs(viewModel.decimalPayAmount)).formatted(
+                    PerpetualOrderViewModel.payAmountStyle
+                        .sign(strategy: .always())
+                )
+                infos.append(.general(
+                    title: R.string.localizable.amount().uppercased(),
+                    content: payAmount
+                ))
             case let .close(pnl, closePrice):
                 infos.append(.pnl(value: pnl.aggregated, color: pnl.color))
-                if let fee = viewModel.feeAmount {
+                if let fee {
                     infos.append(.fee(fee))
                 }
                 infos.append(contentsOf: [
@@ -138,13 +192,12 @@ final class PerpetualOrderViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(reportingTags: ["source": "perps_position"])
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "perps_position"])
     }
     
     private func viewMarket() {
-        if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID),
+        if let market = PerpsMarketDAO.shared.market(marketID: viewModel.order.marketID),
            let navigationController
         {
             let viewModel = PerpetualMarketViewModel(market: market)
@@ -223,7 +276,7 @@ extension PerpetualOrderViewController: UICollectionViewDataSource {
                 return cell
             case let .pnl(value, color):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_compact_info, for: indexPath)!
-                cell.titleLabel.text = R.string.localizable.pnl()
+                cell.titleLabel.text = R.string.localizable.perps_realized_pnl().uppercased()
                 cell.infoButton.isHidden = true
                 cell.contentLabel.text = value
                 cell.contentLabel.marketColor = color
@@ -284,7 +337,7 @@ extension PerpetualOrderViewController: PillActionView.Delegate {
         case .share:
             let dataSource: SharePerpetualPositionDataSource
             switch viewModel.type {
-            case .open, .increase:
+            case .open, .increasePosition, .increaseMargin, .decreaseMargin:
                 return
             case .close(let pnl, let closePrice):
                 dataSource = SharePerpetualPositionDataSource(
@@ -294,7 +347,7 @@ extension PerpetualOrderViewController: PillActionView.Delegate {
                 )
             }
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             Referral.loadAvailableCode { [weak self] code in
                 hud.hide()
                 let share = PopupShareViewController(

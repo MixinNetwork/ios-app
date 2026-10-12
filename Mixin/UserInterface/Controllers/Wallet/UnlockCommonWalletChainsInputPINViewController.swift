@@ -1,0 +1,51 @@
+import UIKit
+import MixinServices
+
+final class UnlockCommonWalletChainsInputPINViewController: FullscreenPINValidationViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
+    }
+    
+    override func continueAction(_ sender: Any) {
+        isBusy = true
+        let pin = pinField.text
+        Task {
+            do {
+                try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
+                await MainActor.run {
+                    AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
+                    Logger.web3.info(category: "UnlockChainsInputPIN", message: "Finished")
+                    (navigationController as? UnlockCommonWalletChainsNavigationController)?.onSuccess?()
+                    navigationController?.presentingViewController?.dismiss(animated: true)
+                }
+            } catch {
+                Logger.web3.error(category: "UnlockChainsInputPIN", message: "Failed: \(error)")
+                await MainActor.run {
+                    self.pinField.clear()
+                    self.isBusy = false
+                    if let error = error as? MixinAPIError {
+                        PINVerificationFailureHandler.handle(error: error) { (description) in
+                            self.alert(description)
+                        }
+                    } else {
+                        self.alert(error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController(
+            presentLoginLogsOnLongPressingTitle: true,
+            reportingTags: ["source": "unlock_common_wallet_chain"],
+        )
+        present(customerService, animated: true)
+    }
+    
+}

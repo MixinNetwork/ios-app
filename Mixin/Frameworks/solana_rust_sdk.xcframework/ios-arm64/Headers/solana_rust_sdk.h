@@ -62,6 +62,8 @@ bool solana_transaction_contains_set_authority(const void *txn);
 
 int16_t solana_transaction_number_of_required_signatures(const void *txn);
 
+enum SolanaErrorCode solana_transaction_fee_payer(const void *txn, const char **out);
+
 enum SolanaErrorCode solana_sign_transaction(const void *tx,
                                              const uint8_t *recent_blockhash,
                                              size_t recent_blockhash_len,

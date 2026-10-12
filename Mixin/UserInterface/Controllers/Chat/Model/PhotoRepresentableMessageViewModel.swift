@@ -10,9 +10,7 @@ class PhotoRepresentableMessageViewModel: ImageMessageViewModel {
     var expandIconOrigin: CGPoint?
     
     private var maxPresentationHeight: CGFloat {
-        return Queue.main.autoSync {
-            AppDelegate.current.mainWindow.bounds.height / 2
-        }
+        UIScreen.main.bounds.height / 2
     }
     
     override init(message: MessageItem) {
@@ -28,7 +26,7 @@ class PhotoRepresentableMessageViewModel: ImageMessageViewModel {
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {
         let ratio = contentRatio.width / contentRatio.height
-        if quotedMessageViewModel == nil {
+        if quotedMessageViewModel == nil && !hasCaption {
             let photoHeight = min(maxPresentationHeight, round(Self.bubbleWidth / ratio))
             photoFrame.size = CGSize(width: Self.bubbleWidth, height: photoHeight)
         } else {

@@ -8,7 +8,7 @@ func showAutoHiddenHud(style: Hud.Style, text: String) {
         return
     }
     let hud = Hud()
-    hud.show(style: style, text: text, on: AppDelegate.current.mainWindow)
+    hud.show(style: style, text: text)
     hud.scheduleAutoHidden()
 }
 
@@ -70,7 +70,10 @@ final class Hud: NSObject {
         }
     }
     
-    func show(style: Style, text: String, on view: UIView) {
+    func show(style: Style, text: String) {
+        guard let window = UIApplication.shared.firstWindowScene?.keyWindow else {
+            return
+        }
         guard !isShowing else {
             return
         }
@@ -86,12 +89,18 @@ final class Hud: NSObject {
         hudView.alpha = 0
         set(style: style, text: text)
         
-        containerView.frame = view.bounds
-        view.addSubview(containerView)
+        containerView.frame = window.bounds
+        window.addSubview(containerView)
         
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: .beginFromCurrentState, animations: {
-            self.hudView.alpha = 1
-        }, completion: nil)
+        UIView.animate(
+            withDuration: 0.3,
+            delay: 0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 0,
+            options: .beginFromCurrentState,
+            animations: { self.hudView.alpha = 1 },
+            completion: nil
+        )
     }
     
     func hide() {

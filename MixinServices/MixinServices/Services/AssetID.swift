@@ -21,6 +21,7 @@ public enum AssetID {
     
     public static let btc = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
     public static let lightningBTC = "59c09123-95cc-3ffd-a659-0f9169074cee"
+    public static let pearl = "e1bf305c-0d49-397d-85bd-55b9eaadafba"
     
     public static let erc20USDT = "4d8c508b-91c5-375b-92b0-ee702ed2dac5"
     public static let tronUSDT = "b91e18ff-a9ae-3dc7-8679-e935d9a4b34b"
@@ -39,6 +40,9 @@ public enum AssetID {
     public static let avalancheXAVAX = "cbc77539-0a20-4666-8c8a-4ded62b36f0a"
     public static let avalancheCAVAX = "1f67ac58-87ba-3571-9781-e9413c046f34"
     public static let hyperEVMHYPE = "36d23d9e-bf4e-3ede-a12d-26f1f1f9fd2f"
+    public static let xLayerOKB = "37f5a4d1-905f-3b34-8291-c37438c7dcfc"
+    public static let robinhoodETH = "b304e03d-d004-3102-875b-8266f8407a1a"
+    public static let arcUSDC = "3f42cb95-274e-366b-9ab7-e1528d929a06"
     
     public static let stablecoins: Set<String> = [
         AssetID.erc20USDT, AssetID.tronUSDT, AssetID.polygonUSDT,

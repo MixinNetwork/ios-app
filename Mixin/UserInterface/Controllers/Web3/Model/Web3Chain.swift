@@ -9,6 +9,7 @@ final class Web3Chain {
     enum Kind: CaseIterable {
         
         case bitcoin
+        case pearl
         case evm
         case solana
         
@@ -16,8 +17,10 @@ final class Web3Chain {
             switch self {
             case .bitcoin:
                 [.bitcoin]
+            case .pearl:
+                [.pearl]
             case .evm:
-                [.ethereum, .polygon, .bnbSmartChain, .base, .arbitrumOne, .opMainnet, .avalancheCChain, .hyperEVM]
+                [.ethereum, .polygon, .bnbSmartChain, .base, .arbitrumOne, .opMainnet, .avalancheCChain, .hyperEVM, .xLayer, .robinhood, .arc]
             case .solana:
                 [.solana]
             }
@@ -26,6 +29,8 @@ final class Web3Chain {
         static func singleKindWallet(chainIDs: Set<String>) -> Kind? {
             if chainIDs.contains(ChainID.bitcoin) {
                 .bitcoin
+            } else if chainIDs.contains(ChainID.pearl) {
+                .pearl
             } else if chainIDs.contains(ChainID.ethereum) {
                 .evm
             } else if chainIDs.contains(ChainID.solana) {
@@ -39,6 +44,7 @@ final class Web3Chain {
     
     enum KindSpecification {
         case bitcoin
+        case pearl
         case evm(chainID: Int)
         case solana
     }
@@ -48,12 +54,12 @@ final class Web3Chain {
     let chainID: String
     let feeTokenAssetID: String
     let name: String
-    let failsafeRPCServerURL: URL
+    let failsafeRPCServerURL: URL?
     let caip2: Blockchain
     
     private(set) var dapps: [Web3Dapp] = []
     
-    var rpcServerURL: URL {
+    var rpcServerURL: URL? {
         if let string = AppGroupUserDefaults.web3RPCURL[chainID],
            let url = URL(string: string)
         {
@@ -66,11 +72,13 @@ final class Web3Chain {
     private init(
         specification: KindSpecification, mixinChainID: String,
         feeTokenAssetID: String, name: String,
-        failsafeRPCServerURL: URL, caip2: Blockchain
+        failsafeRPCServerURL: URL?, caip2: Blockchain
     ) {
         let kind: Kind = switch specification {
         case .bitcoin:
                 .bitcoin
+        case .pearl:
+                .pearl
         case .evm:
                 .evm
         case .solana:
@@ -179,8 +187,9 @@ extension Web3Chain {
     
     static let all: [Web3Chain] = {
         let chains: [Web3Chain] = [
-            .bitcoin, .ethereum, .solana, .bnbSmartChain, .base,
+            .bitcoin, .pearl, .ethereum, .solana, .bnbSmartChain, .base,
             .polygon, .arbitrumOne, .opMainnet, .avalancheCChain, .hyperEVM,
+            .xLayer, .robinhood, .arc,
         ]
         // Make sure all chains are included
         let allChains = Kind.allCases.reduce(into: []) { results, kind in
@@ -200,12 +209,21 @@ extension Web3Chain {
         caip2: Blockchain("bip122:000000000019d6689c085ae165831e93")!
     )
     
+    static let pearl = Web3Chain(
+        specification: .pearl,
+        mixinChainID: ChainID.pearl,
+        feeTokenAssetID: AssetID.pearl,
+        name: "Pearl",
+        failsafeRPCServerURL: nil,
+        caip2: Blockchain("bip122:a18d3093b7ff618f0cdd073fa3d10374")!
+    )
+    
     static let ethereum = Web3Chain.evm(
         chainID: 1,
         mixinChainID: ChainID.ethereum,
         feeTokenAssetID: AssetID.eth,
         name: "Ethereum",
-        failsafeRPCServerURL: URL(string: "https://cloudflare-eth.com")!
+        failsafeRPCServerURL: URL(string: "https://ethereum-rpc.publicnode.com")!
     )
     
     static let polygon = Web3Chain.evm(
@@ -213,7 +231,7 @@ extension Web3Chain {
         mixinChainID: ChainID.polygon,
         feeTokenAssetID: AssetID.matic,
         name: "Polygon",
-        failsafeRPCServerURL: URL(string: "https://polygon-rpc.com")!
+        failsafeRPCServerURL: URL(string: "https://polygon.drpc.org")!
     )
     
     static let bnbSmartChain = Web3Chain.evm(
@@ -221,7 +239,7 @@ extension Web3Chain {
         mixinChainID: ChainID.bnbSmartChain,
         feeTokenAssetID: AssetID.bnb,
         name: "BSC",
-        failsafeRPCServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!
+        failsafeRPCServerURL: URL(string: "https://bsc-dataseed.bnbchain.org")!
     )
     
     static let base = Web3Chain.evm(
@@ -229,7 +247,7 @@ extension Web3Chain {
         mixinChainID: ChainID.base,
         feeTokenAssetID: AssetID.baseETH,
         name: "Base",
-        failsafeRPCServerURL: URL(string: "https://base.llamarpc.com")!
+        failsafeRPCServerURL: URL(string: "https://mainnet.base.org")!
     )
     
     static let arbitrumOne = Web3Chain.evm(
@@ -237,7 +255,7 @@ extension Web3Chain {
         mixinChainID: ChainID.arbitrumOne,
         feeTokenAssetID: AssetID.arbitrumOneETH,
         name: "Arbitrum One",
-        failsafeRPCServerURL: URL(string: "https://arbitrum.llamarpc.com")!
+        failsafeRPCServerURL: URL(string: "https://arb1.arbitrum.io/rpc")!
     )
     
     static let opMainnet = Web3Chain.evm(
@@ -245,7 +263,7 @@ extension Web3Chain {
         mixinChainID: ChainID.opMainnet,
         feeTokenAssetID: AssetID.opMainnetETH,
         name: "OP Mainnet",
-        failsafeRPCServerURL: URL(string: "https://optimism.llamarpc.com")!
+        failsafeRPCServerURL: URL(string: "https://mainnet.optimism.io")!
     )
     
     static let avalancheCChain = Web3Chain.evm(
@@ -262,6 +280,30 @@ extension Web3Chain {
         feeTokenAssetID: AssetID.hyperEVMHYPE,
         name: "HyperEVM",
         failsafeRPCServerURL: URL(string: "https://rpc.hyperliquid.xyz/evm")!
+    )
+    
+    static let xLayer = Web3Chain.evm(
+        chainID: 196,
+        mixinChainID: ChainID.xLayer,
+        feeTokenAssetID: AssetID.xLayerOKB,
+        name: "X Layer",
+        failsafeRPCServerURL: URL(string: "https://rpc.xlayer.tech")!
+    )
+    
+    static let robinhood = Web3Chain.evm(
+        chainID: 4663,
+        mixinChainID: ChainID.robinhood,
+        feeTokenAssetID: AssetID.robinhoodETH,
+        name: "Robinhood",
+        failsafeRPCServerURL: URL(string: "https://rpc.mainnet.chain.robinhood.com")!,
+    )
+    
+    static let arc = Web3Chain.evm(
+        chainID: 5042,
+        mixinChainID: ChainID.arc,
+        feeTokenAssetID: AssetID.arcUSDC,
+        name: "Arc",
+        failsafeRPCServerURL: URL(string: "https://rpc.mainnet.arc.io")!,
     )
     
     static let solana = Web3Chain.solana(
@@ -288,30 +330,31 @@ extension Web3Chain {
 extension Web3Chain {
     
     static func synchronize() {
-        Web3API.dapps(queue: .global()) { result in
+        RouteAPI.dapps(queue: .global()) { result in
             switch result {
             case .success(let updates):
                 Logger.web3.info(category: "Web3Chain", message: "Loaded \(updates.count) updates")
                 var rpcURLs: [String: String] = [:]
                 var dapps: [String: [Web3Dapp]] = [:]
                 for update in updates {
-                    rpcURLs[update.chainID] = update.rpc.absoluteString
+                    rpcURLs[update.chainID] = update.rpcURLs
+                        .lazy
+                        .compactMap { string in
+                            URL(string: string)?.absoluteString
+                        }
+                        .first
                     dapps[update.chainID] = update.dapps
                 }
                 DispatchQueue.main.async {
                     AppGroupUserDefaults.web3RPCURL = rpcURLs
                     for chain in Web3Chain.all {
-                        guard let dapps = dapps[chain.chainID] else {
-                            continue
-                        }
-                        chain.dapps = dapps
+                        chain.dapps = dapps[chain.chainID] ?? []
                     }
                 }
             case .failure(.httpTransport(.requestAdaptationFailed)):
                 // Logout
                 break
-            case .failure(let error):
-                Logger.web3.info(category: "Web3Chain", message: "Failed to load: \(error)")
+            case .failure:
                 DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: synchronize)
             }
         }

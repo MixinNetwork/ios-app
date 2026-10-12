@@ -1,29 +1,37 @@
 import UIKit
 
-class UnknownURLWindow: BottomSheetView {
+final class UnknownURLWindow: UIViewController {
     
     @IBOutlet weak var tipLabel: UILabel!
     
-    private var urlString: String!
+    private let url: URL
     
-    class func instance() -> UnknownURLWindow {
-        return R.nib.unknownURLWindow(withOwner: self)!
+    init(url: URL) {
+        self.url = url
+        let nib = R.nib.unknownURLWindow
+        super.init(nibName: nib.name, bundle: nib.bundle)
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
+        modalPresentationStyle = .custom
     }
     
-    func render(url: URL) -> BottomSheetView {
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         tipLabel.text = R.string.localizable.url_unrecognized_hint(url.absoluteString)
-        urlString = url.absoluteString
-        return self
     }
 
     @IBAction func okAction(_ sender: Any) {
-        dismissPopupController(animated: true)
+        dismiss(animated: true)
     }
     
     @IBAction func copyAction(_ sender: Any) {
-        UIPasteboard.general.string = urlString
-        dismissPopupController(animated: true)
-        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
+        UIPasteboard.general.string = url.absoluteString
+        dismiss(animated: true) {
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
+        }
     }
     
 }

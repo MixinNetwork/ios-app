@@ -91,7 +91,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     override var isReusable: Bool {
-        return parent == nil && UIApplication.homeContainerViewController?.pipController != self
+        return parent == nil && UIApplication.shared.homeContainerViewController?.pipController != self
     }
     
     override var supportedActions: Action {
@@ -106,7 +106,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     override var canPerformInteractiveDismissal: Bool {
-        UIApplication.shared.isPortrait
+        view.window?.windowScene?.interfaceOrientation.isPortrait ?? false
     }
     
     private var player: AVPlayer {
@@ -288,13 +288,13 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             self.isBuiltInPipActive.toggle()
             if self.isBuiltInPipActive {
                 self.galleryViewController?.dismiss(pipController: self)
-                if let container = UIApplication.homeContainerViewController {
+                if let container = UIApplication.shared.homeContainerViewController {
                     container.pipController = self
                     container.overlaysCoordinator.register(overlay: self.view)
                 }
             } else {
                 self.galleryViewController?.show(itemViewController: self)
-                if let container = UIApplication.homeContainerViewController {
+                if let container = UIApplication.shared.homeContainerViewController {
                     container.pipController = nil
                     container.overlaysCoordinator.unregister(overlay: self.view)
                 }
@@ -388,7 +388,7 @@ extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
             self.view.alpha = 0
         }
         updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: true)
-        if let container = UIApplication.homeContainerViewController {
+        if let container = UIApplication.shared.homeContainerViewController {
             container.pipController = self
         }
     }
@@ -407,8 +407,8 @@ extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
     
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
-        if UIApplication.homeContainerViewController?.pipController == self {
-            UIApplication.homeContainerViewController?.pipController = nil
+        if UIApplication.shared.homeContainerViewController?.pipController == self {
+            UIApplication.shared.homeContainerViewController?.pipController = nil
         }
         if let parent = parent, parent is HomeContainerViewController {
             willMove(toParent: nil)
@@ -436,7 +436,7 @@ extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
 extension GalleryVideoItemViewController {
     
     @objc func playAction(_ sender: Any) {
-        if let controller = UIApplication.homeContainerViewController?.pipController, controller != self {
+        if let controller = UIApplication.shared.homeContainerViewController?.pipController, controller != self {
             if controller.item == self.item {
                 controller.stopPipIfActive()
                 return
@@ -619,11 +619,12 @@ extension GalleryVideoItemViewController {
     }
     
     private func executeInPortraitOrientation(_ work: @escaping () -> Void) {
-        if UIApplication.shared.isLandscape {
+        if let window = view.window,
+           let scene = window.windowScene,
+           scene.interfaceOrientation.isLandscape
+        {
             if #available(iOS 16.0, *) {
-                if let windowScene = view.window?.windowScene {
-                    windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
-                }
+                scene.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
             } else {
                 let portrait = Int(UIInterfaceOrientation.portrait.rawValue)
                 UIDevice.current.setValue(portrait, forKey: "orientation")
@@ -842,7 +843,7 @@ extension GalleryVideoItemViewController {
     
     private func updateControlView(playControlsHidden: Bool, otherControlsHidden: Bool, animated: Bool) {
         let hidePlayControls = playControlsHidden || !isPlayable
-        let hideOtherControls = otherControlsHidden || !isPlayable || !(isFocused || UIApplication.homeContainerViewController?.pipController == self)
+        let hideOtherControls = otherControlsHidden || !isPlayable || !(isFocused || UIApplication.shared.homeContainerViewController?.pipController == self)
         controlView.set(playControlsHidden: hidePlayControls, otherControlsHidden: hideOtherControls, animated: animated)
     }
     
@@ -872,7 +873,7 @@ extension GalleryVideoItemViewController {
         willMove(toParent: nil)
         view.removeFromSuperview()
         removeFromParent()
-        if let container = UIApplication.homeContainerViewController, container.pipController == self {
+        if let container = UIApplication.shared.homeContainerViewController, container.pipController == self {
             container.pipController = nil
             container.overlaysCoordinator.unregister(overlay: self.view)
         }

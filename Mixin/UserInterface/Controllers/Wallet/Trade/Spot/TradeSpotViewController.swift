@@ -1271,7 +1271,7 @@ extension TradeSpotViewController {
     private func reportClientOutdated() {
         let alert = UIAlertController(
             title: R.string.localizable.update_mixin(),
-            message: R.string.localizable.app_update_tips(Bundle.main.shortVersionString),
+            message: R.string.localizable.mixin_version_expired_description(),
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: R.string.localizable.update(), style: .default, handler: { _ in
@@ -1380,8 +1380,7 @@ extension TradeSpotViewController {
                 self?.reloadData(swappableTokens: tokens)
             case .failure(.requiresUpdate):
                 self?.reportClientOutdated()
-            case .failure(let error):
-                Logger.general.debug(category: "Trade", message: "\(error)")
+            case .failure:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     self?.reloadTokens()
                 }
@@ -1398,8 +1397,8 @@ extension TradeSpotViewController {
                 DispatchQueue.main.async {
                     self?.stockTokens = tokens
                 }
-            case .failure(let error):
-                Logger.general.debug(category: "Trade", message: "\(error)")
+            case .failure:
+                break
             }
         }
     }

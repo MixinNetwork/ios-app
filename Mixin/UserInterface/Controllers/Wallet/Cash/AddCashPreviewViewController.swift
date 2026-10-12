@@ -158,7 +158,7 @@ final class AddCashPreviewViewController: UIViewController {
     
     @objc private func done(_ sender: Any) {
         presentingViewController?.dismiss(animated: true) {
-            guard let navigationController = UIApplication.homeNavigationController else {
+            guard let navigationController = UIApplication.shared.homeNavigationController else {
                 return
             }
             var viewControllers = navigationController.viewControllers

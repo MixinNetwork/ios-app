@@ -47,7 +47,7 @@ final class RecoveryContactSelectorViewController: UserItemPeerViewController<Pe
             return
         }
         let hud = self.hud
-        hud.show(style: .busy, text: "", on: navigationController.view)
+        hud.show(style: .busy, text: "")
         EmergencyAPI.createContact(identityNumber: identityNumber) { [weak self] (result) in
             switch result {
             case .success(let response):

@@ -59,7 +59,7 @@ class ClipSwitcherViewController: UIViewController {
             } completion: { (_) in
                 self.hide()
             }
-            UIApplication.homeContainerViewController?.clipSwitcher.replaceClips(with: [])
+            UIApplication.shared.homeContainerViewController?.clipSwitcher.replaceClips(with: [])
         }))
         controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(controller, animated: true, completion: nil)
@@ -76,7 +76,7 @@ class ClipSwitcherViewController: UIViewController {
             return
         }
         isShowing = false
-        UIApplication.homeContainerViewController?.setNeedsStatusBarAppearanceUpdate()
+        UIApplication.shared.homeContainerViewController?.setNeedsStatusBarAppearanceUpdate()
         UIView.animate(withDuration: 0.3) {
             self.backgroundView.effect = nil
             self.collectionView.alpha = 0
@@ -93,12 +93,12 @@ class ClipSwitcherViewController: UIViewController {
         guard parent == nil else {
             return
         }
-        guard let container = UIApplication.homeContainerViewController else {
+        guard let container = UIApplication.shared.homeContainerViewController else {
             return
         }
-        AppDelegate.current.mainWindow.endEditing(true)
+        view.window?.endEditing(true)
         isShowing = true
-        UIApplication.homeContainerViewController?.setNeedsStatusBarAppearanceUpdate()
+        UIApplication.shared.homeContainerViewController?.setNeedsStatusBarAppearanceUpdate()
         loadViewIfNeeded()
         backgroundView.effect = nil
         collectionView.alpha = 0
@@ -177,7 +177,7 @@ extension ClipSwitcherViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let clip = clips[indexPath.row]
-        guard let navigationController = UIApplication.homeNavigationController else {
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return
         }
         if let index = navigationController.viewControllers.lastIndex(of: clip.controller) {
@@ -191,7 +191,7 @@ extension ClipSwitcherViewController: UICollectionViewDelegate {
                 hide()
             }
         } else {
-            if let presented = UIApplication.homeContainerViewController?.presentedViewController {
+            if let presented = UIApplication.shared.homeContainerViewController?.presentedViewController {
                 presented.dismiss(animated: true) {
                     self.hide()
                     navigationController.pushViewController(clip.controller, animated: true)
@@ -248,7 +248,7 @@ extension ClipSwitcherViewController: UICollectionViewDropDelegate {
             self.clips.insert(clip, at: destinationIndexPath.item)
             collectionView.moveItem(at: sourceIndexPath, to: destinationIndexPath)
         } completion: { (_) in
-            UIApplication.homeContainerViewController?.clipSwitcher.replaceClips(with: self.clips)
+            UIApplication.shared.homeContainerViewController?.clipSwitcher.replaceClips(with: self.clips)
         }
         coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
     }
@@ -273,7 +273,7 @@ extension ClipSwitcherViewController: ClipThumbnailCellDelegate {
                 self.hide()
             }
         }
-        UIApplication.homeContainerViewController?.clipSwitcher.removeClip(at: indexPath.row)
+        UIApplication.shared.homeContainerViewController?.clipSwitcher.removeClip(at: indexPath.row)
     }
     
 }

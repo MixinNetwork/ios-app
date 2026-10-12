@@ -10,8 +10,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import <WebRTC/RTCMacros.h>
+#import <WebRTC/RTCVideoCodecInfo.h>
 #import <WebRTC/RTCVideoEncoder.h>
+#import <WebRTC/RTCMacros.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 RTC_OBJC_EXPORT
 @interface RTC_OBJC_TYPE (RTCVideoEncoderVP8) : NSObject
@@ -22,4 +25,14 @@ RTC_OBJC_EXPORT
  */
 + (id<RTC_OBJC_TYPE(RTCVideoEncoder)>)vp8Encoder;
 
+/* Returns list of scalability modes supported by the encoder that can be
+ * created with `vp8Encoder` method above.
+ */
++ (NSArray<NSString *> *)supportedScalabilityModes;
+
+/** Returns the list of supported codec formats for the VP8 encoder. */
++ (NSArray<RTC_OBJC_TYPE(RTCVideoCodecInfo) *> *)supportedCodecs;
+
 @end
+
+NS_ASSUME_NONNULL_END

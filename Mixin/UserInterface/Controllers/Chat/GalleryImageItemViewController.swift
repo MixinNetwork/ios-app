@@ -58,7 +58,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
     
     override var supportedActions: Action {
         if let item = item {
-            let isTranscriptPreviewPresented = UIApplication
+            let isTranscriptPreviewPresented = UIApplication.shared
                 .currentConversationViewController()?
                 .children
                 .contains(where: { $0 is TranscriptPreviewViewController }) ?? false
@@ -72,7 +72,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
                 if item.url == nil {
                     return [.forward, .showInChat]
                 } else {
-                    let conversation = UIApplication.homeNavigationController?.viewControllers.compactMap({ $0 as? ConversationViewController }).last
+                    let conversation = UIApplication.shared.homeNavigationController?.viewControllers.compactMap({ $0 as? ConversationViewController }).last
                     if let id = conversation?.conversationId, id == item.conversationId {
                         return [.forward, .saveToLibrary, .share, .showInChat]
                     } else {

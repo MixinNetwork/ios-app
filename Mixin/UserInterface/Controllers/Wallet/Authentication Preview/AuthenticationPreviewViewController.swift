@@ -499,7 +499,7 @@ extension AuthenticationPreviewViewController {
         case user(title: String, user: UserItem)
         case waivedFee(token: String, fiatMoney: String, display: AmountIntent)
         case perpsPositions([(iconURL: URL?, name: String, side: PerpetualOrderSide, leverage: String?)])
-        case estimatedReceive(token: MixinTokenItem, count: String, pnl: NSAttributedString)
+        case estimatedReceive(token: MixinTokenItem, count: String, pnl: NSAttributedString?)
     }
     
     struct TableHeaderViewStyle: OptionSet {
@@ -589,7 +589,7 @@ extension AuthenticationPreviewViewController {
     
     @objc func enableBiometricAuthentication(_ sender: Any) {
         presentingViewController?.dismiss(animated: true) {
-            guard let navigationController = UIApplication.homeNavigationController else {
+            guard let navigationController = UIApplication.shared.homeNavigationController else {
                 return
             }
             var viewControllers = navigationController.viewControllers

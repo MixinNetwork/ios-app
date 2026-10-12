@@ -183,7 +183,7 @@ final class InscriptionViewController: UIViewController {
         guard let url = URL(string: "https://rune.fan/items/\(inscriptionHash)") else {
             return
         }
-        guard let navigationController = UIApplication.homeNavigationController else {
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return
         }
         navigationController.pushWebViewController(
@@ -554,7 +554,7 @@ extension InscriptionViewController: ImageCropViewControllerDelegate {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: navigationController.view)
+        hud.show(style: .busy, text: "")
         AccountAPI.update(fullName: nil, avatarBase64: avatarBase64, completion: { (result) in
             switch result {
             case let .success(account):

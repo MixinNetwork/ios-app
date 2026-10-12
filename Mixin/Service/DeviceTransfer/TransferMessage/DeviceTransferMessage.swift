@@ -32,6 +32,7 @@ struct DeviceTransferMessage {
     let quoteContent: String?
     let createdAt: String
     let albumId: String?
+    let caption: String?
     
     init(message: Message, to platform: DeviceTransferPlatform) {
         let content: String?
@@ -89,6 +90,7 @@ struct DeviceTransferMessage {
         self.quoteContent = QuoteContentConverter.generalQuoteContent(from: message.quoteContent)
         self.createdAt = message.createdAt
         self.albumId = message.albumId
+        self.caption = message.caption
     }
     
     func toMessage() -> Message {
@@ -109,35 +111,38 @@ struct DeviceTransferMessage {
             duration = nil
         }
         
-        return Message(messageId: messageId,
-                       conversationId: conversationId,
-                       userId: userId,
-                       category: category,
-                       content: localContent,
-                       mediaUrl: mediaUrl,
-                       mediaMimeType: mediaMimeType,
-                       mediaSize: mediaSize,
-                       mediaDuration: duration,
-                       mediaWidth: mediaWidth,
-                       mediaHeight: mediaHeight,
-                       mediaHash: mediaHash,
-                       mediaKey: mediaKey,
-                       mediaDigest: mediaDigest,
-                       mediaStatus: mediaStatus,
-                       mediaWaveform: mediaWaveform,
-                       thumbImage: thumbImage,
-                       thumbUrl: thumbUrl,
-                       status: MessageStatus.READ.rawValue,
-                       action: action,
-                       participantId: participantId,
-                       snapshotId: snapshotId,
-                       name: name,
-                       stickerId: stickerId,
-                       sharedUserId: sharedUserId,
-                       quoteMessageId: quoteMessageId,
-                       quoteContent: QuoteContentConverter.localQuoteContent(from: quoteContent),
-                       createdAt: createdAt,
-                       albumId: albumId)
+        return Message(
+            messageId: messageId,
+            conversationId: conversationId,
+            userId: userId,
+            category: category,
+            content: localContent,
+            mediaUrl: mediaUrl,
+            mediaMimeType: mediaMimeType,
+            mediaSize: mediaSize,
+            mediaDuration: duration,
+            mediaWidth: mediaWidth,
+            mediaHeight: mediaHeight,
+            mediaHash: mediaHash,
+            mediaKey: mediaKey,
+            mediaDigest: mediaDigest,
+            mediaStatus: mediaStatus,
+            mediaWaveform: mediaWaveform,
+            thumbImage: thumbImage,
+            thumbUrl: thumbUrl,
+            status: MessageStatus.READ.rawValue,
+            action: action,
+            participantId: participantId,
+            snapshotId: snapshotId,
+            name: name,
+            stickerId: stickerId,
+            sharedUserId: sharedUserId,
+            quoteMessageId: quoteMessageId,
+            quoteContent: QuoteContentConverter.localQuoteContent(from: quoteContent),
+            createdAt: createdAt,
+            albumId: albumId,
+            caption: caption,
+        )
     }
     
 }
@@ -174,6 +179,7 @@ extension DeviceTransferMessage: DeviceTransferRecord {
         case quoteContent = "quote_content"
         case createdAt = "created_at"
         case albumId = "album_id"
+        case caption
     }
     
 }

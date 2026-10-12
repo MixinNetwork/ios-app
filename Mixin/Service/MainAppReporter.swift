@@ -37,23 +37,16 @@ final class MainAppReporter: Reporter {
              .receiveEnd,
              .receiveSuccess,
              .sendStart,
-             .sendEnd:
+             .sendEnd,
+             .signUpAccountCreated,
+             .signUpStart:
             AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
-        case .signUpAccountCreated:
-            AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
-            if let appInstanceID = Analytics.appInstanceID() {
-                AppsFlyerLib.shared().customData = ["app_instance_id": appInstanceID]
-            }
-            AppsFlyerLib.shared().start()
-        case .signUpStart:
-            AppsFlyerLib.shared().logEvent(event.rawValue, withValues: tags)
-            AppsFlyerLib.shared().start()
         case .loginEnd:
             AppsFlyerLib.shared().logEvent(AFEventLogin, withValues: tags)
-            AppsFlyerLib.shared().start()
+            AppDelegate.current.startAppsFlyerIfReady()
         case .signUpEnd:
             AppsFlyerLib.shared().logEvent(AFEventCompleteRegistration, withValues: tags)
-            AppsFlyerLib.shared().start()
+            AppDelegate.current.startAppsFlyerIfReady()
         default:
             break
         }

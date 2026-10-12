@@ -40,7 +40,7 @@ final class HomeTabBarController: UIViewController {
     private lazy var marketDashboardViewController = MarketDashboardViewController()
     private lazy var exploreViewController = ExploreViewController()
     
-    private var needsUnlockBitcoin = false
+    private var unlockableWalletChain: UnlockableCommonWalletChain?
     
     init(initialChild: ChildID) {
         self.initialChild = initialChild
@@ -106,12 +106,19 @@ final class HomeTabBarController: UIViewController {
             make.leading.trailing.bottom.equalToSuperview()
         }
         
-        let bitcoinUnlockableWallets = Web3WalletDAO.shared
+        let isBitcoinUnavailable = Web3WalletDAO.shared
             .chainUnavailableWallets(chainID: ChainID.bitcoin)
-            .filter { wallet in
-                wallet.hasSecret()
-            }
-        needsUnlockBitcoin = !bitcoinUnlockableWallets.isEmpty
+            .contains(where: { $0.hasSecret() })
+        let isPearlUnavailable = Web3WalletDAO.shared
+            .chainUnavailableWallets(chainID: ChainID.pearl)
+            .contains(where: { $0.hasSecret() })
+        if isBitcoinUnavailable {
+            unlockableWalletChain = .bitcoin
+        } else if isPearlUnavailable {
+            unlockableWalletChain = .pearl
+        } else {
+            unlockableWalletChain = nil
+        }
         
         switchToChildAfterValidated(with: initialChild)
         
@@ -208,13 +215,13 @@ final class HomeTabBarController: UIViewController {
         case .chat, .market, .more:
             switchToChild(with: id)
         case .wallet:
-            if needsUnlockBitcoin {
-                let unlock = UnlockBitcoinNavigationController()
+            if let unlockableWalletChain {
+                let unlock = UnlockCommonWalletChainsNavigationController(content: unlockableWalletChain)
                 unlock.onSuccess = { [weak self] in
                     self?.switchTo(child: .wallet)
                 }
                 present(unlock, animated: true)
-                needsUnlockBitcoin = false
+                self.unlockableWalletChain = nil
             } else {
                 let shouldValidatePIN: Bool
                 if let date = AppGroupUserDefaults.Wallet.lastPINVerifiedDate {

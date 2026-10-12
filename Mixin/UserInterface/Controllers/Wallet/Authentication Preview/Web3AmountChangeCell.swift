@@ -5,7 +5,7 @@ final class Web3AmountChangeCell: UITableViewCell {
     
     enum Content {
         case unlimited
-        case limited(token: String, fiatMoney: String?)
+        case limited(token: String, fiatMoney: String?, style: StyledAssetChange.AmountStyle)
         case decodingFailed
     }
     
@@ -50,8 +50,18 @@ final class Web3AmountChangeCell: UITableViewCell {
             fiatMoneyValueLabel.textColor = R.color.mixin_red()
             assetIconView.isHidden = false
             assetIconView.setIcon(token: token, chain: chain)
-        case let .limited(tokenAmount, fiatMoneyAmount):
+        case let .limited(tokenAmount, fiatMoneyAmount, style):
             tokenAmountLabel.text = tokenAmount
+            tokenAmountLabel.textColor = switch style {
+            case .incoming:
+                R.color.market_green()
+            case .outgoing:
+                R.color.market_red()
+            case .plain:
+                R.color.text()
+            case .gray:
+                R.color.text_tertiary()
+            }
             tokenAmountLabel.isHidden = false
             symbolLabel.text = token?.symbol
             symbolLabel.setFont(

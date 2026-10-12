@@ -27,12 +27,23 @@ RTC_OBJC_EXPORT
  */
 @property(nonatomic, assign) BOOL srtpEnableGcmCryptoSuites;
 /**
+ * If set, GCM crypto suites are listed before kSrtpAes128CmSha1_80 in the
+ * SRTP cipher preference order, so GCM is selected whenever both peers
+ * support it. Otherwise GCM is offered last.
+ */
+@property(nonatomic, assign) BOOL srtpPreferGcmCryptoSuites;
+/**
  * If set to true, the (potentially insecure) crypto cipher
  * kSrtpAes128CmSha1_32 will be included in the list of supported ciphers
  * during negotiation. It will only be used if both peers support it and no
  * other ciphers get preferred.
  */
 @property(nonatomic, assign) BOOL srtpEnableAes128Sha1_32CryptoCipher;
+/**
+ * If set to true, the crypto cipher SRTP_AES128_CM_SHA1_80 will be included in
+ * the list of supported ciphers during negotiation.
+ */
+@property(nonatomic, assign) BOOL srtpEnableAes128Sha1_80CryptoCipher;
 /**
  * If set to true, encrypted RTP header extensions as defined in RFC 6904
  * will be negotiated. They will only be used if both peers support them.
@@ -50,10 +61,16 @@ RTC_OBJC_EXPORT
  * Initializes CryptoOptions with all possible options set explicitly. This
  * is done when converting from a native RTCConfiguration.crypto_options.
  */
-- (instancetype)initWithSrtpEnableGcmCryptoSuites:(BOOL)srtpEnableGcmCryptoSuites
-              srtpEnableAes128Sha1_32CryptoCipher:(BOOL)srtpEnableAes128Sha1_32CryptoCipher
-           srtpEnableEncryptedRtpHeaderExtensions:(BOOL)srtpEnableEncryptedRtpHeaderExtensions
-                     sframeRequireFrameEncryption:(BOOL)sframeRequireFrameEncryption
+- (instancetype)
+         initWithSrtpEnableGcmCryptoSuites:(BOOL)srtpEnableGcmCryptoSuites
+                 srtpPreferGcmCryptoSuites:(BOOL)srtpPreferGcmCryptoSuites
+       srtpEnableAes128Sha1_32CryptoCipher:
+           (BOOL)srtpEnableAes128Sha1_32CryptoCipher
+       srtpEnableAes128Sha1_80CryptoCipher:
+           (BOOL)srtpEnableAes128Sha1_80CryptoCipher
+    srtpEnableEncryptedRtpHeaderExtensions:
+        (BOOL)srtpEnableEncryptedRtpHeaderExtensions
+              sframeRequireFrameEncryption:(BOOL)sframeRequireFrameEncryption
     NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;

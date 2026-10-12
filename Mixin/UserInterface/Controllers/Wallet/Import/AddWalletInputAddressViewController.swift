@@ -100,6 +100,15 @@ final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewCo
                 } else {
                     throw LoadAddressError.invalidAddress
                 }
+            case .pearl:
+                if importedAddresses.contains(input) {
+                    throw LoadAddressError.alreadyImported
+                } else if Pearl.isValidAddress(address: input) {
+                    address = .init(destination: input, chainID: ChainID.pearl, path: nil)
+                    errorDescriptionLabel.text = nil
+                } else {
+                    throw LoadAddressError.invalidAddress
+                }
             case .evm:
                 guard input.hasPrefix("0x"), input.count == 42 else {
                     throw LoadAddressError.invalidAddress

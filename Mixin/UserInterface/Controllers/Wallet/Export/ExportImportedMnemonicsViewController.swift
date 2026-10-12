@@ -69,7 +69,7 @@ final class ExportImportedMnemonicsViewController: TitledMnemonicsViewController
     }
     
     @objc private func copyPhrases(_ sender: Any) {
-        UIPasteboard.general.string = mnemonics.joinedPhrases
+        UIPasteboard.general.setString(mnemonics.joinedPhrases, expireAfter: .minute)
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     

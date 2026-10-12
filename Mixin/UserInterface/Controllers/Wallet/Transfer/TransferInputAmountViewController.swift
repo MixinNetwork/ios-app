@@ -6,6 +6,7 @@ final class TransferInputAmountViewController: TokenConsumingInputAmountViewCont
     
     var reference: String?
     var redirection: URL?
+    var popToWebViewControllerOnTransferFinished = false
     
     private let traceID: String
     private let tokenItem: MixinTokenItem
@@ -144,7 +145,7 @@ final class TransferInputAmountViewController: TokenConsumingInputAmountViewCont
             reference: reference,
             on: self,
             onFailure: onPreconditonFailure
-        ) { [redirection] (operation, issues) in
+        ) { [redirection, popToWebViewControllerOnTransferFinished] (operation, issues) in
             self.reviewButton.isBusy = false
             let preview = TransferPreviewViewController(
                 issues: issues,
@@ -152,6 +153,11 @@ final class TransferInputAmountViewController: TokenConsumingInputAmountViewCont
                 amountDisplay: amountIntent,
                 redirection: redirection
             )
+            if popToWebViewControllerOnTransferFinished {
+                preview.navigationStackManipulationOnFinished = .popToWebViewController
+            } else {
+                preview.navigationStackManipulationOnFinished = .automatically
+            }
             self.present(preview, animated: true)
         }
     }

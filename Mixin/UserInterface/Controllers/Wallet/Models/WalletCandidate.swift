@@ -4,6 +4,7 @@ import MixinServices
 struct WalletCandidate {
     
     let bitcoinWallet: BIP39Mnemonics.Derivation
+    let pearlWallet: BIP39Mnemonics.Derivation
     let evmWallet: BIP39Mnemonics.Derivation
     let solanaWallet: BIP39Mnemonics.Derivation
     let usdBalanceSum: Decimal
@@ -17,6 +18,7 @@ struct WalletCandidate {
     
     init(
         bitcoinWallet: BIP39Mnemonics.Derivation,
+        pearlWallet: BIP39Mnemonics.Derivation,
         evmWallet: BIP39Mnemonics.Derivation,
         solanaWallet: BIP39Mnemonics.Derivation,
         tokens: [Web3Token],
@@ -32,6 +34,7 @@ struct WalletCandidate {
         let tokenDigests = tokens.map(TokenDigest.init(token:))
         self.init(
             bitcoinWallet: bitcoinWallet,
+            pearlWallet: pearlWallet,
             evmWallet: evmWallet,
             solanaWallet: solanaWallet,
             usdBalanceSum: usdBalanceSum,
@@ -43,6 +46,7 @@ struct WalletCandidate {
     
     private init(
         bitcoinWallet: BIP39Mnemonics.Derivation,
+        pearlWallet: BIP39Mnemonics.Derivation,
         evmWallet: BIP39Mnemonics.Derivation,
         solanaWallet: BIP39Mnemonics.Derivation,
         usdBalanceSum: Decimal,
@@ -51,6 +55,7 @@ struct WalletCandidate {
         importedAsName: String?
     ) {
         self.bitcoinWallet = bitcoinWallet
+        self.pearlWallet = pearlWallet
         self.evmWallet = evmWallet
         self.solanaWallet = solanaWallet
         self.usdBalanceSum = usdBalanceSum
@@ -61,6 +66,7 @@ struct WalletCandidate {
     
     static func empty(
         bitcoinWallet: BIP39Mnemonics.Derivation,
+        pearlWallet: BIP39Mnemonics.Derivation,
         evmWallet: BIP39Mnemonics.Derivation,
         solanaWallet: BIP39Mnemonics.Derivation,
         importedAsName: String?,
@@ -71,6 +77,7 @@ struct WalletCandidate {
         )
         return WalletCandidate(
             bitcoinWallet: bitcoinWallet,
+            pearlWallet: pearlWallet,
             evmWallet: evmWallet,
             solanaWallet: solanaWallet,
             usdBalanceSum: 0,

@@ -33,9 +33,9 @@ struct PerpetualPositionViewModel {
     let date: String
     let priceFormatStyle: Decimal.FormatStyle.Currency
     let state: PerpetualPosition.State?
-    let decimalMargin: Decimal?
-    let margin: String?
-    let estimatedReceiving: EstimatedReceiving?
+    let decimalMargin: Decimal
+    let margin: String
+    let estimatedReceiving: EstimatedReceiving
     let decimalLiquidationPrice: Decimal?
     let liquidationPrice: String?
     let takeProfitPrice: Decimal?
@@ -45,10 +45,11 @@ struct PerpetualPositionViewModel {
     init(wallet: Wallet, position: PerpetualPositionItem) {
         let pnl = Decimal(string: position.unrealizedPnL, locale: .enUSPOSIX) ?? 0
         let decimalEntryPrice = Decimal(string: position.entryPrice, locale: .enUSPOSIX)
+        let decimalMarkPrice = Decimal(string: position.markPrice, locale: .enUSPOSIX) ?? 0
         let decimalQuantity = abs(Decimal(string: position.quantity, locale: .enUSPOSIX) ?? 0)
         let leverage = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
         let side = PerpetualOrderSide(rawValue: position.side) ?? .short
-        let margin = Decimal(string: position.margin, locale: .enUSPOSIX)
+        let margin = Decimal(string: position.margin, locale: .enUSPOSIX) ?? 0
         let roe = Decimal(string: position.roe, locale: .enUSPOSIX)
         let localizedPnL = CurrencyFormatter.localizedString(
             from: pnl,
@@ -72,8 +73,8 @@ struct PerpetualPositionViewModel {
         self.leverage = leverage
         self.pnl = localizedPnL
         self.pnlColor = pnl >= 0 ? .rising : .falling
-        if let margin, margin != 0 {
-            let roe = roe ?? max(-1, pnl / margin)
+        if margin != 0 {
+            let roe = roe ?? (pnl / margin)
             let roeWithSign = PercentageFormatter.string(
                 from: roe,
                 format: .pretty,
@@ -91,7 +92,7 @@ struct PerpetualPositionViewModel {
             self.roeWithoutSign = roeWithoutSign
             self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
             self.orderValueInFiatMoney = CurrencyFormatter.localizedString(
-                from: margin * Decimal(position.leverage),
+                from: decimalQuantity * decimalMarkPrice,
                 format: .fiatMoneyPretty,
                 sign: .never,
                 symbol: .dollarSign,
@@ -132,25 +133,17 @@ struct PerpetualPositionViewModel {
         
         self.state = position.state.knownCase
         self.decimalMargin = margin
-        self.margin = if let margin {
-            CurrencyFormatter.localizedString(
-                from: margin,
-                format: .fiatMoneyPretty,
-                sign: .never,
-                symbol: .dollarSign
-            )
-        } else {
-            nil
-        }
-        self.estimatedReceiving = if let margin {
-            EstimatedReceiving(
-                assetID: position.settleAssetID,
-                receivingAmount: margin + pnl,
-                pnlAmount: pnl
-            )
-        } else {
-            nil
-        }
+        self.margin = CurrencyFormatter.localizedString(
+            from: margin,
+            format: .fiatMoneyPretty,
+            sign: .never,
+            symbol: .dollarSign
+        )
+        self.estimatedReceiving = EstimatedReceiving(
+            assetID: position.settleAssetID,
+            receivingAmount: margin + pnl,
+            pnlAmount: pnl
+        )
         if let price = position.liquidationPrice,
            !price.isEmpty,
            let decimalPrice = Decimal(string: price, locale: .enUSPOSIX)

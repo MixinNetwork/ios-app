@@ -154,7 +154,7 @@ extension TranscriptPreviewViewController {
     }
     
     private func reloadData() {
-        let layoutWidth = AppDelegate.current.mainWindow.bounds.width
+        let layoutWidth = view.bounds.width
         queue.async { [weak self] in
             guard let self = self else {
                 return

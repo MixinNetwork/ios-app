@@ -23,11 +23,13 @@ public final class MultisigAPI: MixinAPI {
         PINEncryptor.encrypt(pin: pin, tipBody: {
             try TIPBody.signMultisigRequest(id: requestId)
         }, onFailure: completion) { (encryptedPin) in
-            self.request(method: .post,
-                         path: Path.sign(id: requestId),
-                         parameters: ["pin_base64": encryptedPin],
-                         options: .disableRetryOnRequestSigningTimeout,
-                         completion: completion)
+            self.request(
+                method: .post,
+                path: Path.sign(id: requestId),
+                parameters: ["pin_base64": encryptedPin],
+                options: [.disableRetryOnRequestSigningTimeout],
+                completion: completion
+            )
         }
     }
     
@@ -35,11 +37,13 @@ public final class MultisigAPI: MixinAPI {
         PINEncryptor.encrypt(pin: pin, tipBody: {
             try TIPBody.unlockMultisigRequest(id: requestId)
         }, onFailure: completion) { (encryptedPin) in
-            self.request(method: .post,
-                         path: Path.unlock(id: requestId),
-                         parameters: ["pin_base64": encryptedPin],
-                         options: .disableRetryOnRequestSigningTimeout,
-                         completion: completion)
+            self.request(
+                method: .post,
+                path: Path.unlock(id: requestId),
+                parameters: ["pin_base64": encryptedPin],
+                options: [.disableRetryOnRequestSigningTimeout],
+                completion: completion
+            )
         }
     }
     

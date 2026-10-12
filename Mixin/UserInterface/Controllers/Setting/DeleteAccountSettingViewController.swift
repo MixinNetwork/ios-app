@@ -70,7 +70,7 @@ extension DeleteAccountSettingViewController {
     
     private func checkAvailableAssets() {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         DispatchQueue.global().async { [weak self] in
             let assets = TokenDAO.shared.positiveBalancedTokens()
             DispatchQueue.main.async {
@@ -113,35 +113,32 @@ extension DeleteAccountSettingViewController {
             }))
         } else {
             controller.addAction(UIAlertAction(title: R.string.localizable.delete(), style: .destructive, handler: { _ in
-                DeleteAccountConfirmWindow
-                    .instance(verificationID: nil)
-                    .presentPopupControllerAnimated()
+                let window = DeleteAccountConfirmWindow(verificationID: nil)
+                self.present(window, animated: true)
             }))
         }
         present(controller, animated: true, completion: nil)
     }
     
     private func verifyPIN() {
-        let window = DeleteAccountVerifyPinWindow.instance()
-        window.onSuccess = checkAvailableAssets
-        window.presentPopupControllerAnimated()
+        let window = DeleteAccountVerifyPinWindow(onSuccess: checkAvailableAssets)
+        present(window, animated: true)
     }
     
     private func presentDeleteAccountHintWindow(assets: [MixinTokenItem]) {
-        let window = DeleteAccountHintWindow.instance()
+        let window = DeleteAccountHintWindow(assets: assets)
         window.onViewWallet = { [weak self] in
             self?.presentWallet()
         }
         window.onContinue = { [weak self] in
             self?.presentVerificationConfirmation()
         }
-        window.render(assets: assets)
-        window.presentPopupControllerAnimated()
+        present(window, animated: true)
     }
     
     private func presentWallet() {
-        UIApplication.homeNavigationController?.popToRootViewController(animated: false)
-        if let tabBarController = UIApplication.homeContainerViewController?.homeTabBarController {
+        UIApplication.shared.homeNavigationController?.popToRootViewController(animated: false)
+        if let tabBarController = UIApplication.shared.homeContainerViewController?.homeTabBarController {
             tabBarController.switchTo(child: .wallet)
             if let container = tabBarController.selectedViewController as? WalletContainerViewController {
                 container.switchToWalletSummary(animated: false)
@@ -160,7 +157,7 @@ extension DeleteAccountSettingViewController {
             hud.set(style: .busy, text: "")
         } else {
             hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
         }
         AccountAPI.deactivateVerifications(phoneNumber: phone, captchaToken: token) { [weak self] (result) in
             guard let self else {

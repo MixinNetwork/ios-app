@@ -8,6 +8,8 @@ final class WalletPendingDepositView: UIView {
     @IBOutlet weak var iconStackView: UIStackView!
     @IBOutlet weak var label: UILabel!
     
+    @IBOutlet weak var iconStackViewWidthConstraint: NSLayoutConstraint!
+    
     private let maxIconCount = 3
     
     override func awakeFromNib() {
@@ -17,6 +19,7 @@ final class WalletPendingDepositView: UIView {
     }
     
     func reload(tokens: [MixinToken], snapshots: [SafeSnapshot]) {
+        iconStackViewWidthConstraint.priority = .almostInexist
         for iconView in iconStackView.arrangedSubviews {
             iconView.removeFromSuperview()
         }
@@ -71,6 +74,10 @@ final class WalletPendingDepositView: UIView {
     }
     
     func reload(pendingTransactions transactions: [Web3Transaction]) {
+        iconStackViewWidthConstraint.priority = .almostRequired
+        for iconView in iconStackView.arrangedSubviews {
+            iconView.removeFromSuperview()
+        }
         label.text = if transactions.count == 1 {
             R.string.localizable.pending_transaction_one()
         } else {

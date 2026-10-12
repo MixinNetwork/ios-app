@@ -30,17 +30,7 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
         }
         titleLabel.text = transaction.compactHash
         
-        let sendAmountColor: UIColor
-        let receiveAmountColor: UIColor
-        switch transaction.status {
-        case .pending, .failed, .notFound:
-            sendAmountColor = R.color.text_secondary()!
-            receiveAmountColor = R.color.text_secondary()!
-        case .success:
-            sendAmountColor = R.color.market_red()!
-            receiveAmountColor = R.color.market_green()!
-        }
-        
+        let (sendAmountColor, receiveAmountColor) = transaction.amountColors()
         if let transfer = transaction.simpleTransfer {
             loadRowViews(count: 1)
             let row = rowViews[0]
@@ -72,7 +62,7 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
                         Decimal.FormatStyle.number
                             .locale(.current)
                             .grouping(.never)
-                            .sign(strategy: .always())
+                            .sign(strategy: .always(includingZero: false))
                             .precision(.fractionLength(0...8))
                             .rounded(rule: .towardZero)
                     )

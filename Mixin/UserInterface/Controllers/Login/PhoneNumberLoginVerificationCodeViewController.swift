@@ -31,15 +31,14 @@ final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCod
         super.viewDidAppear(animated)
         if let deactivation = context.deactivation {
             verificationCodeField.resignFirstResponder()
-            let window = DeleteAccountAbortWindow.instance()
-            window.render(deactivation: deactivation) { abort in
+            let window = DeleteAccountAbortWindow(deactivation: deactivation) { abort in
                 if abort {
                     self.navigationController?.popViewController(animated: true)
                 } else {
                     self.verificationCodeField.becomeFirstResponder()
                 }
             }
-            window.presentPopupControllerAnimated()
+            present(window, animated: true)
         }
     }
     

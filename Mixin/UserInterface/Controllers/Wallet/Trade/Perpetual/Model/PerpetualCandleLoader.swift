@@ -56,8 +56,8 @@ final class PerpetualCandleLoader {
                             forTimeFrame: timeFrame
                         )
                     }
-                case .failure(let error):
-                    Logger.general.debug(category: "PerpCandleLoader", message: "\(error)")
+                case .failure:
+                    break
                 }
             }
         }

@@ -268,6 +268,8 @@ final class CommonWalletViewController: WalletViewController {
                     switch kind {
                     case .bitcoin:
                         importedSecret = .privateKey(privateKey, .bitcoin)
+                    case .pearl:
+                        importedSecret = .privateKey(privateKey, .pearl)
                     case .evm:
                         importedSecret = .privateKey(privateKey, .evm)
                     case .solana:
@@ -360,6 +362,7 @@ final class CommonWalletViewController: WalletViewController {
                 tokensValue: tokensValue,
                 perpsValue: 0,
                 cashValue: 0,
+                earnValue: 0,
                 btcPrice: btcPrice
             )
             
@@ -492,7 +495,7 @@ extension CommonWalletViewController: UICollectionViewDelegate {
             return
         }
         switch item {
-        case .overview, .emptyWalletInstruction, .cash, .perpsPosition, .perpsTopMover, .referral, .benefit:
+        case .overview, .emptyWalletInstruction, .cash, .earn, .perpsPosition, .perpsTopMover, .referral, .benefit:
             break
         case let .banner(banner, _):
             banner.invokeRemoteActionURL()
@@ -558,7 +561,7 @@ extension CommonWalletViewController {
         case .always:
             if AppGroupUserDefaults.Wallet.dappConnectionWalletID != wallet.walletID {
                 AppGroupUserDefaults.Wallet.dappConnectionWalletID = wallet.walletID
-                UIApplication.homeContainerViewController?.clipSwitcher.reloadWebViews()
+                UIApplication.shared.homeContainerViewController?.clipSwitcher.reloadWebViews()
                 WalletConnectService.shared.updateSessions(with: wallet)
             }
         case .never, .afterImportingMnemonics, .afterImportingPrivateKey:
@@ -588,7 +591,7 @@ extension CommonWalletViewController {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         RouteAPI.renameWallet(id: wallet.walletID, name: name, queue: .main) { [weak self] result in
             switch result {
             case let .success(wallet):

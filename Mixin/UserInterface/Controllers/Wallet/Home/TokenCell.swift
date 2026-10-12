@@ -18,6 +18,17 @@ final class TokenCell: UICollectionViewCell {
     @IBOutlet weak var fiatMoneyBalanceLabel: UILabel!
     @IBOutlet weak var noFiatMoneyPriceIndicatorLabel: UILabel!
     
+    private let fiatMoneyBalanceAttributes: [NSAttributedString.Key: Any] = [
+        .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 12)),
+    ]
+    
+    private let earnSymbolAttributes: [NSAttributedString.Key: Any] = [
+        .font: UIFontMetrics.default.scaledFont(
+            for: .systemFont(ofSize: 12, weight: .medium)
+        ),
+        .foregroundColor: R.color.theme()!,
+    ]
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         titleStackView.setCustomSpacing(4, after: maliciousWarningImageView)
@@ -32,7 +43,7 @@ final class TokenCell: UICollectionViewCell {
         assetIconView.prepareForReuse()
     }
     
-    func load(token: MixinTokenItem, attributedSymbol: NSAttributedString? = nil) {
+    func load(token: MixinTokenItem, availableForEarning: Bool) {
         assetIconView.setIcon(token: token)
         maliciousWarningImageView.isHidden = !token.isMalicious
         balanceLabel.text = if token.decimalBalance.isZero {
@@ -44,14 +55,10 @@ final class TokenCell: UICollectionViewCell {
                 sign: .never
             )
         }
-        if let attributedSymbol = attributedSymbol {
-            symbolLabel.attributedText = attributedSymbol
-        } else {
-            symbolLabel.attributedText = NSAttributedString(
-                string: token.symbol,
-                attributes: TokenCell.symbolAttributes
-            )
-        }
+        symbolLabel.attributedText = NSAttributedString(
+            string: token.symbol,
+            attributes: TokenCell.symbolAttributes
+        )
         if token.decimalUSDPrice > 0 {
             changeLabel.text = token.localizedUSDChange
             changeLabel.marketColor = .byValue(token.decimalUSDChange)
@@ -66,7 +73,24 @@ final class TokenCell: UICollectionViewCell {
             fiatMoneyPriceLabel.alpha = 0
             noFiatMoneyPriceIndicatorLabel.alpha = 1
         }
-        fiatMoneyBalanceLabel.text = token.estimatedFiatMoneyBalance
+        if availableForEarning {
+            let balance = NSMutableAttributedString(
+                string: token.estimatedFiatMoneyBalance + " • ",
+                attributes: fiatMoneyBalanceAttributes,
+            )
+            balance.append(
+                NSAttributedString(
+                    string: R.string.localizable.earn(),
+                    attributes: earnSymbolAttributes
+                )
+            )
+            fiatMoneyBalanceLabel.attributedText = balance
+        } else {
+            fiatMoneyBalanceLabel.attributedText = NSAttributedString(
+                string: token.estimatedFiatMoneyBalance,
+                attributes: fiatMoneyBalanceAttributes,
+            )
+        }
     }
     
     func load(web3Token token: Web3TokenItem) {

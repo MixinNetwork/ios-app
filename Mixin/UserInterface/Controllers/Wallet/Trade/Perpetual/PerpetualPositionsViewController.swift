@@ -136,6 +136,7 @@ final class PerpetualPositionsViewController: UIViewController {
             return
         }
         present(preview, animated: true)
+        reporter.report(event: .tradePerpsCloseStart, tags: ["type": "multiple"])
     }
     
     private func reloadTrayView() {

@@ -133,7 +133,7 @@ extension Web3BrowserViewController: UITableViewDelegate {
                 self?.present(profile, animated: true)
             }
         } else {
-            if let navigationController = UIApplication.homeNavigationController {
+            if let navigationController = UIApplication.shared.homeNavigationController {
                 let url = searchResults[indexPath.row].homeURL
                 navigationController.pushWebViewController(
                     context: .init(conversationID: "", initialURL: url)

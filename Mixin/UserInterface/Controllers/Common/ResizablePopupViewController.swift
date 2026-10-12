@@ -121,7 +121,11 @@ class ResizablePopupViewController: UIViewController {
         guard !isBeingDismissed else {
             return
         }
-        preferredContentSize.height = preferredContentHeight(forSize: size)
+        let height = preferredContentHeight(forSize: size)
+        guard abs(preferredContentSize.height - height) > 0.5 else {
+            return
+        }
+        preferredContentSize.height = height
     }
     
     func dismissAndPresent(_ viewController: UIViewController) {
@@ -133,7 +137,7 @@ class ResizablePopupViewController: UIViewController {
     
     func dismissAndPush(_ viewController: UIViewController) {
         dismiss(animated: true) {
-            UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
+            UIApplication.shared.homeNavigationController?.pushViewController(viewController, animated: true)
         }
     }
     
@@ -171,8 +175,8 @@ class ResizablePopupViewController: UIViewController {
     
     func preferredContentHeight(forSize size: Size) -> CGFloat {
         view.layoutIfNeeded()
-        let window = AppDelegate.current.mainWindow
-        let maxHeight = window.bounds.height - window.safeAreaInsets.top
+        let totalHeight = presentingViewController?.view.bounds.height ?? view.window?.bounds.height ?? UIScreen.main.bounds.height
+        let maxHeight = totalHeight - view.windowSafeAreaInsets.top
         return maxHeight
     }
     

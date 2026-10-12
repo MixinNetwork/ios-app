@@ -5,6 +5,8 @@ import MixinServices
 
 final class ScreenLockManager {
     
+    static let didUnlockNotification = Notification.Name("one.mixin.messenger.ScreenLockManager.DidUnlock")
+    
     private enum State: String {
         case none
         case authenticationFailed
@@ -21,7 +23,9 @@ final class ScreenLockManager {
     
     private(set) var isLocked = false
     private(set) var isLastAuthenticationStillValid = false
-    private(set) var window: Window?
+    private(set) var lockWindow: Window?
+    
+    private weak var mainWindow: UIWindow?
     
     private var context: LAContext!
     private var viewController: ScreenLockViewController?
@@ -89,25 +93,40 @@ extension ScreenLockManager {
     }
     
     private func showScreenLockView() {
-        guard window == nil else {
+        guard lockWindow == nil else {
             return
         }
         isLocked = true
-        AppDelegate.current.mainWindow.endEditing(true)
+        mainWindow = UIApplication.shared.firstWindowScene?.keyWindow
+        mainWindow?.endEditing(true)
         viewController = ScreenLockViewController()
         viewController!.tapUnlockAction = { [weak self] in
             self?.performBiometricAuthentication()
         }
-        window = Window(frame: UIScreen.main.bounds)
-        window!.rootViewController = viewController
-        window!.makeKeyAndVisible()
+        let lockWindow = if let windowScene = mainWindow?.windowScene {
+            Window(windowScene: windowScene)
+        } else {
+            Window(frame: UIScreen.main.bounds)
+        }
+        lockWindow.rootViewController = viewController
+        lockWindow.makeKeyAndVisible()
+        self.lockWindow = lockWindow
     }
     
     private func hideScreenLockView() {
-        AppDelegate.current.mainWindow.makeKeyAndVisible()
+        let wasLocked = isLocked
+        if let mainWindow {
+            mainWindow.makeKeyAndVisible()
+        }
         viewController = nil
-        window = nil
+        lockWindow?.isHidden = true
+        lockWindow = nil
         isLocked = false
+        if wasLocked {
+            NotificationCenter.default.post(name: Self.didUnlockNotification, object: self)
+            screenLockViewDidHide?()
+            screenLockViewDidHide = nil
+        }
     }
     
 }
@@ -161,7 +180,6 @@ extension ScreenLockManager {
                     }
                 } else {
                     hideScreenLockView()
-                    screenLockViewDidHide?()
                 }
             } else if from == .willResignActive {
                 if !hasLastBiometricAuthenticationFailed {
@@ -179,7 +197,6 @@ extension ScreenLockManager {
             hasLastBiometricAuthenticationFailed = false
             hideScreenLockView()
             AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate = Date()
-            screenLockViewDidHide?()
         case .authenticationFailed:
             hasLastBiometricAuthenticationFailed = true
             viewController?.showUnlockOption(true)

@@ -24,7 +24,6 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
            !AppGroupUserDefaults.isClockSkewed,
            let account = LoginManager.shared.account
         {
-            reporter.registerUserInformation(account: account)
             Logger.general.info(category: "HomeNavigationController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
             if UIApplication.shared.applicationState == .active {
                 WebSocketService.shared.connect(firstConnect: true)
@@ -35,9 +34,12 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
     }
     
     func pushQRCodeScannerViewController() {
+        if viewControllers.last is QRCodeScannerViewController {
+            return
+        }
         VideoCaptureDevice.checkAuthorization {
             let scanner = QRCodeScannerViewController()
-            self.pushViewController(scanner, animated: true)
+            self.pushViewController(withBackRoot: scanner)
         } onDenied: { alert in
             self.present(alert, animated: true)
         }
@@ -66,17 +68,35 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
         presentAppPage(appID: BotUserID.mixinCash)
     }
     
-    func presentAppPage(appID: String) {
+    func presentEarnPage(
+        additionalURLQueries: [String: String] = [:]
+    ) {
+        presentAppPage(
+            appID: BotUserID.mixinEarn,
+            additionalURLQueries: additionalURLQueries
+        )
+    }
+    
+    func presentAppPage(
+        appID: String,
+        additionalURLQueries: [String: String] = [:]
+    ) {
         if let app = AppDAO.shared.getApp(appId: appID) {
             let verified = UserDAO.shared.isVerified(userID: appID)
-            pushWebViewController(context: .init(conversationID: "", app: app, isAppVerified: verified))
+            let context = MixinWebContext(
+                conversationID: "",
+                app: app,
+                isAppVerified: verified,
+                additionalURLQueries: additionalURLQueries,
+            )
+            pushWebViewController(context: context)
             let updateUser = RefreshUserJob(userIds: [appID])
             ConcurrentJobQueue.shared.addJob(job: updateUser)
             return
         }
         
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: view)
+        hud.show(style: .busy, text: "")
         UserAPI.showUser(userId: appID) { [weak self] result in
             switch result {
             case .success(let response):
@@ -85,9 +105,13 @@ final class HomeNavigationController: GeneralAppearanceNavigationController {
                 }
                 hud.hide()
                 if let app = response.app {
-                    self?.pushWebViewController(
-                        context: .init(conversationID: "", app: app, isAppVerified: response.isVerified)
+                    let context = MixinWebContext(
+                        conversationID: "",
+                        app: app,
+                        isAppVerified: response.isVerified,
+                        additionalURLQueries: additionalURLQueries,
                     )
+                    self?.pushWebViewController(context: context)
                 }
             case .failure(let error):
                 hud.set(style: .error, text: error.localizedDescription)
@@ -170,7 +194,7 @@ extension HomeNavigationController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         switch gestureRecognizer {
         case interactivePopGestureRecognizer:
-            guard viewControllers.count > 1 else {
+            guard viewControllers.count > 1, transitionCoordinator == nil else {
                 return false
             }
             if let vc = viewControllers.last {
@@ -183,7 +207,7 @@ extension HomeNavigationController: UIGestureRecognizerDelegate {
                 return true
             }
         case interactivePopOutRecognizer:
-            guard viewControllers.count > 1 else {
+            guard viewControllers.count > 1, transitionCoordinator == nil else {
                 return false
             }
             if let vc = viewControllers.last, let vc = vc as? PopupNavigationAnimating {

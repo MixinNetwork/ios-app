@@ -47,6 +47,34 @@ final class Web3TransactionViewController: TransactionViewController {
             object: nil
         )
         reloadData()
+        if transaction.status == .pending {
+            // This additional refresh repairs transaction records for some users whose failed gasless
+            // transactions remain pending indefinitely due to a mismatch in `account` field.
+            // It updates the status of these transactions without affecting normal ones.
+            let hash = transaction.transactionHash
+            let chainID = transaction.chainID
+            let address = transaction.address
+            Task.detached {
+                do {
+                    let rawTx = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash)
+                    if let rawTx, rawTx.isGaslessSponsorTransaction {
+                        Logger.web3.info(category: "Web3TxView", message: "Skip additional refresh for gasless tx: \(hash)")
+                        return
+                    }
+                    Logger.web3.info(category: "Web3TxView", message: "Additional refresh for pending tx: \(hash)")
+                    let tx = try await RouteAPI.transaction(chainID: chainID, hash: hash)
+                    Logger.web3.info(category: "Web3TxView", message: "Refreshed hash: \(tx.hash), state: \(tx.state.rawValue), cid: \(chainID)<->\(tx.chainID), address: \(address)<->\(tx.account)")
+                    Web3TransactionDAO.shared.setPendingTransactionStatus(
+                        hash: hash,
+                        chainID: chainID,
+                        address: address,
+                        state: tx.state.rawValue,
+                    )
+                } catch {
+                    Logger.web3.info(category: "Web3TxView", message: "Additional refresh failed: \(error)")
+                }
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -240,16 +268,7 @@ extension Web3TransactionViewController {
         let token: Web3Token?
         let amount: NSAttributedString
         
-        init(token: Web3Token?, amount: Decimal, pending: Bool) {
-            let amountColor = if pending {
-                R.color.text()!
-            } else {
-                if amount >= 0 {
-                    R.color.market_green()!
-                } else {
-                    R.color.market_red()!
-                }
-            }
+        init(token: Web3Token?, amount: Decimal, color: UIColor) {
             let precision = token?.precision ?? 8
             let amount = NSMutableAttributedString(
                 string: amount.formatted(
@@ -262,7 +281,7 @@ extension Web3TransactionViewController {
                 ),
                 attributes: [
                     .font: UIFont.preferredFont(forTextStyle: .callout),
-                    .foregroundColor: amountColor,
+                    .foregroundColor: color,
                 ]
             )
             if let symbol = token?.symbol {
@@ -375,18 +394,12 @@ extension Web3TransactionViewController {
                 simpleHeaderView.nowValueLabel.isHidden = true
                 simpleHeaderView.thenValueLabel.isHidden = true
             }
-            simpleHeaderView.amountLabel.textColor = switch transaction.status {
-            case .success where !transfer.directionalAmount.isZero:
-                switch transaction.transactionType.knownCase {
-                case .transferIn:
-                    R.color.market_green()
-                case .transferOut:
-                    R.color.market_red()
-                default:
-                    R.color.text_tertiary()
-                }
-            default:
-                R.color.text_tertiary()
+            simpleHeaderView.amountLabel.textColor = if transfer.directionalAmount == 0 {
+                Web3Transaction.Color.unavailable
+            } else if transfer.directionalAmount > 0 {
+                transaction.amountColors().receive
+            } else {
+                transaction.amountColors().send
             }
             simpleHeaderView.amountLabel.text = transfer.localizedAmountString
             simpleHeaderView.statusLabel.load(status: transaction.status)
@@ -497,16 +510,18 @@ extension Web3TransactionViewController {
         } else {
             switch transaction.transactionType.knownCase {
             case .transferIn, .transferOut, .swap, .none, .unknown:
-                let tokens = Web3TokenDAO.shared.tokens(walletID: wallet.walletID, ids: transaction.allAssetIDs)
-                    .reduce(into: [:]) { result, token in
-                        result[token.assetID] = token
-                    }
-                let pending = transaction.status == .pending
+                let tokens = Web3TokenDAO.shared.tokens(
+                    walletID: wallet.walletID,
+                    ids: transaction.allAssetIDs
+                ).reduce(into: [:]) { result, token in
+                    result[token.assetID] = token
+                }
+                let (sendColor, receiveColor) = transaction.amountColors()
                 let changes = transaction.assetChanges.map { change in
                     AssetChange(
                         token: tokens[change.assetID],
                         amount: change.amount,
-                        pending: pending
+                        color: change.amount >= 0 ? receiveColor : sendColor,
                     )
                 }
                 if changes.isEmpty {
@@ -592,6 +607,44 @@ extension Web3TransactionViewController {
                             wallet: wallet,
                             fromAddress: fromAddress,
                             transaction: rawTransaction,
+                        )
+                    } catch {
+                        Logger.general.debug(category: "Web3Txn", message: "Cancel failed: \(error)")
+                        cancelOperation = nil
+                    }
+                } else {
+                    speedUpOperation = nil
+                    cancelOperation = nil
+                }
+                DispatchQueue.main.async {
+                    self?.reloadHeaderView(
+                        speedUpOperation: speedUpOperation,
+                        cancelOperation: cancelOperation
+                    )
+                }
+            }
+        case .pearl:
+            DispatchQueue.global().async { [wallet, weak self] in
+                let speedUpOperation: Web3TransferOperation?
+                let cancelOperation: Web3TransferOperation?
+                if let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID),
+                   let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash)
+                {
+                    do {
+                        speedUpOperation = try PearlSpeedUpOperation(
+                            wallet: wallet,
+                            fromAddress: fromAddress,
+                            transaction: rawTransaction
+                        )
+                    } catch {
+                        Logger.general.debug(category: "Web3Txn", message: "Speed up failed: \(error)")
+                        speedUpOperation = nil
+                    }
+                    do {
+                        cancelOperation = try PearlCancelOperation(
+                            wallet: wallet,
+                            fromAddress: fromAddress,
+                            transaction: rawTransaction
                         )
                     } catch {
                         Logger.general.debug(category: "Web3Txn", message: "Cancel failed: \(error)")

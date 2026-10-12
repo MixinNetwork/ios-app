@@ -66,8 +66,12 @@ class PopupSearchableTableViewController: UIViewController {
     }
     
     private func updatePreferredContentSizeHeight() {
-        let window = AppDelegate.current.mainWindow
-        preferredContentSize.height = window.bounds.height - window.safeAreaInsets.top - 56
+        let totalHeight = presentingViewController?.view.bounds.height ?? view.window?.bounds.height ?? UIScreen.main.bounds.height
+        let height = totalHeight - view.windowSafeAreaInsets.top - 56
+        guard abs(preferredContentSize.height - height) > 0.5 else {
+            return
+        }
+        preferredContentSize.height = height
     }
     
 }

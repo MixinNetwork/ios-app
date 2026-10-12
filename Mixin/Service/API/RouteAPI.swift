@@ -47,6 +47,7 @@ extension RouteAPI {
         completion: @escaping (MixinAPI.Result<[SwapToken.Codable]>) -> Void
     ) -> Request? {
         guard let encodedKeyword = keyword.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+            Logger.route.error(category: "RouteAPI", message: "Token search failed: \(MixinAPIError.invalidPath)")
             completion(.failure(.invalidPath))
             return nil
         }
@@ -166,9 +167,11 @@ extension RouteAPI {
         
     }
     
-    enum LiquidationPriceRequest {
+    enum LiquidationPriceAction {
         case open(marketID: String, side: PerpetualOrderSide, leverage: Int)
-        case add(positionID: String)
+        case increasePosition(positionID: String)
+        case increaseMargin(positionID: String)
+        case decreaseMargin(positionID: String)
     }
     
     static func perpsMarkets(
@@ -257,6 +260,13 @@ extension RouteAPI {
         )
     }
     
+    static func acceptedPerpsOrderAssets() async throws -> [String] {
+        try await request(
+            method: .get,
+            path: "/perps/orders/accepted-assets",
+        )
+    }
+    
     static func openPerpsOrder(
         orderRequest: OpenPerpetualOrderRequest,
         completion: @escaping (MixinAPI.Result<OpenPerpetualOrderResponse>) -> Void
@@ -286,11 +296,50 @@ extension RouteAPI {
         )
     }
     
+    static func increasePerpsMargin(
+        positionID: String,
+        assetID: String,
+        amount: String,
+        destination: String?,
+        completion: @escaping (MixinAPI.Result<OpenPerpetualOrderResponse>) -> Void
+    ) {
+        var params = [
+            "type": "increase",
+            "asset_id": assetID,
+            "amount": amount,
+        ]
+        if let destination {
+            params["destination"] = destination
+        }
+        request(
+            method: .post,
+            path: "/perps/positions/\(positionID)/margin",
+            with: params,
+            completion: completion,
+        )
+    }
+    
+    @discardableResult
+    static func decreasePerpsMargin(
+        positionID: String,
+        amount: String,
+    ) async throws -> Empty {
+        try await request(
+            method: .post,
+            path: "/perps/positions/\(positionID)/margin",
+            with: [
+                "type": "decrease",
+                "amount": amount,
+            ],
+        )
+    }
+    
     static func increasePerpsPosition(
         positionID: String,
         assetID: String,
         amount: String,
         destination: String?,
+        leaderPositionID: String?,
         completion: @escaping (MixinAPI.Result<OpenPerpetualOrderResponse>) -> Void
     ) {
         var params = [
@@ -299,6 +348,9 @@ extension RouteAPI {
         ]
         if let destination {
             params["destination"] = destination
+        }
+        if let leaderPositionID {
+            params["leader_position_id"] = leaderPositionID
         }
         request(
             method: .post,
@@ -344,7 +396,7 @@ extension RouteAPI {
     }
     
     static func perpsLiquidationPrice(
-        request: LiquidationPriceRequest,
+        action: LiquidationPriceAction,
         amount: Decimal,
     ) async throws -> Decimal {
         struct Price: Decodable {
@@ -359,11 +411,15 @@ extension RouteAPI {
         
         let amount = amount.formatted(MixinToken.transferCanonicalFormatStyle)
         var path = "/perps/markets/liquidation-price?amount=\(amount)"
-        switch request {
+        switch action {
         case let .open(marketID, side, leverage):
-            path += "&market_id=\(marketID)&side=\(side.rawValue)&leverage=\(leverage)"
-        case let .add(positionID):
-            path += "&position_id=\(positionID)"
+            path += "&action=open&market_id=\(marketID)&side=\(side.rawValue)&leverage=\(leverage)"
+        case let .increasePosition(positionID):
+            path += "&action=increase_position&position_id=\(positionID)"
+        case let .increaseMargin(positionID):
+            path += "&action=increase_margin&position_id=\(positionID)"
+        case let .decreaseMargin(positionID):
+            path += "&action=decrease_margin&position_id=\(positionID)"
         }
         let result: Price = try await Self.request(method: .get, path: path)
         if let liquidationPrice = Decimal(string: result.liquidationPrice, locale: .enUSPOSIX) {
@@ -375,6 +431,7 @@ extension RouteAPI {
                     debugDescription: "Invalid price"
                 )
             )
+            Logger.route.error(category: "RouteAPI", message: "GET \(path) failed: \(error)")
             throw MixinAPIError.invalidJSON(error)
         }
     }
@@ -533,7 +590,10 @@ extension RouteAPI {
 // MARK: - Web3 Wallets
 extension RouteAPI {
     
-    static func dapps(queue: DispatchQueue, completion: @escaping (MixinAPI.Result<[Web3ChainUpdate]>) -> Void) {
+    static func dapps(
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[Web3ChainUpdate]>) -> Void
+    ) {
         request(method: .get, path: "/web3/dapps", queue: queue, completion: completion)
     }
     
@@ -937,6 +997,21 @@ extension RouteAPI {
         )
     }
     
+    static func pearlNetworkInfo(feeRate: String?) async throws -> BitcoinNetworkInfo {
+        var parameters = [
+            "chain_id": ChainID.pearl,
+        ]
+        if let feeRate {
+            // Used in RBF transactions
+            parameters["fee_rate"] = feeRate
+        }
+        return try await request(
+            method: .post,
+            path: "/web3/estimate-fee",
+            with: parameters
+        )
+    }
+    
     static func estimatedEthereumFee(
         mixinChainID: String,
         from: String,
@@ -997,11 +1072,16 @@ extension RouteAPI {
             path: "/web3/rpc?chain_id=\(ChainID.solana)",
             with: ["method": "getLatestBlockhash"]
         )
-        guard let data = result.data(using: .utf8) else {
-            throw RPCError.invalidResponse
+        do {
+            guard let data = result.data(using: .utf8) else {
+                throw RPCError.invalidResponse
+            }
+            let response = try JSONDecoder.default.decode(Response.self, from: data)
+            return response.blockhash
+        } catch {
+            Logger.route.error(category: "RouteAPI", message: "Decode getLatestBlockhash failed: \(error)")
+            throw error
         }
-        let response = try JSONDecoder.default.decode(Response.self, from: data)
-        return response.blockhash
     }
     
     static func solanaAccountExists(pubkey: String) async throws -> Bool {
@@ -1034,10 +1114,15 @@ extension RouteAPI {
                 ],
             ]
         )
-        guard let data = result.data(using: .utf8) else {
-            throw RPCError.invalidResponse
+        do {
+            guard let data = result.data(using: .utf8) else {
+                throw RPCError.invalidResponse
+            }
+            return try JSONDecoder.default.decode(SolanaAccountInfo.self, from: data)
+        } catch {
+            Logger.route.error(category: "RouteAPI", message: "Decode getAccountInfo failed: \(error)")
+            throw error
         }
-        return try JSONDecoder.default.decode(SolanaAccountInfo.self, from: data)
     }
     
 }
@@ -1176,6 +1261,11 @@ extension RouteAPI {
             host: "https://api.cash.mixin.one"
         )
         
+        static let earn = Config(
+            botUserID: BotUserID.mixinEarn,
+            host: "https://api.earn.mixin.one"
+        )
+        
         let botUserID: String
         let host: String
         
@@ -1261,7 +1351,13 @@ extension RouteAPI {
             encoder: .json,
             interceptor: interceptor
         )
-        return request(dataRequest, queue: queue, completion: completion)
+        return request(
+            dataRequest,
+            method: method,
+            url: url,
+            queue: queue,
+            completion: completion,
+        )
     }
     
     @discardableResult
@@ -1286,7 +1382,13 @@ extension RouteAPI {
             encoding: JSONEncoding.default,
             interceptor: interceptor
         )
-        return request(dataRequest, queue: queue, completion: completion)
+        return request(
+            dataRequest,
+            method: method,
+            url: url,
+            queue: queue,
+            completion: completion,
+        )
     }
     
     static func request<Response>(
@@ -1313,15 +1415,11 @@ extension RouteAPI {
             interceptor: interceptor
         )
         
-        request(dataRequest, queue: .global()) { theResult in
+        request(dataRequest, method: method, url: url, queue: .global()) { theResult in
             result = theResult
             semaphore.signal()
         }
         semaphore.wait()
-        
-        if case let .failure(error) = result, error.isTransportTimedOut {
-            Logger.general.error(category: "RouteAPI", message: "Sync request timed out with: \(error), timeout: \(requestTimeout)")
-        }
         
         return result
     }
@@ -1355,25 +1453,56 @@ extension RouteAPI {
     @discardableResult
     private static func request<Response>(
         _ request: DataRequest,
+        method: HTTPMethod,
+        url: String,
         queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
         request.validate(statusCode: 200...299)
             .responseDecodable(of: ResponseObject<Response>.self, queue: queue) { response in
+                let result: MixinAPI.Result<Response>
                 switch response.result {
                 case .success(let response):
                     if let data = response.data {
-                        completion(.success(data))
+                        result = .success(data)
                     } else if let error = response.error {
-                        completion(.failure(.response(error)))
+                        result = .failure(.response(error))
                     } else if Response.self == Empty.self {
-                        completion(.success(Empty.value as! Response))
+                        result = .success(Empty.value as! Response)
                     } else {
-                        completion(.failure(.emptyResponse))
+                        result = .failure(.emptyResponse)
                     }
                 case .failure(let error):
-                    completion(.failure(.httpTransport(error)))
+                    result = .failure(.httpTransport(error))
                 }
+                switch result {
+                case .success:
+                    if let metrics = response.metrics, metrics.taskInterval.duration > 1 {
+                        let total = String(format: "%.2f", metrics.taskInterval.duration)
+                        // From request sent to first response byte, including one network round trip
+                        let server: String
+                        if let transaction = metrics.transactionMetrics.last,
+                           let requestEnd = transaction.requestEndDate,
+                           let responseStart = transaction.responseStartDate
+                        {
+                            server = String(format: "%.2f", responseStart.timeIntervalSince(requestEnd)) + "s"
+                        } else {
+                            server = "unknown"
+                        }
+                        Logger.route.warn(
+                            category: "RouteAPI",
+                            message: "\(method.rawValue) \(url) took \(total)s, server: \(server)",
+                        )
+                    }
+                case .failure(.httpTransport(.explicitlyCancelled)):
+                    break
+                case .failure(let error):
+                    Logger.route.error(
+                        category: "RouteAPI",
+                        message: "\(method.rawValue) \(url) failed: \(error)",
+                    )
+                }
+                completion(result)
             }
     }
     

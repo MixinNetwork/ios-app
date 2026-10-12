@@ -171,16 +171,8 @@ final class DepositViewController: UIViewController {
     }
     
     @objc private func contactSupport(_ sender: Any) {
-        guard let navigationController, let user = UserDAO.shared.getUser(identityNumber: "7000") else {
-            return
-        }
-        let conversation = ConversationViewController.instance(ownerUser: user)
-        var viewControllers = navigationController.viewControllers
-        if let index = viewControllers.firstIndex(where: { $0 is HomeTabBarController }) {
-            viewControllers.removeLast(viewControllers.count - index - 1)
-        }
-        viewControllers.append(conversation)
-        navigationController.setViewControllers(viewControllers, animated: true)
+        let customerService = CustomerServiceViewController(reportingTags: nil)
+        present(customerService, animated: true)
     }
     
     private func updateCollectionViewBottomInset() {

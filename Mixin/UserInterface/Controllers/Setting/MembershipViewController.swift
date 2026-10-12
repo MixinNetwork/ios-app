@@ -71,7 +71,7 @@ final class MembershipViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(reportingTags: nil)
         present(customerService, animated: true)
     }
     
@@ -177,7 +177,7 @@ extension MembershipViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
         case .invite:
-            UIApplication.homeNavigationController?.presentReferralPage()
+            UIApplication.shared.homeNavigationController?.presentReferralPage()
             BadgeManager.shared.setHasViewed(identifier: .referral)
         case .plan:
             break

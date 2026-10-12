@@ -24,7 +24,7 @@ class ShowRecoveryContactValidationViewController: PinValidationViewController {
             case .success(let user):
                 weakSelf.dismiss(animated: true, completion: {
                     let vc = RecoveryContactViewController(user: user)
-                    UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+                    UIApplication.shared.homeNavigationController?.pushViewController(vc, animated: true)
                 })
             case .failure(let error):
                 weakSelf.handle(error: error)

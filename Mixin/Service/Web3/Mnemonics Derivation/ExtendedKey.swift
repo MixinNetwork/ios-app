@@ -14,15 +14,22 @@ struct ExtendedKey {
         case ed25519
     }
     
+    private static let secp256k1Order = BigUInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", radix: 16)!
+    
     let key: Data
     let chainCode: Data
     
-    init(seed: Data, curve: Curve) {
-        let (key, chainCode) = switch curve {
+    init(seed: Data, curve: Curve) throws {
+        let key: Data, chainCode: Data
+        switch curve {
         case .secp256k1:
-            Self.hmacSHA512(seed, key: "Bitcoin seed".data(using: .utf8)!)
+            (key, chainCode) = Self.hmacSHA512(seed, key: "Bitcoin seed".data(using: .utf8)!)
+            let parse256Key = BigUInt(key)
+            if parse256Key.isZero || parse256Key >= Self.secp256k1Order {
+                throw Error.invalidMasterKey
+            }
         case .ed25519:
-            Self.hmacSHA512(seed, key: "ed25519 seed".data(using: .utf8)!)
+            (key, chainCode) = Self.hmacSHA512(seed, key: "ed25519 seed".data(using: .utf8)!)
         }
         self.init(key: key, chainCode: chainCode)
     }
@@ -46,6 +53,7 @@ struct ExtendedKey {
 extension ExtendedKey {
     
     enum Error: Swift.Error {
+        case invalidMasterKey
         case missingStorage
         case createContext
         case randomizeContext
@@ -83,7 +91,7 @@ extension ExtendedKey {
     }
     
     private func privateKeyUsingSecp256k1(index: Index) throws -> ExtendedKey {
-        let n = BigUInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", radix: 16)!
+        let n = Self.secp256k1Order
         let il, ir: Data
         switch index {
         case .normal:

@@ -45,8 +45,26 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.error_too_many_wallets()
         case .unsupportedWatchAddress:
             return R.string.localizable.error_watch_address_not_supported()
+        case .perpsOrderMarginTooLow:
+            return R.string.localizable.error_perps_margin_too_small()
+        case .perpsOrderSizeTooLow:
+            if case let .string(value) = extra?.value(at: ["min_order_value"]),
+               let decimalValue = Decimal(string: value, locale: .enUSPOSIX)
+            {
+                let value = CurrencyFormatter.localizedString(
+                    from: decimalValue,
+                    format: .fiatMoneyPrecision,
+                    sign: .never,
+                    symbol: .dollarSign
+                )
+                return R.string.localizable.error_perps_position_size_too_small_value(value)
+            } else {
+                return R.string.localizable.error_perps_position_size_too_small()
+            }
         case .alreadyHadPosition:
             return R.string.localizable.error_already_had_open_position()
+        case .perpPositionSizeExceedsLeverageLimit:
+            return R.string.localizable.error_perps_position_size_exceeds_leverage_limit()
         case .referralCodeNotFound:
             return R.string.localizable.error_invalid_referral_code()
         case .alreadyBondedReferralCode:

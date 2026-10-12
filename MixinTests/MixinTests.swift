@@ -9,15 +9,16 @@
 import Testing
 import CommonCrypto
 import CryptoKit
+import TIP
 @testable import Mixin
 @testable import MixinServices
 
 struct MixinTests {
     
-    @Test func testP2PKHDerivation() {
+    @Test func testP2PKHDerivation() throws {
         let seed = Data(hexEncodedString: "67f93560761e20617de26e0cb84f7234aaf373ed2e66295c3d7397e6d7ebe882ea396d5d293808b0defd7edd2babd4c091ad942e6a9351e6d075a29d4df872af")!
-        let key = ExtendedKey(seed: seed, curve: .secp256k1)
-        let addresses = try! (0..<20).map { (index: UInt32) in
+        let key = try ExtendedKey(seed: seed, curve: .secp256k1)
+        let addresses = try (0..<20).map { (index: UInt32) in
             let path = try DerivationPath(string: "m/44'/0'/0'/0/\(index)")
             let publicKey = try key.deriveUsingSecp256k1(path: path).publicKey()
             return P2PKH.address(of: publicKey)
@@ -47,9 +48,9 @@ struct MixinTests {
         #expect(addresses == expectation)
     }
     
-    @Test func testEthereumDerivation() {
+    @Test func testEthereumDerivation() throws {
         let seed = Data(hexEncodedString: "67f93560761e20617de26e0cb84f7234aaf373ed2e66295c3d7397e6d7ebe882ea396d5d293808b0defd7edd2babd4c091ad942e6a9351e6d075a29d4df872af")!
-        let key = ExtendedKey(seed: seed, curve: .secp256k1)
+        let key = try ExtendedKey(seed: seed, curve: .secp256k1)
         let addresses = try! (0..<20).map { (index: UInt32) in
             let path = try DerivationPath(string: "m/44'/60'/0'/0/\(index)")
             let derivation = try key.deriveUsingSecp256k1(path: path)
@@ -183,6 +184,76 @@ struct MixinTests {
             Reporter.userIDHash(userID: userID)
         }
         #expect(hashes == expectedHashes)
+    }
+    
+    @Test func testPBKDF2NFKDNormalization() throws {
+        let precomposedPassword = "pass\u{00E9}"
+        let decomposedPassword = "pass\u{0065}\u{0301}"
+        let precomposedSalt = "mnemonic\u{00E9}"
+        let decomposedSalt = "mnemonic\u{0065}\u{0301}"
+        
+        let seed1 = try PBKDF2.derivation(
+            password: precomposedPassword,
+            salt: precomposedSalt,
+            pseudoRandomAlgorithm: .hmacSHA512,
+            iterationCount: 2048,
+            keyCount: 64
+        )
+        let seed2 = try PBKDF2.derivation(
+            password: decomposedPassword,
+            salt: decomposedSalt,
+            pseudoRandomAlgorithm: .hmacSHA512,
+            iterationCount: 2048,
+            keyCount: 64
+        )
+        #expect(seed1 == seed2)
+    }
+    
+    @Test func testMnemonicWhitespaceSplitting() throws {
+        let rawInput = "  legal\nwinner\t thank\r\n year   wave sausage worth useful legal\n\nwinner thank yellow  "
+        let phrases = rawInput.split(whereSeparator: \.isWhitespace).map(String.init)
+        #expect(phrases.count == 12)
+        #expect(BIP39Mnemonics.areValid(phrases: phrases))
+        
+        let mnemonics = try BIP39Mnemonics(phrases: phrases)
+        #expect(mnemonics.entropy == Data(hexEncodedString: "7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f")!)
+    }
+    
+    @Test func testPearlDerivation() throws {
+        let phrases = "legal winner thank year wave sausage worth useful legal winner thank yellow"
+            .components(separatedBy: " ")
+        let mnemonics = try BIP39Mnemonics(phrases: phrases)
+        let path = try DerivationPath.pearl(index: 0)
+        let derivation = try mnemonics.checkedDerivationForPearl(path: path)
+        #expect(Pearl.isValidAddress(address: derivation.address))
+        #expect(derivation.address.hasPrefix("prl1p"))
+        
+        let wif = try Pearl.wif(privateKey: derivation.privateKey)
+        let recoveredKey = try Pearl.privateKey(wif: wif)
+        #expect(recoveredKey == derivation.privateKey)
+        
+        let signature = try Pearl.sign(message: "test message", with: derivation.privateKey)
+        #expect(!signature.isEmpty)
+        
+        var error: NSError?
+        let tipAddress = BlockchainGeneratePearlAddressFromPrivateKey(derivation.privateKey.hexEncodedString(), &error)
+        #expect(error == nil)
+        #expect(tipAddress == derivation.address)
+        
+        let mnemonicTipAddress = BlockchainGeneratePearlAddressFromMnemonic(phrases.joined(separator: " "), path.string, &error)
+        #expect(error == nil)
+        #expect(mnemonicTipAddress == derivation.address)
+        
+        let seed = try PBKDF2.derivation(
+            password: phrases.joined(separator: " "),
+            salt: "mnemonic",
+            pseudoRandomAlgorithm: .hmacSHA512,
+            iterationCount: 2048,
+            keyCount: 64
+        )
+        let seedTipAddress = BlockchainGeneratePearlAddress(seed.hexEncodedString(), path.string, &error)
+        #expect(error == nil)
+        #expect(seedTipAddress == derivation.address)
     }
     
 }

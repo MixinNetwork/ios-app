@@ -18,11 +18,13 @@ public final class AddressAPI: MixinAPI {
         }, onFailure: completion) { (encryptedPin) in
             var encryptedRequest = request
             encryptedRequest.pin = encryptedPin
-            self.request(method: .post,
-                         path: "/addresses",
-                         parameters: encryptedRequest,
-                         options: .disableRetryOnRequestSigningTimeout,
-                         completion: completion)
+            self.request(
+                method: .post,
+                path: "/addresses",
+                parameters: encryptedRequest,
+                options: [.disableRetryOnRequestSigningTimeout],
+                completion: completion
+            )
         }
     }
     
@@ -30,11 +32,13 @@ public final class AddressAPI: MixinAPI {
         PINEncryptor.encrypt(pin: pin, tipBody: {
             try TIPBody.removeAddress(addressID: addressID)
         }, onFailure: completion) { (encryptedPin) in
-            self.request(method: .post,
-                         path: "/addresses/\(addressID)/delete",
-                         parameters: ["pin_base64": encryptedPin],
-                         options: .disableRetryOnRequestSigningTimeout,
-                         completion: completion)
+            self.request(
+                method: .post,
+                path: "/addresses/\(addressID)/delete",
+                parameters: ["pin_base64": encryptedPin],
+                options: [.disableRetryOnRequestSigningTimeout],
+                completion: completion
+            )
         }
     }
     

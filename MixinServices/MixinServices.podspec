@@ -24,8 +24,9 @@ Mixin Core Services.
   s.static_framework = true
 
   s.source_files = 'MixinServices/Foundation/**/*', 'MixinServices/Crypto/**/*', 'MixinServices/Database/**/*', 'MixinServices/Services/**/*'
-  s.vendored_frameworks = 'MixinServices/XKCP_FIPS202.xcframework', 'MixinServices/TIP.xcframework'
 
+  s.dependency 'TIP'
+  s.dependency 'XKCP_FIPS202'
   s.dependency 'Bugsnag'
   s.dependency 'Alamofire'
   s.dependency 'SDWebImage'

@@ -440,7 +440,10 @@ extension ChainCategorizedTokenSelectorViewController {
                 Chain(id: ChainID.arbitrumOne, name: "Arbitrum"),
                 Chain(id: ChainID.opMainnet, name: "Optimism"),
                 Chain(id: ChainID.hyperEVM, name: "HyperEVM"),
+                Chain(id: ChainID.xLayer, name: "X Layer"),
                 Chain(id: ChainID.ton, name: "TON"),
+                Chain(id: ChainID.robinhood, name: "Robinhood"),
+                Chain(id: ChainID.arc, name: "Arc"),
             ]
             let groups: [Group] = all.filter { chain in
                 ids.contains(chain.id)
@@ -451,7 +454,12 @@ extension ChainCategorizedTokenSelectorViewController {
         }
         
         static func web3Chains(ids: Set<String>) -> OrderedSet<Group> {
-            let groups: [Group] = Web3Chain.all.filter { chain in
+            let allGroupingChains: [Web3Chain] = [
+                .bitcoin, .ethereum, .solana, .bnbSmartChain, .base,
+                .polygon, .arbitrumOne, .opMainnet, .avalancheCChain,
+                .hyperEVM, .xLayer, .robinhood, .arc,
+            ]
+            let groups: [Group] = allGroupingChains.filter { chain in
                 ids.contains(chain.chainID)
             }.map { chain in
                     .byChain(Chain(id: chain.chainID, name: chain.name))

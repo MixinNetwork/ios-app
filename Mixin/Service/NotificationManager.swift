@@ -85,7 +85,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
-        if let conversationId = userInfo[UNNotificationContent.UserInfoKey.conversationId] as? String, !conversationId.isEmpty, conversationId == UIApplication.currentConversationId() {
+        if let conversationId = userInfo[UNNotificationContent.UserInfoKey.conversationId] as? String, !conversationId.isEmpty, conversationId == UIApplication.shared.currentConversationId() {
             completionHandler([])
             return
         }
@@ -158,10 +158,10 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                     func pushConversationController() {
                         let push = {
                             let vc = ConversationViewController.instance(conversation: conversation)
-                            UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                            UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: vc)
                         }
-                        UIApplication.homeContainerViewController?.clipSwitcher.hideFullscreenSwitcher()
-                        if var webControllers = UIApplication.homeContainerViewController?.children.compactMap({ $0 as? MixinWebViewController}), !webControllers.isEmpty {
+                        UIApplication.shared.homeContainerViewController?.clipSwitcher.hideFullscreenSwitcher()
+                        if var webControllers = UIApplication.shared.homeContainerViewController?.children.compactMap({ $0 as? MixinWebViewController}), !webControllers.isEmpty {
                             let last = webControllers.removeLast()
                             for webController in webControllers {
                                 webController.minimizeWithAnimation()
@@ -171,7 +171,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                             push()
                         }
                     }
-                    if let container = UIApplication.homeContainerViewController, container.galleryIsOnTopMost {
+                    if let container = UIApplication.shared.homeContainerViewController, container.galleryIsOnTopMost {
                         let currentItemViewController = container.galleryViewController.currentItemViewController
                         if let vc = currentItemViewController as? GalleryVideoItemViewController {
                             vc.togglePipMode(completion: {

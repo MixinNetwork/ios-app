@@ -9,6 +9,7 @@ struct WatchingAddresses {
     
     init(addresses: [Web3Address]) {
         var bitcoinAddress: String?
+        var pearlAddress: String?
         var evmAddress: String?
         var solanaAddress: String?
         for address in addresses {
@@ -20,6 +21,10 @@ struct WatchingAddresses {
                 if bitcoinAddress == nil {
                     bitcoinAddress = address.destination
                 }
+            case .pearl:
+                if pearlAddress == nil {
+                    pearlAddress = address.destination
+                }
             case .evm:
                 if evmAddress == nil {
                     evmAddress = address.destination
@@ -29,7 +34,7 @@ struct WatchingAddresses {
                     solanaAddress = address.destination
                 }
             }
-            if evmAddress != nil && solanaAddress != nil {
+            if bitcoinAddress != nil && pearlAddress != nil && evmAddress != nil && solanaAddress != nil {
                 break
             }
         }
@@ -37,6 +42,9 @@ struct WatchingAddresses {
         var orderedAddresses: OrderedDictionary<Web3Chain.Kind, String> = [:]
         if let bitcoinAddress {
             orderedAddresses[.bitcoin] = bitcoinAddress
+        }
+        if let pearlAddress {
+            orderedAddresses[.pearl] = pearlAddress
         }
         if let evmAddress {
             orderedAddresses[.evm] = evmAddress

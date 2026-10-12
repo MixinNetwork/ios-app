@@ -119,8 +119,8 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
                             remoteResults: [],
                             comparator: comparator,
                         )
-                    case .failure(let error):
-                        Logger.general.debug(category: "SwapMixinTokenSelector", message: "\(error)")
+                    case .failure:
+                        break
                     }
                 }
             }

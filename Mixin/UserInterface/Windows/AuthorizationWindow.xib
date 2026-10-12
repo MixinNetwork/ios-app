@@ -9,9 +9,23 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AuthorizationWindow" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="appNumberLabel" destination="ja9-m3-UeY" id="cOq-as-mzC"/>
+                <outlet property="avatarImageView" destination="HXw-Nw-vNO" id="Ef1-lj-Jcs"/>
+                <outlet property="avatarWidthConstraint" destination="F6W-Qj-eAr" id="Pda-5K-Wta"/>
+                <outlet property="nameLabel" destination="a1w-fq-L4p" id="P0R-O6-s1Z"/>
+                <outlet property="scopeConfirmationView" destination="g6z-m3-tTk" id="s9W-yb-Lp3"/>
+                <outlet property="scopePreviewView" destination="8gQ-MM-YrK" id="wZa-4g-mpz"/>
+                <outlet property="showScopeConfirmationViewConstraint" destination="KcS-8b-8Tn" id="AtZ-Vb-Dru"/>
+                <outlet property="showScopePreviewViewConstraint" destination="aJT-Cc-w4z" id="qNq-33-nKa"/>
+                <outlet property="stackView" destination="WNn-OT-775" id="e6v-lH-deA"/>
+                <outlet property="stackViewWidthConstraint" destination="JhC-TF-mdA" id="8SH-QT-IiN"/>
+                <outlet property="view" destination="WPn-rX-5IO" id="s0e-Wz-P0a"/>
+            </connections>
+        </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="WPn-rX-5IO" customClass="AuthorizationWindow" customModule="Mixin" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="WPn-rX-5IO">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -28,7 +42,7 @@
                                     </constraints>
                                     <state key="normal" image="dialog_close"/>
                                     <connections>
-                                        <action selector="backAction:" destination="WPn-rX-5IO" eventType="touchUpInside" id="OjO-OB-xf8"/>
+                                        <action selector="backAction:" destination="-1" eventType="touchUpInside" id="OjO-OB-xf8"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -175,26 +189,13 @@
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="hQj-XO-iMW"/>
-            <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="rph-I6-ZA7" secondAttribute="trailing" id="0qw-D7-NiJ"/>
                 <constraint firstAttribute="bottom" secondItem="rph-I6-ZA7" secondAttribute="bottom" id="K1m-zD-4D7"/>
                 <constraint firstItem="8gQ-MM-YrK" firstAttribute="bottom" secondItem="hQj-XO-iMW" secondAttribute="bottom" priority="750" id="aJT-Cc-w4z"/>
                 <constraint firstItem="rph-I6-ZA7" firstAttribute="leading" secondItem="WPn-rX-5IO" secondAttribute="leading" id="eHP-yW-E18"/>
             </constraints>
-            <connections>
-                <outlet property="appNumberLabel" destination="ja9-m3-UeY" id="cOq-as-mzC"/>
-                <outlet property="avatarImageView" destination="HXw-Nw-vNO" id="Ef1-lj-Jcs"/>
-                <outlet property="avatarWidthConstraint" destination="F6W-Qj-eAr" id="Pda-5K-Wta"/>
-                <outlet property="nameLabel" destination="a1w-fq-L4p" id="P0R-O6-s1Z"/>
-                <outlet property="popupView" destination="rph-I6-ZA7" id="tFj-71-DwN"/>
-                <outlet property="scopeConfirmationView" destination="g6z-m3-tTk" id="s9W-yb-Lp3"/>
-                <outlet property="scopePreviewView" destination="8gQ-MM-YrK" id="wZa-4g-mpz"/>
-                <outlet property="showScopeConfirmationViewConstraint" destination="KcS-8b-8Tn" id="AtZ-Vb-Dru"/>
-                <outlet property="showScopePreviewViewConstraint" destination="aJT-Cc-w4z" id="qNq-33-nKa"/>
-                <outlet property="stackView" destination="WNn-OT-775" id="e6v-lH-deA"/>
-                <outlet property="stackViewWidthConstraint" destination="JhC-TF-mdA" id="8SH-QT-IiN"/>
-            </connections>
             <point key="canvasLocation" x="81.159420289855078" y="62.946428571428569"/>
         </view>
     </objects>

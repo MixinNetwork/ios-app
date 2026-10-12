@@ -8,7 +8,6 @@ struct CashAccount {
     let rewardAPY: String
     
     let decimalBalance: Decimal
-    let displayBalance: String
     let decimalMinAmount: Decimal
     let displayAPY: String
     
@@ -31,11 +30,6 @@ extension CashAccount: Codable {
         self.minAmount = try container.decode(String.self, forKey: .minAmount)
         self.rewardAPY = try container.decode(String.self, forKey: .rewardAPY)
         self.decimalBalance = decimalBalance
-        self.displayBalance = CurrencyFormatter.localizedString(
-            from: decimalBalance,
-            format: .fiatMoneyPrecision,
-            sign: .never
-        )
         self.decimalMinAmount = Decimal(string: minAmount, locale: .enUSPOSIX) ?? 5
         self.displayAPY = if let apy = Decimal(string: rewardAPY, locale: .enUSPOSIX) {
             R.string.localizable.cash_account_apy(

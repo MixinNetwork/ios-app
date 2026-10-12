@@ -278,6 +278,10 @@ extension TIP {
                 encryptedSaltToSave = newEncryptedPlaceholdingSalt
             } else {
                 Logger.tip.info(category: "TIP", message: "Update for phone user")
+                
+                // Always fetch the salt from the server because the local cache may be outdated
+                AppGroupKeychain.encryptedSalt = nil
+                
                 let oldEncryptedSalt = try await custodialEncryptedSalt()
                 let oldSaltKey = try saltAESKey(pin: oldPINData, tipPriv: tipPriv)
                 let salt = try AESCryptor.decrypt(oldEncryptedSalt, with: oldSaltKey)

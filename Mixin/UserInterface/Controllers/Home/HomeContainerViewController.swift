@@ -3,6 +3,8 @@ import MixinServices
 
 final class HomeContainerViewController: UIViewController {
     
+    static let viewDidAppearNotification = Notification.Name("one.mixin.messenger.HomeContainerViewController.ViewDidAppear")
+    
     let homeTabBarController: HomeTabBarController
     let homeNavigationController: HomeNavigationController
     
@@ -143,8 +145,16 @@ final class HomeContainerViewController: UIViewController {
         super.viewDidAppear(animated)
         if refreshAccountAfterViewAppears {
             refreshAccountAfterViewAppears = false
-            ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
+            if CheckTIPCountersJob.isTIPCounterChecked {
+                ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
+            } else {
+                ConcurrentJobQueue.shared.addJob(job: CheckTIPCountersJob())
+            }
         }
+        NotificationCenter.default.post(
+            name: Self.viewDidAppearNotification,
+            object: self
+        )
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -168,12 +178,35 @@ final class HomeContainerViewController: UIViewController {
         topMost.present(viewControllerToPresent, animated: true)
     }
     
+    func showWalletViewController() {
+        homeTabBarController.switchTo(child: .wallet)
+    }
+    
+    func presentMyQRCode() {
+        guard let account = LoginManager.shared.account else {
+            return
+        }
+        if let current = presentedViewController as? QRCodeViewController {
+            if current.isShowingAccount {
+                return
+            } else {
+                dismiss(animated: true)
+            }
+        }
+        let qrCode = QRCodeViewController(account: account)
+        present(qrCode, animated: true)
+    }
+    
     @objc private func applicationWillEnterForeground(_ notification: Notification) {
-        if UIApplication.shared.isLandscape, let controller = pipController, controller.isAvPipActive {
+        guard let window = view.window, let scene = window.windowScene else {
+            return
+        }
+        if scene.interfaceOrientation.isLandscape,
+           let controller = pipController,
+           controller.isAvPipActive
+        {
             if #available(iOS 16.0, *) {
-                if let windowScene = view.window?.windowScene {
-                    windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
-                }
+                scene.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
             } else {
                 let portrait = Int(UIInterfaceOrientation.portrait.rawValue)
                 UIDevice.current.setValue(portrait, forKey: "orientation")

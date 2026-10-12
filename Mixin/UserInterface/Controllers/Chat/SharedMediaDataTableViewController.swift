@@ -135,7 +135,7 @@ extension SharedMediaDataTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let viewModel = dataSource.item(at: indexPath) {
-            UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
+            UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
             preview(viewModel: viewModel)
         }
     }

@@ -95,48 +95,46 @@ extension SettingsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let setting: UIViewController
         switch indexPath.section {
         case 0:
-            switch indexPath.row {
+            let setting = switch indexPath.row {
             case 0:
-                setting = AccountSettingViewController()
+                AccountSettingViewController()
             case 1:
-                setting = ChatsViewController()
+                ChatsViewController()
             case 2:
-                setting = NotificationAndConfirmationSettingsViewController()
+                NotificationAndConfirmationSettingsViewController()
             default:
-                setting = DataAndStorageSettingsViewController()
+                DataAndStorageSettingsViewController()
             }
+            navigationController?.pushViewController(setting, animated: true)
         case 1:
             if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {
-                setting = MembershipViewController(plan: plan, expiredAt: membership.expiredAt)
+                let setting = MembershipViewController(plan: plan, expiredAt: membership.expiredAt)
+                navigationController?.pushViewController(setting, animated: true)
             } else {
                 let buy = MembershipPlansViewController(selectedPlan: nil)
                 present(buy, animated: true)
-                return
             }
         case 2:
-            setting = AppearanceSettingsViewController()
+            let setting = AppearanceSettingsViewController()
+            navigationController?.pushViewController(setting, animated: true)
         case 3:
-            setting = DesktopViewController()
+            let setting = DesktopViewController()
+            navigationController?.pushViewController(setting, animated: true)
         case 4:
             if indexPath.row == 0 {
-                if let user = UserDAO.shared.getUser(identityNumber: "7000") {
-                    setting = ConversationViewController.instance(ownerUser: user)
-                } else {
-                    return
-                }
+                let customerService = CustomerServiceViewController(reportingTags: nil)
+                present(customerService, animated: true)
             } else {
                 let content = R.string.localizable.chat_on_mixin_content(myIdentityNumber)
                 let controller = UIActivityViewController(activityItems: [content], applicationActivities: nil)
                 present(controller, animated: true, completion: nil)
-                return
             }
         default:
-            setting = AboutViewController()
+            let setting = AboutViewController()
+            navigationController?.pushViewController(setting, animated: true)
         }
-        navigationController?.pushViewController(setting, animated: true)
     }
     
 }

@@ -52,7 +52,7 @@ class RequestInAppNotificationJob: BaseJob {
         }
         
         DispatchQueue.main.sync {
-            guard message.conversationId != UIApplication.currentConversationId() else {
+            guard message.conversationId != UIApplication.shared.currentConversationId() else {
                 return
             }
             

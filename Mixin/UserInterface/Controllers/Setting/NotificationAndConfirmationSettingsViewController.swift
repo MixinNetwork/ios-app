@@ -192,7 +192,7 @@ extension NotificationAndConfirmationSettingsViewController {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         let request = UserPreferenceRequest(fiat_currency: Currency.current.code,
                                             transfer_notification_threshold: value.doubleValue)
         AccountAPI.preferences(preferenceRequest: request, completion: { (result) in
@@ -215,7 +215,7 @@ extension NotificationAndConfirmationSettingsViewController {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         let request = UserPreferenceRequest(fiat_currency: Currency.current.code,
                                             transfer_confirmation_threshold: value.doubleValue)
         AccountAPI.preferences(preferenceRequest: request, completion: { (result) in

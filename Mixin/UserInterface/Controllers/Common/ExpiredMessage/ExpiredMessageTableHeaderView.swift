@@ -1,6 +1,6 @@
 import UIKit
 
-class ExpiredMessageTableHeaderView: UIView {
+final class ExpiredMessageTableHeaderView: UIView {
     
     @IBOutlet weak var textLabel: TextLabel!
     @IBOutlet weak var imageView: UIImageView!
@@ -19,13 +19,17 @@ class ExpiredMessageTableHeaderView: UIView {
         textLabel.linkColor = .theme
         textLabel.detectLinks = false
         let text = R.string.localizable.disappearing_message_hint()
-        textLabel.text = text
-        let linkRange = (text as NSString).range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
-        if linkRange.location != NSNotFound && linkRange.length != 0 {
-            textLabel.additionalLinksMap = [linkRange: URL.disappearingMessage]
+        let learnMoreRange = (text as NSString).range(
+            of: R.string.localizable.learn_more(),
+            options: [.backwards, .caseInsensitive]
+        )
+        if learnMoreRange.location != NSNotFound && learnMoreRange.length != 0 {
+            textLabel.setText(text, additionalLinks: [learnMoreRange: URL.disappearingMessage])
+        } else {
+            textLabel.text = text
         }
     }
-
+    
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let labelWidth = size.width
             - textLabelLeadingConstraint.constant

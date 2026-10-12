@@ -173,7 +173,7 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
                 let input = AddCashInputAmountViewController(account: account, tokenItem: token)
                 navigationController?.pushViewController(input, animated: true)
             } else {
-                UIApplication.homeNavigationController?.presentCashPage()
+                UIApplication.shared.homeNavigationController?.presentCashPage()
             }
         case .myWallets:
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])

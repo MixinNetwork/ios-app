@@ -75,7 +75,7 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
     }
     
     @IBAction func scanQRCode(_ sender: Any) {
-        UIApplication.homeNavigationController?.pushQRCodeScannerViewController()
+        UIApplication.shared.homeNavigationController?.pushQRCodeScannerViewController()
     }
     
     @IBAction func openSettings(_ sender: Any) {
@@ -149,16 +149,14 @@ final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryC
             }
             BadgeManager.shared.setHasViewed(identifier: .membership)
         case .referral:
-            UIApplication.homeNavigationController?.presentReferralPage()
+            UIApplication.shared.homeNavigationController?.presentReferralPage()
             BadgeManager.shared.setHasViewed(identifier: .referral)
         case .linkDesktop:
             let desktop = DesktopViewController()
             navigationController?.pushViewController(desktop, animated: true)
         case .customerService:
-            if let user = UserDAO.shared.getUser(identityNumber: "7000") {
-                let conversation = ConversationViewController.instance(ownerUser: user)
-                navigationController?.pushViewController(conversation, animated: true)
-            }
+            let customerService = CustomerServiceViewController(reportingTags: nil)
+            present(customerService, animated: true)
         case .editFavoriteApps:
             let editApps = EditFavoriteAppsViewController()
             navigationController?.pushViewController(editApps, animated: true)

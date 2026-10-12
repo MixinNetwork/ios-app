@@ -79,17 +79,7 @@ final class TransactionCell: UICollectionViewCell {
         }
         setTitle(transaction.compactHash)
         
-        let sendAmountColor: UIColor
-        let receiveAmountColor: UIColor
-        switch transaction.status {
-        case .pending, .failed, .notFound:
-            sendAmountColor = R.color.text_secondary()!
-            receiveAmountColor = R.color.text_secondary()!
-        case .success:
-            sendAmountColor = R.color.market_red()!
-            receiveAmountColor = R.color.market_green()!
-        }
-        
+        let (sendAmountColor, receiveAmountColor) = transaction.amountColors()
         if let transfer = transaction.simpleTransfer {
             loadRowViews(count: 1)
             let row = rowViews[0]
@@ -121,7 +111,7 @@ final class TransactionCell: UICollectionViewCell {
                         Decimal.FormatStyle.number
                             .locale(.current)
                             .grouping(.never)
-                            .sign(strategy: .always())
+                            .sign(strategy: .always(includingZero: false))
                             .precision(.fractionLength(0...8))
                             .rounded(rule: .towardZero)
                     )
@@ -206,7 +196,6 @@ final class TransactionCell: UICollectionViewCell {
                 progressLayer?.isHidden = true
                 setTitle(snapshot.deposit?.sender)
             }
-            row.amountLabel.textColor = R.color.text_tertiary()!
         default:
             progressLayer?.isHidden = true
             if let deposit = snapshot.deposit {
@@ -230,16 +219,8 @@ final class TransactionCell: UICollectionViewCell {
                 iconButton.isUserInteractionEnabled = false
                 setTitle(nil)
             }
-            if let withdrawal = snapshot.withdrawal, withdrawal.hash.isEmpty {
-                row.amountLabel.textColor = R.color.text_tertiary()!
-            } else {
-                row.amountLabel.textColor = if snapshot.decimalAmount < 0 {
-                    R.color.market_red()
-                } else {
-                    R.color.market_green()
-                }
-            }
         }
+        row.amountLabel.textColor = snapshot.amountColor()
         if snapshot.isInscription {
             let amount: Decimal = snapshot.decimalAmount > 0 ? 1 : -1
             row.amountLabel.text = CurrencyFormatter.localizedString(

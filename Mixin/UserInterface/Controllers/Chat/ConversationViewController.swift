@@ -13,7 +13,7 @@ final class ConversationViewController: UIViewController {
     @IBOutlet weak var navigationBarContentView: UIView!
     @IBOutlet weak var wallpaperImageView: WallpaperImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var membershipIconView: SDAnimatedImageView!
+    @IBOutlet weak var opponentUserBadgeView: SDAnimatedImageView!
     @IBOutlet weak var tableView: ConversationTableView!
     @IBOutlet weak var accessoryButtonsWrapperView: HittestBypassWrapperView!
     @IBOutlet weak var mentionWrapperView: UIView!
@@ -228,7 +228,7 @@ final class ConversationViewController: UIViewController {
     }
     
     private var maxInputWrapperHeight: CGFloat {
-        return AppDelegate.current.mainWindow.frame.height
+        view.bounds.height
             - navigationBarView.frame.height
             - minInputWrapperTopMargin
     }
@@ -238,7 +238,7 @@ final class ConversationViewController: UIViewController {
         if let banner = pinMessageBannerViewIfLoaded, !banner.isHidden {
             min = navigationBarView.frame.maxY + pinMessageBannerHeight + 33
         } else {
-            min = AppDelegate.current.mainWindow.safeAreaInsets.top + titleViewHeightConstraint.constant + 30
+            min = view.safeAreaInsets.top + titleViewHeightConstraint.constant + 30
         }
         let max = inputWrapperView.frame.minY - 30
         return (min, max)
@@ -275,14 +275,6 @@ final class ConversationViewController: UIViewController {
         vc.dataSource = dataSource
         vc.composer = ConversationMessageComposer(dataSource: dataSource, ownerUser: ownerUser)
         return vc
-    }
-    
-    class func teamMixin() -> ConversationViewController? {
-        if let teamMixin = UserDAO.shared.getUser(userId: BotUserID.teamMixin) {
-            return instance(ownerUser: teamMixin)
-        } else {
-            return nil
-        }
     }
     
     // MARK: - Life cycle
@@ -713,7 +705,7 @@ final class ConversationViewController: UIViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.confirm(), style: .destructive, handler: { _ in
             let hud = Hud()
             if let view = self.navigationController?.view {
-                hud.show(style: .busy, text: "", on: view)
+                hud.show(style: .busy, text: "")
             }
             UserAPI.reportUser(userId: inviterId) { result in
                 switch result {
@@ -816,14 +808,14 @@ final class ConversationViewController: UIViewController {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
                 conversationInputViewController.dismiss()
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
-                if let galleryViewController = UIApplication.homeContainerViewController?.galleryViewController {
+                if let galleryViewController = UIApplication.shared.homeContainerViewController?.galleryViewController {
                     galleryViewController.conversationId = conversationId
                     galleryViewController.show(item: item, from: cell)
                 }
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue || viewModel.mediaStatus == MediaStatus.READ.rawValue {
                     conversationInputViewController.dismiss()
-                    UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
+                    UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
                     if viewModel.isListPlayable {
                         if CallService.shared.hasCall {
                             alert(R.string.localizable.call_on_another_call_hint())
@@ -856,6 +848,7 @@ final class ConversationViewController: UIViewController {
                 navigationController?.pushViewController(post, animated: true)
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 conversationInputViewController.dismiss()
+                UserOperationAnalytics.tradeSource = .url
                 open(url: .aboutEncryption)
             } else if message.category == MessageCategory.SYSTEM_ACCOUNT_SNAPSHOT.rawValue {
                 conversationInputViewController.dismiss()
@@ -1371,7 +1364,7 @@ final class ConversationViewController: UIViewController {
         guard !conversationId.isEmpty else {
             return
         }
-        UIApplication.homeNavigationController?.pushWebViewController(
+        UIApplication.shared.homeNavigationController?.pushWebViewController(
             context: .init(conversationID: conversationId, app: app, isAppVerified: verified),
         )
     }
@@ -1507,6 +1500,9 @@ extension ConversationViewController: UITableViewDataSource {
         }
         if let cell = cell as? TextMessageCell {
             cell.contentLabel.delegate = self
+        }
+        if let cell = cell as? PhotoMessageCell {
+            cell.captionLabel.delegate = self
         }
         if let cell = cell as? AppButtonGroupMessageCell {
             cell.appButtonDelegate = self
@@ -1753,10 +1749,12 @@ extension ConversationViewController: AppButtonDelegate {
         }
         if let appButtons = message.appButtons {
             if index < appButtons.count {
+                UserOperationAnalytics.tradeSource = .url
                 openAction(action: appButtons[index].action, sendUserId: message.userId)
             }
         } else if case let .v1(content) = message.appCard {
             if index < content.actions.count {
+                UserOperationAnalytics.tradeSource = .appCard
                 openAction(action: content.actions[index].action,
                            sendUserId: message.userId,
                            shareable: content.isShareable)
@@ -1807,6 +1805,7 @@ extension ConversationViewController: UITextViewDelegate {
     // Works for UITextView in AnnouncementBadgeContentView
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
         if !openUrlOutsideApplication(URL) {
+            UserOperationAnalytics.tradeSource = .url
             open(url: URL)
         }
         return false
@@ -1892,7 +1891,7 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
-        guard UIApplication.homeContainerViewController?.pipController?.item != item else {
+        guard UIApplication.shared.homeContainerViewController?.pipController?.item != item else {
             return
         }
         setCell(ofMessageId: item.messageId, contentViewHidden: true)
@@ -1986,10 +1985,11 @@ extension ConversationViewController {
         } else if category.hasSuffix("_CONTACT") || category.hasSuffix("_LIVE") {
             actions = [.reply, .forward, .delete]
         } else if category.hasSuffix("_IMAGE") {
+            let hasCaption = !(message.caption?.isEmpty ?? true)
             if mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue {
-                actions = [.addToStickers, .reply, .forward, .delete]
+                actions = hasCaption ? [.addToStickers, .reply, .forward, .copy, .delete] : [.addToStickers, .reply, .forward, .delete]
             } else {
-                actions = [.reply, .delete]
+                actions = hasCaption ? [.reply, .copy, .delete] : [.reply, .delete]
             }
         } else if category.hasSuffix("_DATA") || category.hasSuffix("_VIDEO") || category.hasSuffix("_AUDIO") {
             if mediaStatus == MediaStatus.DONE.rawValue || mediaStatus == MediaStatus.READ.rawValue {
@@ -2051,6 +2051,8 @@ extension ConversationViewController {
         case .copy:
             if ["_TEXT", "_POST"].contains(where: message.category.hasSuffix(_:)) {
                 UIPasteboard.general.string = message.content
+            } else if message.category.hasSuffix("_IMAGE") {
+                UIPasteboard.general.string = message.caption
             }
         case .delete:
             beginMultipleSelection(on: indexPath, intent: .delete)
@@ -2092,35 +2094,38 @@ extension ConversationViewController {
 extension ConversationViewController {
     
     private func updateNavigationBar() {
-        let membershipIcon: UIImage?
+        let badgeImage: UIImage?
+        let showsMembershipIcon: Bool
         if dataSource.category == .group {
             let conversation = dataSource.conversation
             titleLabel.text = conversation.name
             avatarImageView.setGroupImage(with: conversation.iconUrl)
-            membershipIcon = nil
+            badgeImage = nil
+            showsMembershipIcon = false
         } else if let user = ownerUser {
             subtitleLabel.text = user.identityNumber
             titleLabel.text = user.fullName
             avatarImageView.setImage(with: user)
-            membershipIcon = user.membership?.badgeImage
+            badgeImage = user.badgeImage
+            showsMembershipIcon = user.membership?.badgeImage != nil
         } else {
-            membershipIcon = nil
+            badgeImage = nil
+            showsMembershipIcon = false
         }
-        if let membershipIcon {
-            membershipIconView.image = membershipIcon
-            membershipIconView.isHidden = false
+        opponentUserBadgeView.image = badgeImage
+        opponentUserBadgeView.isHidden = badgeImage == nil
+        if showsMembershipIcon {
             if membershipButton == nil {
                 let button = UIButton()
                 button.addTarget(self, action: #selector(buyOpponentMembership(_:)), for: .touchUpInside)
                 navigationBarContentView.addSubview(button)
                 button.snp.makeConstraints { make in
                     make.width.height.equalTo(30)
-                    make.center.equalTo(membershipIconView)
+                    make.center.equalTo(opponentUserBadgeView)
                 }
                 membershipButton = button
             }
         } else {
-            membershipIconView.isHidden = true
             membershipButton?.removeFromSuperview()
         }
     }
@@ -2254,7 +2259,7 @@ extension ConversationViewController {
     }
     
     private func updateNavigationBarHeightAndTableViewTopInset() {
-        titleViewTopConstraint.constant = max(20, AppDelegate.current.mainWindow.safeAreaInsets.top)
+        titleViewTopConstraint.constant = max(20, view.safeAreaInsets.top)
         tableView.contentInset.top = titleViewTopConstraint.constant + titleViewHeightConstraint.constant
         tableView.verticalScrollIndicatorInsets.top = tableView.contentInset.top
     }
@@ -2294,11 +2299,14 @@ extension ConversationViewController {
     }
     
     private func setCell(_ cell: PhotoRepresentableMessageCell, contentViewHidden hidden: Bool) {
-        var contentViews = [
+        var contentViews: [UIView] = [
             cell.contentImageView,
-            cell.timeLabel,
-            cell.statusImageView
         ]
+        let isQuotedOrHasCaption = cell.viewModel?.quotedMessageViewModel != nil || ((cell.viewModel as? ImageMessageViewModel)?.hasCaption ?? false)
+        if !isQuotedOrHasCaption {
+            contentViews.append(cell.timeLabel)
+            contentViews.append(cell.statusImageView)
+        }
         if let cell = cell as? AttachmentExpirationHintingMessageCell {
             contentViews.append(cell.operationButton)
         }
@@ -2316,7 +2324,10 @@ extension ConversationViewController {
     
     private func frameOfPhotoRepresentableCell(_ cell: PhotoRepresentableMessageCell) -> CGRect {
         var rect = cell.contentImageView.convert(cell.contentImageView.bounds, to: view)
-        if UIApplication.shared.statusBarHeight == StatusBarHeight.inCall {
+        if let scene = view.window?.windowScene,
+           let statusBarFrame = scene.statusBarManager?.statusBarFrame,
+           statusBarFrame.height == StatusBarHeight.inCall
+        {
             rect.origin.y += (StatusBarHeight.inCall - StatusBarHeight.normal)
         }
         return rect
@@ -2526,7 +2537,7 @@ extension ConversationViewController {
     private func hidePinMessagePreview() {
         pinMessageBannerView.hideMessagePreview()
         pinMessageBannerView.snp.updateConstraints { make in
-            make.left.equalTo(AppDelegate.current.mainWindow.bounds.width - 60)
+            make.left.equalTo(view.bounds.width - 60)
         }
     }
     
@@ -2636,6 +2647,7 @@ extension ConversationViewController {
                     }
                 }
                 DispatchQueue.main.async {
+                    UserOperationAnalytics.tradeSource = .appCard
                     if let app {
                         self?.open(
                             url: appCard.action,
@@ -2648,6 +2660,7 @@ extension ConversationViewController {
                 }
             }
         } else {
+            UserOperationAnalytics.tradeSource = .appCard
             openAction(action: action, sendUserId: sendUserId, shareable: isShareable)
         }
     }
@@ -2721,7 +2734,7 @@ extension ConversationViewController {
         } else {
             context = .init(conversationID: conversationId, initialURL: url)
         }
-        UIApplication.homeNavigationController?.pushWebViewController(context: context)
+        UIApplication.shared.homeNavigationController?.pushWebViewController(context: context)
     }
     
     private func reportAirDop(conversationId: String) {
@@ -2894,6 +2907,7 @@ extension ConversationViewController {
         guard !openUrlOutsideApplication(url) else {
             return
         }
+        UserOperationAnalytics.tradeSource = .url
         open(url: url)
     }
     
@@ -2903,6 +2917,7 @@ extension ConversationViewController {
         }
         let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.open_url(), style: .default, handler: { [weak self](_) in
+            UserOperationAnalytics.tradeSource = .url
             self?.open(url: url)
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.copy(), style: .default, handler: { (_) in

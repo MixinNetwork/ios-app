@@ -210,10 +210,25 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
     }
     
     override func review(_ sender: Any) {
-        LoginManager.shared.account?.checkBuyTokenEligibility {
-            reviewOrder()
-        } onVerificationNeeded: { popup in
-            present(popup, animated: true)
+        switch wallet {
+        case .privacy:
+            let selector = BuyTokenMethodSelectorViewController()
+            selector.onSelected = { [weak self] method in
+                switch method {
+                case .card:
+                    self?.buyWithCard()
+                case .bankTransfer:
+                    _ = UrlWindow.checkApp(
+                        userID: BotUserID.mixinCash,
+                        action: .presentHomePage(additionalQueries: ["page": "add-cash-bank"])
+                    )
+                }
+            }
+            present(selector, animated: true)
+        case .common:
+            buyWithCard()
+        case .safe:
+            break
         }
     }
     
@@ -498,6 +513,14 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         )
         minimalAmountLabel.text = R.string.localizable.buying_limitation(limitation)
         minimalAmountLabel.alpha = 1
+    }
+    
+    private func buyWithCard() {
+        LoginManager.shared.account?.checkBuyTokenEligibility {
+            reviewOrder()
+        } onVerificationNeeded: { popup in
+            present(popup, animated: true)
+        }
     }
     
     private func reviewOrder() {

@@ -88,6 +88,11 @@ final class StickerPreviewViewController: UIViewController {
         }
     }
     
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updatePreferredContentSizeHeight()
+    }
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         guard traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else {
@@ -126,18 +131,21 @@ extension StickerPreviewViewController {
             return
         }
         let height = preferredContentHeight()
+        guard abs(preferredContentSize.height - height) > 0.5 else {
+            return
+        }
         preferredContentSize.height = height
         view.frame.origin.y = backgroundButton.bounds.height - height
     }
     
     private func preferredContentHeight() -> CGFloat {
         view.layoutIfNeeded()
-        let window = AppDelegate.current.mainWindow
-        let maxHeight = window.bounds.height - window.safeAreaInsets.top
-        let previewHeight = window.bounds.width - stickerPreviewViewLeadingConstraint.constant - stickerPreviewViewTrailingConstraint.constant
+        let totalBounds = view.window?.bounds ?? UIScreen.main.bounds
+        let maxHeight = totalBounds.height - view.windowSafeAreaInsets.top
+        let previewHeight = totalBounds.width - stickerPreviewViewLeadingConstraint.constant - stickerPreviewViewTrailingConstraint.constant
         let contentHeight = stickerPreviewViewTopConstraint.constant
             + previewHeight
-            + window.safeAreaInsets.bottom
+            + view.windowSafeAreaInsets.bottom
             + ((albumItem != nil && !albumItem!.stickers.isEmpty) ? 168 : 90)
         return min(maxHeight, contentHeight)
     }

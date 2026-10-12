@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class DeleteAccountHintWindow: BottomSheetView {
+final class DeleteAccountHintWindow: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
@@ -9,39 +9,46 @@ final class DeleteAccountHintWindow: BottomSheetView {
     var onViewWallet: (() -> Void)?
     var onContinue: (() -> Void)?
     
-    private var assets = [MixinTokenItem]()
+    private let assets: [MixinTokenItem]
     private let maxTableHeight: CGFloat = AssetCell.height * 3
     
-    class func instance() -> DeleteAccountHintWindow {
-        R.nib.deleteAccountHintWindow(withOwner: self)!
+    init(assets: [MixinTokenItem]) {
+        self.assets = assets
+        let nib = R.nib.deleteAccountHintWindow
+        super.init(nibName: nib.name, bundle: nib.bundle)
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
+        modalPresentationStyle = .custom
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         tableView.register(R.nib.assetCell)
         tableView.tableFooterView = UIView()
         tableView.dataSource = self
         tableView.delegate = self
-    }
-    
-    func render(assets: [MixinTokenItem]) {
-        self.assets = assets
         tableViewHeightConstraint.constant = min(maxTableHeight, CGFloat(assets.count) * AssetCell.height)
-        tableView.reloadData()
     }
     
     @IBAction func closeAction(_ sender: Any) {
-        dismissPopupController(animated: true)
+        dismiss(animated: true)
     }
     
     @IBAction func viewWalletAction(_ sender: Any) {
-        onViewWallet?()
-        dismissPopupController(animated: true)
+        let onViewWallet = self.onViewWallet
+        dismiss(animated: true) {
+            onViewWallet?()
+        }
     }
     
     @IBAction func continueAction(_ sender: Any) {
-        onContinue?()
-        dismissPopupController(animated: true)
+        let onContinue = self.onContinue
+        dismiss(animated: true) {
+            onContinue?()
+        }
     }
     
 }

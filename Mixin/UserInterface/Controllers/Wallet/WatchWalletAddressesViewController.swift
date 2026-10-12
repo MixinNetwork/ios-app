@@ -77,7 +77,7 @@ final class WatchWalletAddressesViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(reportingTags: nil)
         present(customerService, animated: true)
     }
     
@@ -113,6 +113,8 @@ extension WatchWalletAddressesViewController: UICollectionViewDataSource {
             cell.chainImageView.image = switch kind {
             case .bitcoin:
                 R.image.bitcoin_chain()
+            case .pearl:
+                R.image.pearl_chain()
             case .evm:
                 R.image.evm_chains()
             case .solana:

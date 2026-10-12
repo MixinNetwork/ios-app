@@ -1,6 +1,6 @@
 import UIKit
 
-class SearchBoxView: UIView, XibDesignable {
+final class SearchBoxView: UIView, XibDesignable {
     
     @IBOutlet weak var textField: InsetTextField!
     
@@ -69,10 +69,9 @@ class SearchBoxView: UIView, XibDesignable {
         textField.leftView = textFieldLeftView
         textField.leftViewMode = .always
         clearButton.addTarget(self, action: #selector(clear(_:)), for: .touchUpInside)
-        let clearImage = UIImage(named: "Wallet/ic_clear")
         clearButton.alpha = 0
+        clearButton.setImage(R.image.wallet.ic_clear(), for: .normal)
         clearButton.imageView?.contentMode = .center
-        clearButton.setImage(clearImage, for: .normal)
         textField.rightView = clearButton
         textField.rightViewMode = .whileEditing
         clearButton.frame = textField.rightViewRect(forBounds: textField.bounds)

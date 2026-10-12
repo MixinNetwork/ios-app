@@ -68,7 +68,7 @@ final class DatabaseDiagnosticViewController: UIViewController {
     }
     
     @IBAction func run(_ sender: Any) {
-        AppDelegate.current.mainWindow.endEditing(true)
+        view.window?.endEditing(true)
         runButton.isEnabled = false
         runButton.setTitle("Executing", for: .normal)
         pasteButton.isEnabled = false

@@ -81,8 +81,12 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
             .precision(.fractionLength(0...priceScale))
     }
     
-    public private(set) lazy var decimalPrice = Decimal(string: last, locale: .enUSPOSIX) ?? 0
-    public private(set) lazy var localizedPrice = decimalPrice.formatted(
+    public private(set) lazy var decimalMarkPrice = Decimal(string: markPrice, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var localizedMarkPrice = decimalMarkPrice.formatted(
+        PerpetualMarket.userDisplayPriceFormatStyle(scale: priceScale)
+    )
+    public private(set) lazy var decimalLastPrice = Decimal(string: last, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var localizedLastPrice = decimalLastPrice.formatted(
         PerpetualMarket.userDisplayPriceFormatStyle(scale: priceScale)
     )
     
@@ -191,7 +195,7 @@ extension PerpetualMarket {
 
 extension PerpetualMarket {
     
-    struct FavoriteStorage: Codable, MixinEncodableRecord, PersistableRecord {
+    struct FavoriteStorage: Codable, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord, DatabaseColumnConvertible {
         
         enum CodingKeys: String, CodingKey {
             case marketID = "market_id"
@@ -218,6 +222,7 @@ extension PerpetualMarket {
             case price
             case change
             case score
+            case addedAt
         }
         
         public let field: Field
@@ -233,6 +238,8 @@ extension PerpetualMarket {
                 "24H%"
             case .score:
                 "Score"
+            case .addedAt:
+                "AddedAt"
             }
             switch direction {
             case .ascending:

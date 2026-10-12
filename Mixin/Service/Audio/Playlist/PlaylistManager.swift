@@ -725,7 +725,7 @@ extension PlaylistManager {
     private func playerWillPlay(item: PlaylistItem) {
         setAudioCellStyle(.playing, forCellsRegisteredWith: item.id)
         delegate?.playlistManager(self, willPlay: item)
-        if let mini = UIApplication.homeContainerViewController?.minimizedPlaylistViewController {
+        if let mini = UIApplication.shared.homeContainerViewController?.minimizedPlaylistViewController {
             mini.show()
             mini.waveView.startAnimating()
         }
@@ -734,7 +734,7 @@ extension PlaylistManager {
     
     private func playerDidPause() {
         delegate?.playlistManagerDidPause(self)
-        if let mini = UIApplication.homeContainerViewController?.minimizedPlaylistViewController {
+        if let mini = UIApplication.shared.homeContainerViewController?.minimizedPlaylistViewController {
             mini.waveView.stopAnimating()
         }
         updateNowPlayingInfo(elapsedPlaybackTime: true, rate: false)
@@ -742,7 +742,7 @@ extension PlaylistManager {
     
     private func playerDidEnd() {
         delegate?.playlistManagerDidEnd(self)
-        if let mini = UIApplication.homeContainerViewController?.minimizedPlaylistViewController {
+        if let mini = UIApplication.shared.homeContainerViewController?.minimizedPlaylistViewController {
             mini.waveView.stopAnimating()
             mini.hide()
         }

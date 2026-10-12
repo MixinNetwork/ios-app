@@ -183,7 +183,8 @@ extension Payment {
         
         enum Operation {
             case open
-            case increase
+            case increasePosition(quantityBefore: Decimal, marginBefore: Decimal)
+            case increaseMargin(marginBefore: Decimal)
         }
         
         let wallet: Wallet
@@ -194,6 +195,7 @@ extension Payment {
         let liquidationPrice: Decimal
         let takeProfitPrice: Decimal?
         let stopLossPrice: Decimal?
+        let presentMarketViewOnSuccess: Bool
         let onDismissAfterSuccess: (() -> Void)?
         
     }

@@ -354,6 +354,11 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
                     payment: payment,
                     decimalAmount: sendAmount
                 )
+            case .pearl:
+                try PearlTransferToAddressOperation(
+                    payment: payment,
+                    decimalAmount: sendAmount
+                )
             case .evm(let id):
                 try EVMTransferToAddressOperation(
                     evmChainID: id,
@@ -398,7 +403,7 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
             }
             
             await MainActor.run {
-                guard let homeContainer = UIApplication.homeContainerViewController else {
+                guard let homeContainer = UIApplication.shared.homeContainerViewController else {
                     return
                 }
                 guard isBalanceSufficient else {

@@ -17,8 +17,8 @@ class BottomSheetView: UIView {
     }
 
     func presentPopupControllerAnimated() {
-        UIApplication.currentActivity()?.view.endEditing(true)
-        guard !isShowing, let window = UIApplication.shared.keyWindow else {
+        UIApplication.shared.firstWindowScene?.keyWindow?.endEditing(true)
+        guard !isShowing, let window = UIApplication.shared.firstWindowScene?.keyWindow else {
             return
         }
 
@@ -87,7 +87,7 @@ extension BottomSheetView: UIGestureRecognizerDelegate {
 extension BottomSheetView {
 
     func presentView() {
-        guard !isShowing, let superView = UIApplication.currentActivity()?.view else {
+        guard !isShowing, let superView = UIApplication.shared.firstWindowScene?.keyWindow?.rootViewController?.view else {
             return
         }
         superView.endEditing(true)
@@ -125,7 +125,7 @@ extension BottomSheetView {
 extension BottomSheetView {
 
     func alert(_ message: String, actionTitle: String = R.string.localizable.ok(), cancelHandler: ((UIAlertAction) -> Void)? = nil) {
-        guard let root = AppDelegate.current.mainWindow.rootViewController else {
+        guard let root = UIApplication.shared.firstWindowScene?.keyWindow?.rootViewController else {
             return
         }
         let alc = UIAlertController(title: message, message: nil, preferredStyle: .alert)

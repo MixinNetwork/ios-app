@@ -35,7 +35,11 @@ final class PopInNavigationAnimator: NSObject, UIViewControllerAnimatedTransitio
         UIView.animate(withDuration: duration, delay: 0, options: .overdampedCurve) {
             toView.frame = transitionContext.finalFrame(for: toVC)
         } completion: { _ in
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            let isCancelled = transitionContext.transitionWasCancelled
+            if isCancelled {
+                toView.removeFromSuperview()
+            }
+            transitionContext.completeTransition(!isCancelled)
         }
     }
     
@@ -76,7 +80,11 @@ final class PopOutNavigationAnimator: NSObject, UIViewControllerAnimatedTransiti
                         .scaledBy(x: 0.8, y: 0.8)
                 }
             } completion: { _ in
-                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+                let isCancelled = transitionContext.transitionWasCancelled
+                if isCancelled {
+                    toView.removeFromSuperview()
+                }
+                transitionContext.completeTransition(!isCancelled)
                 fromView.transform = .identity
                 fromView.layer.cornerRadius = 0
             }
@@ -84,7 +92,11 @@ final class PopOutNavigationAnimator: NSObject, UIViewControllerAnimatedTransiti
             UIView.animate(withDuration: duration, delay: 0, options: .overdampedCurve) {
                 fromView.frame.origin.y = fromView.frame.height
             } completion: { _ in
-                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+                let isCancelled = transitionContext.transitionWasCancelled
+                if isCancelled {
+                    toView.removeFromSuperview()
+                }
+                transitionContext.completeTransition(!isCancelled)
             }
         }
     }

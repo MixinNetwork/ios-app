@@ -73,6 +73,7 @@ extension AppGroupUserDefaults {
             case marketSubCategory = "market_sub_category"
             case cryptoMarketChangePeriod = "market_change_period"
             case marketColorAppearance = "color_appearance"
+            case recentMarketSearches = "recent_market_searches"
         }
         
         public static let version = 33
@@ -88,9 +89,11 @@ extension AppGroupUserDefaults {
         public static let marketChangePeriodDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.MarketChangePeriodChange")
         public static let marketColorAppearanceDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.MarketColorAppearanceChange")
         public static let recentSearchesDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.RecentSearchesChange")
+        public static let recentMarketSearchesDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.RecentMarketSearchesChange")
         
         private static let maxNumberOfAssetSearchHistory = 2
         private static let maxNumberOfRecentSearches = 4
+        private static let maxNumberOfRecentMarketSearches = 6
         
         public static var needsUpgradeInMainApp: Bool {
             return localVersion < version
@@ -205,6 +208,13 @@ extension AppGroupUserDefaults {
         private static var recentSearchItems: [Data] {
             didSet {
                 NotificationCenter.default.post(onMainThread: recentSearchesDidChangeNotification, object: self)
+            }
+        }
+        
+        @Default(namespace: .user, key: Key.recentMarketSearches, defaultValue: [])
+        public private(set) static var recentMarketSearchItems: [Data] {
+            didSet {
+                NotificationCenter.default.post(onMainThread: recentMarketSearchesDidChangeNotification, object: self)
             }
         }
         
@@ -349,6 +359,27 @@ extension AppGroupUserDefaults {
         
         public static func removeAllRecentSearches() {
             recentSearchItems = []
+        }
+        
+        public static var recentMarketSearches: [RecentMarketSearch] {
+            recentMarketSearchItems.compactMap(RecentMarketSearch.init(rawValue:))
+        }
+        
+        public static func insertRecentMarketSearch(_ item: RecentMarketSearch) {
+            var items = recentMarketSearchItems
+            let data = item.rawValue
+            if let index = items.firstIndex(of: data) {
+                items.remove(at: index)
+            }
+            items.insert(data, at: 0)
+            if items.count > maxNumberOfRecentMarketSearches {
+                items.removeLast(items.count - maxNumberOfRecentMarketSearches)
+            }
+            recentMarketSearchItems = items
+        }
+        
+        public static func removeAllRecentMarketSearches() {
+            recentMarketSearchItems = []
         }
         
         internal static func migrate() {

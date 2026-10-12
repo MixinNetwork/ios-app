@@ -103,11 +103,12 @@ final class TIPIntroViewController: UIViewController {
             }
             setNoticeHidden(false)
         }
-        descriptionTextLabel.text = description
-        descriptionTextLabel.delegate = self
         noticeTextView.textContainerInset = UIEdgeInsets(top: 12, left: 8, bottom: 12, right: 14)
-        lazy var linksMap: [NSRange: URL] = {
-            let range = (description as NSString).range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
+        let links: [NSRange: URL] = {
+            let range = (description as NSString).range(
+                of: R.string.localizable.learn_more(),
+                options: [.backwards, .caseInsensitive]
+            )
             if range.location != NSNotFound && range.length != 0 {
                 return [range: URL.tip]
             } else {
@@ -116,14 +117,16 @@ final class TIPIntroViewController: UIViewController {
         }()
         switch interruption {
         case .unknown:
+            descriptionTextLabel.setText(description, additionalLinks: links)
             checkCounter()
-            descriptionTextLabel.additionalLinksMap = linksMap
         case .none:
-            descriptionTextLabel.additionalLinksMap = linksMap
+            descriptionTextLabel.setText(description, additionalLinks: links)
             updateNextButtonAndStatusLabel(with: .waitingForUser)
         case .inputNeeded, .noInputNeeded:
+            descriptionTextLabel.text = description
             updateNextButtonAndStatusLabel(with: .waitingForUser)
         }
+        descriptionTextLabel.delegate = self
     }
     
     override func viewDidLayoutSubviews() {
@@ -171,9 +174,11 @@ final class TIPIntroViewController: UIViewController {
     }
     
     @objc func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        let customerService = CustomerServiceViewController(
+            presentLoginLogsOnLongPressingTitle: true,
+            reportingTags: ["source": "tip_intro"],
+        )
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "tip_intro"])
     }
     
     @objc private func presentMoreActions(_ sender: Any) {

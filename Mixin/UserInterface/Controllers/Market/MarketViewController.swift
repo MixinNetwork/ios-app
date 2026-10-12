@@ -274,7 +274,7 @@ final class MarketViewController: UIViewController {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         Referral.loadAvailableCode { [weak self] code in
             hud.hide()
             let share = PopupShareViewController(
@@ -295,18 +295,9 @@ final class MarketViewController: UIViewController {
         }
         NotificationManager.shared.getAuthorized { isAuthorized in
             if isAuthorized {
-                if self.actionView.hasAlert {
-                    let coin = MarketAlertCoin(market: market)
-                    let alert = CoinMarketAlertsViewController(coin: coin)
-                    self.navigationController?.pushViewController(alert, animated: true)
-                } else {
-                    let coin = MarketAlertCoin(market: market)
-                    let addAlert = AddMarketAlertViewController(
-                        coin: coin,
-                        reportingSource: "market_detail",
-                    )
-                    self.navigationController?.pushViewController(addAlert, animated: true)
-                }
+                let coin = MarketAlertCoin(market: market)
+                let alerts = AllMarketAlertsViewController(initialCoin: coin)
+                self.navigationController?.pushViewController(alerts, animated: true)
             } else {
                 self.requestEnableNotifications()
             }
@@ -397,8 +388,8 @@ final class MarketViewController: UIViewController {
                     DispatchQueue.main.async {
                         self?.reloadPriceChart(period: period, points: points)
                     }
-                case .failure(let error):
-                    Logger.general.debug(category: "MarketView", message: "\(error)")
+                case .failure:
+                    break
                 }
             }
         }
@@ -519,7 +510,9 @@ final class MarketViewController: UIViewController {
             next = OpenPerpsPositionViewController(
                 wallet: .privacy,
                 side: side,
-                viewModel: viewModel
+                presentMarketViewOnSuccess: true,
+                viewModel: viewModel,
+                leaderPosition: nil
             )
             UserOperationAnalytics.tradeSource = analyticSource
         }
@@ -830,7 +823,7 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
             viewPerps(market: market, openOnSide: side)
         } else {
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             RouteAPI.perpsMarket(marketID: marketID) { [weak self] result in
                 switch result {
                 case .success(let market):

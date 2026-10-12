@@ -40,9 +40,9 @@ class SpotlightManager: NSObject {
         }
         let presentUserProfileController = {
             let controller = UserProfileViewController(user: user)
-            UIApplication.homeContainerViewController?.present(controller, animated: true, completion: nil)
+            UIApplication.shared.homeContainerViewController?.present(controller, animated: true, completion: nil)
         }
-        if let presentedViewController = UIApplication.homeContainerViewController?.presentedViewController {
+        if let presentedViewController = UIApplication.shared.homeContainerViewController?.presentedViewController {
             if let profile = presentedViewController as? UserProfileViewController, profile.user.userId == user.userId {
                 return
             }

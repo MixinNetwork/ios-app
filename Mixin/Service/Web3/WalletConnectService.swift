@@ -79,7 +79,7 @@ final class WalletConnectService {
         logger.info(category: "Service", message: "Will connect to v2 topic: \(uri.topic)")
         assert(Thread.isMainThread)
         let hud = loadHud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         Task {
             do {
                 try await WalletKit.instance.pair(uri: uri)

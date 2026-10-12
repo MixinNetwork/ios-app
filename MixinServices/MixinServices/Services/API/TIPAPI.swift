@@ -47,18 +47,37 @@ public final class TIPAPI: MixinAPI {
         }
     }
     
-    static func sign(url: URL, request: TIPSignRequest) async throws -> TIPSignResponse {
-        try await AF.request(url, method: .post, parameters: request, encoder: .json, headers: ["X-Request-Id": request.id])
-            .validate(statusCode: 200...299)
-            .serializingDecodable(TIPSignResponse.self)
-            .value
+    static func sign(
+        path: String,
+        request: TIPSignRequest,
+    ) async throws -> TIPSignResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            self.request(
+                method: .post,
+                path: path,
+                parameters: request,
+                options: [.requestID(request.id), .timeoutInterval(15), .rawResponseObject],
+            ) { result in
+                continuation.resume(with: result)
+            }
+        }
     }
     
-    static func watch(url: URL, request: TIPWatchRequest, timeoutInterval: TimeInterval) async throws -> TIPWatchResponse {
-        try await AF.request(url, method: .post, parameters: request, encoder: .json, requestModifier: { $0.timeoutInterval = timeoutInterval })
-            .validate(statusCode: 200...299)
-            .serializingDecodable(TIPWatchResponse.self)
-            .value
+    static func watch(
+        path: String,
+        request: TIPWatchRequest,
+        timeoutInterval: TimeInterval,
+    ) async throws -> TIPWatchResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            self.request(
+                method: .post,
+                path: path,
+                parameters: request,
+                options: [.timeoutInterval(timeoutInterval), .rawResponseObject],
+            ) { result in
+                continuation.resume(with: result)
+            }
+        }
     }
     
 }

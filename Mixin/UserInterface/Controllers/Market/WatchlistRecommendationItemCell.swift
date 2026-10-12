@@ -5,7 +5,7 @@ final class WatchlistRecommendationItemCell: UICollectionViewCell {
     
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var symbolLabel: UILabel!
-    @IBOutlet weak var tagLabel: InsetLabel!
+    @IBOutlet weak var leverageLabel: InsetLabel!
     @IBOutlet weak var infoLabel: MarketColoredLabel!
     @IBOutlet weak var selectionImageView: UIImageView!
     
@@ -21,15 +21,18 @@ final class WatchlistRecommendationItemCell: UICollectionViewCell {
         contentView.layer.borderWidth = 1
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
-        tagLabel.contentInset = UIEdgeInsets(top: 1, left: 3, bottom: 1, right: 3)
-        tagLabel.layer.cornerRadius = 4
-        tagLabel.layer.masksToBounds = true
+        leverageLabel.contentInset = UIEdgeInsets(top: 2, left: 3, bottom: 0, right: 3)
+        leverageLabel.layer.cornerRadius = 4
+        leverageLabel.layer.masksToBounds = true
+        leverageLabel.font = UIFontMetrics.default.scaledFont(
+            for: .condensed(size: 12)
+        )
     }
     
     func loadCrypto(market: Market) {
         iconView.setIcon(market: market)
         symbolLabel.text = market.symbol
-        tagLabel.isHidden = true
+        leverageLabel.isHidden = true
         infoLabel.text = market.localizedMarketCap
         infoLabel.textColor = R.color.text_tertiary()
     }
@@ -37,8 +40,8 @@ final class WatchlistRecommendationItemCell: UICollectionViewCell {
     func loadPerps(market: PerpetualMarket) {
         iconView.setIcon(urlString: market.iconURL)
         symbolLabel.text = market.tokenSymbol
-        tagLabel.isHidden = false
-        tagLabel.text = R.string.localizable.perp()
+        leverageLabel.isHidden = false
+        leverageLabel.text = PerpetualLeverage.stringRepresentation(multiplier: market.leverage)
         infoLabel.text = market.changePercentage
         infoLabel.marketColor = .byValue(market.decimalChange)
     }

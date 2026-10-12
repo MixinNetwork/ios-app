@@ -5,6 +5,8 @@ platform :ios, '15.0'
 
 def mixin_services
   pod 'libsignal-protocol-c', :git => 'https://github.com/MixinNetwork/libsignal-protocol-c.git'
+  pod 'TIP', :path => './MixinServices'
+  pod 'XKCP_FIPS202', :path => './MixinServices'
   pod 'MixinServices', :path => './MixinServices', :testspecs => ['Tests']
 end
 

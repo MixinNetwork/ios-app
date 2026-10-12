@@ -474,7 +474,7 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
                     return
                 }
                 let isOpened = UrlWindow.checkUrl(url: url)
-                if !isOpened, let navigationController = UIApplication.homeNavigationController {
+                if !isOpened, let navigationController = UIApplication.shared.homeNavigationController {
                     let context = MixinWebContext(
                         conversationID: "",
                         initialURL: url,

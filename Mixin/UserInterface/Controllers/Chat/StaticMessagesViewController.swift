@@ -88,6 +88,11 @@ class StaticMessagesViewController: UIViewController {
                 UIPasteboard.general.string = viewModel.message.content
             }
             return [copyAction]
+        } else if viewModel.message.category.hasSuffix("_IMAGE"), let caption = viewModel.message.caption, !caption.isEmpty {
+            let copyAction = UIAction(title: R.string.localizable.copy(), image: R.image.conversation.ic_action_copy()) { _ in
+                UIPasteboard.general.string = caption
+            }
+            return [copyAction]
         } else {
             return nil
         }
@@ -150,8 +155,8 @@ class StaticMessagesViewController: UIViewController {
     }
     
     func presentAsChild(of parent: UIViewController) {
+        parent.view.window?.endEditing(true)
         loadViewIfNeeded()
-        AppDelegate.current.mainWindow.endEditing(true)
         view.frame = parent.view.bounds
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         contentViewHeightConstraint.constant = parent.view.bounds.height - parent.view.safeAreaInsets.top
@@ -213,7 +218,7 @@ extension StaticMessagesViewController {
                     didPlayAudioMessage = true
                 }
             } else if (isImageOrVideo && mediaStatusIsReady) || message.category.hasSuffix("_LIVE"),
-                      let galleryViewController = UIApplication.homeContainerViewController?.galleryViewController,
+                      let galleryViewController = UIApplication.shared.homeContainerViewController?.galleryViewController,
                       let cell = cell as? PhotoRepresentableMessageCell
             {
                 var items: [GalleryItem] = []
@@ -290,7 +295,7 @@ extension StaticMessagesViewController {
                         guard !UrlWindow.checkUrl(url: content.action) else {
                             return
                         }
-                        guard let navigationController = UIApplication.homeNavigationController else {
+                        guard let navigationController = UIApplication.shared.homeNavigationController else {
                             return
                         }
                         let context = MixinWebContext(
@@ -334,6 +339,9 @@ extension StaticMessagesViewController: UITableViewDataSource {
         }
         if let cell = cell as? TextMessageCell {
             cell.contentLabel.delegate = self
+        }
+        if let cell = cell as? PhotoMessageCell {
+            cell.captionLabel.delegate = self
         }
         if let cell = cell as? AudioMessageCell {
             cell.audioMessagePlayingManager = audioManager
@@ -551,7 +559,7 @@ extension StaticMessagesViewController {
                     return
                 }
                 DispatchQueue.main.sync {
-                    let layoutWidth = AppDelegate.current.mainWindow.bounds.width
+                    let layoutWidth = self.view.bounds.width
                     let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
                     if let style = self.viewModels[date]?[indexPath.row].style {
                         let viewModel = self.factory.viewModel(withMessage: message, style: style, fits: layoutWidth)
@@ -643,7 +651,7 @@ extension StaticMessagesViewController {
         guard !UrlWindow.checkUrl(url: url) else {
             return
         }
-        guard let navigationController = UIApplication.homeNavigationController else {
+        guard let navigationController = UIApplication.shared.homeNavigationController else {
             return
         }
         navigationController.pushWebViewController(

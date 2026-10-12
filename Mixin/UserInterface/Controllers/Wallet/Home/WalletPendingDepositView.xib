@@ -29,6 +29,7 @@
                             <rect key="frame" x="0.0" y="10" width="0.0" height="16"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="16" id="3Y4-Jo-CrE"/>
+                                <constraint firstAttribute="width" priority="1" id="7rh-PH-0ht"/>
                             </constraints>
                         </stackView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000149011612" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ADh-oX-skS">
@@ -60,6 +61,7 @@
                 <outlet property="button" destination="QmY-2n-Bbw" id="vFB-bS-CzV"/>
                 <outlet property="contentStackView" destination="KEd-MI-BXs" id="hLg-pa-7ml"/>
                 <outlet property="iconStackView" destination="UmZ-j0-4Vf" id="mER-cf-wbr"/>
+                <outlet property="iconStackViewWidthConstraint" destination="7rh-PH-0ht" id="1hf-Ag-ooh"/>
                 <outlet property="label" destination="ADh-oX-skS" id="cE2-Tv-dCT"/>
             </connections>
             <point key="canvasLocation" x="-21" y="52"/>

@@ -180,7 +180,7 @@ extension SharePerpsPositionViewController: ModernShareContentViewController {
         }
         presentingViewController?.dismiss(animated: true) {
             let receiverSelector = MessageReceiverViewController.instance(content: .photo(image))
-            UIApplication.homeNavigationController?.pushViewController(receiverSelector, animated: true)
+            UIApplication.shared.homeNavigationController?.pushViewController(receiverSelector, animated: true)
         }
     }
     

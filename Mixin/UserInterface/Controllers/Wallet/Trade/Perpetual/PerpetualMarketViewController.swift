@@ -3,6 +3,11 @@ import MixinServices
 
 final class PerpetualMarketViewController: UIViewController {
     
+    private enum PriceDisplay: Int, CaseIterable {
+        case lastPrice = 0
+        case markPrice = 1
+    }
+    
     private enum AutoClosingIntroDisplay {
         case takeProfit
         case stopLoss
@@ -44,11 +49,7 @@ final class PerpetualMarketViewController: UIViewController {
             if viewModel.openInterest != nil {
                 infos.append(.openInterest)
             }
-            if viewModel.market.fundingIntervalHours != 0,
-               viewModel.nextFundingAt.timeIntervalSinceNow > 0
-            {
-                infos.append(.fundingRate)
-            }
+            infos.append(.fundingRate)
             return infos
         }
         
@@ -64,7 +65,12 @@ final class PerpetualMarketViewController: UIViewController {
     private var viewModel: PerpetualMarketViewModel
     private var isFavorite: Bool = false
     private var sections: [Section] = [.price, .info]
-    private var infos: [Info] = []
+    private var infos: [Info]
+    private var priceDisplay: PriceDisplay {
+        didSet {
+            AppGroupUserDefaults.Wallet.perpsPriceDisplay = priceDisplay.rawValue
+        }
+    }
     private var selectedTimeFrame: PerpetualTimeFrame = {
         if let value = AppGroupUserDefaults.Wallet.perpsChartTimeFrame,
            let frame = PerpetualTimeFrame(rawValue: value)
@@ -117,6 +123,7 @@ final class PerpetualMarketViewController: UIViewController {
         )
         self.viewModel = viewModel
         self.infos = Info.availableInfos(in: viewModel)
+        self.priceDisplay = PriceDisplay(rawValue: AppGroupUserDefaults.Wallet.perpsPriceDisplay) ?? .lastPrice
         super.init(nibName: nil, bundle: nil)
         self.candleLoader.delegate = self
     }
@@ -379,16 +386,17 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(reportingTags: ["source": "perps_market"])
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "perps_market"])
     }
     
     @objc private func openLongPosition(_ sender: UIButton) {
         let open = OpenPerpsPositionViewController(
             wallet: wallet,
             side: .long,
-            viewModel: viewModel
+            presentMarketViewOnSuccess: true,
+            viewModel: viewModel,
+            leaderPosition: nil
         )
         navigationController?.pushViewController(open, animated: true)
     }
@@ -397,25 +405,46 @@ final class PerpetualMarketViewController: UIViewController {
         let open = OpenPerpsPositionViewController(
             wallet: wallet,
             side: .short,
-            viewModel: viewModel
+            presentMarketViewOnSuccess: true,
+            viewModel: viewModel,
+            leaderPosition: nil
         )
         navigationController?.pushViewController(open, animated: true)
     }
     
-    @objc private func addPosition(_ sender: UIButton) {
-        guard
-            let positionViewModel = openPositionViewModel,
-            let margin = positionViewModel.decimalMargin
-        else {
-            return
+    @objc private func adjustPosition(_ sender: UIButton) {
+        let adjustment = PerpPositionAdjustmentSelectorViewController()
+        adjustment.onSelected = { [weak self] adjustment in
+            guard let self else {
+                return
+            }
+            guard let positionViewModel = self.openPositionViewModel else {
+                return
+            }
+            switch adjustment.behavior {
+            case .increase:
+                UserOperationAnalytics.tradeSource = .perpsMarketDetailAdjust
+                let addPosition = AddToPerpsPositionViewController(
+                    wallet: wallet,
+                    adding: adjustment.target,
+                    marketViewModel: viewModel,
+                    positionViewModel: positionViewModel,
+                    source: nil,
+                    presentMarketViewOnSuccess: true,
+                )
+                self.present(addPosition, animated: true)
+            case .decrease:
+                UserOperationAnalytics.tradeSource = .perpsMarketDetailAdjust
+                let reduce = ReduceToPerpsPositionViewController(
+                    wallet: wallet,
+                    reducing: adjustment.target,
+                    marketViewModel: viewModel,
+                    positionViewModel: positionViewModel,
+                )
+                self.present(reduce, animated: true)
+            }
         }
-        let addPosition = AddPerpsPositionViewController(
-            wallet: wallet,
-            marketViewModel: viewModel,
-            positionViewModel: positionViewModel,
-            openedMargin: margin,
-        )
-        present(addPosition, animated: true)
+        present(adjustment, animated: true)
     }
     
     @objc private func closePosition(_ sender: UIButton) {
@@ -600,8 +629,10 @@ final class PerpetualMarketViewController: UIViewController {
     private func setupTakeProfit(positionViewModel: PerpetualPositionViewModel) {
         guard
             editingLock == nil,
-            let margin = positionViewModel.decimalMargin,
             let entryPrice = positionViewModel.decimalEntryPrice,
+            entryPrice > 0,
+            positionViewModel.decimalQuantity > 0,
+            positionViewModel.decimalMargin > 0,
             let liquidationPrice = positionViewModel.decimalLiquidationPrice
         else {
             return
@@ -609,12 +640,15 @@ final class PerpetualMarketViewController: UIViewController {
         let editor = EditPerpClosingConditionViewController(
             viewModel: viewModel,
             side: positionViewModel.side,
-            margin: margin,
+            margin: positionViewModel.decimalMargin,
             behavior: .takeProfit,
             leverage: Decimal(positionViewModel.leverageMultiplier),
-            orderState: .open(entryPrice: entryPrice), 
+            orderState: .open(
+                entryPrice: entryPrice,
+                quantity: positionViewModel.decimalQuantity,
+            ),
             liquidationPrice: liquidationPrice,
-            currentAutoClosingPrice: positionViewModel.takeProfitPrice
+            currentAutoClosingPrice: positionViewModel.takeProfitPrice,
         )
         let priceFormatStyle = viewModel.market.canonicalPriceFormatStyle
         editor.onSet = { [weak self] price in
@@ -647,8 +681,10 @@ final class PerpetualMarketViewController: UIViewController {
     private func setupStopLoss(positionViewModel: PerpetualPositionViewModel) {
         guard
             editingLock == nil,
-            let margin = positionViewModel.decimalMargin,
             let entryPrice = positionViewModel.decimalEntryPrice,
+            entryPrice > 0,
+            positionViewModel.decimalQuantity > 0,
+            positionViewModel.decimalMargin > 0,
             let liquidationPrice = positionViewModel.decimalLiquidationPrice
         else {
             return
@@ -656,10 +692,13 @@ final class PerpetualMarketViewController: UIViewController {
         let editor = EditPerpClosingConditionViewController(
             viewModel: viewModel,
             side: positionViewModel.side,
-            margin: margin,
+            margin: positionViewModel.decimalMargin,
             behavior: .stopLoss,
             leverage: Decimal(positionViewModel.leverageMultiplier),
-            orderState: .open(entryPrice: entryPrice),
+            orderState: .open(
+                entryPrice: entryPrice,
+                quantity: positionViewModel.decimalQuantity,
+            ),
             liquidationPrice: liquidationPrice,
             currentAutoClosingPrice: positionViewModel.stopLossPrice,
         )
@@ -736,13 +775,17 @@ final class PerpetualMarketViewController: UIViewController {
                     config.baseBackgroundColor = MarketColor.rising.uiColor
                     config.baseForegroundColor = .white
                     config.attributedTitle = AttributedString(
-                        R.string.localizable.add_position(),
+                        R.string.localizable.perps_adjust(),
                         attributes: actionView.mediumFontAttributes
                     )
                     actionView.leftButton.configuration = config
                 }
                 actionView.leftButton.removeTarget(self, action: nil, for: .touchUpInside)
-                actionView.leftButton.addTarget(self, action: #selector(addPosition(_:)), for: .touchUpInside)
+                actionView.leftButton.addTarget(
+                    self,
+                    action: #selector(adjustPosition(_:)),
+                    for: .touchUpInside
+                )
                 if var config = actionView.rightButton.configuration {
                     config.baseBackgroundColor = R.color.theme()!
                     config.baseForegroundColor = .white
@@ -767,6 +810,40 @@ final class PerpetualMarketViewController: UIViewController {
             actionWrapperView.addSubview(actionView)
             actionView.snp.makeEdgesEqualToSuperview()
             self.actionView = actionView
+        }
+    }
+    
+    private func updatePrice(on cell: PerpetualMarketPriceCell, by display: PriceDisplay) {
+        cell.priceSelectorButton.menu = UIMenu(children: PriceDisplay.allCases.map { display in
+            let title = switch display {
+            case .lastPrice:
+                R.string.localizable.perps_last_price()
+            case .markPrice:
+                R.string.localizable.perps_mark_price()
+            }
+            return UIAction(
+                title: title,
+                state: display == priceDisplay ? .on : .off,
+                handler: { [weak self, weak cell] _ in
+                    guard let self, let cell else {
+                        return
+                    }
+                    self.priceDisplay = display
+                    self.updatePrice(on: cell, by: display)
+                }
+            )
+        })
+        switch display {
+        case .lastPrice:
+            cell.loadPrice(
+                title: R.string.localizable.perps_last_price(),
+                content: viewModel.localizedLastPrice
+            )
+        case .markPrice:
+            cell.loadPrice(
+                title: R.string.localizable.perps_mark_price(),
+                content: viewModel.market.localizedMarkPrice
+            )
         }
     }
     
@@ -809,13 +886,14 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
         switch sections[indexPath.section] {
         case .price:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_price, for: indexPath)!
-            cell.delegate = self
             cell.load(viewModel: viewModel)
+            updatePrice(on: cell, by: priceDisplay)
             cell.load(
                 chart: charts[selectedTimeFrame] ?? .loading,
                 priceFormatStyle: viewModel.userDisplayPriceFormatStyle
             )
             cell.setTimeFrame(frame: selectedTimeFrame)
+            cell.delegate = self
             priceCell = cell
             return cell
         case .autoClosingIntroduction(let suggestion):
@@ -850,7 +928,12 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
                 return cell
             case .fundingRate:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perp_market_funding_rate, for: indexPath)!
-                cell.titleLabel.text = R.string.localizable.perps_funding_title_interval(viewModel.market.fundingIntervalHours).uppercased()
+                let title = if viewModel.market.fundingIntervalHours > 0 {
+                    R.string.localizable.perps_funding_title_interval(viewModel.market.fundingIntervalHours)
+                } else {
+                    R.string.localizable.funding_rate()
+                }
+                cell.titleLabel.text = title.uppercased()
                 cell.contentLabel.text = viewModel.fundingRate
                 cell.delegate = self
                 cell.startCountDown(
@@ -962,10 +1045,10 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
         }
         let dataSource = SharePerpetualPositionDataSource(
             viewModel: positionViewModel,
-            latestPrice: viewModel.decimalPrice,
+            latestPrice: viewModel.decimalLastPrice,
         )
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         Referral.loadAvailableCode { [weak self] code in
             hud.hide()
             let share = PopupShareViewController(

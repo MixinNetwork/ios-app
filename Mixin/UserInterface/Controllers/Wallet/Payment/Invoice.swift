@@ -337,7 +337,7 @@ extension Invoice: PaymentPreconditionChecker {
                                 continuation.resume(with: .success(result))
                             }
                             let auth = AuthenticationViewController(intent: consolidation)
-                            UIApplication.homeContainerViewController?.present(auth, animated: true)
+                            UIApplication.shared.homeContainerViewController?.present(auth, animated: true)
                         }
                     }
                     switch consolidationResult {

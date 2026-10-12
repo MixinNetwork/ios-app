@@ -57,9 +57,8 @@ class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(reportingTags: ["source": "send_recipient", "wallet": "main"])
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "send_recipient", "wallet": "main"])
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {

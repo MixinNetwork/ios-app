@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 final class PerpetualPositionHeaderCell: UICollectionViewCell {
     
@@ -36,10 +37,37 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
     }
     
     func load(viewModel: PerpetualOrderViewModel) {
-        iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        titleLabel.text = viewModel.quantity
-        symbolLabel.text = viewModel.tokenSymbol
-        symbolLabel.isHidden = false
+        iconView.setIcon(tokenIconURL: viewModel.order.iconURL)
+        switch viewModel.type {
+        case .open, .close:
+            titleLabel.textColor = R.color.text()
+            titleLabel.text = viewModel.quantity
+            symbolLabel.text = viewModel.order.tokenSymbol
+            symbolLabel.isHidden = false
+        case .increasePosition:
+            titleLabel.text = CurrencyFormatter.localizedString(
+                from: viewModel.absoluteDecimalQuantity,
+                format: .precision,
+                sign: .always
+            )
+            titleLabel.textColor = R.color.market_green()
+            symbolLabel.text = viewModel.order.tokenSymbol
+            symbolLabel.isHidden = false
+        case .increaseMargin:
+            titleLabel.text = abs(viewModel.decimalPayAmount).formatted(
+                PerpetualOrderViewModel.payAmountStyle
+                    .sign(strategy: .always())
+            )
+            titleLabel.textColor = R.color.market_green()
+            symbolLabel.isHidden = true
+        case .decreaseMargin:
+            titleLabel.text = (-abs(viewModel.decimalPayAmount)).formatted(
+                PerpetualOrderViewModel.payAmountStyle
+                    .sign(strategy: .always())
+            )
+            titleLabel.textColor = R.color.market_red()
+            symbolLabel.isHidden = true
+        }
         switch viewModel.status {
         case .normal:
             switch viewModel.side {

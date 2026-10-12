@@ -211,7 +211,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
         guard manipulateNavigationStackOnFinished else {
             return
         }
-        guard let navigation = UIApplication.homeNavigationController else {
+        guard let navigation = UIApplication.shared.homeNavigationController else {
             return
         }
         switch operation.destination {

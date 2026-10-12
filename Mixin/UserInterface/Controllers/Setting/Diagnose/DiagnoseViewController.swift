@@ -121,7 +121,7 @@ extension DiagnoseViewController: UITableViewDelegate {
             navigationController?.pushViewController(AttachmentDiagnosticViewController(), animated: true)
         case (3, 0):
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             ExpiredMessageManager.shared.isQueueAvailable { isAvailable in
                 hud.set(style: isAvailable ? .notification : .error, text: "")
                 hud.scheduleAutoHidden()

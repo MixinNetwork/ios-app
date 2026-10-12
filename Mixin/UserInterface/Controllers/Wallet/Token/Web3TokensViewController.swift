@@ -178,6 +178,8 @@ final class Web3TokensViewController: TokensViewController {
                     switch kind {
                     case .bitcoin:
                         importedSecret = .privateKey(privateKey, .bitcoin)
+                    case .pearl:
+                        importedSecret = .privateKey(privateKey, .pearl)
                     case .evm:
                         importedSecret = .privateKey(privateKey, .evm)
                     case .solana:
@@ -215,6 +217,7 @@ final class Web3TokensViewController: TokensViewController {
                 tokensValue: tokensValue,
                 perpsValue: 0,
                 cashValue: 0,
+                earnValue: 0,
                 btcPrice: btcPrice
             )
             let tokens = Web3TokenDAO.shared.notHiddenTokens(

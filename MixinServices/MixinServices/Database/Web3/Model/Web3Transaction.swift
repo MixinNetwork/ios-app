@@ -64,14 +64,14 @@ public class Web3Transaction: Codable, Identifiable {
     public lazy var simpleTransfer: SimpleTransfer? = {
         switch transactionType.knownCase {
         case .transferIn:
-            if let senders, senders.count == 1 {
-                SimpleTransfer(sender: senders[0])
+            if let senders, senders.count == 1, let sender = senders.first {
+                SimpleTransfer(sender: sender)
             } else {
                 nil
             }
         case .transferOut:
-            if let receivers, receivers.count == 1 {
-                SimpleTransfer(receiver: receivers[0])
+            if let receivers, receivers.count == 1, let receiver = receivers.first {
+                SimpleTransfer(receiver: receiver)
             } else {
                 nil
             }
@@ -83,14 +83,20 @@ public class Web3Transaction: Codable, Identifiable {
     public lazy var assetChanges: [AssetChange] = {
         let sendings: [AssetChange] = senders?.compactMap { sender in
             if let amount = Decimal(string: sender.amount, locale: .enUSPOSIX) {
-                AssetChange(assetID: sender.assetID, amount: -abs(amount))
+                AssetChange(
+                    assetID: sender.assetID,
+                    amount: -abs(amount) // Required for historical records in database
+                )
             } else {
                 nil
             }
         } ?? []
         let receivings: [AssetChange] = receivers?.compactMap { receiver in
             if let amount = Decimal(string: receiver.amount, locale: .enUSPOSIX) {
-                AssetChange(assetID: receiver.assetID, amount: abs(amount))
+                AssetChange(
+                    assetID: receiver.assetID,
+                    amount: abs(amount) // Required for historical records in database
+                )
             } else {
                 nil
             }
@@ -194,9 +200,17 @@ extension Web3Transaction {
         public let amount: String
         public let to: String?
         
-        public init(assetID: String, amount: String, to: String?) {
+        public init(
+            assetID: String,
+            absoluteAmountFrom amount: String,
+            to: String?
+        ) {
             self.assetID = assetID
-            self.amount = amount
+            self.amount = if amount.hasPrefix("+") || amount.hasPrefix("-") {
+                String(amount.dropFirst())
+            } else {
+                amount
+            }
             self.to = to
         }
         
@@ -214,9 +228,17 @@ extension Web3Transaction {
         public let amount: String
         public let from: String?
         
-        public init(assetID: String, amount: String, from: String?) {
+        public init(
+            assetID: String,
+            absoluteAmountFrom amount: String,
+            from: String?
+        ) {
             self.assetID = assetID
-            self.amount = amount
+            self.amount = if amount.hasPrefix("+") || amount.hasPrefix("-") {
+                String(amount.dropFirst())
+            } else {
+                amount
+            }
             self.from = from
         }
         
@@ -366,8 +388,7 @@ extension Web3Transaction {
         
         public let assetID: String
         
-        // Positive value for receiving in
-        // Negative value for sending out
+        // Positive for incoming, negative for outgoing
         public let amount: Decimal
         
     }

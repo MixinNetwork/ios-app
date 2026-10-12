@@ -13,11 +13,22 @@ final class SyncWeb3OutputJob: AsynchronousJob {
     }
     
     public override func getJobId() -> String {
-        "sync-web3outputs-\(walletID)"
+        "sync-web3outputs-\(walletID)-\(assetID)"
     }
     
     public override func execute() -> Bool {
-        guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: ChainID.bitcoin) else {
+        let chainID: String
+        switch assetID {
+        case AssetID.btc:
+            chainID = ChainID.bitcoin
+        case AssetID.pearl:
+            chainID = ChainID.pearl
+        default:
+            Logger.general.error(category: "SyncWeb3Output", message: "Unknown asset id: \(assetID)")
+            return false
+        }
+        guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: chainID) else {
+            Logger.general.warn(category: "SyncWeb3Output", message: "Missing address for: \(chainID)")
             return false
         }
         Logger.general.debug(category: "SyncWeb3Output", message: "wid: \(walletID), addr: \(address.destination)")

@@ -95,7 +95,12 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                 return
             }
             let addresses = wallets.flatMap { wallet in
-                [wallet.bitcoin.address, wallet.evm.address, wallet.solana.address]
+                [
+                    wallet.bitcoin.address,
+                    wallet.pearl.address,
+                    wallet.evm.address,
+                    wallet.solana.address,
+                ]
             }
             switch behavior {
             case .alwaysNavigateToSelector:
@@ -113,41 +118,49 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
             RouteAPI.assets(searchAddresses: addresses, queue: .global()) { result in
                 switch result {
                 case let .success(assets):
-                    let candidates: [WalletCandidate]
-                    if assets.isEmpty {
+                    let tokens = assets.reduce(into: [:]) { result, addressAssets in
+                        result[addressAssets.address] = addressAssets.assets
+                    }
+                    var candidates: [WalletCandidate] = wallets.compactMap { wallet in
+                        let bitcoinTokens = tokens[wallet.bitcoin.address] ?? []
+                        let pearlTokens = tokens[wallet.pearl.address] ?? []
+                        let evmTokens = tokens[wallet.evm.address] ?? []
+                        let solanaTokens = tokens[wallet.solana.address] ?? []
+                        let allTokens = bitcoinTokens + pearlTokens + evmTokens + solanaTokens
+                        
+                        let name = walletNames[wallet.bitcoin.address]
+                        ?? walletNames[wallet.pearl.address]
+                        ?? walletNames[wallet.evm.address]
+                        ?? walletNames[wallet.solana.address]
+                        
+                        if allTokens.isEmpty && name == nil {
+                            return nil
+                        } else {
+                            return WalletCandidate(
+                                bitcoinWallet: wallet.bitcoin,
+                                pearlWallet: wallet.pearl,
+                                evmWallet: wallet.evm,
+                                solanaWallet: wallet.solana,
+                                tokens: allTokens,
+                                importedAsName: name
+                            )
+                        }
+                    }
+                    if candidates.isEmpty {
                         let wallet = wallets[0]
                         let name = walletNames[wallet.bitcoin.address]
+                        ?? walletNames[wallet.pearl.address]
                         ?? walletNames[wallet.evm.address]
                         ?? walletNames[wallet.solana.address]
                         candidates = [
                             .empty(
                                 bitcoinWallet: wallet.bitcoin,
+                                pearlWallet: wallet.pearl,
                                 evmWallet: wallet.evm,
                                 solanaWallet: wallet.solana,
                                 importedAsName: name
                             )
                         ]
-                    } else {
-                        let tokens = assets.reduce(into: [:]) { result, addressAssets in
-                            result[addressAssets.address] = addressAssets.assets
-                        }
-                        candidates = wallets.compactMap { wallet in
-                            let bitcoinTokens = tokens[wallet.bitcoin.address] ?? []
-                            let evmTokens = tokens[wallet.evm.address] ?? []
-                            let solanaTokens = tokens[wallet.solana.address] ?? []
-                            
-                            let name = walletNames[wallet.bitcoin.address]
-                            ?? walletNames[wallet.evm.address]
-                            ?? walletNames[wallet.solana.address]
-                            
-                            return tokens.isEmpty ? nil : WalletCandidate(
-                                bitcoinWallet: wallet.bitcoin,
-                                evmWallet: wallet.evm,
-                                solanaWallet: wallet.solana,
-                                tokens: bitcoinTokens + evmTokens + solanaTokens,
-                                importedAsName: name
-                            )
-                        }
                     }
                     DispatchQueue.main.async {
                         let selector = AddWalletSelectorViewController(
@@ -160,7 +173,6 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                         self?.navigationController?.pushViewController(replacingCurrent: selector, animated: true)
                     }
                 case let .failure(error):
-                    Logger.general.debug(category: "AddWallet", message: "\(error)")
                     DispatchQueue.main.async {
                         self?.showError(error.localizedDescription)
                     }

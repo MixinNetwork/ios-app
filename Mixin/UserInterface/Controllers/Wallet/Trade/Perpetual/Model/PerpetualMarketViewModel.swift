@@ -7,8 +7,8 @@ struct PerpetualMarketViewModel {
     let iconURL: URL?
     let maxLeverageMultiplier: Decimal
     let leverage: String
-    let decimalPrice: Decimal
-    let price: String
+    let decimalLastPrice: Decimal
+    let localizedLastPrice: String
     let volume: String
     let fundingRate: String
     let change: String
@@ -28,8 +28,8 @@ struct PerpetualMarketViewModel {
         self.iconURL = URL(string: m.iconURL)
         self.maxLeverageMultiplier = Decimal(m.leverage)
         self.leverage = PerpetualLeverage.stringRepresentation(multiplier: m.leverage)
-        self.decimalPrice = m.decimalPrice
-        self.price = m.localizedPrice
+        self.decimalLastPrice = m.decimalLastPrice
+        self.localizedLastPrice = m.localizedLastPrice
         self.volume = m.prettyVolume
         self.fundingRate = if let decimalFundingRate {
             PercentageFormatter.string(

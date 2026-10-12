@@ -49,8 +49,14 @@ class ConversationDataSource {
     
     var layoutSize: CGSize {
         Queue.main.autoSync {
-            var size = AppDelegate.current.mainWindow.bounds.size
-            if UIApplication.shared.isLandscape {
+            guard
+                let scene = UIApplication.shared.firstWindowScene,
+                let window = scene.keyWindow
+            else {
+                return CGSize(width: 320, height: 568)
+            }
+            var size = window.bounds.size
+            if scene.interfaceOrientation.isLandscape {
                 swap(&size.width, &size.height)
             }
             return size
@@ -749,6 +755,8 @@ extension ConversationDataSource: MessageViewModelFactoryDelegate {
     
     func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel) {
         if let viewModel = viewModel as? TextMessageViewModel, let keyword = highlight?.keyword {
+            viewModel.highlight(keyword: keyword)
+        } else if let viewModel = viewModel as? PhotoMessageViewModel, let keyword = highlight?.keyword {
             viewModel.highlight(keyword: keyword)
         }
     }

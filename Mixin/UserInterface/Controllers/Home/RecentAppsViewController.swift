@@ -49,7 +49,7 @@ class RecentAppsViewController: UIViewController {
     }
     
     @IBAction func hideSearchAction() {
-        let tabBar = UIApplication.homeNavigationController?.topViewController as? HomeTabBarController
+        let tabBar = UIApplication.shared.homeNavigationController?.topViewController as? HomeTabBarController
         let home = tabBar?.selectedViewController as? HomeViewController
         home?.cancelSearching(self)
     }

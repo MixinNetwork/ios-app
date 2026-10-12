@@ -6,10 +6,6 @@ public struct TIPSigner: Decodable {
     public let index: Int
     public let api: String
     
-    var apiURL: URL {
-        URL(string: "https://" + MixinHost.http + api)!
-    }
-    
 }
 
 extension TIPSigner: Equatable {

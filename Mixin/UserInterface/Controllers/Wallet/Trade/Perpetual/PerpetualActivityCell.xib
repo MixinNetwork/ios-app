@@ -90,8 +90,8 @@
                 <outlet property="changeLabel" destination="elY-dg-zQK" id="xXe-ut-RS2"/>
                 <outlet property="iconView" destination="dYm-ke-3E8" id="gyz-ct-9SK"/>
                 <outlet property="leverageLabel" destination="iDx-g1-65Q" id="BcV-YJ-4mq"/>
+                <outlet property="subtitleLabel" destination="4Pr-24-t8A" id="eMo-ua-DaA"/>
                 <outlet property="titleLabel" destination="ef5-tF-pUh" id="kNO-3S-uVM"/>
-                <outlet property="valueLabel" destination="4Pr-24-t8A" id="eMo-ua-DaA"/>
             </connections>
             <point key="canvasLocation" x="-63" y="154"/>
         </collectionViewCell>
@@ -101,7 +101,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_input">
-            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="market_green">
             <color red="0.31372549019607843" green="0.74117647058823533" blue="0.36078431372549019" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -110,7 +110,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class NumberPadView: UIView, XibDesignable {
+final class NumberPadView: UIView, XibDesignable {
 
     @IBOutlet weak var tipView: UIView!
     
@@ -22,8 +22,7 @@ class NumberPadView: UIView, XibDesignable {
     }
     
     private var bottomSafeAreaInset: CGFloat {
-        let safeAreaBottomInset = UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0
-        if safeAreaBottomInset > 0 {
+        if windowSafeAreaInsets.bottom > 0 {
             switch ScreenHeight.current {
             case .short, .medium:
                 return 58
@@ -49,6 +48,12 @@ class NumberPadView: UIView, XibDesignable {
         prepare()
     }
 
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        updateBottomInset()
+        invalidateIntrinsicContentSize()
+    }
+
     @IBAction func inputAction(_ sender: Any) {
         guard let sender = sender as? NumberPadButton else {
             return
@@ -64,15 +69,19 @@ class NumberPadView: UIView, XibDesignable {
         target?.deleteBackward()
     }
     
-    private func prepare() {
-        loadXib()
-        backgroundColor = R.color.keyboard_background_14()
+    private func updateBottomInset() {
         contentViewBottomConstraint.constant = contentBottomMargin + bottomSafeAreaInset
         self.bounds = CGRect(x: 0,
                              y: 0,
-                             width: UIScreen.main.bounds.width,
+                             width: bounds.width > 0 ? bounds.width : UIScreen.main.bounds.width,
                              height: contentHeight + bottomSafeAreaInset)
         layoutIfNeeded()
+    }
+
+    private func prepare() {
+        loadXib()
+        backgroundColor = R.color.keyboard_background_14()
+        updateBottomInset()
     }
     
 }

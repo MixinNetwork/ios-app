@@ -58,7 +58,7 @@ class TransactionViewController: UIViewController {
             return
         }
         let targetSize = CGSize(
-            width: AppDelegate.current.mainWindow.bounds.width,
+            width: view.bounds.width,
             height: UIView.layoutFittingExpandedSize.height
         )
         let layoutSize = tableHeaderView.systemLayoutSizeFitting(targetSize)
@@ -95,10 +95,8 @@ class TransactionViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        if let user = UserDAO.shared.getUser(identityNumber: "7000") {
-            let conversation = ConversationViewController.instance(ownerUser: user)
-            navigationController?.pushViewController(withBackRoot: conversation)
-        }
+        let customerService = CustomerServiceViewController(reportingTags: nil)
+        present(customerService, animated: true)
     }
     
 }

@@ -32,7 +32,7 @@ extension CoreTextLabelDelegate {
             showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        UIApplication.currentActivity()?.present(alert, animated: true, completion: nil)
+        UIApplication.shared.homeContainerViewController?.present(alert, animated: true, completion: nil)
     }
     
 }

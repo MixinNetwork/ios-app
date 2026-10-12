@@ -186,7 +186,7 @@ extension EditFavoriteAppsViewController: FavoriteAppCellDelegate {
         switch Section(rawValue: indexPath.section)! {
         case .favorite:
             if let id = user.appId {
-                hud.show(style: .busy, text: "", on: view)
+                hud.show(style: .busy, text: "")
                 UserAPI.unfavoriteApp(id: id) { [weak self] (result) in
                     switch result {
                     case .success:
@@ -203,7 +203,7 @@ extension EditFavoriteAppsViewController: FavoriteAppCellDelegate {
             }
         case .candidate:
             if let id = user.appId {
-                hud.show(style: .busy, text: "", on: view)
+                hud.show(style: .busy, text: "")
                 UserAPI.setFavoriteApp(id: id) { [weak self] (result) in
                     switch result {
                     case .success(let favApp):

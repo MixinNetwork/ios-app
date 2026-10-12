@@ -98,8 +98,8 @@ class SignInWithMnemonicsViewController<PhrasesCount: SignInAvailablePhrasesCoun
     
     @objc func pastePhrases(_ sender: Any) {
         let phrases = UIPasteboard.general.string?
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .components(separatedBy: " ")
+            .split(whereSeparator: \.isWhitespace)
+            .map(String.init)
         guard let phrases else {
             return
         }
@@ -115,9 +115,11 @@ class SignInWithMnemonicsViewController<PhrasesCount: SignInAvailablePhrasesCoun
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        let customerService = CustomerServiceViewController(
+            presentLoginLogsOnLongPressingTitle: true,
+            reportingTags: ["source": "login_mnemonic_phrase"],
+        )
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "login_mnemonic_phrase"])
     }
     
     @objc private func switchWordCount(_ button: UIButton) {
@@ -187,7 +189,9 @@ extension SignInWithMnemonicsViewController: NavigationBarStyling {
 extension SignInWithMnemonicsViewController: QRCodeScannerViewControllerDelegate {
     
     func qrCodeScannerViewController(_ controller: QRCodeScannerViewController, shouldRecognizeString string: String) -> Bool {
-        let phrases = string.components(separatedBy: " ")
+        let phrases = string
+            .split(whereSeparator: \.isWhitespace)
+            .map(String.init)
         input(phrases: phrases)
         return false
     }

@@ -16,7 +16,7 @@ enum RequestSigning {
     
     static func signedHeaders(for request: URLRequest) -> [String: String] {
         var headers = Self.baseHeaders
-        let requestId = UUID().uuidString.lowercased()
+        let requestId = request.value(forHTTPHeaderField: "X-Request-Id") ?? UUID().uuidString.lowercased()
         if let signedToken = Self.signedToken(request: request, requestId: requestId) {
             headers["Authorization"] = signedToken
         }

@@ -17,7 +17,9 @@ class PerpsMarginInputViewController: UIViewController {
     @IBOutlet weak var marginTokenNameLabel: UILabel!
     @IBOutlet weak var marginLoadingView: ActivityIndicatorView!
     
-    var marginAmount: Decimal = 0
+    let leaderPosition: TradeURL.LeaderPosition?
+    
+    var marginAmount: Decimal
     
     var marginTokens: [MixinTokenItem] = []
     var marginToken: MixinTokenItem? {
@@ -44,42 +46,34 @@ class PerpsMarginInputViewController: UIViewController {
             )
             marginTokenDepositButton.isHidden = token.decimalBalance > 0
             marginTokenNameLabel.text = token.name
-            if marginAmountTextField.inputAccessoryView == nil {
-                let accessoryView = TradeInputAccessoryView(
-                    frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 44)
-                )
-                accessoryView.items = [
-                    .init(title: "25%") { [weak self] in
-                        guard let self else {
-                            return
-                        }
-                        self.inputAmount(withBalanceMultipliedBy: 0.25)
-                        self.reportPercentageInput(percent: "25%")
-                    },
-                    .init(title: "50%") { [weak self] in
-                        guard let self else {
-                            return
-                        }
-                        self.inputAmount(withBalanceMultipliedBy: 0.5)
-                        self.reportPercentageInput(percent: "50%")
-                    },
-                    .init(title: R.string.localizable.max()) { [weak self] in
-                        guard let self else {
-                            return
-                        }
-                        self.inputAmount(withBalanceMultipliedBy: 1)
-                        self.reportPercentageInput(percent: "max")
-                    },
-                ]
-                accessoryView.onDone = { [weak textField=marginAmountTextField] in
-                    textField?.resignFirstResponder()
-                }
-                marginAmountTextField.inputAccessoryView = accessoryView
-            }
         }
     }
     
     private let marginAmountPrecisionValidator = MarginAmountPrecisionValidator()
+    
+    init(
+        leaderPosition: TradeURL.LeaderPosition?,
+        nibName: String?,
+        bundle: Bundle?
+    ) {
+        self.leaderPosition = leaderPosition
+        self.marginAmount = leaderPosition?.margin ?? 0
+        super.init(nibName: nibName, bundle: bundle)
+    }
+    
+    init(
+        marginAmount: Decimal,
+        nibName: String?,
+        bundle: Bundle?,
+    ) {
+        self.leaderPosition = nil
+        self.marginAmount = marginAmount
+        super.init(nibName: nibName, bundle: bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,6 +85,13 @@ class PerpsMarginInputViewController: UIViewController {
         marginTitleLabel.text = R.string.localizable.amount()
         marginNetworkLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         marginAmountTextField.delegate = marginAmountPrecisionValidator
+        if marginAmount > 0 {
+            marginAmountTextField.text = CurrencyFormatter.localizedString(
+                from: marginAmount,
+                format: .precision,
+                sign: .never,
+            )
+        }
         marginTokenFooterStackView.setCustomSpacing(0, after: marginTokenBalanceButton)
         marginTokenBalanceButton.titleLabel?.adjustsFontForContentSizeCategory = true
         marginTokenDepositButton.configuration?.attributedTitle = {
@@ -202,8 +203,7 @@ class PerpsMarginInputViewController: UIViewController {
                         comparator: comparator,
                     )
                 }
-            case .failure(let error):
-                Logger.general.debug(category: "OpenPerpsPosition", message: "Margin Tokens: \(error)")
+            case .failure:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                     self?.reloadMarginTokens()
                 }
@@ -298,37 +298,6 @@ extension PerpsMarginInputViewController: AddTokenMethodSelectorViewController.D
 }
 
 extension PerpsMarginInputViewController {
-    
-    final class AmountValidator {
-        
-        enum Result {
-            case valid
-            case invalid(reason: String)
-        }
-        
-        private let minAmount: Decimal
-        private let maxAmount: Decimal?
-        
-        init(market: PerpetualMarket) {
-            minAmount = Decimal(string: market.minAmount, locale: .enUSPOSIX) ?? 1
-            maxAmount = Decimal(string: market.maxAmount, locale: .enUSPOSIX)
-        }
-        
-        func validate(amount: Decimal, symbol: String) -> Result {
-            if amount < minAmount {
-                let min = CurrencyFormatter.localizedString(from: minAmount, format: .precision, sign: .never)
-                let reason = R.string.localizable.single_transaction_should_be_greater_than(min, symbol)
-                return .invalid(reason: reason)
-            } else if let maxAmount, amount > maxAmount {
-                let max = CurrencyFormatter.localizedString(from: maxAmount, format: .precision, sign: .never)
-                let reason = R.string.localizable.single_transaction_should_be_less_than(max, symbol)
-                return .invalid(reason: reason)
-            } else {
-                return .valid
-            }
-        }
-        
-    }
     
     private final class MarginAmountPrecisionValidator: NSObject, UITextFieldDelegate {
         

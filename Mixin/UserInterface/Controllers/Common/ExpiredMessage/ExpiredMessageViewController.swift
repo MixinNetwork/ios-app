@@ -42,10 +42,8 @@ extension ExpiredMessageViewController: UITableViewDelegate {
         if let expireIn = option.expireIn {
             update(expireIn: expireIn)
         } else {
-            let window = ExpiredMessageTimePickerWindow.instance()
-            window.render(expireIn: currentExpireIn)
-            window.onPick = update(expireIn:)
-            window.presentPopupControllerAnimated()
+            let window = ExpiredMessageTimePickerWindow(expireIn: currentExpireIn, onPick: update(expireIn:))
+            present(window, animated: true)
         }
     }
     

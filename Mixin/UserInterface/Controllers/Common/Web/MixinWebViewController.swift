@@ -64,7 +64,7 @@ final class MixinWebViewController: WebViewController {
         loadingFailureViewIfLoaded = view
         return view
     }()
-    private lazy var clipSwitcher = UIApplication.homeContainerViewController?.clipSwitcher
+    private lazy var clipSwitcher = UIApplication.shared.homeContainerViewController?.clipSwitcher
     private lazy var web3Worker = Web3Worker(webView: webView,
                                              evmChain: defaultEVMChain,
                                              solanaChain: .solana)
@@ -85,7 +85,10 @@ final class MixinWebViewController: WebViewController {
                 assertionFailure()
                 return nil
             }
-            return .init(address: address, chainID: chainID, rpcURL: chain.rpcServerURL)
+            guard let rpcServerURL = chain.rpcServerURL else {
+                return nil
+            }
+            return .init(address: address, chainID: chainID, rpcURL: rpcServerURL)
         }()
         let solanaConfig: Script.SolanaConfig? = {
             if let address = Web3AddressDAO.shared.currentSelectedWalletAddress(chainID: ChainID.solana) {
@@ -200,7 +203,7 @@ final class MixinWebViewController: WebViewController {
             return
         }
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         DispatchQueue.global().async { [weak self] in
             guard let developerUserId = Self.syncUser(userId: app.appId, hud: hud)?.appCreatorId else {
                 return
@@ -230,7 +233,7 @@ final class MixinWebViewController: WebViewController {
         guard
             let switcher = clipSwitcher,
             !switcher.isMaximumLimitReached,
-            let container = UIApplication.homeContainerViewController,
+            let container = UIApplication.shared.homeContainerViewController,
             let navigationController,
             let index = navigationController.viewControllers.firstIndex(of: self)
         else {
@@ -346,8 +349,15 @@ extension MixinWebViewController: WKNavigationDelegate {
                     make.top.bottom.equalTo(view.safeAreaLayoutGuide)
                 }
             }
-            loadFailLabel.text = R.string.localizable.web_cannot_reached_desc(host)
-            contactDeveloperButton.isHidden = context.appEnvironment == nil
+            if let app = context.appEnvironment?.app {
+                loadFailLabel.text = R.string.localizable.web_cannot_reached_desc(
+                    app.name + " (\(app.appNumber))"
+                )
+                contactDeveloperButton.isHidden = false
+            } else {
+                loadFailLabel.text = R.string.localizable.web_cannot_reached_desc(host)
+                contactDeveloperButton.isHidden = true
+            }
         default:
             break
         }
@@ -387,8 +397,9 @@ extension MixinWebViewController: WebViewMessageHandler.Delegate {
             webView.evaluateJavaScript(callback)
         case .getAssets(let assetIDs, let callback):
             reportAssetsIfVerified(ids: assetIDs, callback: callback)
-        case .web3Bridge(let json):
-            web3Worker.handleRequest(json: json)
+        case .web3Bridge(let json, let host):
+            let proposer = Web3DappProposer(name: webView.title ?? "(no title)", host: host)
+            web3Worker.handleRequest(json: json, proposer: proposer)
         case .signBotSignature(let callback):
             webView.evaluateJavaScript(callback)
         case .openInBrowser(let url):
@@ -617,14 +628,14 @@ extension MixinWebViewController {
             DispatchQueue.main.async {
                 let vc = UserProfileViewController(user: user)
                 vc.updateUserFromRemoteAfterReloaded = updateUserFromRemoteAfterReloaded
-                UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
+                UIApplication.shared.homeContainerViewController?.present(vc, animated: true, completion: nil)
             }
         }
     }
     
     private func scanQRCodeOnCurrentPage() {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         let config = WKSnapshotConfiguration()
         config.rect = webView.frame
         config.snapshotWidth = NSNumber(value: Int(webView.frame.width))
@@ -812,12 +823,11 @@ extension MixinWebViewController {
                                 forMainFrameOnly: true)
         }()
         
-        static let web3Provider: WKUserScript = {
-            let source = try! String(contentsOf: R.file.mixinMinJs()!)
-            return WKUserScript(source: source,
-                                injectionTime: .atDocumentStart,
-                                forMainFrameOnly: false)
-        }()
+        static let web3Provider = WKUserScript(
+            source: try! String(contentsOf: R.file.mixinMinJs()!),
+            injectionTime: .atDocumentStart,
+            forMainFrameOnly: true
+        )
         
         static func web3Config(evm: EVMConfig?, solana: SolanaConfig?) -> WKUserScript? {
             guard evm != nil || solana != nil else {
@@ -893,7 +903,7 @@ extension MixinWebViewController {
                     initializeEIP6963(window.ethereum);
                 })();
             """
-            return WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+            return WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: true)
         }
         
     }

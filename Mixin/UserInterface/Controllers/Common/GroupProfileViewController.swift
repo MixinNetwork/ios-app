@@ -66,7 +66,7 @@ final class GroupProfileViewController: ProfileViewController {
         let conversationId = conversation.conversationId
         NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: ConversationChange(conversationId: conversationId, action: .startedUpdateConversation))
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: ConversationCategory.GROUP.rawValue, participants: nil, duration: interval, announcement: nil, randomID: nil)
         ConversationAPI.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
             switch result {
@@ -106,7 +106,7 @@ extension GroupProfileViewController {
             dismiss(animated: true, completion: nil)
             return
         }
-        guard UIApplication.currentConversationId() != conversation.conversationId else {
+        guard UIApplication.shared.currentConversationId() != conversation.conversationId else {
             dismiss(animated: true, completion: nil)
             return
         }
@@ -157,7 +157,7 @@ extension GroupProfileViewController {
         presentEditNameController(title: R.string.localizable.change_name(), text: conversation.name, placeholder: R.string.localizable.new_name()) { [weak self] (name) in
             NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: ConversationChange(conversationId: conversation.conversationId, action: .startedUpdateConversation))
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             ConversationAPI.updateGroupName(conversationId: conversation.conversationId, name: name) { (result) in
                 switch result {
                 case .success:
@@ -178,7 +178,7 @@ extension GroupProfileViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.exit_group(), style: .destructive, handler: { (_) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             ConversationAPI.exitConversation(conversationId: conversationId) { [weak self](result) in
                 let exitSuccessBlock = {
                     self?.conversation.status = ConversationStatus.QUIT.rawValue
@@ -216,7 +216,7 @@ extension GroupProfileViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.delete_chat(), style: .destructive, handler: { [weak self](_) in
             let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            hud.show(style: .busy, text: "")
             DispatchQueue.global().async {
                 ConversationDAO.shared.deleteChat(conversationId: conversationId)
                 DispatchQueue.main.async {
@@ -226,8 +226,8 @@ extension GroupProfileViewController {
                     self.checkedDismiss(animated: true) { _ in
                         hud.set(style: .notification, text: R.string.localizable.done())
                         hud.scheduleAutoHidden()
-                        if UIApplication.currentConversationId() == conversationId {
-                            UIApplication.homeNavigationController?.backToHome()
+                        if UIApplication.shared.currentConversationId() == conversationId {
+                            UIApplication.shared.homeNavigationController?.backToHome()
                         }
                     }
                 }
@@ -519,7 +519,7 @@ extension GroupProfileViewController {
             DispatchQueue.main.async {
                 self?.checkedDismiss(animated: true, completion: { _ in
                     let vc = ConversationViewController.instance(conversation: conversation)
-                    UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
+                    UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: vc)
                 })
             }
         }

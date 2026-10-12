@@ -60,12 +60,7 @@ public final class PerpsMarketDAO: PerpsDAO {
         case .categorized(let category):
             sql.append("    AND m.category = '\(category.rawValue)'")
         }
-        let direction = switch ordering.direction {
-        case .ascending:
-            "ASC"
-        case .descending:
-            "DESC"
-        }
+        let direction = ordering.direction.sql
         switch ordering.field {
         case .volume:
             sql += "\nORDER BY CAST(volume AS REAL) \(direction)"
@@ -75,6 +70,8 @@ public final class PerpsMarketDAO: PerpsDAO {
             sql += "\nORDER BY CAST(change AS REAL) \(direction)"
         case .score:
             sql += "\nORDER BY trade_volume_score_1d \(direction), CAST(volume AS REAL) \(direction)"
+        case .addedAt:
+            sql += "\nORDER BY f.created_at \(direction), f.rowid ASC"
         }
         if let limit {
             sql += "\nLIMIT \(limit)"
@@ -114,26 +111,29 @@ public final class PerpsMarketDAO: PerpsDAO {
         markets: [PerpetualMarket],
         dataSource: PerpetualMarket.RequestCategory,
     ) {
-        guard !markets.isEmpty else {
-            return
-        }
         db.write { db in
             switch dataSource {
             case .all:
                 try markets.save(db)
             case .favorite:
-                try db.execute(literal: "DELETE FROM favorites WHERE market_id NOT IN \(markets.map(\.marketID))")
-                let now = Date().toUTCString()
-                for market in markets {
-                    _ = try market.upsertAndFetch(db) { _ in
-                        [PerpetualMarket.column(of: .tradeVolumeScore1D).noOverwrite]
+                if markets.isEmpty {
+                    try db.execute(sql: "DELETE FROM favorites")
+                } else {
+                    try db.execute(literal: "DELETE FROM favorites WHERE market_id NOT IN \(markets.map(\.marketID))")
+                    let now = Date().toUTCString()
+                    for market in markets {
+                        _ = try market.upsertAndFetch(db) { _ in
+                            [PerpetualMarket.column(of: .tradeVolumeScore1D).noOverwrite]
+                        }
+                        let favorite = PerpetualMarket.FavoriteStorage(
+                            marketID: market.marketID,
+                            isFavorite: true,
+                            createdAt: now,
+                        )
+                        _ = try favorite.upsertAndFetch(db) { _ in
+                            [PerpetualMarket.FavoriteStorage.column(of: .createdAt).noOverwrite]
+                        }
                     }
-                    let favorite = PerpetualMarket.FavoriteStorage(
-                        marketID: market.marketID,
-                        isFavorite: true,
-                        createdAt: now,
-                    )
-                    try favorite.save(db)
                 }
             case .featured:
                 try db.execute(literal: "DELETE FROM market_categories WHERE category = \(Market.DatabaseCategory.featured.rawValue)")
@@ -197,6 +197,39 @@ public final class PerpsMarketDAO: PerpsDAO {
                 completion?()
             }
         }
+    }
+    
+    public func availableMarkets(
+        keyword: String,
+        limit: Int?,
+    ) -> [FavorablePerpetualMarket] {
+        var sql = """
+        SELECT m.*,
+            ifnull(f.is_favored, FALSE) AS \(FavorablePerpetualMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
+        FROM markets m
+            LEFT JOIN favorites f ON m.market_id = f.market_id
+        WHERE CAST(m.volume AS REAL) > 0
+            AND (m.display_symbol LIKE :keyword OR m.token_symbol LIKE :keyword)
+        ORDER BY CAST(m.volume AS REAL) DESC,
+            m.token_symbol ASC,
+            m.display_symbol ASC
+        """
+        if let limit {
+            sql += "\nLIMIT \(limit)"
+        }
+        return db.select(with: sql, arguments: ["keyword": "%\(keyword)%"])
+    }
+    
+    public func favorableMarket(marketID: String) -> FavorablePerpetualMarket? {
+        let sql = """
+        SELECT m.*,
+            ifnull(f.is_favored, FALSE) AS \(FavorablePerpetualMarket.JoinedQueryCodingKeys.isFavorite.rawValue)
+        FROM markets m
+            LEFT JOIN favorites f ON m.market_id = f.market_id
+        WHERE m.market_id = ?
+        LIMIT 1
+        """
+        return db.select(with: sql, arguments: [marketID])
     }
     
     public func deleteAll() {

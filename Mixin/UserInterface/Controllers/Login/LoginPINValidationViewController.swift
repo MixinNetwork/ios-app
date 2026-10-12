@@ -42,7 +42,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 self?.checkSessionEnvironmentAgain(pin: pin)
             case .failure(.response(.malformedPin)):
                 Logger.login.error(category: "LoginPINValidation", message: "malformedPin...hasPIN:\(account.hasPIN)...hasSafe:\(account.hasSafe)")
-                AppDelegate.current.mainWindow.rootViewController = LegacyPINViewController()
+                self?.view.window?.rootViewController = LegacyPINViewController()
             case .failure(let error):
                 Logger.login.error(category: "LoginPINValidation", message: "Failed: \(error)")
                 guard let self else {
@@ -58,9 +58,11 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        let customerService = CustomerServiceViewController(
+            presentLoginLogsOnLongPressingTitle: true,
+            reportingTags: ["source": "login_pin_verify"],
+        )
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "login_pin_verify"])
     }
     
     @objc private func presentMoreActions(_ sender: Any) {

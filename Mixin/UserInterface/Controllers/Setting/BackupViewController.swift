@@ -229,7 +229,7 @@ extension BackupViewController {
     
     private func compressDatabase(_ action: UIAlertAction) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         DispatchQueue.global().async {
             do {
                 Logger.database.info(category: "DB Compressor", message: "Start compressing database, size: \(AppGroupContainer.userDatabaseUrl.fileSize.sizeRepresentation())")
@@ -254,7 +254,7 @@ extension BackupViewController {
     
     private func optimizeDatabase(_ action: UIAlertAction) {
         let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        hud.show(style: .busy, text: "")
         DispatchQueue.global().async {
             do {
                 Logger.database.info(category: "DB Optimizer", message: "Start optimizing database")

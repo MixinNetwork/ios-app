@@ -9,9 +9,17 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RecognizeWindow" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="actionButton" destination="uOW-zj-ZNt" id="oMA-FW-YUO"/>
+                <outlet property="actionButtonBottomConstraint" destination="Y2f-c1-nf8" id="1gu-uQ-zkq"/>
+                <outlet property="contentTextView" destination="V5F-62-qhE" id="oDN-oE-zx0"/>
+                <outlet property="copyButton" destination="y9A-UR-Gd5" id="mE6-CY-ozU"/>
+                <outlet property="view" destination="UYR-5Z-1kS" id="s0e-Wz-P0a"/>
+            </connections>
+        </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="UYR-5Z-1kS" customClass="RecognizeWindow" customModule="Mixin" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="UYR-5Z-1kS">
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -26,7 +34,7 @@
                             </constraints>
                             <state key="normal" image="dialog_close"/>
                             <connections>
-                                <action selector="dismissAction:" destination="UYR-5Z-1kS" eventType="touchUpInside" id="Rzl-g3-rF9"/>
+                                <action selector="dismissAction:" destination="-1" eventType="touchUpInside" id="Rzl-g3-rF9"/>
                             </connections>
                         </button>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="https://www.google.com" textAlignment="center" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V5F-62-qhE">
@@ -47,7 +55,7 @@
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="buttonAction:" destination="UYR-5Z-1kS" eventType="touchUpInside" id="q4j-WJ-90f"/>
+                                <action selector="buttonAction:" destination="-1" eventType="touchUpInside" id="q4j-WJ-90f"/>
                             </connections>
                         </button>
                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y9A-UR-Gd5">
@@ -60,7 +68,7 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="copy"/>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="copyAction:" destination="UYR-5Z-1kS" eventType="touchUpInside" id="ac9-rX-Nk1"/>
+                                <action selector="copyAction:" destination="-1" eventType="touchUpInside" id="ac9-rX-Nk1"/>
                             </connections>
                         </button>
                     </subviews>
@@ -84,20 +92,13 @@
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="lRr-3C-PSy"/>
-            <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="TQ9-9O-96j" secondAttribute="trailing" id="0GY-qh-rHq"/>
                 <constraint firstItem="TQ9-9O-96j" firstAttribute="leading" secondItem="UYR-5Z-1kS" secondAttribute="leading" id="AUv-Pb-zGK"/>
                 <constraint firstItem="lRr-3C-PSy" firstAttribute="bottom" secondItem="y9A-UR-Gd5" secondAttribute="bottom" constant="20" id="F0N-ut-4kM"/>
                 <constraint firstAttribute="bottom" secondItem="TQ9-9O-96j" secondAttribute="bottom" priority="500" constant="-13" id="ZWl-62-ZeD"/>
             </constraints>
-            <connections>
-                <outlet property="actionButton" destination="uOW-zj-ZNt" id="oMA-FW-YUO"/>
-                <outlet property="actionButtonBottomConstraint" destination="Y2f-c1-nf8" id="1gu-uQ-zkq"/>
-                <outlet property="contentTextView" destination="V5F-62-qhE" id="oDN-oE-zx0"/>
-                <outlet property="copyButton" destination="y9A-UR-Gd5" id="mE6-CY-ozU"/>
-                <outlet property="popupView" destination="TQ9-9O-96j" id="sX7-ac-uZj"/>
-            </connections>
             <point key="canvasLocation" x="82.5" y="63.5"/>
         </view>
     </objects>

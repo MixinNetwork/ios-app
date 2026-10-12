@@ -255,7 +255,7 @@ struct NoPendingTransactionPrecondition: PaymentPrecondition {
                     }
                     let hint = WalletHintViewController(content: .waitingTransaction)
                     hint.delegate = delegation
-                    UIApplication.homeContainerViewController?.present(hint, animated: true)
+                    UIApplication.shared.homeContainerViewController?.present(hint, animated: true)
                     ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
                 }
             }

@@ -323,7 +323,7 @@ extension AddressInfoInputViewController {
     }
     
     private func destination(bip21Unchecked destination: String) -> String {
-        if token.chainID == ChainID.bitcoin, let uri = BIP21(string: destination) {
+        if (token.chainID == ChainID.bitcoin || token.chainID == ChainID.pearl), let uri = BIP21(string: destination) {
             uri.destination
         } else {
             destination

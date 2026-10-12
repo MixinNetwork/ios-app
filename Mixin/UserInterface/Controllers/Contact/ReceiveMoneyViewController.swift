@@ -60,7 +60,7 @@ final class ReceiveMoneyViewController: UIViewController {
     }
     
     @IBAction func scan(_ sender: Any) {
-        UIApplication.homeNavigationController?.pushQRCodeScannerViewController()
+        UIApplication.shared.homeNavigationController?.pushQRCodeScannerViewController()
     }
     
     @IBAction func setAmount(_ sender: Any) {
@@ -81,7 +81,7 @@ final class ReceiveMoneyViewController: UIViewController {
     }
     
     @objc func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(reportingTags: nil)
         present(customerService, animated: true)
     }
     

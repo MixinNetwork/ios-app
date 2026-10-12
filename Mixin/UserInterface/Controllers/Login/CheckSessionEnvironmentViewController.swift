@@ -42,6 +42,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     private lazy var navigationBarAppearanceUpdater = NavigationBarStyle.AppearanceUpdater()
     
     private weak var retryButton: UIButton?
+    private weak var launchCoverView: UIView?
     
     private var account: Account
     private var isAccountFresh: Bool
@@ -111,7 +112,14 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         navigationBar.setItems([navigationItem], animated: false)
         
         if AccountVerificationIntent.current == nil {
-            // Permissive path for app relauncch
+            // Permissive path for app relaunch
+            let coverView = UIView()
+            coverView.backgroundColor = view.backgroundColor
+            coverView.accessibilityViewIsModal = true
+            view.addSubview(coverView)
+            coverView.snp.makeEdgesEqualToSuperview()
+            launchCoverView = coverView
+            
             check()
         } else {
             // Strict path for login
@@ -149,8 +157,8 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         Logger.login.info(category: "CheckSessionEnv", message: "Check environments")
         if AppGroupUserDefaults.isClockSkewed {
             Logger.login.info(category: "CheckSessionEnv", message: "Clock skewed")
-            while UIApplication.shared.keyWindow?.subviews.last is BottomSheetView {
-                UIApplication.shared.keyWindow?.subviews.last?.removeFromSuperview()
+            if presentedViewController != nil {
+                dismiss(animated: false)
             }
             let clockSkew = ClockSkewViewController()
             reload(content: clockSkew)
@@ -205,9 +213,11 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        let customerService = CustomerServiceViewController(
+            presentLoginLogsOnLongPressingTitle: true,
+            reportingTags: ["source": "check_session_env"],
+        )
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "check_session_env"])
     }
     
     @objc private func reloadAccountThenCheck() {
@@ -252,6 +262,7 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
                             reporter.report(event: .loginPINVerify, tags: ["type": "pin_upgrade"])
                         }
                     } else {
+                        CheckTIPCountersJob.isTIPCounterChecked = true
                         Logger.login.info(category: "CheckSessionEnv", message: "No interruption, start validation")
                         let validation = LoginPINValidationViewController(account: account)
                         let navigation = GeneralAppearanceNavigationController(rootViewController: validation)
@@ -286,7 +297,9 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         }
         AccountVerificationIntent.current = nil
         
-        AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(initialTab: initialTab)
+        DispatchQueue.main.async {
+            self.view.window?.rootViewController = HomeContainerViewController(initialTab: initialTab)
+        }
         
         if intent != nil {
             assert(MixinKeys.testAccountPrefix != nil)
@@ -384,6 +397,8 @@ extension CheckSessionEnvironmentViewController {
                     switch address.chainID {
                     case ChainID.bitcoin:
                         derivation = try mnemonics.plain.checkedDerivationForBitcoin(path: path)
+                    case ChainID.pearl:
+                        derivation = try mnemonics.plain.checkedDerivationForPearl(path: path)
                     case ChainID.ethereum:
                         derivation = try mnemonics.plain.checkedDerivationForEVM(path: path)
                     case ChainID.solana:
@@ -510,6 +525,7 @@ extension CheckSessionEnvironmentViewController {
     
     private func reload(content: UIViewController) {
         removeContentViewController()
+        launchCoverView?.removeFromSuperview()
         addChild(content)
         view.addSubview(content.view)
         content.view.snp.makeEdgesEqualToSuperview()
@@ -529,6 +545,7 @@ extension CheckSessionEnvironmentViewController {
         description: String,
         retryWithSelector retrySelector: Selector
     ) {
+        launchCoverView?.removeFromSuperview()
         activityIndicator.stopAnimating()
         descriptionLabel.text = description
         descriptionLabel.textColor = R.color.error_red()

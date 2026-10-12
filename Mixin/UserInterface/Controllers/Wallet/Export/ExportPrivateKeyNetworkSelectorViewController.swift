@@ -99,7 +99,7 @@ extension ExportPrivateKeyNetworkSelectorViewController: UICollectionViewDelegat
                 let introduction = AddWalletIntroductionViewController(
                     action: .exportSecret(.privateKeyFromMnemonics(mnemonics, kind, path))
                 )
-                UIApplication.homeNavigationController?.pushViewController(introduction, animated: true)
+                UIApplication.shared.homeNavigationController?.pushViewController(introduction, animated: true)
             }
         } catch {
             Logger.general.error(category: "ExportPrivateKey", message: "\(error)")

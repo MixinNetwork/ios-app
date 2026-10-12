@@ -24,10 +24,9 @@ class InteractiveDismissResponder: UIView {
     }
     
     override var intrinsicContentSize: CGSize {
-        let width = AppDelegate.current.mainWindow.bounds.width
-        return CGSize(width: width, height: height)
+        CGSize(width: UIView.layoutFittingExpandedSize.width, height: height)
     }
-        
+    
     private func prepare() {
         backgroundColor = .clear
         isUserInteractionEnabled = false

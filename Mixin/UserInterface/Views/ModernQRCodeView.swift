@@ -64,7 +64,7 @@ final class ModernQRCodeView: UIView {
         }
         imageView.isHidden = true
         
-        let scale = AppDelegate.current.mainWindow.screen.scale
+        let scale = UIApplication.shared.firstWindowScene?.keyWindow?.screen.scale ?? 3
         let pixelSize = CGSize(width: size.width * scale, height: size.height * scale)
         let tintColor = self.tintColor.cgColor
         DispatchQueue.global().async { [qrCodeGenerator] in

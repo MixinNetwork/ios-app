@@ -673,8 +673,6 @@
 "error_watch_address_not_supported" = "오류 10633: 현재 이 주소를 추가할 수 없습니다";
 "error_withdrawal_memo_format_incorrect" = "오류 20131: 출금 메모 형식이 잘못되었습니다.";
 "error_withdrawal_suspend" = "오류 20137: 출금이 일시 중지되었습니다.";
-"estimate_loss" = "예상 손실";
-"estimate_profit" = "예상 수익";
 "estimated_balance_change" = "잔액 변경(예상)";
 "estimated_fee" = "예상 수수료";
 "estimated_liquidation_price" = "예상 청산 가격";

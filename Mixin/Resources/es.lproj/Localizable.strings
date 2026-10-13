@@ -673,8 +673,6 @@
 "error_watch_address_not_supported" = "ERROR 10633: Actualmente no se admite añadir esta dirección";
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Formato de nota de retiro incorrecto.";
 "error_withdrawal_suspend" = "ERROR 20137: Los retiros están suspendidos.";
-"estimate_loss" = "Pérdida estimada";
-"estimate_profit" = "Ganancia estimada";
 "estimated_balance_change" = "Cambio de saldo (estimación)";
 "estimated_fee" = "Comisión estimada";
 "estimated_liquidation_price" = "Precio de liquidación estimado";

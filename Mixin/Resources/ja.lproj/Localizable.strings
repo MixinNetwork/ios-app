@@ -673,8 +673,6 @@
 "error_watch_address_not_supported" = "エラー 10633: このアドレスは現在対応していません";
 "error_withdrawal_memo_format_incorrect" = "エラー20131：出金メモのフォーマットが不正確です";
 "error_withdrawal_suspend" = "エラー 20137: 出金は一時停止されています。";
-"estimate_loss" = "予想損失";
-"estimate_profit" = "予想利益";
 "estimated_balance_change" = "バランス変更 (推定)";
 "estimated_fee" = "推定手数料";
 "estimated_liquidation_price" = "推定清算価格";

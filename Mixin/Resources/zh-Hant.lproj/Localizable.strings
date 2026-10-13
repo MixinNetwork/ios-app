@@ -673,8 +673,6 @@
 "error_watch_address_not_supported" = "錯誤 10633：暫不支援新增該地址";
 "error_withdrawal_memo_format_incorrect" = "錯誤 20131：提現備註格式不正確";
 "error_withdrawal_suspend" = "錯誤 20137：提現暫停";
-"estimate_loss" = "預計虧損";
-"estimate_profit" = "預計收益";
 "estimated_balance_change" = "餘額變動（預估）";
 "estimated_fee" = "預估手續費";
 "estimated_liquidation_price" = "預估強平價格";

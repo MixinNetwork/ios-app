@@ -673,8 +673,6 @@
 "error_watch_address_not_supported" = "ERROR 10633: This address is currently not supported";
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Withdrawal memo format incorrect.";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawals are suspended.";
-"estimate_loss" = "Estimate Loss";
-"estimate_profit" = "Estimate Profit";
 "estimated_balance_change" = "Balance Change (estimate)";
 "estimated_fee" = "Estimated Fee";
 "estimated_liquidation_price" = "Estimated Liquidation Price";

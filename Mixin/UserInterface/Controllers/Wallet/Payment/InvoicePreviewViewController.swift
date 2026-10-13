@@ -46,7 +46,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
             symbol: .currencySymbol
         )
         var rows: [Row] = [
-            .info(caption: .totalAmount, content: totalFiatMoneyAmount),
+            .info(caption: .totalAmount, content: totalFiatMoneyAmount, action: nil),
         ]
         
         let changes: [StyledAssetChange] = operation.transactions.compactMap { item in
@@ -132,7 +132,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
            let value = memo.plainValue ?? memo.hexEncodedValue,
            !value.isEmpty
         {
-            rows.append(.info(caption: .memo, content: value))
+            rows.append(.info(caption: .memo, content: value, action: nil))
         }
         
         reloadData(with: rows)

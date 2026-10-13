@@ -2,6 +2,7 @@ import UIKit
 
 final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
     
+    @IBOutlet weak var captionStackView: UIStackView!
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var contentTextView: UITextView!
     
@@ -15,10 +16,18 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
     private weak var label: InsetLabel?
     private weak var labelLeadingConstraint: NSLayoutConstraint?
     private weak var labelTopConstraint: NSLayoutConstraint?
+    private weak var infoImageView: UIImageView?
+    private weak var infoButton: UIButton?
     
     private var stackViewBottomMargin: CGFloat = 0
     private var contentTextViewSizeObserver: NSKeyValueObservation?
     private var labelContent: AddressLabel?
+    
+    var onInfo: (() -> Void)? {
+        didSet {
+            updateInfoViews()
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -29,6 +38,11 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
             self?.layoutLabelIfNeeded()
         }
         stackViewBottomMargin = contentBottomConstraint.constant
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        onInfo = nil
     }
     
     func setContent(_ content: String, labelContent: AddressLabel? = nil) {
@@ -53,6 +67,33 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
             setContent("\(content)")
         } else {
             setContent("")
+        }
+    }
+    
+    @objc private func showInfo(_ sender: Any) {
+        onInfo?()
+    }
+    
+    private func updateInfoViews() {
+        if onInfo == nil {
+            infoButton?.removeFromSuperview()
+            infoImageView?.removeFromSuperview()
+        } else if infoButton == nil {
+            let imageView = UIImageView(image: R.image.info())
+            imageView.contentMode = .scaleAspectFit
+            captionStackView.insertArrangedSubview(imageView, at: 1)
+            imageView.snp.makeConstraints { make in
+                make.width.height.equalTo(16)
+            }
+            infoImageView = imageView
+            let button = UIButton(type: .system)
+            button.addTarget(self, action: #selector(showInfo(_:)), for: .touchUpInside)
+            contentView.addSubview(button)
+            button.snp.makeConstraints { make in
+                make.center.equalTo(imageView)
+                make.width.height.equalTo(36)
+            }
+            infoButton = button
         }
     }
     

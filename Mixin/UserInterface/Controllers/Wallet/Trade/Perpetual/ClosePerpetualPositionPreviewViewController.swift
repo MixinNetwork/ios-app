@@ -100,6 +100,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                     sign: .never,
                     symbol: .dollarSign,
                 ),
+                action: nil,
             ))
             
             let pnl = NSMutableAttributedString(
@@ -134,6 +135,9 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 rows.append(.info(
                     caption: .string(R.string.localizable.estimated_fee()),
                     content: fee,
+                    action: { [weak self] in
+                        self?.introduceFee()
+                    },
                 ))
             }
         } else {
@@ -152,6 +156,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                     sign: .never,
                     symbol: .dollarSign,
                 ),
+                action: nil,
             ))
             
             let pnl = NSMutableAttributedString(
@@ -185,6 +190,9 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             rows.append(.info(
                 caption: .string(R.string.localizable.estimated_fee()),
                 content: totalFee.formatted(PerpetualOrder.feeFormatStyle),
+                action: { [weak self] in
+                    self?.introduceFee()
+                },
             ))
         }
         
@@ -192,6 +200,17 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             .wallet(caption: .receiver, wallet: wallet, threshold: nil),
         ])
         reloadData(with: rows)
+    }
+    
+    private func introduceFee() {
+        let manual = PerpsManual.viewController(initialPage: .tradingFee)
+        present(manual, animated: true)
+        reporter.report(
+            event: .tradePerpsGuide,
+            tags: ["source": reducingQuantity == nil
+                ? "perps_close_preview_fee"
+                : "perps_reduce_position_preview_fee"],
+        )
     }
     
     override func confirm(_ sender: Any) {

@@ -159,7 +159,7 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
             break
         }
         
-        rows.append(.info(caption: .network, content: operation.chain.name))
+        rows.append(.info(caption: .network, content: operation.chain.name, action: nil))
         reloadData(with: rows)
         
         if operationContainsSetAuthority {

@@ -78,11 +78,13 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 ),
                 .info(
                     caption: .string(R.string.localizable.amount()),
-                    content: amount
+                    content: amount,
+                    action: nil,
                 ),
                 .info(
                     caption: .string(R.string.localizable.entry_price()),
-                    content: context.viewModel.localizedLastPrice
+                    content: context.viewModel.localizedLastPrice,
+                    action: nil,
                 ),
             ])
         case let .increasePosition(quantity, margin):
@@ -238,7 +240,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         }
         rows.append(.wallet(caption: .sender, wallet: context.wallet, threshold: nil))
         if let memo = operation.extra.plainValue {
-            rows.append(.info(caption: .memo, content: memo))
+            rows.append(.info(caption: .memo, content: memo, action: nil))
         }
         
         reloadData(with: rows)

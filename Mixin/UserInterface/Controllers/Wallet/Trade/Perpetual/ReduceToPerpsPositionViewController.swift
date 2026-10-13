@@ -28,6 +28,8 @@ final class ReduceToPerpsPositionViewController: UIViewController {
     @IBOutlet weak var thirdDescriptionView: UIStackView!
     @IBOutlet weak var thirdDescriptionTitleLabel: UILabel!
     @IBOutlet weak var thirdDescriptionContentLabel: UILabel!
+    @IBOutlet weak var thirdDescriptionInfoView: UIImageView!
+    @IBOutlet weak var thirdDescriptionInfoButton: UIButton!
     
     @IBOutlet weak var actionWrapperView: UIView!
     @IBOutlet weak var cancelButton: UIButton!
@@ -161,6 +163,8 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             secondDescriptionTitleLabel.text = R.string.localizable.liquidation_price()
             secondDescriptionInfoView.isHidden = false
             thirdDescriptionView.isHidden = true
+            thirdDescriptionInfoView.isHidden = true
+            thirdDescriptionInfoButton.isHidden = true
         case .position:
             reporter.report(event: .tradePerpsReducePositionStart, tags: tags)
             titleView.titleLabel.text = R.string.localizable.perps_close_position_title(
@@ -173,6 +177,8 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             secondDescriptionInfoView.isHidden = true
             secondDescriptionInfoButton.isHidden = true
             thirdDescriptionView.isHidden = false
+            thirdDescriptionInfoView.isHidden = false
+            thirdDescriptionInfoButton.isHidden = false
             thirdDescriptionTitleLabel.text = R.string.localizable.fee()
         }
         updateSubtitle()
@@ -404,6 +410,20 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             )
         case .position:
             break
+        }
+    }
+    
+    @IBAction func introduceThirdDescription(_ sender: Any) {
+        switch target {
+        case .margin:
+            break
+        case .position:
+            let manual = PerpsManual.viewController(initialPage: .tradingFee)
+            present(manual, animated: true)
+            reporter.report(
+                event: .tradePerpsGuide,
+                tags: ["source": "perps_reduce_position_fee"]
+            )
         }
     }
     

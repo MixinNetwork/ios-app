@@ -84,7 +84,8 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
             ),
             .info(
                 caption: .string(R.string.localizable.order_type()),
-                content: orderType
+                content: orderType,
+                action: nil,
             ),
             .doubleLineInfo(
                 caption: .price,
@@ -114,7 +115,8 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
             rows.append(
                 .info(
                     caption: .string(R.string.localizable.trade_expiry()),
-                    content: expiry.localizedName
+                    content: expiry.localizedName,
+                    action: nil,
                 )
             )
         }
@@ -127,7 +129,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
             rows.append(.receivers([receiver], threshold: nil))
             rows.append(.wallet(caption: .sender, wallet: .privacy, threshold: nil))
             if let memo = operation.extra.plainValue, !memo.isEmpty {
-                rows.append(.info(caption: .memo, content: memo))
+                rows.append(.info(caption: .memo, content: memo, action: nil))
             }
         case .web3(let operation):
             if let fee = operation.fee?.selected {

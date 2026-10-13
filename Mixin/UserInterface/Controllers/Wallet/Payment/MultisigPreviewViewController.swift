@@ -144,14 +144,14 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
         if let safe {
             rows = [
                 .safeMultisigAmount(token: token, tokenAmount: tokenValue, fiatMoneyAmount: fiatMoneyValue),
-                .info(caption: .sender, content: safe.address),
+                .info(caption: .sender, content: safe.address, action: nil),
                 .safe(name: safe.name, role: safe.role),
             ]
             switch safe.operation {
             case let .transaction(transaction):
                 rows.insert(.addressReceivers(token, transaction.recipients), at: 2)
                 if !transaction.note.isEmpty {
-                    rows.append(.info(caption: .note, content: transaction.note))
+                    rows.append(.info(caption: .note, content: transaction.note, action: nil))
                 }
             case .recovery:
                 break
@@ -168,7 +168,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 .senders(senders, multisigSigners: signers, threshold: sendersThreshold),
                 .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
                 .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
-                .info(caption: .network, content: token.depositNetworkName ?? ""),
+                .info(caption: .network, content: token.depositNetworkName ?? "", action: nil),
             ]
         }
         

@@ -182,16 +182,19 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             cell.setContent(address, labelContent: label)
+            cell.onInfo = nil
             return cell
-        case let .info(caption, content):
+        case let .info(caption, content, action):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             cell.setContent(content)
+            cell.onInfo = action
             return cell
         case let .boldInfo(caption, content):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             cell.setBoldContent(content)
+            cell.onInfo = nil
             return cell
         case let .doubleLineInfo(caption, primary, secondary):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
@@ -242,6 +245,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = R.string.localizable.receiver().uppercased()
             cell.setContent(address)
+            cell.onInfo = nil
             return cell
         case let .web3Message(caption, message):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_message, for: indexPath)!
@@ -466,7 +470,7 @@ extension AuthenticationPreviewViewController {
         }
         
         case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent, boldPrimaryAmount: Bool)
-        case info(caption: Caption, content: String)
+        case info(caption: Caption, content: String, action: (() -> Void)?)
         case boldInfo(caption: Caption, content: String)
         case doubleLineInfo(caption: Caption, primary: String, secondary: Text)
         case address(caption: Caption, address: String, label: AddressLabel?)

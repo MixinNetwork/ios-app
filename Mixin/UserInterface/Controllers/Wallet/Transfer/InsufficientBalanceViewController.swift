@@ -236,7 +236,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
         
         if let network = insufficientToken.depositNetworkName {
             rows.append(
-                .info(caption: .network, content: network)
+                .info(caption: .network, content: network, action: nil)
             )
         }
         

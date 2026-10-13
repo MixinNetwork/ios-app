@@ -4,14 +4,15 @@ import MixinServices
 
 final class WalletSummaryViewController: UIViewController {
     
-    private lazy var addWalletView = BadgeBarButtonView(
+    @IBOutlet weak var categorySelectorCollectionView: UICollectionView!
+    @IBOutlet weak var categorySelectorLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var categorySelectorHeightConstraint: NSLayoutConstraint!
+    
+    private lazy var addWalletItem = CompatibleBadgeBarButtonItem(
         image: R.image.ic_title_add()!,
         target: self,
         action: #selector(addWallet(_:)),
     )
-    @IBOutlet weak var categorySelectorCollectionView: UICollectionView!
-    @IBOutlet weak var categorySelectorLayout: UICollectionViewFlowLayout!
-    @IBOutlet weak var categorySelectorHeightConstraint: NSLayoutConstraint!
     
     private var categorySelectorSizeObserver: NSKeyValueObservation?
     private var categorySelectorController: CategorySelectorController!
@@ -57,8 +58,8 @@ final class WalletSummaryViewController: UIViewController {
         }
         navigationItem.leftBarButtonItem = titleItem
         
-        addWalletView.badge = BadgeManager.shared.hasViewed(identifier: .addWalletAction) ? nil : .unread
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: addWalletView)
+        addWalletItem.compatibleBadge = BadgeManager.shared.hasViewed(identifier: .addWalletAction) ? nil : .unread
+        navigationItem.rightBarButtonItem = addWalletItem
         
         categorySelectorLayout.itemSize = UICollectionViewFlowLayout.automaticSize
         categorySelectorController = CategorySelectorController(
@@ -207,7 +208,7 @@ final class WalletSummaryViewController: UIViewController {
     }
     
     @objc private func addWallet(_ sender: Any) {
-        addWalletView.badge = nil
+        addWalletItem.compatibleBadge = nil
         BadgeManager.shared.setHasViewed(identifier: .addWalletAction)
         let selector = AddWalletMethodSelectorViewController()
         selector.onSelected = { [weak self] method in

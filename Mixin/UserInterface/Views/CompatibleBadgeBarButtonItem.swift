@@ -7,8 +7,10 @@ final class CompatibleBadgeBarButtonItem: UIBarButtonItem {
             if #available(iOS 26.0, *) {
                 switch compatibleBadge {
                 case .unread:
-                    var badge: Badge = .indicator()
-                    badge.backgroundColor = R.color.error_red()
+                    var badge: Badge = .string("●")
+                    badge.backgroundColor = .clear
+                    badge.foregroundColor = R.color.error_red()
+                    badge.font = .systemFont(ofSize: 10)
                     super.badge = badge
                 case .count(let count):
                     var badge: Badge = .count(count)

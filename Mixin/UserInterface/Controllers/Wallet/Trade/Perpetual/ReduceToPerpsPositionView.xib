@@ -25,16 +25,16 @@
                 <outlet property="secondDescriptionActivityIndicator" destination="KEk-Ed-oel" id="gan-BA-tTg"/>
                 <outlet property="secondDescriptionContentLabel" destination="bgf-1d-1Jh" id="CZg-ut-nN2"/>
                 <outlet property="secondDescriptionInfoButton" destination="vYl-s2-2ue" id="second-info-button"/>
-                <outlet property="thirdDescriptionView" destination="third-description" id="third-description-outlet"/>
-                <outlet property="thirdDescriptionTitleLabel" destination="third-title" id="third-title-outlet"/>
-                <outlet property="thirdDescriptionContentLabel" destination="third-content" id="third-content-outlet"/>
-                <outlet property="thirdDescriptionInfoView" destination="third-info" id="third-info-outlet"/>
-                <outlet property="thirdDescriptionInfoButton" destination="third-info-button" id="third-info-button-outlet"/>
                 <outlet property="secondDescriptionInfoView" destination="6AI-DR-YTQ" id="x0Z-ET-1d2"/>
                 <outlet property="secondDescriptionTitleLabel" destination="7mc-Eo-nGw" id="pLk-9G-FEh"/>
                 <outlet property="slider" destination="xua-ar-gf3" id="fCn-dd-grJ"/>
                 <outlet property="swapValueDisplayButton" destination="Sgf-Ye-eIV" id="swap-value-button"/>
                 <outlet property="swapValueDisplayImageView" destination="nWd-Js-qlG" id="tCk-hx-FVw"/>
+                <outlet property="thirdDescriptionContentLabel" destination="third-content" id="third-content-outlet"/>
+                <outlet property="thirdDescriptionInfoButton" destination="third-info-button" id="third-info-button-outlet"/>
+                <outlet property="thirdDescriptionInfoView" destination="third-info" id="third-info-outlet"/>
+                <outlet property="thirdDescriptionTitleLabel" destination="third-title" id="third-title-outlet"/>
+                <outlet property="thirdDescriptionView" destination="third-description" id="third-description-outlet"/>
                 <outlet property="titleView" destination="ztB-1h-zOB" id="ada-cY-rWC"/>
                 <outlet property="valueTextField" destination="Iml-Mv-mdd" id="iGn-lJ-Q9R"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -56,7 +56,7 @@
                     <rect key="frame" x="0.0" y="188" width="393" height="514"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vet-Pn-N7H" userLabel="Content View">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="335.33333333333331"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="368.33333333333331"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hS7-wT-Jr6">
                                     <rect key="frame" x="20" y="0.0" width="353" height="269.33333333333331"/>
@@ -169,7 +169,7 @@
                                     </constraints>
                                 </view>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="RxC-NC-Wys">
-                                    <rect key="frame" x="36" y="285.33333333333331" width="321" height="50"/>
+                                    <rect key="frame" x="36" y="285.33333333333331" width="321" height="83"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="HgE-5h-7O2">
                                             <rect key="frame" x="0.0" y="0.0" width="321" height="17"/>
@@ -180,7 +180,7 @@
                                                     <color key="textColor" name="text_tertiary"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="g6b-fm-1it">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="g6b-fm-1it">
                                                     <rect key="frame" x="31.333333333333343" y="0.0" width="289.66666666666663" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="text_tertiary"/>
@@ -198,9 +198,9 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info" translatesAutoresizingMaskIntoConstraints="NO" id="6AI-DR-YTQ">
-                                                    <rect key="frame" x="112" y="0.0" width="16" height="17"/>
+                                                    <rect key="frame" x="112" y="0.0" width="16" height="16"/>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="-" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bgf-1d-1Jh">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="-" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bgf-1d-1Jh">
                                                     <rect key="frame" x="132" y="0.0" width="189" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="text_tertiary"/>
@@ -209,19 +209,19 @@
                                             </subviews>
                                         </stackView>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="third-description">
-                                            <rect key="frame" x="0.0" y="0.0" width="321" height="17"/>
+                                            <rect key="frame" x="0.0" y="66.000000000000057" width="321" height="17"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fee" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="third-title">
-                                                    <rect key="frame" x="0.0" y="0.0" width="27.333333333333332" height="17"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="23.666666666666668" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="text_tertiary"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info" translatesAutoresizingMaskIntoConstraints="NO" id="third-info">
-                                                    <rect key="frame" x="31.333333333333343" y="0.5" width="16" height="16"/>
+                                                    <rect key="frame" x="27.666666666666664" y="0.66666666666662877" width="16" height="16"/>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="third-content">
-                                                    <rect key="frame" x="51.333333333333343" y="0.0" width="269.66666666666663" height="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="third-content">
+                                                    <rect key="frame" x="47.666666666666657" y="0.0" width="273.33333333333337" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="text_tertiary"/>
                                                     <nil key="highlightedColor"/>
@@ -231,7 +231,7 @@
                                     </subviews>
                                 </stackView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vYl-s2-2ue">
-                                    <rect key="frame" x="138" y="309" width="36" height="36"/>
+                                    <rect key="frame" x="138" y="308.33333333333331" width="36" height="36"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="vYl-s2-2ue" secondAttribute="height" id="Ynd-v8-7eg"/>
                                         <constraint firstAttribute="width" constant="36" id="p9c-oV-6QN"/>
@@ -243,7 +243,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="third-info-button">
-                                    <rect key="frame" x="57.333333333333343" y="342" width="36" height="36"/>
+                                    <rect key="frame" x="53.666666666666657" y="342" width="36" height="36"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="third-info-button" secondAttribute="height" id="third-info-button-square"/>
                                         <constraint firstAttribute="width" constant="36" id="third-info-button-width"/>

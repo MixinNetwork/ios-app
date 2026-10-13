@@ -172,14 +172,15 @@ final class ReduceToPerpsPositionViewController: UIViewController {
                 marketViewModel.market.tokenSymbol
             )
             firstDescriptionTitleLabel.text = R.string.localizable.estimated_receive()
+            firstDescriptionContentLabel.textColor = R.color.text()!
             secondDescriptionTitleLabel.text = R.string.localizable.margin()
-            secondDescriptionContentLabel.numberOfLines = 2
             secondDescriptionInfoView.isHidden = true
             secondDescriptionInfoButton.isHidden = true
             thirdDescriptionView.isHidden = false
             thirdDescriptionInfoView.isHidden = false
             thirdDescriptionInfoButton.isHidden = false
             thirdDescriptionTitleLabel.text = R.string.localizable.fee()
+            thirdDescriptionContentLabel.textColor = R.color.text()!
         }
         updateSubtitle()
         titleView.closeButton.addTarget(

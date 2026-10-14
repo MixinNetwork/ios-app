@@ -786,17 +786,17 @@ extension ReduceToPerpsPositionViewController {
                 max(0, absoluteAmount + Decimal(change))
             )
             switch target {
-            case .margin:
-                break
             case .position:
                 if value == totalAmount, totalAmount > 0 {
                     inputPercentage(1)
-                    return
+                } else {
+                    fallthrough
                 }
+            case .margin:
+                input = Input(mode: .byAmount, value: value)
+                updateValueViews(updatingValueTextField: true)
+                updateDescriptions(requestLiquidationPrice: true)
             }
-            input = Input(mode: .byAmount, value: value)
-            updateValueViews(updatingValueTextField: true)
-            updateDescriptions(requestLiquidationPrice: true)
         }
     }
     

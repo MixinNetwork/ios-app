@@ -143,17 +143,28 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 ))
             }
         } else {
-            let totalPnL = viewModels.map(\.position.decimalUnrealizedPnL).reduce(0, +)
-            let pnlColor: MarketColor = totalPnL >= 0 ? .rising : .falling
-            let totalMargin = viewModels.map(\.decimalMargin).reduce(0, +) + totalPnL
-            let totalFee: Decimal = viewModels.reduce(0) { result, viewModel in
-                result + (viewModel.position.decimalEstimatedCloseFee ?? 0)
+            var totalPnL: Decimal = 0
+            var totalMargin: Decimal = 0
+            var totalFee: Decimal = 0
+            var totalReceivingAmount: Decimal = 0
+            for viewModel in viewModels {
+                let fee = viewModel.position.decimalEstimatedCloseFee ?? 0
+                let pnl = max(
+                    -(viewModel.decimalMargin - fee),
+                    viewModel.position.decimalUnrealizedPnL,
+                )
+                let margin = viewModel.decimalMargin + pnl
+                totalPnL += pnl
+                totalMargin += margin
+                totalFee += fee
+                totalReceivingAmount += max(0, margin - fee)
             }
+            let pnlColor: MarketColor = totalPnL >= 0 ? .rising : .falling
             
             rows.append(.info(
                 caption: .string(R.string.localizable.estimated_receive()),
                 content: CurrencyFormatter.localizedString(
-                    from: totalMargin - totalFee,
+                    from: totalReceivingAmount,
                     format: .precision,
                     sign: .never,
                     symbol: .dollarSign,

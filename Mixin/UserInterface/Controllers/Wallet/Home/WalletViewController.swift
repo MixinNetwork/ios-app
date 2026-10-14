@@ -39,7 +39,13 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     private(set) var isViewAppearing = false
     private(set) var dataSource: DiffableDataSource!
     
-    private let bannersInfiniteIllusionMultiplier = 7
+    private let bannersInfiniteIllusionMultiplier: Int = {
+        if #available(iOS 17.0, *) {
+            return 7
+        } else {
+            return 1
+        }
+    }()
     private let touchDetectionGestureCoordinator = TouchDetectionGestureCoordinator()
     
     private weak var bannersPageControl: UIPageControl?
@@ -824,6 +830,9 @@ extension WalletViewController {
     }
     
     func resetBannersToCenter() {
+        guard #available(iOS 17.0, *) else {
+            return
+        }
         if let indexPath = focusedBannerIndexPath,
            case let .banner(banner, offset) = dataSource.itemIdentifier(for: indexPath),
            offset != 0,
@@ -836,6 +845,10 @@ extension WalletViewController {
     
     func scheduleBannersAutoScrolling() {
         bannerAutoScrollingTimer?.invalidate()
+        bannerAutoScrollingTimer = nil
+        guard #available(iOS 17.0, *) else {
+            return
+        }
         guard isViewAppearing, banners.count > 1 else {
             return
         }
@@ -910,6 +923,9 @@ extension WalletViewController {
     }
     
     func scrollToFirstBanner() {
+        guard #available(iOS 17.0, *) else {
+            return
+        }
         guard let firstBanner = banners.first else {
             return
         }
@@ -921,8 +937,8 @@ extension WalletViewController {
     }
     
     private func displayBannerItems(banners: [WalletBanner], multiplier: Int) -> [Item] {
-        if banners.count == 1 {
-            return [Item.banner(banners[banners.startIndex], duplicationOffset: 0)]
+        if banners.count == 1 || multiplier == 1 {
+            return banners.map { Item.banner($0, duplicationOffset: 0) }
         } else {
             let groups: [[Item]] = (-multiplier/2..<0).map { offset in
                 banners.map { banner in

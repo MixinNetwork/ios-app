@@ -153,21 +153,36 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 ))
             }
         case .batch(let viewModels):
+            let hasEstimatedFees = viewModels.allSatisfy { viewModel in
+                viewModel.position.decimalEstimatedCloseFee != nil
+            }
             var totalPnL: Decimal = 0
             var totalMargin: Decimal = 0
             var totalFee: Decimal = 0
             var totalReceivingAmount: Decimal = 0
             for viewModel in viewModels {
-                let fee = viewModel.position.decimalEstimatedCloseFee ?? 0
-                let pnl = max(
-                    -(viewModel.decimalMargin - fee),
-                    viewModel.position.decimalUnrealizedPnL,
-                )
-                let margin = viewModel.decimalMargin + pnl
+                let pnl: Decimal
+                let margin: Decimal
+                let receivingAmount: Decimal
+                if hasEstimatedFees, let fee = viewModel.position.decimalEstimatedCloseFee {
+                    pnl = max(
+                        -(viewModel.decimalMargin - fee),
+                        viewModel.position.decimalUnrealizedPnL,
+                    )
+                    margin = viewModel.decimalMargin + pnl
+                    receivingAmount = max(0, margin - fee)
+                    totalFee += fee
+                } else {
+                    pnl = max(
+                        -viewModel.decimalMargin,
+                        viewModel.position.decimalUnrealizedPnL,
+                    )
+                    margin = viewModel.decimalMargin + pnl
+                    receivingAmount = max(0, margin)
+                }
                 totalPnL += pnl
                 totalMargin += margin
-                totalFee += fee
-                totalReceivingAmount += max(0, margin - fee)
+                totalReceivingAmount += receivingAmount
             }
             let pnlColor: MarketColor = totalPnL >= 0 ? .rising : .falling
             
@@ -212,7 +227,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             
             rows.append(.info(
                 caption: .string(R.string.localizable.estimated_fee()),
-                content: totalFee.formatted(PerpetualOrder.feeFormatStyle),
+                content: hasEstimatedFees ? totalFee.formatted(PerpetualOrder.feeFormatStyle) : "-",
                 action: { [weak self] in
                     self?.introduceFee()
                 },

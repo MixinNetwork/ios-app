@@ -235,6 +235,9 @@ public final class PerpsDatabase: Database {
             if !marketColumns.contains("quantity_scale") {
                 try db.execute(sql: "ALTER TABLE `markets` ADD COLUMN `quantity_scale` INTEGER NOT NULL DEFAULT 0")
             }
+            if !marketColumns.contains("min_order_value") {
+                try db.execute(sql: "ALTER TABLE `markets` ADD COLUMN `min_order_value` TEXT NOT NULL DEFAULT ''")
+            }
         }
         
         return migrator

@@ -1264,6 +1264,7 @@
 "perps_margin_tip" = "Add margin to lower liquidation risk";
 "perps_mark_price" = "Mark Price";
 "perps_markets" = "Markets";
+"perps_minimum_order_size" = "Minimum order size is %@";
 "perps_position_size_overview" = "Size represents the total value of your position, calculated as margin × leverage.";
 "perps_position_size_pnl_1" = "Larger size, larger PnL";
 "perps_position_size_pnl_2" = "Smaller size, smaller PnL";

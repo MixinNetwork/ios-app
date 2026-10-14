@@ -1264,6 +1264,7 @@
 "perps_margin_tip" = "Добавление маржи снижает риск ликвидации";
 "perps_mark_price" = "Цена маркировки";
 "perps_markets" = "Рынки";
+"perps_minimum_order_size" = "Минимальная стоимость позиции — %@";
 "perps_position_size_overview" = "Размер представляет собой общую стоимость вашей позиции, рассчитываемую как маржа × кредитное плечо.";
 "perps_position_size_pnl_1" = "Больше размер, больше PnL";
 "perps_position_size_pnl_2" = "Меньший размер, меньший PnL";

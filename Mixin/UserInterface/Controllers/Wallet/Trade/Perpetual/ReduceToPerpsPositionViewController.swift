@@ -178,6 +178,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             secondDescriptionTitleLabel.text = R.string.localizable.margin()
             secondDescriptionInfoView.isHidden = true
             secondDescriptionInfoButton.isHidden = true
+            secondDescriptionContentLabel.textColor = R.color.text()!
             thirdDescriptionView.isHidden = false
             thirdDescriptionInfoView.isHidden = false
             thirdDescriptionInfoButton.isHidden = false
@@ -210,11 +211,6 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         if var config = errorDescriptionButton.configuration {
             config.titleAlignment = .center
             config.titleLineBreakMode = .byTruncatingTail
-            config.titleTextAttributesTransformer = .init { incoming in
-                var outgoing = incoming
-                outgoing.font = .preferredFont(forTextStyle: .caption1)
-                return outgoing
-            }
             errorDescriptionButton.configuration = config
         }
         if let label = errorDescriptionButton.titleLabel {
@@ -844,13 +840,13 @@ extension ReduceToPerpsPositionViewController {
     
     private func updateDescriptions(requestLiquidationPrice: Bool) {
         let reducingAmount = absoluteAmount
-        if requestLiquidationPrice || reducingAmount <= 0 {
-            validatedReductionValue = nil
-            liquidationPriceRequester?.cancelLastRequest()
-            showError(description: nil)
-        }
         switch target {
         case .margin:
+            if requestLiquidationPrice || reducingAmount <= 0 {
+                validatedReductionValue = nil
+                liquidationPriceRequester?.cancelLastRequest()
+                showError(description: nil)
+            }
             let before = CurrencyFormatter.localizedString(
                 from: positionViewModel.decimalMargin,
                 format: .fiatMoneyPretty,
@@ -870,6 +866,7 @@ extension ReduceToPerpsPositionViewController {
             }
         case .position:
             let markPrice = positionViewModel.position.decimalMarkPrice
+            var validationError: String?
             validatedReductionValue = {
                 let current = abs(positionViewModel.decimalQuantity)
                 let quantityScale = marketViewModel.market.quantityScale
@@ -897,15 +894,23 @@ extension ReduceToPerpsPositionViewController {
                 guard roundedQuantity > 0, roundedQuantity <= current else {
                     return nil
                 }
+                let remainingQuantity = current - roundedQuantity
+                if remainingQuantity > 0, let minOrderValue = marketViewModel.market.decimalMinOrderValue, minOrderValue > 0 {
+                    guard markPrice > 0, remainingQuantity * markPrice >= minOrderValue else {
+                        let minimum = CurrencyFormatter.localizedString(
+                            from: minOrderValue,
+                            format: .precision,
+                            sign: .never,
+                            symbol: .dollarSign,
+                        )
+                        validationError = R.string.localizable.perps_minimum_order_size(minimum)
+                        return nil
+                    }
+                }
                 return roundedQuantity
             }()
-            firstDescriptionContentLabel.text = "-"
-            secondDescriptionContentLabel.text = "-"
-            thirdDescriptionContentLabel.text = "-"
             secondDescriptionContentLabel.alpha = 1
             secondDescriptionActivityIndicator.stopAnimating()
-            reduceButton.isEnabled = false
-            showError(description: nil)
             if let reducingQuantity = validatedReductionValue {
                 let proportion = reducingQuantity / positionViewModel.decimalQuantity
                 let margin = positionViewModel.decimalMargin * proportion
@@ -946,11 +951,22 @@ extension ReduceToPerpsPositionViewController {
                     thirdDescriptionContentLabel.text = fee.formatted(PerpetualOrder.feeFormatStyle)
                     thirdDescriptionView.isHidden = false
                 } else {
+                    firstDescriptionContentLabel.text = "-"
+                    thirdDescriptionContentLabel.text = "-"
                     thirdDescriptionView.isHidden = true
                 }
                 reduceButton.isEnabled = hasValidQuantityScale
-            } else if input.value != 0 {
-                showError(description: R.string.localizable.perps_reduce_invalid_quantity())
+                showError(description: nil)
+            } else {
+                firstDescriptionContentLabel.text = "-"
+                secondDescriptionContentLabel.text = "-"
+                thirdDescriptionContentLabel.text = "-"
+                reduceButton.isEnabled = false
+                if input.value != 0 {
+                    showError(description: validationError ?? R.string.localizable.perps_reduce_invalid_quantity())
+                } else {
+                    showError(description: nil)
+                }
             }
             return
         }
@@ -1075,12 +1091,24 @@ extension ReduceToPerpsPositionViewController {
     private func showError(description: String?) {
         maximumRemovableAmount = nil
         errorDescriptionButton.isEnabled = false
-        if let description {
-            errorDescriptionButton.configuration?.title = description
-            errorDescriptionButton.alpha = 1
-        } else {
-            errorDescriptionButton.alpha = 0
+        let color: UIColor
+        switch target {
+        case .margin:
+            color = R.color.market_red()!
+        case .position:
+            color = description == nil ? R.color.text()! : R.color.market_red()!
+            valueTextField.textColor = color
+            let signColor = valueTextField.hasText ? color : valuePlaceholderColor
+            leftSignLabel.textColor = signColor
+            rightSignLabel.textColor = signColor
         }
+        errorDescriptionButton.configuration?.attributedTitle = description.map { description in
+            var title = AttributedString(description)
+            title.font = .preferredFont(forTextStyle: .caption1)
+            title.foregroundColor = color
+            return title
+        }
+        errorDescriptionButton.alpha = description == nil ? 0 : 1
     }
     
 }

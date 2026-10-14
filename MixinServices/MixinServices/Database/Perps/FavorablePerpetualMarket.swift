@@ -46,6 +46,7 @@ public final class FavorablePerpetualMarket: PerpetualMarket {
             openInterest: m.openInterest,
             tradeVolumeScore1D: m.tradeVolumeScore1D,
             quantityScale: m.quantityScale,
+            minOrderValue: m.minOrderValue,
         )
     }
     

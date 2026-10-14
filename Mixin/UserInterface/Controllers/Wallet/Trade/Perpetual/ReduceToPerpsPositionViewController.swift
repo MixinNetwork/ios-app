@@ -64,7 +64,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
     private var totalAmount: Decimal
     
     private var markingButtons: [UIButton] = []
-    private var input = Input(mode: .byPercentage, value: 0)
+    private var input: Input
     private var amountDisplay: AmountDisplay
     
     // Dollars for margin reduction; token quantity for position reduction.
@@ -103,6 +103,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         reducing target: PerpPositionAdjustmentTarget,
         marketViewModel: PerpetualMarketViewModel,
         positionViewModel: PerpetualPositionViewModel,
+        initialPercentage: Decimal,
     ) {
         let markingPercentages: [Decimal] = [0, 0.25, 0.5, 0.75, 1]
         let totalAmount: Decimal = switch target {
@@ -114,6 +115,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         
         self.wallet = wallet
         self.target = target
+        self.input = Input(mode: .byPercentage, value: initialPercentage)
         self.hasValidQuantityScale = marketViewModel.market.quantityScale != 0
         self.marketViewModel = marketViewModel
         self.positionViewModel = positionViewModel
@@ -207,7 +209,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             for: .touchUpInside
         )
         updateValueTextFieldAccessories()
-        updateValueViews(updatingValueTextField: false)
+        updateValueViews(updatingValueTextField: true)
         if var config = errorDescriptionButton.configuration {
             config.titleAlignment = .center
             config.titleLineBreakMode = .byTruncatingTail

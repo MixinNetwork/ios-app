@@ -1277,7 +1277,6 @@
 "perps_reduce_margin_description" = "Retira el margen excedente para liberar fondos sin cambiar tu posición";
 "perps_reduce_margin_title" = "Reducir margen para %1$@ %2$@";
 "perps_reduce_position" = "Reducir posición";
-"perps_reduce_position_description" = "Cierra parcialmente tu posición para asegurar ganancias o limitar pérdidas";
 "perps_reduced_margin" = "Margen reducido";
 "perps_reducing_margin" = "Reduciendo margen";
 "perps_reducing_margin_failed" = "No se pudo reducir el margen";

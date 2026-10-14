@@ -1277,7 +1277,6 @@
 "perps_reduce_margin_description" = "Выведите избыточную маржу, чтобы освободить средства, сохранив позицию";
 "perps_reduce_margin_title" = "Уменьшить маржу для %1$@ %2$@";
 "perps_reduce_position" = "Уменьшить позицию";
-"perps_reduce_position_description" = "Частично закройте позицию, чтобы зафиксировать прибыль или ограничить убытки";
 "perps_reduced_margin" = "Маржа уменьшена";
 "perps_reducing_margin" = "Уменьшение маржи";
 "perps_reducing_margin_failed" = "Не удалось уменьшить маржу";

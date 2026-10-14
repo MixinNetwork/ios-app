@@ -1277,7 +1277,6 @@
 "perps_reduce_margin_description" = "ポジションを維持しながら余剰証拠金を引き出し、資金を確保します";
 "perps_reduce_margin_title" = "%1$@ %2$@ の証拠金を減らす";
 "perps_reduce_position" = "ポジションを減らす";
-"perps_reduce_position_description" = "ポジションを一部決済して利益を確定、または損失を抑えます";
 "perps_reduced_margin" = "証拠金減額";
 "perps_reducing_margin" = "証拠金を減らしています";
 "perps_reducing_margin_failed" = "証拠金の減少に失敗しました";

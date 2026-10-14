@@ -422,25 +422,25 @@ final class PerpetualMarketViewController: UIViewController {
             guard let positionViewModel = self.openPositionViewModel else {
                 return
             }
-            switch adjustment.behavior {
-            case .increase:
-                UserOperationAnalytics.tradeSource = .perpsMarketDetailAdjust
+            UserOperationAnalytics.tradeSource = .perpsMarketDetailAdjust
+            switch adjustment {
+            case .increaseMargin, .increasePosition:
                 let addPosition = AddToPerpsPositionViewController(
                     wallet: wallet,
-                    adding: adjustment.target,
+                    adding: adjustment == .increaseMargin ? .margin : .position,
                     marketViewModel: viewModel,
                     positionViewModel: positionViewModel,
                     source: nil,
                     presentMarketViewOnSuccess: true,
                 )
                 self.present(addPosition, animated: true)
-            case .decrease:
-                UserOperationAnalytics.tradeSource = .perpsMarketDetailAdjust
+            case .decreaseMargin:
                 let reduce = ReduceToPerpsPositionViewController(
                     wallet: wallet,
-                    reducing: adjustment.target,
+                    reducing: .margin,
                     marketViewModel: viewModel,
                     positionViewModel: positionViewModel,
+                    initialPercentage: 0,
                 )
                 self.present(reduce, animated: true)
             }
@@ -449,13 +449,17 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     @objc private func closePosition(_ sender: UIButton) {
-        guard
-            let viewModel = openPositionViewModel,
-            let preview = ClosePerpetualPositionPreviewViewController(viewModels: [viewModel])
-        else {
+        guard let positionViewModel = openPositionViewModel else {
             return
         }
-        present(preview, animated: true)
+        let reduce = ReduceToPerpsPositionViewController(
+            wallet: wallet,
+            reducing: .position,
+            marketViewModel: viewModel,
+            positionViewModel: positionViewModel,
+            initialPercentage: 1,
+        )
+        present(reduce, animated: true)
         reporter.report(event: .tradePerpsCloseStart, tags: ["type": "single"])
     }
     

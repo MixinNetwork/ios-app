@@ -103,31 +103,33 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 action: nil,
             ))
             
-            let pnl = NSMutableAttributedString(
-                string: R.string.localizable.perps_include_pnl() + " ",
-                attributes: [
-                    .font: UIFont.preferredFont(forTextStyle: .caption1),
-                    .foregroundColor: R.color.text_tertiary()!,
-                ]
-            )
-            pnl.append(NSAttributedString(
-                string: CurrencyFormatter.localizedString(
-                    from: position.decimalUnrealizedPnL,
-                    format: .precision,
-                    sign: .always,
-                    symbol: .dollarSign,
-                ),
-                attributes: [.foregroundColor: viewModel.pnlColor.uiColor]
-            ))
             rows.append(.doubleLineInfo(
                 caption: .string(R.string.localizable.margin()),
                 primary: CurrencyFormatter.localizedString(
-                    from: margin,
+                    from: margin * proportion,
                     format: .precision,
                     sign: .never,
                     symbol: .dollarSign,
                 ),
-                secondary: .attributed(pnl)
+                secondary: .attributed({
+                    let pnl = NSMutableAttributedString(
+                        string: R.string.localizable.perps_include_pnl() + " ",
+                        attributes: [
+                            .font: UIFont.preferredFont(forTextStyle: .caption1),
+                            .foregroundColor: R.color.text_tertiary()!,
+                        ]
+                    )
+                    pnl.append(NSAttributedString(
+                        string: CurrencyFormatter.localizedString(
+                            from: position.decimalUnrealizedPnL * proportion,
+                            format: .precision,
+                            sign: .always,
+                            symbol: .dollarSign,
+                        ),
+                        attributes: [.foregroundColor: viewModel.pnlColor.uiColor]
+                    ))
+                    return pnl
+                }())
             ))
             
             if let fee = viewModel.position.decimalEstimatedCloseFee {

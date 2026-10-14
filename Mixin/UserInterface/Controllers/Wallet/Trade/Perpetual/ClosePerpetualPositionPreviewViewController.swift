@@ -93,10 +93,10 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         case let .single(viewModel, quantity, _):
             let position = viewModel.position
             let proportion = quantity / viewModel.decimalQuantity
-            let margin = viewModel.decimalMargin + position.decimalUnrealizedPnL
+            let marginPlusPnL = viewModel.decimalMargin + position.decimalUnrealizedPnL
             
             let receivingAmount = {
-                var amount = margin
+                var amount = marginPlusPnL
                 if let fee = position.decimalEstimatedCloseFee {
                     amount -= fee
                 }
@@ -116,7 +116,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             rows.append(.doubleLineInfo(
                 caption: .string(R.string.localizable.margin()),
                 primary: CurrencyFormatter.localizedString(
-                    from: margin * proportion,
+                    from: marginPlusPnL * proportion,
                     format: .precision,
                     sign: .never,
                     symbol: .dollarSign,

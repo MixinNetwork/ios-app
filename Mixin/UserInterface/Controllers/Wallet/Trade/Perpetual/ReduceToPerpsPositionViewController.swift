@@ -913,12 +913,12 @@ extension ReduceToPerpsPositionViewController {
             secondDescriptionActivityIndicator.stopAnimating()
             if let reducingQuantity = validatedReductionValue {
                 let proportion = reducingQuantity / positionViewModel.decimalQuantity
-                let margin = positionViewModel.decimalMargin * proportion
                 let pnl = positionViewModel.position.decimalUnrealizedPnL * proportion
+                let marginPlusPnL = positionViewModel.decimalMargin * proportion + pnl
                 secondDescriptionContentLabel.attributedText = {
                     let description = NSMutableAttributedString(
                         string: CurrencyFormatter.localizedString(
-                            from: margin,
+                            from: marginPlusPnL,
                             format: .precision,
                             sign: .never,
                             symbol: .dollarSign,
@@ -943,7 +943,7 @@ extension ReduceToPerpsPositionViewController {
                 if let estimatedCloseFee = positionViewModel.position.decimalEstimatedCloseFee {
                     let fee = estimatedCloseFee * proportion
                     firstDescriptionContentLabel.text = CurrencyFormatter.localizedString(
-                        from: margin + pnl - fee,
+                        from: marginPlusPnL - fee,
                         format: .fiatMoneyPretty,
                         sign: .whenNegative,
                         symbol: .dollarSign,

@@ -1278,7 +1278,6 @@
 "perps_reduce_margin_title" = "Reduce Margin for %1$@ %2$@";
 "perps_reduce_position" = "Reduce Position";
 "perps_reduce_position_description" = "Partially close to lock in profits or limit losses";
-"perps_reduce_quantity_changed" = "The position has changed. Please return and check the quantity before trying again.";
 "perps_reduced_margin" = "Reduced Margin";
 "perps_reducing_margin" = "Reducing Margin";
 "perps_reducing_margin_failed" = "Failed to Reduce Margin";

@@ -1278,7 +1278,6 @@
 "perps_reduce_margin_title" = "%1$@ %2$@의 증거금 감소";
 "perps_reduce_position" = "포지션 축소";
 "perps_reduce_position_description" = "포지션을 일부 청산하여 수익을 확보하거나 손실을 줄이세요";
-"perps_reduce_quantity_changed" = "포지션이 변경되었습니다. 이전 화면으로 돌아가 수량을 확인한 후 다시 시도하세요.";
 "perps_reduced_margin" = "증거금 감소";
 "perps_reducing_margin" = "증거금 감소 중";
 "perps_reducing_margin_failed" = "증거금 감소 실패";

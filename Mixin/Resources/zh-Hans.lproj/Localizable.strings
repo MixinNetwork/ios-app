@@ -1278,7 +1278,6 @@
 "perps_reduce_margin_title" = "%1$@ %2$@ 减少保证金";
 "perps_reduce_position" = "减少仓位";
 "perps_reduce_position_description" = "部分平仓，锁定收益或减少亏损";
-"perps_reduce_quantity_changed" = "持仓已变化，请返回核对数量后重试。";
 "perps_reduced_margin" = "减少保证金";
 "perps_reducing_margin" = "正在减少保证金";
 "perps_reducing_margin_failed" = "减少保证金失败";

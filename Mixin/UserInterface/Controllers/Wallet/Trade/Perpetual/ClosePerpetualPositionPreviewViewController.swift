@@ -3,10 +3,17 @@ import MixinServices
 
 final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
+    enum Position {
+        case batch([PerpetualPositionViewModel])
+        case single(
+            viewModel: PerpetualPositionViewModel,
+            reducingQuantity: Decimal,
+            canonicalFormatStyle: Decimal.FormatStyle,
+        )
+    }
+    
     private let wallet: Wallet
-    private let viewModels: [PerpetualPositionViewModel]
-    private let reducingQuantity: Decimal?
-    private let requestQuantity: String?
+    private let position: Position
     private let onDismissAfterSuccess: (() -> Void)?
     
     private var hasSucceeded = false
@@ -24,9 +31,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             return nil
         }
         self.wallet = wallet
-        self.viewModels = viewModels
-        self.reducingQuantity = nil
-        self.requestQuantity = nil
+        self.position = .batch(viewModels)
         self.onDismissAfterSuccess = nil
         super.init(wallet: wallet, warnings: [])
     }
@@ -34,17 +39,15 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
     init(
         reducing viewModel: PerpetualPositionViewModel,
         quantity: Decimal,
-        market: PerpetualMarket,
+        canonicalFormatStyle: Decimal.FormatStyle,
         onDismissAfterSuccess: @escaping () -> Void,
     ) {
         self.wallet = viewModel.wallet
-        self.viewModels = [viewModel]
-        self.reducingQuantity = quantity
-        self.requestQuantity = if quantity < viewModel.decimalQuantity {
-            quantity.formatted(market.canonicalQuantityFormatStyle)
-        } else {
-            nil
-        }
+        self.position = .single(
+            viewModel: viewModel,
+            reducingQuantity: quantity,
+            canonicalFormatStyle: canonicalFormatStyle,
+        )
         self.onDismissAfterSuccess = onDismissAfterSuccess
         super.init(wallet: viewModel.wallet, warnings: [])
     }
@@ -56,6 +59,12 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let viewModels: [PerpetualPositionViewModel] = switch position {
+        case .batch(let viewModels):
+            viewModels
+        case .single(let viewModel, _, _):
+            [viewModel]
+        }
         if viewModels.count == 1, let viewModel = viewModels.first {
             tableHeaderView.setTokenIcon(url: viewModel.position.iconURL)
             tableHeaderView.titleLabel.text = R.string.localizable.perps_close_position_title(
@@ -80,7 +89,8 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         }
         rows.append(.perpsPositions(positions))
         
-        if let quantity = reducingQuantity, let viewModel = viewModels.first {
+        switch position {
+        case let .single(viewModel, quantity, _):
             let position = viewModel.position
             let proportion = quantity / viewModel.decimalQuantity
             let margin = viewModel.decimalMargin + position.decimalUnrealizedPnL
@@ -142,7 +152,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                     },
                 ))
             }
-        } else {
+        case .batch(let viewModels):
             var totalPnL: Decimal = 0
             var totalMargin: Decimal = 0
             var totalFee: Decimal = 0
@@ -215,30 +225,25 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         reloadData(with: rows)
     }
     
-    private func introduceFee() {
-        let manual = PerpsManual.viewController(initialPage: .tradingFee)
-        present(manual, animated: true)
-        reporter.report(
-            event: .tradePerpsGuide,
-            tags: ["source": reducingQuantity == nil
-                ? "perps_close_preview_fee"
-                : "perps_reduce_position_preview_fee"],
-        )
-    }
-    
     override func confirm(_ sender: Any) {
         super.confirm(sender)
-        reporter.report(event: reducingQuantity == nil
-            ? .tradePerpsClosePreviewConfirm
-            : .tradePerpsReducePositionPreviewConfirm)
+        switch position {
+        case .batch:
+            reporter.report(event: .tradePerpsClosePreviewConfirm)
+        case .single:
+            reporter.report(event: .tradePerpsReducePositionPreviewConfirm)
+        }
     }
     
     override func close(_ sender: Any) {
         super.close(sender)
         if !hasSucceeded {
-            reporter.report(event: reducingQuantity == nil
-                ? .tradePerpsClosePreviewCancel
-                : .tradePerpsReducePositionPreviewCancel)
+            switch position {
+            case .batch:
+                reporter.report(event: .tradePerpsClosePreviewCancel)
+            case .single:
+                reporter.report(event: .tradePerpsReducePositionPreviewCancel)
+            }
         }
     }
     
@@ -250,56 +255,69 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             subtitle: R.string.localizable.signature_request_from(.mixin)
         )
         replaceTrayView(with: nil, animation: .vertical)
-        let requestQuantity = self.requestQuantity
-        let isReduction = reducingQuantity != nil
         Task {
             do {
                 try await AccountAPI.verify(pin: pin)
-                let errors = await withTaskGroup(of: Error?.self) { group in
-                    for viewModel in viewModels {
-                        group.addTask { [positionID=viewModel.position.positionID] in
-                            do {
-                                _ = try await RouteAPI.closePerpsOrder(
-                                    positionID: positionID,
-                                    quantity: requestQuantity,
-                                )
-                                return nil
-                            } catch {
-                                return error
+                switch position {
+                case .batch(let viewModels):
+                    let errors = await withTaskGroup(of: Error?.self) { group in
+                        for viewModel in viewModels {
+                            let positionID = viewModel.position.positionID
+                            let quantity = viewModel.position.quantity
+                            group.addTask {
+                                do {
+                                    _ = try await RouteAPI.closePerpsOrder(
+                                        positionID: positionID,
+                                        quantity: quantity,
+                                    )
+                                    return nil
+                                } catch {
+                                    return error
+                                }
                             }
                         }
-                    }
-                    var errors: [Error] = []
-                    for await error in group {
-                        if let error {
-                            errors.append(error)
+                        var errors: [Error] = []
+                        for await error in group {
+                            if let error {
+                                errors.append(error)
+                            }
                         }
+                        return errors
                     }
-                    return errors
-                }
-                if errors.count == viewModels.count, let firstError = errors.first {
-                    throw firstError
+                    if errors.count == viewModels.count, let firstError = errors.first {
+                        throw firstError
+                    }
+                case let .single(viewModel, reducingQuantity, canonicalFormatStyle):
+                    _ = try await RouteAPI.closePerpsOrder(
+                        positionID: viewModel.position.positionID,
+                        quantity: reducingQuantity.formatted(canonicalFormatStyle),
+                    )
                 }
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {
                     canDismissInteractively = true
                     hasSucceeded = true
                     tableHeaderView.setIcon(progress: .success)
-                    layoutTableHeaderView(
-                        title: isReduction
-                            ? R.string.localizable.perps_close_submitted()
-                            : R.string.localizable.position_closed(),
-                        subtitle: isReduction
-                            ? R.string.localizable.position_submitted_description()
-                            : R.string.localizable.position_closed_description()
-                    )
+                    switch position {
+                    case .batch:
+                        layoutTableHeaderView(
+                            title: R.string.localizable.position_closed(),
+                            subtitle: R.string.localizable.position_closed_description()
+                        )
+                    case .single:
+                        layoutTableHeaderView(
+                            title: R.string.localizable.perps_close_submitted(),
+                            subtitle: R.string.localizable.position_submitted_description()
+                        )
+                    }
                     tableView.setContentOffset(.zero, animated: true)
                     loadFinishedTrayView()
-                    if isReduction {
+                    switch position {
+                    case .batch:
+                        reporter.report(event: .tradePerpsCloseEnd)
+                    case .single:
                         onDismiss = onDismissAfterSuccess
                         reporter.report(event: .tradePerpsReducePositionEnd)
-                    } else {
-                        reporter.report(event: .tradePerpsCloseEnd)
                     }
                 }
             } catch {
@@ -336,6 +354,18 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 }
             }
         }
+    }
+    
+    private func introduceFee() {
+        let manual = PerpsManual.viewController(initialPage: .tradingFee)
+        present(manual, animated: true)
+        let source = switch position {
+        case .batch:
+            "perps_close_preview_fee"
+        case .single:
+            "perps_reduce_position_preview_fee"
+        }
+        reporter.report(event: .tradePerpsGuide, tags: ["source": source])
     }
     
 }

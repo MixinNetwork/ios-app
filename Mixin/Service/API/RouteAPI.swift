@@ -362,16 +362,15 @@ extension RouteAPI {
     
     static func closePerpsOrder(
         positionID: String,
-        quantity: String?,
+        quantity: String,
     ) async throws -> ClosePerpetualOrderResponse {
-        var parameters = ["position_id": positionID]
-        if let quantity {
-            parameters["quantity"] = quantity
-        }
-        return try await request(
+        try await request(
             method: .post,
             path: "/perps/orders/close",
-            with: parameters,
+            with: [
+                "position_id": positionID,
+                "quantity": quantity,
+            ],
         )
     }
     

@@ -477,7 +477,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             let preview = ClosePerpetualPositionPreviewViewController(
                 reducing: positionViewModel,
                 quantity: reducingQuantity,
-                market: marketViewModel.market,
+                canonicalFormatStyle: marketViewModel.market.canonicalQuantityFormatStyle,
                 onDismissAfterSuccess: { [weak self] in
                     self?.presentingViewController?.dismiss(animated: true)
                 },

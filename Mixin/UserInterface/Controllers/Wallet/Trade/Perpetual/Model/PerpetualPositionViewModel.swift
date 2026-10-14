@@ -32,7 +32,7 @@ struct PerpetualPositionViewModel {
     init(wallet: Wallet, position: PerpetualPositionItem) {
         let pnl = position.decimalUnrealizedPnL
         let decimalEntryPrice = Decimal(string: position.entryPrice, locale: .enUSPOSIX)
-        let decimalQuantity = abs(Decimal(string: position.quantity, locale: .enUSPOSIX) ?? 0)
+        let decimalQuantity = Decimal(string: position.quantity, locale: .enUSPOSIX) ?? 0
         let leverage = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
         let side = PerpetualOrderSide(rawValue: position.side) ?? .short
         let margin = Decimal(string: position.margin, locale: .enUSPOSIX) ?? 0

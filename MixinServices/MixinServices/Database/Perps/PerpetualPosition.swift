@@ -35,7 +35,7 @@ public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchab
     public let positionID: String
     public let marketID: String
     public let side: String
-    public let quantity: String
+    public let quantity: String // Always positive
     public let entryPrice: String
     public let margin: String
     public let leverage: Int

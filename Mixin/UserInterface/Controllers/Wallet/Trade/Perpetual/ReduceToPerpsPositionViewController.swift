@@ -868,7 +868,7 @@ extension ReduceToPerpsPositionViewController {
             let markPrice = positionViewModel.position.decimalMarkPrice
             var validationError: String?
             validatedReductionValue = {
-                let current = abs(positionViewModel.decimalQuantity)
+                let current = positionViewModel.decimalQuantity
                 let quantityScale = marketViewModel.market.quantityScale
                 guard quantityScale >= 0, current > 0, input.value > 0 else {
                     return nil

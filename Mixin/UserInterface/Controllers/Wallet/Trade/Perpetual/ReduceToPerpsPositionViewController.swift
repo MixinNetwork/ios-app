@@ -896,20 +896,21 @@ extension ReduceToPerpsPositionViewController {
                 guard roundedQuantity > 0, roundedQuantity <= current else {
                     return nil
                 }
-                let remainingQuantity = current - roundedQuantity
-                if remainingQuantity > 0, let minOrderValue = marketViewModel.market.decimalMinOrderValue, minOrderValue > 0 {
-                    guard markPrice > 0, remainingQuantity * markPrice >= minOrderValue else {
-                        let minimum = CurrencyFormatter.localizedString(
-                            from: minOrderValue,
-                            format: .precision,
-                            sign: .never,
-                            symbol: .dollarSign,
-                        )
-                        validationError = R.string.localizable.perps_minimum_order_size(minimum)
-                        return nil
-                    }
+                let minOrderValue = marketViewModel.market.decimalMinOrderValue ?? 0
+                if roundedQuantity == current {
+                    return roundedQuantity
+                } else if roundedQuantity * markPrice < minOrderValue {
+                    let minimum = CurrencyFormatter.localizedString(
+                        from: minOrderValue,
+                        format: .precision,
+                        sign: .never,
+                        symbol: .dollarSign,
+                    )
+                    validationError = R.string.localizable.perps_minimum_order_size(minimum)
+                    return nil
+                } else {
+                    return roundedQuantity
                 }
-                return roundedQuantity
             }()
             secondDescriptionContentLabel.alpha = 1
             secondDescriptionActivityIndicator.stopAnimating()

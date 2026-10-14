@@ -57,6 +57,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         .rounded(rule: .toNearestOrAwayFromZero)
     
     private var marketViewModel: PerpetualMarketViewModel
+    private var hasValidQuantityScale: Bool
     private var positionViewModel: PerpetualPositionViewModel
     private var liquidationPriceBeforeReducing: String
     private var markingAmounts: [Decimal]
@@ -113,6 +114,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         
         self.wallet = wallet
         self.target = target
+        self.hasValidQuantityScale = marketViewModel.market.quantityScale != 0
         self.marketViewModel = marketViewModel
         self.positionViewModel = positionViewModel
         switch target {
@@ -469,7 +471,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             )
             present(preview, animated: true)
         case .position:
-            guard let reducingQuantity = validatedReductionValue else {
+            guard hasValidQuantityScale, let reducingQuantity = validatedReductionValue else {
                 return
             }
             let preview = ClosePerpetualPositionPreviewViewController(
@@ -502,6 +504,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         }
         let viewModel = PerpetualMarketViewModel(market: market)
         marketViewModel = viewModel
+        hasValidQuantityScale = true
         updateSubtitle()
         switch target {
         case .margin:
@@ -945,7 +948,7 @@ extension ReduceToPerpsPositionViewController {
                 } else {
                     thirdDescriptionView.isHidden = true
                 }
-                reduceButton.isEnabled = true
+                reduceButton.isEnabled = hasValidQuantityScale
             } else if input.value != 0 {
                 showError(description: R.string.localizable.perps_reduce_invalid_quantity())
             }

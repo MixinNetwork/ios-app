@@ -142,6 +142,32 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 }())
             ))
             
+            let remainingQuantity = viewModel.decimalQuantity - quantity
+            let sizeBefore = CurrencyFormatter.localizedString(
+                from: viewModel.decimalQuantity,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(position.tokenSymbol),
+            )
+            let sizeAfter = CurrencyFormatter.localizedString(
+                from: remainingQuantity,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(position.tokenSymbol),
+            ) + "(" + CurrencyFormatter.localizedString(
+                from: remainingQuantity * position.decimalMarkPrice,
+                format: .fiatMoneyPretty,
+                sign: .never,
+                symbol: .dollarSign,
+            ) + ")"
+            rows.append(.info(
+                caption: .string(R.string.localizable.position_size()),
+                content: PerpPositionAdjustment.change(from: sizeBefore, to: sizeAfter),
+                action: { [weak self] in
+                    self?.introducePositionSize()
+                },
+            ))
+            
             if let fee = viewModel.position.decimalEstimatedCloseFee {
                 let fee = (fee * proportion).formatted(PerpetualOrder.feeFormatStyle)
                 rows.append(.info(
@@ -359,6 +385,15 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 }
             }
         }
+    }
+    
+    private func introducePositionSize() {
+        let manual = PerpsManual.viewController(initialPage: .size)
+        present(manual, animated: true)
+        reporter.report(
+            event: .tradePerpsGuide,
+            tags: ["source": "perps_reduce_position_preview_size"]
+        )
     }
     
     private func introduceFee() {

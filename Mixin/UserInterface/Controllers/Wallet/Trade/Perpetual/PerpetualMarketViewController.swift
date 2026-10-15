@@ -77,7 +77,7 @@ final class PerpetualMarketViewController: UIViewController {
         {
             return frame
         } else {
-            return .oneDay
+            return .fifteenMinutes
         }
     }()
     private var charts: [PerpetualTimeFrame: PerpetualMarketPriceCell.Chart] = [:]

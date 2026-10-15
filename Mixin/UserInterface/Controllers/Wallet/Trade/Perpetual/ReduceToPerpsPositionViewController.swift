@@ -914,7 +914,7 @@ extension ReduceToPerpsPositionViewController {
                     let description = NSMutableAttributedString(
                         string: CurrencyFormatter.localizedString(
                             from: marginPlusPnL,
-                            format: .precision,
+                            format: .fiatMoneyPretty,
                             sign: .never,
                             symbol: .dollarSign,
                         ) + "\n",
@@ -927,7 +927,7 @@ extension ReduceToPerpsPositionViewController {
                     description.append(NSAttributedString(
                         string: CurrencyFormatter.localizedString(
                             from: pnl,
-                            format: .precision,
+                            format: .fiatMoneyPretty,
                             sign: .always,
                             symbol: .dollarSign,
                         ),
@@ -943,7 +943,12 @@ extension ReduceToPerpsPositionViewController {
                         sign: .whenNegative,
                         symbol: .dollarSign,
                     )
-                    thirdDescriptionContentLabel.text = fee.formatted(PerpetualOrder.feeFormatStyle)
+                    thirdDescriptionContentLabel.text = CurrencyFormatter.localizedString(
+                        from: fee,
+                        format: .fiatMoneyPretty,
+                        sign: .whenNegative,
+                        symbol: .dollarSign,
+                    )
                     thirdDescriptionView.isHidden = false
                 } else {
                     firstDescriptionContentLabel.text = "-"

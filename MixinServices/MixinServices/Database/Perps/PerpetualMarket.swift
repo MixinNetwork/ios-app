@@ -109,7 +109,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
     public private(set) lazy var decimalChange = Decimal(string: change, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var changePercentage = NumberFormatter.percentage.string(decimal: decimalChange) ?? "-%"
     
-    public private(set) lazy var decimalMinOrderValue = Decimal(string: minOrderValue, locale: .enUSPOSIX)
+    public private(set) lazy var decimalMinOrderValue = Decimal(string: minOrderValue, locale: .enUSPOSIX) ?? 0
     
     init(
         marketID: String,

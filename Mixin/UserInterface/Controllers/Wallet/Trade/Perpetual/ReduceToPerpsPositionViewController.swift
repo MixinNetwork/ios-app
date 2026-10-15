@@ -893,7 +893,7 @@ extension ReduceToPerpsPositionViewController {
                 guard roundedQuantity > 0, roundedQuantity <= current else {
                     return nil
                 }
-                let minOrderValue = marketViewModel.market.decimalMinOrderValue ?? 0
+                let minOrderValue = marketViewModel.market.decimalMinOrderValue
                 if roundedQuantity == current {
                     return roundedQuantity
                 } else if roundedQuantity * markPrice < minOrderValue {

@@ -291,7 +291,6 @@ class ReduceToPerpsPositionViewController: UIViewController {
     
     func addDescription(
         title: String,
-        alignment: UIStackView.Alignment,
         infoAction: Selector?,
         showsActivityIndicator: Bool,
     ) -> DescriptionRow {
@@ -311,7 +310,7 @@ class ReduceToPerpsPositionViewController: UIViewController {
         }
         
         let stackView = UIStackView()
-        stackView.alignment = alignment
+        stackView.alignment = .center
         stackView.spacing = 4
         stackView.addArrangedSubview(titleLabel)
         descriptionStackView.addArrangedSubview(stackView)
@@ -319,7 +318,7 @@ class ReduceToPerpsPositionViewController: UIViewController {
         let infoButton: UIButton?
         if let infoAction {
             let infoView = UIImageView(image: R.image.info())
-            infoView.contentMode = .scaleAspectFit
+            infoView.contentMode = .center
             stackView.addArrangedSubview(infoView)
             infoView.snp.makeConstraints { make in
                 make.width.equalTo(16)
@@ -327,7 +326,6 @@ class ReduceToPerpsPositionViewController: UIViewController {
             }
             
             let button = UIButton(type: .system)
-            button.accessibilityLabel = title
             button.addTarget(self, action: infoAction, for: .touchUpInside)
             contentView.addSubview(button)
             button.snp.makeConstraints { make in

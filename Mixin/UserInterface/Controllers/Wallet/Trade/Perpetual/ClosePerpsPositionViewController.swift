@@ -56,25 +56,21 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
         valueTitleLabel.text = R.string.localizable.perps_position_amount()
         receivingDescription = addDescription(
             title: R.string.localizable.estimated_receive(),
-            alignment: .center,
             infoAction: nil,
             showsActivityIndicator: false,
         )
         marginDescription = addDescription(
             title: R.string.localizable.margin(),
-            alignment: .top,
             infoAction: nil,
             showsActivityIndicator: false,
         )
         sizeDescription = addDescription(
             title: R.string.localizable.position_size(),
-            alignment: .center,
             infoAction: #selector(introducePositionSize(_:)),
             showsActivityIndicator: false,
         )
         feeDescription = addDescription(
             title: R.string.localizable.fee(),
-            alignment: .center,
             infoAction: #selector(introduceTradingFee(_:)),
             showsActivityIndicator: false,
         )

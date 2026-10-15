@@ -71,13 +71,11 @@ final class ReducePerpsPositionMarginViewController: ReduceToPerpsPositionViewCo
         valueTitleLabel.text = R.string.localizable.perps_margin_amount()
         marginDescription = addDescription(
             title: R.string.localizable.margin(),
-            alignment: .center,
             infoAction: nil,
             showsActivityIndicator: false,
         )
         liquidationPriceDescription = addDescription(
             title: R.string.localizable.liquidation_price(),
-            alignment: .top,
             infoAction: #selector(introduceLiquidationPrice(_:)),
             showsActivityIndicator: true,
         )

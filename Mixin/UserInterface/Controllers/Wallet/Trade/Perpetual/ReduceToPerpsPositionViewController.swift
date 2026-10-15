@@ -224,13 +224,6 @@ class ReduceToPerpsPositionViewController: UIViewController {
             name: PerpsPositionDAO.perpsPositionDidChangeNotification,
             object: nil,
         )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(applicationDidBecomeActive),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil,
-        )
-        valueTextField.becomeFirstResponder()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -410,13 +403,6 @@ class ReduceToPerpsPositionViewController: UIViewController {
         let signColor = valueTextField.hasText ? color : valuePlaceholderColor
         leftSignLabel.textColor = signColor
         rightSignLabel.textColor = signColor
-    }
-    
-    @objc private func applicationDidBecomeActive() {
-        guard viewIfLoaded?.window != nil, presentedViewController == nil else {
-            return
-        }
-        valueTextField.becomeFirstResponder()
     }
     
     @objc private func reloadMarket(_ notification: Notification) {

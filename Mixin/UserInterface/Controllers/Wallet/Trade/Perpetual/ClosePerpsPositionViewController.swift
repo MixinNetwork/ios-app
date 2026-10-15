@@ -22,6 +22,7 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
     
     private var receivingDescription: DescriptionRow!
     private var marginDescription: DescriptionRow!
+    private var sizeDescription: DescriptionRow!
     private var feeDescription: DescriptionRow!
     private var hasValidQuantityScale: Bool
     private var validatedQuantity: Decimal?
@@ -62,6 +63,12 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
             title: R.string.localizable.margin(),
             alignment: .top,
             infoAction: nil,
+            showsActivityIndicator: false,
+        )
+        sizeDescription = addDescription(
+            title: R.string.localizable.position_size(),
+            alignment: .center,
+            infoAction: #selector(introducePositionSize(_:)),
             showsActivityIndicator: false,
         )
         feeDescription = addDescription(
@@ -132,6 +139,28 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
             }
         }()
         if let reducingQuantity = validatedQuantity {
+            let remainingQuantity = positionViewModel.decimalQuantity - reducingQuantity
+            let sizeBefore = CurrencyFormatter.localizedString(
+                from: positionViewModel.decimalQuantity,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(marketViewModel.market.tokenSymbol),
+            )
+            let sizeAfter = CurrencyFormatter.localizedString(
+                from: remainingQuantity,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(marketViewModel.market.tokenSymbol),
+            ) + "(" + CurrencyFormatter.localizedString(
+                from: remainingQuantity * markPrice,
+                format: .fiatMoneyPretty,
+                sign: .never,
+                symbol: .dollarSign,
+            ) + ")"
+            sizeDescription.contentLabel.text = PerpPositionAdjustment.change(
+                from: sizeBefore,
+                to: sizeAfter,
+            )
             let proportion = reducingQuantity / positionViewModel.decimalQuantity
             let pnl = positionViewModel.position.decimalUnrealizedPnL * proportion
             let marginPlusPnL = positionViewModel.decimalMargin * proportion + pnl
@@ -185,6 +214,7 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
         } else {
             receivingDescription.contentLabel.text = "-"
             marginDescription.contentLabel.text = "-"
+            sizeDescription.contentLabel.text = "-"
             feeDescription.contentLabel.text = "-"
             confirmButton.isEnabled = false
             if input.value != 0 {
@@ -217,12 +247,21 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
         present(preview, animated: true)
     }
     
+    @objc private func introducePositionSize(_ sender: Any) {
+        let manual = PerpsManual.viewController(initialPage: .size)
+        present(manual, animated: true)
+        reporter.report(
+            event: .tradePerpsGuide,
+            tags: ["source": "perps_close_position_size"]
+        )
+    }
+    
     @objc private func introduceTradingFee(_ sender: Any) {
         let manual = PerpsManual.viewController(initialPage: .tradingFee)
         present(manual, animated: true)
         reporter.report(
             event: .tradePerpsGuide,
-            tags: ["source": "perps_reduce_position_fee"]
+            tags: ["source": "perps_close_position_fee"]
         )
     }
     

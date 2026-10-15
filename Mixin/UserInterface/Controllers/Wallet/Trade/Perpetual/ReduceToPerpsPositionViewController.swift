@@ -17,7 +17,7 @@ class ReduceToPerpsPositionViewController: UIViewController {
     @IBOutlet weak var errorDescriptionButton: UIButton!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var markingContainerView: UIView!
-    @IBOutlet private weak var descriptionStackView: UIStackView!
+    @IBOutlet weak var descriptionStackView: UIStackView!
     
     @IBOutlet weak var actionWrapperView: UIView!
     @IBOutlet weak var cancelButton: UIButton!
@@ -298,32 +298,40 @@ class ReduceToPerpsPositionViewController: UIViewController {
         titleLabel.text = title
         titleLabel.textColor = R.color.text_tertiary()
         titleLabel.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
+        titleLabel.setContentCompressionResistancePriority(.medium, for: .horizontal)
         
         let contentLabel = UILabel()
         contentLabel.text = "-"
         contentLabel.textColor = R.color.text_secondary()
         contentLabel.textAlignment = .right
         contentLabel.numberOfLines = 0
+        contentLabel.lineBreakMode = .byWordWrapping
         contentLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        contentLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         for label in [titleLabel, contentLabel] {
             label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         }
         
+        let titleStackView = UIStackView(arrangedSubviews: [titleLabel])
+        titleStackView.alignment = .center
+        titleStackView.spacing = 4
+        
         let stackView = UIStackView()
-        stackView.alignment = .center
+        stackView.alignment = .top
         stackView.spacing = 4
-        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(titleStackView)
         descriptionStackView.addArrangedSubview(stackView)
         
         let infoButton: UIButton?
         if let infoAction {
             let infoView = UIImageView(image: R.image.info())
             infoView.contentMode = .center
-            stackView.addArrangedSubview(infoView)
+            titleStackView.addArrangedSubview(infoView)
             infoView.snp.makeConstraints { make in
                 make.width.equalTo(16)
                 make.height.equalTo(16).priority(999)
             }
+            infoView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             
             let button = UIButton(type: .system)
             button.addTarget(self, action: infoAction, for: .touchUpInside)
@@ -349,6 +357,7 @@ class ReduceToPerpsPositionViewController: UIViewController {
                 make.centerY.trailing.equalTo(contentLabel)
                 make.size.equalTo(16)
             }
+            indicator.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             activityIndicator = indicator
         } else {
             activityIndicator = nil

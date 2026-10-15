@@ -139,13 +139,15 @@ class ReduceToPerpsPositionViewController: UIViewController {
             .withRenderingMode(.alwaysTemplate)
         for (index, percentage) in markingPercentages.enumerated() {
             var config: UIButton.Configuration = .plain()
-            config.titleTextAttributesTransformer = .init { incoming in
-                var outgoing = incoming
-                outgoing.font = UIFontMetrics.default.scaledFont(
-                    for: .systemFont(ofSize: 12, weight: .medium)
-                )
-                return outgoing
-            }
+            config.attributedTitle = AttributedString(
+                string: PercentageFormatter.string(
+                    from: percentage,
+                    format: .pretty,
+                    sign: .never
+                ),
+                scalingByFontSize: 12,
+                weight: .medium
+            )
             config.baseForegroundColor = R.color.text_tertiary()
             config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 4, bottom: 8, trailing: 4)
             let button = UIButton(configuration: config)
@@ -185,7 +187,6 @@ class ReduceToPerpsPositionViewController: UIViewController {
             markingButtons.append(button)
             button.titleLabel?.adjustsFontForContentSizeCategory = true
         }
-        updateMarkingButtons()
         
         actionWrapperView.snp.makeConstraints { make in
             make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
@@ -383,7 +384,6 @@ class ReduceToPerpsPositionViewController: UIViewController {
         updateValueViews(
             updatingValueTextField: !valueTextField.isFirstResponder || input.mode != amountDisplay
         )
-        updateMarkingButtons()
         updateDescriptions(refreshValidation: refreshValidation)
     }
     
@@ -458,7 +458,6 @@ class ReduceToPerpsPositionViewController: UIViewController {
         AppGroupUserDefaults.Wallet.reducePerpsPositionAmountDisplay = amountDisplay.rawValue
         updateValueTextFieldAccessories()
         updateValueViews(updatingValueTextField: true)
-        updateMarkingButtons()
     }
     
     @objc private func selectMarking(_ sender: UIButton) {
@@ -638,32 +637,6 @@ extension ReduceToPerpsPositionViewController {
         rightSignLabel.sizeToFit()
         valueTextField.invalidateIntrinsicContentSize()
         valueTextField.setNeedsLayout()
-    }
-    
-    private func updateMarkingButtons() {
-        let markingAmounts = markingAmounts
-        for (index, button) in markingButtons.enumerated() {
-            guard var config = button.configuration else {
-                continue
-            }
-            config.title = switch amountDisplay {
-            case .byAmount:
-                markingAmounts[index].formatted(
-                    Decimal.FormatStyle.Currency
-                        .currency(code: "USD")
-                        .presentation(.narrow)
-                        .precision(.fractionLength(0...8))
-                        .rounded(rule: .towardZero)
-                )
-            case .byPercentage:
-                PercentageFormatter.string(
-                    from: markingPercentages[index],
-                    format: .pretty,
-                    sign: .never
-                )
-            }
-            button.configuration = config
-        }
     }
     
     private func adjustValue(by change: Int) {

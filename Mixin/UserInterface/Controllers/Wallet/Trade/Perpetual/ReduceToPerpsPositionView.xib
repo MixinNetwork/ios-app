@@ -14,6 +14,7 @@
                 <outlet property="actionWrapperView" destination="3b9-nb-UKz" id="fgw-FW-TLM"/>
                 <outlet property="alternativeValueLabel" destination="gib-sV-HmB" id="19t-dY-QF9"/>
                 <outlet property="cancelButton" destination="V7i-at-j61" id="Q6z-ii-L3I"/>
+                <outlet property="confirmButton" destination="vTz-nn-fIz" id="pgn-iS-ZNe"/>
                 <outlet property="decreaseMultiplierButton" destination="nwm-iV-y6C" id="2vm-oy-BFT"/>
                 <outlet property="errorDescriptionButton" destination="0Cc-45-tPy" id="x1T-Uc-28n"/>
                 <outlet property="firstDescriptionContentLabel" destination="g6b-fm-1it" id="KMH-cp-SuZ"/>
@@ -21,7 +22,6 @@
                 <outlet property="increaseMultiplierButton" destination="P70-rC-iEd" id="dNA-3E-r4F"/>
                 <outlet property="inputBackgroundView" destination="hS7-wT-Jr6" id="p5u-Bv-KlN"/>
                 <outlet property="markingContainerView" destination="pC6-jx-HxP" id="19w-Pr-KQN"/>
-                <outlet property="reduceButton" destination="vTz-nn-fIz" id="pgn-iS-ZNe"/>
                 <outlet property="secondDescriptionActivityIndicator" destination="KEk-Ed-oel" id="gan-BA-tTg"/>
                 <outlet property="secondDescriptionContentLabel" destination="bgf-1d-1Jh" id="CZg-ut-nN2"/>
                 <outlet property="secondDescriptionInfoButton" destination="vYl-s2-2ue" id="second-info-button"/>
@@ -417,7 +417,7 @@
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

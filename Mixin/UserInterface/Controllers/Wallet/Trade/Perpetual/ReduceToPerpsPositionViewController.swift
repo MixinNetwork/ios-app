@@ -33,7 +33,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
     
     @IBOutlet weak var actionWrapperView: UIView!
     @IBOutlet weak var cancelButton: UIButton!
-    @IBOutlet weak var reduceButton: UIButton!
+    @IBOutlet weak var confirmButton: UIButton!
     
     private let wallet: Wallet
     private let target: PerpPositionAdjustmentTarget
@@ -295,21 +295,16 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             cancelButton.configuration = config
         }
         cancelButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        if var config = reduceButton.configuration {
+        if var config = confirmButton.configuration {
             config.titleTextAttributesTransformer = .init { incoming in
                 var outgoing = incoming
                 outgoing.font = UIFont.preferredFont(forTextStyle: .callout)
                 return outgoing
             }
-            config.title = switch target {
-            case .margin:
-                R.string.localizable.perps_reduce_margin()
-            case .position:
-                R.string.localizable.perps_reduce_position()
-            }
-            reduceButton.configuration = config
+            config.title = R.string.localizable.confirm()
+            confirmButton.configuration = config
         }
-        reduceButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        confirmButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
         NotificationCenter.default.addObserver(
             self,
@@ -955,13 +950,13 @@ extension ReduceToPerpsPositionViewController {
                     thirdDescriptionContentLabel.text = "-"
                     thirdDescriptionView.isHidden = true
                 }
-                reduceButton.isEnabled = hasValidQuantityScale
+                confirmButton.isEnabled = hasValidQuantityScale
                 showError(description: nil)
             } else {
                 firstDescriptionContentLabel.text = "-"
                 secondDescriptionContentLabel.text = "-"
                 thirdDescriptionContentLabel.text = "-"
-                reduceButton.isEnabled = false
+                confirmButton.isEnabled = false
                 if input.value != 0 {
                     showError(description: validationError ?? R.string.localizable.perps_reduce_invalid_quantity())
                 } else {
@@ -1009,11 +1004,11 @@ extension ReduceToPerpsPositionViewController {
             validatedReductionValue = nil
             secondDescriptionContentLabel.text = liquidationPriceBeforeReducing
             secondDescriptionContentLabel.alpha = 1
-            reduceButton.isEnabled = false
+            confirmButton.isEnabled = false
         case .busy:
             secondDescriptionActivityIndicator.startAnimating()
             secondDescriptionContentLabel.alpha = 0
-            reduceButton.isEnabled = false
+            confirmButton.isEnabled = false
         case let .valid(price):
             secondDescriptionActivityIndicator.stopAnimating()
             let after = price.formatted(
@@ -1024,7 +1019,7 @@ extension ReduceToPerpsPositionViewController {
                 to: after,
             )
             secondDescriptionContentLabel.alpha = 1
-            reduceButton.isEnabled = true
+            confirmButton.isEnabled = true
         }
     }
     

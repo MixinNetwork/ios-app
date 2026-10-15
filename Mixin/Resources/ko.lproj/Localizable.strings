@@ -1259,12 +1259,14 @@
 "perps_liquidation_price_short" = "청산가";
 "perps_long_overview" = "가격 상승이 예상될 때 롱 포지션을 오픈합니다. 가격이 오르면 이익을 얻고, 가격이 떨어지면 손실이 발생합니다.";
 "perps_low_margin_tip" = "증거금이 부족하면 먼저 증거금을 추가하세요";
+"perps_margin_amount" = "증거금 금액";
 "perps_margin_or_position" = "증거금 추가와 포지션 추가 중 무엇을 선택할까요?";
 "perps_margin_submitted" = "증거금 조정이 제출되었습니다";
 "perps_margin_tip" = "증거금을 추가하면 강제 청산 위험이 줄어듭니다";
 "perps_mark_price" = "마크 가격";
 "perps_markets" = "시장";
 "perps_minimum_order_size" = "포지션 가치는 최소 %@ 이상이어야 합니다";
+"perps_position_amount" = "포지션 금액";
 "perps_position_size_overview" = "크기는 마진 × 레버리지로 계산된 포지션의 총 가치를 나타냅니다.";
 "perps_position_size_pnl_1" = "더 큰 규모, 더 큰 손익";
 "perps_position_size_pnl_2" = "더 작은 크기, 더 작은 손익";
@@ -1280,7 +1282,6 @@
 "perps_reduced_margin" = "증거금 감소";
 "perps_reducing_margin" = "증거금 감소 중";
 "perps_reducing_margin_failed" = "증거금 감소 실패";
-"perps_reduction_estimate_note" = "예상 금액에는 수수료가 포함되지 않습니다. 실제 수령액은 체결 및 정산 결과에 따라 달라집니다. 표시된 청산 가격은 현재 가격입니다.";
 "perps_scene_sl_triggered" = "손절매 트리거: 손실 제한";
 "perps_scene_tp_triggered" = "이익실현 유발: 이익 고정";
 "perps_share_card_market" = "- 📈 시장: %@";

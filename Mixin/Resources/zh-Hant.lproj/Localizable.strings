@@ -1259,12 +1259,14 @@
 "perps_liquidation_price_short" = "強平價格";
 "perps_long_overview" = "做多是指在預期價格上漲時建立倉位，價格上漲可獲得盈利，價格下跌則產生虧損。";
 "perps_low_margin_tip" = "保證金不足時，優先新增保證金";
+"perps_margin_amount" = "保證金金額";
 "perps_margin_or_position" = "新增保證金還是增加倉位？";
 "perps_margin_submitted" = "保證金調整已提交";
 "perps_margin_tip" = "新增保證金可降低強平風險";
 "perps_mark_price" = "標記價格";
 "perps_markets" = "市場";
 "perps_minimum_order_size" = "倉位價值至少 %@";
+"perps_position_amount" = "倉位金額";
 "perps_position_size_overview" = "當前合約的倉位規模由「金額 × 槓桿」計算得出，表示本次交易所控制的資產規模。";
 "perps_position_size_pnl_1" = "倉位越大，盈虧金額越大";
 "perps_position_size_pnl_2" = "倉位越小，盈虧金額越小";
@@ -1280,7 +1282,6 @@
 "perps_reduced_margin" = "減少保證金";
 "perps_reducing_margin" = "正在減少保證金";
 "perps_reducing_margin_failed" = "減少保證金失敗";
-"perps_reduction_estimate_note" = "預估不含手續費，實際到賬以成交和結算為準。此處顯示當前強平價格。";
 "perps_scene_sl_triggered" = "觸發止損：控制虧損";
 "perps_scene_tp_triggered" = "觸發止盈：鎖定利潤";
 "perps_share_card_market" = "- 📈 市場：%@";

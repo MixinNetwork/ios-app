@@ -53,6 +53,7 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
             positionViewModel.side.localizedName,
             marketViewModel.market.tokenSymbol
         )
+        valueTitleLabel.text = R.string.localizable.perps_position_amount()
         receivingDescription = addDescription(
             title: R.string.localizable.estimated_receive(),
             alignment: .center,

@@ -1259,12 +1259,14 @@
 "perps_liquidation_price_short" = "清算価格";
 "perps_long_overview" = "価格が上昇すると予想される場合、ロングポジションをオープンします。価格が上昇すれば利益が得られます。価格が下落すると損失が発生します。";
 "perps_low_margin_tip" = "証拠金が不足している場合は、先に証拠金を追加してください";
+"perps_margin_amount" = "証拠金額";
 "perps_margin_or_position" = "証拠金を追加？それともポジションを増やす？";
 "perps_margin_submitted" = "証拠金の調整を送信しました";
 "perps_margin_tip" = "証拠金の追加は強制決済リスクを下げます";
 "perps_mark_price" = "マーク価格";
 "perps_markets" = "市場";
 "perps_minimum_order_size" = "ポジション価値は最低 %@ 必要です";
+"perps_position_amount" = "ポジション金額";
 "perps_position_size_overview" = "サイズは、証拠金 × レバレッジとして計算されたポジションの合計価値を表します。";
 "perps_position_size_pnl_1" = "サイズが大きくなり、損益も大きくなる";
 "perps_position_size_pnl_2" = "サイズが小さく、損益が小さい";
@@ -1280,7 +1282,6 @@
 "perps_reduced_margin" = "証拠金減額";
 "perps_reducing_margin" = "証拠金を減らしています";
 "perps_reducing_margin_failed" = "証拠金の減少に失敗しました";
-"perps_reduction_estimate_note" = "概算には手数料が含まれていません。実際の受取額は約定と決済の結果によって決まります。表示されている清算価格は現在の価格です。";
 "perps_scene_sl_triggered" = "トリガーストップロス: 損失のコントロール";
 "perps_scene_tp_triggered" = "利益確定のトリガー: 利益を確定する";
 "perps_share_card_market" = "- 📈 マーケット: %@";

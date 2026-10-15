@@ -1259,12 +1259,14 @@
 "perps_liquidation_price_short" = "Liq. Price";
 "perps_long_overview" = "You open a long position when you expect the price to rise. If the price rises, you profit; if the price falls, you incur a loss.";
 "perps_low_margin_tip" = "If margin is low, add margin first";
+"perps_margin_amount" = "Margin Amount";
 "perps_margin_or_position" = "Add Margin or Increase Position?";
 "perps_margin_submitted" = "Margin adjustment submitted";
 "perps_margin_tip" = "Add margin to lower liquidation risk";
 "perps_mark_price" = "Mark Price";
 "perps_markets" = "Markets";
 "perps_minimum_order_size" = "Minimum order size is %@";
+"perps_position_amount" = "Position Amount";
 "perps_position_size_overview" = "Size represents the total value of your position, calculated as margin × leverage.";
 "perps_position_size_pnl_1" = "Larger size, larger PnL";
 "perps_position_size_pnl_2" = "Smaller size, smaller PnL";
@@ -1280,7 +1282,6 @@
 "perps_reduced_margin" = "Reduced Margin";
 "perps_reducing_margin" = "Reducing Margin";
 "perps_reducing_margin_failed" = "Failed to Reduce Margin";
-"perps_reduction_estimate_note" = "Estimates exclude fees. Final proceeds depend on execution and settlement. The liquidation price shown is the current price.";
 "perps_scene_sl_triggered" = "Trigger stop-loss: Control losses";
 "perps_scene_tp_triggered" = "Trigger take-profit: Lock in profits";
 "perps_share_card_market" = "- 📈 Market: %@";

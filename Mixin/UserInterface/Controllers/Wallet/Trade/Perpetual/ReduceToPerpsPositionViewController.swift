@@ -7,6 +7,7 @@ class ReduceToPerpsPositionViewController: UIViewController {
     
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var inputBackgroundView: UIView!
+    @IBOutlet weak var valueTitleLabel: UILabel!
     @IBOutlet weak var decreaseMultiplierButton: UIButton!
     @IBOutlet weak var increaseMultiplierButton: UIButton!
     @IBOutlet weak var valueTextField: UITextField!
@@ -112,6 +113,10 @@ class ReduceToPerpsPositionViewController: UIViewController {
         
         inputBackgroundView.layer.cornerRadius = 8
         inputBackgroundView.layer.masksToBounds = true
+        valueTitleLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
         valueTextField.leftView = leftSignLabel
         valueTextField.rightView = rightSignLabel
         valueTextField.delegate = self

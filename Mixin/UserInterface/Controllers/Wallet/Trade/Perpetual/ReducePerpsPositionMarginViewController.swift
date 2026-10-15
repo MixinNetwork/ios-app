@@ -64,13 +64,11 @@ final class ReducePerpsPositionMarginViewController: ReduceToPerpsPositionViewCo
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var tags: [String: String] = [:]
-        tags["source"] = UserOperationAnalytics.tradeSource?.rawValue
-        reporter.report(event: .tradePerpsReduceMarginStart, tags: tags)
         titleView.titleLabel.text = R.string.localizable.perps_reduce_margin_title(
             positionViewModel.side.localizedName,
             marketViewModel.market.tokenSymbol
         )
+        valueTitleLabel.text = R.string.localizable.perps_margin_amount()
         marginDescription = addDescription(
             title: R.string.localizable.margin(),
             alignment: .center,
@@ -97,6 +95,10 @@ final class ReducePerpsPositionMarginViewController: ReduceToPerpsPositionViewCo
             object: nil,
         )
         valueTextField.becomeFirstResponder()
+        
+        var tags: [String: String] = [:]
+        tags["source"] = UserOperationAnalytics.tradeSource?.rawValue
+        reporter.report(event: .tradePerpsReduceMarginStart, tags: tags)
     }
     
     override func selectReduction(percentage: Decimal, amount: Decimal) {

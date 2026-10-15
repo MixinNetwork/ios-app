@@ -157,31 +157,21 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 viewModel.position.decimalEstimatedCloseFee != nil
             }
             var totalPnL: Decimal = 0
-            var totalMargin: Decimal = 0
+            var totalMarginPlusPnL: Decimal = 0
             var totalFee: Decimal = 0
             var totalReceivingAmount: Decimal = 0
             for viewModel in viewModels {
-                let pnl: Decimal
-                let margin: Decimal
+                let pnl = viewModel.position.decimalUnrealizedPnL
+                let marginPlusPnL = viewModel.decimalMargin + pnl
                 let receivingAmount: Decimal
                 if hasEstimatedFees, let fee = viewModel.position.decimalEstimatedCloseFee {
-                    pnl = max(
-                        -(viewModel.decimalMargin - fee),
-                        viewModel.position.decimalUnrealizedPnL,
-                    )
-                    margin = viewModel.decimalMargin + pnl
-                    receivingAmount = max(0, margin - fee)
+                    receivingAmount = marginPlusPnL - fee
                     totalFee += fee
                 } else {
-                    pnl = max(
-                        -viewModel.decimalMargin,
-                        viewModel.position.decimalUnrealizedPnL,
-                    )
-                    margin = viewModel.decimalMargin + pnl
-                    receivingAmount = max(0, margin)
+                    receivingAmount = marginPlusPnL
                 }
                 totalPnL += pnl
-                totalMargin += margin
+                totalMarginPlusPnL += marginPlusPnL
                 totalReceivingAmount += receivingAmount
             }
             let pnlColor: MarketColor = totalPnL >= 0 ? .rising : .falling
@@ -217,7 +207,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             rows.append(.doubleLineInfo(
                 caption: .string(R.string.localizable.margin()),
                 primary: CurrencyFormatter.localizedString(
-                    from: totalMargin,
+                    from: totalMarginPlusPnL,
                     format: .precision,
                     sign: .never,
                     symbol: .dollarSign,

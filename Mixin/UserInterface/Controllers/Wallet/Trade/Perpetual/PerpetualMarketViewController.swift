@@ -435,9 +435,8 @@ final class PerpetualMarketViewController: UIViewController {
                 )
                 self.present(addPosition, animated: true)
             case .decreaseMargin:
-                let reduce = ReduceToPerpsPositionViewController(
+                let reduce = ReducePerpsPositionMarginViewController(
                     wallet: wallet,
-                    reducing: .margin,
                     marketViewModel: viewModel,
                     positionViewModel: positionViewModel,
                     initialPercentage: 0,
@@ -452,9 +451,8 @@ final class PerpetualMarketViewController: UIViewController {
         guard let positionViewModel = openPositionViewModel else {
             return
         }
-        let reduce = ReduceToPerpsPositionViewController(
+        let reduce = ClosePerpsPositionViewController(
             wallet: wallet,
-            reducing: .position,
             marketViewModel: viewModel,
             positionViewModel: positionViewModel,
             initialPercentage: 1,

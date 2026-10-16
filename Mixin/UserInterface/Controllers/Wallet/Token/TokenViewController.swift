@@ -405,14 +405,6 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
     
 }
 
-extension TokenViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension TokenViewController {
     
     enum Section: Int, CaseIterable {

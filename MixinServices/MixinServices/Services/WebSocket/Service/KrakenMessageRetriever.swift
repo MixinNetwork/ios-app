@@ -27,12 +27,15 @@ public class KrakenMessageRetriever {
         
         Logger.call.info(category: "KrakenMessageRetriever", message: "Requesting peers for conversation: \(id)")
         do {
-            if let peers = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage?.toKrakenPeers() {
+            if let peers = try WebSocketService.shared.requestSync(
+                blazeMessage,
+                timeout: requestTimeout,
+            ).toKrakenPeers() {
                 return peers.filter { $0.userId != myUserId }
             } else {
                 return nil
             }
-        } catch MixinAPIResponseError.invalidConversationChecksum {
+        } catch .response(.invalidConversationChecksum) {
             SendMessageService.shared.syncConversation(conversationId: id)
             try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: id)
             return requestPeers(forConversationWith: id)
@@ -53,14 +56,17 @@ public class KrakenMessageRetriever {
         }
         
         do {
-            let blazeMessage = try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage
-            if let data = blazeMessage?.toBlazeMessageData() {
+            let response = try WebSocketService.shared.requestSync(
+                blazeMessage,
+                timeout: requestTimeout,
+            )
+            if let data = response.toBlazeMessageData() {
                 return .success(data)
             } else {
-                let error: Error = blazeMessage?.error ?? MixinServicesError.badKrakenBlazeMessage
+                let error: any Error = response.error ?? MixinServicesError.badKrakenBlazeMessage
                 return .failure(error)
             }
-        } catch MixinAPIResponseError.invalidConversationChecksum {
+        } catch .response(.invalidConversationChecksum) {
             if let conversationId = blazeMessage.params?.conversationId {
                 SendMessageService.shared.syncConversation(conversationId: conversationId)
                 try? ReceiveMessageService.shared.checkSessionSenderKey(conversationId: conversationId)
@@ -68,6 +74,13 @@ public class KrakenMessageRetriever {
             } else {
                 assertionFailure()
                 return .failure(MixinServicesError.missingConversationId)
+            }
+        } catch let .response(error) {
+            sleep(2)
+            if request.retryOnFailure, let delegate = self.delegate, delegate.krakenMessageRetriever(self, shouldRetryRequest: request, error: error, numberOfRetries: numberOfRetries) {
+                return self.request(request, numberOfRetries: numberOfRetries + 1)
+            } else {
+                return .failure(error)
             }
         } catch {
             sleep(2)

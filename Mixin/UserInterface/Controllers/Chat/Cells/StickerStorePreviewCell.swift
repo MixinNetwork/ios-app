@@ -34,6 +34,7 @@ class StickerStorePreviewCell: UICollectionViewCell {
     }
     
     private var maxStickerPreviewCount = 4
+    private let stickerReuseIdentifier = "sticker_preview"
     
     @IBAction func stickerAction(_ sender: Any) {
         onToggle?()
@@ -41,6 +42,10 @@ class StickerStorePreviewCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        collectionView.register(
+            StickerPreviewCell.self,
+            forCellWithReuseIdentifier: stickerReuseIdentifier,
+        )
         let margin: CGFloat = ScreenWidth.current <= .short ? 10 : 20
         collectionViewLeadingConstraint.constant = margin
         collectionViewTrailingConstraint.constant = margin
@@ -61,7 +66,10 @@ extension StickerStorePreviewCell: UICollectionViewDataSource, UICollectionViewD
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_preview, for: indexPath)!
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: stickerReuseIdentifier,
+            for: indexPath,
+        ) as! StickerPreviewCell
         if let albumItem = albumItem, indexPath.item < albumItem.stickers.count {
             cell.stickerView.load(sticker: albumItem.stickers[indexPath.item])
             cell.stickerView.startAnimating()

@@ -184,14 +184,6 @@ final class PerpetualPositionsViewController: UIViewController {
     
 }
 
-extension PerpetualPositionsViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension PerpetualPositionsViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

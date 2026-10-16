@@ -96,6 +96,9 @@ final class PermissionsViewController: UIViewController {
             item.target = self
             item.action = #selector(profileAction(_:))
             navigationItem.rightBarButtonItem = item
+            iconView.snp.makeConstraints { make in
+                make.size.equalTo(36)
+            }
         }
         iconView.setImage(with: response.app.iconUrl,
                           userId: response.app.appId,

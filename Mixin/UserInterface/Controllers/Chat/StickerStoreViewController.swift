@@ -1,10 +1,10 @@
 import UIKit
 import MixinServices
 
-class StickersStoreViewController: UIViewController {
+final class StickerStoreViewController: UIViewController {
     
-    @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    private weak var flowLayout: UICollectionViewFlowLayout!
+    private weak var collectionView: UICollectionView!
     
     private let maxBannerCount = 3
 
@@ -15,16 +15,54 @@ class StickersStoreViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
+    override func loadView() {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.minimumLineSpacing = 13
+        flowLayout.minimumInteritemSpacing = 10
+        let collectionView = UICollectionView(
+            frame: .zero,
+            collectionViewLayout: flowLayout,
+        )
+        collectionView.backgroundColor = R.color.background()
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        view = collectionView
+        self.collectionView = collectionView
+        self.flowLayout = flowLayout
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateAlbumAddStatus(_:)),
-                                               name: AlbumDAO.addedAlbumsDidChangeNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(reloadData),
-                                               name: RefreshAlbumJob.didRefreshNotification,
-                                               object: nil)
+        collectionView.register(R.nib.stickerStorePreviewCell)
+        collectionView.register(
+            R.nib.stickerStoreBannerView,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+        )
+        navigationItem.title = R.string.localizable.sticker_store()
+        navigationItem.leftBarButtonItem = .tintedIcon(
+            image: R.image.ic_title_close(),
+            target: self,
+            action: #selector(dismissAction(_:)),
+        )
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_sticker_setting(),
+            target: self,
+            action: #selector(editAction(_:)),
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateAlbumAddStatus(_:)),
+            name: AlbumDAO.addedAlbumsDidChangeNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadData),
+            name: RefreshAlbumJob.didRefreshNotification,
+            object: nil
+        )
         reloadData()
         ConcurrentJobQueue.shared.addJob(job: RefreshAlbumJob())
     }
@@ -42,18 +80,18 @@ class StickersStoreViewController: UIViewController {
         }
     }
     
-    @IBAction func dismissAction(_ sender: Any) {
+    @objc private func dismissAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func editAction(_ sender: Any) {
-        let viewController = R.storyboard.chat.my_stickers()!
+    @objc private func editAction(_ sender: Any) {
+        let viewController = StickersEditingViewController()
         navigationController?.pushViewController(viewController, animated: true)
     }
     
 }
 
-extension StickersStoreViewController: UICollectionViewDataSource {
+extension StickerStoreViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return listItems.count
@@ -86,7 +124,7 @@ extension StickersStoreViewController: UICollectionViewDataSource {
     
 }
 
-extension StickersStoreViewController: UICollectionViewDelegate {
+extension StickerStoreViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard indexPath.item < listItems.count else {
@@ -97,7 +135,7 @@ extension StickersStoreViewController: UICollectionViewDelegate {
     
 }
 
-extension StickersStoreViewController {
+extension StickerStoreViewController {
 
     @objc private func reloadData() {
         if AppGroupUserDefaults.User.hasNewStickers {

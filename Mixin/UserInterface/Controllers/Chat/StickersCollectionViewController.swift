@@ -43,7 +43,11 @@ class StickersCollectionViewController: UIViewController, ConversationAccessible
         super.viewDidLoad()
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = false
-        collectionView.backgroundColor = .background
+        if #available(iOS 26, *) {
+            collectionView.backgroundColor = .clear
+        } else {
+            collectionView.backgroundColor = .background
+        }
         collectionView.alwaysBounceVertical = true
         collectionView.register(StickerPreviewCell.self, forCellWithReuseIdentifier: cellReuseId)
         collectionView.dataSource = self

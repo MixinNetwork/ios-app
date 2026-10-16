@@ -10,7 +10,7 @@ public class Ed25519PrivateKey {
     
     private let key: Curve25519.Signing.PrivateKey
     
-    public convenience init() {
+    public convenience init() throws {
         var error: NSError?
         var key = Curve25519.Signing.PrivateKey()
         var goImpl = Ed25519NewKeyFromSeed(key.rawRepresentation, &error)
@@ -18,7 +18,7 @@ public class Ed25519PrivateKey {
             key = Curve25519.Signing.PrivateKey()
             goImpl = Ed25519NewKeyFromSeed(key.rawRepresentation, &error)
         }
-        self.init(key: key)
+        try self.init(key: key)
     }
     
     public convenience init(rawRepresentation: Data) throws {
@@ -28,14 +28,21 @@ public class Ed25519PrivateKey {
         guard goImpl != nil && error == nil else {
             throw ValidationError.invalidSeed(error)
         }
-        self.init(key: key)
+        try self.init(key: key)
     }
     
-    init(key: Curve25519.Signing.PrivateKey) {
+    init(key: Curve25519.Signing.PrivateKey) throws {
         let rawRepresentation = key.rawRepresentation
+        let x25519Representation = Self.x25519(from: rawRepresentation)
+        let agreementKey = try Curve25519.KeyAgreement.PrivateKey(
+            rawRepresentation: x25519Representation,
+        )
         self.rawRepresentation = rawRepresentation
-        self.x25519Representation = Self.x25519(from: rawRepresentation)
-        self.publicKey = Ed25519PublicKey(key: key.publicKey)!
+        self.x25519Representation = x25519Representation
+        self.publicKey = Ed25519PublicKey(
+            key: key.publicKey,
+            agreementKey: agreementKey.publicKey,
+        )
         self.key = key
     }
     

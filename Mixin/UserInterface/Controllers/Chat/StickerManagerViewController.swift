@@ -4,13 +4,11 @@ import CoreServices
 import SDWebImage
 import MixinServices
 
-class StickerManagerViewController: UICollectionViewController {
+final class StickerManagerViewController: UICollectionViewController {
     
     private var stickers = [StickerItem]()
     private var isDeleteStickers = false
     private var pickerContentOffset = CGPoint.zero
-    
-    private weak var rightBarButton: BusyButton?
     
     private lazy var itemSize: CGSize = {
         let minWidth: CGFloat = UIScreen.main.bounds.width > 400 ? 120 : 100
@@ -19,13 +17,13 @@ class StickerManagerViewController: UICollectionViewController {
         return CGSize(width: itemWidth, height: itemWidth)
     }()
     
-    private lazy var selectButton: UIBarButtonItem = .busyButton(
+    private lazy var selectButton: UIBarButtonItem = .button(
         title: R.string.localizable.select(),
         target: self,
         action: #selector(selectItems(_:))
     )
     
-    private lazy var deleteButton: UIBarButtonItem = .busyButton(
+    private lazy var deleteButton: UIBarButtonItem = .button(
         title: R.string.localizable.delete(),
         target: self,
         action: #selector(deleteSelections(_:))
@@ -39,14 +37,16 @@ class StickerManagerViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        selectButton.isEnabled = false
         navigationItem.rightBarButtonItem = selectButton
-        rightBarButton = navigationItem.rightBarButtonItem?.customView as? BusyButton
         view.backgroundColor = R.color.background()
         fetchStickers()
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(fetchStickers),
-                                               name: StickerDAO.favoriteStickersDidChangeNotification,
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(fetchStickers),
+            name: StickerDAO.favoriteStickersDidChangeNotification,
+            object: nil
+        )
     }
     
     @objc private func fetchStickers() {
@@ -55,20 +55,20 @@ class StickerManagerViewController: UICollectionViewController {
             DispatchQueue.main.async {
                 self?.stickers = stickers
                 self?.collectionView?.reloadData()
-                self?.rightBarButton?.isEnabled = stickers.count > 0
+                self?.selectButton.isEnabled = stickers.count > 0
             }
         }
     }
     
-    @objc private func deleteSelections(_ sender: BusyButton) {
-        guard !sender.isBusy, let selectionCells = collectionView?.indexPathsForSelectedItems, selectionCells.count > 0 else {
+    @objc private func deleteSelections(_ sender: UIBarButtonItem) {
+        guard let selectionCells = collectionView?.indexPathsForSelectedItems, selectionCells.count > 0 else {
             navigationItem.rightBarButtonItem = selectButton
             isDeleteStickers = false
             collectionView?.allowsMultipleSelection = false
             collectionView?.reloadData()
             return
         }
-        sender.isBusy = true
+        navigationItem.rightBarButtonItem = .busyIndicator()
         
         let stickerIds: [String] = selectionCells.compactMap { (indexPath) -> String? in
             guard indexPath.row < stickers.count else {
@@ -78,7 +78,6 @@ class StickerManagerViewController: UICollectionViewController {
         }
         
         StickerAPI.removeSticker(stickerIds: stickerIds, completion: { [weak self] (result) in
-            sender.isBusy = false
             switch result {
             case .success:
                 DispatchQueue.global().async {
@@ -97,6 +96,7 @@ class StickerManagerViewController: UICollectionViewController {
                     }
                 }
             case let .failure(error):
+                self?.navigationItem.rightBarButtonItem = sender
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         })

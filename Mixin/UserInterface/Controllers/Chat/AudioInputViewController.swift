@@ -67,6 +67,19 @@ class AudioInputViewController: UIViewController, ConversationInputAccessible {
     override func viewDidLoad() {
         super.viewDidLoad()
         recordGestureRecognizer.delegate = self
+        lockView.alpha = 0
+        if #available(iOS 26, *) {
+            recordImageView.backgroundColor = .clear
+            recordImageView.layer.cornerRadius = 24
+            recordImageView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+            recordImageView.clipsToBounds = true
+            lockedActionsView.layer.cornerRadius = 24
+            lockedActionsView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+            lockedActionsView.clipsToBounds = true
+            recordingIndicatorView.layer.cornerRadius = 24
+            recordingIndicatorView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+            recordingIndicatorView.clipsToBounds = true
+        }
     }
     
     @IBAction func tapAction(_ sender: Any) {
@@ -311,6 +324,7 @@ extension AudioInputViewController {
         } else {
             fadeOutLockView()
         }
+        lockView.alpha = 0
         UIView.animate(withDuration: animationDuration, animations: {
             if self.isLocked {
                 self.lockedActionsView.alpha = 0
@@ -319,6 +333,7 @@ extension AudioInputViewController {
             }
             self.recordingIndicatorView.alpha = 0
         }) { (_) in
+            self.isLocked = false
             self.lockView.progress = 0
             self.preferredContentSize.width = self.view.frame.height
             self.lockedActionsView.alpha = 1
@@ -331,6 +346,7 @@ extension AudioInputViewController {
         lockViewVisibleConstraint.priority = .defaultHigh
         lockViewHiddenConstraint.priority = .defaultLow
         UIView.animate(withDuration: animationDuration) {
+            self.lockView.alpha = 1
             self.view.layoutIfNeeded()
         }
     }
@@ -339,6 +355,7 @@ extension AudioInputViewController {
         lockViewVisibleConstraint.priority = .defaultLow
         lockViewHiddenConstraint.priority = .defaultHigh
         UIView.animate(withDuration: animationDuration, animations: {
+            self.lockView.alpha = 0
             self.view.layoutIfNeeded()
         }) { (_) in
             self.isShowingLockView = false
@@ -352,7 +369,6 @@ extension AudioInputViewController {
             self.lockViewVisibleConstraint.priority = .defaultLow
             self.lockViewHiddenConstraint.priority = .defaultHigh
             self.view.layoutIfNeeded()
-            self.lockView.alpha = 1
         }
     }
     

@@ -214,7 +214,7 @@ final class MixinWebViewController: WebViewController {
             DispatchQueue.main.async {
                 hud.hide()
                 let conversation = ConversationViewController.instance(ownerUser: developUser)
-                self?.navigationController?.pushViewController(withBackRoot: conversation)
+                self?.navigationController?.pushViewController(afterRoot: conversation)
             }
         }
     }

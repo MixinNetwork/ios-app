@@ -7,13 +7,13 @@ class AcknowledgementListViewController: SettingsTableViewController {
     
     init() {
         var acknows: [Acknowledgement] = []
-        if let url = Bundle.main.url(forResource: "Pods-Mixin-acknowledgements", withExtension: "plist") {
-            let pods = Acknowledgement.read(from: url)
-            acknows.append(contentsOf: pods)
-        }
-        if let url = Bundle.main.url(forResource: "Custom-acknowledgements", withExtension: "plist") {
-            let customs = Acknowledgement.read(from: url)
-            acknows.append(contentsOf: customs)
+        if let url = Bundle.main.url(
+            forResource: "Acknowledgements",
+            withExtension: "plist",
+            subdirectory: "com.mono0926.LicensePlist.Output",
+        ) {
+            let dependencies = Acknowledgement.read(from: url)
+            acknows.append(contentsOf: dependencies)
         }
         self.acknowledgements = acknows
         

@@ -86,7 +86,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         requestTimeout = 5
         BackgroundMessagingService.shared.end()
         MixinService.isStopProcessMessages = false
-        if WebSocketService.shared.isConnected && WebSocketService.shared.isRealConnected {
+        if WebSocketService.shared.isConnected {
             DispatchQueue.global().async {
                 guard canProcessMessages else {
                     return

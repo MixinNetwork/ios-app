@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="sticker_store_preview" id="6ze-5H-jkF" customClass="StickerStorePreviewCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="208" width="375" height="104"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="0N3-xF-dy3">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="104"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sticker" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5md-9Y-eyo">
+                        <rect key="frame" x="20" y="3.5" width="53.5" height="19"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                        <color key="textColor" name="text"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qYq-sN-8nf">
+                        <rect key="frame" x="308" y="0.0" width="47" height="26"/>
+                        <color key="backgroundColor" name="theme"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="26" id="ggM-C8-naD"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                        <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                        <state key="normal" title="Add"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="add"/>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="13"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                        <connections>
+                            <action selector="stickerAction:" destination="6ze-5H-jkF" eventType="touchUpInside" id="Het-Tp-qy9"/>
+                        </connections>
+                    </button>
+                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="3Cl-kB-Fh3">
+                        <rect key="frame" x="20" y="32" width="335" height="72"/>
+                        <color key="backgroundColor" name="background"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="4" minimumInteritemSpacing="0.0" id="Lai-36-8qQ">
+                            <size key="itemSize" width="72" height="72"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <connections>
+                            <outlet property="dataSource" destination="6ze-5H-jkF" id="oPR-L6-6GO"/>
+                            <outlet property="delegate" destination="6ze-5H-jkF" id="TP4-XU-PLd"/>
+                        </connections>
+                    </collectionView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="3Cl-kB-Fh3" firstAttribute="top" secondItem="0N3-xF-dy3" secondAttribute="top" constant="32" id="5Kt-BO-YMR"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="5md-9Y-eyo" secondAttribute="trailing" constant="90" id="LTi-qU-Ydg"/>
+                    <constraint firstItem="5md-9Y-eyo" firstAttribute="leading" secondItem="3Cl-kB-Fh3" secondAttribute="leading" id="NBH-10-RRM"/>
+                    <constraint firstItem="qYq-sN-8nf" firstAttribute="top" secondItem="0N3-xF-dy3" secondAttribute="top" id="PqL-Do-5HP"/>
+                    <constraint firstItem="qYq-sN-8nf" firstAttribute="trailing" secondItem="3Cl-kB-Fh3" secondAttribute="trailing" id="aWS-9q-zfA"/>
+                    <constraint firstAttribute="trailing" secondItem="3Cl-kB-Fh3" secondAttribute="trailing" constant="20" id="bQf-Cx-tiS"/>
+                    <constraint firstItem="3Cl-kB-Fh3" firstAttribute="leading" secondItem="0N3-xF-dy3" secondAttribute="leading" constant="20" id="doJ-XS-yK0"/>
+                    <constraint firstItem="5md-9Y-eyo" firstAttribute="centerY" secondItem="qYq-sN-8nf" secondAttribute="centerY" id="mEY-Aj-Euy"/>
+                    <constraint firstAttribute="bottom" secondItem="3Cl-kB-Fh3" secondAttribute="bottom" id="pM7-sq-uFp"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <connections>
+                <outlet property="addButton" destination="qYq-sN-8nf" id="Tjt-44-eTp"/>
+                <outlet property="collectionView" destination="3Cl-kB-Fh3" id="qLV-1X-85Y"/>
+                <outlet property="collectionViewLeadingConstraint" destination="doJ-XS-yK0" id="CuE-kF-ISl"/>
+                <outlet property="collectionViewTrailingConstraint" destination="bQf-Cx-tiS" id="RCr-an-KRQ"/>
+                <outlet property="layout" destination="Lai-36-8qQ" id="K34-BX-TOg"/>
+                <outlet property="nameLabel" destination="5md-9Y-eyo" id="n5T-5X-H5W"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -158,7 +158,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                     func pushConversationController() {
                         let push = {
                             let vc = ConversationViewController.instance(conversation: conversation)
-                            UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: vc)
+                            UIApplication.shared.homeNavigationController?.pushViewController(afterRoot: vc)
                         }
                         UIApplication.shared.homeContainerViewController?.clipSwitcher.hideFullscreenSwitcher()
                         if var webControllers = UIApplication.shared.homeContainerViewController?.children.compactMap({ $0 as? MixinWebViewController}), !webControllers.isEmpty {

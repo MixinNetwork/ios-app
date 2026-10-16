@@ -101,13 +101,13 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
             var quantity: Decimal
             switch input.mode {
             case .byPercentage:
-                var value = input.value * 100
-                var integralValue = Decimal()
-                NSDecimalRound(&integralValue, &value, 0, .down)
-                guard value == integralValue, value <= 100 else {
+                if input.value > 1 {
                     return nil
+                } else if input.value == 1 {
+                    return current
+                } else {
+                    quantity = current * input.value
                 }
-                quantity = current * value / 100
             case .byAmount:
                 guard markPrice > 0, input.value <= current * markPrice else {
                     return nil

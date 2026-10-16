@@ -319,9 +319,14 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                         throw firstError
                     }
                 case let .single(viewModel, reducingQuantity, canonicalFormatStyle):
+                    let quantity = if reducingQuantity == viewModel.decimalQuantity {
+                        viewModel.position.quantity
+                    } else {
+                        reducingQuantity.formatted(canonicalFormatStyle)
+                    }
                     _ = try await RouteAPI.closePerpsOrder(
                         positionID: viewModel.position.positionID,
-                        quantity: reducingQuantity.formatted(canonicalFormatStyle),
+                        quantity: quantity,
                     )
                 }
                 UIDevice.current.playPaymentSuccess()

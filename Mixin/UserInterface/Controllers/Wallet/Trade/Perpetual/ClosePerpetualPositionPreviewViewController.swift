@@ -176,7 +176,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                     symbol: .dollarSign,
                 )
                 rows.append(.info(
-                    caption: .string(R.string.localizable.estimated_fee()),
+                    caption: .string(R.string.localizable.fee()),
                     content: fee,
                     action: { [weak self] in
                         self?.introduceFee()
@@ -257,7 +257,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 "-"
             }
             rows.append(.info(
-                caption: .string(R.string.localizable.estimated_fee()),
+                caption: .string(R.string.localizable.fee()),
                 content: fee,
                 action: { [weak self] in
                     self?.introduceFee()

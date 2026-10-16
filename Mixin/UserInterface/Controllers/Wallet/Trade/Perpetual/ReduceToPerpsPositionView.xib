@@ -58,7 +58,7 @@
                                             <color key="textColor" name="text_quaternary"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <textField opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iml-Mv-mdd">
+                                        <textField opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iml-Mv-mdd" customClass="PerpsPositionValueTextField" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="171.66666666666666" y="65" width="10" height="58"/>
                                             <color key="textColor" name="text"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="48"/>

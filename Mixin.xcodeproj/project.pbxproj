@@ -669,6 +669,7 @@
 		94073A0B305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94073A0A305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.xib */; };
 		94073A0C305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94073A09305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.swift */; };
 		94073AF330599312004767E3 /* ReduceToPerpsPositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94073AF130599312004767E3 /* ReduceToPerpsPositionViewController.swift */; };
+		C0DE00101600000000000002 /* PerpsPositionValueTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00101600000000000001 /* PerpsPositionValueTextField.swift */; };
 		94073AF430599312004767E3 /* ReduceToPerpsPositionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94073AF230599312004767E3 /* ReduceToPerpsPositionView.xib */; };
 		94073C0D305A938D004767E3 /* ReducePerpsPositionMarginPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94073C0C305A938D004767E3 /* ReducePerpsPositionMarginPreviewViewController.swift */; };
 		94073C66305BA5B6004767E3 /* PerpPositionAdjustmentTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94073C65305BA5AD004767E3 /* PerpPositionAdjustmentTarget.swift */; };
@@ -2716,6 +2717,7 @@
 		94073A09305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpPositionAdjustmentIntroductionCell.swift; sourceTree = "<group>"; };
 		94073A0A305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpPositionAdjustmentIntroductionCell.xib; sourceTree = "<group>"; };
 		94073AF130599312004767E3 /* ReduceToPerpsPositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReduceToPerpsPositionViewController.swift; sourceTree = "<group>"; };
+		C0DE00101600000000000001 /* PerpsPositionValueTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsPositionValueTextField.swift; sourceTree = "<group>"; };
 		94073AF230599312004767E3 /* ReduceToPerpsPositionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReduceToPerpsPositionView.xib; sourceTree = "<group>"; };
 		94073C0C305A938D004767E3 /* ReducePerpsPositionMarginPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducePerpsPositionMarginPreviewViewController.swift; sourceTree = "<group>"; };
 		94073C65305BA5AD004767E3 /* PerpPositionAdjustmentTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpPositionAdjustmentTarget.swift; sourceTree = "<group>"; };
@@ -5024,6 +5026,7 @@
 				94ABA8CD2FBC317400FC536D /* AddToPerpsPositionViewController.swift */,
 				94073AF230599312004767E3 /* ReduceToPerpsPositionView.xib */,
 				94073AF130599312004767E3 /* ReduceToPerpsPositionViewController.swift */,
+				C0DE00101600000000000001 /* PerpsPositionValueTextField.swift */,
 				C0DE00101500000000000003 /* ClosePerpsPositionViewController.swift */,
 				C0DE00101500000000000001 /* ReducePerpsPositionMarginViewController.swift */,
 				94073C0C305A938D004767E3 /* ReducePerpsPositionMarginPreviewViewController.swift */,
@@ -9350,6 +9353,7 @@
 				7B5BABE31FB57B0300341FE6 /* AvatarPickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				94073AF330599312004767E3 /* ReduceToPerpsPositionViewController.swift in Sources */,
+				C0DE00101600000000000002 /* PerpsPositionValueTextField.swift in Sources */,
 				C0DE00101500000000000004 /* ClosePerpsPositionViewController.swift in Sources */,
 				C0DE00101500000000000002 /* ReducePerpsPositionMarginViewController.swift in Sources */,
 				94FB2E0A2F504D9200F85AB4 /* PerpetualPlaceholderCell.swift in Sources */,

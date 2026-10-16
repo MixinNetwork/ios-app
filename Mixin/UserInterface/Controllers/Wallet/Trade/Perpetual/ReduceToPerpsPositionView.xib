@@ -47,19 +47,19 @@
                     <rect key="frame" x="0.0" y="188" width="393" height="514"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vet-Pn-N7H" userLabel="Content View">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="306.33333333333331"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="294.33333333333331"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hS7-wT-Jr6">
-                                    <rect key="frame" x="20" y="0.0" width="353" height="290.33333333333331"/>
+                                    <rect key="frame" x="20" y="0.0" width="353" height="278.33333333333331"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vtl-Qe-r8N" userLabel="Value Title Label">
-                                            <rect key="frame" x="8" y="44" width="337" height="17"/>
+                                            <rect key="frame" x="8" y="36" width="337" height="17"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" name="text_quaternary"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <textField opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iml-Mv-mdd" customClass="PerpsPositionValueTextField" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="171.66666666666666" y="65" width="10" height="58"/>
+                                            <rect key="frame" x="171.66666666666666" y="57" width="10" height="58"/>
                                             <color key="textColor" name="text"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="48"/>
                                             <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
@@ -68,7 +68,7 @@
                                             </connections>
                                         </textField>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="af8-42-ylv">
-                                            <rect key="frame" x="157.33333333333334" y="126.99999999999999" width="38.333333333333343" height="19.333333333333329"/>
+                                            <rect key="frame" x="157.33333333333334" y="118.99999999999999" width="38.333333333333343" height="19.333333333333329"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gib-sV-HmB">
                                                     <rect key="frame" x="0.0" y="0.0" width="24.333333333333332" height="19.333333333333332"/>
@@ -83,7 +83,7 @@
                                             </subviews>
                                         </stackView>
                                         <button opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="0Cc-45-tPy">
-                                            <rect key="frame" x="16" y="146.33333333333331" width="321" height="54"/>
+                                            <rect key="frame" x="16" y="138.33333333333331" width="321" height="50"/>
                                             <buttonConfiguration key="configuration" style="plain" title="Max removable 50%" titleAlignment="center">
                                                 <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
                                                 <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="12" trailing="0.0"/>
@@ -91,16 +91,16 @@
                                             </buttonConfiguration>
                                         </button>
                                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="xua-ar-gf3">
-                                            <rect key="frame" x="16" y="200.33333333333331" width="321" height="34"/>
+                                            <rect key="frame" x="16" y="188.33333333333331" width="321" height="34"/>
                                             <connections>
                                                 <action selector="sliderValueChanged:" destination="-1" eventType="valueChanged" id="i3Q-Lf-h4X"/>
                                             </connections>
                                         </slider>
                                         <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="44" translatesAutoresizingMaskIntoConstraints="NO" id="pC6-jx-HxP">
-                                            <rect key="frame" x="0.0" y="234.33333333333331" width="353" height="44"/>
+                                            <rect key="frame" x="0.0" y="222.33333333333331" width="353" height="44"/>
                                         </view>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nwm-iV-y6C">
-                                            <rect key="frame" x="60" y="72" width="44" height="44"/>
+                                            <rect key="frame" x="60" y="64" width="44" height="44"/>
                                             <gestureRecognizers/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="44" id="Ffu-2e-d8y"/>
@@ -113,7 +113,7 @@
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P70-rC-iEd">
-                                            <rect key="frame" x="249" y="72" width="44" height="44"/>
+                                            <rect key="frame" x="249" y="64" width="44" height="44"/>
                                             <gestureRecognizers/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="44" id="Hcb-he-P5c"/>
@@ -126,7 +126,7 @@
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sgf-Ye-eIV">
-                                            <rect key="frame" x="168.66666666666666" y="114.66666666666669" width="44" height="44"/>
+                                            <rect key="frame" x="168.66666666666666" y="106.66666666666669" width="44" height="44"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="44" id="6rV-5V-hll"/>
                                                 <constraint firstAttribute="width" constant="44" id="a4O-MM-29r"/>
@@ -141,7 +141,7 @@
                                         <constraint firstItem="pC6-jx-HxP" firstAttribute="leading" secondItem="xua-ar-gf3" secondAttribute="leading" constant="-16" id="3Bk-p9-PAM"/>
                                         <constraint firstItem="af8-42-ylv" firstAttribute="centerX" secondItem="hS7-wT-Jr6" secondAttribute="centerX" id="64p-LT-dvI"/>
                                         <constraint firstItem="nwm-iV-y6C" firstAttribute="leading" secondItem="hS7-wT-Jr6" secondAttribute="leading" priority="750" constant="60" id="7vE-gI-y3b"/>
-                                        <constraint firstItem="xua-ar-gf3" firstAttribute="top" secondItem="af8-42-ylv" secondAttribute="bottom" constant="54" id="AGb-7h-pEA"/>
+                                        <constraint firstItem="xua-ar-gf3" firstAttribute="top" secondItem="af8-42-ylv" secondAttribute="bottom" constant="50" id="AGb-7h-pEA"/>
                                         <constraint firstAttribute="trailing" secondItem="0Cc-45-tPy" secondAttribute="trailing" constant="16" id="B9V-fC-rdv"/>
                                         <constraint firstAttribute="bottom" secondItem="pC6-jx-HxP" secondAttribute="bottom" constant="12" id="B9m-5f-8sE"/>
                                         <constraint firstItem="Sgf-Ye-eIV" firstAttribute="centerX" secondItem="nWd-Js-qlG" secondAttribute="centerX" id="GMV-ef-AoQ"/>
@@ -161,12 +161,12 @@
                                         <constraint firstItem="P70-rC-iEd" firstAttribute="centerY" secondItem="Iml-Mv-mdd" secondAttribute="centerY" id="hIM-3E-Iqr"/>
                                         <constraint firstAttribute="trailing" secondItem="P70-rC-iEd" secondAttribute="trailing" priority="750" constant="60" id="j1D-tL-2i9"/>
                                         <constraint firstItem="Vtl-Qe-r8N" firstAttribute="leading" secondItem="hS7-wT-Jr6" secondAttribute="leading" constant="8" id="value-title-leading"/>
-                                        <constraint firstItem="Vtl-Qe-r8N" firstAttribute="top" secondItem="hS7-wT-Jr6" secondAttribute="top" constant="44" id="value-title-top"/>
+                                        <constraint firstItem="Vtl-Qe-r8N" firstAttribute="top" secondItem="hS7-wT-Jr6" secondAttribute="top" constant="36" id="value-title-top"/>
                                         <constraint firstAttribute="trailing" secondItem="Vtl-Qe-r8N" secondAttribute="trailing" constant="8" id="value-title-trailing"/>
                                     </constraints>
                                 </view>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="RxC-NC-Wys">
-                                    <rect key="frame" x="36" y="306.33333333333331" width="321" height="0.0"/>
+                                    <rect key="frame" x="36" y="294.33333333333331" width="321" height="0.0"/>
                                     <constraints>
                                         <constraint firstAttribute="height" placeholder="YES" id="description-height-placeholder"/>
                                     </constraints>

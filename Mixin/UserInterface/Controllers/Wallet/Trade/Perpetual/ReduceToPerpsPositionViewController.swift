@@ -131,11 +131,6 @@ class ReduceToPerpsPositionViewController: UIViewController {
         )
         updateValueTextFieldAccessories()
         updateValueViews(updatingValueTextField: true)
-        if var config = errorDescriptionButton.configuration {
-            config.titleAlignment = .center
-            config.titleLineBreakMode = .byTruncatingTail
-            errorDescriptionButton.configuration = config
-        }
         if let label = errorDescriptionButton.titleLabel {
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0

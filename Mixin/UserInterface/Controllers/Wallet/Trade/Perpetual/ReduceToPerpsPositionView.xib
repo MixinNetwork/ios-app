@@ -82,9 +82,9 @@
                                                 </imageView>
                                             </subviews>
                                         </stackView>
-                                        <button opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Cc-45-tPy">
+                                        <button opaque="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="0Cc-45-tPy">
                                             <rect key="frame" x="16" y="146.33333333333331" width="321" height="54"/>
-                                            <buttonConfiguration key="configuration" style="plain" title="Max removable 50%">
+                                            <buttonConfiguration key="configuration" style="plain" title="Max removable 50%" titleAlignment="center">
                                                 <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
                                                 <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="12" trailing="0.0"/>
                                                 <color key="baseForegroundColor" name="market_red"/>

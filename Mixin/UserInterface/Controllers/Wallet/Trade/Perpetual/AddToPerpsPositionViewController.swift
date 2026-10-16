@@ -87,17 +87,17 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
         self.liquidationPriceBeforeAdding = positionViewModel.decimalLiquidationPrice?.formatted(
             marketViewModel.userDisplayPriceFormatStyle
         ) ?? "-"
-        self.leverageMultiplier = Decimal(positionViewModel.leverageMultiplier)
+        self.leverageMultiplier = Decimal(positionViewModel.position.leverage)
         self.presentMarketViewOnSuccess = presentMarketViewOnSuccess
         self.liquidationPriceRequester = switch target {
         case .position:
             EditPerpsPositionLiquidationPriceRequester(
-                positionID: positionViewModel.positionID,
+                positionID: positionViewModel.position.positionID,
                 action: .increasePosition,
             )
         case .margin:
             EditPerpsPositionLiquidationPriceRequester(
-                positionID: positionViewModel.positionID,
+                positionID: positionViewModel.position.positionID,
                 action: .increaseMargin,
             )
         }
@@ -321,7 +321,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
         switch target {
         case .position:
             RouteAPI.increasePerpsPosition(
-                positionID: positionViewModel.positionID,
+                positionID: positionViewModel.position.positionID,
                 assetID: assetID,
                 amount: amount,
                 destination: nil,
@@ -331,7 +331,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
             }
         case .margin:
             RouteAPI.increasePerpsMargin(
-                positionID: positionViewModel.positionID,
+                positionID: positionViewModel.position.positionID,
                 assetID: assetID,
                 amount: amount,
                 destination: nil
@@ -362,7 +362,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
     }
     
     @objc private func reloadPosition() {
-        let positionID = positionViewModel.positionID
+        let positionID = positionViewModel.position.positionID
         DispatchQueue.global().async { [weak self, wallet] in
             guard let position = PerpsPositionDAO.shared.position(positionID: positionID) else {
                 return
@@ -376,7 +376,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                 self.liquidationPriceBeforeAdding = viewModel.decimalLiquidationPrice?.formatted(
                     self.marketViewModel.userDisplayPriceFormatStyle
                 ) ?? "-"
-                self.leverageMultiplier = Decimal(viewModel.leverageMultiplier)
+                self.leverageMultiplier = Decimal(viewModel.position.leverage)
                 self.updateSubtitle()
                 self.updateDescriptions(marginAmount: self.marginAmount, requestLiquidationPrice: false)
             }

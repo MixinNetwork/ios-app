@@ -159,7 +159,7 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
             break
         }
         
-        rows.append(.info(caption: .network, content: operation.chain.name))
+        rows.append(.info(caption: .network, content: operation.chain.name, action: nil))
         reloadData(with: rows)
         
         if operationContainsSetAuthority {
@@ -516,7 +516,7 @@ extension Web3TransferPreviewViewController {
             if let decimalAmount, decimalAmount != 0 {
                 style = decimalAmount > 0 ? .incoming : .outgoing
             } else {
-                style = .plain
+                style = .primary
             }
             rows.append(
                 .web3Amount(
@@ -543,7 +543,7 @@ extension Web3TransferPreviewViewController {
                 if let decimalAmount, decimalAmount != 0 {
                     style = decimalAmount > 0 ? .incoming : .outgoing
                 } else {
-                    style = .plain
+                    style = .primary
                 }
                 return StyledAssetChange(
                     token: change,
@@ -551,7 +551,10 @@ extension Web3TransferPreviewViewController {
                     amountStyle: style
                 )
             }
-            rows.append(.assetChanges(estimated: true, changes: styledChanges))
+            rows.append(.assetChanges(
+                title: R.string.localizable.estimated_balance_change(),
+                changes: styledChanges,
+            ))
         }
         
         if rows.isEmpty {

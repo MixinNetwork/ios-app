@@ -674,6 +674,7 @@
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Withdrawal memo format incorrect.";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawals are suspended.";
 "estimated_balance_change" = "Balance Change (estimate)";
+"estimated_fee" = "Estimated Fee";
 "estimated_liquidation_price" = "Estimated Liquidation Price";
 "estimated_price" = "Estimated Price";
 "estimated_receive" = "Estimated Receive";
@@ -1228,9 +1229,12 @@
 "perps_category_indices" = "Indices";
 "perps_category_meme" = "Memes";
 "perps_category_stocks" = "Stocks";
+"perps_close_position_title" = "Close Position to %1$@ %2$@";
+"perps_close_submitted" = "Close order submitted";
 "perps_confirm_add_margin" = "Confirm Adding Margin";
 "perps_confirm_reduce_margin" = "Confirm Reducing Margin";
 "perps_current_price" = "Current Price";
+"perps_estimated_realized_pnl" = "Estimated Realized PnL";
 "perps_funding_frequency" = "Frequency";
 "perps_funding_frequency_value" = "1/4/8 hours";
 "perps_funding_rate_key_point_1" = "Keep perp prices close to spot prices";
@@ -1239,6 +1243,7 @@
 "perps_funding_rate_overview" = "Funding rate is a fee paid or received between long and short traders to keep the perpetual price close to the spot price. When positive, longs pay shorts. When negative, shorts pay longs.";
 "perps_funding_rate_purpose" = "Purpose";
 "perps_funding_title_interval" = "Funding (%dH)";
+"perps_include_pnl" = "Include PnL";
 "perps_intro_overview" = "Mixin Perpetual Futures are crypto-settled perpetual contracts with no expiry date that allow traders to speculate on the price of crypto assets. They can be held indefinitely and typically track the underlying spot market.";
 "perps_intro_risk_notice_1" = "Leverage amplifies both profits and losses";
 "perps_intro_risk_notice_2" = "Positions may be liquidated if margin requirements are not maintained";
@@ -1254,11 +1259,14 @@
 "perps_liquidation_price_short" = "Liq. Price";
 "perps_long_overview" = "You open a long position when you expect the price to rise. If the price rises, you profit; if the price falls, you incur a loss.";
 "perps_low_margin_tip" = "If margin is low, add margin first";
+"perps_margin_amount" = "Margin Amount";
 "perps_margin_or_position" = "Add Margin or Increase Position?";
 "perps_margin_submitted" = "Margin adjustment submitted";
 "perps_margin_tip" = "Add margin to lower liquidation risk";
 "perps_mark_price" = "Mark Price";
 "perps_markets" = "Markets";
+"perps_minimum_order_size" = "Minimum order size is %@";
+"perps_position_amount" = "Position Amount";
 "perps_position_size_overview" = "Size represents the total value of your position, calculated as margin × leverage.";
 "perps_position_size_pnl_1" = "Larger size, larger PnL";
 "perps_position_size_pnl_2" = "Smaller size, smaller PnL";
@@ -1266,12 +1274,11 @@
 "perps_product" = "Market";
 "perps_realized_pnl" = "Realized PnL";
 "perps_receive" = "Receive";
+"perps_reduce_invalid_quantity" = "Enter a positive amount within the current position size.";
 "perps_reduce_margin" = "Reduce Margin";
 "perps_reduce_margin_description" = "Withdraw excess margin to free up funds while maintaining your position";
 "perps_reduce_margin_title" = "Reduce Margin for %1$@ %2$@";
 "perps_reduce_position" = "Reduce Position";
-"perps_reduce_position_description" = "Partially close to lock in profits or limit losses";
-"perps_reduce_position_title" = "Reduce Position for %1$@ %2$@";
 "perps_reduced_margin" = "Reduced Margin";
 "perps_reducing_margin" = "Reducing Margin";
 "perps_reducing_margin_failed" = "Failed to Reduce Margin";

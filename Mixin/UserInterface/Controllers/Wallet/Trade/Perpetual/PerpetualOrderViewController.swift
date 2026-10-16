@@ -30,14 +30,7 @@ final class PerpetualOrderViewController: UIViewController {
             guard decimalFee != 0 else {
                 return nil
             }
-            return decimalFee.formatted(
-                Decimal.FormatStyle.Currency
-                    .currency(code: "USD")
-                    .presentation(.narrow)
-                    .precision(.fractionLength(0...16))
-                    .rounded(rule: .towardZero)
-                    .sign(strategy: .never)
-            )
+            return decimalFee.formatted(PerpetualOrder.feeFormatStyle)
         }()
         
         var infos: [Info] = []

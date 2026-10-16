@@ -6,8 +6,9 @@ struct StyledAssetChange {
     enum AmountStyle {
         case incoming
         case outgoing
-        case plain
-        case gray
+        case primary
+        case secondary
+        case tertiary
     }
     
     let token: any Token

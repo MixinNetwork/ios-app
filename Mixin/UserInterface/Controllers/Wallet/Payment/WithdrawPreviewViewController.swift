@@ -87,7 +87,7 @@ final class WithdrawPreviewViewController: WalletIdentifyingAuthenticationPrevie
             let totalTokenValue = CurrencyFormatter.localizedString(from: totalTokenAmount, format: .precision, sign: .never, symbol: .custom(withdrawalToken.symbol))
             rows.append(.amount(caption: .total, token: totalTokenValue, fiatMoney: totalFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false))
         }
-        rows.append(.info(caption: .network, content: withdrawalToken.depositNetworkName ?? ""))
+        rows.append(.info(caption: .network, content: withdrawalToken.depositNetworkName ?? "", action: nil))
         reloadData(with: rows)
         reporter.report(event: .sendPreview)
     }

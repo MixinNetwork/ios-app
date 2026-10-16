@@ -71,3 +71,16 @@ extension PerpetualOrder: TableRecord, PersistableRecord {
     public static let databaseTableName = "perps_orders"
     
 }
+
+extension PerpetualOrder {
+    
+    public static var feeFormatStyle: Decimal.FormatStyle.Currency {
+        Decimal.FormatStyle.Currency
+            .currency(code: "USD")
+            .presentation(.narrow)
+            .precision(.fractionLength(0...16))
+            .rounded(rule: .towardZero)
+            .sign(strategy: .never)
+    }
+    
+}

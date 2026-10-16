@@ -669,6 +669,7 @@
 		94073A0B305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94073A0A305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.xib */; };
 		94073A0C305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94073A09305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.swift */; };
 		94073AF330599312004767E3 /* ReduceToPerpsPositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94073AF130599312004767E3 /* ReduceToPerpsPositionViewController.swift */; };
+		C0DE00101600000000000002 /* PerpsPositionValueTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00101600000000000001 /* PerpsPositionValueTextField.swift */; };
 		94073AF430599312004767E3 /* ReduceToPerpsPositionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94073AF230599312004767E3 /* ReduceToPerpsPositionView.xib */; };
 		94073C0D305A938D004767E3 /* ReducePerpsPositionMarginPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94073C0C305A938D004767E3 /* ReducePerpsPositionMarginPreviewViewController.swift */; };
 		94073C66305BA5B6004767E3 /* PerpPositionAdjustmentTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94073C65305BA5AD004767E3 /* PerpPositionAdjustmentTarget.swift */; };
@@ -1032,8 +1033,6 @@
 		944C61FF2B6C033500C7DF06 /* EditAddressPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C61FE2B6C033500C7DF06 /* EditAddressPreviewViewController.swift */; };
 		944C62042B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C62032B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift */; };
 		944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */; };
-		944D17932F6199C3008BBA92 /* ClosePerpsReceiveCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944D17912F6199C3008BBA92 /* ClosePerpsReceiveCell.swift */; };
-		944D17942F6199C3008BBA92 /* ClosePerpsReceiveCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944D17922F6199C3008BBA92 /* ClosePerpsReceiveCell.xib */; };
 		944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */; };
 		944F53FE2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944F53FD2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift */; };
 		944F54072E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944F54062E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.xib */; };
@@ -1983,6 +1982,8 @@
 		E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */; };
 		E1E4D3D2AE8111FEA2F9C942 /* RecalledMessage+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D875CB7B470C4D1A8D3D47 /* RecalledMessage+Description.swift */; };
 		F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23987C4F141F7C6E533A683D /* Pods_Mixin.framework */; };
+		C0DE00101500000000000002 /* ReducePerpsPositionMarginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00101500000000000001 /* ReducePerpsPositionMarginViewController.swift */; };
+		C0DE00101500000000000004 /* ClosePerpsPositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00101500000000000003 /* ClosePerpsPositionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -2716,6 +2717,7 @@
 		94073A09305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpPositionAdjustmentIntroductionCell.swift; sourceTree = "<group>"; };
 		94073A0A305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpPositionAdjustmentIntroductionCell.xib; sourceTree = "<group>"; };
 		94073AF130599312004767E3 /* ReduceToPerpsPositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReduceToPerpsPositionViewController.swift; sourceTree = "<group>"; };
+		C0DE00101600000000000001 /* PerpsPositionValueTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsPositionValueTextField.swift; sourceTree = "<group>"; };
 		94073AF230599312004767E3 /* ReduceToPerpsPositionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReduceToPerpsPositionView.xib; sourceTree = "<group>"; };
 		94073C0C305A938D004767E3 /* ReducePerpsPositionMarginPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducePerpsPositionMarginPreviewViewController.swift; sourceTree = "<group>"; };
 		94073C65305BA5AD004767E3 /* PerpPositionAdjustmentTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpPositionAdjustmentTarget.swift; sourceTree = "<group>"; };
@@ -3081,8 +3083,6 @@
 		944C61FE2B6C033500C7DF06 /* EditAddressPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAddressPreviewViewController.swift; sourceTree = "<group>"; };
 		944C62032B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPreviewDoubleButtonTrayView.swift; sourceTree = "<group>"; };
 		944C656025D9BA0A008BDDD3 /* OggOpusWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusWriter.swift; sourceTree = "<group>"; };
-		944D17912F6199C3008BBA92 /* ClosePerpsReceiveCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosePerpsReceiveCell.swift; sourceTree = "<group>"; };
-		944D17922F6199C3008BBA92 /* ClosePerpsReceiveCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClosePerpsReceiveCell.xib; sourceTree = "<group>"; };
 		944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebLoadingFailureView.xib; sourceTree = "<group>"; };
 		944F53FD2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWalletAddressesViewController.swift; sourceTree = "<group>"; };
 		944F54052E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWalletAddressesIntroductionCell.swift; sourceTree = "<group>"; };
@@ -4057,6 +4057,8 @@
 		E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItem.swift; sourceTree = "<group>"; };
 		E1D875CB7B470C4D1A8D3D47 /* RecalledMessage+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecalledMessage+Description.swift"; sourceTree = "<group>"; };
 		E49F74E7017E780C23E3311F /* Pods_MixinDebug.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MixinDebug.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0DE00101500000000000001 /* ReducePerpsPositionMarginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducePerpsPositionMarginViewController.swift; sourceTree = "<group>"; };
+		C0DE00101500000000000003 /* ClosePerpsPositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosePerpsPositionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -5024,6 +5026,9 @@
 				94ABA8CD2FBC317400FC536D /* AddToPerpsPositionViewController.swift */,
 				94073AF230599312004767E3 /* ReduceToPerpsPositionView.xib */,
 				94073AF130599312004767E3 /* ReduceToPerpsPositionViewController.swift */,
+				C0DE00101600000000000001 /* PerpsPositionValueTextField.swift */,
+				C0DE00101500000000000003 /* ClosePerpsPositionViewController.swift */,
+				C0DE00101500000000000001 /* ReducePerpsPositionMarginViewController.swift */,
 				94073C0C305A938D004767E3 /* ReducePerpsPositionMarginPreviewViewController.swift */,
 				94FB2EE92F51672200F85AB4 /* LeverageMultiplierInputView.xib */,
 				94FB2EE82F51672200F85AB4 /* LeverageMultiplierInputViewController.swift */,
@@ -5697,8 +5702,6 @@
 				946CBA042E9F7A950099FFCB /* CommonWalletReceiverCell.swift */,
 				940EAFC82EAE454A009B3DAA /* WaivedFeeCell.xib */,
 				940EAFC72EAE454A009B3DAA /* WaivedFeeCell.swift */,
-				944D17922F6199C3008BBA92 /* ClosePerpsReceiveCell.xib */,
-				944D17912F6199C3008BBA92 /* ClosePerpsReceiveCell.swift */,
 				9457F7712B6F4186008FC98F /* AuthenticationPreviewSingleButtonTrayView.swift */,
 				944C61F92B6BFD6F00C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.xib */,
 				944C62032B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift */,
@@ -7571,7 +7574,6 @@
 				94E681722E5ED27B003304DF /* DepositGeneralEntryCell.xib in Resources */,
 				946E98FC2FF3AF050083D89C /* LargeWalletValueAddedServiceCell.xib in Resources */,
 				94E9792D2D0B43B100FFCC12 /* UpdateView.xib in Resources */,
-				944D17942F6199C3008BBA92 /* ClosePerpsReceiveCell.xib in Resources */,
 				940FC5082F502C01000C4260 /* OpenPerpetualActionView.xib in Resources */,
 				94EC9C512F2BBD2500B3CD82 /* QRCodeScannerView.xib in Resources */,
 				94F64FFD2D65E40100234D7D /* WalletSummaryValueCell.xib in Resources */,
@@ -9012,7 +9014,6 @@
 				941C768C2F5F1FA5005B70A9 /* CandlestickChartView.swift in Sources */,
 				7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */,
 				94FCC9182FD6889900AA6AA7 /* MixinTokensViewController.swift in Sources */,
-				944D17932F6199C3008BBA92 /* ClosePerpsReceiveCell.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
 				944731682E71A17A00ACC49B /* SearchMarketViewController.swift in Sources */,
 				94D0A0082E72000400ACC49B /* RecentMarketSearchCell.swift in Sources */,
@@ -9352,6 +9353,9 @@
 				7B5BABE31FB57B0300341FE6 /* AvatarPickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				94073AF330599312004767E3 /* ReduceToPerpsPositionViewController.swift in Sources */,
+				C0DE00101600000000000002 /* PerpsPositionValueTextField.swift in Sources */,
+				C0DE00101500000000000004 /* ClosePerpsPositionViewController.swift in Sources */,
+				C0DE00101500000000000002 /* ReducePerpsPositionMarginViewController.swift in Sources */,
 				94FB2E0A2F504D9200F85AB4 /* PerpetualPlaceholderCell.swift in Sources */,
 				944731522E71866400ACC49B /* HomeNavigationTitleView.swift in Sources */,
 				945DAF843052B9F30088A584 /* SearchMarketCategoriesHeaderView.swift in Sources */,

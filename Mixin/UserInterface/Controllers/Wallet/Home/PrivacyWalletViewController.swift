@@ -360,7 +360,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 perpsTopMovers = [:]
                 snapshot.appendSections([.perpsPositions])
                 snapshot.appendItems(
-                    displayPerpsPositions.values.map({ Item.perpsPosition(positionID: $0.positionID) }),
+                    displayPerpsPositions.values.map({ Item.perpsPosition(positionID: $0.position.positionID) }),
                     toSection: .perpsPositions
                 )
             }
@@ -518,8 +518,8 @@ final class PrivacyWalletViewController: WalletViewController {
                     snapshot.deleteItems(
                         snapshot.itemIdentifiers(inSection: .perpsPositions)
                     )
-                    let newItems = displayPerpsPositions.values.map { position in
-                        Item.perpsPosition(positionID: position.positionID)
+                    let newItems = displayPerpsPositions.values.map { viewModel in
+                        Item.perpsPosition(positionID: viewModel.position.positionID)
                     }
                     snapshot.appendItems(newItems, toSection: .perpsPositions)
                     snapshot.reloadItems(newItems)
@@ -640,8 +640,8 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
         case .earn:
             UIApplication.shared.homeNavigationController?.presentEarnPage()
         case .perpsPosition(let positionID):
-            if let position = perpsPositions[positionID],
-               let market = PerpsMarketDAO.shared.market(marketID: position.marketID)
+            if let viewModel = perpsPositions[positionID],
+               let market = PerpsMarketDAO.shared.market(marketID: viewModel.position.marketID)
             {
                 let viewModel = PerpetualMarketViewModel(market: market)
                 let market = PerpetualMarketViewController(

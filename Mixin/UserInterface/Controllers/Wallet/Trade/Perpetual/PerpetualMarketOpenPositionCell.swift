@@ -169,7 +169,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         liquidationPriceContentLabel.text = viewModel.liquidationPrice
         if let takeProfitPrice = viewModel.takeProfitPrice {
             takeProfitEnabledStackView.isHidden = false
-            takeProfitPriceLabel.text = takeProfitPrice.formatted(viewModel.priceFormatStyle)
+            takeProfitPriceLabel.text = takeProfitPrice.formatted(viewModel.position.priceFormatStyle)
             deleteTakeProfitButton.isHidden = false
             addTakeProfitButton.isHidden = true
         } else {
@@ -183,7 +183,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         }
         if let stopLossPrice = viewModel.stopLossPrice {
             stopLossEnabledStackView.isHidden = false
-            stopLossPriceLabel.text = stopLossPrice.formatted(viewModel.priceFormatStyle)
+            stopLossPriceLabel.text = stopLossPrice.formatted(viewModel.position.priceFormatStyle)
             deleteStopLossButton.isHidden = false
             addStopLossButton.isHidden = true
         } else {

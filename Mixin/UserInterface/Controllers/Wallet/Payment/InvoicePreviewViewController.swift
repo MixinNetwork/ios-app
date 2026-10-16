@@ -46,7 +46,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
             symbol: .currencySymbol
         )
         var rows: [Row] = [
-            .info(caption: .totalAmount, content: totalFiatMoneyAmount),
+            .info(caption: .totalAmount, content: totalFiatMoneyAmount, action: nil),
         ]
         
         let changes: [StyledAssetChange] = operation.transactions.compactMap { item in
@@ -62,11 +62,14 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
                 return StyledAssetChange(
                     token: item.token,
                     amount: amount,
-                    amountStyle: .plain
+                    amountStyle: .primary,
                 )
             }
         }
-        rows.append(.assetChanges(estimated: false, changes: changes))
+        rows.append(.assetChanges(
+            title: R.string.localizable.balance_changes(),
+            changes: changes,
+        ))
         
         let senderThreshold: Int32?
         switch operation.destination {
@@ -129,7 +132,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
            let value = memo.plainValue ?? memo.hexEncodedValue,
            !value.isEmpty
         {
-            rows.append(.info(caption: .memo, content: value))
+            rows.append(.info(caption: .memo, content: value, action: nil))
         }
         
         reloadData(with: rows)

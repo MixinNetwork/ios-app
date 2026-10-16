@@ -221,6 +221,25 @@ public final class PerpsDatabase: Database {
             }
         }
         
+        migrator.registerMigration("reduce_position") { db in
+            let positionsColumns = try TableInfo
+                .fetchAll(db, sql: "PRAGMA table_info(positions)")
+                .map(\.name)
+            if !positionsColumns.contains("estimated_close_fee") {
+                try db.execute(sql: "ALTER TABLE positions ADD COLUMN estimated_close_fee TEXT NOT NULL DEFAULT ''")
+            }
+            
+            let marketColumns = try TableInfo
+                .fetchAll(db, sql: "PRAGMA table_info(markets)")
+                .map(\.name)
+            if !marketColumns.contains("quantity_scale") {
+                try db.execute(sql: "ALTER TABLE markets ADD COLUMN quantity_scale INTEGER NOT NULL DEFAULT 0")
+            }
+            if !marketColumns.contains("min_order_value") {
+                try db.execute(sql: "ALTER TABLE markets ADD COLUMN min_order_value TEXT NOT NULL DEFAULT '0'")
+            }
+        }
+        
         return migrator
     }
     

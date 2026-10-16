@@ -674,6 +674,7 @@
 "error_withdrawal_memo_format_incorrect" = "エラー20131：出金メモのフォーマットが不正確です";
 "error_withdrawal_suspend" = "エラー 20137: 出金は一時停止されています。";
 "estimated_balance_change" = "バランス変更 (推定)";
+"estimated_fee" = "推定手数料";
 "estimated_liquidation_price" = "推定清算価格";
 "estimated_price" = "推定価格";
 "estimated_receive" = "推定受取額";
@@ -1228,9 +1229,12 @@
 "perps_category_indices" = "インデックス";
 "perps_category_meme" = "ミーム";
 "perps_category_stocks" = "株式";
+"perps_close_position_title" = "%1$@ %2$@ のポジションを決済";
+"perps_close_submitted" = "決済注文を送信しました";
 "perps_confirm_add_margin" = "証拠金の追加を確認";
 "perps_confirm_reduce_margin" = "証拠金の減少を確認";
 "perps_current_price" = "現在の価格";
+"perps_estimated_realized_pnl" = "予想実現損益";
 "perps_funding_frequency" = "頻度";
 "perps_funding_frequency_value" = "1/4/8 時間";
 "perps_funding_rate_key_point_1" = "Perps価格を現物価格に近づける";
@@ -1239,6 +1243,7 @@
 "perps_funding_rate_overview" = "資金調達率は、Perps価格を現物価格に近づけるためにロングとショートのトレーダー間で支払われる、または受け取られる手数料です。プラスの場合はロングがショートに支払い、マイナスの場合はショートがロングに支払います。";
 "perps_funding_rate_purpose" = "目的";
 "perps_funding_title_interval" = "資金調達（%d時間）";
+"perps_include_pnl" = "損益を含む";
 "perps_intro_overview" = "Mixin Perpsは、有効期限のない暗号資産決済の無期限契約で、トレーダーが暗号資産価格に投機できます。無期限に保有でき、通常は基礎となる現物市場に連動します。";
 "perps_intro_risk_notice_1" = "レバレッジにより利益と損失の両方が増幅される";
 "perps_intro_risk_notice_2" = "証拠金要件が維持されない場合、ポジションは強制決済される場合があります";
@@ -1254,11 +1259,14 @@
 "perps_liquidation_price_short" = "清算価格";
 "perps_long_overview" = "価格が上昇すると予想される場合、ロングポジションをオープンします。価格が上昇すれば利益が得られます。価格が下落すると損失が発生します。";
 "perps_low_margin_tip" = "証拠金が不足している場合は、先に証拠金を追加してください";
+"perps_margin_amount" = "証拠金額";
 "perps_margin_or_position" = "証拠金を追加？それともポジションを増やす？";
 "perps_margin_submitted" = "証拠金の調整を送信しました";
 "perps_margin_tip" = "証拠金の追加は強制決済リスクを下げます";
 "perps_mark_price" = "マーク価格";
 "perps_markets" = "市場";
+"perps_minimum_order_size" = "ポジション価値は最低 %@ 必要です";
+"perps_position_amount" = "ポジション金額";
 "perps_position_size_overview" = "サイズは、証拠金 × レバレッジとして計算されたポジションの合計価値を表します。";
 "perps_position_size_pnl_1" = "サイズが大きくなり、損益も大きくなる";
 "perps_position_size_pnl_2" = "サイズが小さく、損益が小さい";
@@ -1266,12 +1274,11 @@
 "perps_product" = "市場";
 "perps_realized_pnl" = "実現損益";
 "perps_receive" = "受け取る";
+"perps_reduce_invalid_quantity" = "現在のポジション金額以下の、ゼロより大きい金額を入力してください。";
 "perps_reduce_margin" = "証拠金を減らす";
 "perps_reduce_margin_description" = "ポジションを維持しながら余剰証拠金を引き出し、資金を確保します";
 "perps_reduce_margin_title" = "%1$@ %2$@ の証拠金を減らす";
 "perps_reduce_position" = "ポジションを減らす";
-"perps_reduce_position_description" = "ポジションを一部決済して利益を確定、または損失を抑えます";
-"perps_reduce_position_title" = "%1$@ %2$@ のポジションを減らす";
 "perps_reduced_margin" = "証拠金減額";
 "perps_reducing_margin" = "証拠金を減らしています";
 "perps_reducing_margin_failed" = "証拠金の減少に失敗しました";

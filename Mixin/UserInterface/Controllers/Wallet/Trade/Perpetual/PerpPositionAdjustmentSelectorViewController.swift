@@ -2,14 +2,10 @@ import UIKit
 
 final class PerpPositionAdjustmentSelectorViewController: UIViewController {
     
-    struct Adjustment {
-        let target: PerpPositionAdjustmentTarget
-        let behavior: Behavior
-    }
-    
-    enum Behavior: Int, CaseIterable {
-        case increase
-        case decrease
+    enum Adjustment: CaseIterable {
+        case increaseMargin
+        case decreaseMargin
+        case increasePosition
     }
     
     private enum Section {
@@ -166,10 +162,8 @@ extension PerpPositionAdjustmentSelectorViewController: UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch sections[section] {
         case .margin:
-            Behavior.allCases.count
-        case .position:
-            1
-        case .introduction:
+            2
+        case .position, .introduction:
             1
         }
     }
@@ -178,12 +172,11 @@ extension PerpPositionAdjustmentSelectorViewController: UICollectionViewDataSour
         switch sections[indexPath.section] {
         case .margin:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.add_wallet_method, for: indexPath)!
-            switch Behavior.allCases[indexPath.row] {
-            case .increase:
+            if indexPath.row == 0 {
                 cell.iconImageView.image = R.image.increase_margin()
                 cell.titleLabel.text = R.string.localizable.perps_add_margin()
                 cell.subtitleLabel.text = R.string.localizable.perps_add_margin_description()
-            case .decrease:
+            } else {
                 cell.iconImageView.image = R.image.decrease_margin()
                 cell.titleLabel.text = R.string.localizable.perps_reduce_margin()
                 cell.subtitleLabel.text = R.string.localizable.perps_reduce_margin_description()
@@ -206,21 +199,21 @@ extension PerpPositionAdjustmentSelectorViewController: UICollectionViewDelegate
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        let target: PerpPositionAdjustmentTarget
-        let behavior: Behavior
         switch sections[indexPath.section] {
         case .margin:
-            target = .margin
-            behavior = Behavior.allCases[indexPath.row]
+            presentingViewController?.dismiss(animated: true) { [onSelected] in
+                if indexPath.row == 0 {
+                    onSelected?(.increaseMargin)
+                } else {
+                    onSelected?(.decreaseMargin)
+                }
+            }
         case .position:
-            target = .position
-            behavior = .increase
+            presentingViewController?.dismiss(animated: true) { [onSelected] in
+                onSelected?(.increasePosition)
+            }
         case .introduction:
             return
-        }
-        let adjustment = Adjustment(target: target, behavior: behavior)
-        presentingViewController?.dismiss(animated: true) { [onSelected] in
-            onSelected?(adjustment)
         }
     }
     

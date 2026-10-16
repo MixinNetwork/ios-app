@@ -106,7 +106,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 caption: .string(R.string.localizable.estimated_receive()),
                 content: CurrencyFormatter.localizedString(
                     from: receivingAmount,
-                    format: .precision,
+                    format: .fiatMoneyPretty,
                     sign: .never,
                     symbol: .dollarSign,
                 ),
@@ -117,7 +117,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 caption: .string(R.string.localizable.margin()),
                 primary: CurrencyFormatter.localizedString(
                     from: marginPlusPnL * proportion,
-                    format: .precision,
+                    format: .fiatMoneyPretty,
                     sign: .never,
                     symbol: .dollarSign,
                 ),
@@ -132,7 +132,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                     pnl.append(NSAttributedString(
                         string: CurrencyFormatter.localizedString(
                             from: position.decimalUnrealizedPnL * proportion,
-                            format: .precision,
+                            format: .fiatMoneyPretty,
                             sign: .always,
                             symbol: .dollarSign,
                         ),
@@ -169,7 +169,12 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             ))
             
             if let fee = viewModel.position.decimalEstimatedCloseFee {
-                let fee = (fee * proportion).formatted(PerpetualOrder.feeFormatStyle)
+                let fee = CurrencyFormatter.localizedString(
+                    from: fee * proportion,
+                    format: .fiatMoneyPretty,
+                    sign: .never,
+                    symbol: .dollarSign,
+                )
                 rows.append(.info(
                     caption: .string(R.string.localizable.estimated_fee()),
                     content: fee,
@@ -206,7 +211,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 caption: .string(R.string.localizable.estimated_receive()),
                 content: CurrencyFormatter.localizedString(
                     from: totalReceivingAmount,
-                    format: .precision,
+                    format: .fiatMoneyPretty,
                     sign: .never,
                     symbol: .dollarSign,
                 ),
@@ -223,7 +228,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             pnl.append(NSAttributedString(
                 string: CurrencyFormatter.localizedString(
                     from: totalPnL,
-                    format: .precision,
+                    format: .fiatMoneyPretty,
                     sign: .always,
                     symbol: .dollarSign,
                 ),
@@ -234,16 +239,26 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 caption: .string(R.string.localizable.margin()),
                 primary: CurrencyFormatter.localizedString(
                     from: totalMarginPlusPnL,
-                    format: .precision,
+                    format: .fiatMoneyPretty,
                     sign: .never,
                     symbol: .dollarSign,
                 ),
                 secondary: .attributed(pnl)
             ))
             
+            let fee = if hasEstimatedFees {
+                CurrencyFormatter.localizedString(
+                    from: totalFee,
+                    format: .fiatMoneyPretty,
+                    sign: .never,
+                    symbol: .dollarSign,
+                )
+            } else {
+                "-"
+            }
             rows.append(.info(
                 caption: .string(R.string.localizable.estimated_fee()),
-                content: hasEstimatedFees ? totalFee.formatted(PerpetualOrder.feeFormatStyle) : "-",
+                content: fee,
                 action: { [weak self] in
                     self?.introduceFee()
                 },

@@ -91,8 +91,10 @@ final class MixinWebViewController: WebViewController {
             return .init(address: address, chainID: chainID, rpcURL: rpcServerURL)
         }()
         let solanaConfig: Script.SolanaConfig? = {
-            if let address = Web3AddressDAO.shared.currentSelectedWalletAddress(chainID: ChainID.solana) {
-                Script.SolanaConfig(address: address.destination)
+            if Web3AddressDAO.shared.currentSelectedWalletAddress(chainID: ChainID.solana) != nil,
+               let rpcURL = Web3Chain.solana.rpcServerURL
+            {
+                Script.SolanaConfig(rpcURL: rpcURL)
             } else {
                 nil
             }
@@ -796,7 +798,7 @@ extension MixinWebViewController {
         }
         
         struct SolanaConfig {
-            let address: String
+            let rpcURL: URL
         }
         
         static let getThemeColor = """
@@ -838,16 +840,18 @@ extension MixinWebViewController {
                 configs.append("""
                     ethereum: {
                         address: "\(evm.address)",
-                        chainId: \(evm.chainID),
-                        rpcUrl: "\(evm.rpcURL.absoluteString)"
+                        chainId: "0x\(String(evm.chainID, radix: 16))",
+                        rpcUrl: "\(evm.rpcURL.absoluteString)",
+                        overwriteMetamask: true,
                     },
                 """)
             }
             if let solana {
                 configs.append("""
                     solana: {
-                        cluster: "mainnet-beta",
-                        address: "\(solana.address)",
+                        cluster: "\(solana.rpcURL.absoluteString)",
+                        supportsV1Transactions: true,
+                        nativeTransactionBroadcast: true,
                     },
                 """)
             }
@@ -857,23 +861,38 @@ extension MixinWebViewController {
                         \(configs)
                         isDebug: false
                     };
+                    const core = mixinwallet.core('CALLBACK', (params) => {
+                        webkit.messageHandlers._mw_.postMessage(JSON.stringify(params));
+                    });
+                    const providers = [];
                     if (config.ethereum) {
-                        mixinwallet.ethereum = new mixinwallet.Provider(config);
-                        window.ethereum = mixinwallet.ethereum;
-                        window.ethereum.setAddress(config.ethereum.address);
+                        const ethereum = mixinwallet.ethereum(config.ethereum);
+                        ethereum.setAddress(config.ethereum.address);
+                        providers.push(ethereum);
+                        Object.defineProperty(mixinwallet, 'ethereum', {
+                            configurable: false,
+                            enumerable: true,
+                            writable: false,
+                            value: ethereum,
+                        });
+                        window.ethereum = ethereum;
                     }
                     if (config.solana) {
-                        mixinwallet.solana = new mixinwallet.SolanaProvider(config);
-                        window.solana = mixinwallet.solana;
-                        window.solana.setAddress(config.solana.address);
+                        const solana = mixinwallet.solana(config.solana);
+                        providers.push(solana);
+                        Object.defineProperty(mixinwallet, 'solana', {
+                            configurable: false,
+                            enumerable: true,
+                            writable: false,
+                            value: solana,
+                        });
+                        window.solana = solana;
                     }
-                    mixinwallet.postMessage = (jsonString) => {
-                        webkit.messageHandlers._mw_.postMessage(jsonString)
-                    };
+                    core.registerProviders(providers);
                     
                     const mixinLogoDataUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0wIDExMkMwIDUwLjE0NDEgNTAuMTQ0MSAwIDExMiAwSDQwMEM0NjEuODU2IDAgNTEyIDUwLjE0NDEgNTEyIDExMlY0MDBDNTEyIDQ2MS44NTYgNDYxLjg1NiA1MTIgNDAwIDUxMkgxMTJDNTAuMTQ0MSA1MTIgMCA0NjEuODU2IDAgNDAwVjExMloiIGZpbGw9InVybCgjcGFpbnQwX2xpbmVhcl8yNzk1XzE3KSIvPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTM4MS43NDkgMTU2QzM4My43NTggMTU2IDM4NS4zOTMgMTU3LjU5OCAzODUuNDU0IDE1OS41OTJMMzg1LjQ1NiAxNTkuNzA3VjM1MS4yOTJDMzg1LjQ1NiAzNTEuODQyIDM4NS4zMzMgMzUyLjM4NiAzODUuMDk3IDM1Mi44ODNDMzg0LjIzNiAzNTQuNjk2IDM4Mi4wOTQgMzU1LjQ4OCAzODAuMjY4IDM1NC42OUwzODAuMTU4IDM1NC42NEwzMzIuNjM0IDMzMi4wNTZDMzMwLjQyIDMzMS4wMDMgMzI4Ljk5MiAzMjguNzk1IDMyOC45MzMgMzI2LjM1M0wzMjguOTMxIDMyNi4xOTZWMTgxLjUzOEMzMjguOTMxIDE3OC45NDkgMzMwLjQ3IDE3Ni42MTMgMzMyLjgzNiAxNzUuNTg3TDMzMi45NzYgMTc1LjUyOEwzODAuMzU0IDE1Ni4yNzNDMzgwLjc5NyAxNTYuMDkzIDM4MS4yNzEgMTU2IDM4MS43NDkgMTU2Wk0xMjkuNzA3IDE1NkMxMzAuMTg1IDE1NiAxMzAuNjU5IDE1Ni4wOTMgMTMxLjEwMiAxNTYuMjczTDE3OC40OCAxNzUuNTI4QzE4MC45MjUgMTc2LjUyMiAxODIuNTI0IDE3OC44OTggMTgyLjUyNCAxODEuNTM4VjMyNi4xOTZDMTgyLjUyNCAzMjguNyAxODEuMDgzIDMzMC45ODEgMTc4LjgyMiAzMzIuMDU2TDEzMS4yOTcgMzU0LjY0QzEyOS40NDggMzU1LjUxOSAxMjcuMjM3IDM1NC43MzIgMTI2LjM1OSAzNTIuODgzQzEyNi4xMjMgMzUyLjM4NiAxMjYgMzUxLjg0MiAxMjYgMzUxLjI5MlYxNTkuNzA3QzEyNiAxNTcuNjYgMTI3LjY1OSAxNTYgMTI5LjcwNyAxNTZaTTI1OS44OTggMTk3Ljg0N0wzMDMuNzE5IDIyMy4xNTFDMzA2LjMgMjI0LjY0MSAzMDcuODg5IDIyNy4zOTUgMzA3Ljg4OSAyMzAuMzc1VjI4MC45ODJDMzA3Ljg4OSAyODMuOTYyIDMwNi4zIDI4Ni43MTYgMzAzLjcxOSAyODguMjA2TDI1OS44OTggMzEzLjUxQzI1Ny4zMTcgMzE0Ljk5OSAyNTQuMTM4IDMxNC45OTkgMjUxLjU1OCAzMTMuNTFMMjA3LjczNiAyODguMjA2QzIwNS4xNTYgMjg2LjcxNiAyMDMuNTY2IDI4My45NjIgMjAzLjU2NiAyODAuOTgyVjIzMC4zNzVDMjAzLjU2NiAyMjcuMzk1IDIwNS4xNTYgMjI0LjY0MSAyMDcuNzM2IDIyMy4xNTFMMjUxLjU1OCAxOTcuODQ3QzI1NC4xMzggMTk2LjM1NyAyNTcuMzE3IDE5Ni4zNTcgMjU5Ljg5OCAxOTcuODQ3WiIgZmlsbD0id2hpdGUiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl8yNzk1XzE3IiB4MT0iMTMuNSIgeTE9IjUxMiIgeDI9IjUxMiIgeTI9Ii0xLjYxODczZS0wNSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMkE1QkY2Ii8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzUyOUZGOSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=';
                     const info = {
-                        uuid: crypto.randomUUID(),
+                        uuid: mixinwallet.randomUUID(),
                         name: 'Mixin',
                         icon: mixinLogoDataUrl,
                         rdns: 'one.mixin.messenger',
@@ -900,7 +919,9 @@ extension MixinWebViewController {
                             options.onRequestProvider?.();
                         });
                     }
-                    initializeEIP6963(window.ethereum);
+                    if (config.ethereum) {
+                        initializeEIP6963(window.ethereum);
+                    }
                 })();
             """
             return WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: true)

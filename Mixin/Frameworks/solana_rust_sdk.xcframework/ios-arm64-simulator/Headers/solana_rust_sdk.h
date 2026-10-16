@@ -12,8 +12,6 @@ typedef enum SolanaErrorCode {
   SolanaErrorCodeSignatureToString = -4,
   SolanaErrorCodeSignTransaction = -5,
   SolanaErrorCodeSerializeTransaction = -6,
-  SolanaErrorCodeDeserializeTransaction = -7,
-  SolanaErrorCodeNotLegacyMessage = -8,
   SolanaErrorCodeNotFound = -9,
   SolanaErrorCodeInvalidString = -10,
   SolanaErrorCodeInvalidPublicKey = -11,
@@ -60,22 +58,27 @@ const void *solana_deserialize_transaction(const uint8_t *txn, size_t txn_len);
 
 bool solana_transaction_contains_set_authority(const void *txn);
 
-int16_t solana_transaction_number_of_required_signatures(const void *txn);
-
 enum SolanaErrorCode solana_transaction_fee_payer(const void *txn, const char **out);
 
+/**
+ * Sign once and return the base64 transaction, signing account's base58 signature,
+ * and whether every required signer slot contains a nonzero signature.
+ * Signature presence does not imply cryptographic validity of the other signatures.
+ * The input transaction is unchanged. Free each string output with solana_free_string.
+ * Output pointers must be non-null, valid, and distinct; errors leave them unchanged.
+ */
 enum SolanaErrorCode solana_sign_transaction(const void *tx,
                                              const uint8_t *recent_blockhash,
                                              size_t recent_blockhash_len,
                                              const uint8_t *seed,
                                              size_t seed_len,
-                                             const char **out);
+                                             const char **out,
+                                             const char **out_signature,
+                                             bool *out_is_fully_signed);
 
 enum SolanaErrorCode solana_calculate_fee(const void *txn,
                                           uint64_t lamports_per_signature,
                                           uint64_t *out);
-
-enum SolanaErrorCode solana_balance_change(const void *txn, uint64_t *change, const char **mint);
 
 enum SolanaErrorCode solana_new_sol_transaction(const char *from,
                                                 const char *to,
@@ -97,3 +100,9 @@ enum SolanaErrorCode solana_new_spl_token_transaction(const char *from,
                                                       uint8_t decimals,
                                                       const struct SolanaPriorityFee *priority_fee,
                                                       const void **out);
+
+bool solana_transaction_requires_blockhash(const void *txn);
+
+bool solana_transaction_requires_signer(const void *txn, const char *address);
+
+enum SolanaErrorCode solana_transaction_priority_fee(const void *txn, uint64_t *out);

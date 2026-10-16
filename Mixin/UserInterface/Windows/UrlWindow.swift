@@ -1581,22 +1581,29 @@ extension UrlWindow {
                                 wallet: wallet,
                                 transaction: transaction,
                                 fromAddress: address,
-                                chain: .solana
-                            ) { signature in
-                                guard let requestID, case let .conversation(composer) = source else {
-                                    return
-                                }
-                                let response = [
-                                    "request_id": requestID,
-                                    "signature": signature,
-                                ]
-                                let jsonData = try? JSONSerialization.data(withJSONObject: response, options: .prettyPrinted)
-                                if let jsonData, let json = String(data: jsonData, encoding: .utf8) {
-                                    await MainActor.run {
-                                        composer.unwrapped?.sendMessage(type: .SIGNAL_TEXT, value: json)
+                                chain: .solana,
+                                broadcastsTransaction: true,
+                                respondWith: { _, transactionHash in
+                                    guard
+                                        let transactionHash,
+                                        let requestID,
+                                        case let .conversation(composer) = source
+                                    else {
+                                        return
                                     }
-                                }
-                            }
+                                    let response = [
+                                        "request_id": requestID,
+                                        "signature": transactionHash, // Solana's transaction ID is its first signature; the link protocol calls it "signature".
+                                    ]
+                                    let jsonData = try? JSONSerialization.data(withJSONObject: response, options: .prettyPrinted)
+                                    if let jsonData, let json = String(data: jsonData, encoding: .utf8) {
+                                        await MainActor.run {
+                                            composer.unwrapped?.sendMessage(type: .SIGNAL_TEXT, value: json)
+                                        }
+                                    }
+                                },
+                                rejectWith: nil,
+                            )
                             DispatchQueue.main.async {
                                 hud.hide()
                                 let transfer = Web3TransferPreviewViewController(operation: operation, proposer: nil)

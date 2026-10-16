@@ -116,15 +116,24 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
             }
             var roundedQuantity = Decimal()
             NSDecimalRound(&roundedQuantity, &quantity, quantityScale, .down)
-            guard roundedQuantity > 0, roundedQuantity <= current else {
-                return nil
-            }
             let minOrderValue = marketViewModel.market.decimalMinOrderValue
-            if roundedQuantity == current {
+            if !(roundedQuantity >= 0 && roundedQuantity <= current) {
+                return nil
+            } else if roundedQuantity == current {
                 return roundedQuantity
-            } else if roundedQuantity * markPrice < minOrderValue {
+            } else if roundedQuantity == 0 || roundedQuantity * markPrice < minOrderValue {
+                guard markPrice > 0 else {
+                    return nil
+                }
+                let quantityStep = Decimal(sign: .plus, exponent: -quantityScale, significand: 1)
+                var minimumQuantity = max(quantityStep, minOrderValue / markPrice)
+                var roundedMinimumQuantity = Decimal()
+                NSDecimalRound(&roundedMinimumQuantity, &minimumQuantity, quantityScale, .up)
+                var minimumValue = roundedMinimumQuantity * markPrice
+                var roundedMinimumValue = Decimal()
+                NSDecimalRound(&roundedMinimumValue, &minimumValue, 2, .up)
                 let minimum = CurrencyFormatter.localizedString(
-                    from: minOrderValue,
+                    from: roundedMinimumValue,
                     format: .precision,
                     sign: .never,
                     symbol: .dollarSign,

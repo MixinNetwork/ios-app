@@ -1,10 +1,10 @@
 import UIKit
 
-final class WalletBannerCell: UICollectionViewCell {
+final class AdvertisementBannerCell: UICollectionViewCell {
     
     protocol Delegate: AnyObject {
-        func walletBannerCell(_ cell: WalletBannerCell, requestPerformAction banner: WalletBanner, index: Int)
-        func walletBannerCell(_ cell: WalletBannerCell, requestDismiss banner: WalletBanner)
+        func advertisementBannerCell(_ cell: AdvertisementBannerCell, requestPerformAction banner: AdvertisementBanner, index: Int)
+        func advertisementBannerCell(_ cell: AdvertisementBannerCell, requestDismiss banner: AdvertisementBanner)
     }
     
     @IBOutlet weak var imageView: UIImageView!
@@ -15,7 +15,7 @@ final class WalletBannerCell: UICollectionViewCell {
     
     weak var delegate: Delegate?
     
-    var banner: WalletBanner? {
+    var banner: AdvertisementBanner? {
         didSet {
             reload(banner: banner)
         }
@@ -48,17 +48,17 @@ final class WalletBannerCell: UICollectionViewCell {
         guard let banner else {
             return
         }
-        delegate?.walletBannerCell(self, requestDismiss: banner)
+        delegate?.advertisementBannerCell(self, requestDismiss: banner)
     }
     
     @objc private func requestAction(_ sender: UIButton) {
         guard let banner else {
             return
         }
-        delegate?.walletBannerCell(self, requestPerformAction: banner, index: sender.tag)
+        delegate?.advertisementBannerCell(self, requestPerformAction: banner, index: sender.tag)
     }
     
-    private func reload(banner: WalletBanner?) {
+    private func reload(banner: AdvertisementBanner?) {
         switch banner {
         case .embedded(let banner):
             switch banner {

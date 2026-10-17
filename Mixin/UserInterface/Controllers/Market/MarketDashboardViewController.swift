@@ -5,6 +5,8 @@ final class MarketDashboardViewController: UIViewController {
     
     private let queue = OperationQueue()
     private let hiddenSearchTopMargin: CGFloat = -28
+    private let bannerSectionBottomInset: CGFloat = 16
+    private let bannerController: AdvertisementBannerController
     
     private var isViewAppearing = false
     
@@ -19,6 +21,7 @@ final class MarketDashboardViewController: UIViewController {
     
     private var collectionView: UICollectionView!
     private var dataSource: DiffableDataSource!
+    private var pendingHeaderScroll: (category: Category, subCategoryIndex: Int)?
     
     private var markets: [String: FavorableMarket] = [:]
     private var perpsMarkets: [String: FavorablePerpetualMarket] = [:]
@@ -32,6 +35,21 @@ final class MarketDashboardViewController: UIViewController {
     private weak var searchViewController: UIViewController?
     private weak var searchViewCenterYConstraint: NSLayoutConstraint?
     private weak var addToWatchlistButton: UIButton?
+    
+    private var areBannersAboveVisibleBounds: Bool {
+        guard let bannerSectionIndex = dataSource.index(for: .banners) else {
+            return false
+        }
+        let headerAttributes = collectionView.layoutAttributesForSupplementaryElement(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            at: IndexPath(item: 0, section: bannerSectionIndex + 1),
+        )
+        guard let headerAttributes else {
+            return false
+        }
+        let visibleTop = collectionView.contentOffset.y + collectionView.adjustedContentInset.top
+        return visibleTop >= headerAttributes.frame.minY - bannerSectionBottomInset
+    }
     
     init() {
         let category: Category
@@ -52,6 +70,10 @@ final class MarketDashboardViewController: UIViewController {
         self.allDataLoader = AllDataLoader(
             excludingCategory: category,
             excludingSubCategoryIndex: subCategoryIndex
+        )
+        self.bannerController = AdvertisementBannerController(
+            outlineInBannerCell: true,
+            sectionBottomInset: bannerSectionBottomInset,
         )
         super.init(nibName: nil, bundle: nil)
     }
@@ -115,10 +137,12 @@ final class MarketDashboardViewController: UIViewController {
         categoryController.select(category: category)
         
         let layout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, environment) in
-            guard let section = self?.dataSource.sectionIdentifier(for: sectionIndex) else {
+            guard let self, let section = self.dataSource.sectionIdentifier(for: sectionIndex) else {
                 return nil
             }
             switch section {
+            case .banners:
+                return self.bannerController.layoutSection(environment: environment)
             case .market, .perps:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -145,7 +169,7 @@ final class MarketDashboardViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
-                if self?.category != .indicator {
+                if self.category != .indicator {
                     let header = NSCollectionLayoutBoundarySupplementaryItem(
                         layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(31)),
                         elementKind: UICollectionView.elementKindSectionHeader,
@@ -207,11 +231,16 @@ final class MarketDashboardViewController: UIViewController {
         }
         self.collectionView = collectionView
         collectionView.delegate = self
+        bannerController.delegate = self
+        bannerController.attach(collectionView: collectionView)
         
+        let bannerRegistration = bannerController.bannerCellRegistration()
         let dataSource = DiffableDataSource(
             collectionView: collectionView
         ) { [weak self] collectionView, indexPath, item in
             switch item {
+            case let .banner(banner, _):
+                return collectionView.dequeueConfiguredReusableCell(using: bannerRegistration, for: indexPath, item: banner)
             case let .market(id, info):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.favorable_market, for: indexPath)!
                 if let self, let market = self.markets[id] {
@@ -254,6 +283,8 @@ final class MarketDashboardViewController: UIViewController {
                 return nil
             }
             switch section {
+            case .banners:
+                return nil
             case .market, .perps:
                 let header = collectionView.dequeueReusableSupplementaryView(
                     ofKind: UICollectionView.elementKindSectionHeader,
@@ -432,6 +463,7 @@ final class MarketDashboardViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isViewAppearing = true
+        bannerController.viewWillAppear()
         marketLoader?.start()
         perpsMarketLoader?.start()
         NotificationCenter.default.removeObserver(
@@ -463,6 +495,7 @@ final class MarketDashboardViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         isViewAppearing = false
+        bannerController.viewWillDisappear()
         marketLoader?.pause()
         perpsMarketLoader?.stop()
         NotificationCenter.default.addObserver(
@@ -503,6 +536,11 @@ final class MarketDashboardViewController: UIViewController {
         debugReason: StaticString,
     ) {
         Logger.general.debug(category: "MarketDashboard", message: "\(debugReason): Reload \(category.rawValue), subCategory: \(subCategoryIndex), order: \(order?.debugDescription ?? "(null)"), loadFromRemote: \(scheduleRemoteLoader)")
+        if let pendingHeaderScroll,
+           pendingHeaderScroll.category != category || pendingHeaderScroll.subCategoryIndex != subCategoryIndex
+        {
+            self.pendingHeaderScroll = nil
+        }
         queue.cancelAllOperations()
         if scheduleRemoteLoader {
             marketLoader?.pause()
@@ -565,7 +603,7 @@ final class MarketDashboardViewController: UIViewController {
                 snapshot.appendItems([.marketIndicator], toSection: .marketIndicator)
                 ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
             }
-            dataSource.applySnapshotUsingReloadData(snapshot)
+            applySnapshotWithBanners(snapshot, cachedBanners: [], completion: nil)
         }
     }
     
@@ -583,7 +621,7 @@ final class MarketDashboardViewController: UIViewController {
             var snapshot = DataSourceSnapshot()
             snapshot.appendSections([.marketIndicator])
             snapshot.appendItems([.marketIndicator])
-            dataSource.applySnapshotUsingReloadData(snapshot)
+            applySnapshotWithBanners(snapshot, cachedBanners: [], completion: nil)
         }
     }
     
@@ -608,6 +646,94 @@ final class MarketDashboardViewController: UIViewController {
             scheduleRemoteLoader: false,
             debugReason: debugReason,
         )
+    }
+    
+    private func applySnapshotWithBanners(
+        _ snapshot: DataSourceSnapshot,
+        cachedBanners: [AdvertisementBanner],
+        completion: (() -> Void)?,
+    ) {
+        let placement = category.bannerPlacement
+        let preservedContentOffset: CGPoint?
+        if placement == bannerController.placement, areBannersAboveVisibleBounds {
+            preservedContentOffset = collectionView.contentOffset
+        } else {
+            preservedContentOffset = nil
+        }
+        let shouldScrollToHeader = pendingHeaderScroll?.category == category
+            && pendingHeaderScroll?.subCategoryIndex == subCategoryIndex
+        if shouldScrollToHeader {
+            pendingHeaderScroll = nil
+        }
+        let banners: [AdvertisementBanner]
+        if let placement {
+            if placement == bannerController.placement {
+                banners = bannerController.banners
+            } else {
+                banners = cachedBanners
+            }
+        } else {
+            banners = []
+        }
+        bannerController.update(
+            placement: placement,
+            banners: banners,
+            snapshot: snapshot,
+            dataSource: dataSource,
+            section: .banners,
+            position: .first,
+            itemConstructor: { Item.banner($0, duplicationOffset: $1) },
+            mode: .reloadData,
+        ) { [weak self] in
+            if shouldScrollToHeader || preservedContentOffset != nil {
+                self?.restoreMarketContentOffset(shouldScrollToHeader ? nil : preservedContentOffset)
+            }
+            completion?()
+        }
+        bannerController.reloadBannersIfAllowed(
+            chainIDs: nil
+        ) { [weak self] availableBanners in
+            guard let self else {
+                return
+            }
+            self.bannerController.update(
+                placement: placement,
+                banners: availableBanners.map(AdvertisementBanner.remote),
+                snapshot: self.dataSource.snapshot(),
+                dataSource: dataSource,
+                section: .banners,
+                position: .first,
+                itemConstructor: { Item.banner($0, duplicationOffset: $1) },
+                mode: .differences(animated: false),
+                completion: nil,
+            )
+        }
+    }
+    
+    private func restoreMarketContentOffset(_ previousContentOffset: CGPoint?) {
+        guard let bannerSectionIndex = dataSource.index(for: .banners) else {
+            return
+        }
+        UIView.performWithoutAnimation {
+            let topInset = collectionView.adjustedContentInset.top
+            // Lay out the banners at the top so the header uses their actual, not estimated, height.
+            collectionView.setContentOffset(CGPoint(x: 0, y: -topInset), animated: false)
+            collectionView.layoutIfNeeded()
+            guard let headerAttributes = collectionView.layoutAttributesForSupplementaryElement(
+                ofKind: UICollectionView.elementKindSectionHeader,
+                at: IndexPath(item: 0, section: bannerSectionIndex + 1),
+            ) else {
+                return
+            }
+            let headerOffsetY = headerAttributes.frame.minY - topInset
+            collectionView.setContentOffset(
+                CGPoint(
+                    x: previousContentOffset?.x ?? 0,
+                    y: max(headerOffsetY, previousContentOffset?.y ?? headerOffsetY),
+                ),
+                animated: false,
+            )
+        }
     }
     
     private func hideSearch(endEditing: Bool, animate: Bool) {
@@ -813,9 +939,12 @@ extension MarketDashboardViewController {
             var snapshot = dataSource.snapshot()
             snapshot.reconfigureItems(snapshot.itemIdentifiers)
             dataSource.apply(snapshot) {
+                guard let section = self.dataSource.snapshot().indexOfSection(.market) else {
+                    return
+                }
                 if let headerView = self.collectionView.supplementaryView(
                     forElementKind: UICollectionView.elementKindSectionHeader,
-                    at: IndexPath(item: 0, section: 0)
+                    at: IndexPath(item: 0, section: section)
                 ) as? MarketOrderingHeaderView {
                     headerView.changePeriod = AppGroupUserDefaults.User.cryptoMarketChangePeriod
                 }
@@ -863,6 +992,9 @@ extension MarketDashboardViewController: UICollectionViewDelegate {
             return
         }
         switch item {
+        case let .banner(banner, _):
+            collectionView.deselectItem(at: indexPath, animated: true)
+            bannerController.handleSelection(of: banner)
         case let .market(id, _):
             if let market = markets[id] {
                 let controller = MarketViewController(market: market)
@@ -903,7 +1035,11 @@ extension MarketDashboardViewController: UICollectionViewDelegate {
 extension MarketDashboardViewController: MarketHeaderView.Delegate {
     
     func marketHeaderView(_ view: MarketHeaderView, didSelectSubCategoryAt index: Int) {
-        collectionView.setContentOffset(.zero, animated: false)
+        if areBannersAboveVisibleBounds {
+            pendingHeaderScroll = (category, index)
+        } else {
+            pendingHeaderScroll = nil
+        }
         reloadData(
             category: category,
             subCategoryIndex: index,
@@ -1331,6 +1467,19 @@ extension MarketDashboardViewController {
             }
         }
         
+        var bannerPlacement: AppBanner.Placement? {
+            switch self {
+            case .crypto:
+                .marketCrypto
+            case .perps:
+                .marketPerps
+            case .stock:
+                .marketStock
+            case .watchlist, .indicator:
+                nil
+            }
+        }
+        
     }
     
     enum CryptoSubCategory: CaseIterable {
@@ -1393,6 +1542,7 @@ extension MarketDashboardViewController {
     }
     
     private enum Section {
+        case banners
         case market
         case perps
         case marketIndicator
@@ -1401,6 +1551,7 @@ extension MarketDashboardViewController {
     }
     
     private enum Item: Hashable {
+        case banner(AdvertisementBanner, duplicationOffset: Int)
         case market(id: String, info: CryptoMarketDisplayInfo)
         case perps(id: String)
         case busyIndicator
@@ -1495,6 +1646,16 @@ extension MarketDashboardViewController {
             super.init()
         }
         
+        func loadCachedBanners(for category: Category) -> [AdvertisementBanner] {
+            if let placement = category.bannerPlacement  {
+                AppBanner
+                    .loadFromCache(placement: placement, chainIDs: nil)
+                    .map(AdvertisementBanner.remote)
+            } else {
+                []
+            }
+        }
+        
         func reloadCryptoWatchlist(
             order: Market.Ordering,
             displayCategory: Category,
@@ -1528,6 +1689,7 @@ extension MarketDashboardViewController {
                     result[market.coinID] = market
                 }
             }
+            let cachedBanners = loadCachedBanners(for: displayCategory)
             DispatchQueue.main.sync { [weak self] in
                 guard let self, !self.isCancelled, let viewController else {
                     return
@@ -1538,12 +1700,16 @@ extension MarketDashboardViewController {
                 viewController.markets = marketViewModels
                 if showsRecommendations {
                     viewController.collectionView.allowsMultipleSelection = true
-                    viewController.dataSource.applySnapshotUsingReloadData(snapshot) {
+                    viewController.applySnapshotWithBanners(snapshot, cachedBanners: cachedBanners) {
                         viewController.selectAllRecommendationItems(snapshot: snapshot)
                     }
                 } else {
                     viewController.collectionView.allowsMultipleSelection = false
-                    viewController.dataSource.applySnapshotUsingReloadData(snapshot)
+                    viewController.applySnapshotWithBanners(
+                        snapshot,
+                        cachedBanners: cachedBanners,
+                        completion: nil,
+                    )
                 }
                 if scheduleRemoteLoader {
                     let requester = MarketPeriodicRequester(category: .favorite)
@@ -1593,6 +1759,7 @@ extension MarketDashboardViewController {
                     result[market.marketID] = market
                 }
             }
+            let cachedBanners = loadCachedBanners(for: displayCategory)
             DispatchQueue.main.sync { [weak self] in
                 guard let self, !self.isCancelled, let viewController else {
                     return
@@ -1603,12 +1770,16 @@ extension MarketDashboardViewController {
                 viewController.perpsMarkets = marketViewModels
                 if showsRecommendations {
                     viewController.collectionView.allowsMultipleSelection = true
-                    viewController.dataSource.applySnapshotUsingReloadData(snapshot) {
+                    viewController.applySnapshotWithBanners(snapshot, cachedBanners: cachedBanners) {
                         viewController.selectAllRecommendationItems(snapshot: snapshot)
                     }
                 } else {
                     viewController.collectionView.allowsMultipleSelection = false
-                    viewController.dataSource.applySnapshotUsingReloadData(snapshot)
+                    viewController.applySnapshotWithBanners(
+                        snapshot,
+                        cachedBanners: cachedBanners,
+                        completion: nil,
+                    )
                 }
                 if scheduleRemoteLoader {
                     let requester = PerpetualMarketLoader(
@@ -1742,6 +1913,7 @@ extension MarketDashboardViewController {
                     snapshot.appendSections([.market])
                     snapshot.appendItems(items, toSection: .market)
                 }
+                let cachedBanners = loadCachedBanners(for: .crypto)
                 DispatchQueue.main.sync { [weak self] in
                     guard let self, !self.isCancelled, let viewController else {
                         return
@@ -1751,7 +1923,11 @@ extension MarketDashboardViewController {
                     viewController.order = .crypto(order)
                     viewController.markets = viewModels
                     viewController.collectionView.allowsMultipleSelection = false
-                    viewController.dataSource.applySnapshotUsingReloadData(snapshot)
+                    viewController.applySnapshotWithBanners(
+                        snapshot,
+                        cachedBanners: cachedBanners,
+                        completion: nil,
+                    )
                     if scheduleRemoteLoader {
                         let requester = MarketPeriodicRequester(category: requestCategory)
                         viewController.marketLoader = requester
@@ -1825,6 +2001,7 @@ extension MarketDashboardViewController {
                 snapshot.appendSections([.perps])
                 snapshot.appendItems(items, toSection: .perps)
             }
+            let cachedBanners = loadCachedBanners(for: .perps)
             DispatchQueue.main.sync { [weak self] in
                 guard let self, !self.isCancelled, let viewController else {
                     return
@@ -1834,7 +2011,11 @@ extension MarketDashboardViewController {
                 viewController.order = .perps(order)
                 viewController.perpsMarkets = viewModels
                 viewController.collectionView.allowsMultipleSelection = false
-                viewController.dataSource.applySnapshotUsingReloadData(snapshot)
+                viewController.applySnapshotWithBanners(
+                    snapshot,
+                    cachedBanners: cachedBanners,
+                    completion: nil,
+                )
                 if scheduleRemoteLoader {
                     let requester = PerpetualMarketLoader(
                         request: .multiple(.all),
@@ -1892,6 +2073,7 @@ extension MarketDashboardViewController {
                 snapshot.appendSections([.market])
                 snapshot.appendItems(items, toSection: .market)
             }
+            let cachedBanners = loadCachedBanners(for: .stock)
             DispatchQueue.main.sync { [weak self] in
                 guard let self, !self.isCancelled, let viewController else {
                     return
@@ -1901,7 +2083,11 @@ extension MarketDashboardViewController {
                 viewController.order = .crypto(order)
                 viewController.markets = viewModels
                 viewController.collectionView.allowsMultipleSelection = false
-                viewController.dataSource.applySnapshotUsingReloadData(snapshot)
+                viewController.applySnapshotWithBanners(
+                    snapshot,
+                    cachedBanners: cachedBanners,
+                    completion: nil,
+                )
                 if scheduleRemoteLoader {
                     let requester = MarketPeriodicRequester(category: .stocks)
                     viewController.marketLoader = requester
@@ -1930,6 +2116,7 @@ extension MarketDashboardViewController {
                 snapshot.appendSections([.perps])
                 snapshot.appendItems(items, toSection: .perps)
             }
+            let cachedBanners = loadCachedBanners(for: .stock)
             DispatchQueue.main.sync { [weak self] in
                 guard let self, !self.isCancelled, let viewController else {
                     return
@@ -1939,7 +2126,11 @@ extension MarketDashboardViewController {
                 viewController.order = .perps(order)
                 viewController.perpsMarkets = viewModels
                 viewController.collectionView.allowsMultipleSelection = false
-                viewController.dataSource.applySnapshotUsingReloadData(snapshot)
+                viewController.applySnapshotWithBanners(
+                    snapshot,
+                    cachedBanners: cachedBanners,
+                    completion: nil,
+                )
                 if scheduleRemoteLoader {
                     let requester = PerpetualMarketLoader(
                         request: .multiple(.all),
@@ -2073,6 +2264,61 @@ extension MarketDashboardViewController {
             return .cancel
         }
         
+    }
+    
+}
+
+// MARK: - AdvertisementBannerController.Delegate
+extension MarketDashboardViewController: AdvertisementBannerController.Delegate {
+    
+    func advertisementBannerController(
+        _ controller: AdvertisementBannerController,
+        requestAction action: AdvertisementBanner.Action,
+        for banner: AdvertisementBanner,
+    ) {
+        guard case .remote(let remote) = banner else {
+            return
+        }
+        let source = switch (category, action) {
+        case (.crypto, .button):
+            "market_crypto_ad_banner_button"
+        case (.crypto, .background):
+            "market_crypto_ad_banner_background"
+        case (.perps, .button):
+            "market_perps_ad_banner_button"
+        case (.perps, .background):
+            "market_perps_ad_banner_background"
+        case (.stock, .button):
+            "market_stock_ad_banner_button"
+        case (.stock, .background):
+            "market_stock_ad_banner_background"
+        case (.watchlist, _), (.indicator, _):
+            ""
+        }
+        AdvertisementBannerActionHandler.perform(action, for: remote, source: source)
+    }
+    
+    func advertisementBannerController(
+        _ controller: AdvertisementBannerController,
+        requestDismiss banner: AdvertisementBanner,
+    ) {
+        switch banner {
+        case .remote(let remote):
+            AdvertisementBannerActionHandler.dismiss(remote)
+        case .embedded:
+            break
+        }
+        bannerController.update(
+            placement: category.bannerPlacement,
+            banners: controller.banners.filter { $0 != banner },
+            snapshot: dataSource.snapshot(),
+            dataSource: dataSource,
+            section: .banners,
+            position: .first,
+            itemConstructor: { Item.banner($0, duplicationOffset: $1) },
+            mode: .differences(animated: true),
+            completion: nil
+        )
     }
     
 }

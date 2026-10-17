@@ -5,6 +5,7 @@ final class MarketDashboardViewController: UIViewController {
     
     private let queue = OperationQueue()
     private let hiddenSearchTopMargin: CGFloat = -28
+    private let bannerSectionBottomInset: CGFloat = 16
     private let bannerController: AdvertisementBannerController
     
     private var isViewAppearing = false
@@ -20,6 +21,7 @@ final class MarketDashboardViewController: UIViewController {
     
     private var collectionView: UICollectionView!
     private var dataSource: DiffableDataSource!
+    private var pendingHeaderScroll: (category: Category, subCategoryIndex: Int)?
     
     private var markets: [String: FavorableMarket] = [:]
     private var perpsMarkets: [String: FavorablePerpetualMarket] = [:]
@@ -33,6 +35,21 @@ final class MarketDashboardViewController: UIViewController {
     private weak var searchViewController: UIViewController?
     private weak var searchViewCenterYConstraint: NSLayoutConstraint?
     private weak var addToWatchlistButton: UIButton?
+    
+    private var areBannersAboveVisibleBounds: Bool {
+        guard let bannerSectionIndex = dataSource.index(for: .banners) else {
+            return false
+        }
+        let headerAttributes = collectionView.layoutAttributesForSupplementaryElement(
+            ofKind: UICollectionView.elementKindSectionHeader,
+            at: IndexPath(item: 0, section: bannerSectionIndex + 1),
+        )
+        guard let headerAttributes else {
+            return false
+        }
+        let visibleTop = collectionView.contentOffset.y + collectionView.adjustedContentInset.top
+        return visibleTop >= headerAttributes.frame.minY - bannerSectionBottomInset
+    }
     
     init() {
         let category: Category
@@ -56,7 +73,7 @@ final class MarketDashboardViewController: UIViewController {
         )
         self.bannerController = AdvertisementBannerController(
             outlineInBannerCell: true,
-            sectionBottomInset: 16,
+            sectionBottomInset: bannerSectionBottomInset,
         )
         super.init(nibName: nil, bundle: nil)
     }
@@ -519,6 +536,11 @@ final class MarketDashboardViewController: UIViewController {
         debugReason: StaticString,
     ) {
         Logger.general.debug(category: "MarketDashboard", message: "\(debugReason): Reload \(category.rawValue), subCategory: \(subCategoryIndex), order: \(order?.debugDescription ?? "(null)"), loadFromRemote: \(scheduleRemoteLoader)")
+        if let pendingHeaderScroll,
+           pendingHeaderScroll.category != category || pendingHeaderScroll.subCategoryIndex != subCategoryIndex
+        {
+            self.pendingHeaderScroll = nil
+        }
         queue.cancelAllOperations()
         if scheduleRemoteLoader {
             marketLoader?.pause()
@@ -632,6 +654,17 @@ final class MarketDashboardViewController: UIViewController {
         completion: (() -> Void)?,
     ) {
         let placement = category.bannerPlacement
+        let preservedContentOffset: CGPoint?
+        if placement == bannerController.placement, areBannersAboveVisibleBounds {
+            preservedContentOffset = collectionView.contentOffset
+        } else {
+            preservedContentOffset = nil
+        }
+        let shouldScrollToHeader = pendingHeaderScroll?.category == category
+            && pendingHeaderScroll?.subCategoryIndex == subCategoryIndex
+        if shouldScrollToHeader {
+            pendingHeaderScroll = nil
+        }
         let banners: [AdvertisementBanner]
         if let placement {
             if placement == bannerController.placement {
@@ -651,8 +684,12 @@ final class MarketDashboardViewController: UIViewController {
             position: .first,
             itemConstructor: { Item.banner($0, duplicationOffset: $1) },
             mode: .reloadData,
-            completion: completion,
-        )
+        ) { [weak self] in
+            if shouldScrollToHeader || preservedContentOffset != nil {
+                self?.restoreMarketContentOffset(shouldScrollToHeader ? nil : preservedContentOffset)
+            }
+            completion?()
+        }
         bannerController.reloadBannersIfAllowed(
             chainIDs: nil
         ) { [weak self] availableBanners in
@@ -669,6 +706,32 @@ final class MarketDashboardViewController: UIViewController {
                 itemConstructor: { Item.banner($0, duplicationOffset: $1) },
                 mode: .differences(animated: false),
                 completion: nil,
+            )
+        }
+    }
+    
+    private func restoreMarketContentOffset(_ previousContentOffset: CGPoint?) {
+        guard let bannerSectionIndex = dataSource.index(for: .banners) else {
+            return
+        }
+        UIView.performWithoutAnimation {
+            let topInset = collectionView.adjustedContentInset.top
+            // Lay out the banners at the top so the header uses their actual, not estimated, height.
+            collectionView.setContentOffset(CGPoint(x: 0, y: -topInset), animated: false)
+            collectionView.layoutIfNeeded()
+            guard let headerAttributes = collectionView.layoutAttributesForSupplementaryElement(
+                ofKind: UICollectionView.elementKindSectionHeader,
+                at: IndexPath(item: 0, section: bannerSectionIndex + 1),
+            ) else {
+                return
+            }
+            let headerOffsetY = headerAttributes.frame.minY - topInset
+            collectionView.setContentOffset(
+                CGPoint(
+                    x: previousContentOffset?.x ?? 0,
+                    y: max(headerOffsetY, previousContentOffset?.y ?? headerOffsetY),
+                ),
+                animated: false,
             )
         }
     }
@@ -972,7 +1035,11 @@ extension MarketDashboardViewController: UICollectionViewDelegate {
 extension MarketDashboardViewController: MarketHeaderView.Delegate {
     
     func marketHeaderView(_ view: MarketHeaderView, didSelectSubCategoryAt index: Int) {
-        collectionView.setContentOffset(.zero, animated: false)
+        if areBannersAboveVisibleBounds {
+            pendingHeaderScroll = (category, index)
+        } else {
+            pendingHeaderScroll = nil
+        }
         reloadData(
             category: category,
             subCategoryIndex: index,

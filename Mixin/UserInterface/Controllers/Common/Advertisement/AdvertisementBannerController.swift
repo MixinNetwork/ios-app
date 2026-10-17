@@ -33,11 +33,12 @@ final class AdvertisementBannerController: NSObject {
     private(set) var placement: AppBanner.Placement?
     private(set) var banners: [AdvertisementBanner] = []
     
+    private let outlineInBannerCell: Bool
     private let containerHorizontalMargin: CGFloat = 20
     private let interitemSpacing: CGFloat = 6
     private let unfocusedCellScale: CGFloat = 0.93
     private let topContentInset: CGFloat = 0
-    private let bottomContentInset: CGFloat = 0
+    private let bottomContentInset: CGFloat
     private let infiniteIllusionMultiplier: Int = {
         if #available(iOS 17.0, *) {
             7
@@ -63,6 +64,12 @@ final class AdvertisementBannerController: NSObject {
         } else {
             banners.count * infiniteIllusionMultiplier
         }
+    }
+    
+    init(outlineInBannerCell: Bool, sectionBottomInset: CGFloat) {
+        self.outlineInBannerCell = outlineInBannerCell
+        self.bottomContentInset = sectionBottomInset
+        super.init()
     }
     
     deinit {
@@ -102,8 +109,11 @@ final class AdvertisementBannerController: NSObject {
         ) { [weak self] cell, indexPath, banner in
             cell.banner = banner
             cell.delegate = self
-            if self?.banners.count ?? 0 <= 1 {
-                cell.transform = .identity
+            if let self {
+                cell.drawOutline = self.outlineInBannerCell
+                if self.banners.count <= 1 {
+                    cell.transform = .identity
+                }
             }
         }
     }

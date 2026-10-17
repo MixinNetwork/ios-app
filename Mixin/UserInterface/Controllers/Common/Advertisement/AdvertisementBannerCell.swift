@@ -21,6 +21,16 @@ final class AdvertisementBannerCell: UICollectionViewCell {
         }
     }
     
+    var drawOutline = false {
+        didSet {
+            if drawOutline != oldValue {
+                updateOutline()
+            }
+        }
+    }
+    
+    private let outlineColor = R.color.outline_primary()!
+    
     private var actionButtons: [UIButton] = []
     
     override func awakeFromNib() {
@@ -42,6 +52,15 @@ final class AdvertisementBannerCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.sd_cancelCurrentImageLoad()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            if drawOutline {
+                contentView.layer.borderColor = outlineColor.resolvedColor(with: traitCollection).cgColor
+            }
+        }
     }
     
     @IBAction func close(_ sender: Any) {
@@ -134,6 +153,16 @@ final class AdvertisementBannerCell: UICollectionViewCell {
         )
         config.attributedTitle = AttributedString(title, attributes: attributes)
         return config
+    }
+    
+    private func updateOutline() {
+        if drawOutline {
+            contentView.layer.borderWidth = 1
+            contentView.layer.borderColor = outlineColor.resolvedColor(with: traitCollection).cgColor
+        } else {
+            contentView.layer.borderWidth = 0
+            contentView.layer.borderColor = nil
+        }
     }
     
 }

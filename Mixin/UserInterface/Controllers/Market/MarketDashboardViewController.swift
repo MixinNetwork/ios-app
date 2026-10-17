@@ -54,7 +54,10 @@ final class MarketDashboardViewController: UIViewController {
             excludingCategory: category,
             excludingSubCategoryIndex: subCategoryIndex
         )
-        self.bannerController = AdvertisementBannerController()
+        self.bannerController = AdvertisementBannerController(
+            outlineInBannerCell: true,
+            sectionBottomInset: 16,
+        )
         super.init(nibName: nil, bundle: nil)
     }
     

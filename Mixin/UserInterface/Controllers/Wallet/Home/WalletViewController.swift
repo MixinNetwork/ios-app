@@ -12,7 +12,10 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     
     let itemsCount = 3
     let perpsTopMoversCount = 4
-    let bannerController = AdvertisementBannerController()
+    let bannerController = AdvertisementBannerController(
+        outlineInBannerCell: false,
+        sectionBottomInset: 0,
+    )
     
     var overview: WalletOverview?
     var overviewAction: WalletOverview.Action?

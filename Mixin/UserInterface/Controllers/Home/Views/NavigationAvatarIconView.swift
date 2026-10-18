@@ -1,6 +1,6 @@
 import UIKit
 
-class NavigationAvatarIconView: AvatarImageView {
+final class NavigationAvatarIconView: AvatarImageView {
     
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 44, height: 44)

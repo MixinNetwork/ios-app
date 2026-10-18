@@ -21,7 +21,7 @@ extension PerpetualCandleViewModel {
     ) -> [PerpetualCandleViewModel]? {
         let drawingItems = candle.items
         let dateFormatter: DateFormatter = switch timeFrame {
-        case .oneMinute, .fiveMinutes, .oneHour, .fourHours:
+        case .oneMinute, .fiveMinutes, .fifteenMinutes, .oneHour, .fourHours:
                 .shortTimeOnly
         case .oneDay, .oneWeek:
                 .shortDateOnly

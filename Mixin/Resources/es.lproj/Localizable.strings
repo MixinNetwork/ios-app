@@ -674,6 +674,7 @@
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Formato de nota de retiro incorrecto.";
 "error_withdrawal_suspend" = "ERROR 20137: Los retiros están suspendidos.";
 "estimated_balance_change" = "Cambio de saldo (estimación)";
+"estimated_fee" = "Comisión estimada";
 "estimated_liquidation_price" = "Precio de liquidación estimado";
 "estimated_price" = "Precio estimado";
 "estimated_receive" = "Recepción estimada";
@@ -1228,9 +1229,12 @@
 "perps_category_indices" = "Índices";
 "perps_category_meme" = "Memes";
 "perps_category_stocks" = "Acciones";
+"perps_close_position_title" = "Cerrar posición de %1$@ %2$@";
+"perps_close_submitted" = "Orden de cierre enviada";
 "perps_confirm_add_margin" = "Confirmar adición de margen";
 "perps_confirm_reduce_margin" = "Confirmar reducción del margen";
 "perps_current_price" = "Precio actual";
+"perps_estimated_realized_pnl" = "PnL realizado estimado";
 "perps_funding_frequency" = "Frecuencia";
 "perps_funding_frequency_value" = "1/4/8 horas";
 "perps_funding_rate_key_point_1" = "Mantener los precios de Perps cerca de los precios spot";
@@ -1239,6 +1243,7 @@
 "perps_funding_rate_overview" = "La tasa de financiación es una comisión pagada o recibida entre traders long y short para mantener el precio de Perps cerca del precio spot. Cuando es positiva, los long pagan a los short. Cuando es negativa, los short pagan a los long.";
 "perps_funding_rate_purpose" = "Propósito";
 "perps_funding_title_interval" = "Financiación (%d h)";
+"perps_include_pnl" = "Incluye PnL";
 "perps_intro_overview" = "Mixin Perps son contratos perpetuos liquidados en criptomonedas sin fecha de vencimiento que permiten a los traders especular sobre el precio de los criptoactivos. Se pueden mantener indefinidamente y suelen seguir el mercado spot subyacente.";
 "perps_intro_risk_notice_1" = "El apalancamiento amplifica tanto las ganancias como las pérdidas";
 "perps_intro_risk_notice_2" = "Las posiciones pueden liquidarse si no se mantienen los requisitos de margen";
@@ -1254,11 +1259,14 @@
 "perps_liquidation_price_short" = "Precio liq.";
 "perps_long_overview" = "Abre una posición long cuando espera que el precio suba. Si el precio sube, obtiene ganancias; si baja, incurre en pérdidas.";
 "perps_low_margin_tip" = "Si el margen es bajo, añade margen primero";
+"perps_margin_amount" = "Importe del margen";
 "perps_margin_or_position" = "¿Añadir margen o aumentar la posición?";
 "perps_margin_submitted" = "Ajuste de margen enviado";
 "perps_margin_tip" = "Añadir margen reduce el riesgo de liquidación";
 "perps_mark_price" = "Precio de marca";
 "perps_markets" = "Mercados";
+"perps_minimum_order_size" = "El valor mínimo de la posición es de %@";
+"perps_position_amount" = "Importe de la posición";
 "perps_position_size_overview" = "El tamaño representa el valor total de su posición, calculado como margen × apalancamiento.";
 "perps_position_size_pnl_1" = "Tamaño más grande, PnL más grande";
 "perps_position_size_pnl_2" = "Tamaño más pequeño, PnL más pequeño";
@@ -1266,12 +1274,11 @@
 "perps_product" = "Mercado";
 "perps_realized_pnl" = "PnL realizado";
 "perps_receive" = "Recibir";
+"perps_reduce_invalid_quantity" = "Introduce un importe mayor que cero que no supere el valor de la posición actual.";
 "perps_reduce_margin" = "Reducir margen";
 "perps_reduce_margin_description" = "Retira el margen excedente para liberar fondos sin cambiar tu posición";
 "perps_reduce_margin_title" = "Reducir margen para %1$@ %2$@";
 "perps_reduce_position" = "Reducir posición";
-"perps_reduce_position_description" = "Cierra parcialmente tu posición para asegurar ganancias o limitar pérdidas";
-"perps_reduce_position_title" = "Reducir posición para %1$@ %2$@";
 "perps_reduced_margin" = "Margen reducido";
 "perps_reducing_margin" = "Reduciendo margen";
 "perps_reducing_margin_failed" = "No se pudo reducir el margen";
@@ -2027,6 +2034,7 @@
 "waiting_transaction_description" = "Tienes una transferencia o retiro que no se ha completado. Inténtelo de nuevo más tarde.";
 "wallet" = "Cartera";
 "wallet_already_added" = "Esta billetera ya ha sido agregada";
+"wallet_already_imported" = "Esta billetera ya se ha importado";
 "wallet_buy_option_apple_pay_or_card" = "Apple Pay o Tarjeta";
 "wallet_buy_option_apple_pay_or_card_desc" = "Utilice Apple Pay, tarjeta de crédito o débito para comprar criptomonedas al instante.";
 "wallet_buy_option_bank_transfer" = "Transferencia bancaria";

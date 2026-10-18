@@ -76,7 +76,7 @@ final class Web3SignViewController: WalletIdentifyingAuthenticationPreviewViewCo
                 .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
                 .doubleLineInfo(caption: .from, primary: operation.proposer.name, secondary: .plain(operation.proposer.host)),
                 .address(caption: .wallet, address: operation.address.destination, label: .wallet(.common(operation.wallet))),
-                .info(caption: .network, content: operation.chain.name)
+                .info(caption: .network, content: operation.chain.name, action: nil)
             ])
         case .signing:
             canDismissInteractively = false

@@ -54,7 +54,6 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.register(R.nib.authenticationPreviewWalletCell)
         tableView.register(R.nib.commonWalletReceiverCell)
         tableView.register(R.nib.waivedFeeCell)
-        tableView.register(R.nib.closePerpsReceiveCell)
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -183,16 +182,19 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             cell.setContent(address, labelContent: label)
+            cell.onInfo = nil
             return cell
-        case let .info(caption, content):
+        case let .info(caption, content, action):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             cell.setContent(content)
+            cell.onInfo = action
             return cell
         case let .boldInfo(caption, content):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             cell.setBoldContent(content)
+            cell.onInfo = nil
             return cell
         case let .doubleLineInfo(caption, primary, secondary):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
@@ -243,6 +245,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = R.string.localizable.receiver().uppercased()
             cell.setContent(address)
+            cell.onInfo = nil
             return cell
         case let .web3Message(caption, message):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_message, for: indexPath)!
@@ -269,13 +272,9 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.secondaryAmountLabel.text = fiatMoneyAmount
             cell.tokenIconView.setIcon(token: token)
             return cell
-        case let .assetChanges(estimated, changes):
+        case let .assetChanges(title, changes):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
-            cell.titleLabel.text = if estimated {
-                R.string.localizable.estimated_balance_change().uppercased()
-            } else {
-                R.string.localizable.balance_changes().uppercased()
-            }
+            cell.titleLabel.text = title.uppercased()
             cell.reloadData(changes: changes)
             return cell
         case let .safeMultisigAmount(token, tokenAmount, fiatMoneyAmount):
@@ -359,14 +358,6 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
         case let .perpsPositions(positions):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
             cell.reloadData(perpsPositions: positions)
-            return cell
-        case let .estimatedReceive(token, count, pnl):
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.close_perps_receiving, for: indexPath)!
-            cell.titleLabel.text = R.string.localizable.estimated_receive().uppercased()
-            cell.iconView.setIcon(token: token)
-            cell.valueLabel.text = count
-            cell.networkLabel.text = token.chainName
-            cell.pnlLabel.attributedText = pnl
             return cell
         }
     }
@@ -479,7 +470,7 @@ extension AuthenticationPreviewViewController {
         }
         
         case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent, boldPrimaryAmount: Bool)
-        case info(caption: Caption, content: String)
+        case info(caption: Caption, content: String, action: (() -> Void)?)
         case boldInfo(caption: Caption, content: String)
         case doubleLineInfo(caption: Caption, primary: String, secondary: Text)
         case address(caption: Caption, address: String, label: AddressLabel?)
@@ -490,7 +481,7 @@ extension AuthenticationPreviewViewController {
         case web3Amount(caption: String, content: Web3AmountChangeCell.Content, token: (any Token)?, chain: Chain?)
         case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
         case tokenAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
-        case assetChanges(estimated: Bool, changes: [StyledAssetChange])
+        case assetChanges(title: String, changes: [StyledAssetChange])
         case safeMultisigAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case addressReceivers(MixinTokenItem, [SafeMultisigResponse.Safe.Recipient])
         case wallet(caption: Caption, wallet: Wallet, threshold: Int32?)
@@ -499,7 +490,6 @@ extension AuthenticationPreviewViewController {
         case user(title: String, user: UserItem)
         case waivedFee(token: String, fiatMoney: String, display: AmountIntent)
         case perpsPositions([(iconURL: URL?, name: String, side: PerpetualOrderSide, leverage: String?)])
-        case estimatedReceive(token: MixinTokenItem, count: String, pnl: NSAttributedString?)
     }
     
     struct TableHeaderViewStyle: OptionSet {

@@ -125,7 +125,8 @@ extension Web3TokenSenderSelectorViewController: WalletSelectorViewController.De
                     confirmations: -1,
                     assetKey: receivingToken.assetKey,
                     precision: receivingToken.precision,
-                    collectionHash: nil
+                    collectionHash: nil,
+                    primitiveAssetID: nil,
                 )
                 tokenItem = MixinTokenItem(
                     token: mixinToken,

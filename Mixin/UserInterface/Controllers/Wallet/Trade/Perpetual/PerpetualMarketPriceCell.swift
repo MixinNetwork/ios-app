@@ -59,6 +59,8 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
                 R.string.localizable.minutes_count_short(1)
             case .fiveMinutes:
                 R.string.localizable.minutes_count_short(5)
+            case .fifteenMinutes:
+                R.string.localizable.minutes_count_short(15)
             case .oneHour:
                 R.string.localizable.hours_count_short(1).uppercased()
             case .fourHours:

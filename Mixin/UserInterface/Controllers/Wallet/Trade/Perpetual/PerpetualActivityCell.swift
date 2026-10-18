@@ -28,7 +28,7 @@ final class PerpetualActivityCell: UICollectionViewCell {
     }
     
     func load(viewModel: PerpetualPositionViewModel) {
-        iconView.setIcon(tokenIconURL: viewModel.iconURL)
+        iconView.setIcon(tokenIconURL: viewModel.position.iconURL)
         titleLabel.text = viewModel.directionWithSymbol
         leverageLabel.text = viewModel.leverage
         subtitleLabel.text = viewModel.orderValueInToken

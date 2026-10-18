@@ -312,7 +312,10 @@ final class PrivacyWalletViewController: WalletViewController {
                 btcPrice: btcPrice
             )
             
-            let remoteBanners = AppBanner.loadFromCache(chainIDs: nil)
+            let remoteBanners = AppBanner.loadFromCache(
+                placement: .wallet,
+                chainIDs: nil,
+            )
             
             let tokens = TokenDAO.shared.notHiddenTokens(
                 includesZeroBalanceItems: true,
@@ -369,7 +372,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 perpsTopMovers = [:]
                 snapshot.appendSections([.perpsPositions])
                 snapshot.appendItems(
-                    displayPerpsPositions.values.map({ Item.perpsPosition(positionID: $0.positionID) }),
+                    displayPerpsPositions.values.map({ Item.perpsPosition(positionID: $0.position.positionID) }),
                     toSection: .perpsPositions
                 )
             }
@@ -411,8 +414,6 @@ final class PrivacyWalletViewController: WalletViewController {
                 }
                 self.overview = overview
                 
-                self.reloadBanners(with: remoteBanners, updating: &snapshot)
-                
                 self.tokens = displayTokens
                 self.tokensValue = formattedTokensValue
                 self.hasMoreTokens = hasMoreToken
@@ -434,10 +435,7 @@ final class PrivacyWalletViewController: WalletViewController {
                     self.insertOrUpdate(vasItem: .cash, into: &snapshot)
                 }
                 self.insertOrUpdate(vasItem: .earn, into: &snapshot)
-                self.dataSource.applySnapshotUsingReloadData(snapshot) {
-                    self.scrollToFirstBanner()
-                    self.scheduleBannersAutoScrolling()
-                }
+                self.applySnapshot(snapshot, remoteBanners: remoteBanners, mode: .reloadData)
                 
                 self.reloadBannersIfAllowed(chainIDs: nil)
                 self.reloadCashAccount()
@@ -527,8 +525,8 @@ final class PrivacyWalletViewController: WalletViewController {
                     snapshot.deleteItems(
                         snapshot.itemIdentifiers(inSection: .perpsPositions)
                     )
-                    let newItems = displayPerpsPositions.values.map { position in
-                        Item.perpsPosition(positionID: position.positionID)
+                    let newItems = displayPerpsPositions.values.map { viewModel in
+                        Item.perpsPosition(positionID: viewModel.position.positionID)
                     }
                     snapshot.appendItems(newItems, toSection: .perpsPositions)
                     snapshot.reloadItems(newItems)
@@ -627,14 +625,14 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
         case .overview, .emptyWalletInstruction, .referral, .benefit:
             break
         case let .banner(banner, _):
-            banner.invokeRemoteActionURL()
+            bannerController.handleSelection(of: banner)
         case .cash:
             UIApplication.shared.homeNavigationController?.presentCashPage()
         case .earn:
             UIApplication.shared.homeNavigationController?.presentEarnPage()
         case .perpsPosition(let positionID):
-            if let position = perpsPositions[positionID],
-               let market = PerpsMarketDAO.shared.market(marketID: position.marketID)
+            if let viewModel = perpsPositions[positionID],
+               let market = PerpsMarketDAO.shared.market(marketID: viewModel.position.marketID)
             {
                 let viewModel = PerpetualMarketViewModel(market: market)
                 let market = PerpetualMarketViewController(

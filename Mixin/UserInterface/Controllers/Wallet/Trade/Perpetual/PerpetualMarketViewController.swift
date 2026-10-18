@@ -77,7 +77,7 @@ final class PerpetualMarketViewController: UIViewController {
         {
             return frame
         } else {
-            return .oneDay
+            return .fifteenMinutes
         }
     }()
     private var charts: [PerpetualTimeFrame: PerpetualMarketPriceCell.Chart] = [:]
@@ -119,7 +119,8 @@ final class PerpetualMarketViewController: UIViewController {
             timeInterval: 3,
         )
         self.candleLoader = PerpetualCandleLoader(
-            marketID: viewModel.market.marketID
+            marketID: viewModel.market.marketID,
+            timeInterval: 5,
         )
         self.viewModel = viewModel
         self.infos = Info.availableInfos(in: viewModel)
@@ -421,25 +422,24 @@ final class PerpetualMarketViewController: UIViewController {
             guard let positionViewModel = self.openPositionViewModel else {
                 return
             }
-            switch adjustment.behavior {
-            case .increase:
-                UserOperationAnalytics.tradeSource = .perpsMarketDetailAdjust
+            UserOperationAnalytics.tradeSource = .perpsMarketDetailAdjust
+            switch adjustment {
+            case .increaseMargin, .increasePosition:
                 let addPosition = AddToPerpsPositionViewController(
                     wallet: wallet,
-                    adding: adjustment.target,
+                    adding: adjustment == .increaseMargin ? .margin : .position,
                     marketViewModel: viewModel,
                     positionViewModel: positionViewModel,
                     source: nil,
                     presentMarketViewOnSuccess: true,
                 )
                 self.present(addPosition, animated: true)
-            case .decrease:
-                UserOperationAnalytics.tradeSource = .perpsMarketDetailAdjust
-                let reduce = ReduceToPerpsPositionViewController(
+            case .decreaseMargin:
+                let reduce = ReducePerpsPositionMarginViewController(
                     wallet: wallet,
-                    reducing: adjustment.target,
                     marketViewModel: viewModel,
                     positionViewModel: positionViewModel,
+                    initialPercentage: 0,
                 )
                 self.present(reduce, animated: true)
             }
@@ -448,13 +448,16 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     @objc private func closePosition(_ sender: UIButton) {
-        guard
-            let viewModel = openPositionViewModel,
-            let preview = ClosePerpetualPositionPreviewViewController(viewModels: [viewModel])
-        else {
+        guard let positionViewModel = openPositionViewModel else {
             return
         }
-        present(preview, animated: true)
+        let reduce = ClosePerpsPositionViewController(
+            wallet: wallet,
+            marketViewModel: viewModel,
+            positionViewModel: positionViewModel,
+            initialPercentage: 1,
+        )
+        present(reduce, animated: true)
         reporter.report(event: .tradePerpsCloseStart, tags: ["type": "single"])
     }
     
@@ -642,7 +645,7 @@ final class PerpetualMarketViewController: UIViewController {
             side: positionViewModel.side,
             margin: positionViewModel.decimalMargin,
             behavior: .takeProfit,
-            leverage: Decimal(positionViewModel.leverageMultiplier),
+            leverage: Decimal(positionViewModel.position.leverage),
             orderState: .open(
                 entryPrice: entryPrice,
                 quantity: positionViewModel.decimalQuantity,
@@ -664,7 +667,7 @@ final class PerpetualMarketViewController: UIViewController {
                 .delete
             }
             RouteAPI.updatePerpsTPSL(
-                positionID: positionViewModel.positionID,
+                positionID: positionViewModel.position.positionID,
                 takeProfitPrice: price,
                 stopLossPrice: nil,
             ) { result in
@@ -694,7 +697,7 @@ final class PerpetualMarketViewController: UIViewController {
             side: positionViewModel.side,
             margin: positionViewModel.decimalMargin,
             behavior: .stopLoss,
-            leverage: Decimal(positionViewModel.leverageMultiplier),
+            leverage: Decimal(positionViewModel.position.leverage),
             orderState: .open(
                 entryPrice: entryPrice,
                 quantity: positionViewModel.decimalQuantity,
@@ -716,7 +719,7 @@ final class PerpetualMarketViewController: UIViewController {
                 .delete
             }
             RouteAPI.updatePerpsTPSL(
-                positionID: positionViewModel.positionID,
+                positionID: positionViewModel.position.positionID,
                 takeProfitPrice: nil,
                 stopLossPrice: price,
             ) { result in
@@ -1070,7 +1073,7 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
         autoClosingIntroCell?.performSuggestionButton.isEnabled = false
         cell.updateTakeProfit(busy: true)
         RouteAPI.updatePerpsTPSL(
-            positionID: positionViewModel.positionID,
+            positionID: positionViewModel.position.positionID,
             takeProfitPrice: .delete,
             stopLossPrice: nil
         ) { [weak self] result in
@@ -1098,7 +1101,7 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
         autoClosingIntroCell?.performSuggestionButton.isEnabled = false
         cell.updateStopLoss(busy: true)
         RouteAPI.updatePerpsTPSL(
-            positionID: positionViewModel.positionID,
+            positionID: positionViewModel.position.positionID,
             takeProfitPrice: nil,
             stopLossPrice: .delete
         ) { [weak self] result in

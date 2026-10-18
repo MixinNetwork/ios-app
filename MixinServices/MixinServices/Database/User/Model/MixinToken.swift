@@ -19,6 +19,7 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
         case assetKey = "asset_key"
         case precision
         case collectionHash = "collection_hash"
+        case primitiveAssetID = "primitive_asset_id"
     }
     
     public static let databaseTableName = "tokens"
@@ -38,21 +39,38 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
     public let assetKey: String
     public let precision: Int16
     public let collectionHash: String?
+    public let primitiveAssetID: String?
     
     public private(set) lazy var decimalBTCPrice = Decimal(string: btcPrice, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDPrice = Decimal(string: usdPrice, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDChange = Decimal(string: usdChange, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalDust = Decimal(string: dust, locale: .enUSPOSIX) ?? 0
     
+    public var isDisplayable: Bool {
+        primitiveAssetID?.isEmpty ?? true
+    }
+    
     public var isPrecisionReady: Bool {
         precision != Self.invalidPrecision
     }
     
     public init(
-        assetID: String, kernelAssetID: String, symbol: String, name: String, iconURL: String,
-        btcPrice: String, usdPrice: String, chainID: String, usdChange: String,
-        btcChange: String, dust: String, confirmations: Int, assetKey: String, precision: Int16,
-        collectionHash: String?
+        assetID: String,
+        kernelAssetID: String,
+        symbol: String,
+        name: String,
+        iconURL: String,
+        btcPrice: String,
+        usdPrice: String,
+        chainID: String,
+        usdChange: String,
+        btcChange: String,
+        dust: String,
+        confirmations: Int,
+        assetKey: String,
+        precision: Int16,
+        collectionHash: String?,
+        primitiveAssetID: String?,
     ) {
         self.assetID = assetID
         self.kernelAssetID = kernelAssetID
@@ -69,6 +87,7 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
         self.assetKey = assetKey
         self.precision = precision
         self.collectionHash = collectionHash
+        self.primitiveAssetID = primitiveAssetID
     }
     
 }

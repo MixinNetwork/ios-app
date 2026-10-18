@@ -674,6 +674,7 @@
 "error_withdrawal_memo_format_incorrect" = "錯誤 20131：提現備註格式不正確";
 "error_withdrawal_suspend" = "錯誤 20137：提現暫停";
 "estimated_balance_change" = "餘額變動（預估）";
+"estimated_fee" = "預估手續費";
 "estimated_liquidation_price" = "預估強平價格";
 "estimated_price" = "預計價格";
 "estimated_receive" = "預計收到";
@@ -1228,9 +1229,12 @@
 "perps_category_indices" = "指數";
 "perps_category_meme" = "Memes";
 "perps_category_stocks" = "股票";
+"perps_close_position_title" = "平倉 %1$@ %2$@";
+"perps_close_submitted" = "平倉訂單已提交";
 "perps_confirm_add_margin" = "確認新增保證金";
 "perps_confirm_reduce_margin" = "確認減少保證金";
 "perps_current_price" = "最新價格";
+"perps_estimated_realized_pnl" = "預計淨盈虧";
 "perps_funding_frequency" = "頻率";
 "perps_funding_frequency_value" = "1/4/8 小時";
 "perps_funding_rate_key_point_1" = "資金費率為正時，多頭向空頭支付資金費。";
@@ -1239,6 +1243,7 @@
 "perps_funding_rate_overview" = "資金費率是多頭和空頭之間定期結算的費用，用於讓永續合約價格接近現貨市場價格。";
 "perps_funding_rate_purpose" = "作用";
 "perps_funding_title_interval" = "資金費率（%d小時）";
+"perps_include_pnl" = "含盈虧";
 "perps_intro_overview" = "Mixin 永續合約是一種以數字資產結算的衍生品交易方式，支援做多和做空，無到期日。通過槓桿機制，交易者可以放大倉位，把握價格上漲或下跌帶來的交易機會。";
 "perps_intro_risk_notice_1" = "槓桿交易可能放大收益，同時也會放大虧損";
 "perps_intro_risk_notice_2" = "當保證金不足時，倉位可能被強制平倉";
@@ -1254,11 +1259,14 @@
 "perps_liquidation_price_short" = "強平價格";
 "perps_long_overview" = "做多是指在預期價格上漲時建立倉位，價格上漲可獲得盈利，價格下跌則產生虧損。";
 "perps_low_margin_tip" = "保證金不足時，優先新增保證金";
+"perps_margin_amount" = "保證金金額";
 "perps_margin_or_position" = "新增保證金還是增加倉位？";
 "perps_margin_submitted" = "保證金調整已提交";
 "perps_margin_tip" = "新增保證金可降低強平風險";
 "perps_mark_price" = "標記價格";
 "perps_markets" = "市場";
+"perps_minimum_order_size" = "倉位價值至少 %@";
+"perps_position_amount" = "倉位金額";
 "perps_position_size_overview" = "當前合約的倉位規模由「金額 × 槓桿」計算得出，表示本次交易所控制的資產規模。";
 "perps_position_size_pnl_1" = "倉位越大，盈虧金額越大";
 "perps_position_size_pnl_2" = "倉位越小，盈虧金額越小";
@@ -1266,12 +1274,11 @@
 "perps_product" = "合約";
 "perps_realized_pnl" = "淨盈虧";
 "perps_receive" = "收到";
+"perps_reduce_invalid_quantity" = "請輸入大於零且不超過當前倉位的金額。";
 "perps_reduce_margin" = "減少保證金";
 "perps_reduce_margin_description" = "減少多餘保證金，在保持持倉的同時釋放資金";
 "perps_reduce_margin_title" = "%1$@ %2$@ 減少保證金";
 "perps_reduce_position" = "減少倉位";
-"perps_reduce_position_description" = "部分平倉，鎖定收益或減少虧損";
-"perps_reduce_position_title" = "%1$@ %2$@ 減少倉位";
 "perps_reduced_margin" = "減少保證金";
 "perps_reducing_margin" = "正在減少保證金";
 "perps_reducing_margin_failed" = "減少保證金失敗";
@@ -2027,6 +2034,7 @@
 "waiting_transaction_description" = "您有一筆轉賬或提現未完成，請稍後再試";
 "wallet" = "錢包";
 "wallet_already_added" = "這個錢包已經新增過了";
+"wallet_already_imported" = "該錢包已在錢包列表中，無需重複匯入";
 "wallet_buy_option_apple_pay_or_card" = "Apple Pay 或銀行卡";
 "wallet_buy_option_apple_pay_or_card_desc" = "使用 Apple Pay、信用卡或簽帳金融卡，立刻購買加密貨幣。";
 "wallet_buy_option_bank_transfer" = "銀行轉賬";

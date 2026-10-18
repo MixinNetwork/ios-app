@@ -301,8 +301,8 @@ final class TradePerpetualViewController: UIViewController {
             guard let self else {
                 return
             }
-            let alreadyOpened = self.openPositions.contains { position in
-                position.marketID == market.marketID
+            let alreadyOpened = self.openPositions.contains { viewModel in
+                viewModel.position.marketID == market.marketID
             }
             self.dismiss(animated: true) {
                 let viewModel = PerpetualMarketViewModel(market: market)
@@ -539,8 +539,8 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
         case .value:
             break
         case .positions:
-            let position = openPositions[indexPath.item]
-            if let market = PerpsMarketDAO.shared.market(marketID: position.marketID) {
+            let viewModel = openPositions[indexPath.item]
+            if let market = PerpsMarketDAO.shared.market(marketID: viewModel.position.marketID) {
                 let viewModel = PerpetualMarketViewModel(market: market)
                 let market = PerpetualMarketViewController(
                     wallet: wallet,

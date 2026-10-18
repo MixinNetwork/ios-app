@@ -1148,7 +1148,6 @@ extension UrlWindow {
                         UIApplication.shared.homeNavigationController?.pushViewController(inputAmount, animated: true)
                     }
                 case (.none, .none):
-                    // Receive money QR code
                     DispatchQueue.main.async {
                         completion(nil)
                         reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "schema"])
@@ -1157,6 +1156,7 @@ extension UrlWindow {
                             reporter.report(event: .sendTokenSelect, tags: ["method": location.asEventMethod])
                             reporter.report(event: .sendRecipient, tags: ["type": "contact"])
                             let inputAmount = TransferInputAmountViewController(
+                                traceID: paymentURL.trace,
                                 tokenItem: token,
                                 receiver: destination,
                                 note: paymentURL.memo

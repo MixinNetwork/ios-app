@@ -16,11 +16,13 @@ final class PerpetualCandleLoader {
     weak var delegate: Delegate?
     
     private let marketID: String
+    private let timeInterval: TimeInterval
     
     private weak var timer: Timer?
     
-    init(marketID: String) {
+    init(marketID: String, timeInterval: TimeInterval) {
         self.marketID = marketID
+        self.timeInterval = timeInterval
     }
     
     deinit {
@@ -31,7 +33,7 @@ final class PerpetualCandleLoader {
         assert(Thread.isMainThread)
         timer?.invalidate()
         let timer: Timer = .scheduledTimer(
-            withTimeInterval: 30,
+            withTimeInterval: timeInterval,
             repeats: true
         ) { [marketID, weak self] (timer) in
             RouteAPI.perpsMarketCandles(

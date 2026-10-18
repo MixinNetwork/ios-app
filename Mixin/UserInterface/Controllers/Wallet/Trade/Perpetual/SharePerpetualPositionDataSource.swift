@@ -26,7 +26,7 @@ struct SharePerpetualPositionDataSource {
     
     init(viewModel: PerpetualPositionViewModel, latestPrice: Decimal?) {
         self.title = viewModel.directionWithSymbol
-        self.iconURL = viewModel.iconURL
+        self.iconURL = viewModel.position.iconURL
         self.pnl = viewModel.pnl
         self.roe = viewModel.roeWithSign ?? ""
         self.color = viewModel.pnlColor
@@ -34,15 +34,15 @@ struct SharePerpetualPositionDataSource {
         self.leverage = viewModel.leverage
         self.entryPrice = viewModel.entryPrice
         self.trailingPrice = if let latestPrice {
-            .currentPrice(latestPrice.formatted(viewModel.priceFormatStyle))
+            .currentPrice(latestPrice.formatted(viewModel.position.priceFormatStyle))
         } else {
             .none
         }
-        self.marketID = viewModel.marketID
-        self.tokenSymbol = viewModel.tokenSymbol
-        self.displaySymbol = viewModel.displaySymbol
+        self.marketID = viewModel.position.marketID
+        self.tokenSymbol = viewModel.position.tokenSymbol
+        self.displaySymbol = viewModel.position.displaySymbol
         self.side = viewModel.side.localizedName
-        self.leverageMultiplier = viewModel.leverageMultiplier
+        self.leverageMultiplier = viewModel.position.leverage
     }
     
     init(

@@ -105,7 +105,7 @@ final class TradeOrderViewController: UITableViewController {
                 switch viewModel.state.knownCase {
                 case .created, .pending, .failed, .cancelling, .cancelled, .expired, .none:
                     cell.titleLabel.text = R.string.localizable.estimated_receive().uppercased()
-                    cell.reloadData(changes: viewModel.receivings, style: .gray)
+                    cell.reloadData(changes: viewModel.receivings, style: .tertiary)
                 case .success:
                     cell.titleLabel.text = R.string.localizable.swap_order_received().uppercased()
                     cell.reloadData(changes: viewModel.receivings, style: .incoming)

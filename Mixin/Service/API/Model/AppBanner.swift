@@ -41,6 +41,9 @@ extension AppBanner {
     
     enum Placement: String {
         case wallet = "wallet_banner"
+        case marketStock = "market_stock"
+        case marketCrypto = "market_crypto"
+        case marketPerps = "market_perps"
     }
     
     struct Action: Codable {
@@ -80,23 +83,32 @@ extension AppBanner {
     }
     
     // nil for all chains
-    static func loadFromCache(chainIDs: Set<String>?) -> [AppBanner] {
+    static func loadFromCache(
+        placement: Placement,
+        chainIDs: Set<String>?,
+    ) -> [AppBanner] {
         let closedBannerIDs = Set(AppGroupUserDefaults.Wallet.closedBannerIDs)
         return PropertiesDAO.shared.jsonObject(
             forKey: .walletBanners,
             type: [AppBanner].self
         )?.filter { banner in
+            guard banner.placement.knownCase == placement else {
+                return false
+            }
+            if closedBannerIDs.contains(banner.bannerID) {
+                return false
+            }
             guard let endAt = DateFormatter.iso8601Full.date(from: banner.endAt) else {
                 return false
             }
-            let chainsMatch: Bool = if let chainIDs {
-                banner.available(to: chainIDs)
-            } else {
-                true
+            if endAt.timeIntervalSinceNow < 0 {
+                return false
             }
-            return endAt.timeIntervalSinceNow > 0
-            && !closedBannerIDs.contains(banner.bannerID)
-            && chainsMatch
+            if let chainIDs {
+                return banner.available(to: chainIDs)
+            } else {
+                return true
+            }
         } ?? []
     }
     

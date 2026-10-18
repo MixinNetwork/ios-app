@@ -36,7 +36,10 @@ enum AdvertisementBannerActionHandler {
         if !banner.trackingKey.isEmpty {
             reporter.report(
                 eventName: banner.trackingKey,
-                tags: ["source": source]
+                tags: [
+                    "placement": banner.placement.rawValue,
+                    "source": source
+                ]
             )
         }
     }

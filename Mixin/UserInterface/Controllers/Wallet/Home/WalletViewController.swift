@@ -864,9 +864,9 @@ extension WalletViewController: AdvertisementBannerController.Delegate {
         case .remote(let remote):
             let source = switch action {
             case .button:
-                "wallet_home_ad_banner_button"
+                "ad_banner_button"
             case .background:
-                "wallet_home_ad_banner_background"
+                "ad_banner_background"
             }
             AdvertisementBannerActionHandler.perform(action, for: remote, source: source)
         }

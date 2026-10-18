@@ -1039,6 +1039,7 @@ extension MarketDashboardViewController: MarketHeaderView.Delegate {
             pendingHeaderScroll = (category, index)
         } else {
             pendingHeaderScroll = nil
+            collectionView.setContentOffset(.zero, animated: false)
         }
         reloadData(
             category: category,

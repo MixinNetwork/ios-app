@@ -2281,20 +2281,12 @@ extension MarketDashboardViewController: AdvertisementBannerController.Delegate 
             return
         }
         let source = switch (category, action) {
-        case (.crypto, .button):
-            "market_crypto_ad_banner_button"
-        case (.crypto, .background):
-            "market_crypto_ad_banner_background"
-        case (.perps, .button):
-            "market_perps_ad_banner_button"
-        case (.perps, .background):
-            "market_perps_ad_banner_background"
-        case (.stock, .button):
-            "market_stock_ad_banner_button"
-        case (.stock, .background):
-            "market_stock_ad_banner_background"
         case (.watchlist, _), (.indicator, _):
             ""
+        case (_, .button):
+            "ad_banner_button"
+        case (_, .background):
+            "ad_banner_background"
         }
         AdvertisementBannerActionHandler.perform(action, for: remote, source: source)
     }

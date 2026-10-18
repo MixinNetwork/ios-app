@@ -145,18 +145,32 @@ final class AdvertisementBannerController: NSObject {
         
         let containerWidth = environment.container.contentSize.width
         let itemWidth = max(0, containerWidth - containerHorizontalMargin * 2)
+        let heightDimension: NSCollectionLayoutDimension
+        if #available(iOS 17.0, *) {
+            heightDimension = .uniformAcrossSiblings(estimate: 81)
+        } else {
+            heightDimension = .estimated(81)
+        }
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .estimated(81),
+            heightDimension: heightDimension,
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        // Let the content determine its height before the outer group equalizes pages.
+        let contentGroup = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1),
+                heightDimension: .estimated(81),
+            ),
+            subitems: [item],
+        )
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(itemWidth),
-            heightDimension: .estimated(81),
+            heightDimension: heightDimension,
         )
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize,
-            subitems: [item],
+            subitems: [contentGroup],
         )
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = interitemSpacing
@@ -484,6 +498,9 @@ extension AdvertisementBannerController {
     }
     
     private func updateCellTransforms() {
+        guard #available(iOS 17.0, *) else {
+            return
+        }
         guard let collectionView, banners.count > 1 else {
             if let collectionView, banners.count <= 1 {
                 for cell in collectionView.visibleCells {

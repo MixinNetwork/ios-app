@@ -294,7 +294,10 @@ final class CommonWalletViewController: WalletViewController {
                 supportedChainIDs: chainIDs,
             )
             
-            let remoteBanners = AppBanner.loadFromCache(chainIDs: chainIDs)
+            let remoteBanners = AppBanner.loadFromCache(
+                placement: .wallet,
+                chainIDs: chainIDs,
+            )
             
             let tray: WalletOverview.Tray?
             if let watchingAddresses {
@@ -418,8 +421,6 @@ final class CommonWalletViewController: WalletViewController {
                 self.overviewAction = action
                 self.overviewTray = tray
                 
-                self.reloadBanners(with: remoteBanners, updating: &snapshot)
-                
                 self.importedSecret = importedSecret
                 self.availability = availability
                 self.supportedChainIDs = chainIDs
@@ -448,10 +449,7 @@ final class CommonWalletViewController: WalletViewController {
                     responder: self
                 )
                 self.insertReferralSection(into: &snapshot)
-                self.dataSource.applySnapshotUsingReloadData(snapshot) {
-                    self.scrollToFirstBanner()
-                    self.scheduleBannersAutoScrolling()
-                }
+                self.applySnapshot(snapshot, remoteBanners: remoteBanners, mode: .reloadData)
                 self.reloadBannersIfAllowed(chainIDs: chainIDs)
                 self.updateDappConnectionWalletIfNeeded()
             }
@@ -498,7 +496,7 @@ extension CommonWalletViewController: UICollectionViewDelegate {
         case .overview, .emptyWalletInstruction, .cash, .earn, .perpsPosition, .perpsTopMover, .referral, .benefit:
             break
         case let .banner(banner, _):
-            banner.invokeRemoteActionURL()
+            bannerController.handleSelection(of: banner)
         case .token(let assetID):
             if let token = tokens[assetID] {
                 let viewController = Web3TokenViewController(

@@ -16,13 +16,15 @@ enum RewardAPI {
     }
     
     static func appBanners(
-        completion: @escaping (MixinAPI.Result<[AppBanner]>) -> Void
+        queue: DispatchQueue = .main,
+        completion: @escaping (MixinAPI.Result<[AppBanner]>) -> Void,
     ) {
         RouteAPI.request(
             method: .get,
             path: "/app-banners",
             config: .rewards,
-            completion: completion
+            queue: queue,
+            completion: completion,
         )
     }
     

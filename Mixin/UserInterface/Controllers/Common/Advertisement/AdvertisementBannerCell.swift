@@ -1,10 +1,10 @@
 import UIKit
 
-final class WalletBannerCell: UICollectionViewCell {
+final class AdvertisementBannerCell: UICollectionViewCell {
     
     protocol Delegate: AnyObject {
-        func walletBannerCell(_ cell: WalletBannerCell, requestPerformAction banner: WalletBanner, index: Int)
-        func walletBannerCell(_ cell: WalletBannerCell, requestDismiss banner: WalletBanner)
+        func advertisementBannerCell(_ cell: AdvertisementBannerCell, requestPerformAction banner: AdvertisementBanner, index: Int)
+        func advertisementBannerCell(_ cell: AdvertisementBannerCell, requestDismiss banner: AdvertisementBanner)
     }
     
     @IBOutlet weak var imageView: UIImageView!
@@ -15,11 +15,21 @@ final class WalletBannerCell: UICollectionViewCell {
     
     weak var delegate: Delegate?
     
-    var banner: WalletBanner? {
+    var banner: AdvertisementBanner? {
         didSet {
             reload(banner: banner)
         }
     }
+    
+    var drawOutline = false {
+        didSet {
+            if drawOutline != oldValue {
+                updateOutline()
+            }
+        }
+    }
+    
+    private let outlineColor = R.color.outline_primary()!
     
     private var actionButtons: [UIButton] = []
     
@@ -44,21 +54,30 @@ final class WalletBannerCell: UICollectionViewCell {
         imageView.sd_cancelCurrentImageLoad()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            if drawOutline {
+                contentView.layer.borderColor = outlineColor.resolvedColor(with: traitCollection).cgColor
+            }
+        }
+    }
+    
     @IBAction func close(_ sender: Any) {
         guard let banner else {
             return
         }
-        delegate?.walletBannerCell(self, requestDismiss: banner)
+        delegate?.advertisementBannerCell(self, requestDismiss: banner)
     }
     
     @objc private func requestAction(_ sender: UIButton) {
         guard let banner else {
             return
         }
-        delegate?.walletBannerCell(self, requestPerformAction: banner, index: sender.tag)
+        delegate?.advertisementBannerCell(self, requestPerformAction: banner, index: sender.tag)
     }
     
-    private func reload(banner: WalletBanner?) {
+    private func reload(banner: AdvertisementBanner?) {
         switch banner {
         case .embedded(let banner):
             switch banner {
@@ -134,6 +153,16 @@ final class WalletBannerCell: UICollectionViewCell {
         )
         config.attributedTitle = AttributedString(title, attributes: attributes)
         return config
+    }
+    
+    private func updateOutline() {
+        if drawOutline {
+            contentView.layer.borderWidth = 1
+            contentView.layer.borderColor = outlineColor.resolvedColor(with: traitCollection).cgColor
+        } else {
+            contentView.layer.borderWidth = 0
+            contentView.layer.borderColor = nil
+        }
     }
     
 }

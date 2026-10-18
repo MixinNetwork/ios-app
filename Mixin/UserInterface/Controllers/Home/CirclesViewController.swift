@@ -3,8 +3,6 @@ import MixinServices
 
 final class CirclesViewController: UIViewController {
     
-    var onCircleSelected: (() -> Void)?
-    
     private weak var tableView: UITableView!
     
     private lazy var tableFooterView: CirclesTableFooterView = {
@@ -95,7 +93,7 @@ final class CirclesViewController: UIViewController {
                     self.tableFooterView.showsHintLabel = circles.isEmpty
                     self.tableView.tableFooterView = self.tableFooterView
                     let indexPath: IndexPath
-                    if let circleId = AppGroupUserDefaults.User.circleId, let row = circles.firstIndex(where: { $0.circleId == circleId }) {
+                    if let circleId = AppGroupUserDefaults.User.circleID, let row = circles.firstIndex(where: { $0.circleId == circleId }) {
                         indexPath = IndexPath(row: row, section: 1)
                     } else {
                         indexPath = IndexPath(row: 0, section: 0)
@@ -259,7 +257,7 @@ extension CirclesViewController {
         CircleAPI.update(id: circleId, name: name, completion: { result in
             switch result {
             case .success(let circle):
-                if circle.circleId == AppGroupUserDefaults.User.circleId {
+                if circle.circleId == AppGroupUserDefaults.User.circleID {
                     AppGroupUserDefaults.User.circleName = circle.name
                 }
                 DispatchQueue.global().async {
@@ -281,14 +279,13 @@ extension CirclesViewController {
         let section = Section(rawValue: indexPath.section)!
         switch section {
         case .embedded:
-            AppGroupUserDefaults.User.circleId = nil
+            AppGroupUserDefaults.User.circleID = nil
             AppGroupUserDefaults.User.circleName = nil
         case .user:
             let circle = userCircles[indexPath.row]
-            AppGroupUserDefaults.User.circleId = circle.circleId
+            AppGroupUserDefaults.User.circleID = circle.circleId
             AppGroupUserDefaults.User.circleName = circle.name
         }
-        onCircleSelected?()
         setRow(at: indexPath, isCurrent: true)
     }
     

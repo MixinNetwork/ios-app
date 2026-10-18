@@ -114,6 +114,7 @@ final class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(groupConversationParticipantDidChange(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(circleIDDidChange), name: AppGroupUserDefaults.User.circleIDDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dismissSearch), name: dismissSearchNotification, object: nil)
         
     }
@@ -168,8 +169,14 @@ final class HomeViewController: UIViewController {
     }
     
     @IBAction func guideAction(_ sender: Any) {
-        if let circleId = AppGroupUserDefaults.User.circleId, let name = AppGroupUserDefaults.User.circleName {
-            let editor = CircleEditorViewController.instance(name: name, circleId: circleId, isNewCreatedCircle: false)
+        if let circleID = AppGroupUserDefaults.User.circleID,
+           let name = AppGroupUserDefaults.User.circleName
+        {
+            let editor = CircleEditorViewController.instance(
+                name: name,
+                circleId: circleID,
+                isNewCreatedCircle: false
+            )
             present(editor, animated: true, completion: nil)
         } else {
             let vc = ContactViewController.instance(showAddContactButton: false)
@@ -179,9 +186,6 @@ final class HomeViewController: UIViewController {
     
     @IBAction func toggleCircles(_ sender: Any) {
         let circles = CirclesViewController()
-        circles.onCircleSelected = { [weak self] in
-            self?.setNeedsRefresh()
-        }
         let navigation = GeneralAppearanceNavigationController(rootViewController: circles)
         present(navigation, animated: true)
     }
@@ -221,10 +225,10 @@ final class HomeViewController: UIViewController {
     }
     
     @objc private func circleConversationDidChange(_ notification: Notification) {
-        guard let circleId = notification.userInfo?[CircleConversationDAO.circleIdUserInfoKey] as? String else {
+        guard let circleID = notification.userInfo?[CircleConversationDAO.circleIdUserInfoKey] as? String else {
             return
         }
-        guard circleId == AppGroupUserDefaults.User.circleId else {
+        guard circleID == AppGroupUserDefaults.User.circleID else {
             return
         }
         setNeedsRefresh()
@@ -284,6 +288,13 @@ final class HomeViewController: UIViewController {
     
     @objc private func circleNameDidChange() {
         titleButton.setTitle(topLeftTitle, for: .normal)
+    }
+    
+    @objc private func circleIDDidChange() {
+        if AppGroupUserDefaults.User.circleID == nil {
+            titleButton.showsTopRightDot = false
+        }
+        setNeedsRefresh()
     }
     
     func setNeedsRefresh() {
@@ -424,26 +435,31 @@ extension HomeViewController {
         needRefresh = false
 
         DispatchQueue.main.async {
-            if AppGroupUserDefaults.User.circleId == nil {
+            let circleID = AppGroupUserDefaults.User.circleID
+            if circleID == nil {
                 self.titleButton.showsTopRightDot = false
             }
             let limit = (self.tableView.indexPathsForVisibleRows?.first?.row ?? 0) + self.messageCountPerPage
 
             DispatchQueue.global().async { [weak self] in
-                let circleId = AppGroupUserDefaults.User.circleId
-                let conversations = ConversationDAO.shared.conversationList(limit: limit, circleId: circleId)
+                let conversations = ConversationDAO.shared.conversationList(limit: limit, circleId: circleID)
                 let groupIcons = conversations.filter({ $0.isNeedCachedGroupIcon() })
                 for conversation in groupIcons {
                     ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: conversation.conversationId))
                 }
                 let hasUnreadMessagesOutsideCircle: Bool = {
-                    if let id = circleId {
+                    if let id = circleID {
                         return ConversationDAO.shared.hasUnreadMessage(outsideCircleWith: id)
                     } else {
                         return false
                     }
                 }()
                 DispatchQueue.main.async {
+                    guard circleID == AppGroupUserDefaults.User.circleID else {
+                        self?.refreshing = false
+                        self?.fetchConversations()
+                        return
+                    }
                     guard self?.tableView != nil, !(self?.isEditingRow ?? false) else {
                          self?.refreshing = false
                         return
@@ -468,7 +484,7 @@ extension HomeViewController {
             guideView.isHidden = true
             return
         }
-        if AppGroupUserDefaults.User.circleId == nil {
+        if AppGroupUserDefaults.User.circleID == nil {
             guideLabel.text = R.string.localizable.chat_list_empty_info()
             guideButton.setTitle(R.string.localizable.start_messaging(), for: .normal)
         } else {
@@ -485,16 +501,20 @@ extension HomeViewController {
         if conversation.pinTime == nil {
             let pinTime = Date().toUTCString()
             conversation.pinTime = pinTime
-            dao.updateConversation(with: conversation.conversationId,
-                                   inCirleOf: AppGroupUserDefaults.User.circleId,
-                                   pinTime: pinTime)
+            dao.updateConversation(
+                with: conversation.conversationId,
+                inCirleOf: AppGroupUserDefaults.User.circleID,
+                pinTime: pinTime
+            )
             conversations.remove(at: indexPath.row)
             destinationIndex = 0
         } else {
             conversation.pinTime = nil
-            dao.updateConversation(with: conversation.conversationId,
-                                   inCirleOf: AppGroupUserDefaults.User.circleId,
-                                   pinTime: nil)
+            dao.updateConversation(
+                with: conversation.conversationId,
+                inCirleOf: AppGroupUserDefaults.User.circleID,
+                pinTime: nil
+            )
             conversations.remove(at: indexPath.row)
             destinationIndex = conversations.firstIndex(where: { $0.pinTime == nil && $0.createdAt < conversation.createdAt }) ?? conversations.count
         }

@@ -12,6 +12,19 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
         case user(toAddressLabel: AddressLabel?)
         case speedUp(sender: Web3TransactionViewController)
         case cancel(sender: Web3TransactionViewController)
+        
+        var analyticDestination: String {
+            switch self {
+            case .dapp:
+                return "dapp"
+            case .user:
+                return "user"
+            case .speedUp:
+                return "speed_up"
+            case .cancel:
+                return "cancel"
+            }
+        }
     }
     
     var manipulateNavigationStackOnFinished = false
@@ -318,7 +331,14 @@ extension Web3TransferPreviewViewController {
                                      rightAction: #selector(resendTransaction(_:)),
                                      animation: .vertical)
         case .success:
-            reporter.report(event: .sendEnd)
+            reporter.report(
+                event: .sendEnd,
+                tags: [
+                    "wallet": "web3",
+                    "destination": proposer?.analyticDestination ?? "unknown"
+                ]
+            )
+            
             canDismissInteractively = true
             tableHeaderView.setIcon(progress: .success)
             layoutTableHeaderView(

@@ -303,7 +303,15 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                         }
                         reloadData(with: rows)
                     }
-                    reporter.report(event: .sendEnd)
+                    
+                    reporter.report(
+                        event: .sendEnd,
+                        tags: [
+                            "wallet": "main",
+                            "destination": "multisig"
+                        ]
+                    )
+                    
                     tableView.setContentOffset(.zero, animated: true)
                     loadSingleButtonTrayView(title: R.string.localizable.done(),
                                              action: #selector(close(_:)))

@@ -30,27 +30,27 @@ final class PerpetualMarketViewController: UIViewController {
         case price
         case autoClosingIntroduction(PerpsAutoClosingCondition.Behavior)
         case openPosition(PerpetualPositionViewModel)
-        case info
+        case statistics
         case activities([PerpetualOrderViewModel])
         case introduction
         case description(String)
     }
     
-    private enum Info {
+    private enum StatisticItem {
         
         case volume
         case openInterest
         case fundingRate
         
-        static func availableInfos(
+        static func availableItems(
             in viewModel: PerpetualMarketViewModel
-        ) -> [Info] {
-            var infos: [Info] = [.volume]
+        ) -> [StatisticItem] {
+            var items: [StatisticItem] = [.volume]
             if viewModel.openInterest != nil {
-                infos.append(.openInterest)
+                items.append(.openInterest)
             }
-            infos.append(.fundingRate)
-            return infos
+            items.append(.fundingRate)
+            return items
         }
         
     }
@@ -64,8 +64,8 @@ final class PerpetualMarketViewController: UIViewController {
     
     private var viewModel: PerpetualMarketViewModel
     private var isFavorite: Bool = false
-    private var sections: [Section] = [.price, .info]
-    private var infos: [Info]
+    private var sections: [Section] = [.price, .statistics]
+    private var statisticItems: [StatisticItem]
     private var priceDisplay: PriceDisplay {
         didSet {
             AppGroupUserDefaults.Wallet.perpsPriceDisplay = priceDisplay.rawValue
@@ -123,7 +123,7 @@ final class PerpetualMarketViewController: UIViewController {
             timeInterval: 5,
         )
         self.viewModel = viewModel
-        self.infos = Info.availableInfos(in: viewModel)
+        self.statisticItems = StatisticItem.availableItems(in: viewModel)
         self.priceDisplay = PriceDisplay(rawValue: AppGroupUserDefaults.Wallet.perpsPriceDisplay) ?? .lastPrice
         super.init(nibName: nil, bundle: nil)
         self.candleLoader.delegate = self
@@ -181,7 +181,7 @@ final class PerpetualMarketViewController: UIViewController {
                 return oneCell(estimatedHeight: 116)
             case .openPosition:
                 return oneCell(estimatedHeight: 238)
-            case .info:
+            case .statistics:
                 let section = multipleCells(estimatedHeight: 50)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
                 let background: NSCollectionLayoutDecorationItem = .background(
@@ -468,13 +468,13 @@ final class PerpetualMarketViewController: UIViewController {
                 return
             }
             let viewModel = PerpetualMarketViewModel(market: market)
-            let infos = Info.availableInfos(in: viewModel)
+            let statisticItems = StatisticItem.availableItems(in: viewModel)
             DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
                 self.viewModel = viewModel
-                self.infos = infos
+                self.statisticItems = statisticItems
                 UIView.performWithoutAnimation(self.collectionView.reloadData)
             }
         }
@@ -542,7 +542,7 @@ final class PerpetualMarketViewController: UIViewController {
             }
             sections.append(contentsOf:[
                 .openPosition(openPosition),
-                .info,
+                .statistics,
             ])
             if !activities.isEmpty {
                 sections.append(.activities(activities))
@@ -553,7 +553,7 @@ final class PerpetualMarketViewController: UIViewController {
             sections = [
                 .price,
                 .introduction,
-                .info,
+                .statistics,
             ]
             if !activities.isEmpty {
                 sections.append(.activities(activities))
@@ -568,7 +568,7 @@ final class PerpetualMarketViewController: UIViewController {
             sections.append(.description(description))
         }
         
-        infos = Info.availableInfos(in: viewModel)
+        statisticItems = StatisticItem.availableItems(in: viewModel)
         
         collectionView.reloadData()
     }
@@ -874,8 +874,8 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             1
         case .openPosition:
             1
-        case .info:
-            infos.count
+        case .statistics:
+            statisticItems.count
         case .activities(let activities):
             min(maxItemCount, activities.count)
         case .introduction:
@@ -913,8 +913,8 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             cell.delegate = self
             openPositionCell = cell
             return cell
-        case .info:
-            switch infos[indexPath.item] {
+        case .statistics:
+            switch statisticItems[indexPath.item] {
             case .volume:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_info, for: indexPath)!
                 cell.titleLabel.text = R.string.localizable.volume_24h().uppercased()
@@ -995,7 +995,7 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         switch sections[indexPath.section] {
-        case .price, .autoClosingIntroduction, .openPosition, .info, .description:
+        case .price, .autoClosingIntroduction, .openPosition, .statistics, .description:
             false
         case .activities, .introduction:
             true
@@ -1004,7 +1004,7 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch sections[indexPath.section] {
-        case .price, .autoClosingIntroduction, .openPosition, .info, .description:
+        case .price, .autoClosingIntroduction, .openPosition, .statistics, .description:
             break
         case .activities(let viewModels):
             let viewModel = viewModels[indexPath.item]

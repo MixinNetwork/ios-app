@@ -1234,6 +1234,7 @@
 "perps_confirm_add_margin" = "确认添加保证金";
 "perps_confirm_reduce_margin" = "确认减少保证金";
 "perps_current_price" = "最新价格";
+"perps_estimated_profit" = "预估收益 %@";
 "perps_estimated_realized_pnl" = "预计净盈亏";
 "perps_funding_frequency" = "频率";
 "perps_funding_frequency_value" = "1/4/8 小时";
@@ -1297,6 +1298,7 @@
 "perps_top_movers" = "涨跌榜";
 "perps_total_margin" = "总保证金";
 "perps_tpsl_overview" = "止盈和止损是预先设定的自动平仓指令，帮助你在不盯盘的情况下管理风险。";
+"perps_tpsl_requires_amount_leverage" = "在设置止盈止损之前，请先设置好金额和杠杆倍数。";
 "perps_trading_fee_overview" = "开仓、加仓和平仓均会产生手续费，费用按仓位价值计算，而不是按保证金计算。";
 "perps_trading_fee_pnl_1" = "仓位越大，手续费越高";
 "perps_trading_fee_pnl_2" = "仓位越小，手续费越低";

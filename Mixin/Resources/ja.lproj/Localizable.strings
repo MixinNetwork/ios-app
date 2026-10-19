@@ -1234,6 +1234,7 @@
 "perps_confirm_add_margin" = "証拠金の追加を確認";
 "perps_confirm_reduce_margin" = "証拠金の減少を確認";
 "perps_current_price" = "現在の価格";
+"perps_estimated_profit" = "予想利益 %@";
 "perps_estimated_realized_pnl" = "予想実現損益";
 "perps_funding_frequency" = "頻度";
 "perps_funding_frequency_value" = "1/4/8 時間";
@@ -1297,6 +1298,7 @@
 "perps_top_movers" = "トップムーバー";
 "perps_total_margin" = "証拠金合計";
 "perps_tpsl_overview" = "テイクプロフィットとストップロスは、トリガー価格に達すると自動的に実行される条件付き注文です。";
+"perps_tpsl_requires_amount_leverage" = "利益確定とストップロスを設定する前に、金額とレバレッジを設定してください。";
 "perps_trading_fee_overview" = "ポジションの新規建て、追加、決済時に手数料が発生します。手数料は証拠金ではなく、ポジションの価値を基に計算されます。";
 "perps_trading_fee_pnl_1" = "ポジションが大きいほど手数料が高くなります";
 "perps_trading_fee_pnl_2" = "ポジションが小さいほど手数料が低くなります";

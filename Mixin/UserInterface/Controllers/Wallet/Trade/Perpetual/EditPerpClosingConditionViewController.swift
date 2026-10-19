@@ -501,7 +501,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
                 switch condition.behavior {
                 case .takeProfit:
                     let description = NSMutableAttributedString(
-                        string: R.string.localizable.max_profit(maxChange),
+                        string: R.string.localizable.perps_estimated_profit(maxChange),
                         attributes: [.foregroundColor: R.color.text_quaternary()!]
                     )
                     if let range = description.string.range(of: maxChange, options: .backwards) {
@@ -513,7 +513,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
                     inputDescriptionLabel.attributedText = description
                 case .stopLoss:
                     let description = NSMutableAttributedString(
-                        string: R.string.localizable.max_loss(maxChange),
+                        string: R.string.localizable.perps_estimated_profit(maxChange),
                         attributes: [.foregroundColor: R.color.text_quaternary()!]
                     )
                     if let range = description.string.range(of: maxChange, options: .backwards) {

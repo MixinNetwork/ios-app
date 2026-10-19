@@ -1234,6 +1234,7 @@
 "perps_confirm_add_margin" = "증거금 추가 확인";
 "perps_confirm_reduce_margin" = "증거금 감소 확인";
 "perps_current_price" = "현재 가격";
+"perps_estimated_profit" = "예상 수익 %@";
 "perps_estimated_realized_pnl" = "예상 실현 손익";
 "perps_funding_frequency" = "빈도";
 "perps_funding_frequency_value" = "1/4/8시간";
@@ -1297,6 +1298,7 @@
 "perps_top_movers" = "최고 변동 항목";
 "perps_total_margin" = "총 증거금";
 "perps_tpsl_overview" = "이익실현 및 손절매는 발동 가격에 도달하면 자동으로 실행되는 조건부 주문입니다.";
+"perps_tpsl_requires_amount_leverage" = "이익 실현 및 손절매를 설정하기 전에 금액과 레버리지를 먼저 설정해 주세요.";
 "perps_trading_fee_overview" = "포지션을 열거나 추가하거나 닫을 때 수수료가 발생합니다. 수수료는 증거금이 아닌 포지션 가치를 기준으로 계산됩니다.";
 "perps_trading_fee_pnl_1" = "포지션이 클수록 수수료가 높아집니다";
 "perps_trading_fee_pnl_2" = "포지션이 작을수록 수수료가 낮아집니다";

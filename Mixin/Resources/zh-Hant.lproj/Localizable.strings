@@ -1234,6 +1234,7 @@
 "perps_confirm_add_margin" = "確認新增保證金";
 "perps_confirm_reduce_margin" = "確認減少保證金";
 "perps_current_price" = "最新價格";
+"perps_estimated_profit" = "預估收益 %@";
 "perps_estimated_realized_pnl" = "預計淨盈虧";
 "perps_funding_frequency" = "頻率";
 "perps_funding_frequency_value" = "1/4/8 小時";
@@ -1297,6 +1298,7 @@
 "perps_top_movers" = "漲跌榜";
 "perps_total_margin" = "總保證金";
 "perps_tpsl_overview" = "止盈和止損是預先設定的自動平倉指令，幫助你在不盯盤的情況下管理風險。";
+"perps_tpsl_requires_amount_leverage" = "在設定止盈止損之前，請先設定好金額和槓桿倍數。";
 "perps_trading_fee_overview" = "開倉、加倉和平倉均會產生手續費，費用按倉位價值計算，而不是按保證金計算。";
 "perps_trading_fee_pnl_1" = "倉位越大，手續費越高";
 "perps_trading_fee_pnl_2" = "倉位越小，手續費越低";

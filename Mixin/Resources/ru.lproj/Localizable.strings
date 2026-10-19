@@ -1234,6 +1234,7 @@
 "perps_confirm_add_margin" = "Подтвердить добавление маржи";
 "perps_confirm_reduce_margin" = "Подтвердить уменьшение маржи";
 "perps_current_price" = "Текущая цена";
+"perps_estimated_profit" = "Ожидаемая прибыль %@";
 "perps_estimated_realized_pnl" = "Ожидаемая реализованная прибыль/убыток";
 "perps_funding_frequency" = "Частота";
 "perps_funding_frequency_value" = "1/4/8 часов";
@@ -1297,6 +1298,7 @@
 "perps_top_movers" = "Лучшие игроки";
 "perps_total_margin" = "Общая маржа";
 "perps_tpsl_overview" = "Тейк-профит и стоп-лосс — это условные ордера, которые исполняются автоматически при достижении триггерной цены.";
+"perps_tpsl_requires_amount_leverage" = "Прежде чем настраивать тейк-профит и стоп-лосс, укажите сумму и кредитное плечо.";
 "perps_trading_fee_overview" = "Комиссия взимается при открытии, увеличении или закрытии позиции. Она рассчитывается исходя из стоимости позиции, а не маржи.";
 "perps_trading_fee_pnl_1" = "Чем больше позиция, тем выше комиссия";
 "perps_trading_fee_pnl_2" = "Чем меньше позиция, тем ниже комиссия";

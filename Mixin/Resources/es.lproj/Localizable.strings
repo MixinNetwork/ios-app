@@ -1234,6 +1234,7 @@
 "perps_confirm_add_margin" = "Confirmar adición de margen";
 "perps_confirm_reduce_margin" = "Confirmar reducción del margen";
 "perps_current_price" = "Precio actual";
+"perps_estimated_profit" = "Beneficio estimado %@";
 "perps_estimated_realized_pnl" = "PnL realizado estimado";
 "perps_funding_frequency" = "Frecuencia";
 "perps_funding_frequency_value" = "1/4/8 horas";
@@ -1297,6 +1298,7 @@
 "perps_top_movers" = "Principales avances";
 "perps_total_margin" = "Margen total";
 "perps_tpsl_overview" = "Take-profit y stop-loss son órdenes condicionales que se ejecutan automáticamente cuando se alcanza el precio de activación.";
+"perps_tpsl_requires_amount_leverage" = "Establezca el importe y el apalancamiento antes de configurar el Take Profit y el Stop Loss.";
 "perps_trading_fee_overview" = "Se aplican comisiones al abrir, añadir o cerrar una posición. Se calculan en función del valor de la posición, no del margen.";
 "perps_trading_fee_pnl_1" = "Cuanto mayor sea la posición, mayores serán las comisiones";
 "perps_trading_fee_pnl_2" = "Cuanto menor sea la posición, menores serán las comisiones";

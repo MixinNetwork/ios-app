@@ -1234,6 +1234,7 @@
 "perps_confirm_add_margin" = "Confirm Adding Margin";
 "perps_confirm_reduce_margin" = "Confirm Reducing Margin";
 "perps_current_price" = "Current Price";
+"perps_estimated_profit" = "Estimate Profit %@";
 "perps_estimated_realized_pnl" = "Estimated Realized PnL";
 "perps_funding_frequency" = "Frequency";
 "perps_funding_frequency_value" = "1/4/8 hours";
@@ -1297,6 +1298,7 @@
 "perps_top_movers" = "Top Movers";
 "perps_total_margin" = "Total Margin";
 "perps_tpsl_overview" = "Take-profit and stop-loss are conditional orders that execute automatically when the trigger price is reached.";
+"perps_tpsl_requires_amount_leverage" = "Please set the amount and leverage before configuring Take Profit and Stop Loss.";
 "perps_trading_fee_overview" = "Fees apply when opening, adding to, or closing a position. They are calculated based on position value, not margin.";
 "perps_trading_fee_pnl_1" = "Larger position, higher fees";
 "perps_trading_fee_pnl_2" = "Smaller position, lower fees";

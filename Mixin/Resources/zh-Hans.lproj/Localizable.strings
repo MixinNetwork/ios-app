@@ -537,6 +537,7 @@
 "desktop_logout" = "退出 Mixin 桌面端";
 "desktop_on_hint" = "桌面端已登入。";
 "desktop_upgrade" = "请升级 Mixin 桌面端至最新版！";
+"details" = "详情";
 "detect_qr_tip" = "检测到一个 Mixin 二维码，点击识别";
 "developer" = "开发者";
 "device_transfer_failed" = "同步失败";
@@ -1253,15 +1254,17 @@
 "perps_leverage_overview" = "杠杆用于放大仓位规模，使交易者可以用较少的资金控制更大的合约头寸。";
 "perps_leverage_risk_notice_1" = "杠杆越高，爆仓风险越大";
 "perps_leverage_risk_notice_2" = "高杠杆下，小幅价格波动也可能导致较大亏损";
+"perps_liquidation_price_down_description" = "下跌 %@ 将触发强平";
 "perps_liquidation_price_key_point_1" = "强平触发价格为标记价格";
 "perps_liquidation_price_key_point_2" = "强平不会影响钱包其他资产";
 "perps_liquidation_price_key_point_3" = "高杠杆会增加被强制平仓的风险";
 "perps_liquidation_price_overview" = "强平价格是保证金不足时系统自动平仓的价格。触发后亏损不超过保证金。";
 "perps_liquidation_price_short" = "强平价格";
+"perps_liquidation_price_up_description" = "上涨 %@ 将触发强平";
 "perps_long_overview" = "做多是指在预期价格上涨时建立仓位，价格上涨可获得盈利，价格下跌则产生亏损。";
 "perps_low_margin_tip" = "保证金不足时，优先添加保证金";
 "perps_margin_amount" = "保证金金额";
-"perps_margin_description" = "保证金是您为开仓交易而投入的资金。它作为抵押品，且是您在该交易中可能损失的最大金额。";
+"perps_margin_description" = "保证金是您为合约仓位提供的抵押资金，也是您在该笔交易中可能损失的最大金额。";
 "perps_margin_or_position" = "添加保证金还是增加仓位？";
 "perps_margin_submitted" = "保证金调整已提交";
 "perps_margin_tip" = "添加保证金可降低强平风险";

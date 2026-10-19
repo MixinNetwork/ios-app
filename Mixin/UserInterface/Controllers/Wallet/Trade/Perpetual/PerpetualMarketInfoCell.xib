@@ -41,6 +41,12 @@
                                 <color key="textColor" name="text"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sub-ti-tle">
+                                <rect key="frame" x="0.0" y="44" width="0.0" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text_tertiary"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                     </stackView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DLL-Dy-NAA">
@@ -69,6 +75,8 @@
             <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="contentLabel" destination="HHa-La-sun" id="NfE-cG-wwv"/>
+                <outlet property="contentStackView" destination="cPl-Nt-U06" id="sub-st-ack"/>
+                <outlet property="subtitleLabel" destination="sub-ti-tle" id="sub-ou-tlt"/>
                 <outlet property="titleInfoImageView" destination="4ek-sl-yNT" id="bEb-P8-JDp"/>
                 <outlet property="titleLabel" destination="IDo-7Q-M43" id="8CY-9u-GIf"/>
             </connections>
@@ -85,6 +93,9 @@
         </namedColor>
         <namedColor name="text_quaternary">
             <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

@@ -537,6 +537,7 @@
 "desktop_logout" = "Cerrar sesión Mixin Escritorio";
 "desktop_on_hint" = "Tienes tu escritorio conectado";
 "desktop_upgrade" = "Actualiza Mixin Desktop a la última versión.";
+"details" = "Detalles";
 "detect_qr_tip" = "Se ha detectado un código QR de Mixin, toca para reconocer";
 "developer" = "Desarrollador";
 "device_transfer_failed" = "Error en la transferencia";
@@ -1253,15 +1254,17 @@
 "perps_leverage_overview" = "El apalancamiento le permite controlar una posición más grande con menos capital.";
 "perps_leverage_risk_notice_1" = "Un mayor apalancamiento aumenta el riesgo de liquidación";
 "perps_leverage_risk_notice_2" = "Con un alto apalancamiento, pequeños movimientos de precios pueden generar grandes pérdidas";
+"perps_liquidation_price_down_description" = "Una bajada del %@ activará la liquidación";
 "perps_liquidation_price_key_point_1" = "La liquidación se activa por el precio de marca";
 "perps_liquidation_price_key_point_2" = "La liquidación no afecta otros activos en su billetera";
 "perps_liquidation_price_key_point_3" = "Un mayor apalancamiento aumenta el riesgo de liquidación";
 "perps_liquidation_price_overview" = "El precio de liquidación es el precio al que el sistema cierra automáticamente su posición cuando el margen es insuficiente. Pérdidas limitadas al margen.";
 "perps_liquidation_price_short" = "Precio liq.";
+"perps_liquidation_price_up_description" = "Una subida del %@ activará la liquidación";
 "perps_long_overview" = "Abre una posición long cuando espera que el precio suba. Si el precio sube, obtiene ganancias; si baja, incurre en pérdidas.";
 "perps_low_margin_tip" = "Si el margen es bajo, añade margen primero";
 "perps_margin_amount" = "Importe del margen";
-"perps_margin_description" = "El margen es el dinero que aporta para abrir una operación. Sirve como garantía y es la cantidad máxima que puede perder en esa operación.";
+"perps_margin_description" = "El margen es la garantía que asigna a una posición. Representa la cantidad máxima que puede perder en esa operación.";
 "perps_margin_or_position" = "¿Añadir margen o aumentar la posición?";
 "perps_margin_submitted" = "Ajuste de margen enviado";
 "perps_margin_tip" = "Añadir margen reduce el riesgo de liquidación";

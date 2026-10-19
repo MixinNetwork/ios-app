@@ -537,6 +537,7 @@
 "desktop_logout" = "退出 Mixin 桌面端";
 "desktop_on_hint" = "桌面端已登入。";
 "desktop_upgrade" = "請升級 Mixin 桌面端至最新版！";
+"details" = "詳情";
 "detect_qr_tip" = "檢測到一個 Mixin 二維碼，點選識別";
 "developer" = "開發者";
 "device_transfer_failed" = "同步失敗";
@@ -1253,15 +1254,17 @@
 "perps_leverage_overview" = "槓桿用於放大倉位規模，使交易者可以用較少的資金控制更大的合約頭寸。";
 "perps_leverage_risk_notice_1" = "槓桿越高，爆倉風險越大";
 "perps_leverage_risk_notice_2" = "高槓杆下，小幅價格波動也可能導致較大虧損";
+"perps_liquidation_price_down_description" = "下跌 %@ 將觸發強平";
 "perps_liquidation_price_key_point_1" = "強平觸發價格為標記價格";
 "perps_liquidation_price_key_point_2" = "強平不會影響錢包其他資產";
 "perps_liquidation_price_key_point_3" = "高槓杆會增加被強制平倉的風險";
 "perps_liquidation_price_overview" = "強平價格是保證金不足時系統自動平倉的價格。觸發後虧損不超過保證金。";
 "perps_liquidation_price_short" = "強平價格";
+"perps_liquidation_price_up_description" = "上漲 %@ 將觸發強平";
 "perps_long_overview" = "做多是指在預期價格上漲時建立倉位，價格上漲可獲得盈利，價格下跌則產生虧損。";
 "perps_low_margin_tip" = "保證金不足時，優先新增保證金";
 "perps_margin_amount" = "保證金金額";
-"perps_margin_description" = "保證金是您為開倉交易而投入的資金。它作為抵押品，且是您在該交易中可能損失的最大金額。";
+"perps_margin_description" = "保證金是您為合約倉位提供的抵押資金，也是您在該筆交易中可能損失的最大金額。";
 "perps_margin_or_position" = "新增保證金還是增加倉位？";
 "perps_margin_submitted" = "保證金調整已提交";
 "perps_margin_tip" = "新增保證金可降低強平風險";

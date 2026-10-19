@@ -9,12 +9,18 @@ final class PerpetualMarketInfoCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var titleInfoImageView: UIImageView!
     @IBOutlet weak var contentLabel: UILabel!
+    @IBOutlet weak var contentStackView: UIStackView!
+    @IBOutlet weak var subtitleLabel: UILabel!
     
     weak var delegate: Delegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         titleLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
+        subtitleLabel.setFont(
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )

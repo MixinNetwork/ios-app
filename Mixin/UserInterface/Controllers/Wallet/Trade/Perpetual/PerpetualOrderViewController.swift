@@ -23,15 +23,13 @@ final class PerpetualOrderViewController: UIViewController {
     
     init(wallet: Wallet, viewModel: PerpetualOrderViewModel) {
         let order = viewModel.order
-        lazy var fee: String? = {
-            guard let decimalFee = Decimal(string: order.feeAmount, locale: .enUSPOSIX) else {
-                return nil
-            }
-            guard decimalFee != 0 else {
-                return nil
-            }
-            return decimalFee.formatted(PerpetualOrder.feeFormatStyle)
-        }()
+        lazy var fee: String? = if order.decimalFeeAmount == 0 {
+            nil
+        } else {
+            order.decimalFeeAmount.formatted(
+                PerpetualOrder.feeFormatStyle
+            )
+        }
         
         var infos: [Info] = []
         if let displaySymbol = order.displaySymbol {
@@ -43,22 +41,24 @@ final class PerpetualOrderViewController: UIViewController {
             case let .open(payAmount):
                 infos.append(contentsOf: [
                     .general(
-                        title: R.string.localizable.entry_price().uppercased(),
-                        content: viewModel.entryPrice
-                    ),
-                    .general(
                         title: R.string.localizable.amount().uppercased(),
                         content: payAmount
+                    ),
+                    .general(
+                        title: R.string.localizable.margin().uppercased(),
+                        content: viewModel.order.decimalMarginAmount.formatted(
+                            PerpetualOrderViewModel.payAmountStyle
+                        )
                     ),
                 ])
                 if let fee {
                     infos.append(.fee(fee))
                 }
+                infos.append(.general(
+                    title: R.string.localizable.entry_price().uppercased(),
+                    content: viewModel.entryPrice
+                ))
             case .increasePosition:
-                let payAmount = abs(viewModel.decimalPayAmount).formatted(
-                    PerpetualOrderViewModel.payAmountStyle
-                        .sign(strategy: .always())
-                )
                 infos.append(contentsOf: [
                     .general(
                         title: R.string.localizable.entry_price().uppercased(),
@@ -66,29 +66,27 @@ final class PerpetualOrderViewController: UIViewController {
                     ),
                     .general(
                         title: R.string.localizable.amount().uppercased(),
-                        content: payAmount
+                        content: viewModel.order.decimalPayAmount.formatted(
+                            PerpetualOrderViewModel.payAmountStyle.sign(strategy: .always())
+                        )
                     ),
                 ])
                 if let fee {
                     infos.append(.fee(fee))
                 }
             case .increaseMargin:
-                let payAmount = abs(viewModel.decimalPayAmount).formatted(
-                    PerpetualOrderViewModel.payAmountStyle
-                        .sign(strategy: .always())
-                )
                 infos.append(.general(
                     title: R.string.localizable.amount().uppercased(),
-                    content: payAmount
+                    content: viewModel.order.decimalMarginAmount.formatted(
+                        PerpetualOrderViewModel.payAmountStyle.sign(strategy: .always())
+                    )
                 ))
             case .decreaseMargin:
-                let payAmount = (-abs(viewModel.decimalPayAmount)).formatted(
-                    PerpetualOrderViewModel.payAmountStyle
-                        .sign(strategy: .always())
-                )
                 infos.append(.general(
                     title: R.string.localizable.amount().uppercased(),
-                    content: payAmount
+                    content: viewModel.order.decimalMarginAmount.formatted(
+                        PerpetualOrderViewModel.payAmountStyle.sign(strategy: .always())
+                    )
                 ))
             case let .close(pnl, closePrice):
                 infos.append(.pnl(value: pnl.aggregated, color: pnl.color))

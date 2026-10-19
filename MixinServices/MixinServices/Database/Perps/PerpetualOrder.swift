@@ -13,18 +13,19 @@ public class PerpetualOrder: Codable, DatabaseColumnConvertible, MixinFetchableR
         case status = "status"
         case leverage = "leverage"
         case quantity = "quantity"
+        case marginAmount = "margin_amount"
+        case feeAmount = "fee_amount"
         case entryPrice = "entry_price"
         case closePrice = "close_price"
         case realizedPnL = "realized_pnl"
         case roe = "roe"
+        case netRealizedPnL = "net_realized_pnl"
+        case netROE = "net_roe"
+        case profitShareAmount = "profit_share_amount"
         case closeReason = "close_reason"
         case triggerPrice = "trigger_price"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
-        case feeAmount = "fee_amount"
-        case netRealizedPnL = "net_realized_pnl"
-        case netROE = "net_roe"
-        case profitShareAmount = "profit_share_amount"
     }
     
     public enum OrderType: String {
@@ -51,18 +52,23 @@ public class PerpetualOrder: Codable, DatabaseColumnConvertible, MixinFetchableR
     public let status: UnknownableEnum<Status>
     public let leverage: Int
     public let quantity: String
+    public let marginAmount: String
+    public let feeAmount: String
     public let entryPrice: String
     public let closePrice: String
     public let realizedPnL: String
     public let roe: String
+    public let netRealizedPnL: String
+    public let netROE: String
+    public let profitShareAmount: String
     public let closeReason: String?
     public let triggerPrice: String?
     public let createdAt: String
     public let updatedAt: String
-    public let feeAmount: String
-    public let netRealizedPnL: String
-    public let netROE: String
-    public let profitShareAmount: String
+    
+    public private(set) lazy var decimalPayAmount = Decimal(string: payAmount, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var decimalMarginAmount = Decimal(string: marginAmount, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var decimalFeeAmount = Decimal(string: feeAmount, locale: .enUSPOSIX) ?? 0
     
 }
 

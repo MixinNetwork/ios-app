@@ -1261,6 +1261,7 @@
 "perps_long_overview" = "Abre una posición long cuando espera que el precio suba. Si el precio sube, obtiene ganancias; si baja, incurre en pérdidas.";
 "perps_low_margin_tip" = "Si el margen es bajo, añade margen primero";
 "perps_margin_amount" = "Importe del margen";
+"perps_margin_description" = "El margen es el dinero que aporta para abrir una operación. Sirve como garantía y es la cantidad máxima que puede perder en esa operación.";
 "perps_margin_or_position" = "¿Añadir margen o aumentar la posición?";
 "perps_margin_submitted" = "Ajuste de margen enviado";
 "perps_margin_tip" = "Añadir margen reduce el riesgo de liquidación";

@@ -1261,6 +1261,7 @@
 "perps_long_overview" = "가격 상승이 예상될 때 롱 포지션을 오픈합니다. 가격이 오르면 이익을 얻고, 가격이 떨어지면 손실이 발생합니다.";
 "perps_low_margin_tip" = "증거금이 부족하면 먼저 증거금을 추가하세요";
 "perps_margin_amount" = "증거금 금액";
+"perps_margin_description" = "증거금은 거래를 시작하기 위해 투입하는 자금입니다. 담보 역할을 하며, 해당 거래에서 손실을 볼 수 있는 최대 금액입니다.";
 "perps_margin_or_position" = "증거금 추가와 포지션 추가 중 무엇을 선택할까요?";
 "perps_margin_submitted" = "증거금 조정이 제출되었습니다";
 "perps_margin_tip" = "증거금을 추가하면 강제 청산 위험이 줄어듭니다";

@@ -61,7 +61,7 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
         )
         marginDescription = addDescription(
             title: R.string.localizable.margin(),
-            infoAction: nil,
+            infoAction: #selector(introduceMargin(_:)),
             showsActivityIndicator: false,
         )
         sizeDescription = addDescription(
@@ -251,6 +251,10 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
         reporter.report(event: .tradePerpsReducePositionPreview)
         valueTextField.resignFirstResponder()
         present(preview, animated: true)
+    }
+    
+    @objc private func introduceMargin(_ sender: Any) {
+        present(PopupAlertViewController.perpsMargin(), animated: true)
     }
     
     @objc private func introducePositionSize(_ sender: Any) {

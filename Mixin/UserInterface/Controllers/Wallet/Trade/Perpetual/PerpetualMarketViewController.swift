@@ -1042,6 +1042,10 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
         reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_detail_card"])
     }
     
+    func perpetualMarketOpenPositionCellRequestMarginInfo(_ cell: PerpetualMarketOpenPositionCell) {
+        present(PopupAlertViewController.perpsMargin(), animated: true)
+    }
+    
     func perpetualMarketOpenPositionCellAskToShare(_ cell: PerpetualMarketOpenPositionCell) {
         guard let positionViewModel = openPositionViewModel else {
             return

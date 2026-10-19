@@ -1261,6 +1261,7 @@
 "perps_long_overview" = "You open a long position when you expect the price to rise. If the price rises, you profit; if the price falls, you incur a loss.";
 "perps_low_margin_tip" = "If margin is low, add margin first";
 "perps_margin_amount" = "Margin Amount";
+"perps_margin_description" = "Margin is the money you put in to open a trade. It acts as collateral, and it’s the most you can lose on that trade.";
 "perps_margin_or_position" = "Add Margin or Increase Position?";
 "perps_margin_submitted" = "Margin adjustment submitted";
 "perps_margin_tip" = "Add margin to lower liquidation risk";

@@ -1261,6 +1261,7 @@
 "perps_long_overview" = "価格が上昇すると予想される場合、ロングポジションをオープンします。価格が上昇すれば利益が得られます。価格が下落すると損失が発生します。";
 "perps_low_margin_tip" = "証拠金が不足している場合は、先に証拠金を追加してください";
 "perps_margin_amount" = "証拠金額";
+"perps_margin_description" = "証拠金は、取引を開始するために預け入れる資金です。担保として機能し、その取引で損失を被る可能性のある最大額となります。";
 "perps_margin_or_position" = "証拠金を追加？それともポジションを増やす？";
 "perps_margin_submitted" = "証拠金の調整を送信しました";
 "perps_margin_tip" = "証拠金の追加は強制決済リスクを下げます";

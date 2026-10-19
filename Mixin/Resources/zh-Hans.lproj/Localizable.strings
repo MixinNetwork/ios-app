@@ -1261,6 +1261,7 @@
 "perps_long_overview" = "做多是指在预期价格上涨时建立仓位，价格上涨可获得盈利，价格下跌则产生亏损。";
 "perps_low_margin_tip" = "保证金不足时，优先添加保证金";
 "perps_margin_amount" = "保证金金额";
+"perps_margin_description" = "保证金是您为开仓交易而投入的资金。它作为抵押品，且是您在该交易中可能损失的最大金额。";
 "perps_margin_or_position" = "添加保证金还是增加仓位？";
 "perps_margin_submitted" = "保证金调整已提交";
 "perps_margin_tip" = "添加保证金可降低强平风险";

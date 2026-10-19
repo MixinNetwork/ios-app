@@ -135,16 +135,24 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ez6-cd-Esz">
-                                        <rect key="frame" x="252.33333333333329" y="0.0" width="50.666666666666657" height="41.333333333333336"/>
+                                        <rect key="frame" x="232.33333333333331" y="0.0" width="70.66666666666667" height="43"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Amount" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uhI-kg-Qeo">
-                                                <rect key="frame" x="0.0" y="0.0" width="50.666666666666664" height="14.333333333333334"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" name="text_quaternary"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="mrg-st-k01">
+                                                <rect key="frame" x="0.0" y="0.0" width="70.66666666666667" height="16"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Margin" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uhI-kg-Qeo">
+                                                        <rect key="frame" x="0.0" y="0.833333333333333" width="50.666666666666664" height="14.333333333333334"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" name="text_quaternary"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info" translatesAutoresizingMaskIntoConstraints="NO" id="mrg-ic-n01">
+                                                        <rect key="frame" x="54.666666666666664" y="0.0" width="16" height="16"/>
+                                                    </imageView>
+                                                </subviews>
+                                            </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$431.21" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sh9-ST-ymA">
-                                                <rect key="frame" x="0.0" y="24.333333333333329" width="50.666666666666664" height="17"/>
+                                                <rect key="frame" x="0.0" y="26" width="70.66666666666667" height="17"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" name="text"/>
                                                 <nil key="highlightedColor"/>
@@ -352,6 +360,18 @@
                             <action selector="questionAboutSize:" destination="sup-Pc-C7A" eventType="touchUpInside" id="W7F-n0-hPf"/>
                         </connections>
                     </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mrg-bt-n01">
+                        <rect key="frame" x="293" y="111.33333333333333" width="36" height="36"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="36" id="mrg-wd-t01"/>
+                            <constraint firstAttribute="width" secondItem="mrg-bt-n01" secondAttribute="height" id="mrg-ht-t01"/>
+                        </constraints>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain"/>
+                        <connections>
+                            <action selector="questionAboutMargin:" destination="sup-Pc-C7A" eventType="touchUpInside" id="mrg-ac-t01"/>
+                        </connections>
+                    </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="svB-na-CPX">
                         <rect key="frame" x="293" y="174" width="36" height="36"/>
                         <constraints>
@@ -419,6 +439,8 @@
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
+                    <constraint firstItem="mrg-bt-n01" firstAttribute="centerX" secondItem="mrg-ic-n01" secondAttribute="centerX" id="mrg-cx-t01"/>
+                    <constraint firstItem="mrg-bt-n01" firstAttribute="centerY" secondItem="mrg-ic-n01" secondAttribute="centerY" id="mrg-cy-t01"/>
                     <constraint firstItem="8qY-Zm-GKw" firstAttribute="centerX" secondItem="vfO-er-XWk" secondAttribute="centerX" id="22Y-ta-fVu"/>
                     <constraint firstItem="RVY-KM-D95" firstAttribute="centerX" secondItem="ay3-ln-jfK" secondAttribute="centerX" id="22x-yd-i3b"/>
                     <constraint firstItem="svB-na-CPX" firstAttribute="centerY" secondItem="D20-Bn-Z2V" secondAttribute="centerY" id="2X5-dA-0ac"/>

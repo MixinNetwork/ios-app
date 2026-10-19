@@ -184,7 +184,15 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
                             )
                         }
                     } else {
-                        reporter.report(event: .sendEnd)
+                        reporter.report(
+                            event: .sendEnd,
+                            tags: [
+                                "wallet": "main",
+                                "destination": operation.destination.analyticDestination,
+                                "asset_symbol": operation.token.symbol,
+                                "asset_level": Reporter.assetLevel(decimalUSDPrice: operation.token.decimalUSDPrice, decimalAmount: operation.amount)
+                            ]
+                        )
                         layoutTableHeaderView(
                             title: R.string.localizable.transfer_success(),
                             subtitle: R.string.localizable.transfer_sent_description()

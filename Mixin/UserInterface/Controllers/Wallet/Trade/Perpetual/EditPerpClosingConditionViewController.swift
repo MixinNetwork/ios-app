@@ -498,32 +498,17 @@ final class EditPerpClosingConditionViewController: UIViewController {
                 inputDescriptionLabel.text = R.string.localizable.auto_close_description()
             } else {
                 let maxChange = condition.maxChange()
-                switch condition.behavior {
-                case .takeProfit:
-                    let description = NSMutableAttributedString(
-                        string: R.string.localizable.perps_estimated_profit(maxChange),
-                        attributes: [.foregroundColor: R.color.text_quaternary()!]
+                let description = NSMutableAttributedString(
+                    string: R.string.localizable.perps_estimated_profit(maxChange.localized),
+                    attributes: [.foregroundColor: R.color.text_quaternary()!]
+                )
+                if let range = description.string.range(of: maxChange.localized, options: .backwards) {
+                    description.setAttributes(
+                        [.foregroundColor: MarketColor.byValue(maxChange.value).uiColor],
+                        range: NSRange(range, in: description.string)
                     )
-                    if let range = description.string.range(of: maxChange, options: .backwards) {
-                        description.setAttributes(
-                            [.foregroundColor: MarketColor.rising.uiColor],
-                            range: NSRange(range, in: description.string)
-                        )
-                    }
-                    inputDescriptionLabel.attributedText = description
-                case .stopLoss:
-                    let description = NSMutableAttributedString(
-                        string: R.string.localizable.perps_estimated_profit(maxChange),
-                        attributes: [.foregroundColor: R.color.text_quaternary()!]
-                    )
-                    if let range = description.string.range(of: maxChange, options: .backwards) {
-                        description.setAttributes(
-                            [.foregroundColor: MarketColor.falling.uiColor],
-                            range: NSRange(range, in: description.string)
-                        )
-                    }
-                    inputDescriptionLabel.attributedText = description
                 }
+                inputDescriptionLabel.attributedText = description
             }
             inputErrorLabel.isHidden = true
             confirmButton.isEnabled = condition.price > 0

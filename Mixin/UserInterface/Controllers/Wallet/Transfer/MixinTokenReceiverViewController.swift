@@ -75,9 +75,12 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
                 let inputAmount = WithdrawInputAmountViewController(tokenItem: token, destination: destination)
                 self.navigationController?.pushViewController(inputAmount, animated: true)
                 reporter.report(event: .sendRecipient, tags: ["type": destination.reportingType])
-            case let .insufficientBalance(withdrawing, fee):
+            case let .insufficientBalance(withdrawing, fee, destination):
                 self.nextButton?.isBusy = false
-                let insufficient = InsufficientBalanceViewController(intent: .withdraw(withdrawing: withdrawing, fee: fee))
+                let insufficient = InsufficientBalanceViewController(
+                    intent: .withdraw(withdrawing: withdrawing, fee: fee),
+                    receiver: .withdrawal(destination),
+                )
                 self.present(insufficient, animated: true)
             case let .withdrawPayment(payment, destination, fee):
                 payment.checkPreconditions(

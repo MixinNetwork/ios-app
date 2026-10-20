@@ -6,6 +6,9 @@ final class CommonWalletReceiverCell: UITableViewCell {
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
     
+    @IBOutlet weak var contentLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentTrailingConstraint: NSLayoutConstraint!
+    
     weak var userItemView: PaymentUserItemView!
     
     override func awakeFromNib() {

@@ -229,7 +229,8 @@ final class Web3Worker {
                         Web3PopupCoordinator.enqueue(popup: .request(transfer))
                     } else {
                         let insufficient = InsufficientBalanceViewController(
-                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement)
+                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement),
+                            receiver: .address(operation.toAddress, label: nil),
                         )
                         Web3PopupCoordinator.enqueue(popup: .request(insufficient))
                         self.send(error: "Insufficient Fee", to: request)
@@ -428,7 +429,8 @@ final class Web3Worker {
                         Web3PopupCoordinator.enqueue(popup: .request(transfer))
                     } else {
                         let insufficient = InsufficientBalanceViewController(
-                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement)
+                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement),
+                            receiver: .address(operation.toAddress, label: nil),
                         )
                         Web3PopupCoordinator.enqueue(popup: .request(insufficient))
                         self.send(error: "Insufficient Fee", to: request)

@@ -266,8 +266,10 @@ final class PerpetualMarketViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        positionsLoader.start()
-        marketLoader.start()
+        if editingLock == nil {
+            positionsLoader.start()
+            marketLoader.start()
+        }
         candleLoader.start(timeFrame: selectedTimeFrame)
         if !BadgeManager.shared.hasViewed(identifier: .perpsManual) {
             BadgeManager.shared.setHasViewed(identifier: .perpsManual)
@@ -691,6 +693,7 @@ extension PerpetualMarketViewController {
         autoClosingIntroCell?.performSuggestionButton.isEnabled = true
         if editingLock == nil {
             positionsLoader.start()
+            marketLoader.start()
         }
     }
     
@@ -726,6 +729,7 @@ extension PerpetualMarketViewController {
         editor.onSet = { [weak self] price in
             if let self {
                 positionsLoader.stop()
+                marketLoader.stop()
                 editingLock = .takeProfit
                 autoClosingIntroCell?.performSuggestionButton.isEnabled = false
                 openPositionCell?.updateTakeProfit(busy: true)
@@ -778,6 +782,7 @@ extension PerpetualMarketViewController {
         editor.onSet = { [weak self] price in
             if let self {
                 positionsLoader.stop()
+                marketLoader.stop()
                 editingLock = .stopLoss
                 autoClosingIntroCell?.performSuggestionButton.isEnabled = false
                 openPositionCell?.updateStopLoss(busy: true)
@@ -978,11 +983,11 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             return cell
         case .openPosition:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_open_position, for: indexPath)!
-            cell.updateTakeProfit(busy: editingLock == .takeProfit)
-            cell.updateStopLoss(busy: editingLock == .stopLoss)
             if let openPositionViewModel {
                 cell.load(viewModel: openPositionViewModel)
             }
+            cell.updateTakeProfit(busy: editingLock == .takeProfit)
+            cell.updateStopLoss(busy: editingLock == .stopLoss)
             cell.delegate = self
             openPositionCell = cell
             return cell
@@ -1218,6 +1223,7 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
             return
         }
         positionsLoader.stop()
+        marketLoader.stop()
         editingLock = .takeProfit
         autoClosingIntroCell?.performSuggestionButton.isEnabled = false
         cell.updateTakeProfit(busy: true)
@@ -1246,6 +1252,7 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
             return
         }
         positionsLoader.stop()
+        marketLoader.stop()
         editingLock = .stopLoss
         autoClosingIntroCell?.performSuggestionButton.isEnabled = false
         cell.updateStopLoss(busy: true)

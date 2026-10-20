@@ -1239,6 +1239,8 @@
 "perps_estimated_realized_pnl" = "PnL realizado estimado";
 "perps_funding_frequency" = "Frecuencia";
 "perps_funding_frequency_value" = "1/4/8 horas";
+"perps_funding_payments" = "Pagos de financiación";
+"perps_funding_payments_description" = "El total de financiación que ha recibido o pagado desde que abrió esta posición. El verde (positivo) indica que ha recibido financiación, mientras que el rojo (negativo) indica que ha pagado financiación.";
 "perps_funding_rate_key_point_1" = "Mantener los precios de Perps cerca de los precios spot";
 "perps_funding_rate_key_point_2" = "Equilibrar posiciones long y short";
 "perps_funding_rate_key_point_3" = "Crear oportunidades de arbitraje";

@@ -1239,6 +1239,8 @@
 "perps_estimated_realized_pnl" = "予想実現損益";
 "perps_funding_frequency" = "頻度";
 "perps_funding_frequency_value" = "1/4/8 時間";
+"perps_funding_payments" = "資金調達料";
+"perps_funding_payments_description" = "このポジションを開いてから受け取った、または支払った資金調達料の累計です。緑色（プラス）は資金調達料を受け取ったことを、赤色（マイナス）は資金調達料を支払ったことを示します。";
 "perps_funding_rate_key_point_1" = "Perps価格を現物価格に近づける";
 "perps_funding_rate_key_point_2" = "ロングポジションとショートポジションのバランスを取る";
 "perps_funding_rate_key_point_3" = "裁定取引の機会を創出する";

@@ -215,6 +215,15 @@ public final class PerpsDatabase: Database {
            """)
         }
         
+        migrator.registerMigration("funding_payment") { db in
+            let positionsColumns = try TableInfo
+                .fetchAll(db, sql: "PRAGMA table_info(positions)")
+                .map(\.name)
+            if !positionsColumns.contains("funding_amount") {
+                try db.execute(sql: "ALTER TABLE positions ADD COLUMN funding_amount TEXT NOT NULL DEFAULT ''")
+            }
+        }
+        
         return migrator
     }
     

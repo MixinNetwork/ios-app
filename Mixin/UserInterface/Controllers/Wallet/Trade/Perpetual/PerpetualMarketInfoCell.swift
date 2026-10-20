@@ -8,9 +8,9 @@ final class PerpetualMarketInfoCell: UICollectionViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var titleInfoImageView: UIImageView!
-    @IBOutlet weak var contentLabel: UILabel!
+    @IBOutlet weak var contentLabel: MarketColoredLabel!
     @IBOutlet weak var contentStackView: UIStackView!
-    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
     
     weak var delegate: Delegate?
     
@@ -20,7 +20,7 @@ final class PerpetualMarketInfoCell: UICollectionViewCell {
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )
-        subtitleLabel.setFont(
+        descriptionLabel.setFont(
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )

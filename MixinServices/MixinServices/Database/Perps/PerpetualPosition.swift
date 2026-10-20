@@ -30,6 +30,7 @@ public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchab
         case stopLossPrice = "stop_loss_price"
         case liquidationPrice = "liquidation_price"
         case estimatedCloseFee = "estimated_close_fee"
+        case fundingAmount = "funding_amount"
     }
     
     public let positionID: String
@@ -54,6 +55,7 @@ public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchab
     public let stopLossPrice: String?
     public let liquidationPrice: String?
     public let estimatedCloseFee: String
+    public let fundingAmount: String
     
     public private(set) lazy var decimalMarkPrice = Decimal(string: markPrice, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUnrealizedPnL = Decimal(string: unrealizedPnL, locale: .enUSPOSIX) ?? 0
@@ -62,6 +64,13 @@ public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchab
             nil
         } else {
             Decimal(string: estimatedCloseFee, locale: .enUSPOSIX)
+        }
+    }()
+    public private(set) lazy var decimalFundingAmount: Decimal? = {
+        if fundingAmount.isEmpty {
+            nil
+        } else {
+            Decimal(string: fundingAmount, locale: .enUSPOSIX)
         }
     }()
     

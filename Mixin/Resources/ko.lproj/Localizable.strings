@@ -1239,6 +1239,8 @@
 "perps_estimated_realized_pnl" = "예상 실현 손익";
 "perps_funding_frequency" = "빈도";
 "perps_funding_frequency_value" = "1/4/8시간";
+"perps_funding_payments" = "펀딩 수수료";
+"perps_funding_payments_description" = "이 포지션을 개설한 이후 받거나 지급한 펀딩 수수료의 누적 합계입니다. 녹색(양수)은 펀딩 수수료를 받았음을, 빨간색(음수)은 펀딩 수수료를 지급했음을 의미합니다.";
 "perps_funding_rate_key_point_1" = "Perps 가격을 현물 가격에 가깝게 유지";
 "perps_funding_rate_key_point_2" = "롱 포지션과 숏 포지션의 균형";
 "perps_funding_rate_key_point_3" = "차익거래 기회 창출";

@@ -151,4 +151,12 @@ extension PopupAlertViewController {
         )
     }
     
+    static func perpsFundingPayments() -> PopupAlertViewController {
+        PopupAlertViewController(
+            title: R.string.localizable.perps_funding_payments(),
+            description: R.string.localizable.perps_funding_payments_description(),
+            buttonTitle: R.string.localizable.got_it(),
+        )
+    }
+    
 }

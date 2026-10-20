@@ -3,109 +3,6 @@ import MixinServices
 
 final class PerpetualMarketViewController: UIViewController {
     
-    private enum PriceDisplay: Int, CaseIterable {
-        case lastPrice = 0
-        case markPrice = 1
-    }
-    
-    private enum AutoClosingIntroDisplay {
-        case takeProfit
-        case stopLoss
-        case disabled
-    }
-    
-    private enum EditingLock {
-        case takeProfit
-        case stopLoss
-    }
-    
-    private enum ActionViewState {
-        case available
-        case opening
-        case opened
-        case adding
-    }
-    
-    private enum Section {
-        case price
-        case autoClosingIntroduction(PerpsAutoClosingCondition.Behavior)
-        case openPosition
-        case positionDetails
-        case statistics
-        case activities([PerpetualOrderViewModel])
-        case introduction
-        case description(String)
-    }
-    
-    private enum PositionDetailItem {
-        
-        case entryPrice
-        case liquidationPrice(description: NSAttributedString?)
-        
-        static func items(viewModel: PerpetualPositionViewModel?) -> [PositionDetailItem] {
-            guard let viewModel else {
-                return []
-            }
-            let markPrice = viewModel.position.decimalMarkPrice
-            let attributedDescription: NSAttributedString?
-            if let liquidationPrice = viewModel.decimalLiquidationPrice,
-               liquidationPrice >= 0,
-               markPrice > 0
-            {
-                let percentage = PercentageFormatter.string(
-                    from: abs(liquidationPrice - markPrice) / markPrice,
-                    format: .pretty,
-                    sign: .never
-                )
-                let description = switch viewModel.side {
-                case .long:
-                    R.string.localizable.perps_liquidation_price_down_description(percentage)
-                case .short:
-                    R.string.localizable.perps_liquidation_price_up_description(percentage)
-                }
-                attributedDescription = {
-                    let attributed = NSMutableAttributedString(
-                        string: description,
-                        attributes: [
-                            .foregroundColor: R.color.text_quaternary()!,
-                            .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
-                        ]
-                    )
-                    if let range = description.range(of: percentage) {
-                        attributed.setAttributes(
-                            [.foregroundColor: R.color.text_secondary()!],
-                            range: NSRange(range, in: description)
-                        )
-                    }
-                    return attributed
-                }()
-            } else {
-                attributedDescription = nil
-            }
-            return [.entryPrice, .liquidationPrice(description: attributedDescription)]
-        }
-        
-    }
-    
-    private enum StatisticItem {
-        
-        case volume
-        case openInterest
-        case fundingRate
-        
-        static func availableItems(
-            in viewModel: PerpetualMarketViewModel
-        ) -> [StatisticItem] {
-            var items: [StatisticItem] = [.volume]
-            if viewModel.openInterest != nil {
-                items.append(.openInterest)
-            }
-            items.append(.fundingRate)
-            return items
-        }
-        
-    }
-    
     private let wallet: Wallet
     private let positionsLoader: PerpetualPositionLoader
     private let marketLoader: PerpetualMarketLoader
@@ -387,6 +284,123 @@ final class PerpetualMarketViewController: UIViewController {
         candleLoader.stop()
     }
     
+}
+
+extension PerpetualMarketViewController {
+    
+    private enum PriceDisplay: Int, CaseIterable {
+        case lastPrice = 0
+        case markPrice = 1
+    }
+    
+    private enum AutoClosingIntroDisplay {
+        case takeProfit
+        case stopLoss
+        case disabled
+    }
+    
+    private enum EditingLock {
+        case takeProfit
+        case stopLoss
+    }
+    
+    private enum ActionViewState {
+        case available
+        case opening
+        case opened
+        case adding
+    }
+    
+    private enum Section {
+        case price
+        case autoClosingIntroduction(PerpsAutoClosingCondition.Behavior)
+        case openPosition
+        case positionDetails
+        case statistics
+        case activities([PerpetualOrderViewModel])
+        case introduction
+        case description(String)
+    }
+    
+    private enum PositionDetailItem {
+        
+        case entryPrice
+        case liquidationPrice(description: NSAttributedString?)
+        case fundingPayments(value: String, color: MarketColor)
+        
+        static func items(viewModel: PerpetualPositionViewModel?) -> [PositionDetailItem] {
+            guard let viewModel else {
+                return []
+            }
+            var items: [PositionDetailItem] = [.entryPrice]
+            
+            let markPrice = viewModel.position.decimalMarkPrice
+            if let liquidationPrice = viewModel.decimalLiquidationPrice,
+               liquidationPrice >= 0,
+               markPrice > 0
+            {
+                let percentage = PercentageFormatter.string(
+                    from: abs(liquidationPrice - markPrice) / markPrice,
+                    format: .pretty,
+                    sign: .never
+                )
+                let description = switch viewModel.side {
+                case .long:
+                    R.string.localizable.perps_liquidation_price_down_description(percentage)
+                case .short:
+                    R.string.localizable.perps_liquidation_price_up_description(percentage)
+                }
+                let attributedDescription = NSMutableAttributedString(
+                    string: description,
+                    attributes: [
+                        .foregroundColor: R.color.text_quaternary()!,
+                        .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
+                    ]
+                )
+                if let range = description.range(of: percentage) {
+                    attributedDescription.setAttributes(
+                        [.foregroundColor: R.color.text_secondary()!],
+                        range: NSRange(range, in: description)
+                    )
+                }
+                items.append(.liquidationPrice(description: attributedDescription))
+            }
+            
+            if let fundingAmount = viewModel.position.decimalFundingAmount {
+                let value = CurrencyFormatter.localizedString(
+                    from: fundingAmount,
+                    format: .fiatMoneyPretty,
+                    sign: .always,
+                    symbol: .dollarSign,
+                )
+                let color: MarketColor = fundingAmount >= 0 ? .rising : .falling
+                items.append(.fundingPayments(value: value, color: color))
+            }
+            
+            return items
+        }
+        
+    }
+    
+    private enum StatisticItem {
+        
+        case volume
+        case openInterest
+        case fundingRate
+        
+        static func availableItems(
+            in viewModel: PerpetualMarketViewModel
+        ) -> [StatisticItem] {
+            var items: [StatisticItem] = [.volume]
+            if viewModel.openInterest != nil {
+                items.append(.openInterest)
+            }
+            items.append(.fundingRate)
+            return items
+        }
+        
+    }
+    
     @objc private func toggleFavorite(_ sender: Any) {
         let marketID = viewModel.market.marketID
         let symbol = viewModel.market.displaySymbol
@@ -652,11 +666,11 @@ final class PerpetualMarketViewController: UIViewController {
         switch result {
         case let .success(position):
             let item = PerpsPositionDAO.shared.save(position: position)
-            if let item, let openPositionIndexPath {
+            if let item, openPositionIndexPath != nil {
                 openPositionViewModel = PerpetualPositionViewModel(wallet: wallet, position: item)
                 positionDetailItems = PositionDetailItem.items(viewModel: openPositionViewModel)
                 UIView.performWithoutAnimation {
-                    collectionView.reloadItems(at: [openPositionIndexPath])
+                    collectionView.reloadData()
                 }
             } else {
                 var message = "TPSL: Item: \(item != nil), indexPath: \(openPositionIndexPath != nil)"
@@ -979,14 +993,23 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
                 cell.titleLabel.text = R.string.localizable.entry_price().uppercased()
                 cell.titleInfoImageView.isHidden = true
                 cell.contentLabel.text = openPositionViewModel?.entryPrice
-                cell.subtitleLabel.isHidden = true
+                cell.contentLabel.textColor = R.color.text()
+                cell.descriptionLabel.isHidden = true
                 cell.delegate = nil
-            case .liquidationPrice(let description):
+            case let .liquidationPrice(description):
                 cell.titleLabel.text = R.string.localizable.liquidation_price().uppercased()
                 cell.titleInfoImageView.isHidden = false
                 cell.contentLabel.text = openPositionViewModel?.liquidationPrice
-                cell.subtitleLabel.attributedText = description
-                cell.subtitleLabel.isHidden = false
+                cell.contentLabel.textColor = R.color.text()
+                cell.descriptionLabel.attributedText = description
+                cell.descriptionLabel.isHidden = false
+                cell.delegate = self
+            case let .fundingPayments(value, color):
+                cell.titleLabel.text = R.string.localizable.perps_funding_payments().uppercased()
+                cell.titleInfoImageView.isHidden = false
+                cell.contentLabel.text = value
+                cell.contentLabel.marketColor = color
+                cell.descriptionLabel.isHidden = true
                 cell.delegate = self
             }
             return cell
@@ -997,7 +1020,8 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
                 cell.titleLabel.text = R.string.localizable.volume_24h().uppercased()
                 cell.titleInfoImageView.isHidden = true
                 cell.contentLabel.text = viewModel.volume
-                cell.subtitleLabel.isHidden = true
+                cell.contentLabel.textColor = R.color.text()
+                cell.descriptionLabel.isHidden = true
                 cell.delegate = nil
                 return cell
             case .openInterest:
@@ -1005,7 +1029,8 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
                 cell.titleLabel.text = R.string.localizable.open_interest().uppercased()
                 cell.titleInfoImageView.isHidden = true
                 cell.contentLabel.text = viewModel.openInterest
-                cell.subtitleLabel.isHidden = true
+                cell.contentLabel.textColor = R.color.text()
+                cell.descriptionLabel.isHidden = true
                 cell.delegate = nil
                 return cell
             case .fundingRate:
@@ -1125,9 +1150,23 @@ extension PerpetualMarketViewController: PerpetualMarketPriceCell.Delegate {
 extension PerpetualMarketViewController: PerpetualMarketInfoCell.Delegate {
     
     func perpetualMarketInfoCellDidRequestInfo(_ cell: PerpetualMarketInfoCell) {
-        let manual = PerpsManual.viewController(initialPage: .liquidation)
-        present(manual, animated: true)
-        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_detail_card"])
+        guard
+            let indexPath = collectionView.indexPath(for: cell),
+            case .positionDetails = sections[indexPath.section]
+        else {
+            return
+        }
+        switch positionDetailItems[indexPath.item] {
+        case .entryPrice:
+            break
+        case .liquidationPrice:
+            let manual = PerpsManual.viewController(initialPage: .liquidation)
+            present(manual, animated: true)
+            reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_detail_card"])
+        case .fundingPayments:
+            let alert: PopupAlertViewController = .perpsFundingPayments()
+            present(alert, animated: true)
+        }
     }
     
 }

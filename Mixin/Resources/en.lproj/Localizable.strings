@@ -1239,6 +1239,8 @@
 "perps_estimated_realized_pnl" = "Estimated Realized PnL";
 "perps_funding_frequency" = "Frequency";
 "perps_funding_frequency_value" = "1/4/8 hours";
+"perps_funding_payments" = "Funding payments";
+"perps_funding_payments_description" = "The total funding you’ve received or paid since opening this position. Green (positive) means you received funding, while red (negative) means you paid funding.";
 "perps_funding_rate_key_point_1" = "Keep perp prices close to spot prices";
 "perps_funding_rate_key_point_2" = "Balance long and short positions";
 "perps_funding_rate_key_point_3" = "Create arbitrage opportunities";

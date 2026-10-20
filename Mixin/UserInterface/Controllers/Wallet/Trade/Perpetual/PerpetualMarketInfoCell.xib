@@ -35,7 +35,7 @@
                                     </imageView>
                                 </subviews>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="500" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="19" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HHa-La-sun">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="500" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="19" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HHa-La-sun" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="25" width="0.0" height="19"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <color key="textColor" name="text"/>
@@ -76,7 +76,7 @@
             <connections>
                 <outlet property="contentLabel" destination="HHa-La-sun" id="NfE-cG-wwv"/>
                 <outlet property="contentStackView" destination="cPl-Nt-U06" id="sub-st-ack"/>
-                <outlet property="subtitleLabel" destination="sub-ti-tle" id="sub-ou-tlt"/>
+                <outlet property="descriptionLabel" destination="sub-ti-tle" id="sub-ou-tlt"/>
                 <outlet property="titleInfoImageView" destination="4ek-sl-yNT" id="bEb-P8-JDp"/>
                 <outlet property="titleLabel" destination="IDo-7Q-M43" id="8CY-9u-GIf"/>
             </connections>

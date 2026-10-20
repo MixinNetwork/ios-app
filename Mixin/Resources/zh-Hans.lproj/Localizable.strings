@@ -1239,6 +1239,8 @@
 "perps_estimated_realized_pnl" = "预计净盈亏";
 "perps_funding_frequency" = "频率";
 "perps_funding_frequency_value" = "1/4/8 小时";
+"perps_funding_payments" = "资金费用";
+"perps_funding_payments_description" = "自该合约开仓以来，您累计收到或支付的资金费用。绿色（正数）表示您收到资金费用，红色（负数）表示您支付资金费用。";
 "perps_funding_rate_key_point_1" = "资金费率为正时，多头向空头支付资金费。";
 "perps_funding_rate_key_point_2" = "资金费率为负时，空头向多头支付资金费。";
 "perps_funding_rate_key_point_3" = "实际资金费取决于您的仓位价值和当前资金费率。";

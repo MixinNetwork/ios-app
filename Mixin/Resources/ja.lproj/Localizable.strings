@@ -955,8 +955,6 @@
 "markets" = "市場";
 "max" = "マックス";
 "max_favorite_bots_description" = "お気に入りのボットは最大 5 つまで追加できます。他の人があなたのプロフィールでこれらのボットを閲覧できることに注意してください。";
-"max_loss" = "最大損失%@";
-"max_profit" = "最大利益 %@";
 "max_removable" = "最大減少量 %@";
 "maximum_deposit" = "最大入金額";
 "media" = "メディア";
@@ -1256,13 +1254,13 @@
 "perps_leverage_overview" = "レバレッジを利用すると、少ない資本でより大きなポジションをコントロールできます。";
 "perps_leverage_risk_notice_1" = "レバレッジが高いと清算リスクが増加する";
 "perps_leverage_risk_notice_2" = "高いレバレッジでは、小さな価格変動が大きな損失につながる可能性があります";
-"perps_liquidation_price_down_description" = "%@ 下落すると清算が発動します";
+"perps_liquidation_price_down_description" = "%@ 下落すると清算が発動します。";
 "perps_liquidation_price_key_point_1" = "清算はマーク価格によってトリガーされます";
 "perps_liquidation_price_key_point_2" = "清算はウォレット内の他の資産には影響しません";
 "perps_liquidation_price_key_point_3" = "レバレッジが高いと清算のリスクが高まる";
 "perps_liquidation_price_overview" = "清算価格は、証拠金が不足している場合にシステムがポジションを自動決済する価格です。損失は​​証拠金で上限が設定されます。";
 "perps_liquidation_price_short" = "清算価格";
-"perps_liquidation_price_up_description" = "%@ 上昇すると清算が発動します";
+"perps_liquidation_price_up_description" = "%@ 上昇すると清算が発動します。";
 "perps_long_overview" = "価格が上昇すると予想される場合、ロングポジションをオープンします。価格が上昇すれば利益が得られます。価格が下落すると損失が発生します。";
 "perps_low_margin_tip" = "証拠金が不足している場合は、先に証拠金を追加してください";
 "perps_margin_amount" = "証拠金額";

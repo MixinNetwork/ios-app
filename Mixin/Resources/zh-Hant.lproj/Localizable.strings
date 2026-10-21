@@ -955,8 +955,6 @@
 "markets" = "行情";
 "max" = "最大值";
 "max_favorite_bots_description" = "最多可以新增 5 個喜歡的機器人，注意其他人可以在你的個人資訊彈窗裡檢視這些你喜歡的機器人。";
-"max_loss" = "最多虧損 %@";
-"max_profit" = "最多盈利 %@";
 "max_removable" = "最多減少 %@";
 "maximum_deposit" = "最大充值金額";
 "media" = "媒體";
@@ -1256,13 +1254,13 @@
 "perps_leverage_overview" = "槓桿用於放大倉位規模，使交易者可以用較少的資金控制更大的合約頭寸。";
 "perps_leverage_risk_notice_1" = "槓桿越高，爆倉風險越大";
 "perps_leverage_risk_notice_2" = "高槓杆下，小幅價格波動也可能導致較大虧損";
-"perps_liquidation_price_down_description" = "下跌 %@ 將觸發強平";
+"perps_liquidation_price_down_description" = "下跌 %@ 將觸發強平。";
 "perps_liquidation_price_key_point_1" = "強平觸發價格為標記價格";
 "perps_liquidation_price_key_point_2" = "強平不會影響錢包其他資產";
 "perps_liquidation_price_key_point_3" = "高槓杆會增加被強制平倉的風險";
 "perps_liquidation_price_overview" = "強平價格是保證金不足時系統自動平倉的價格。觸發後虧損不超過保證金。";
 "perps_liquidation_price_short" = "強平價格";
-"perps_liquidation_price_up_description" = "上漲 %@ 將觸發強平";
+"perps_liquidation_price_up_description" = "上漲 %@ 將觸發強平。";
 "perps_long_overview" = "做多是指在預期價格上漲時建立倉位，價格上漲可獲得盈利，價格下跌則產生虧損。";
 "perps_low_margin_tip" = "保證金不足時，優先新增保證金";
 "perps_margin_amount" = "保證金金額";

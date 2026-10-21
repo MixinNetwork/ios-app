@@ -955,8 +955,6 @@
 "markets" = "行情";
 "max" = "最大值";
 "max_favorite_bots_description" = "最多可以添加 5 个喜欢的机器人，注意其他人可以在你的个人信息弹窗里查看这些你喜欢的机器人。";
-"max_loss" = "最多亏损 %@";
-"max_profit" = "最多盈利 %@";
 "max_removable" = "最多减少 %@";
 "maximum_deposit" = "最大充值金额";
 "media" = "媒体";
@@ -1256,13 +1254,13 @@
 "perps_leverage_overview" = "杠杆用于放大仓位规模，使交易者可以用较少的资金控制更大的合约头寸。";
 "perps_leverage_risk_notice_1" = "杠杆越高，爆仓风险越大";
 "perps_leverage_risk_notice_2" = "高杠杆下，小幅价格波动也可能导致较大亏损";
-"perps_liquidation_price_down_description" = "下跌 %@ 将触发强平";
+"perps_liquidation_price_down_description" = "下跌 %@ 将触发强平。";
 "perps_liquidation_price_key_point_1" = "强平触发价格为标记价格";
 "perps_liquidation_price_key_point_2" = "强平不会影响钱包其他资产";
 "perps_liquidation_price_key_point_3" = "高杠杆会增加被强制平仓的风险";
 "perps_liquidation_price_overview" = "强平价格是保证金不足时系统自动平仓的价格。触发后亏损不超过保证金。";
 "perps_liquidation_price_short" = "强平价格";
-"perps_liquidation_price_up_description" = "上涨 %@ 将触发强平";
+"perps_liquidation_price_up_description" = "上涨 %@ 将触发强平。";
 "perps_long_overview" = "做多是指在预期价格上涨时建立仓位，价格上涨可获得盈利，价格下跌则产生亏损。";
 "perps_low_margin_tip" = "保证金不足时，优先添加保证金";
 "perps_margin_amount" = "保证金金额";

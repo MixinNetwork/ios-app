@@ -955,8 +955,6 @@
 "markets" = "시장";
 "max" = "최대";
 "max_favorite_bots_description" = "좋아하는 봇을 최대 5개까지 추가할 수 있습니다. 다른 사람들이 귀하의 프로필에서 이러한 봇을 볼 수 있다는 점에 유의하십시오.";
-"max_loss" = "최대 손실 %@";
-"max_profit" = "최대 이익 %@";
 "max_removable" = "최대 축소 가능 %@";
 "maximum_deposit" = "최대 입금액";
 "media" = "미디어";
@@ -1256,13 +1254,13 @@
 "perps_leverage_overview" = "레버리지를 사용하면 더 적은 자본으로 더 큰 포지션을 관리할 수 있습니다.";
 "perps_leverage_risk_notice_1" = "레버리지가 높을수록 청산 위험이 높아집니다.";
 "perps_leverage_risk_notice_2" = "레버리지가 높으면 작은 가격 변동으로도 큰 손실이 발생할 수 있습니다.";
-"perps_liquidation_price_down_description" = "%@ 하락하면 청산이 발생합니다";
+"perps_liquidation_price_down_description" = "%@ 하락하면 청산이 발생합니다.";
 "perps_liquidation_price_key_point_1" = "마크 가격에 따라 청산이 시작됩니다.";
 "perps_liquidation_price_key_point_2" = "청산은 지갑에 있는 다른 자산에 영향을 미치지 않습니다.";
 "perps_liquidation_price_key_point_3" = "레버리지가 높을수록 청산 위험이 높아집니다.";
 "perps_liquidation_price_overview" = "청산 가격은 증거금이 부족할 때 시스템이 자동으로 포지션을 청산하는 가격입니다. 손실은 마진으로 제한됩니다.";
 "perps_liquidation_price_short" = "청산가";
-"perps_liquidation_price_up_description" = "%@ 상승하면 청산이 발생합니다";
+"perps_liquidation_price_up_description" = "%@ 상승하면 청산이 발생합니다.";
 "perps_long_overview" = "가격 상승이 예상될 때 롱 포지션을 오픈합니다. 가격이 오르면 이익을 얻고, 가격이 떨어지면 손실이 발생합니다.";
 "perps_low_margin_tip" = "증거금이 부족하면 먼저 증거금을 추가하세요";
 "perps_margin_amount" = "증거금 금액";

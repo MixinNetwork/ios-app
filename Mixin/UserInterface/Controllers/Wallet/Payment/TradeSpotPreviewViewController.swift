@@ -104,7 +104,8 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                         receiveSymbol: receiveToken.symbol,
                         numeraire: .send
                     )
-                )
+                ),
+                infoAction: nil,
             ),
         ]
         

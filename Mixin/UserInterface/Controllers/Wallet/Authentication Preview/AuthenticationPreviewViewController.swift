@@ -196,7 +196,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.setBoldContent(content)
             cell.onInfo = nil
             return cell
-        case let .doubleLineInfo(caption, primary, secondary):
+        case let .doubleLineInfo(caption, primary, secondary, infoAction):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
             cell.primaryLabel.text = primary
@@ -208,6 +208,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             }
             cell.setPrimaryLabel(usesBoldFont: false)
             cell.trailingContent = nil
+            cell.onInfo = infoAction
             return cell
         case let .senders(users, multisigSigners, threshold):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_user_group, for: indexPath)!
@@ -472,7 +473,7 @@ extension AuthenticationPreviewViewController {
         case amount(caption: Caption, token: String, fiatMoney: String, display: AmountIntent, boldPrimaryAmount: Bool)
         case info(caption: Caption, content: String, action: (() -> Void)?)
         case boldInfo(caption: Caption, content: String)
-        case doubleLineInfo(caption: Caption, primary: String, secondary: Text)
+        case doubleLineInfo(caption: Caption, primary: String, secondary: Text, infoAction: (() -> Void)?)
         case address(caption: Caption, address: String, label: AddressLabel?)
         case senders([UserItem], multisigSigners: Set<String>?, threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)

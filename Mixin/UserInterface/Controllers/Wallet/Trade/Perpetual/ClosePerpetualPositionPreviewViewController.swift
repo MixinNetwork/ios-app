@@ -139,7 +139,10 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                         attributes: [.foregroundColor: viewModel.pnlColor.uiColor]
                     ))
                     return pnl
-                }())
+                }()),
+                infoAction: { [weak self] in
+                    self?.present(PopupAlertViewController.perpsMargin(), animated: true)
+                },
             ))
             
             let remainingQuantity = viewModel.decimalQuantity - quantity
@@ -243,7 +246,10 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                     sign: .never,
                     symbol: .dollarSign,
                 ),
-                secondary: .attributed(pnl)
+                secondary: .attributed(pnl),
+                infoAction: { [weak self] in
+                    self?.present(PopupAlertViewController.perpsMargin(), animated: true)
+                },
             ))
             
             let fee = if hasEstimatedFees {

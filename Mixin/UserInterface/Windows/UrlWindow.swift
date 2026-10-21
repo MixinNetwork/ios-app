@@ -2143,13 +2143,14 @@ extension UrlWindow {
         }
         
         let root = UIApplication.shared.homeContainerViewController ?? UIApplication.shared.firstWindowScene?.keyWindow?.rootViewController
-        if root?.topPresentedViewController is AuthorizationWindow {
+        let presenter = root?.topPresentedViewController
+        if presenter is AuthorizationWindow {
             hud.hideInMainThread()
             return
         }
         hud.hide()
         let window = AuthorizationWindow(authInfo: authorization)
-        UIApplication.shared.homeContainerViewController?.present(window, animated: true)
+        presenter?.present(window, animated: true)
     }
 
     private static func presentConversation(conversation: ConversationResponse, codeId: String, hud: Hud) {

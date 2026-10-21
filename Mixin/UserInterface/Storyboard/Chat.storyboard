@@ -516,9 +516,11 @@
                         <outlet property="sendButton" destination="Ccj-kA-7d2" id="eSh-Ut-rKY"/>
                         <outlet property="stickersButton" destination="Yf8-Qi-YeA" id="RkK-KC-0bm"/>
                         <outlet property="textView" destination="ucd-YD-Vpg" id="Dqi-dB-Qz5"/>
+                        <outlet property="textViewBottomConstraint" destination="Boe-tV-Yi3" id="Qpb-bm-k8C"/>
                         <outlet property="textViewHeightConstraint" destination="Kzm-2u-qAF" id="vvq-oU-Wdv"/>
                         <outlet property="textViewRightAccessoryView" destination="4Hc-pE-gbi" id="x53-gR-XSA"/>
                         <outlet property="textViewRightAccessoryWidthConstraint" destination="HhS-mj-m72" id="jms-SZ-NMR"/>
+                        <outlet property="textViewTopConstraint" destination="sFq-fP-j0s" id="tP6-gb-F4x"/>
                         <outlet property="unblockButton" destination="iAX-RP-UWF" id="I6N-dn-BhE"/>
                     </connections>
                 </viewController>

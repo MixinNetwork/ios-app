@@ -30,6 +30,8 @@ final class ConversationInputViewController: UIViewController {
     @IBOutlet weak var quotePreviewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var quotePreviewWrapperHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var textViewRightAccessoryWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputBarLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var inputBarTrailingConstraint: NSLayoutConstraint!
@@ -1296,14 +1298,19 @@ extension ConversationInputViewController {
     }
     
     private func updateIntegralPanelCornerRadius() {
-        guard #available(iOS 26, *) else {
+        guard #available(iOS 26, *), let font = textView.font else {
             return
         }
-        let radius = inputBarView.frame.height / 2
-        guard radius > 0 else { return }
+        // Keep the single-line capsule radius as the text view grows.
+        let singleLineTextHeight = max(36, ceil(font.lineHeight + textView.textContainerInset.vertical))
+        let verticalPadding = textViewTopConstraint.constant + textViewBottomConstraint.constant
+        let radius = (singleLineTextHeight + verticalPadding) / 2
+        guard radius > 0 else {
+            return
+        }
         quotePreviewView.layer.cornerRadius = radius
         quotePreviewView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        inputBarEffectView?.layer.cornerRadius = radius
+        inputBarEffectView?.cornerConfiguration = .corners(radius: .fixed(radius))
         if unblockButton.frame.height > 0 {
             unblockButton.layer.cornerRadius = unblockButton.frame.height / 2
         }

@@ -11,11 +11,18 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
         case externalWeb3Transaction(wallet: Web3Wallet, fee: BalanceRequirement)
     }
     
+    enum Receiver {
+        case transfer(Payment.TransferDestination)
+        case withdrawal(Payment.WithdrawalDestination)
+        case address(String?, label: AddressLabel?)
+    }
+    
     override var tableViewStyle: UITableView.Style {
         .insetGrouped
     }
     
     private let intent: Intent
+    private let receiver: Receiver?
     private let insufficientToken: any (ValuableToken & OnChainToken)
     private let swappableStablecoinAssetIDs: Set<String> = [
         AssetID.erc20USDT, AssetID.tronUSDT, AssetID.polygonUSDT,
@@ -26,8 +33,9 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
     
     private var swappingFromAssetID: String?
     
-    init(intent: Intent) {
+    init(intent: Intent, receiver: Receiver?) {
         self.intent = intent
+        self.receiver = receiver
         self.insufficientToken = switch intent {
         case let .privacyWalletTransfer(requirement), let .externalWeb3Transaction(_, requirement):
             requirement.token
@@ -234,6 +242,56 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
             ]
         }
         
+        switch receiver {
+        case let .transfer(destination):
+            switch destination {
+            case let .user(user):
+                rows.append(.receivers([user], threshold: nil))
+            case let .multisig(threshold, users):
+                rows.append(.receivers(users, threshold: threshold))
+            case let .mainnet(_, address):
+                rows.append(.mainnetReceiver(address))
+            }
+        case let .withdrawal(destination):
+            switch destination {
+            case let .address(address):
+                rows.append(.address(
+                    caption: .receiver,
+                    address: address.fullRepresentation,
+                    label: .addressBook(address.label),
+                ))
+            case let .temporary(address):
+                rows.append(.address(caption: .receiver, address: address.fullRepresentation, label: nil))
+            case let .commonWallet(wallet, address):
+                rows.append(.address(
+                    caption: .receiver,
+                    address: address.fullRepresentation,
+                    label: .wallet(.common(wallet)),
+                ))
+            case let .safeWallet(wallet):
+                rows.append(.wallet(caption: .receiver, wallet: .safe(wallet), threshold: nil))
+            }
+        case let .address(address, label):
+            switch label {
+            case .wallet(.privacy):
+                rows.append(.wallet(caption: .receiver, wallet: .privacy, threshold: nil))
+            case let .wallet(.safe(wallet)):
+                rows.append(.wallet(caption: .receiver, wallet: .safe(wallet), threshold: nil))
+            case let .contact(user):
+                if let address, !address.isEmpty {
+                    rows.append(.commonWalletReceiver(user: user, address: address))
+                } else {
+                    rows.append(.receivers([user], threshold: nil))
+                }
+            case .wallet(.common), .addressBook, .none:
+                if let address, !address.isEmpty {
+                    rows.append(.address(caption: .receiver, address: address, label: label))
+                }
+            }
+        case .none:
+            break
+        }
+        
         if let network = insufficientToken.depositNetworkName {
             rows.append(
                 .info(caption: .network, content: network, action: nil)
@@ -297,6 +355,15 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
             }
             cell.contentLeadingConstraint.constant = 16
             cell.contentTrailingConstraint.constant = 16
+        case let cell as AuthenticationPreviewWalletCell:
+            cell.contentLeadingConstraint.constant = 16
+            cell.contentTrailingConstraint.constant = 16
+        case let cell as PaymentUserGroupCell:
+            cell.contentLeadingConstraint.constant = 16
+            cell.contentTrailingConstraint.constant = 16
+        case let cell as CommonWalletReceiverCell:
+            cell.contentLeadingConstraint.constant = 16
+            cell.contentTrailingConstraint.constant = 16
         default:
             break
         }
@@ -334,7 +401,9 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
                 receiveAssetID: to,
                 referral: nil
             )
-        case let .commonWalletTransfer(wallet, _, _), let .commonWalletTrade(wallet, _, _), let .externalWeb3Transaction(wallet, _):
+        case let .commonWalletTransfer(wallet, _, _),
+             let .commonWalletTrade(wallet, _, _),
+             let .externalWeb3Transaction(wallet, _):
             TradeViewController(
                 wallet: .common(wallet),
                 trading: .simpleSpot,

@@ -197,7 +197,8 @@ extension WalletConnectSession {
                 } else {
                     await MainActor.run {
                         let insufficient = InsufficientBalanceViewController(
-                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement)
+                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement),
+                            receiver: .address(operation.toAddress, label: nil),
                         )
                         Web3PopupCoordinator.enqueue(popup: .request(insufficient))
                     }
@@ -271,7 +272,8 @@ extension WalletConnectSession {
                 } else {
                     await MainActor.run {
                         let insufficient = InsufficientBalanceViewController(
-                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement)
+                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement),
+                            receiver: .address(operation.toAddress, label: nil),
                         )
                         Web3PopupCoordinator.enqueue(popup: .request(insufficient))
                     }

@@ -55,6 +55,8 @@
             <connections>
                 <outlet property="addressLabel" destination="zMc-Ci-RkX" id="QVE-O2-egu"/>
                 <outlet property="captionLabel" destination="En2-PH-7ay" id="uUU-Us-RWb"/>
+                <outlet property="contentLeadingConstraint" destination="vvp-Ey-bum" id="Kvg-TD-hBp"/>
+                <outlet property="contentTrailingConstraint" destination="pq1-7T-E9m" id="06t-9J-O1e"/>
                 <outlet property="contentStackView" destination="A5C-Sq-Gq0" id="cFO-pX-TPI"/>
             </connections>
             <point key="canvasLocation" x="9" y="42"/>

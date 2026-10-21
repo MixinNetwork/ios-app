@@ -6,7 +6,11 @@ enum AddressValidator {
     enum WithdrawalValidationResult {
         case tagNeeded(AddressInfoInputViewController)
         case addressVerified(MixinTokenItem, Payment.WithdrawalDestination)
-        case insufficientBalance(withdrawing: BalanceRequirement, fee: BalanceRequirement)
+        case insufficientBalance(
+            withdrawing: BalanceRequirement,
+            fee: BalanceRequirement,
+            destination: Payment.WithdrawalDestination,
+        )
         case withdrawPayment(Payment, Payment.WithdrawalDestination, WithdrawFeeItem)
     }
     
@@ -86,7 +90,11 @@ enum AddressValidator {
                     switch balanceSufficiency {
                     case let .insufficient(withdrawing, fee):
                         await MainActor.run {
-                            onSuccess(.insufficientBalance(withdrawing: withdrawing, fee: fee))
+                            onSuccess(.insufficientBalance(
+                                withdrawing: withdrawing,
+                                fee: fee,
+                                destination: destination,
+                            ))
                         }
                     case let .sufficient(feeItem):
                         let fiatMoneyAmount = amount * token.decimalUSDPrice * Decimal(Currency.current.rate)

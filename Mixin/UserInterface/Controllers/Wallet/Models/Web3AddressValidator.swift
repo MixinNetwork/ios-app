@@ -6,7 +6,12 @@ enum Web3AddressValidator {
     
     enum Web3TransferValidationResult {
         case address(address: String, label: AddressLabel?)
-        case insufficientBalance(transferring: BalanceRequirement, fee: BalanceRequirement)
+        case insufficientBalance(
+            transferring: BalanceRequirement,
+            fee: BalanceRequirement,
+            toAddress: String,
+            toAddressLabel: AddressLabel?,
+        )
         case rentExemptionFailed(Solana.RentExemptionFailedReason)
         case transfer(operation: Web3TransferOperation, toAddressLabel: AddressLabel?)
     }
@@ -147,7 +152,12 @@ enum Web3AddressValidator {
                         if isBalanceSufficient {
                             onSuccess(.transfer(operation: operation, toAddressLabel: label))
                         } else {
-                            onSuccess(.insufficientBalance(transferring: transferRequirement, fee: feeRequirement))
+                            onSuccess(.insufficientBalance(
+                                transferring: transferRequirement,
+                                fee: feeRequirement,
+                                toAddress: address,
+                                toAddressLabel: label,
+                            ))
                         }
                     }
                 } else {

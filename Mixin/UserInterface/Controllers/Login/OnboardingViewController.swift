@@ -214,19 +214,27 @@ extension OnboardingViewController {
         bannerAutoScrollingTimer = .scheduledTimer(
             withTimeInterval: 5,
             repeats: false
-        ) { [weak collectionView, banners] _ in
+        ) { [weak collectionView, banners, sectionsCount] _ in
             guard let collectionView else {
                 return
             }
+            let visibleIndexPaths = collectionView.indexPathsForVisibleItems
             if !collectionView.isDragging,
                !collectionView.isTracking,
                !collectionView.isDecelerating,
-               collectionView.indexPathsForVisibleItems.count == 1
+               visibleIndexPaths.count == 1,
+               var indexPath = visibleIndexPaths.first
             {
-                var indexPath = IndexPath(
-                    item: collectionView.indexPathsForVisibleItems[0].item + 1,
-                    section: collectionView.indexPathsForVisibleItems[0].section
-                )
+                // Recenter before advancing so the next section is always in bounds
+                if indexPath.section != sectionsCount / 2 {
+                    indexPath.section = sectionsCount / 2
+                    collectionView.scrollToItem(
+                        at: indexPath,
+                        at: .centeredHorizontally,
+                        animated: false
+                    )
+                }
+                indexPath.item += 1
                 if indexPath.item == banners.count {
                     indexPath.item = 0
                     indexPath.section += 1

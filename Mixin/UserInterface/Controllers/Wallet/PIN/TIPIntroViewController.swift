@@ -188,7 +188,11 @@ final class TIPIntroViewController: UIViewController {
             let navigationController = GeneralAppearanceNavigationController(rootViewController: logs)
             self.present(navigationController, animated: true)
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
+            sheet.popoverPresentationController?.sourceItem = source
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+        }
         present(sheet, animated: true)
     }
     

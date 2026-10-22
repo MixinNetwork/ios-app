@@ -281,7 +281,11 @@ final class Web3TokensViewController: TokensViewController {
             let hidden = HiddenWeb3TokensViewController(wallet: wallet, availability: self.availability)
             self.navigationController?.pushViewController(hidden, animated: true)
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
+            sheet.popoverPresentationController?.sourceItem = source
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        }
         present(sheet, animated: true, completion: nil)
     }
     

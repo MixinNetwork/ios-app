@@ -225,7 +225,11 @@ final class TradeViewController: UIViewController {
                 reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_home_menu"])
             }))
         }
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
+            sheet.popoverPresentationController?.sourceItem = source
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        }
         present(sheet, animated: true)
     }
     

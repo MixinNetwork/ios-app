@@ -83,7 +83,11 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
         sheet.addAction(UIAlertAction(title: R.string.localizable.switch_account(), style: .default, handler: { _ in
             LoginManager.shared.logout(reason: "Switch Account")
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
+            sheet.popoverPresentationController?.sourceItem = source
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+        }
         present(sheet, animated: true)
     }
     

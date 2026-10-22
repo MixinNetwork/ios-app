@@ -109,7 +109,11 @@ final class InscriptionViewController: UIViewController {
         if output != nil {
             sheet.addAction(UIAlertAction(title: R.string.localizable.release(), style: .destructive, handler: releaseInscription(_:)))
         }
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
+            sheet.popoverPresentationController?.sourceItem = source
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+        }
         present(sheet, animated: true)
     }
     

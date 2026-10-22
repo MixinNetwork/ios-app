@@ -90,12 +90,16 @@ class ClearStorageViewController: UITableViewController {
         } else {
             title = R.string.localizable.setting_storage_clear_count(messageCount, formatterSize)
         }
-        let alc = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: R.string.localizable.clear(), style: .destructive, handler: { [weak self](_) in
+        let sheet = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.clear(), style: .destructive, handler: { [weak self](_) in
             self?.clearAction(button: button)
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        self.present(alc, animated: true, completion: nil)
+        if #available(iOS 26.0, *) {
+            sheet.popoverPresentationController?.sourceItem = button
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        }
+        self.present(sheet, animated: true, completion: nil)
     }
     
     private func clearAction(button: UIBarButtonItem) {

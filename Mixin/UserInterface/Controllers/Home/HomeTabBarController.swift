@@ -210,9 +210,18 @@ final class HomeTabBarController: UITabBarController {
             shouldValidatePIN = true
         }
         if shouldValidatePIN {
-            let validator = PinValidationViewController(onSuccess: { [weak self] _ in
-                self?.selectWallet()
-            })
+            let validator = PinValidationViewController(
+                onSuccess: { [weak self] _ in
+                    self?.selectWallet()
+                },
+                onFailed: { [weak self] in
+                    guard let self, self.selectedViewController === self.walletNavigationController else {
+                        return
+                    }
+                    self.selectedViewController = self.chatNavigationController
+                    self.updateSelectionAppearance()
+                },
+            )
             present(validator, animated: true)
             return false
         }

@@ -28,6 +28,8 @@ protocol WebSocketConnectionDelegate: AnyObject {
 
 final class WebSocketConnection: NSObject {
     
+    private struct HeartbeatTimeoutError: Error {}
+    
     weak var delegate: (any WebSocketConnectionDelegate)?
     
     @Synchronized(value: false)
@@ -219,7 +221,7 @@ final class WebSocketConnection: NSObject {
                 message: "Heartbeat ping timed out (sent: \(sentPingCount), received: \(receivedPongCount))"
             )
             handleTaskTermination(
-                error: URLError(.timedOut),
+                error: HeartbeatTimeoutError(),
                 for: task,
             )
         } else {
@@ -308,6 +310,9 @@ final class WebSocketConnection: NSObject {
         for error: any Error,
         task: URLSessionWebSocketTask?,
     ) -> Bool {
+        if error is HeartbeatTimeoutError {
+            return false
+        }
         if let httpResponse = task?.response as? HTTPURLResponse, httpResponse.statusCode >= 500 {
             return true
         }

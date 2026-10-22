@@ -52,6 +52,12 @@ final class SelectCountryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = R.string.localizable.select_a_country_or_region()
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .close,
+            target: self,
+            action: #selector(dismissAction(_:)),
+        )
         let selector = #selector(getter: Country.localizedName)
         (sectionIndexTitles, sections) = UILocalizedIndexedCollation.current().catalog(library.countries, usingSelector: selector)
         tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
@@ -63,11 +69,11 @@ final class SelectCountryViewController: UIViewController {
         searchBoxView.textField.delegate = self
     }
 
-    @IBAction func dismissAction(_ sender: Any) {
+    @objc private func dismissAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
-    @objc func searchAction(_ sender: Any) {
+    @objc private func searchAction(_ sender: Any) {
         let searchText = (searchBoxView.textField.text ?? "").uppercased()
         if searchText.isEmpty {
             filteredCountries = []

@@ -46,7 +46,19 @@ extension MixinAPIResponseError: LocalizedError {
         case .unsupportedWatchAddress:
             return R.string.localizable.error_watch_address_not_supported()
         case .perpsOrderMarginTooLow:
-            return R.string.localizable.error_perps_margin_too_small()
+            if case let .string(value) = extra?.value(at: ["min_order_value"]),
+               let decimalValue = Decimal(string: value, locale: .enUSPOSIX)
+            {
+                let value = CurrencyFormatter.localizedString(
+                    from: decimalValue,
+                    format: .fiatMoneyPrecision,
+                    sign: .never,
+                    symbol: .dollarSign
+                )
+                return R.string.localizable.error_perps_margin_too_small_value(value)
+            } else {
+                return R.string.localizable.error_perps_margin_too_small()
+            }
         case .perpsOrderSizeTooLow:
             if case let .string(value) = extra?.value(at: ["min_order_value"]),
                let decimalValue = Decimal(string: value, locale: .enUSPOSIX)

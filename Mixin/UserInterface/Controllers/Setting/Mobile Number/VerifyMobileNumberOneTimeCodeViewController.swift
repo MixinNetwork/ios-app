@@ -45,14 +45,23 @@ class VerifyMobileNumberOneTimeCodeViewController: VerificationCodeViewControlle
                 return
             }
             var viewControllers = navigationController.viewControllers
-            let index = viewControllers.firstIndex(where: { controller in
-                controller is VerifyMobileNumberInputNumberViewController
-            })
-            if let index {
-                viewControllers.removeLast(viewControllers.count - index)
-                navigationController.setViewControllers(viewControllers, animated: true)
-            } else {
-                navigationController.popToRootViewController(animated: true)
+            switch context.intent {
+            case .addMobileNumber, .changeMobileNumber:
+                if let recoveryKit = viewControllers.last(where: { $0 is RecoveryKitViewController }) {
+                    navigationController.popToViewController(recoveryKit, animated: true)
+                } else {
+                    fallthrough
+                }
+            case .periodicVerification:
+                let index = viewControllers.firstIndex(where: { controller in
+                    controller is VerifyMobileNumberInputNumberViewController
+                })
+                if let index {
+                    viewControllers.removeLast(viewControllers.count - index)
+                    navigationController.setViewControllers(viewControllers, animated: true)
+                } else {
+                    navigationController.popToRootViewController(animated: true)
+                }
             }
         }
         isBusy = true

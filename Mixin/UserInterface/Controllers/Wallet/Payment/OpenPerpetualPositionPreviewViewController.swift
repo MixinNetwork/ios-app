@@ -75,6 +75,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     caption: .string(R.string.localizable.direction()),
                     primary: direction,
                     secondary: .plain(profit),
+                    infoAction: nil,
                 ),
                 .info(
                     caption: .string(R.string.localizable.amount()),
@@ -110,6 +111,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 secondary: .plain(
                     R.string.localizable.add_position_total_size() + " " + change
                 ),
+                infoAction: nil,
             ))
         case let .increaseMargin(margin):
             liquidationMargin = margin + operation.amount
@@ -132,6 +134,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 secondary: .plain(
                     R.string.localizable.perps_total_margin() + " " + change
                 ),
+                infoAction: nil,
             ))
         }
         
@@ -171,6 +174,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     caption: .string(R.string.localizable.take_profit()),
                     primary: price,
                     secondary: .attributed(attributedSimulation),
+                    infoAction: nil,
                 ),
             )
         }
@@ -211,6 +215,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     caption: .string(R.string.localizable.stop_loss()),
                     primary: price,
                     secondary: .attributed(attributedSimulation),
+                    infoAction: nil,
                 ),
             )
         }
@@ -228,7 +233,8 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
             .doubleLineInfo(
                 caption: .string(R.string.localizable.estimated_liquidation_price()),
                 primary: liquidationPrice,
-                secondary: .plain(liquidation)
+                secondary: .plain(liquidation),
+                infoAction: nil,
             )
         )
         

@@ -659,7 +659,7 @@ public final class ConversationDAO: UserDatabaseDAO {
         }
         try database.execute(sql: sql, arguments: arguments)
         database.afterNextTransaction { db in
-            NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: nil)
+            NotificationCenter.default.postAsynchornously(onMainThread: conversationDidChangeNotification, object: nil)
         }
     }
     

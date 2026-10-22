@@ -104,7 +104,8 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                         receiveSymbol: receiveToken.symbol,
                         numeraire: .send
                     )
-                )
+                ),
+                infoAction: nil,
             ),
         ]
         
@@ -210,6 +211,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                         event: .tradeSpotEnd,
                         tags: [
                             "wallet": "main",
+                            "asset_symbol": sendToken.symbol,
                             "asset_level": Reporter.assetLevel(decimalUSDPrice: sendToken.decimalUSDPrice, decimalAmount: sendAmount)
                         ]
                     )
@@ -224,6 +226,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                         event: .tradeSpotEnd,
                         tags: [
                             "wallet": "web3",
+                            "asset_symbol": sendToken.symbol,
                             "asset_level": Reporter.assetLevel(decimalUSDPrice: sendToken.decimalUSDPrice, decimalAmount: sendAmount)
                         ]
                     )

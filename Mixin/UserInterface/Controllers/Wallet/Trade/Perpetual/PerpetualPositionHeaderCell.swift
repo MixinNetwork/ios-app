@@ -54,14 +54,14 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
             symbolLabel.text = viewModel.order.tokenSymbol
             symbolLabel.isHidden = false
         case .increaseMargin:
-            titleLabel.text = abs(viewModel.decimalPayAmount).formatted(
+            titleLabel.text = viewModel.order.decimalMarginAmount.formatted(
                 PerpetualOrderViewModel.payAmountStyle
                     .sign(strategy: .always())
             )
             titleLabel.textColor = R.color.market_green()
             symbolLabel.isHidden = true
         case .decreaseMargin:
-            titleLabel.text = (-abs(viewModel.decimalPayAmount)).formatted(
+            titleLabel.text = viewModel.order.decimalMarginAmount.formatted(
                 PerpetualOrderViewModel.payAmountStyle
                     .sign(strategy: .always())
             )

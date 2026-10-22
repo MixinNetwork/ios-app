@@ -109,39 +109,6 @@ public final class PerpsDatabase: Database {
             }
         }
         
-        migrator.registerMigration("add_position") { db in
-            try db.execute(sql: "DROP TABLE IF EXISTS position_histories")
-            try db.execute(sql: """
-            CREATE TABLE IF NOT EXISTS perps_orders (
-                order_id TEXT NOT NULL PRIMARY KEY,
-                position_id TEXT NOT NULL,
-                market_id TEXT NOT NULL,
-                side TEXT NOT NULL,
-                order_type TEXT NOT NULL,
-                status TEXT NOT NULL,
-                leverage INTEGER NOT NULL,
-                quantity TEXT NOT NULL,
-                entry_price TEXT NOT NULL,
-                close_price TEXT NOT NULL,
-                realized_pnl TEXT NOT NULL,
-                roe TEXT NOT NULL,
-                close_reason TEXT,
-                trigger_price TEXT,
-                created_at TEXT NOT NULL,
-                updated_at TEXT NOT NULL
-            )
-            """)
-        }
-        
-        migrator.registerMigration("activity_pay_amount") { db in
-            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(perps_orders)")
-            let columnNames = infos.map(\.name)
-            if !columnNames.contains("pay_amount") {
-                try db.execute(sql: "DELETE FROM perps_orders")
-                try db.execute(sql: "ALTER TABLE perps_orders ADD COLUMN pay_amount TEXT NOT NULL")
-            }
-        }
-        
         migrator.registerMigration("market_description") { db in
             let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(markets)")
             let columnNames = infos.map(\.name)
@@ -175,14 +142,6 @@ public final class PerpsDatabase: Database {
         }
         
         migrator.registerMigration("fee") { db in
-            let perpOrdersColumns = try TableInfo
-                .fetchAll(db, sql: "PRAGMA table_info(perps_orders)")
-                .map(\.name)
-            if !perpOrdersColumns.contains("fee_amount") {
-                try db.execute(sql: "DELETE FROM perps_orders")
-                try db.execute(sql: "ALTER TABLE `perps_orders` ADD COLUMN `fee_amount` TEXT NOT NULL DEFAULT '0'")
-            }
-            
             let marketsColumns = try TableInfo
                 .fetchAll(db, sql: "PRAGMA table_info(markets)")
                 .map(\.name)
@@ -207,20 +166,6 @@ public final class PerpsDatabase: Database {
             }
         }
         
-        migrator.registerMigration("net_pnl_roe") { db in
-            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(perps_orders)")
-            let columnNames = infos.map(\.name)
-            if !columnNames.contains("net_realized_pnl") {
-                try db.execute(sql: "ALTER TABLE `perps_orders` ADD COLUMN `net_realized_pnl` TEXT NOT NULL DEFAULT ''")
-            }
-            if !columnNames.contains("net_roe") {
-                try db.execute(sql: "ALTER TABLE `perps_orders` ADD COLUMN `net_roe` TEXT NOT NULL DEFAULT ''")
-            }
-            if !columnNames.contains("profit_share_amount") {
-                try db.execute(sql: "ALTER TABLE `perps_orders` ADD COLUMN `profit_share_amount` TEXT NOT NULL DEFAULT ''")
-            }
-        }
-        
         migrator.registerMigration("reduce_position") { db in
             let positionsColumns = try TableInfo
                 .fetchAll(db, sql: "PRAGMA table_info(positions)")
@@ -237,6 +182,45 @@ public final class PerpsDatabase: Database {
             }
             if !marketColumns.contains("min_order_value") {
                 try db.execute(sql: "ALTER TABLE markets ADD COLUMN min_order_value TEXT NOT NULL DEFAULT '0'")
+            }
+        }
+        
+        migrator.registerMigration("margin_display") { db in
+            try db.execute(sql: "DROP TABLE IF EXISTS perps_orders")
+            try db.execute(sql: """
+            CREATE TABLE IF NOT EXISTS perps_orders (
+                order_id             TEXT NOT NULL PRIMARY KEY,
+                position_id          TEXT NOT NULL,
+                market_id            TEXT NOT NULL,
+                side                 TEXT NOT NULL,
+                order_type           TEXT NOT NULL,
+                pay_amount           TEXT NOT NULL,
+                status               TEXT NOT NULL,
+                leverage             INTEGER NOT NULL,
+                quantity             TEXT NOT NULL,
+                margin_amount        TEXT NOT NULL,
+                fee_amount           TEXT NOT NULL,
+                entry_price          TEXT NOT NULL,
+                close_price          TEXT NOT NULL,
+                realized_pnl         TEXT NOT NULL,
+                roe                  TEXT NOT NULL,
+                net_realized_pnl     TEXT NOT NULL,
+                net_roe              TEXT NOT NULL,
+                profit_share_amount  TEXT NOT NULL,
+                close_reason         TEXT,
+                trigger_price        TEXT,
+                created_at           TEXT NOT NULL,
+                updated_at           TEXT NOT NULL
+           )
+           """)
+        }
+        
+        migrator.registerMigration("funding_payment") { db in
+            let positionsColumns = try TableInfo
+                .fetchAll(db, sql: "PRAGMA table_info(positions)")
+                .map(\.name)
+            if !positionsColumns.contains("funding_amount") {
+                try db.execute(sql: "ALTER TABLE positions ADD COLUMN funding_amount TEXT NOT NULL DEFAULT ''")
             }
         }
         

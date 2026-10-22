@@ -4,6 +4,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     
     protocol Delegate: AnyObject {
         func perpetualMarketOpenPositionCell(_ cell: PerpetualMarketOpenPositionCell, requestManual page: PerpsManual.Page)
+        func perpetualMarketOpenPositionCellRequestMarginInfo(_ cell: PerpetualMarketOpenPositionCell)
         func perpetualMarketOpenPositionCellAskToShare(_ cell: PerpetualMarketOpenPositionCell)
         func perpetualMarketOpenPositionCellRequestAddTakeProfit(_ cell: PerpetualMarketOpenPositionCell)
         func perpetualMarketOpenPositionCellRequestDeleteTakeProfit(_ cell: PerpetualMarketOpenPositionCell)
@@ -25,12 +26,6 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     
     @IBOutlet weak var marginTitleLabel: UILabel!
     @IBOutlet weak var marginContentLabel: UILabel!
-    
-    @IBOutlet weak var entryPriceTitleLabel: UILabel!
-    @IBOutlet weak var entryPriceContentLabel: UILabel!
-    
-    @IBOutlet weak var liquidationPriceTitleLabel: UILabel!
-    @IBOutlet weak var liquidationPriceContentLabel: UILabel!
     
     @IBOutlet weak var autoClosingStackView: UIStackView!
     
@@ -76,8 +71,6 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         let contentLabels: [UILabel] = [
             orderValueContentLabel,
             marginContentLabel,
-            entryPriceContentLabel,
-            liquidationPriceContentLabel,
         ]
         for label in contentLabels {
             label.setFont(
@@ -104,8 +97,6 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         directionTitleLabel.text = R.string.localizable.direction().uppercased()
         orderValueTitleLabel.text = R.string.localizable.position_size().uppercased()
         marginTitleLabel.text = R.string.localizable.margin().uppercased()
-        entryPriceTitleLabel.text = R.string.localizable.entry_price().uppercased()
-        liquidationPriceTitleLabel.text = R.string.localizable.liquidation_price().uppercased()
         takeProfitTitleLabel.text = R.string.localizable.take_profit().uppercased()
         stopLossTitleLabel.text = R.string.localizable.stop_loss().uppercased()
         
@@ -121,8 +112,8 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         delegate?.perpetualMarketOpenPositionCell(self, requestManual: .size)
     }
     
-    @IBAction func questionAboutLiquidation(_ sender: Any) {
-        delegate?.perpetualMarketOpenPositionCell(self, requestManual: .liquidation)
+    @IBAction func questionAboutMargin(_ sender: Any) {
+        delegate?.perpetualMarketOpenPositionCellRequestMarginInfo(self)
     }
     
     @IBAction func questionAboutAutoClosing(_ sender: Any) {
@@ -165,8 +156,6 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             }
         }()
         marginContentLabel.text = viewModel.margin
-        entryPriceContentLabel.text = viewModel.entryPrice
-        liquidationPriceContentLabel.text = viewModel.liquidationPrice
         if let takeProfitPrice = viewModel.takeProfitPrice {
             takeProfitEnabledStackView.isHidden = false
             takeProfitPriceLabel.text = takeProfitPrice.formatted(viewModel.position.priceFormatStyle)

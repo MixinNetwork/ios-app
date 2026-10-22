@@ -1823,6 +1823,7 @@
 		C0DE00101500000000000002 /* ReducePerpsPositionMarginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00101500000000000001 /* ReducePerpsPositionMarginViewController.swift */; };
 		C0DE00101500000000000004 /* ClosePerpsPositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00101500000000000003 /* ClosePerpsPositionViewController.swift */; };
 		C0DE00101600000000000002 /* PerpsPositionValueTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00101600000000000001 /* PerpsPositionValueTextField.swift */; };
+		C764FAFA5AF64A85A5824F01 /* PopupAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C764FAFA5AF64A85A5824F02 /* PopupAlertViewController.swift */; };
 		DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */; };
 		DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */; };
 		DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CCD223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift */; };
@@ -3872,6 +3873,7 @@
 		C0DE00101500000000000001 /* ReducePerpsPositionMarginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducePerpsPositionMarginViewController.swift; sourceTree = "<group>"; };
 		C0DE00101500000000000003 /* ClosePerpsPositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosePerpsPositionViewController.swift; sourceTree = "<group>"; };
 		C0DE00101600000000000001 /* PerpsPositionValueTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsPositionValueTextField.swift; sourceTree = "<group>"; };
+		C764FAFA5AF64A85A5824F02 /* PopupAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupAlertViewController.swift; sourceTree = "<group>"; };
 		C7FEF05A2A554FAC90DA5985 /* StickersEditingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StickersEditingCell.xib; sourceTree = "<group>"; };
 		DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInviteCell.swift; sourceTree = "<group>"; };
 		DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshGroupIconJob.swift; sourceTree = "<group>"; };
@@ -4694,6 +4696,7 @@
 				94B7FF242FC2E13D00FAE569 /* PopupShareView.xib */,
 				94B7FF232FC2E13D00FAE569 /* PopupShareViewController.swift */,
 				94E2A67330207F6900A96B1D /* FavoriteButton.swift */,
+				C764FAFA5AF64A85A5824F02 /* PopupAlertViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -7924,6 +7927,7 @@
 				94211FE52F31DB9000768DC3 /* Account+BuyToken.swift in Sources */,
 				94D7E8532CC025420020BC24 /* RecentSearchHeaderView.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
+				C764FAFA5AF64A85A5824F01 /* PopupAlertViewController.swift in Sources */,
 				94E66CC02D11518A00578F19 /* PopupTipViewController.swift in Sources */,
 				52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */,
 				7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */,
@@ -9788,7 +9792,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 843;
+				CURRENT_PROJECT_VERSION = 844;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -9828,7 +9832,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 843;
+				CURRENT_PROJECT_VERSION = 844;
 				DEVELOPMENT_TEAM = 5EL4S7LCG6;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;

@@ -412,8 +412,9 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
                         intent: .commonWalletTransfer(
                             wallet: wallet,
                             transferring: sendRequirement,
-                            fee: feeRequirement
-                        )
+                            fee: feeRequirement,
+                        ),
+                        receiver: .address(payment.toAddress, label: .contact(displayReceiver)),
                     )
                     homeContainer.present(insufficient, animated: true)
                     return
@@ -424,8 +425,9 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
                         intent: .commonWalletTrade(
                             wallet: wallet,
                             sol: operation.nativeFeeToken,
-                            reason: reason
-                        )
+                            reason: reason,
+                        ),
+                        receiver: .address(payment.toAddress, label: .contact(displayReceiver)),
                     )
                     homeContainer.present(insufficient, animated: true)
                     return

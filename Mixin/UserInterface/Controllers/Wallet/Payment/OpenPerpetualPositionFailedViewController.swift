@@ -65,6 +65,7 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
                     caption: .string(R.string.localizable.direction()),
                     primary: direction,
                     secondary: .plain(profit),
+                    infoAction: nil,
                 ))
             } else {
                 rows.append(.info(

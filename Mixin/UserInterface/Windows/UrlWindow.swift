@@ -559,9 +559,12 @@ class UrlWindow {
                 hud.hide()
                 let inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: destination)
                 UIApplication.shared.homeNavigationController?.pushViewController(afterRoot: inputViewController)
-            case let .insufficientBalance(withdrawing, fee):
+            case let .insufficientBalance(withdrawing, fee, destination):
                 hud.hide()
-                let insufficient = InsufficientBalanceViewController(intent: .withdraw(withdrawing: withdrawing, fee: fee))
+                let insufficient = InsufficientBalanceViewController(
+                    intent: .withdraw(withdrawing: withdrawing, fee: fee),
+                    receiver: .withdrawal(destination),
+                )
                 homeContainer.present(insufficient, animated: true)
             case let .withdrawPayment(payment, destination, fee):
                 payment.checkPreconditions(withdrawTo: destination, fee: fee, on: homeContainer) { reason in
@@ -1213,7 +1216,8 @@ extension UrlWindow {
                     DispatchQueue.main.async {
                         completion(nil)
                         let insufficientBalance = InsufficientBalanceViewController(
-                            intent: .privacyWalletTransfer(requirement)
+                            intent: .privacyWalletTransfer(requirement),
+                            receiver: .transfer(destination),
                         )
                         presenter.present(insufficientBalance, animated: true)
                     }
@@ -1308,7 +1312,8 @@ extension UrlWindow {
                     DispatchQueue.main.async {
                         completion(nil)
                         let insufficient = InsufficientBalanceViewController(
-                            intent: .privacyWalletTransfer(requirement)
+                            intent: .privacyWalletTransfer(requirement),
+                            receiver: .transfer(destination),
                         )
                         presenter.present(insufficient, animated: true)
                     }
@@ -1759,7 +1764,8 @@ extension UrlWindow {
                             await MainActor.run {
                                 hud.hide()
                                 let insufficient = InsufficientBalanceViewController(
-                                    intent: .privacyWalletTransfer(requirement)
+                                    intent: .privacyWalletTransfer(requirement),
+                                    receiver: nil,
                                 )
                                 navigationController.present(insufficient, animated: true)
                             }
@@ -2142,13 +2148,14 @@ extension UrlWindow {
         }
         
         let root = UIApplication.shared.homeContainerViewController ?? UIApplication.shared.firstWindowScene?.keyWindow?.rootViewController
-        if root?.topPresentedViewController is AuthorizationWindow {
+        let presenter = root?.topPresentedViewController
+        if presenter is AuthorizationWindow {
             hud.hideInMainThread()
             return
         }
         hud.hide()
         let window = AuthorizationWindow(authInfo: authorization)
-        UIApplication.shared.homeContainerViewController?.present(window, animated: true)
+        presenter?.present(window, animated: true)
     }
 
     private static func presentConversation(conversation: ConversationResponse, codeId: String, hud: Hud) {

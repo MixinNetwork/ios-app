@@ -146,8 +146,8 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                 marketViewModel.market.tokenSymbol
             )
             targetTitleLabel.text = R.string.localizable.margin()
-            introduceTargetIconView.isHidden = true
-            introduceTargetButton.isHidden = true
+            introduceTargetIconView.isHidden = false
+            introduceTargetButton.isHidden = false
         }
         updateSubtitle()
         titleView.closeButton.addTarget(
@@ -250,9 +250,7 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
             present(manual, animated: true)
             reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_add_position_size"])
         case .margin:
-            let manual = PerpsManual.viewController(initialPage: .liquidation)
-            present(manual, animated: true)
-            reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_add_margin_liquidation"])
+            present(PopupAlertViewController.perpsMargin(), animated: true)
         }
     }
     

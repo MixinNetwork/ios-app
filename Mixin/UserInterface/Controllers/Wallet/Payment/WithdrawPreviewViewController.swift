@@ -112,7 +112,16 @@ final class WithdrawPreviewViewController: WalletIdentifyingAuthenticationPrevie
             do {
                 try await operation.start(pin: pin)
                 await MainActor.run {
-                    reporter.report(event: .sendEnd)
+                    reporter.report(
+                        event: .sendEnd,
+                        tags: [
+                            "wallet": "main",
+                            "destination": "withdrawal",
+                            "asset_symbol": operation.withdrawalToken.symbol,
+                            "asset_level": Reporter.assetLevel(decimalUSDPrice: operation.withdrawalToken.decimalUSDPrice, decimalAmount: operation.withdrawalTokenAmount)
+                        ]
+                    )
+                    
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(title: R.string.localizable.withdrawal_request_sent(),

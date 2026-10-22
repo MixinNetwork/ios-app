@@ -302,6 +302,10 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     }
     
     @IBAction func editTakeProfit(_ sender: Any) {
+        guard marginAmount != 0 else {
+            presentAlertAboutSettingTPSLWithoutValidMarginAmount()
+            return
+        }
         guard let liquidationPrice = validatedInput?.liquidationPrice else {
             return
         }
@@ -322,6 +326,10 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     }
     
     @IBAction func editStopLoss(_ sender: Any) {
+        guard marginAmount != 0 else {
+            presentAlertAboutSettingTPSLWithoutValidMarginAmount()
+            return
+        }
         guard let liquidationPrice = validatedInput?.liquidationPrice else {
             return
         }
@@ -606,6 +614,16 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         } else {
             errorDescriptionLabel.isHidden = true
         }
+    }
+    
+    private func presentAlertAboutSettingTPSLWithoutValidMarginAmount() {
+        let alert = UIAlertController(
+            title: R.string.localizable.perps_tpsl_requires_amount_leverage(),
+            message: nil,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: R.string.localizable.got_it(), style: .cancel))
+        present(alert, animated: true)
     }
     
 }

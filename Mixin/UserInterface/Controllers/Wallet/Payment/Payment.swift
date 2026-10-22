@@ -73,6 +73,16 @@ extension Payment {
             }
         }
         
+        var analyticDestination: String {
+            switch self {
+            case .user:
+                return "user"
+            case .multisig:
+                return "multisig"
+            case .mainnet:
+                return "mainnet"
+            }
+        }
     }
     
     struct InscriptionContext: CustomStringConvertible {

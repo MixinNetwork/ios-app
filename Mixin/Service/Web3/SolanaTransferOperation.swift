@@ -154,7 +154,10 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
     }
     
     override func simulateTransaction() async throws -> TransactionSimulation {
-        try await RouteAPI.simulateSolanaTransaction(rawTransaction: transaction.rawTransaction)
+        try await RouteAPI.simulateSolanaTransaction(
+            from: fromAddress.destination,
+            rawTransaction: transaction.rawTransaction
+        )
     }
     
     override func start(pin: String) async throws {

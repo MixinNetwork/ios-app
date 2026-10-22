@@ -41,7 +41,7 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         connectingView.hidesWhenStopped = true
-        connectingView.tintColor = R.color.icon_tint()
+        connectingView.tintColor = UIColor(displayP3RgbValue: 0xBCBEC3, alpha: 1)
         connectingView.snp.makeConstraints { make in
             make.width.height.equalTo(20)
         }
@@ -52,7 +52,7 @@ final class HomeViewController: UIViewController {
         let titleStackView = UIStackView(arrangedSubviews: [connectingView, titleButton])
         titleStackView.axis = .horizontal
         titleStackView.alignment = .center
-        titleStackView.spacing = 6
+        titleStackView.spacing = 10
         let titleItem = UIBarButtonItem(customView: titleStackView)
         if #available(iOS 26.0, *) {
             titleItem.hidesSharedBackground = true

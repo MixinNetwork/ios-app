@@ -649,12 +649,11 @@ extension HomeViewController {
                 }
                 switch tip {
                 case .appRating:
-                    let scene = UIApplication.shared.connectedScenes.lazy
-                        .compactMap({ $0 as? UIWindowScene })
-                        .first(where: { $0.activationState == .foregroundActive })
-                    if let scene {
+                    if let scene = self.view.window?.windowScene,
+                       scene.activationState == .foregroundActive
+                    {
                         AppGroupUserDefaults.appRatingRequestDate = Date()
-#if RELEASE
+#if !DEBUG
                         if #available(iOS 16.0, *) {
                             AppStore.requestReview(in: scene)
                         } else {

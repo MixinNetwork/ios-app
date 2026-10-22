@@ -99,7 +99,7 @@ final class DatabaseDiagnosticViewController: UIViewController {
         }
         
         queue.async {
-#if RELEASE
+#if !DEBUG
             let prefix = sql.prefix(6).uppercased()
             guard prefix == "SELECT" || prefix == "EXPLAI" else {
                 DispatchQueue.main.sync {

@@ -477,7 +477,7 @@ public class SendMessageService: MixinService {
                     }
                 }
             case .framing:
-                return false
+                return true
             case .timedOut:
                 break
             }

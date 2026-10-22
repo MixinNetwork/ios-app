@@ -71,7 +71,7 @@ final class ReducePerpsPositionMarginViewController: ReduceToPerpsPositionViewCo
         valueTitleLabel.text = R.string.localizable.perps_margin_amount()
         marginDescription = addDescription(
             title: R.string.localizable.margin(),
-            infoAction: nil,
+            infoAction: #selector(introduceMargin(_:)),
             showsActivityIndicator: false,
         )
         liquidationPriceDescription = addDescription(
@@ -193,6 +193,10 @@ final class ReducePerpsPositionMarginViewController: ReduceToPerpsPositionViewCo
             return
         }
         valueTextField.becomeFirstResponder()
+    }
+    
+    @objc private func introduceMargin(_ sender: Any) {
+        present(PopupAlertViewController.perpsMargin(), animated: true)
     }
     
     @objc private func introduceLiquidationPrice(_ sender: Any) {

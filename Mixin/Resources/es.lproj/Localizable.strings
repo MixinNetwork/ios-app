@@ -537,6 +537,7 @@
 "desktop_logout" = "Cerrar sesión Mixin Escritorio";
 "desktop_on_hint" = "Tienes tu escritorio conectado";
 "desktop_upgrade" = "Actualiza Mixin Desktop a la última versión.";
+"details" = "Detalles";
 "detect_qr_tip" = "Se ha detectado un código QR de Mixin, toca para reconocer";
 "developer" = "Desarrollador";
 "device_transfer_failed" = "Error en la transferencia";
@@ -954,8 +955,6 @@
 "markets" = "Mercados";
 "max" = "Máx.";
 "max_favorite_bots_description" = "Puedes agregar un máximo de 5 bots favoritos. Tenga en cuenta que otras personas pueden ver estos bots en su perfil.";
-"max_loss" = "Pérdida máxima %@";
-"max_profit" = "Beneficio máximo %@";
 "max_removable" = "Máximo reducible %@";
 "maximum_deposit" = "Depósito máximo";
 "media" = "Medios de comunicación";
@@ -1234,9 +1233,12 @@
 "perps_confirm_add_margin" = "Confirmar adición de margen";
 "perps_confirm_reduce_margin" = "Confirmar reducción del margen";
 "perps_current_price" = "Precio actual";
+"perps_estimated_profit" = "Beneficio estimado %@";
 "perps_estimated_realized_pnl" = "PnL realizado estimado";
 "perps_funding_frequency" = "Frecuencia";
 "perps_funding_frequency_value" = "1/4/8 horas";
+"perps_funding_payments" = "Pagos de financiación";
+"perps_funding_payments_description" = "El total de financiación que ha recibido o pagado desde que abrió esta posición. El verde (positivo) indica que ha recibido financiación, mientras que el rojo (negativo) indica que ha pagado financiación.";
 "perps_funding_rate_key_point_1" = "Mantener los precios de Perps cerca de los precios spot";
 "perps_funding_rate_key_point_2" = "Equilibrar posiciones long y short";
 "perps_funding_rate_key_point_3" = "Crear oportunidades de arbitraje";
@@ -1252,14 +1254,17 @@
 "perps_leverage_overview" = "El apalancamiento le permite controlar una posición más grande con menos capital.";
 "perps_leverage_risk_notice_1" = "Un mayor apalancamiento aumenta el riesgo de liquidación";
 "perps_leverage_risk_notice_2" = "Con un alto apalancamiento, pequeños movimientos de precios pueden generar grandes pérdidas";
+"perps_liquidation_price_down_description" = "Una bajada del %@ activará la liquidación.";
 "perps_liquidation_price_key_point_1" = "La liquidación se activa por el precio de marca";
 "perps_liquidation_price_key_point_2" = "La liquidación no afecta otros activos en su billetera";
 "perps_liquidation_price_key_point_3" = "Un mayor apalancamiento aumenta el riesgo de liquidación";
 "perps_liquidation_price_overview" = "El precio de liquidación es el precio al que el sistema cierra automáticamente su posición cuando el margen es insuficiente. Pérdidas limitadas al margen.";
 "perps_liquidation_price_short" = "Precio liq.";
+"perps_liquidation_price_up_description" = "Una subida del %@ activará la liquidación.";
 "perps_long_overview" = "Abre una posición long cuando espera que el precio suba. Si el precio sube, obtiene ganancias; si baja, incurre en pérdidas.";
 "perps_low_margin_tip" = "Si el margen es bajo, añade margen primero";
 "perps_margin_amount" = "Importe del margen";
+"perps_margin_description" = "El margen es la garantía que asigna a una posición. Representa la cantidad máxima que puede perder en esa operación.";
 "perps_margin_or_position" = "¿Añadir margen o aumentar la posición?";
 "perps_margin_submitted" = "Ajuste de margen enviado";
 "perps_margin_tip" = "Añadir margen reduce el riesgo de liquidación";
@@ -1297,6 +1302,7 @@
 "perps_top_movers" = "Principales avances";
 "perps_total_margin" = "Margen total";
 "perps_tpsl_overview" = "Take-profit y stop-loss son órdenes condicionales que se ejecutan automáticamente cuando se alcanza el precio de activación.";
+"perps_tpsl_requires_amount_leverage" = "Establezca el importe y el apalancamiento antes de configurar el Take Profit y el Stop Loss.";
 "perps_trading_fee_overview" = "Se aplican comisiones al abrir, añadir o cerrar una posición. Se calculan en función del valor de la posición, no del margen.";
 "perps_trading_fee_pnl_1" = "Cuanto mayor sea la posición, mayores serán las comisiones";
 "perps_trading_fee_pnl_2" = "Cuanto menor sea la posición, menores serán las comisiones";

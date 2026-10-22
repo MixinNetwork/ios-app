@@ -48,7 +48,8 @@ final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewV
             .doubleLineInfo(
                 caption: .from,
                 primary: proposal.proposer.name,
-                secondary: .plain(host)
+                secondary: .plain(host),
+                infoAction: nil,
             )
         ]
         

@@ -11,11 +11,22 @@ struct PerpetualOrderViewModel {
     }
     
     enum OrderType {
-        case open(payAmount: String)
-        case increasePosition(absolutePayAmount: String)
-        case increaseMargin(absolutePayAmount: String)
-        case decreaseMargin(absolutePayAmount: String)
-        case close(pnl: PnL, closePrice: String)
+        case open(
+            payAmount: String // pay_amount, without sign
+        )
+        case increasePosition(
+            payAmount: String // pay_amount, without sign
+        )
+        case increaseMargin(
+            absoluteMarginAmount: String // abs(margin), without sign
+        )
+        case decreaseMargin(
+            absoluteMarginAmount: String // abs(margin), without sign
+        )
+        case close(
+            pnl: PnL,
+            closePrice: String
+        )
     }
     
     enum Status {
@@ -56,14 +67,9 @@ struct PerpetualOrderViewModel {
     let orderValueInToken: String
     let entryPrice: String
     let date: String
-    let decimalPayAmount: Decimal
     let offset: String
     
     init?(wallet: Wallet, order: PerpetualOrderItem) {
-        let decimalPayAmount = Decimal(string: order.payAmount, locale: .enUSPOSIX) ?? 0
-        let payAmount = decimalPayAmount.formatted(
-            Self.payAmountStyle.sign(strategy: .never)
-        )
         let side = PerpetualOrderSide(rawValue: order.side) ?? .short
         let absoluteQuantity = abs(Decimal(string: order.quantity, locale: .enUSPOSIX) ?? 0)
         let entryPrice = Decimal(string: order.entryPrice, locale: .enUSPOSIX)
@@ -73,6 +79,9 @@ struct PerpetualOrderViewModel {
         self.order = order
         switch order.orderType.knownCase {
         case .open:
+            let payAmount = order.decimalPayAmount.formatted(
+                Self.payAmountStyle.sign(strategy: .never)
+            )
             self.type = .open(payAmount: payAmount)
             self.title = switch side {
             case .long:
@@ -91,7 +100,10 @@ struct PerpetualOrderViewModel {
                 }
             }
         case .increasePosition:
-            self.type = .increasePosition(absolutePayAmount: payAmount)
+            let payAmount = order.decimalPayAmount.formatted(
+                Self.payAmountStyle.sign(strategy: .never)
+            )
+            self.type = .increasePosition(payAmount: payAmount)
             self.title = switch side {
             case .long:
                 switch order.status.knownCase {
@@ -109,7 +121,10 @@ struct PerpetualOrderViewModel {
                 }
             }
         case .increaseMargin:
-            self.type = .increaseMargin(absolutePayAmount: payAmount)
+            let absoluteMarginAmount = order.decimalMarginAmount.formatted(
+                Self.payAmountStyle.sign(strategy: .never)
+            )
+            self.type = .increaseMargin(absoluteMarginAmount: absoluteMarginAmount)
             self.title = switch order.status.knownCase {
             case .rejected:
                 R.string.localizable.perps_adding_margin_failed()
@@ -117,7 +132,10 @@ struct PerpetualOrderViewModel {
                 R.string.localizable.perps_added_margin()
             }
         case .decreaseMargin:
-            self.type = .decreaseMargin(absolutePayAmount: payAmount)
+            let absoluteMarginAmount = order.decimalMarginAmount.formatted(
+                Self.payAmountStyle.sign(strategy: .never)
+            )
+            self.type = .decreaseMargin(absoluteMarginAmount: absoluteMarginAmount)
             self.title = switch order.status.knownCase {
             case .rejected:
                 R.string.localizable.perps_reducing_margin_failed()
@@ -232,7 +250,6 @@ struct PerpetualOrderViewModel {
         } else {
             order.updatedAt
         }
-        self.decimalPayAmount = decimalPayAmount
         self.offset = order.updatedAt
     }
     

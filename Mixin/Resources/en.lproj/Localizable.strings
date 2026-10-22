@@ -537,6 +537,7 @@
 "desktop_logout" = "Logout Mixin Desktop";
 "desktop_on_hint" = "You have your desktop logged in";
 "desktop_upgrade" = "Please upgrade Mixin Desktop to the latest version.";
+"details" = "Details";
 "detect_qr_tip" = "Detected a Mixin QR code, tap to recognize";
 "developer" = "Developer";
 "device_transfer_failed" = "Transfer failed";
@@ -954,8 +955,6 @@
 "markets" = "Markets";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
-"max_loss" = "Max Loss %@";
-"max_profit" = "Max Profit %@";
 "max_removable" = "Max removable %@";
 "maximum_deposit" = "Maximum Deposit";
 "media" = "Media";
@@ -1234,9 +1233,12 @@
 "perps_confirm_add_margin" = "Confirm Adding Margin";
 "perps_confirm_reduce_margin" = "Confirm Reducing Margin";
 "perps_current_price" = "Current Price";
+"perps_estimated_profit" = "Estimate Profit %@";
 "perps_estimated_realized_pnl" = "Estimated Realized PnL";
 "perps_funding_frequency" = "Frequency";
 "perps_funding_frequency_value" = "1/4/8 hours";
+"perps_funding_payments" = "Funding payments";
+"perps_funding_payments_description" = "The total funding you’ve received or paid since opening this position. Green (positive) means you received funding, while red (negative) means you paid funding.";
 "perps_funding_rate_key_point_1" = "Keep perp prices close to spot prices";
 "perps_funding_rate_key_point_2" = "Balance long and short positions";
 "perps_funding_rate_key_point_3" = "Create arbitrage opportunities";
@@ -1252,14 +1254,17 @@
 "perps_leverage_overview" = "Leverage allows you to control a larger position with less capital.";
 "perps_leverage_risk_notice_1" = "Higher leverage increases liquidation risk";
 "perps_leverage_risk_notice_2" = "Under high leverage, small price movements can lead to large losses";
+"perps_liquidation_price_down_description" = "Going down %@ will trigger liquidation.";
 "perps_liquidation_price_key_point_1" = "Liquidation is triggered by mark price";
 "perps_liquidation_price_key_point_2" = "Liquidation does not affect other assets in your wallet";
 "perps_liquidation_price_key_point_3" = "Higher leverage increases the risk of liquidation";
 "perps_liquidation_price_overview" = "Liquidation price is the price at which the system auto-closes your position when margin is insufficient. Losses capped at margin.";
 "perps_liquidation_price_short" = "Liq. Price";
+"perps_liquidation_price_up_description" = "Going up %@ will trigger liquidation.";
 "perps_long_overview" = "You open a long position when you expect the price to rise. If the price rises, you profit; if the price falls, you incur a loss.";
 "perps_low_margin_tip" = "If margin is low, add margin first";
 "perps_margin_amount" = "Margin Amount";
+"perps_margin_description" = "Margin is the collateral you allocate to a position. It represents the maximum amount you can lose on that trade.";
 "perps_margin_or_position" = "Add Margin or Increase Position?";
 "perps_margin_submitted" = "Margin adjustment submitted";
 "perps_margin_tip" = "Add margin to lower liquidation risk";
@@ -1297,6 +1302,7 @@
 "perps_top_movers" = "Top Movers";
 "perps_total_margin" = "Total Margin";
 "perps_tpsl_overview" = "Take-profit and stop-loss are conditional orders that execute automatically when the trigger price is reached.";
+"perps_tpsl_requires_amount_leverage" = "Please set the amount and leverage before configuring Take Profit and Stop Loss.";
 "perps_trading_fee_overview" = "Fees apply when opening, adding to, or closing a position. They are calculated based on position value, not margin.";
 "perps_trading_fee_pnl_1" = "Larger position, higher fees";
 "perps_trading_fee_pnl_2" = "Smaller position, lower fees";

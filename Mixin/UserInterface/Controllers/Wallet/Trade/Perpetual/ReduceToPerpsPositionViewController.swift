@@ -71,6 +71,8 @@ class ReduceToPerpsPositionViewController: UIViewController {
         .precision(.fractionLength(0))
         .rounded(rule: .toNearestOrAwayFromZero)
     
+    private weak var valueTextFieldHeightConstraint: NSLayoutConstraint!
+    
     private var markingButtons: [UIButton] = []
     
     private var markingAmounts: [Decimal] {
@@ -120,6 +122,10 @@ class ReduceToPerpsPositionViewController: UIViewController {
         valueTextField.leftView = leftSignLabel
         valueTextField.rightView = rightSignLabel
         valueTextField.delegate = self
+        valueTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        let valueTextFieldHeightConstraint = valueTextField.heightAnchor.constraint(equalToConstant: 0)
+        valueTextFieldHeightConstraint.isActive = true
+        self.valueTextFieldHeightConstraint = valueTextFieldHeightConstraint
         valueTextField.attributedPlaceholder = NSAttributedString(
             string: Decimal(0).formatted(absoluteAmountUserInputSimulationFormatter),
             attributes: [.foregroundColor: valuePlaceholderColor],
@@ -226,19 +232,9 @@ class ReduceToPerpsPositionViewController: UIViewController {
         )
     }
     
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        switch ScreenWidth(size: view.bounds.size) {
-        case .short:
-            valueTextField.font = .systemFont(ofSize: 24, weight: .semibold)
-        case .medium:
-            valueTextField.font = .systemFont(ofSize: 36, weight: .semibold)
-        case .long:
-            valueTextField.font = .systemFont(ofSize: 48, weight: .semibold)
-        }
-        for label in [leftSignLabel, rightSignLabel] {
-            label.font = valueTextField.font
-        }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateValueTextFieldFont()
     }
     
     @IBAction func valueEditingChanged(_ sender: UITextField) {
@@ -632,6 +628,45 @@ extension ReduceToPerpsPositionViewController {
         valueTextField.setNeedsLayout()
     }
     
+    private func updateValueTextFieldFont() {
+        let baseFontSize: CGFloat = 36
+        var font = UIFont.systemFont(ofSize: baseFontSize, weight: .semibold)
+        let height = font.lineHeight.rounded(.up)
+        if valueTextFieldHeightConstraint.constant != height {
+            valueTextFieldHeightConstraint.constant = height
+        }
+        
+        // Measure the available space independently of the field's intrinsic width.
+        let availableWidth = increaseMultiplierButton.frame.minX - decreaseMultiplierButton.frame.maxX
+        guard availableWidth > 0 else {
+            return
+        }
+        let text = valueTextField.hasText
+            ? valueTextField.text ?? ""
+            : valueTextField.attributedPlaceholder?.string ?? ""
+        let strings = [text, leftSignLabel.text ?? "", rightSignLabel.text ?? ""]
+        while font.pointSize > 12 {
+            let width = strings.reduce(CGFloat(10)) { width, string in
+                // Reserve padding for the insertion caret as well as the signs.
+                width + (string as NSString).size(withAttributes: [.font: font]).width.rounded(.up)
+            }
+            guard width > availableWidth else {
+                break
+            }
+            font = font.withSize(font.pointSize - 1)
+        }
+        guard valueTextField.font != font || leftSignLabel.font != font || rightSignLabel.font != font else {
+            return
+        }
+        valueTextField.font = font
+        for label in [leftSignLabel, rightSignLabel] {
+            label.font = font
+            label.sizeToFit()
+        }
+        valueTextField.invalidateIntrinsicContentSize()
+        valueTextField.setNeedsLayout()
+    }
+    
     private func adjustValue(by change: Int) {
         switch amountDisplay {
         case .byPercentage:
@@ -686,6 +721,7 @@ extension ReduceToPerpsPositionViewController {
         slider.value = NSDecimalNumber(decimal: min(1, max(0, percentage))).floatValue
         decreaseMultiplierButton.isEnabled = absoluteAmount > 0
         increaseMultiplierButton.isEnabled = absoluteAmount < totalAmount
+        updateValueTextFieldFont()
     }
     
 }

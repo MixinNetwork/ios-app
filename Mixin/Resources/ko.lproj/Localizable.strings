@@ -537,6 +537,7 @@
 "desktop_logout" = "Mixin 데스크톱 로그아웃";
 "desktop_on_hint" = "데스크톱에 로그인되어 있습니다.";
 "desktop_upgrade" = "Mixin 데스크톱을 최신 버전으로 업그레이드하세요.";
+"details" = "세부정보";
 "detect_qr_tip" = "Mixin QR 코드가 감지되었습니다. 인식하려면 탭하세요.";
 "developer" = "개발자";
 "device_transfer_failed" = "전송 실패";
@@ -954,8 +955,6 @@
 "markets" = "시장";
 "max" = "최대";
 "max_favorite_bots_description" = "좋아하는 봇을 최대 5개까지 추가할 수 있습니다. 다른 사람들이 귀하의 프로필에서 이러한 봇을 볼 수 있다는 점에 유의하십시오.";
-"max_loss" = "최대 손실 %@";
-"max_profit" = "최대 이익 %@";
 "max_removable" = "최대 축소 가능 %@";
 "maximum_deposit" = "최대 입금액";
 "media" = "미디어";
@@ -1234,9 +1233,12 @@
 "perps_confirm_add_margin" = "증거금 추가 확인";
 "perps_confirm_reduce_margin" = "증거금 감소 확인";
 "perps_current_price" = "현재 가격";
+"perps_estimated_profit" = "예상 수익 %@";
 "perps_estimated_realized_pnl" = "예상 실현 손익";
 "perps_funding_frequency" = "빈도";
 "perps_funding_frequency_value" = "1/4/8시간";
+"perps_funding_payments" = "펀딩 수수료";
+"perps_funding_payments_description" = "이 포지션을 개설한 이후 받거나 지급한 펀딩 수수료의 누적 합계입니다. 녹색(양수)은 펀딩 수수료를 받았음을, 빨간색(음수)은 펀딩 수수료를 지급했음을 의미합니다.";
 "perps_funding_rate_key_point_1" = "Perps 가격을 현물 가격에 가깝게 유지";
 "perps_funding_rate_key_point_2" = "롱 포지션과 숏 포지션의 균형";
 "perps_funding_rate_key_point_3" = "차익거래 기회 창출";
@@ -1252,14 +1254,17 @@
 "perps_leverage_overview" = "레버리지를 사용하면 더 적은 자본으로 더 큰 포지션을 관리할 수 있습니다.";
 "perps_leverage_risk_notice_1" = "레버리지가 높을수록 청산 위험이 높아집니다.";
 "perps_leverage_risk_notice_2" = "레버리지가 높으면 작은 가격 변동으로도 큰 손실이 발생할 수 있습니다.";
+"perps_liquidation_price_down_description" = "%@ 하락하면 청산이 발생합니다.";
 "perps_liquidation_price_key_point_1" = "마크 가격에 따라 청산이 시작됩니다.";
 "perps_liquidation_price_key_point_2" = "청산은 지갑에 있는 다른 자산에 영향을 미치지 않습니다.";
 "perps_liquidation_price_key_point_3" = "레버리지가 높을수록 청산 위험이 높아집니다.";
 "perps_liquidation_price_overview" = "청산 가격은 증거금이 부족할 때 시스템이 자동으로 포지션을 청산하는 가격입니다. 손실은 마진으로 제한됩니다.";
 "perps_liquidation_price_short" = "청산가";
+"perps_liquidation_price_up_description" = "%@ 상승하면 청산이 발생합니다.";
 "perps_long_overview" = "가격 상승이 예상될 때 롱 포지션을 오픈합니다. 가격이 오르면 이익을 얻고, 가격이 떨어지면 손실이 발생합니다.";
 "perps_low_margin_tip" = "증거금이 부족하면 먼저 증거금을 추가하세요";
 "perps_margin_amount" = "증거금 금액";
+"perps_margin_description" = "증거금은 포지션에 배정하는 담보입니다. 해당 거래에서 손실을 볼 수 있는 최대 금액을 나타냅니다.";
 "perps_margin_or_position" = "증거금 추가와 포지션 추가 중 무엇을 선택할까요?";
 "perps_margin_submitted" = "증거금 조정이 제출되었습니다";
 "perps_margin_tip" = "증거금을 추가하면 강제 청산 위험이 줄어듭니다";
@@ -1297,6 +1302,7 @@
 "perps_top_movers" = "최고 변동 항목";
 "perps_total_margin" = "총 증거금";
 "perps_tpsl_overview" = "이익실현 및 손절매는 발동 가격에 도달하면 자동으로 실행되는 조건부 주문입니다.";
+"perps_tpsl_requires_amount_leverage" = "이익 실현 및 손절매를 설정하기 전에 금액과 레버리지를 먼저 설정해 주세요.";
 "perps_trading_fee_overview" = "포지션을 열거나 추가하거나 닫을 때 수수료가 발생합니다. 수수료는 증거금이 아닌 포지션 가치를 기준으로 계산됩니다.";
 "perps_trading_fee_pnl_1" = "포지션이 클수록 수수료가 높아집니다";
 "perps_trading_fee_pnl_2" = "포지션이 작을수록 수수료가 낮아집니다";

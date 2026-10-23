@@ -197,7 +197,8 @@ extension WalletConnectSession {
                 } else {
                     await MainActor.run {
                         let insufficient = InsufficientBalanceViewController(
-                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement)
+                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement),
+                            receiver: .address(operation.toAddress, label: nil),
                         )
                         Web3PopupCoordinator.enqueue(popup: .request(insufficient))
                     }
@@ -250,7 +251,7 @@ extension WalletConnectSession {
                 guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.solana) else {
                     throw Error.noAddress
                 }
-                guard address.destination == transaction.feePayer else {
+                guard transaction.requiresSigner(address: address.destination) else {
                     throw Error.mismatchedFromAddress
                 }
                 let operation = try await SolanaTransferWithWalletConnectOperation(
@@ -271,7 +272,8 @@ extension WalletConnectSession {
                 } else {
                     await MainActor.run {
                         let insufficient = InsufficientBalanceViewController(
-                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement)
+                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement),
+                            receiver: .address(operation.toAddress, label: nil),
                         )
                         Web3PopupCoordinator.enqueue(popup: .request(insufficient))
                     }

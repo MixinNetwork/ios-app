@@ -123,18 +123,18 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
             case .transfer:
                 break
             case .release:
-                rows.append(.info(caption: .fee, content: feeTokenValue))
+                rows.append(.info(caption: .fee, content: feeTokenValue, action: nil))
             }
         } else {
             rows.append(contentsOf: [
                 .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
                 .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
-                .info(caption: .network, content: token.depositNetworkName ?? ""),
+                .info(caption: .network, content: token.depositNetworkName ?? "", action: nil),
             ])
         }
         
         if let memo = operation.extra.plainValue, !memo.isEmpty {
-            rows.append(.info(caption: .memo, content: memo))
+            rows.append(.info(caption: .memo, content: memo, action: nil))
         }
         reloadData(with: rows)
         reporter.report(event: .sendPreview)
@@ -184,7 +184,15 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
                             )
                         }
                     } else {
-                        reporter.report(event: .sendEnd)
+                        reporter.report(
+                            event: .sendEnd,
+                            tags: [
+                                "wallet": "main",
+                                "destination": operation.destination.analyticDestination,
+                                "asset_symbol": operation.token.symbol,
+                                "asset_level": Reporter.assetLevel(decimalUSDPrice: operation.token.decimalUSDPrice, decimalAmount: operation.amount)
+                            ]
+                        )
                         layoutTableHeaderView(
                             title: R.string.localizable.transfer_success(),
                             subtitle: R.string.localizable.transfer_sent_description()

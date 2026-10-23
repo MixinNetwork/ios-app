@@ -75,9 +75,14 @@ final class Web3SignViewController: WalletIdentifyingAuthenticationPreviewViewCo
             reloadData(with: [
                 .web3Message(caption: R.string.localizable.unsigned_message(), message: operation.humanReadableMessage),
                 .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
-                .doubleLineInfo(caption: .from, primary: operation.proposer.name, secondary: .plain(operation.proposer.host)),
+                .doubleLineInfo(
+                    caption: .from,
+                    primary: operation.proposer.name,
+                    secondary: .plain(operation.proposer.host),
+                    infoAction: nil,
+                ),
                 .address(caption: .wallet, address: operation.address.destination, label: .wallet(.common(operation.wallet))),
-                .info(caption: .network, content: operation.chain.name)
+                .info(caption: .network, content: operation.chain.name, action: nil)
             ])
         case .signing:
             canDismissInteractively = false

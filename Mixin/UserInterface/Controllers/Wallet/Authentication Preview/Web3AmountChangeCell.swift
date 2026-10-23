@@ -57,9 +57,11 @@ final class Web3AmountChangeCell: UITableViewCell {
                 R.color.market_green()
             case .outgoing:
                 R.color.market_red()
-            case .plain:
+            case .primary:
                 R.color.text()
-            case .gray:
+            case .secondary:
+                R.color.text_secondary()
+            case .tertiary:
                 R.color.text_tertiary()
             }
             tokenAmountLabel.isHidden = false

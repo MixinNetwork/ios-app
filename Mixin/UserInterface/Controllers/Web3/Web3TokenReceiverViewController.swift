@@ -54,9 +54,14 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
                 )
                 let input = Web3TransferInputAmountViewController(payment: addressPayment)
                 self.navigationController?.pushViewController(input, animated: true)
-            case let .insufficientBalance(transferring, fee):
+            case let .insufficientBalance(transferring, fee, address, label):
                 let insufficient = InsufficientBalanceViewController(
-                    intent: .commonWalletTransfer(wallet: payment.wallet, transferring: transferring, fee: fee)
+                    intent: .commonWalletTransfer(
+                        wallet: payment.wallet,
+                        transferring: transferring,
+                        fee: fee,
+                    ),
+                    receiver: .address(address, label: label),
                 )
                 self.present(insufficient, animated: true)
             case let .transfer(operation, label):

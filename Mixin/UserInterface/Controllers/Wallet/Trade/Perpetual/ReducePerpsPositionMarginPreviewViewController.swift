@@ -38,7 +38,7 @@ final class ReducePerpsPositionMarginPreviewViewController: WalletIdentifyingAut
         tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixin)
         
         let receivingToken = TokenDAO.shared.tokenItem(
-            assetID: positionViewModel.estimatedReceiving.assetID
+            assetID: positionViewModel.position.settleAssetID
         )
         
         var rows: [Row] = [
@@ -56,7 +56,15 @@ final class ReducePerpsPositionMarginPreviewViewController: WalletIdentifyingAut
                 sign: .always,
                 symbol: .custom(token.symbol),
             )
-            rows.append(.estimatedReceive(token: token, count: count, pnl: nil))
+            let change = StyledAssetChange(
+                token: token,
+                amount: count,
+                amountStyle: .secondary,
+            )
+            rows.append(.assetChanges(
+                title: R.string.localizable.estimated_receive(),
+                changes: [change],
+            ))
         }
         rows.append(
             .wallet(caption: .receiver, wallet: wallet, threshold: nil)
@@ -84,7 +92,7 @@ final class ReducePerpsPositionMarginPreviewViewController: WalletIdentifyingAut
             subtitle: R.string.localizable.signature_request_from(.mixin)
         )
         replaceTrayView(with: nil, animation: .vertical)
-        let positionID = positionViewModel.positionID
+        let positionID = positionViewModel.position.positionID
         let amount = reducingMargin.formatted(
             MixinToken.transferCanonicalFormatStyle
         )

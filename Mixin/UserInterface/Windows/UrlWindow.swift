@@ -560,9 +560,12 @@ class UrlWindow {
                 hud.hide()
                 let inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: destination)
                 UIApplication.shared.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
-            case let .insufficientBalance(withdrawing, fee):
+            case let .insufficientBalance(withdrawing, fee, destination):
                 hud.hide()
-                let insufficient = InsufficientBalanceViewController(intent: .withdraw(withdrawing: withdrawing, fee: fee))
+                let insufficient = InsufficientBalanceViewController(
+                    intent: .withdraw(withdrawing: withdrawing, fee: fee),
+                    receiver: .withdrawal(destination),
+                )
                 homeContainer.present(insufficient, animated: true)
             case let .withdrawPayment(payment, destination, fee):
                 payment.checkPreconditions(withdrawTo: destination, fee: fee, on: homeContainer) { reason in
@@ -1149,7 +1152,6 @@ extension UrlWindow {
                         UIApplication.shared.homeNavigationController?.pushViewController(inputAmount, animated: true)
                     }
                 case (.none, .none):
-                    // Receive money QR code
                     DispatchQueue.main.async {
                         completion(nil)
                         reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "schema"])
@@ -1158,6 +1160,7 @@ extension UrlWindow {
                             reporter.report(event: .sendTokenSelect, tags: ["method": location.asEventMethod])
                             reporter.report(event: .sendRecipient, tags: ["type": "contact"])
                             let inputAmount = TransferInputAmountViewController(
+                                traceID: paymentURL.trace,
                                 tokenItem: token,
                                 receiver: destination,
                                 note: paymentURL.memo
@@ -1214,7 +1217,8 @@ extension UrlWindow {
                     DispatchQueue.main.async {
                         completion(nil)
                         let insufficientBalance = InsufficientBalanceViewController(
-                            intent: .privacyWalletTransfer(requirement)
+                            intent: .privacyWalletTransfer(requirement),
+                            receiver: .transfer(destination),
                         )
                         presenter.present(insufficientBalance, animated: true)
                     }
@@ -1309,7 +1313,8 @@ extension UrlWindow {
                     DispatchQueue.main.async {
                         completion(nil)
                         let insufficient = InsufficientBalanceViewController(
-                            intent: .privacyWalletTransfer(requirement)
+                            intent: .privacyWalletTransfer(requirement),
+                            receiver: .transfer(destination),
                         )
                         presenter.present(insufficient, animated: true)
                     }
@@ -1576,22 +1581,29 @@ extension UrlWindow {
                                 wallet: wallet,
                                 transaction: transaction,
                                 fromAddress: address,
-                                chain: .solana
-                            ) { signature in
-                                guard let requestID, case let .conversation(composer) = source else {
-                                    return
-                                }
-                                let response = [
-                                    "request_id": requestID,
-                                    "signature": signature,
-                                ]
-                                let jsonData = try? JSONSerialization.data(withJSONObject: response, options: .prettyPrinted)
-                                if let jsonData, let json = String(data: jsonData, encoding: .utf8) {
-                                    await MainActor.run {
-                                        composer.unwrapped?.sendMessage(type: .SIGNAL_TEXT, value: json)
+                                chain: .solana,
+                                broadcastsTransaction: true,
+                                respondWith: { _, transactionHash in
+                                    guard
+                                        let transactionHash,
+                                        let requestID,
+                                        case let .conversation(composer) = source
+                                    else {
+                                        return
                                     }
-                                }
-                            }
+                                    let response = [
+                                        "request_id": requestID,
+                                        "signature": transactionHash, // Solana's transaction ID is its first signature; the link protocol calls it "signature".
+                                    ]
+                                    let jsonData = try? JSONSerialization.data(withJSONObject: response, options: .prettyPrinted)
+                                    if let jsonData, let json = String(data: jsonData, encoding: .utf8) {
+                                        await MainActor.run {
+                                            composer.unwrapped?.sendMessage(type: .SIGNAL_TEXT, value: json)
+                                        }
+                                    }
+                                },
+                                rejectWith: nil,
+                            )
                             DispatchQueue.main.async {
                                 hud.hide()
                                 let transfer = Web3TransferPreviewViewController(operation: operation, proposer: nil)
@@ -1760,7 +1772,8 @@ extension UrlWindow {
                             await MainActor.run {
                                 hud.hide()
                                 let insufficient = InsufficientBalanceViewController(
-                                    intent: .privacyWalletTransfer(requirement)
+                                    intent: .privacyWalletTransfer(requirement),
+                                    receiver: nil,
                                 )
                                 navigationController.present(insufficient, animated: true)
                             }
@@ -2143,13 +2156,14 @@ extension UrlWindow {
         }
         
         let root = UIApplication.shared.homeContainerViewController ?? UIApplication.shared.firstWindowScene?.keyWindow?.rootViewController
-        if root?.topPresentedViewController is AuthorizationWindow {
+        let presenter = root?.topPresentedViewController
+        if presenter is AuthorizationWindow {
             hud.hideInMainThread()
             return
         }
         hud.hide()
         let window = AuthorizationWindow(authInfo: authorization)
-        UIApplication.shared.homeContainerViewController?.present(window, animated: true)
+        presenter?.present(window, animated: true)
     }
 
     private static func presentConversation(conversation: ConversationResponse, codeId: String, hud: Hud) {

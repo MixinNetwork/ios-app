@@ -193,7 +193,7 @@ class EVMTransferOperation: Web3TransferOperation {
         await MainActor.run {
             self.evmFee = evmFee
             self.fee = fee
-            self.state = .ready
+            self.updateState(.ready)
         }
         return fee
     }
@@ -230,7 +230,7 @@ class EVMTransferOperation: Web3TransferOperation {
         }
         assert(!fee.gasless)
         await MainActor.run {
-            state = .signing
+            updateState(.signing)
         }
         Logger.web3.info(category: "EVMTransfer", message: "Will sign")
         let account: EthereumAccount
@@ -254,7 +254,7 @@ class EVMTransferOperation: Web3TransferOperation {
         } catch {
             Logger.web3.error(category: "EVMTransfer", message: "Failed to sign: \(error)")
             await MainActor.run {
-                self.state = .signingFailed(error)
+                self.updateState(.signingFailed(error))
             }
             throw error
         }
@@ -263,7 +263,7 @@ class EVMTransferOperation: Web3TransferOperation {
         await MainActor.run {
             self.transaction = updatedTransaction
             self.account = account
-            self.state = .sending
+            self.updateState(.sending)
         }
         try await self.send(transaction: updatedTransaction, with: account, fee: fee)
     }
@@ -273,7 +273,7 @@ class EVMTransferOperation: Web3TransferOperation {
             return
         }
         assert(!fee.selected.gasless)
-        state = .sending
+        updateState(.sending)
         Logger.web3.info(category: "EVMTransfer", message: "Will resend")
         Task.detached { [transaction] in
             Logger.web3.info(category: "EVMTransfer", message: "Will resend")
@@ -347,14 +347,13 @@ class EVMTransferOperation: Web3TransferOperation {
             try await respond(hash: hash)
             Logger.web3.info(category: "EVMTransfer", message: "Txn sent")
             await MainActor.run {
-                self.state = .success
-                self.hasTransactionSent = true
+                self.updateState(.success)
                 Web3Diagnostic.usesLowEVMFeeOnce = false
             }
         } catch {
             Logger.web3.error(category: "EVMTransfer", message: "Send: \(error)")
             await MainActor.run {
-                self.state = .sendingFailed(error)
+                self.updateState(.sendingFailed(error))
             }
             throw error
         }
@@ -552,7 +551,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
                 let fee = Fee(options: options, selectedIndex: 0)
                 await MainActor.run {
                     self.fee = fee
-                    self.state = .ready
+                    self.updateState(.ready)
                 }
                 return fee
             } catch {
@@ -580,7 +579,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
                 let fee = Fee(options: [option], selectedIndex: 0)
                 await MainActor.run {
                     self.fee = fee
-                    self.state = .ready
+                    self.updateState(.ready)
                 }
                 return fee
             } catch {
@@ -604,7 +603,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
         Logger.web3.info(category: "EVMTransfer(Gasless)", message: "Start")
         let chainID = payment.chain.chainID
         await MainActor.run {
-            state = .signing
+            updateState(.signing)
         }
         let signedTransaction: SignedEVMGaslessTransactionProposal
         let nonce: String
@@ -676,7 +675,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
         } catch {
             Logger.web3.error(category: "EVMTransfer(Gasless)", message: "Failed to sign: \(error)")
             await MainActor.run {
-                self.state = .signingFailed(error)
+                self.updateState(.signingFailed(error))
             }
             throw error
         }
@@ -705,13 +704,12 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             }
             Logger.web3.info(category: "EVMTransfer(Gasless)", message: "Txn sent")
             await MainActor.run {
-                self.state = .success
-                self.hasTransactionSent = true
+                self.updateState(.success)
             }
         } catch {
             Logger.web3.error(category: "EVMTransfer(Gasless)", message: "Send: \(error)")
             await MainActor.run {
-                self.state = .sendingFailed(error)
+                self.updateState(.sendingFailed(error))
             }
             throw error
         }
@@ -731,7 +729,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             return
         }
         self.fee = fee
-        self.state = .ready
+        self.updateState(.ready)
     }
     
 }

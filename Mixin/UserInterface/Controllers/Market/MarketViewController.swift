@@ -425,6 +425,7 @@ final class MarketViewController: UIViewController {
         DispatchQueue.global().async { [weak self] in
             let uniqueIDs = Set(ids)
             let tokens = TokenDAO.shared.tokenItems(with: uniqueIDs)
+                .filter(\.isDisplayable)
                 .sorted { one, another in
                     one.decimalBalance > another.decimalBalance
                 }
@@ -443,7 +444,7 @@ final class MarketViewController: UIViewController {
                 Logger.general.debug(category: "MarketView", message: "Load missing asset: \(missingAssetIDs)")
                 switch SafeAPI.assets(ids: missingAssetIDs) {
                 case .success(let missingTokens):
-                    let missingTokenItems = missingTokens.map { token in
+                    let missingTokenItems = missingTokens.filter(\.isDisplayable).map { token in
                         let chain = ChainDAO.shared.chain(chainId: token.chainID)
                         return MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                     }
@@ -656,15 +657,9 @@ extension MarketViewController: UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_my_balance, for: indexPath)!
                 if let balance = viewModel.balance {
                     cell.balanceLabel.text = balance.balance
-                    cell.periodLabel.text = balance.period
+                    cell.periodLabel.text = nil
                     cell.valueLabel.text = balance.value
-                    cell.changeLabel.text = balance.change
-                    switch balance.changeColor {
-                    case .market(let color):
-                        cell.changeLabel.marketColor = color
-                    case .arbitrary(let color):
-                        cell.changeLabel.textColor = color
-                    }
+                    cell.changeLabel.text = nil
                 }
                 return cell
             }
@@ -1020,27 +1015,11 @@ extension MarketViewController {
             }
             
             let balance: String
-            let period: String
             let value: String
-            let change: String
-            let changeColor: Color
             
-            init(balance: String, period: String, value: String, change: String, changeColor: Color) {
+            init(balance: String, value: String) {
                 self.balance = balance
-                self.period = period
                 self.value = value
-                self.change = change
-                self.changeColor = changeColor
-            }
-            
-            func replacing(change: String, changeColor: Color) -> Balance {
-                Balance(
-                    balance: self.balance,
-                    period: self.period,
-                    value: self.value,
-                    change: change,
-                    changeColor: changeColor
-                )
             }
             
         }
@@ -1083,10 +1062,7 @@ extension MarketViewController {
             self.stats = nil
             self.balance = Balance(
                 balance: token.localizedBalanceWithSymbol,
-                period: R.string.localizable.hours_count_short(24).uppercased(),
                 value: token.estimatedFiatMoneyBalance,
-                change: "",
-                changeColor: .arbitrary(.clear)
             )
             self.infos = basicInfos
             
@@ -1099,9 +1075,6 @@ extension MarketViewController {
         
         func updateWithMarketNotFound() {
             self.stats = nil
-            if let balance {
-                self.balance = balance.replacing(change: .notApplicable, changeColor: .arbitrary(R.color.text_quaternary()!))
-            }
             self.marketInfos = [
                 Info.contentNotApplicable(title: R.string.localizable.market_cap().uppercased()),
                 Info.contentNotApplicable(title: R.string.localizable.circulation_supply().uppercased()),
@@ -1127,26 +1100,6 @@ extension MarketViewController {
                     balance = 0
                 }
                 
-                var change: String
-                let changeColor: Balance.Color
-                if let priceChange24H = Decimal(string: market.priceChange24H, locale: .enUSPOSIX) {
-                    change = CurrencyFormatter.localizedString(
-                        from: priceChange24H * balance * Currency.current.decimalRate,
-                        format: .fiatMoneyPrice,
-                        sign: .always,
-                        symbol: .currencySymbol
-                    )
-                    if let priceChangePercentage24H = Decimal(string: market.priceChangePercentage24H, locale: .enUSPOSIX),
-                       let percent = NumberFormatter.percentage.string(decimal: priceChangePercentage24H / 100)
-                    {
-                        change += " (\(percent))"
-                    }
-                    changeColor = .market(.byValue(priceChange24H))
-                } else {
-                    change = ""
-                    changeColor = .arbitrary(.clear)
-                }
-                
                 return Balance(
                     balance: CurrencyFormatter.localizedString(
                         from: balance,
@@ -1154,15 +1107,12 @@ extension MarketViewController {
                         sign: .never,
                         symbol: .custom(symbol)
                     ),
-                    period: R.string.localizable.hours_count_short(24).uppercased(),
                     value: "≈ " + CurrencyFormatter.localizedString(
                         from: balance * market.decimalPrice * Currency.current.decimalRate,
                         format: .fiatMoneyPrecision,
                         sign: .never,
                         symbol: .currencySymbol
                     ),
-                    change: change,
-                    changeColor: changeColor
                 )
             }()
             

@@ -52,14 +52,14 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
         }
         
         var rows: [Row] = [
-            .info(caption: .label, content: label),
-            .info(caption: .address, content: destination),
+            .info(caption: .label, content: label, action: nil),
+            .info(caption: .address, content: destination, action: nil),
         ]
         if !tag.isEmpty {
             let caption: Caption = token.usesTag ? .tag : .memo
-            rows.append(.info(caption: caption, content: tag))
+            rows.append(.info(caption: caption, content: tag, action: nil))
         }
-        rows.append(.info(caption: .network, content: token.depositNetworkName ?? ""))
+        rows.append(.info(caption: .network, content: token.depositNetworkName ?? "", action: nil))
         reloadData(with: rows)
     }
     

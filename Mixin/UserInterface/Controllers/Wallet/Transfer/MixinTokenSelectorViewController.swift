@@ -41,6 +41,7 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
         queue.async { [displayZeroBalanceItems] in
             let recentAssetIDs = PropertiesDAO.shared.jsonObject(forKey: .transferRecentAssetIDs, type: [String].self) ?? []
             let recentTokens = TokenDAO.shared.tokenItems(with: recentAssetIDs)
+                .filter(\.isDisplayable)
                 .reduce(into: [:]) { results, item in
                     results[item.assetID] = item
                 }

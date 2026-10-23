@@ -1,11 +1,13 @@
 import UIKit
 import MixinServices
 
-final class ReduceToPerpsPositionViewController: UIViewController {
+class ReduceToPerpsPositionViewController: UIViewController {
     
     @IBOutlet weak var titleView: EditPerpsPositionTitleView!
     
+    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var inputBackgroundView: UIView!
+    @IBOutlet weak var valueTitleLabel: UILabel!
     @IBOutlet weak var decreaseMultiplierButton: UIButton!
     @IBOutlet weak var increaseMultiplierButton: UIButton!
     @IBOutlet weak var valueTextField: UITextField!
@@ -15,22 +17,42 @@ final class ReduceToPerpsPositionViewController: UIViewController {
     @IBOutlet weak var errorDescriptionButton: UIButton!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var markingContainerView: UIView!
-    
-    @IBOutlet weak var targetTitleLabel: UILabel!
-    @IBOutlet weak var targetContentLabel: UILabel!
-    @IBOutlet weak var introductTargetIconView: UIImageView!
-    @IBOutlet weak var introductTargetButton: UIButton!
-    @IBOutlet weak var liquidationPriceTitleLabel: UILabel!
-    @IBOutlet weak var liquidationPriceContentLabel: UILabel!
-    @IBOutlet weak var liquidationPriceActivityIndicator: ActivityIndicatorView!
+    @IBOutlet weak var descriptionStackView: UIStackView!
     
     @IBOutlet weak var actionWrapperView: UIView!
     @IBOutlet weak var cancelButton: UIButton!
-    @IBOutlet weak var reduceButton: UIButton!
+    @IBOutlet weak var confirmButton: UIButton!
     
-    private let wallet: Wallet
-    private let target: PerpPositionAdjustmentTarget
-    private let liquidationPriceRequester: EditPerpsPositionLiquidationPriceRequester
+    let wallet: Wallet
+    
+    var marketViewModel: PerpetualMarketViewModel
+    var positionViewModel: PerpetualPositionViewModel
+    
+    private(set) var input: Input
+    private(set) var amountDisplay: AmountDisplay
+    
+    var totalAmount: Decimal {
+        preconditionFailure("Must override")
+    }
+    
+    var absoluteAmount: Decimal {
+        switch input.mode {
+        case .byAmount:
+            input.value
+        case .byPercentage:
+            totalAmount * input.value
+        }
+    }
+    
+    var percentage: Decimal {
+        switch input.mode {
+        case .byPercentage:
+            input.value
+        case .byAmount:
+            totalAmount > 0 ? input.value / totalAmount : 0
+        }
+    }
+    
     private let leftSignLabel = UILabel()
     private let rightSignLabel = UILabel()
     private let valuePlaceholderColor = R.color.text_quaternary()!
@@ -49,72 +71,25 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         .precision(.fractionLength(0))
         .rounded(rule: .toNearestOrAwayFromZero)
     
-    private var marketViewModel: PerpetualMarketViewModel
-    private var positionViewModel: PerpetualPositionViewModel
-    private var liquidationPriceBeforeReducing: String
-    private var markingAmounts: [Decimal]
+    private weak var valueTextFieldHeightConstraint: NSLayoutConstraint!
     
     private var markingButtons: [UIButton] = []
-    private var input = Input(mode: .byPercentage, value: 0)
-    private var amountDisplay: AmountDisplay
-    private var validatedAmount: Decimal?
-    private var maximumRemovableAmount: Decimal?
     
-    private var absoluteAmount: Decimal {
-        switch input.mode {
-        case .byAmount:
-            return input.value
-        case .byPercentage:
-            var amount = positionViewModel.decimalMargin * input.value
-            var result = Decimal()
-            NSDecimalRound(&result, &amount, Int(MixinToken.internalPrecision), .down)
-            return result
-        }
-    }
-    
-    private var percentage: Decimal {
-        switch input.mode {
-        case .byPercentage:
-            return input.value
-        case .byAmount:
-            let margin = positionViewModel.decimalMargin
-            return margin > 0 ? input.value / margin : 0
-        }
+    private var markingAmounts: [Decimal] {
+        Input.markingAmounts(amount: totalAmount, percentages: markingPercentages)
     }
     
     init(
         wallet: Wallet,
-        reducing target: PerpPositionAdjustmentTarget,
         marketViewModel: PerpetualMarketViewModel,
         positionViewModel: PerpetualPositionViewModel,
+        initialPercentage: Decimal,
     ) {
-        let markingPercentages: [Decimal] = [0, 0.25, 0.5, 0.75, 1]
-        
         self.wallet = wallet
-        self.target = target
+        self.input = Input(mode: .byPercentage, value: initialPercentage)
         self.marketViewModel = marketViewModel
         self.positionViewModel = positionViewModel
-        switch target {
-        case .margin:
-            self.liquidationPriceRequester = EditPerpsPositionLiquidationPriceRequester(
-                positionID: positionViewModel.positionID,
-                action: .decreaseMargin,
-            )
-        case .position:
-            assertionFailure("Not ready")
-            self.liquidationPriceRequester = EditPerpsPositionLiquidationPriceRequester(
-                positionID: positionViewModel.positionID,
-                action: .decreaseMargin,
-            )
-        }
-        self.markingPercentages = markingPercentages
-        self.liquidationPriceBeforeReducing = positionViewModel.decimalLiquidationPrice?.formatted(
-            marketViewModel.userDisplayPriceFormatStyle
-        ) ?? "-"
-        self.markingAmounts = Input.markingAmounts(
-            margin: positionViewModel.decimalMargin,
-            percentages: markingPercentages
-        )
+        self.markingPercentages = [0, 0.25, 0.5, 0.75, 1]
         self.amountDisplay = AppGroupUserDefaults.Wallet.reducePerpsPositionAmountDisplay
             .flatMap(AmountDisplay.init(rawValue:))
         ?? .byPercentage
@@ -130,23 +105,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         super.viewDidLoad()
         presentationController?.delegate = self
         
-        var tags: [String: String] = [:]
-        tags["source"] = UserOperationAnalytics.tradeSource?.rawValue
-        
         titleView.iconView.setIcon(tokenIconURL: marketViewModel.iconURL)
-        switch target {
-        case .margin:
-            reporter.report(event: .tradePerpsReduceMarginStart, tags: tags)
-            titleView.titleLabel.text = R.string.localizable.perps_reduce_margin_title(
-                positionViewModel.side.localizedName,
-                marketViewModel.market.tokenSymbol
-            )
-            targetTitleLabel.text = R.string.localizable.margin()
-            introductTargetIconView.isHidden = true
-            introductTargetButton.isHidden = true
-        case .position:
-            assertionFailure("Not ready")
-        }
         updateSubtitle()
         titleView.closeButton.addTarget(
             self,
@@ -156,9 +115,17 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         
         inputBackgroundView.layer.cornerRadius = 8
         inputBackgroundView.layer.masksToBounds = true
+        valueTitleLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
         valueTextField.leftView = leftSignLabel
         valueTextField.rightView = rightSignLabel
         valueTextField.delegate = self
+        valueTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        let valueTextFieldHeightConstraint = valueTextField.heightAnchor.constraint(equalToConstant: 0)
+        valueTextFieldHeightConstraint.isActive = true
+        self.valueTextFieldHeightConstraint = valueTextFieldHeightConstraint
         valueTextField.attributedPlaceholder = NSAttributedString(
             string: Decimal(0).formatted(absoluteAmountUserInputSimulationFormatter),
             attributes: [.foregroundColor: valuePlaceholderColor],
@@ -169,17 +136,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             for: .touchUpInside
         )
         updateValueTextFieldAccessories()
-        updateValueViews(updatingValueTextField: false)
-        if var config = errorDescriptionButton.configuration {
-            config.titleAlignment = .center
-            config.titleLineBreakMode = .byTruncatingTail
-            config.titleTextAttributesTransformer = .init { incoming in
-                var outgoing = incoming
-                outgoing.font = .preferredFont(forTextStyle: .caption1)
-                return outgoing
-            }
-            errorDescriptionButton.configuration = config
-        }
+        updateValueViews(updatingValueTextField: true)
         if let label = errorDescriptionButton.titleLabel {
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
@@ -188,13 +145,15 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             .withRenderingMode(.alwaysTemplate)
         for (index, percentage) in markingPercentages.enumerated() {
             var config: UIButton.Configuration = .plain()
-            config.titleTextAttributesTransformer = .init { incoming in
-                var outgoing = incoming
-                outgoing.font = UIFontMetrics.default.scaledFont(
-                    for: .systemFont(ofSize: 12, weight: .medium)
-                )
-                return outgoing
-            }
+            config.attributedTitle = AttributedString(
+                string: PercentageFormatter.string(
+                    from: percentage,
+                    format: .pretty,
+                    sign: .never
+                ),
+                scalingByFontSize: 12,
+                weight: .medium
+            )
             config.baseForegroundColor = R.color.text_tertiary()
             config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 4, bottom: 8, trailing: 4)
             let button = UIButton(configuration: config)
@@ -234,20 +193,6 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             markingButtons.append(button)
             button.titleLabel?.adjustsFontForContentSizeCategory = true
         }
-        updateMarkingButtons()
-        
-        let infoLabels: [UILabel] = [
-            targetTitleLabel,
-            targetContentLabel,
-            liquidationPriceTitleLabel,
-            liquidationPriceContentLabel,
-        ]
-        for label in infoLabels {
-            label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-        }
-        liquidationPriceTitleLabel.text = R.string.localizable.liquidation_price()
-        liquidationPriceActivityIndicator.style = .custom(diameter: 10, lineWidth: 2)
-        updateDescriptions(requestLiquidationPrice: false)
         
         actionWrapperView.snp.makeConstraints { make in
             make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
@@ -262,16 +207,16 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             cancelButton.configuration = config
         }
         cancelButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        if var config = reduceButton.configuration {
+        if var config = confirmButton.configuration {
             config.titleTextAttributesTransformer = .init { incoming in
                 var outgoing = incoming
                 outgoing.font = UIFont.preferredFont(forTextStyle: .callout)
                 return outgoing
             }
-            config.title = R.string.localizable.perps_reduce_margin()
-            reduceButton.configuration = config
+            config.title = R.string.localizable.confirm()
+            confirmButton.configuration = config
         }
-        reduceButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        confirmButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
         NotificationCenter.default.addObserver(
             self,
@@ -285,28 +230,11 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             name: PerpsPositionDAO.perpsPositionDidChangeNotification,
             object: nil,
         )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(applicationDidBecomeActive),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil,
-        )
-        valueTextField.becomeFirstResponder()
     }
     
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        switch ScreenWidth(size: view.bounds.size) {
-        case .short:
-            valueTextField.font = .systemFont(ofSize: 24, weight: .semibold)
-        case .medium:
-            valueTextField.font = .systemFont(ofSize: 36, weight: .semibold)
-        case .long:
-            valueTextField.font = .systemFont(ofSize: 48, weight: .semibold)
-        }
-        for label in [leftSignLabel, rightSignLabel] {
-            label.font = valueTextField.font
-        }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateValueTextFieldFont()
     }
     
     @IBAction func valueEditingChanged(_ sender: UITextField) {
@@ -316,22 +244,12 @@ final class ReduceToPerpsPositionViewController: UIViewController {
             value: amountDisplay == .byPercentage ? value / 100 : value,
         )
         updateValueViews(updatingValueTextField: false)
-        updateDescriptions(requestLiquidationPrice: true)
+        updateDescriptions(refreshValidation: true)
     }
     
     @IBAction func sliderValueChanged(_ sender: UISlider) {
         let percentage = Decimal(Double(sender.value * 100).rounded()) / 100
-        switch amountDisplay {
-        case .byAmount:
-            input = Input(
-                mode: .byAmount,
-                value: positionViewModel.decimalMargin * percentage,
-            )
-            updateValueViews(updatingValueTextField: true)
-            updateDescriptions(requestLiquidationPrice: true)
-        case .byPercentage:
-            inputPercentage(percentage)
-        }
+        selectReduction(percentage: percentage, amount: totalAmount * percentage)
     }
     
     @IBAction func decreaseMultiplierBy1(_ sender: Any) {
@@ -354,74 +272,140 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         }
     }
     
-    @IBAction func introducePositionSize(_ sender: Any) {
-        let manual = PerpsManual.viewController(initialPage: .size)
-        present(manual, animated: true)
-        switch target {
-        case .margin:
-            reporter.report(
-                event: .tradePerpsGuide,
-                tags: ["source": "perps_reduce_margin_size"]
-            )
-        case .position:
-            assertionFailure("Not ready")
-        }
-    }
-    
-    @IBAction func introduceLiquidationPrice(_ sender: Any) {
-        let manual = PerpsManual.viewController(initialPage: .liquidation)
-        present(manual, animated: true)
-        switch target {
-        case .margin:
-            reporter.report(
-                event: .tradePerpsGuide,
-                tags: ["source": "perps_reduce_margin_liquidation"]
-            )
-        case .position:
-            assertionFailure("Not ready")
-        }
-    }
-    
     @IBAction func cancel(_ sender: Any) {
-        liquidationPriceRequester.cancelLastRequest()
         presentingViewController?.dismiss(animated: true)
-        reporter.report(event: .tradePerpsReduceMarginCancel)
-    }
-    
-    @IBAction func inputMaximumRemovable(_ sender: UIButton) {
-        guard let maximumRemovableAmount else {
-            return
-        }
-        input = Input(mode: .byAmount, value: maximumRemovableAmount)
-        updateValueTextFieldAccessories()
-        updateValueViews(updatingValueTextField: true)
-        updateMarkingButtons()
-        updateDescriptions(requestLiquidationPrice: true)
     }
     
     @IBAction func reduce(_ sender: Any) {
-        guard absoluteAmount > 0, validatedAmount == absoluteAmount else {
-            return
-        }
-        reporter.report(event: .tradePerpsReduceMarginPreview)
-        valueTextField.resignFirstResponder()
-        let preview = ReducePerpsPositionMarginPreviewViewController(
-            wallet: wallet,
-            marketViewModel: marketViewModel,
-            positionViewModel: positionViewModel,
-            reducingMargin: absoluteAmount,
-            onDismissAfterSuccess: { [weak self] in
-                self?.presentingViewController?.dismiss(animated: true)
-            }
-        )
-        present(preview, animated: true)
+        
     }
     
-    @objc private func applicationDidBecomeActive() {
-        guard viewIfLoaded?.window != nil, presentedViewController == nil else {
-            return
+    func addDescription(
+        title: String,
+        infoAction: Selector?,
+        showsActivityIndicator: Bool,
+    ) -> DescriptionRow {
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.textColor = R.color.text_tertiary()
+        titleLabel.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
+        titleLabel.setContentCompressionResistancePriority(.medium, for: .horizontal)
+        
+        let contentLabel = UILabel()
+        contentLabel.text = "-"
+        contentLabel.textColor = R.color.text_secondary()
+        contentLabel.textAlignment = .right
+        contentLabel.numberOfLines = 0
+        contentLabel.lineBreakMode = .byWordWrapping
+        contentLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        contentLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        for label in [titleLabel, contentLabel] {
+            label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         }
-        valueTextField.becomeFirstResponder()
+        
+        let titleStackView = UIStackView(arrangedSubviews: [titleLabel])
+        titleStackView.alignment = .center
+        titleStackView.spacing = 4
+        
+        let stackView = UIStackView()
+        stackView.alignment = .top
+        stackView.spacing = 4
+        stackView.addArrangedSubview(titleStackView)
+        descriptionStackView.addArrangedSubview(stackView)
+        
+        let infoButton: UIButton?
+        if let infoAction {
+            let infoView = UIImageView(image: R.image.info())
+            infoView.contentMode = .center
+            titleStackView.addArrangedSubview(infoView)
+            infoView.snp.makeConstraints { make in
+                make.width.equalTo(16)
+                make.height.equalTo(16).priority(999)
+            }
+            infoView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+            
+            let button = UIButton(type: .system)
+            button.addTarget(self, action: infoAction, for: .touchUpInside)
+            contentView.addSubview(button)
+            button.snp.makeConstraints { make in
+                make.center.equalTo(infoView)
+                make.size.equalTo(36)
+            }
+            infoButton = button
+        } else {
+            infoButton = nil
+        }
+        stackView.addArrangedSubview(contentLabel)
+        
+        let activityIndicator: ActivityIndicatorView?
+        if showsActivityIndicator {
+            let indicator = ActivityIndicatorView()
+            indicator.style = .custom(diameter: 10, lineWidth: 2)
+            indicator.tintColor = R.color.text_tertiary()
+            indicator.isHidden = true
+            stackView.addSubview(indicator)
+            indicator.snp.makeConstraints { make in
+                make.centerY.trailing.equalTo(contentLabel)
+                make.size.equalTo(16)
+            }
+            indicator.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+            activityIndicator = indicator
+        } else {
+            activityIndicator = nil
+        }
+        return DescriptionRow(
+            stackView: stackView,
+            titleLabel: titleLabel,
+            contentLabel: contentLabel,
+            infoButton: infoButton,
+            activityIndicator: activityIndicator,
+        )
+    }
+    
+    func selectReduction(percentage: Decimal, amount: Decimal) {
+        inputPercentage(percentage)
+    }
+    
+    func inputAmount(_ amount: Decimal) {
+        input = Input(mode: .byAmount, value: amount)
+        updateValueViews(updatingValueTextField: true)
+        updateDescriptions(refreshValidation: true)
+    }
+    
+    func updateDescriptions(refreshValidation: Bool) {
+        
+    }
+    
+    func refreshInput(refreshValidation: Bool) {
+        updateValueViews(
+            updatingValueTextField: !valueTextField.isFirstResponder || input.mode != amountDisplay
+        )
+        updateDescriptions(refreshValidation: refreshValidation)
+    }
+    
+    func inputPercentage(_ percentage: Decimal) {
+        let percentage = min(1, max(0, percentage))
+        input = Input(mode: .byPercentage, value: percentage)
+        updateValueViews(updatingValueTextField: true)
+        updateDescriptions(refreshValidation: true)
+    }
+    
+    func showError(description: String?, color: UIColor) {
+        errorDescriptionButton.isEnabled = false
+        errorDescriptionButton.configuration?.attributedTitle = description.map { description in
+            var title = AttributedString(description)
+            title.font = .preferredFont(forTextStyle: .caption1)
+            title.foregroundColor = color
+            return title
+        }
+        errorDescriptionButton.alpha = description == nil ? 0 : 1
+    }
+    
+    func updateInputColor(_ color: UIColor) {
+        valueTextField.textColor = color
+        let signColor = valueTextField.hasText ? color : valuePlaceholderColor
+        leftSignLabel.textColor = signColor
+        rightSignLabel.textColor = signColor
     }
     
     @objc private func reloadMarket(_ notification: Notification) {
@@ -437,7 +421,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
     }
     
     @objc private func reloadPosition() {
-        let positionID = positionViewModel.positionID
+        let positionID = positionViewModel.position.positionID
         DispatchQueue.global().async { [weak self, wallet] in
             guard let position = PerpsPositionDAO.shared.position(positionID: positionID) else {
                 return
@@ -448,16 +432,7 @@ final class ReduceToPerpsPositionViewController: UIViewController {
                     return
                 }
                 self.positionViewModel = viewModel
-                self.liquidationPriceBeforeReducing = viewModel.decimalLiquidationPrice?.formatted(
-                    self.marketViewModel.userDisplayPriceFormatStyle
-                ) ?? "-"
-                self.markingAmounts = Input.markingAmounts(
-                    margin: positionViewModel.decimalMargin,
-                    percentages: markingPercentages
-                )
                 self.updateSubtitle()
-                self.updateMarkingButtons()
-                self.updateDescriptions(requestLiquidationPrice: false)
             }
         }
     }
@@ -472,21 +447,16 @@ final class ReduceToPerpsPositionViewController: UIViewController {
         AppGroupUserDefaults.Wallet.reducePerpsPositionAmountDisplay = amountDisplay.rawValue
         updateValueTextFieldAccessories()
         updateValueViews(updatingValueTextField: true)
-        updateMarkingButtons()
     }
     
     @objc private func selectMarking(_ sender: UIButton) {
         guard let index = markingButtons.firstIndex(of: sender) else {
             return
         }
-        switch amountDisplay {
-        case .byAmount:
-            input = Input(mode: .byAmount, value: markingAmounts[index])
-            updateValueViews(updatingValueTextField: true)
-            updateDescriptions(requestLiquidationPrice: true)
-        case .byPercentage:
-            inputPercentage(markingPercentages[index])
-        }
+        selectReduction(
+            percentage: markingPercentages[index],
+            amount: markingAmounts[index],
+        )
     }
     
 }
@@ -543,12 +513,32 @@ extension ReduceToPerpsPositionViewController: UITextFieldDelegate {
 
 extension ReduceToPerpsPositionViewController {
     
-    private enum AmountDisplay: Int {
+    struct DescriptionRow {
+        
+        let stackView: UIStackView
+        let titleLabel: UILabel
+        let contentLabel: UILabel
+        let infoButton: UIButton?
+        let activityIndicator: ActivityIndicatorView?
+        
+        var isHidden: Bool {
+            get {
+                stackView.isHidden
+            }
+            nonmutating set {
+                stackView.isHidden = newValue
+                infoButton?.isHidden = newValue
+            }
+        }
+        
+    }
+    
+    enum AmountDisplay: Int {
         case byAmount       = 0
         case byPercentage   = 1
     }
     
-    private struct Input {
+    struct Input {
         
         let mode: AmountDisplay
         
@@ -570,11 +560,11 @@ extension ReduceToPerpsPositionViewController {
         }
         
         static func markingAmounts(
-            margin: Decimal,
+            amount: Decimal,
             percentages: [Decimal]
         ) -> [Decimal] {
             percentages.map { percentage in
-                let value = margin * percentage
+                let value = amount * percentage
                 return if value > 0.01 {
                     Input(mode: .byAmount, value: value).value
                 } else {
@@ -583,12 +573,6 @@ extension ReduceToPerpsPositionViewController {
             }
         }
         
-    }
-    
-    private enum LiquidationPrice {
-        case invalid
-        case busy
-        case valid(price: Decimal)
     }
     
     private func updateSubtitle() {
@@ -644,36 +628,43 @@ extension ReduceToPerpsPositionViewController {
         valueTextField.setNeedsLayout()
     }
     
-    private func updateMarkingButtons() {
-        for (index, button) in markingButtons.enumerated() {
-            guard var config = button.configuration else {
-                continue
-            }
-            config.title = switch amountDisplay {
-            case .byAmount:
-                markingAmounts[index].formatted(
-                    Decimal.FormatStyle.Currency
-                        .currency(code: "USD")
-                        .presentation(.narrow)
-                        .precision(.fractionLength(0...8))
-                        .rounded(rule: .towardZero)
-                )
-            case .byPercentage:
-                PercentageFormatter.string(
-                    from: markingPercentages[index],
-                    format: .pretty,
-                    sign: .never
-                )
-            }
-            button.configuration = config
+    private func updateValueTextFieldFont() {
+        let baseFontSize: CGFloat = 36
+        var font = UIFont.systemFont(ofSize: baseFontSize, weight: .semibold)
+        let height = font.lineHeight.rounded(.up)
+        if valueTextFieldHeightConstraint.constant != height {
+            valueTextFieldHeightConstraint.constant = height
         }
-    }
-    
-    private func inputPercentage(_ percentage: Decimal) {
-        let percentage = min(1, max(0, percentage))
-        input = Input(mode: .byPercentage, value: percentage)
-        updateValueViews(updatingValueTextField: true)
-        updateDescriptions(requestLiquidationPrice: true)
+        
+        // Measure the available space independently of the field's intrinsic width.
+        let availableWidth = increaseMultiplierButton.frame.minX - decreaseMultiplierButton.frame.maxX
+        guard availableWidth > 0 else {
+            return
+        }
+        let text = valueTextField.hasText
+            ? valueTextField.text ?? ""
+            : valueTextField.attributedPlaceholder?.string ?? ""
+        let strings = [text, leftSignLabel.text ?? "", rightSignLabel.text ?? ""]
+        while font.pointSize > 12 {
+            let width = strings.reduce(CGFloat(10)) { width, string in
+                // Reserve padding for the insertion caret as well as the signs.
+                width + (string as NSString).size(withAttributes: [.font: font]).width.rounded(.up)
+            }
+            guard width > availableWidth else {
+                break
+            }
+            font = font.withSize(font.pointSize - 1)
+        }
+        guard valueTextField.font != font || leftSignLabel.font != font || rightSignLabel.font != font else {
+            return
+        }
+        valueTextField.font = font
+        for label in [leftSignLabel, rightSignLabel] {
+            label.font = font
+            label.sizeToFit()
+        }
+        valueTextField.invalidateIntrinsicContentSize()
+        valueTextField.setNeedsLayout()
     }
     
     private func adjustValue(by change: Int) {
@@ -683,12 +674,10 @@ extension ReduceToPerpsPositionViewController {
             inputPercentage(percentage + Decimal(change) / 100)
         case .byAmount:
             let value = min(
-                max(0, positionViewModel.decimalMargin),
+                max(0, totalAmount),
                 max(0, absoluteAmount + Decimal(change))
             )
-            input = Input(mode: .byAmount, value: value)
-            updateValueViews(updatingValueTextField: true)
-            updateDescriptions(requestLiquidationPrice: true)
+            inputAmount(value)
         }
     }
     
@@ -731,165 +720,8 @@ extension ReduceToPerpsPositionViewController {
         rightSignLabel.textColor = signColor
         slider.value = NSDecimalNumber(decimal: min(1, max(0, percentage))).floatValue
         decreaseMultiplierButton.isEnabled = absoluteAmount > 0
-        increaseMultiplierButton.isEnabled = absoluteAmount < positionViewModel.decimalMargin
-    }
-    
-    private func updateDescriptions(requestLiquidationPrice: Bool) {
-        let reducingAmount = absoluteAmount
-        if requestLiquidationPrice || reducingAmount <= 0 {
-            validatedAmount = nil
-            liquidationPriceRequester.cancelLastRequest()
-            showError(description: nil)
-        }
-        switch target {
-        case .margin:
-            let before = CurrencyFormatter.localizedString(
-                from: positionViewModel.decimalMargin,
-                format: .fiatMoneyPretty,
-                sign: .never,
-                symbol: .dollarSign
-            )
-            if reducingAmount > 0, reducingAmount <= positionViewModel.decimalMargin {
-                let after = CurrencyFormatter.localizedString(
-                    from: positionViewModel.decimalMargin - reducingAmount,
-                    format: .fiatMoneyPretty,
-                    sign: .never,
-                    symbol: .dollarSign
-                )
-                targetContentLabel.text = PerpPositionAdjustment.change(from: before, to: after)
-            } else {
-                targetContentLabel.text = before
-            }
-        case .position:
-            assertionFailure("Not ready")
-        }
-        
-        guard reducingAmount > 0 else {
-            show(liquidationPrice: .invalid)
-            return
-        }
-        if requestLiquidationPrice {
-            show(liquidationPrice: .busy)
-            liquidationPriceRequester.request(
-                amount: reducingAmount,
-                symbol: nil,
-            ) { [weak self] price in
-                guard let self else {
-                    return
-                }
-                self.validatedAmount = reducingAmount
-                self.showError(description: nil)
-                self.show(liquidationPrice: .valid(price: price))
-            } onFailure: { [weak self] error in
-                guard let self else {
-                    return
-                }
-                self.show(liquidationPrice: .invalid)
-                switch error {
-                case .exceedsMaxRemovableMargin(let value):
-                    self.showMaximumRemovable(value)
-                case .other(let description):
-                    self.showError(description: description)
-                }
-            }
-        }
-    }
-    
-    private func show(liquidationPrice: LiquidationPrice) {
-        switch liquidationPrice {
-        case .invalid:
-            liquidationPriceActivityIndicator.stopAnimating()
-            validatedAmount = nil
-            liquidationPriceContentLabel.text = liquidationPriceBeforeReducing
-            liquidationPriceContentLabel.alpha = 1
-            reduceButton.isEnabled = false
-        case .busy:
-            liquidationPriceActivityIndicator.startAnimating()
-            liquidationPriceContentLabel.alpha = 0
-            reduceButton.isEnabled = false
-        case let .valid(price):
-            liquidationPriceActivityIndicator.stopAnimating()
-            let after = price.formatted(
-                marketViewModel.userDisplayPriceFormatStyle
-            )
-            liquidationPriceContentLabel.text = PerpPositionAdjustment.change(
-                from: liquidationPriceBeforeReducing,
-                to: after,
-            )
-            liquidationPriceContentLabel.alpha = 1
-            reduceButton.isEnabled = true
-        }
-    }
-    
-    private func showMaximumRemovable(_ amount: Decimal) {
-        let value: String
-        let removableAmount: Decimal
-        switch amountDisplay {
-        case .byAmount:
-            var reducingAmount: Decimal = 0
-            if amount < 0.01 {
-                reducingAmount = amount
-            } else {
-                withUnsafePointer(to: amount) { amount in
-                    NSDecimalRound(&reducingAmount, amount, 2, .down)
-                }
-            }
-            value = CurrencyFormatter.localizedString(
-                from: reducingAmount,
-                format: .precision,
-                sign: .never,
-                symbol: .dollarSign
-            )
-            removableAmount = reducingAmount
-        case .byPercentage:
-            let hasInputFractionals: Bool
-            if var inputPercentage = Decimal(string: valueTextField.text ?? "", locale: .current) {
-                var integralPart: Decimal = 0
-                NSDecimalRound(&integralPart, &inputPercentage, 0, .down)
-                hasInputFractionals = inputPercentage != integralPart
-            } else {
-                hasInputFractionals = false
-            }
-            
-            let margin = positionViewModel.decimalMargin
-            let recommendedPercentage = {
-                let percentage = margin > 0 ? amount / margin : 0
-                let scale = hasInputFractionals || percentage < 0.01 ? 4 : 2
-                var roundedPercentage: Decimal = 0
-                withUnsafePointer(to: percentage) { percentage in
-                    NSDecimalRound(&roundedPercentage, percentage, scale, .down)
-                }
-                return roundedPercentage
-            }()
-            
-            value = PercentageFormatter.string(
-                from: recommendedPercentage,
-                format: .pretty,
-                sign: .never
-            )
-            removableAmount = {
-                let amount = margin * recommendedPercentage
-                var roundedAmount: Decimal = 0
-                withUnsafePointer(to: amount) { amount in
-                    NSDecimalRound(&roundedAmount, amount, Int(MixinToken.internalPrecision), .down)
-                }
-                return roundedAmount
-            }()
-        }
-        showError(description: R.string.localizable.max_removable(value))
-        maximumRemovableAmount = removableAmount
-        errorDescriptionButton.isEnabled = true
-    }
-    
-    private func showError(description: String?) {
-        maximumRemovableAmount = nil
-        errorDescriptionButton.isEnabled = false
-        if let description {
-            errorDescriptionButton.configuration?.title = description
-            errorDescriptionButton.alpha = 1
-        } else {
-            errorDescriptionButton.alpha = 0
-        }
+        increaseMultiplierButton.isEnabled = absoluteAmount < totalAmount
+        updateValueTextFieldFont()
     }
     
 }

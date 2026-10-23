@@ -12,7 +12,7 @@ public final class TokenDAO: UserDatabaseDAO {
         static let selector = """
             SELECT t.asset_id, t.kernel_asset_id, t.symbol, t.name, t.icon_url, t.price_btc, t.price_usd,
                 t.chain_id, t.change_usd, t.change_btc, t.dust, t.confirmations, t.asset_key, t.precision,
-                t.collection_hash, c.icon_url AS chain_icon_url, c.name AS chain_name, c.symbol AS chain_symbol,
+                t.collection_hash, t.primitive_asset_id, c.icon_url AS chain_icon_url, c.name AS chain_name, c.symbol AS chain_symbol,
                 c.threshold AS chain_threshold, c.withdrawal_memo_possibility AS chain_withdrawal_memo_possibility,
                 ifnull(te.balance,'0') AS balance, ifnull(te.hidden,FALSE) AS hidden
             FROM tokens t
@@ -20,8 +20,8 @@ public final class TokenDAO: UserDatabaseDAO {
                 LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
         """
         
+        static let displayable = "ifnull(t.primitive_asset_id,'') = ''"
         static let order = "te.balance * t.price_usd DESC, cast(te.balance AS REAL) DESC, cast(t.price_usd AS REAL) DESC, t.name ASC, c.name ASC"
-        
         static let selectWithAssetID = "\(SQL.selector) WHERE t.asset_id = ?"
         
     }
@@ -76,7 +76,7 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func greatestBalanceToken(assetIDs: any Collection<String>) -> MixinTokenItem? {
-        var query = GRDB.SQL(sql: "\(SQL.selector) WHERE te.balance > 0")
+        var query = GRDB.SQL(sql: "\(SQL.selector) WHERE \(SQL.displayable) AND te.balance > 0")
         if !assetIDs.isEmpty {
             query.append(literal: " AND t.asset_id IN \(assetIDs)")
         }
@@ -117,7 +117,7 @@ public final class TokenDAO: UserDatabaseDAO {
     ) -> [MixinTokenItem] {
         var sql = """
         \(SQL.selector)
-        WHERE (t.name LIKE :keyword OR t.symbol LIKE :keyword)
+        WHERE \(SQL.displayable) AND (t.name LIKE :keyword OR t.symbol LIKE :keyword)
         """
         if !includesZeroBalanceItems {
             sql += " AND te.balance > 0"
@@ -136,18 +136,18 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func allTokens() -> [MixinTokenItem] {
-        db.select(with: "\(SQL.selector) ORDER BY \(SQL.order)")
+        db.select(with: "\(SQL.selector) WHERE \(SQL.displayable) ORDER BY \(SQL.order)")
     }
     
     public func hiddenTokens() -> [MixinTokenItem] {
-        db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS TRUE ORDER BY \(SQL.order)")
+        db.select(with: "\(SQL.selector) WHERE \(SQL.displayable) AND ifnull(te.hidden,FALSE) IS TRUE ORDER BY \(SQL.order)")
     }
     
     public func notHiddenTokens(
         includesZeroBalanceItems: Bool,
         limit: Int?,
     ) -> [MixinTokenItem] {
-        var sql = "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS FALSE"
+        var sql = "\(SQL.selector) WHERE \(SQL.displayable) AND ifnull(te.hidden,FALSE) IS FALSE"
         if !includesZeroBalanceItems {
             sql += " AND te.balance > 0"
         }
@@ -159,16 +159,16 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func defaultTransferToken() -> MixinTokenItem? {
-        if let id = AppGroupUserDefaults.Wallet.defaultTransferAssetId, !id.isEmpty, let token = tokenItem(assetID: id), token.decimalBalance > 0 {
+        if let id = AppGroupUserDefaults.Wallet.defaultTransferAssetId, !id.isEmpty, let token = tokenItem(assetID: id), token.decimalBalance > 0, token.isDisplayable {
             return token
         } else {
-            let sql = "\(SQL.selector) WHERE te.balance > 0 ORDER BY \(SQL.order) LIMIT 1"
+            let sql = "\(SQL.selector) WHERE \(SQL.displayable) AND te.balance > 0 ORDER BY \(SQL.order) LIMIT 1"
             return UserDatabase.current.select(with: sql)
         }
     }
     
     public func positiveBalancedTokens(assetIDs: [String]) -> [MixinTokenItem] {
-        var query = GRDB.SQL(sql: "\(SQL.selector) WHERE te.balance > 0")
+        var query = GRDB.SQL(sql: "\(SQL.selector) WHERE \(SQL.displayable) AND te.balance > 0")
         if !assetIDs.isEmpty {
             query.append(literal: " AND t.asset_id IN \(assetIDs)")
         }
@@ -177,7 +177,7 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func positiveBalancedTokens() -> [MixinTokenItem] {
-        db.select(with: "\(SQL.selector) WHERE te.balance > 0 ORDER BY \(SQL.order)")
+        db.select(with: "\(SQL.selector) WHERE \(SQL.displayable) AND te.balance > 0 ORDER BY \(SQL.order)")
     }
     
     public func appTokens(ids: [String]) -> [AppToken] {
@@ -213,6 +213,7 @@ public final class TokenDAO: UserDatabaseDAO {
             c.withdrawal_memo_possibility AS chain_withdrawal_memo_possibility
         FROM tokens t
             LEFT JOIN chains c ON t.chain_id = c.chain_id
+        WHERE \(SQL.displayable)
         """)
     }
     
@@ -222,8 +223,9 @@ public final class TokenDAO: UserDatabaseDAO {
         FROM tokens t
             LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
         """
+        sql += "\nWHERE \(SQL.displayable)"
         if !includesHiddenTokens {
-            sql += "\nWHERE NOT ifnull(te.hidden,FALSE)"
+            sql += " AND NOT ifnull(te.hidden,FALSE)"
         }
         return db.select(with: sql) ?? 0
     }
@@ -233,7 +235,7 @@ public final class TokenDAO: UserDatabaseDAO {
         SELECT t.asset_id, t.symbol, t.name, t.icon_url, t.price_usd, te.balance
         FROM tokens t
             INNER JOIN tokens_extra te ON t.asset_id = te.asset_id
-        WHERE ifnull(te.hidden,FALSE) IS FALSE
+        WHERE \(SQL.displayable) AND ifnull(te.hidden,FALSE) IS FALSE
             AND CAST(t.price_usd * te.balance AS REAL) > 0
         ORDER BY t.price_usd * te.balance DESC
         """)

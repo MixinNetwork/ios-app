@@ -125,6 +125,12 @@ enum Solana {
 
 extension Solana {
     
+    struct SignedTransaction {
+        let rawTransaction: String
+        let signature: String // Base58 signature of the signing account
+        let isFullySigned: Bool
+    }
+    
     final class Transaction {
         
         enum Encoding {
@@ -134,6 +140,10 @@ extension Solana {
         
         let rawTransaction: String
         let feePayer: String
+        
+        var requiresRecentBlockhash: Bool {
+            solana_transaction_requires_blockhash(pointer)
+        }
         
         private let pointer: UnsafeRawPointer
         
@@ -240,36 +250,78 @@ extension Solana {
             solana_free_transaction(pointer)
         }
         
+        func requiresSigner(address: String) -> Bool {
+            address.withCString { address in
+                solana_transaction_requires_signer(pointer, address)
+            }
+        }
+        
+        func priorityFee() throws(SolanaError) -> Decimal {
+            var lamports: UInt64 = 0
+            let result = solana_transaction_priority_fee(pointer, &lamports)
+            guard result == SolanaErrorCodeSuccess else {
+                throw .code(result)
+            }
+            return Decimal(lamports) / Solana.lamportsPerSOL
+        }
+        
         func containsSetAuthority() -> Bool {
             solana_transaction_contains_set_authority(pointer)
         }
         
-        func sign(withPrivateKeyFrom seed: Data, recentBlockhash: Data?) throws -> String {
-            try withSolanaStringPointer { signature in
-                seed.withUnsafeBytes { seed in
-                    if let recentBlockhash {
-                        recentBlockhash.withUnsafeBytes { recentBlockhash in
-                            solana_sign_transaction(
-                                pointer,
-                                recentBlockhash.baseAddress,
-                                recentBlockhash.count,
-                                seed.baseAddress,
-                                seed.count,
-                                &signature
-                            )
-                        }
-                    } else {
-                        solana_sign_transaction(
-                            pointer,
-                            nil,
-                            0,
-                            seed.baseAddress,
-                            seed.count,
-                            &signature
-                        )
-                    }
+        func sign(
+            withPrivateKeyFrom seed: Data,
+            recentBlockhash: Data?,
+        ) throws(SolanaError) -> SignedTransaction {
+            var transaction: UnsafePointer<CChar>?
+            var signature: UnsafePointer<CChar>?
+            var isFullySigned = false
+            defer {
+                if let transaction {
+                    solana_free_string(transaction)
+                }
+                if let signature {
+                    solana_free_string(signature)
                 }
             }
+            let result = seed.withUnsafeBytes { seed in
+                if let recentBlockhash {
+                    recentBlockhash.withUnsafeBytes { recentBlockhash in
+                        solana_sign_transaction(
+                            pointer,
+                            recentBlockhash.baseAddress,
+                            recentBlockhash.count,
+                            seed.baseAddress,
+                            seed.count,
+                            &transaction,
+                            &signature,
+                            &isFullySigned,
+                        )
+                    }
+                } else {
+                    solana_sign_transaction(
+                        pointer,
+                        nil,
+                        0,
+                        seed.baseAddress,
+                        seed.count,
+                        &transaction,
+                        &signature,
+                        &isFullySigned,
+                    )
+                }
+            }
+            guard result == SolanaErrorCodeSuccess else {
+                throw .code(result)
+            }
+            guard let transaction, let signature else {
+                throw .nullResult
+            }
+            return SignedTransaction(
+                rawTransaction: String(cString: transaction),
+                signature: String(cString: signature),
+                isFullySigned: isFullySigned,
+            )
         }
         
         func fee(lamportsPerSignature: UInt64) throws -> Decimal {

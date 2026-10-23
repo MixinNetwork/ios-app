@@ -44,7 +44,8 @@ class AppCardV1MessageViewModel: DetailInfoMessageViewModel {
                                       height: UIView.layoutFittingExpandedSize.height)
         let coverImageHeight: CGFloat
         if let cover = content.cover {
-            coverImageHeight = (contentWidth + leadingConstant - trailingConstant) / cover.ratio + Self.coverBottomSpacing
+            let ratio = cover.ratio.isFinite && cover.ratio > 0 ? cover.ratio : 1
+            coverImageHeight = (contentWidth + leadingConstant - trailingConstant) / ratio + Self.coverBottomSpacing
         } else {
             coverImageHeight = Self.otherSpacing
         }

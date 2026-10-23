@@ -65,11 +65,13 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
                     caption: .string(R.string.localizable.direction()),
                     primary: direction,
                     secondary: .plain(profit),
+                    infoAction: nil,
                 ))
             } else {
                 rows.append(.info(
                     caption: .string(R.string.localizable.direction()),
-                    content: direction
+                    content: direction,
+                    action: nil,
                 ))
             }
         } else {
@@ -81,7 +83,8 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
             }
             rows.append(.info(
                 caption: .string(R.string.localizable.direction()),
-                content: direction
+                content: direction,
+                action: nil,
             ))
         }
         
@@ -94,13 +97,15 @@ final class OpenPerpetualPositionFailedViewController: WalletIdentifyingAuthenti
             )
             rows.append(.info(
                 caption: .string(R.string.localizable.amount()),
-                content: amount
+                content: amount,
+                action: nil,
             ))
         }
         
         rows.append(.info(
             caption: .string(R.string.localizable.entry_price()),
-            content: marketViewModel.localizedLastPrice
+            content: marketViewModel.localizedLastPrice,
+            action: nil,
         ))
         
         rows.append(.wallet(caption: .sender, wallet: wallet, threshold: nil))

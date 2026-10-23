@@ -197,7 +197,7 @@ extension PerpsAutoClosingCondition {
         return localizedChange
     }
     
-    func maxChange() -> String {
+    func maxChange() -> (value: Decimal, localized: String) {
         assert(margin != 0, "Only results 0")
         let pnl: Decimal = switch orderState {
         case .draft:
@@ -221,7 +221,7 @@ extension PerpsAutoClosingCondition {
         case .stopLoss:
             break
         }
-        return maxChange
+        return (value: pnl, localized: maxChange)
     }
     
 }

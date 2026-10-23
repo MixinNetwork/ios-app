@@ -75,14 +75,17 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     caption: .string(R.string.localizable.direction()),
                     primary: direction,
                     secondary: .plain(profit),
+                    infoAction: nil,
                 ),
                 .info(
                     caption: .string(R.string.localizable.amount()),
-                    content: amount
+                    content: amount,
+                    action: nil,
                 ),
                 .info(
                     caption: .string(R.string.localizable.entry_price()),
-                    content: context.viewModel.localizedLastPrice
+                    content: context.viewModel.localizedLastPrice,
+                    action: nil,
                 ),
             ])
         case let .increasePosition(quantity, margin):
@@ -108,6 +111,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 secondary: .plain(
                     R.string.localizable.add_position_total_size() + " " + change
                 ),
+                infoAction: nil,
             ))
         case let .increaseMargin(margin):
             liquidationMargin = margin + operation.amount
@@ -130,6 +134,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 secondary: .plain(
                     R.string.localizable.perps_total_margin() + " " + change
                 ),
+                infoAction: nil,
             ))
         }
         
@@ -146,7 +151,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 currentPrice: context.viewModel.decimalLastPrice,
                 closingPrice: takeProfitPrice,
             )
-            let simulation = R.string.localizable.price_change_take_profit(
+            let simulation = R.string.localizable.price_change_tpsl(
                 PercentageFormatter.string(
                     from: priceChange,
                     format: .pretty,
@@ -169,6 +174,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     caption: .string(R.string.localizable.take_profit()),
                     primary: price,
                     secondary: .attributed(attributedSimulation),
+                    infoAction: nil,
                 ),
             )
         }
@@ -186,7 +192,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 currentPrice: context.viewModel.decimalLastPrice,
                 closingPrice: stopLossPrice,
             )
-            let simulation = R.string.localizable.price_change_stop_loss(
+            let simulation = R.string.localizable.price_change_tpsl(
                 PercentageFormatter.string(
                     from: priceChange,
                     format: .pretty,
@@ -209,6 +215,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     caption: .string(R.string.localizable.stop_loss()),
                     primary: price,
                     secondary: .attributed(attributedSimulation),
+                    infoAction: nil,
                 ),
             )
         }
@@ -226,7 +233,8 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
             .doubleLineInfo(
                 caption: .string(R.string.localizable.estimated_liquidation_price()),
                 primary: liquidationPrice,
-                secondary: .plain(liquidation)
+                secondary: .plain(liquidation),
+                infoAction: nil,
             )
         )
         
@@ -238,7 +246,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         }
         rows.append(.wallet(caption: .sender, wallet: context.wallet, threshold: nil))
         if let memo = operation.extra.plainValue {
-            rows.append(.info(caption: .memo, content: memo))
+            rows.append(.info(caption: .memo, content: memo, action: nil))
         }
         
         reloadData(with: rows)

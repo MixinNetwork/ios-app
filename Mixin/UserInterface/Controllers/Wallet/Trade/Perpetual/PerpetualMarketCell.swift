@@ -54,7 +54,7 @@ final class PerpetualMarketCell: UICollectionViewCell {
     }
     
     func load(viewModel: PerpetualPositionViewModel) {
-        iconView.setIcon(tokenIconURL: viewModel.iconURL)
+        iconView.setIcon(tokenIconURL: viewModel.position.iconURL)
         symbolLabel.text = viewModel.directionWithSymbol
         switch viewModel.side {
         case .long:

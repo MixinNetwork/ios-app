@@ -18,6 +18,7 @@ struct DeviceTransferToken {
     let assetKey: String
     let precision: Int16
     let collectionHash: String?
+    let primitiveAssetID: String?
     
     init(token: MixinToken) {
         assetID = token.assetID
@@ -35,6 +36,7 @@ struct DeviceTransferToken {
         assetKey = token.assetKey
         precision = token.precision
         collectionHash = token.collectionHash
+        primitiveAssetID = token.primitiveAssetID
     }
     
     func toToken() -> MixinToken {
@@ -53,7 +55,8 @@ struct DeviceTransferToken {
             confirmations: confirmations,
             assetKey: assetKey,
             precision: precision,
-            collectionHash: collectionHash
+            collectionHash: collectionHash,
+            primitiveAssetID: primitiveAssetID,
         )
     }
     
@@ -77,6 +80,7 @@ extension DeviceTransferToken: DeviceTransferRecord {
         case assetKey = "asset_key"
         case precision
         case collectionHash = "collection_hash"
+        case primitiveAssetID = "primitive_asset_id"
     }
     
 }

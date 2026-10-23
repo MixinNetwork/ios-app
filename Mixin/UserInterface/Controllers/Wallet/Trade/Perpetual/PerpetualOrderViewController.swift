@@ -9,36 +9,35 @@ final class PerpetualOrderViewController: UIViewController {
     }
     
     enum Info {
+        
+        enum Action {
+            case margin
+            case fee
+        }
+        
         case product(iconURL: URL?, name: String)
         case orderValue(token: String, fiatMoney: String)
-        case general(title: String, content: String)
+        case general(title: String, content: String, action: Action?)
         case pnl(value: String, color: MarketColor)
         case wallet(Wallet)
-        case fee(String)
+        
     }
     
     private let wallet: Wallet
     private let viewModel: PerpetualOrderViewModel
     private let infos: [Info]
     
+    private weak var collectionView: UICollectionView!
+    
     init(wallet: Wallet, viewModel: PerpetualOrderViewModel) {
         let order = viewModel.order
-        lazy var fee: String? = {
-            guard let decimalFee = Decimal(string: order.feeAmount, locale: .enUSPOSIX) else {
-                return nil
-            }
-            guard decimalFee != 0 else {
-                return nil
-            }
-            return decimalFee.formatted(
-                Decimal.FormatStyle.Currency
-                    .currency(code: "USD")
-                    .presentation(.narrow)
-                    .precision(.fractionLength(0...16))
-                    .rounded(rule: .towardZero)
-                    .sign(strategy: .never)
+        lazy var fee: String? = if order.decimalFeeAmount == 0 {
+            nil
+        } else {
+            order.decimalFeeAmount.formatted(
+                PerpetualOrder.feeFormatStyle
             )
-        }()
+        }
         
         var infos: [Info] = []
         if let displaySymbol = order.displaySymbol {
@@ -50,66 +49,87 @@ final class PerpetualOrderViewController: UIViewController {
             case let .open(payAmount):
                 infos.append(contentsOf: [
                     .general(
-                        title: R.string.localizable.entry_price().uppercased(),
-                        content: viewModel.entryPrice
+                        title: R.string.localizable.amount().uppercased(),
+                        content: payAmount,
+                        action: nil,
                     ),
                     .general(
-                        title: R.string.localizable.amount().uppercased(),
-                        content: payAmount
+                        title: R.string.localizable.margin().uppercased(),
+                        content: viewModel.order.decimalMarginAmount.formatted(
+                            PerpetualOrderViewModel.payAmountStyle
+                        ),
+                        action: .margin,
                     ),
                 ])
                 if let fee {
-                    infos.append(.fee(fee))
+                    infos.append(.general(
+                        title: R.string.localizable.fee().uppercased(),
+                        content: fee,
+                        action: .fee,
+                    ))
                 }
+                infos.append(.general(
+                    title: R.string.localizable.entry_price().uppercased(),
+                    content: viewModel.entryPrice,
+                    action: nil,
+                ))
             case .increasePosition:
-                let payAmount = abs(viewModel.decimalPayAmount).formatted(
-                    PerpetualOrderViewModel.payAmountStyle
-                        .sign(strategy: .always())
-                )
                 infos.append(contentsOf: [
                     .general(
                         title: R.string.localizable.entry_price().uppercased(),
-                        content: viewModel.entryPrice
+                        content: viewModel.entryPrice,
+                        action: nil,
                     ),
                     .general(
                         title: R.string.localizable.amount().uppercased(),
-                        content: payAmount
+                        content: viewModel.order.decimalPayAmount.formatted(
+                            PerpetualOrderViewModel.payAmountStyle.sign(strategy: .always())
+                        ),
+                        action: nil,
                     ),
                 ])
                 if let fee {
-                    infos.append(.fee(fee))
+                    infos.append(.general(
+                        title: R.string.localizable.fee().uppercased(),
+                        content: fee,
+                        action: .fee,
+                    ))
                 }
             case .increaseMargin:
-                let payAmount = abs(viewModel.decimalPayAmount).formatted(
-                    PerpetualOrderViewModel.payAmountStyle
-                        .sign(strategy: .always())
-                )
                 infos.append(.general(
                     title: R.string.localizable.amount().uppercased(),
-                    content: payAmount
+                    content: viewModel.order.decimalMarginAmount.formatted(
+                        PerpetualOrderViewModel.payAmountStyle.sign(strategy: .always())
+                    ),
+                    action: nil,
                 ))
             case .decreaseMargin:
-                let payAmount = (-abs(viewModel.decimalPayAmount)).formatted(
-                    PerpetualOrderViewModel.payAmountStyle
-                        .sign(strategy: .always())
-                )
                 infos.append(.general(
                     title: R.string.localizable.amount().uppercased(),
-                    content: payAmount
+                    content: viewModel.order.decimalMarginAmount.formatted(
+                        PerpetualOrderViewModel.payAmountStyle.sign(strategy: .always())
+                    ),
+                    action: nil,
                 ))
             case let .close(pnl, closePrice):
                 infos.append(.pnl(value: pnl.aggregated, color: pnl.color))
                 if let fee {
-                    infos.append(.fee(fee))
+                    infos.append(.general(
+                        title: R.string.localizable.fee().uppercased(),
+                        content: fee,
+                        action: .fee,
+                    ))
                 }
                 infos.append(contentsOf: [
                     .general(
                         title: R.string.localizable.entry_price().uppercased(),
-                        content: viewModel.entryPrice
+                        content: viewModel.entryPrice,
+                        action: nil,
                     ),
                     .general(
                         title: R.string.localizable.close_price().uppercased(),
-                        content: closePrice
+                        content: closePrice,
+                        action: nil,
                     ),
                 ])
             }
@@ -118,7 +138,11 @@ final class PerpetualOrderViewController: UIViewController {
         }
         infos.append(contentsOf: [
             .wallet(.privacy),
-            .general(title: R.string.localizable.date().uppercased(), content: viewModel.date),
+            .general(
+                title: R.string.localizable.date().uppercased(),
+                content: viewModel.date,
+                action: nil,
+            ),
         ])
         
         self.wallet = wallet
@@ -179,6 +203,7 @@ final class PerpetualOrderViewController: UIViewController {
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.backgroundColor = R.color.background_secondary()
         view.addSubview(collectionView)
+        self.collectionView = collectionView
         collectionView.snp.makeEdgesEqualToSuperview()
         collectionView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
         collectionView.register(R.nib.perpetualPositionHeaderCell)
@@ -267,12 +292,13 @@ extension PerpetualOrderViewController: UICollectionViewDataSource {
                 cell.primaryLabel.text = token
                 cell.secondaryLabel.text = fiatMoney
                 return cell
-            case let .general(title, content):
+            case let .general(title, content, action):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_compact_info, for: indexPath)!
                 cell.titleLabel.text = title
-                cell.infoButton.isHidden = true
+                cell.infoButton.isHidden = action == nil
                 cell.contentLabel.text = content
                 cell.contentLabel.textColor = R.color.text()
+                cell.delegate = self
                 return cell
             case let .pnl(value, color):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_compact_info, for: indexPath)!
@@ -295,14 +321,6 @@ extension PerpetualOrderViewController: UICollectionViewDataSource {
                     cell.nameLabel.text = wallet.name
                     cell.iconImageView.isHidden = true
                 }
-                return cell
-            case let .fee(value):
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_compact_info, for: indexPath)!
-                cell.titleLabel.text = R.string.localizable.fee().uppercased()
-                cell.infoButton.isHidden = false
-                cell.contentLabel.text = value
-                cell.contentLabel.textColor = R.color.text()
-                cell.delegate = self
                 return cell
             }
         }
@@ -375,9 +393,27 @@ extension PerpetualOrderViewController: PerpetualPositionHeaderCell.Delegate {
 extension PerpetualOrderViewController: PerpetualPositionCompactInfoCell.Delegate {
     
     func perpetualPositionCompactInfoCellDidSelectInfo(_ cell: PerpetualPositionCompactInfoCell) {
-        let manual = PerpsManual.viewController(initialPage: .tradingFee)
-        present(manual, animated: true)
-        reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_order"])
+        guard
+            let indexPath = collectionView.indexPath(for: cell),
+            Section(rawValue: indexPath.section) == .info
+        else {
+            return
+        }
+        switch infos[indexPath.item] {
+        case let .general(_, _, action):
+            switch action {
+            case .margin:
+                present(PopupAlertViewController.perpsMargin(), animated: true)
+            case .fee:
+                let manual = PerpsManual.viewController(initialPage: .tradingFee)
+                present(manual, animated: true)
+                reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_order"])
+            case nil:
+                break
+            }
+        default:
+            break
+        }
     }
     
 }

@@ -154,8 +154,9 @@ extension AppCardV1MessageCell {
                     setCustomSpacing(AppCardV1MessageViewModel.coverBottomSpacing, after: imageView)
                     self.coverImageView = imageView
                 }
+                let ratio = cover.ratio.isFinite && cover.ratio > 0 ? cover.ratio : 1
                 imageView.snp.remakeConstraints { make in
-                    make.width.equalTo(imageView.snp.height).multipliedBy(cover.ratio)
+                    make.width.equalTo(imageView.snp.height).multipliedBy(ratio)
                 }
                 switch cover {
                 case .plain(let string):

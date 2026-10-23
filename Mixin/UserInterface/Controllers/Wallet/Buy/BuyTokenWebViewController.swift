@@ -68,7 +68,9 @@ extension BuyTokenWebViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         }
-        if isViewLoaded && (UrlWindow.checkUrl(url: url, from: .webView(context)) || UrlWindow.checkWithdrawal(string: url.absoluteString)) {
+        // Buying is presented modally, so it has a presenter rather than a parent.
+        let isPresented = presentingViewController != nil && !isBeingDismissed
+        if isViewLoaded && isPresented && (UrlWindow.checkUrl(url: url, from: .webView(context)) || UrlWindow.checkWithdrawal(string: url.absoluteString)) {
             decisionHandler(.cancel)
         } else if "file" == url.scheme {
             decisionHandler(.allow)
@@ -76,10 +78,10 @@ extension BuyTokenWebViewController: WKNavigationDelegate {
             decisionHandler(.allow)
         } else if ["about:blank", "about:srcdoc"].contains(url.absoluteString.lowercased()) {
             decisionHandler(.allow)
-        } else if parent != nil {
+        } else if isPresented {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
             decisionHandler(.cancel)
-        } else if parent == nil, let url = MixinURL(url: url), case .codes(let code) = url {
+        } else if let url = MixinURL(url: url), case .codes(let code) = url {
             // Call `AuthorizeAPI.authorize` with an empty scope will cancel the auth request
             // Cancel the request when webview is not visible, mostly because user has chosen to close it
             UserAPI.codes(codeId: code) { (result) in

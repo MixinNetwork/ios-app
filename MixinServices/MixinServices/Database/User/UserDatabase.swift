@@ -1007,6 +1007,13 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("tokens_primitive_asset_id") { db in
+            let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(tokens)").map(\.name)
+            if !columns.contains("primitive_asset_id") {
+                try db.execute(sql: "ALTER TABLE tokens ADD COLUMN primitive_asset_id TEXT")
+            }
+        }
+        
         migrator.registerMigration("jobs_unencoded_plain_data") { db in
             // Older versions stored base64 encoded data in jobs of these categories, while
             // data is now encoded right before delivering.

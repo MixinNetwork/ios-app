@@ -83,12 +83,10 @@ class Web3TransferOperation {
     let isFeeWaived: Bool
     
     @MainActor @Published
-    var state: State = .loading
+    private(set) var state: State = .loading
     
     @MainActor
     var fee: Fee?
-    
-    var hasTransactionSent = false
     
     @MainActor
     var isResendingTransactionAvailable: Bool {
@@ -132,12 +130,26 @@ class Web3TransferOperation {
         assertionFailure("Must override")
     }
     
-    func rejectTransactionIfNotSent() {
-        guard !hasTransactionSent else {
+    @MainActor
+    final func updateState(_ newState: State) {
+        // Success is terminal, including when an earlier fee request finishes late.
+        switch state {
+        case .success:
             return
+        default:
+            state = newState
         }
-        Logger.web3.info(category: "Web3Transfer", message: "Rejected by dismissing")
-        reject()
+    }
+    
+    @MainActor
+    func rejectIfNotSuccess() {
+        switch state {
+        case .success:
+            return
+        default:
+            Logger.web3.info(category: "Web3Transfer", message: "Rejected by dismissing")
+            reject()
+        }
     }
     
     @MainActor func resendTransaction() {

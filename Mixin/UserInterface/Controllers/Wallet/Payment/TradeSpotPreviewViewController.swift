@@ -58,7 +58,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
         var rows: [Row]
         rows = [
             .assetChanges(
-                estimated: true,
+                title: R.string.localizable.estimated_balance_change(),
                 changes: [
                     StyledAssetChange(
                         token: sendToken,
@@ -84,7 +84,8 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
             ),
             .info(
                 caption: .string(R.string.localizable.order_type()),
-                content: orderType
+                content: orderType,
+                action: nil,
             ),
             .doubleLineInfo(
                 caption: .price,
@@ -103,7 +104,8 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                         receiveSymbol: receiveToken.symbol,
                         numeraire: .send
                     )
-                )
+                ),
+                infoAction: nil,
             ),
         ]
         
@@ -114,7 +116,8 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
             rows.append(
                 .info(
                     caption: .string(R.string.localizable.trade_expiry()),
-                    content: expiry.localizedName
+                    content: expiry.localizedName,
+                    action: nil,
                 )
             )
         }
@@ -127,7 +130,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
             rows.append(.receivers([receiver], threshold: nil))
             rows.append(.wallet(caption: .sender, wallet: .privacy, threshold: nil))
             if let memo = operation.extra.plainValue, !memo.isEmpty {
-                rows.append(.info(caption: .memo, content: memo))
+                rows.append(.info(caption: .memo, content: memo, action: nil))
             }
         case .web3(let operation):
             if let fee = operation.fee?.selected {
@@ -208,6 +211,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                         event: .tradeSpotEnd,
                         tags: [
                             "wallet": "main",
+                            "asset_symbol": sendToken.symbol,
                             "asset_level": Reporter.assetLevel(decimalUSDPrice: sendToken.decimalUSDPrice, decimalAmount: sendAmount)
                         ]
                     )
@@ -222,6 +226,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                         event: .tradeSpotEnd,
                         tags: [
                             "wallet": "web3",
+                            "asset_symbol": sendToken.symbol,
                             "asset_level": Reporter.assetLevel(decimalUSDPrice: sendToken.decimalUSDPrice, decimalAmount: sendAmount)
                         ]
                     )

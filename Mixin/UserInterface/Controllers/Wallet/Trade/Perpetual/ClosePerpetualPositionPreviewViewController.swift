@@ -3,8 +3,18 @@ import MixinServices
 
 final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
-    private let viewModels: [PerpetualPositionViewModel]
+    enum Position {
+        case batch([PerpetualPositionViewModel])
+        case single(
+            viewModel: PerpetualPositionViewModel,
+            reducingQuantity: Decimal,
+            canonicalFormatStyle: Decimal.FormatStyle,
+        )
+    }
+    
     private let wallet: Wallet
+    private let position: Position
+    private let onDismissAfterSuccess: (() -> Void)?
     
     private var hasSucceeded = false
     
@@ -20,9 +30,26 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         guard sameWallet else {
             return nil
         }
-        self.viewModels = viewModels
         self.wallet = wallet
+        self.position = .batch(viewModels)
+        self.onDismissAfterSuccess = nil
         super.init(wallet: wallet, warnings: [])
+    }
+    
+    init(
+        reducing viewModel: PerpetualPositionViewModel,
+        quantity: Decimal,
+        canonicalFormatStyle: Decimal.FormatStyle,
+        onDismissAfterSuccess: @escaping () -> Void,
+    ) {
+        self.wallet = viewModel.wallet
+        self.position = .single(
+            viewModel: viewModel,
+            reducingQuantity: quantity,
+            canonicalFormatStyle: canonicalFormatStyle,
+        )
+        self.onDismissAfterSuccess = onDismissAfterSuccess
+        super.init(wallet: viewModel.wallet, warnings: [])
     }
     
     @MainActor required init?(coder: NSCoder) {
@@ -32,101 +59,243 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if viewModels.count == 1, let viewModel = viewModels.first {
-            tableHeaderView.setTokenIcon(url: viewModel.iconURL)
-        } else {
-            tableHeaderView.setIcon(tokenIconURLs: viewModels.map(\.iconURL))
+        let viewModels: [PerpetualPositionViewModel] = switch position {
+        case .batch(let viewModels):
+            viewModels
+        case .single(let viewModel, _, _):
+            [viewModel]
         }
-        tableHeaderView.titleLabel.text = R.string.localizable.confirm_closing_position()
+        if viewModels.count == 1, let viewModel = viewModels.first {
+            tableHeaderView.setTokenIcon(url: viewModel.position.iconURL)
+            tableHeaderView.titleLabel.text = R.string.localizable.perps_close_position_title(
+                viewModel.side.localizedName,
+                viewModel.position.tokenSymbol,
+            )
+        } else {
+            tableHeaderView.setIcon(tokenIconURLs: viewModels.map(\.position.iconURL))
+            tableHeaderView.titleLabel.text = R.string.localizable.confirm_closing_position()
+        }
         tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixin)
         
         var rows: [Row] = []
         
         let positions = viewModels.map { viewModel in
             (
-                iconURL: viewModel.iconURL,
-                name: viewModel.displaySymbol ?? "",
+                iconURL: viewModel.position.iconURL,
+                name: viewModel.position.displaySymbol ?? "",
                 side: viewModel.side,
                 leverage: viewModel.leverage
             )
         }
         rows.append(.perpsPositions(positions))
         
-        let receivings = viewModels.compactMap(\.estimatedReceiving)
-        let token = receivings.lazy
-            .compactMap { receiving in
-                TokenDAO.shared.tokenItem(assetID: receiving.assetID)
-            }
-            .first
-        if let token {
-            let totalReceivingAmount = receivings.map(\.receivingAmount).reduce(0, +)
-            let totalPnLAmount = receivings.map(\.pnlAmount).reduce(0, +)
-            let pnlColor: MarketColor = totalPnLAmount >= 0 ? .rising : .falling
+        switch position {
+        case let .single(viewModel, quantity, _):
+            let position = viewModel.position
+            let proportion = quantity / viewModel.decimalQuantity
+            let marginPlusPnL = viewModel.decimalMargin + position.decimalUnrealizedPnL
             
-            let count = CurrencyFormatter.localizedString(
-                from: totalReceivingAmount,
-                format: .precision,
-                sign: .always,
-                symbol: .custom(token.symbol)
-            )
-            
-            let pnl = NSMutableAttributedString(
-                string: R.string.localizable.pnl() + ": ",
-                attributes: [
-                    .font: UIFont.preferredFont(forTextStyle: .caption1),
-                    .foregroundColor: R.color.text_tertiary()!
-                ]
-            )
-            var pnlValue = CurrencyFormatter.localizedString(
-                from: totalPnLAmount,
-                format: .precision,
-                sign: .always,
-                symbol: .custom(token.symbol)
-            )
-            
-            let totalWeightedROE: Decimal = viewModels.reduce(0) { result, viewModel in
-                if let roe = viewModel.decimalROE {
-                    result + viewModel.decimalMargin * roe
-                } else {
-                    result
+            let receivingAmount = {
+                var amount = marginPlusPnL
+                if let fee = position.decimalEstimatedCloseFee {
+                    amount -= fee
                 }
-            }
-            let totalMargin = viewModels.map(\.decimalMargin).reduce(0, +)
-            if totalMargin > 0 {
-                let aggregatedROE = totalWeightedROE / totalMargin
-                let roe = PercentageFormatter.string(
-                    from: aggregatedROE,
-                    format: .pretty,
+                return amount * proportion
+            }()
+            rows.append(.info(
+                caption: .string(R.string.localizable.estimated_receive()),
+                content: CurrencyFormatter.localizedString(
+                    from: receivingAmount,
+                    format: .fiatMoneyPretty,
                     sign: .never,
-                )
-                pnlValue += " (" + roe + ")"
-            }
-            
-            pnl.append(NSAttributedString(
-                string: pnlValue,
-                attributes: [
-                    .font: UIFont.preferredFont(forTextStyle: .caption1),
-                    .foregroundColor: pnlColor.uiColor
-                ]
+                    symbol: .dollarSign,
+                ),
+                action: nil,
             ))
             
-            rows.append(.estimatedReceive(token: token, count: count, pnl: pnl))
+            rows.append(.doubleLineInfo(
+                caption: .string(R.string.localizable.margin()),
+                primary: CurrencyFormatter.localizedString(
+                    from: marginPlusPnL * proportion,
+                    format: .fiatMoneyPretty,
+                    sign: .never,
+                    symbol: .dollarSign,
+                ),
+                secondary: .attributed({
+                    let pnl = NSMutableAttributedString(
+                        string: R.string.localizable.perps_include_pnl() + " ",
+                        attributes: [
+                            .font: UIFont.preferredFont(forTextStyle: .caption1),
+                            .foregroundColor: R.color.text_tertiary()!,
+                        ]
+                    )
+                    pnl.append(NSAttributedString(
+                        string: CurrencyFormatter.localizedString(
+                            from: position.decimalUnrealizedPnL * proportion,
+                            format: .fiatMoneyPretty,
+                            sign: .always,
+                            symbol: .dollarSign,
+                        ),
+                        attributes: [.foregroundColor: viewModel.pnlColor.uiColor]
+                    ))
+                    return pnl
+                }()),
+                infoAction: { [weak self] in
+                    self?.present(PopupAlertViewController.perpsMargin(), animated: true)
+                },
+            ))
+            
+            let remainingQuantity = viewModel.decimalQuantity - quantity
+            let sizeBefore = CurrencyFormatter.localizedString(
+                from: viewModel.decimalQuantity,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(position.tokenSymbol),
+            )
+            let sizeAfter = CurrencyFormatter.localizedString(
+                from: remainingQuantity,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(position.tokenSymbol),
+            ) + "(" + CurrencyFormatter.localizedString(
+                from: remainingQuantity * position.decimalMarkPrice,
+                format: .fiatMoneyPretty,
+                sign: .never,
+                symbol: .dollarSign,
+            ) + ")"
+            rows.append(.info(
+                caption: .string(R.string.localizable.position_size()),
+                content: PerpPositionAdjustment.change(from: sizeBefore, to: sizeAfter),
+                action: { [weak self] in
+                    self?.introducePositionSize()
+                },
+            ))
+            
+            if let fee = viewModel.position.decimalEstimatedCloseFee {
+                let fee = CurrencyFormatter.localizedString(
+                    from: fee * proportion,
+                    format: .fiatMoneyPretty,
+                    sign: .never,
+                    symbol: .dollarSign,
+                )
+                rows.append(.info(
+                    caption: .string(R.string.localizable.fee()),
+                    content: fee,
+                    action: { [weak self] in
+                        self?.introduceFee()
+                    },
+                ))
+            }
+        case .batch(let viewModels):
+            let hasEstimatedFees = viewModels.allSatisfy { viewModel in
+                viewModel.position.decimalEstimatedCloseFee != nil
+            }
+            var totalPnL: Decimal = 0
+            var totalMarginPlusPnL: Decimal = 0
+            var totalFee: Decimal = 0
+            var totalReceivingAmount: Decimal = 0
+            for viewModel in viewModels {
+                let pnl = viewModel.position.decimalUnrealizedPnL
+                let marginPlusPnL = viewModel.decimalMargin + pnl
+                let receivingAmount: Decimal
+                if hasEstimatedFees, let fee = viewModel.position.decimalEstimatedCloseFee {
+                    receivingAmount = marginPlusPnL - fee
+                    totalFee += fee
+                } else {
+                    receivingAmount = marginPlusPnL
+                }
+                totalPnL += pnl
+                totalMarginPlusPnL += marginPlusPnL
+                totalReceivingAmount += receivingAmount
+            }
+            let pnlColor: MarketColor = totalPnL >= 0 ? .rising : .falling
+            
+            rows.append(.info(
+                caption: .string(R.string.localizable.estimated_receive()),
+                content: CurrencyFormatter.localizedString(
+                    from: totalReceivingAmount,
+                    format: .fiatMoneyPretty,
+                    sign: .never,
+                    symbol: .dollarSign,
+                ),
+                action: nil,
+            ))
+            
+            let pnl = NSMutableAttributedString(
+                string: R.string.localizable.perps_include_pnl() + " ",
+                attributes: [
+                    .font: UIFont.preferredFont(forTextStyle: .caption1),
+                    .foregroundColor: R.color.text_tertiary()!,
+                ]
+            )
+            pnl.append(NSAttributedString(
+                string: CurrencyFormatter.localizedString(
+                    from: totalPnL,
+                    format: .fiatMoneyPretty,
+                    sign: .always,
+                    symbol: .dollarSign,
+                ),
+                attributes: [.foregroundColor: pnlColor.uiColor]
+            ))
+            
+            rows.append(.doubleLineInfo(
+                caption: .string(R.string.localizable.margin()),
+                primary: CurrencyFormatter.localizedString(
+                    from: totalMarginPlusPnL,
+                    format: .fiatMoneyPretty,
+                    sign: .never,
+                    symbol: .dollarSign,
+                ),
+                secondary: .attributed(pnl),
+                infoAction: { [weak self] in
+                    self?.present(PopupAlertViewController.perpsMargin(), animated: true)
+                },
+            ))
+            
+            let fee = if hasEstimatedFees {
+                CurrencyFormatter.localizedString(
+                    from: totalFee,
+                    format: .fiatMoneyPretty,
+                    sign: .never,
+                    symbol: .dollarSign,
+                )
+            } else {
+                "-"
+            }
+            rows.append(.info(
+                caption: .string(R.string.localizable.fee()),
+                content: fee,
+                action: { [weak self] in
+                    self?.introduceFee()
+                },
+            ))
         }
+        
         rows.append(contentsOf: [
-            .wallet(caption: .sender, wallet: wallet, threshold: nil),
+            .wallet(caption: .receiver, wallet: wallet, threshold: nil),
         ])
         reloadData(with: rows)
     }
     
     override func confirm(_ sender: Any) {
         super.confirm(sender)
-        reporter.report(event: .tradePerpsClosePreviewConfirm)
+        switch position {
+        case .batch:
+            reporter.report(event: .tradePerpsClosePreviewConfirm)
+        case .single:
+            reporter.report(event: .tradePerpsReducePositionPreviewConfirm)
+        }
     }
     
     override func close(_ sender: Any) {
         super.close(sender)
         if !hasSucceeded {
-            reporter.report(event: .tradePerpsClosePreviewCancel)
+            switch position {
+            case .batch:
+                reporter.report(event: .tradePerpsClosePreviewCancel)
+            case .single:
+                reporter.report(event: .tradePerpsReducePositionPreviewCancel)
+            }
         }
     }
     
@@ -141,40 +310,72 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         Task {
             do {
                 try await AccountAPI.verify(pin: pin)
-                let errors = await withTaskGroup(of: Error?.self) { group in
-                    for viewModel in viewModels {
-                        group.addTask { [positionID=viewModel.positionID] in
-                            do {
-                                _ = try await RouteAPI.closePerpsOrder(positionID: positionID)
-                                return nil
-                            } catch {
-                                return error
+                switch position {
+                case .batch(let viewModels):
+                    let errors = await withTaskGroup(of: Error?.self) { group in
+                        for viewModel in viewModels {
+                            let positionID = viewModel.position.positionID
+                            let quantity = viewModel.position.quantity
+                            group.addTask {
+                                do {
+                                    _ = try await RouteAPI.closePerpsOrder(
+                                        positionID: positionID,
+                                        quantity: quantity,
+                                    )
+                                    return nil
+                                } catch {
+                                    return error
+                                }
                             }
                         }
-                    }
-                    var errors: [Error] = []
-                    for await error in group {
-                        if let error {
-                            errors.append(error)
+                        var errors: [Error] = []
+                        for await error in group {
+                            if let error {
+                                errors.append(error)
+                            }
                         }
+                        return errors
                     }
-                    return errors
-                }
-                if errors.count == viewModels.count, let firstError = errors.first {
-                    throw firstError
+                    if errors.count == viewModels.count, let firstError = errors.first {
+                        throw firstError
+                    }
+                case let .single(viewModel, reducingQuantity, canonicalFormatStyle):
+                    let quantity = if reducingQuantity == viewModel.decimalQuantity {
+                        viewModel.position.quantity
+                    } else {
+                        reducingQuantity.formatted(canonicalFormatStyle)
+                    }
+                    _ = try await RouteAPI.closePerpsOrder(
+                        positionID: viewModel.position.positionID,
+                        quantity: quantity,
+                    )
                 }
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {
                     canDismissInteractively = true
                     hasSucceeded = true
                     tableHeaderView.setIcon(progress: .success)
-                    layoutTableHeaderView(
-                        title: R.string.localizable.position_closed(),
-                        subtitle: R.string.localizable.position_closed_description()
-                    )
+                    switch position {
+                    case .batch:
+                        layoutTableHeaderView(
+                            title: R.string.localizable.position_closed(),
+                            subtitle: R.string.localizable.position_closed_description()
+                        )
+                    case .single:
+                        layoutTableHeaderView(
+                            title: R.string.localizable.perps_close_submitted(),
+                            subtitle: R.string.localizable.position_submitted_description()
+                        )
+                    }
                     tableView.setContentOffset(.zero, animated: true)
                     loadFinishedTrayView()
-                    reporter.report(event: .tradePerpsCloseEnd)
+                    switch position {
+                    case .batch:
+                        reporter.report(event: .tradePerpsCloseEnd)
+                    case .single:
+                        onDismiss = onDismissAfterSuccess
+                        reporter.report(event: .tradePerpsReducePositionEnd)
+                    }
                 }
             } catch {
                 let errorDescription = if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {
@@ -210,6 +411,27 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 }
             }
         }
+    }
+    
+    private func introducePositionSize() {
+        let manual = PerpsManual.viewController(initialPage: .size)
+        present(manual, animated: true)
+        reporter.report(
+            event: .tradePerpsGuide,
+            tags: ["source": "perps_reduce_position_preview_size"]
+        )
+    }
+    
+    private func introduceFee() {
+        let manual = PerpsManual.viewController(initialPage: .tradingFee)
+        present(manual, animated: true)
+        let source = switch position {
+        case .batch:
+            "perps_close_preview_fee"
+        case .single:
+            "perps_reduce_position_preview_fee"
+        }
+        reporter.report(event: .tradePerpsGuide, tags: ["source": source])
     }
     
 }

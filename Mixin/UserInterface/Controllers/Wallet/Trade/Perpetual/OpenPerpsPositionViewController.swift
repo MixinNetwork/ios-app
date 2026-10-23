@@ -302,6 +302,10 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     }
     
     @IBAction func editTakeProfit(_ sender: Any) {
+        guard marginAmount != 0 else {
+            presentAlertAboutSettingTPSLWithoutValidMarginAmount()
+            return
+        }
         guard let liquidationPrice = validatedInput?.liquidationPrice else {
             return
         }
@@ -322,6 +326,10 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
     }
     
     @IBAction func editStopLoss(_ sender: Any) {
+        guard marginAmount != 0 else {
+            presentAlertAboutSettingTPSLWithoutValidMarginAmount()
+            return
+        }
         guard let liquidationPrice = validatedInput?.liquidationPrice else {
             return
         }
@@ -608,6 +616,16 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         }
     }
     
+    private func presentAlertAboutSettingTPSLWithoutValidMarginAmount() {
+        let alert = UIAlertController(
+            title: R.string.localizable.perps_tpsl_requires_amount_leverage(),
+            message: nil,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: R.string.localizable.got_it(), style: .cancel))
+        present(alert, animated: true)
+    }
+    
 }
 
 extension OpenPerpsPositionViewController: NavigationBarStyling {
@@ -703,7 +721,7 @@ extension OpenPerpsPositionViewController {
         private let maxAmount: Decimal?
         
         init(market: PerpetualMarket) {
-            minAmount = Decimal(string: market.minAmount, locale: .enUSPOSIX) ?? 1
+            minAmount = market.decimalMinAmount
             maxAmount = Decimal(string: market.maxAmount, locale: .enUSPOSIX)
         }
         

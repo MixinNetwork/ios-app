@@ -160,8 +160,8 @@ extension AppCardData {
             public init(from decoder: any Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
                 let urlString = try container.decode(String.self, forKey: .url)
-                let width = try container.decode(Int.self, forKey: .width)
-                let height = try container.decode(Int.self, forKey: .height)
+                let width = max(1, try container.decode(Int.self, forKey: .width))
+                let height = max(1, try container.decode(Int.self, forKey: .height))
                 self.url = URL(string: urlString)
                 self.mimeType = try container.decode(String.self, forKey: .mimeType)
                 self.width = width

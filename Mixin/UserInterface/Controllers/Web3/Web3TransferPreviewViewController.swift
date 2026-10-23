@@ -12,6 +12,19 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
         case user(toAddressLabel: AddressLabel?)
         case speedUp(sender: Web3TransactionViewController)
         case cancel(sender: Web3TransactionViewController)
+        
+        var analyticDestination: String {
+            switch self {
+            case .dapp:
+                return "dapp"
+            case .user:
+                return "user"
+            case .speedUp:
+                return "speed_up"
+            case .cancel:
+                return "cancel"
+            }
+        }
     }
     
     var manipulateNavigationStackOnFinished = false
@@ -134,7 +147,8 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
             rows.append(.doubleLineInfo(
                 caption: .from,
                 primary: proposer.name,
-                secondary: .plain(proposer.host)
+                secondary: .plain(proposer.host),
+                infoAction: nil,
             ))
             rows.append(.address(caption: .wallet, address: operation.fromAddress.destination, label: .wallet(.common(operation.wallet))))
         case let .user(toAddressLabel):
@@ -159,7 +173,7 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
             break
         }
         
-        rows.append(.info(caption: .network, content: operation.chain.name))
+        rows.append(.info(caption: .network, content: operation.chain.name, action: nil))
         reloadData(with: rows)
         
         if operationContainsSetAuthority {
@@ -197,12 +211,12 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
     
     override func close(_ sender: Any) {
         super.close(sender)
-        operation.rejectTransactionIfNotSent()
+        operation.rejectIfNotSuccess()
     }
     
     override func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         super.presentationControllerDidDismiss(presentationController)
-        operation.rejectTransactionIfNotSent()
+        operation.rejectIfNotSuccess()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRow row: Row) {
@@ -318,7 +332,14 @@ extension Web3TransferPreviewViewController {
                                      rightAction: #selector(resendTransaction(_:)),
                                      animation: .vertical)
         case .success:
-            reporter.report(event: .sendEnd)
+            reporter.report(
+                event: .sendEnd,
+                tags: [
+                    "wallet": "web3",
+                    "destination": proposer?.analyticDestination ?? "unknown"
+                ]
+            )
+            
             canDismissInteractively = true
             tableHeaderView.setIcon(progress: .success)
             layoutTableHeaderView(
@@ -516,7 +537,7 @@ extension Web3TransferPreviewViewController {
             if let decimalAmount, decimalAmount != 0 {
                 style = decimalAmount > 0 ? .incoming : .outgoing
             } else {
-                style = .plain
+                style = .primary
             }
             rows.append(
                 .web3Amount(
@@ -543,7 +564,7 @@ extension Web3TransferPreviewViewController {
                 if let decimalAmount, decimalAmount != 0 {
                     style = decimalAmount > 0 ? .incoming : .outgoing
                 } else {
-                    style = .plain
+                    style = .primary
                 }
                 return StyledAssetChange(
                     token: change,
@@ -551,7 +572,10 @@ extension Web3TransferPreviewViewController {
                     amountStyle: style
                 )
             }
-            rows.append(.assetChanges(estimated: true, changes: styledChanges))
+            rows.append(.assetChanges(
+                title: R.string.localizable.estimated_balance_change(),
+                changes: styledChanges,
+            ))
         }
         
         if rows.isEmpty {

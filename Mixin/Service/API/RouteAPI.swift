@@ -362,11 +362,15 @@ extension RouteAPI {
     
     static func closePerpsOrder(
         positionID: String,
+        quantity: String,
     ) async throws -> ClosePerpetualOrderResponse {
         try await request(
             method: .post,
             path: "/perps/orders/close",
-            with: ["position_id": positionID],
+            with: [
+                "position_id": positionID,
+                "quantity": quantity,
+            ],
         )
     }
     
@@ -776,6 +780,7 @@ extension RouteAPI {
     }
     
     static func simulateSolanaTransaction(
+        from: String,
         rawTransaction: String
     ) async throws -> TransactionSimulation {
         try await request(
@@ -783,6 +788,7 @@ extension RouteAPI {
             path: "/web3/transactions/simulate",
             with: [
                 "chain_id": ChainID.solana,
+                "from": from,
                 "raw_transaction": rawTransaction,
             ]
         )

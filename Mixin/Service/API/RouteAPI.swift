@@ -780,6 +780,7 @@ extension RouteAPI {
     }
     
     static func simulateSolanaTransaction(
+        from: String,
         rawTransaction: String
     ) async throws -> TransactionSimulation {
         try await request(
@@ -787,6 +788,7 @@ extension RouteAPI {
             path: "/web3/transactions/simulate",
             with: [
                 "chain_id": ChainID.solana,
+                "from": from,
                 "raw_transaction": rawTransaction,
             ]
         )

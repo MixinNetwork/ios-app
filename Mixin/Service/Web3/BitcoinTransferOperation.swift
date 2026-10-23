@@ -64,7 +64,7 @@ class BitcoinTransferOperation: Web3TransferOperation {
             throw SigningError.missingToAddress
         }
         await MainActor.run {
-            state = .signing
+            updateState(.signing)
         }
         let signedTransaction: Bitcoin.SignedTransaction
         do {
@@ -85,7 +85,7 @@ class BitcoinTransferOperation: Web3TransferOperation {
         } catch {
             Logger.web3.error(category: "BTCTransfer", message: "Failed to sign: \(error)")
             await MainActor.run {
-                self.state = .signingFailed(error)
+                self.updateState(.signingFailed(error))
             }
             return
         }
@@ -93,7 +93,7 @@ class BitcoinTransferOperation: Web3TransferOperation {
             from: fee.amount / .satoshi / Decimal(signedTransaction.vsize)
         )
         await MainActor.run {
-            self.state = .sending
+            self.updateState(.sending)
         }
         do {
             Logger.web3.info(category: "BTCTransfer", message: "Will send tx")
@@ -132,13 +132,12 @@ class BitcoinTransferOperation: Web3TransferOperation {
             }
             Logger.web3.info(category: "BTCTransfer", message: "Tx saved")
             await MainActor.run {
-                self.state = .success
-                self.hasTransactionSent = true
+                self.updateState(.success)
             }
         } catch {
             Logger.web3.error(category: "BTCTransfer", message: "Failed to send: \(error)")
             await MainActor.run {
-                self.state = .sendingFailed(error)
+                self.updateState(.sendingFailed(error))
             }
         }
     }
@@ -196,13 +195,13 @@ final class BitcoinTransferToAddressOperation: BitcoinTransferOperation {
             await MainActor.run {
                 self.fee = fee
                 self.spendingOutputs = result.spendingOutputs
-                self.state = .ready
+                self.updateState(.ready)
             }
         } catch let .insufficientOutputs(feeAmount) {
             fee = Fee.native(token: payment.token, amount: feeAmount)
             await MainActor.run {
                 self.fee = fee
-                self.state = .unavailable(reason: R.string.localizable.insufficient_balance())
+                self.updateState(.unavailable(reason: R.string.localizable.insufficient_balance()))
             }
         }
         return fee
@@ -349,7 +348,7 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
                 fee = Fee.native(token: token, amount: result.feeAmount)
                 await MainActor.run {
                     self.fee = fee
-                    self.state = .unavailable(reason: R.string.localizable.btc_tx_already_speedy())
+                    self.updateState(.unavailable(reason: R.string.localizable.btc_tx_already_speedy()))
                 }
             } else {
                 let calculator = Bitcoin.P2WPKHFeeCalculator(
@@ -367,14 +366,14 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
                 await MainActor.run {
                     self.spendingOutputs = result.spendingOutputs
                     self.fee = fee
-                    self.state = .ready
+                    self.updateState(.ready)
                 }
             }
         } catch let .insufficientOutputs(feeAmount) {
             fee = Fee.native(token: token, amount: feeAmount)
             await MainActor.run {
                 self.fee = fee
-                self.state = .unavailable(reason: R.string.localizable.insufficient_balance())
+                self.updateState(.unavailable(reason: R.string.localizable.insufficient_balance()))
             }
         }
         return fee
@@ -450,13 +449,13 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
             await MainActor.run {
                 self.spendingOutputs = result.spendingOutputs
                 self.fee = fee
-                self.state = .ready
+                self.updateState(.ready)
             }
         } catch let .insufficientOutputs(feeAmount) {
             fee = Fee.native(token: token, amount: feeAmount)
             await MainActor.run {
                 self.fee = fee
-                self.state = .unavailable(reason: R.string.localizable.insufficient_balance())
+                self.updateState(.unavailable(reason: R.string.localizable.insufficient_balance()))
             }
         }
         return fee
@@ -470,7 +469,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
             throw SigningError.feeNotReady
         }
         await MainActor.run {
-            state = .signing
+            updateState(.signing)
         }
         let totalInputsAmount = spendingOutputs.reduce(0) { (amount, output) in
             amount + output.decimalAmount
@@ -495,7 +494,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         } catch {
             Logger.web3.error(category: "BTCCancel", message: "Failed to sign: \(error)")
             await MainActor.run {
-                self.state = .signingFailed(error)
+                self.updateState(.signingFailed(error))
             }
             return
         }
@@ -503,7 +502,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
             from: fee.amount / .satoshi / Decimal(signedTransaction.vsize)
         )
         await MainActor.run {
-            self.state = .sending
+            self.updateState(.sending)
         }
         do {
             Logger.web3.info(category: "BTCCancel", message: "Will send tx")
@@ -555,13 +554,12 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
             }
             Logger.web3.info(category: "BTCCancel", message: "Tx saved")
             await MainActor.run {
-                self.state = .success
-                self.hasTransactionSent = true
+                self.updateState(.success)
             }
         } catch {
             Logger.web3.error(category: "BTCCancel", message: "Failed to send: \(error)")
             await MainActor.run {
-                self.state = .sendingFailed(error)
+                self.updateState(.sendingFailed(error))
             }
         }
     }

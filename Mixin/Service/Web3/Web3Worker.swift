@@ -79,21 +79,15 @@ final class Web3Worker {
                 send(error: "RPC Unavailable", to: request)
                 return
             }
+            let hexChainID = "0x" + String(chainID, radix: 16)
             let setConfig = """
-            var config = {
-                ethereum: {
-                    address: "\(address)",
-                    chainId: \(chainID),
-                    rpcUrl: "\(rpcServerURL)"
-                }
-            };
-            mixinwallet.ethereum.setConfig(config);
+            mixinwallet.ethereum.setChainId("\(hexChainID)");
+            mixinwallet.ethereum.setAddress("\(address)");
+            mixinwallet.ethereum.setRPCUrl("\(rpcServerURL.absoluteString)");
+            mixinwallet.ethereum.emit("chainChanged", "\(hexChainID)");
+            mixinwallet.ethereum.emit("networkChanged", "\(chainID)");
             """
             webView?.evaluateJavaScript(setConfig)
-            
-            let hexChainID = "0x" + String(chainID, radix: 16)
-            let emitChange = "mixinwallet.ethereum.emitChainChanged(\"\(hexChainID)\");"
-            webView?.evaluateJavaScript(emitChange)
             
             sendNull(to: request)
             self.evmChain = chain
@@ -117,8 +111,13 @@ final class Web3Worker {
             send(error: "Account Locked", to: request)
             return
         }
-        let script = "mixinwallet.\(request.network.rawValue).setAddress(\"\(address.lowercased())\");"
-        webView?.evaluateJavaScript(script)
+        switch request.network {
+        case .ethereum:
+            let script = "mixinwallet.ethereum.setAddress(\"\(address.lowercased())\");"
+            webView?.evaluateJavaScript(script)
+        case .solana:
+            break // The provider sets its public key from the connect response.
+        }
         send(results: [address], to: request)
     }
     
@@ -409,14 +408,17 @@ final class Web3Worker {
             send(error: "No Address", to: request)
             return
         }
+        let broadcastsTransaction = object["broadcast"] as? Bool ?? false
         Task.detached { [solanaChain, proposer] in
             do {
                 let operation = try await SolanaTransferWithCustomRespondingOperation(
                     wallet: wallet,
                     transaction: transaction,
                     fromAddress: address,
-                    chain: solanaChain
-                ) { signature in
+                    chain: solanaChain,
+                    broadcastsTransaction: broadcastsTransaction,
+                ) { signature, _ in
+                    // The JS provider inserts this signature into the current account's signer slot.
                     try await self.send(result: signature, to: request)
                 } rejectWith: {
                     self.send(error: "User Rejected", to: request)
@@ -472,7 +474,10 @@ final class Web3Worker {
     }
     
     private func send(error: String, to request: Request) {
-        let script = String(format: "mixinwallet.\(request.network.rawValue).sendError(%ld, \"%@\")", request.id, error)
+        guard let data = try? JSONEncoder().encode(error), let errorJSON = String(data: data, encoding: .utf8) else {
+            return
+        }
+        let script = "mixinwallet.\(request.network.rawValue).sendError(\(request.id), new Error(\(errorJSON)));"
         webView?.evaluateJavaScript(script)
     }
     

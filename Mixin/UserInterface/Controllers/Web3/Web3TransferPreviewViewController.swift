@@ -211,12 +211,12 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
     
     override func close(_ sender: Any) {
         super.close(sender)
-        operation.rejectTransactionIfNotSent()
+        operation.rejectIfNotSuccess()
     }
     
     override func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         super.presentationControllerDidDismiss(presentationController)
-        operation.rejectTransactionIfNotSent()
+        operation.rejectIfNotSuccess()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRow row: Row) {

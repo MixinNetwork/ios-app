@@ -721,7 +721,7 @@ extension OpenPerpsPositionViewController {
         private let maxAmount: Decimal?
         
         init(market: PerpetualMarket) {
-            minAmount = Decimal(string: market.minAmount, locale: .enUSPOSIX) ?? 1
+            minAmount = market.decimalMinAmount
             maxAmount = Decimal(string: market.maxAmount, locale: .enUSPOSIX)
         }
         

@@ -6,7 +6,11 @@ class PostMessageCell: TextMessageCell {
     #if DEBUG_POST_LAYOUT
     let textView = UITextView()
     #endif
-    let webView = WKWebView()
+    let webView: WKWebView = {
+        let configuration = WKWebViewConfiguration()
+        configuration.defaultWebpagePreferences.allowsContentJavaScript = false
+        return WKWebView(frame: .zero, configuration: configuration)
+    }()
     let expandImageView = UIImageView(image: R.image.conversation.ic_message_expand())
     let trailingInfoBackgroundView = TrailingInfoBackgroundView()
     

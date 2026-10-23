@@ -1410,8 +1410,7 @@
 "price_alert_notification_permission" = "가격 알림을 사용하려면 알림 권한이 필요합니다.";
 "price_alerts" = "가격 알림";
 "price_change_24h" = "24시간 가격 변동";
-"price_change_stop_loss" = "가격 %1$@ → 최대 손실 %2$@";
-"price_change_take_profit" = "가격 %1$@ → 최대 이익 %2$@";
+"price_change_tpsl" = "가격 %1$@ → 예상 수익 %2$@";
 "price_data_unavailable" = "가격 데이터를 사용할 수 없습니다.";
 "price_decrease_invalid" = "가격 인하는 %1$@보다 크고 %2$@보다 작아야 합니다.";
 "price_fall_loss" = "가격 하락 %1$@ → 손실 %2$@";

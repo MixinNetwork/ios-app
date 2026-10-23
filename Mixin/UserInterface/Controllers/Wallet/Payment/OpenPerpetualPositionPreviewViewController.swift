@@ -151,7 +151,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 currentPrice: context.viewModel.decimalLastPrice,
                 closingPrice: takeProfitPrice,
             )
-            let simulation = R.string.localizable.price_change_take_profit(
+            let simulation = R.string.localizable.price_change_tpsl(
                 PercentageFormatter.string(
                     from: priceChange,
                     format: .pretty,
@@ -192,7 +192,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 currentPrice: context.viewModel.decimalLastPrice,
                 closingPrice: stopLossPrice,
             )
-            let simulation = R.string.localizable.price_change_stop_loss(
+            let simulation = R.string.localizable.price_change_tpsl(
                 PercentageFormatter.string(
                     from: priceChange,
                     format: .pretty,

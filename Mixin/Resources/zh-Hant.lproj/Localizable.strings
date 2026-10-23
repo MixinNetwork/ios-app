@@ -1410,8 +1410,7 @@
 "price_alert_notification_permission" = "價格預警需要開啟通知許可權";
 "price_alerts" = "所有價格預警";
 "price_change_24h" = "24 小時價格變化";
-"price_change_stop_loss" = "價格 %1$@ → 最多虧損 %2$@";
-"price_change_take_profit" = "價格 %1$@ → 最多盈利 %2$@";
+"price_change_tpsl" = "價格 %1$@ → 預估收益 %2$@";
 "price_data_unavailable" = "暫無價格資料";
 "price_decrease_invalid" = "跌幅需大於 %1$@ 且小於 %2$@";
 "price_fall_loss" = "價格下跌 %1$@ → 虧損 %2$@";

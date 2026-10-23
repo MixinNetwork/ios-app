@@ -1410,8 +1410,7 @@
 "price_alert_notification_permission" = "Для включения оповещений о ценах требуется разрешение на уведомление.";
 "price_alerts" = "Оповещения о ценах";
 "price_change_24h" = "Изменение цены за 24 часа";
-"price_change_stop_loss" = "Цена %1$@ → Максимальный убыток %2$@";
-"price_change_take_profit" = "Цена %1$@ → Максимальная прибыль %2$@";
+"price_change_tpsl" = "Цена %1$@ → Ожидаемая прибыль %2$@";
 "price_data_unavailable" = "Данные о ценах недоступны.";
 "price_decrease_invalid" = "Снижение цены должно быть больше %1$@ и меньше %2$@.";
 "price_fall_loss" = "Цена падает %1$@ → Убыток %2$@";

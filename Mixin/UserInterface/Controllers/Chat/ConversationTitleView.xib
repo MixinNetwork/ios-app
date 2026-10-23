@@ -22,59 +22,73 @@
             <rect key="frame" x="0.0" y="0.0" width="200" height="36"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-st-ack">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-co-ntl" customClass="UIControl">
                     <rect key="frame" x="0.0" y="0.0" width="200" height="36"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-ro-wst">
-                            <rect key="frame" x="75" y="0.0" width="50" height="0.0"/>
+                        <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-st-ack">
+                            <rect key="frame" x="0.0" y="0.0" width="200" height="36"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="750" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-la-bel">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="0.0"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                    <color key="textColor" name="text"/>
+                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-ro-wst">
+                                    <rect key="frame" x="75" y="0.0" width="50" height="0.0"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="750" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-la-bel">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="0.0"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" name="text"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="mem-ic-onv" customClass="SDAnimatedImageView">
+                                            <rect key="frame" x="0.0" y="-10" width="20" height="20"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="mem-he-ght"/>
+                                                <constraint firstAttribute="width" constant="20" id="mem-wi-dth"/>
+                                            </constraints>
+                                        </imageView>
+                                    </subviews>
+                                </stackView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="750" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sub-la-bel">
+                                    <rect key="frame" x="75" y="1" width="50" height="35"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                    <color key="textColor" name="text_tertiary"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="mem-ic-onv" customClass="SDAnimatedImageView">
-                                    <rect key="frame" x="0.0" y="-10" width="20" height="20"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="20" id="mem-he-ght"/>
-                                        <constraint firstAttribute="width" constant="20" id="mem-wi-dth"/>
-                                    </constraints>
-                                </imageView>
                             </subviews>
                         </stackView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="750" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sub-la-bel">
-                            <rect key="frame" x="75" y="1" width="50" height="35"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                            <color key="textColor" name="text_tertiary"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                        <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="loa-di-ngv" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="90" y="8" width="20" height="20"/>
+                            <color key="tintColor" name="icon_tint"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="20" id="loa-he-ght"/>
+                                <constraint firstAttribute="width" constant="20" id="loa-wi-dth"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
+                            </userDefinedRuntimeAttributes>
+                        </view>
                     </subviews>
-                </stackView>
-                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="loa-di-ngv" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="90" y="8" width="20" height="20"/>
-                    <color key="tintColor" name="icon_tint"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="20" id="loa-he-ght"/>
-                        <constraint firstAttribute="width" constant="20" id="loa-wi-dth"/>
+                        <constraint firstItem="loa-di-ngv" firstAttribute="centerX" secondItem="ttl-co-ntl" secondAttribute="centerX" id="loa-ce-ntx"/>
+                        <constraint firstItem="loa-di-ngv" firstAttribute="centerY" secondItem="ttl-co-ntl" secondAttribute="centerY" id="loa-ce-nty"/>
+                        <constraint firstAttribute="bottom" secondItem="ttl-st-ack" secondAttribute="bottom" constant="4" id="stk-bo-ttm"/>
+                        <constraint firstItem="ttl-st-ack" firstAttribute="leading" secondItem="ttl-co-ntl" secondAttribute="leading" id="stk-le-adg"/>
+                        <constraint firstItem="ttl-st-ack" firstAttribute="top" secondItem="ttl-co-ntl" secondAttribute="top" constant="4" id="stk-to-ped"/>
+                        <constraint firstAttribute="trailing" secondItem="ttl-st-ack" secondAttribute="trailing" id="stk-tr-alg"/>
                     </constraints>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
-                    </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
             <constraints>
-                <constraint firstItem="loa-di-ngv" firstAttribute="centerX" secondItem="con-te-ntv" secondAttribute="centerX" id="loa-ce-ntx"/>
-                <constraint firstItem="loa-di-ngv" firstAttribute="centerY" secondItem="con-te-ntv" secondAttribute="centerY" id="loa-ce-nty"/>
-                <constraint firstAttribute="bottom" secondItem="ttl-st-ack" secondAttribute="bottom" constant="4" id="stk-bo-ttm"/>
-                <constraint firstItem="ttl-st-ack" firstAttribute="leading" secondItem="con-te-ntv" secondAttribute="leading" id="stk-le-adg"/>
-                <constraint firstItem="ttl-st-ack" firstAttribute="top" secondItem="con-te-ntv" secondAttribute="top" constant="4" id="stk-to-ped"/>
-                <constraint firstAttribute="trailing" secondItem="ttl-st-ack" secondAttribute="trailing" id="stk-tr-alg"/>
+                <constraint firstItem="ttl-co-ntl" firstAttribute="top" secondItem="con-te-ntv" secondAttribute="top" id="ctl-to-top"/>
+                <constraint firstItem="ttl-co-ntl" firstAttribute="leading" secondItem="con-te-ntv" secondAttribute="leading" id="ctl-to-led"/>
+                <constraint firstAttribute="bottom" secondItem="ttl-co-ntl" secondAttribute="bottom" id="ctl-to-bot"/>
+                <constraint firstAttribute="trailing" secondItem="ttl-co-ntl" secondAttribute="trailing" id="ctl-to-trl"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="contentControl" destination="ttl-co-ntl" id="out-ctl-con"/>
                 <outlet property="contentLeadingConstraint" destination="stk-le-adg" id="ssr-7V-ouV"/>
                 <outlet property="contentTrailingConstraint" destination="stk-tr-alg" id="dMA-0L-21f"/>
+                <outlet property="titleLabel" destination="ttl-la-bel" id="out-ctl-ttl"/>
+                <outlet property="subtitleLabel" destination="sub-la-bel" id="out-ctl-sub"/>
             </connections>
             <point key="canvasLocation" x="-240" y="28"/>
         </view>

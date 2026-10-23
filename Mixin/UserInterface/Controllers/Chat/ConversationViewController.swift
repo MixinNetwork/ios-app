@@ -103,7 +103,6 @@ final class ConversationViewController: UIViewController {
     private weak var avatarImageView: AvatarImageView!
     private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
     private weak var groupCallIndicatorViewIfLoaded: GroupCallIndicatorView?
-    private weak var membershipButton: UIButton?
     
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
     private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(withOwner: self)!
@@ -274,6 +273,7 @@ final class ConversationViewController: UIViewController {
         super.viewDidLoad()
         
         let titleView = R.nib.conversationTitleView(withOwner: self)!
+        titleView.addTarget(self, action: #selector(profileAction(_:)), for: .touchUpInside)
         let avatarImageView = AvatarImageView()
         avatarImageView.layer.cornerRadius = 18
         avatarImageView.layer.masksToBounds = true
@@ -320,8 +320,7 @@ final class ConversationViewController: UIViewController {
         
         reportRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(showReportMenuAction))
         reportRecognizer.minimumPressDuration = 2
-        titleLabel.isUserInteractionEnabled = true
-        titleLabel.addGestureRecognizer(reportRecognizer)
+        titleView.addGestureRecognizer(reportRecognizer)
         
         fastReplyRecognizer = FastReplyGestureRecognizer(target: self, action: #selector(fastReplyAction(_:)))
         fastReplyRecognizer.delegate = self
@@ -390,6 +389,8 @@ final class ConversationViewController: UIViewController {
             updateInputLayoutMode()
         }
         if #available(iOS 26, *) {
+            setContentScrollView(tableView, for: .top)
+            tableView.topEdgeEffect.style = .soft
             let interaction = UIScrollEdgeElementContainerInteraction()
             interaction.scrollView = tableView
             interaction.edge = .bottom
@@ -1067,15 +1068,6 @@ final class ConversationViewController: UIViewController {
         
         alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
-    }
-    
-    @objc private func buyOpponentMembership(_ sender: Any) {
-        guard let plan = ownerUser?.membership?.unexpiredPlan else {
-            return
-        }
-        let buyingPlan = SafeMembership.Plan(userMembershipPlan: plan)
-        let plans = MembershipPlansViewController(selectedPlan: buyingPlan)
-        present(plans, animated: true)
     }
     
     // MARK: - Callbacks
@@ -2230,20 +2222,6 @@ extension ConversationViewController {
         }
         opponentUserBadgeView.image = badgeImage
         opponentUserBadgeView.isHidden = badgeImage == nil
-        if showsMembershipIcon {
-            if membershipButton == nil {
-                let button = UIButton()
-                button.addTarget(self, action: #selector(buyOpponentMembership(_:)), for: .touchUpInside)
-                titleView.addSubview(button)
-                button.snp.makeConstraints { make in
-                    make.width.height.equalTo(30)
-                    make.center.equalTo(opponentUserBadgeView)
-                }
-                membershipButton = button
-            }
-        } else {
-            membershipButton?.removeFromSuperview()
-        }
     }
     
     private func updateSubtitleAndInputBar() {

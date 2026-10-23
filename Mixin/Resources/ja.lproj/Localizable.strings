@@ -1410,8 +1410,7 @@
 "price_alert_notification_permission" = "価格アラートを使用するには、通知権限を有効にする必要があります。";
 "price_alerts" = "価格アラート";
 "price_change_24h" = "24 時間の価格変更";
-"price_change_stop_loss" = "価格 %1$@ → 最大損失 %2$@";
-"price_change_take_profit" = "価格 %1$@ → 最大利益 %2$@";
+"price_change_tpsl" = "価格 %1$@ → 予想利益 %2$@";
 "price_data_unavailable" = "価格データを利用できません";
 "price_decrease_invalid" = "価格の引き下げは %1$@ より大きく、%2$@ 未満である必要があります。";
 "price_fall_loss" = "価格下落 %1$@ → 損失 %2$@";

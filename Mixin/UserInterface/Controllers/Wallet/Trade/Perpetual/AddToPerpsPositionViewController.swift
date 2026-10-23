@@ -467,6 +467,15 @@ final class AddToPerpsPositionViewController: PerpsMarginInputViewController {
                 if marginAmount > marginToken.decimalBalance {
                     show(liquidationPrice: .invalid)
                     showError(description: R.string.localizable.insufficient_balance())
+                } else if target == .position, marginAmount < marketViewModel.market.decimalMinAmount {
+                    let min = CurrencyFormatter.localizedString(
+                        from: marketViewModel.market.decimalMinAmount,
+                        format: .precision,
+                        sign: .never,
+                    )
+                    show(liquidationPrice: .invalid)
+                    let reason = R.string.localizable.single_transaction_should_be_greater_than(min, marginToken.symbol)
+                    showError(description: reason)
                 } else {
                     liquidationPriceRequester.request(
                         amount: marginAmount,

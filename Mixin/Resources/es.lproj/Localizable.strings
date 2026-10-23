@@ -1410,8 +1410,7 @@
 "price_alert_notification_permission" = "Las alertas de precios requieren permiso de notificación para estar habilitadas.";
 "price_alerts" = "Alertas de precios";
 "price_change_24h" = "Cambio de precio en 24 horas";
-"price_change_stop_loss" = "Precio %1$@ → Pérdida máxima %2$@";
-"price_change_take_profit" = "Precio %1$@ → Beneficio máximo %2$@";
+"price_change_tpsl" = "Precio %1$@ → Beneficio estimado %2$@";
 "price_data_unavailable" = "Datos de precios no disponibles";
 "price_decrease_invalid" = "La disminución de precio debe ser mayor que %1$@ y menor que %2$@";
 "price_fall_loss" = "El precio cae %1$@ → Pérdida %2$@";

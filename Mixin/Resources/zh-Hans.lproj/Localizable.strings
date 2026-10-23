@@ -1410,8 +1410,7 @@
 "price_alert_notification_permission" = "价格预警需要开启通知权限";
 "price_alerts" = "所有价格预警";
 "price_change_24h" = "24 小时价格变化";
-"price_change_stop_loss" = "价格 %1$@ → 最多亏损 %2$@";
-"price_change_take_profit" = "价格 %1$@ → 最多盈利 %2$@";
+"price_change_tpsl" = "价格 %1$@ → 预估收益 %2$@";
 "price_data_unavailable" = "暂无价格数据";
 "price_decrease_invalid" = "跌幅需大于 %1$@ 且小于 %2$@";
 "price_fall_loss" = "价格下跌 %1$@ → 亏损 %2$@";

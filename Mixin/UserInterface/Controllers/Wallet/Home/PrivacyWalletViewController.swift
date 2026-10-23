@@ -89,6 +89,15 @@ final class PrivacyWalletViewController: WalletViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let jobs = [
+            RefreshAssetsJob(request: .allAssets),
+            RefreshAllTokensJob(),
+            SyncSafeSnapshotJob(),
+            SyncOutputsJob()
+        ]
+        for job in jobs {
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
         DispatchQueue.global().async {
             let hasAssetInLegacyNetwork = AssetDAO.shared.hasPositiveBalancedAssets()
             DispatchQueue.main.async {
@@ -122,7 +131,7 @@ final class PrivacyWalletViewController: WalletViewController {
         )
         modelController.delegate = searchTokenHandler
         let search = WalletSearchViewController(modelController: modelController)
-        search.presentAsChild(on: self)
+        navigationController?.pushViewController(search, animated: true)
         self.searchTokenHandler = searchTokenHandler
     }
     
@@ -139,7 +148,11 @@ final class PrivacyWalletViewController: WalletViewController {
         if hasAssetInLegacyNetwork {
             sheet.addAction(UIAlertAction(title: R.string.localizable.legacy_network(), style: .default, handler: performAssetMigration(_:)))
         }
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
+            sheet.popoverPresentationController?.sourceItem = source
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        }
         present(sheet, animated: true, completion: nil)
     }
     
@@ -600,22 +613,6 @@ final class PrivacyWalletViewController: WalletViewController {
             DispatchQueue.main.async {
                 self?.reloadData()
             }
-        }
-    }
-    
-}
-
-extension PrivacyWalletViewController: HomeTabBarControllerChild {
-    
-    func viewControllerDidSwitchToFront() {
-        let jobs = [
-            RefreshAssetsJob(request: .allAssets),
-            RefreshAllTokensJob(),
-            SyncSafeSnapshotJob(),
-            SyncOutputsJob()
-        ]
-        for job in jobs {
-            ConcurrentJobQueue.shared.addJob(job: job)
         }
     }
     

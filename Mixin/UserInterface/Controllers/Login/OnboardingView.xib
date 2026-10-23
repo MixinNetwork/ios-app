@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -26,7 +26,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="uDz-Hd-YWg">
-                    <rect key="frame" x="0.0" y="0.0" width="393" height="536.66666666666663"/>
+                    <rect key="frame" x="0.0" y="117.99999999999997" width="393" height="459.33333333333326"/>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="uDz-Hd-YWg" secondAttribute="height" multiplier="375:512" priority="750" id="VNj-WP-Jqk"/>
@@ -39,7 +39,7 @@
                     </collectionViewFlowLayout>
                 </collectionView>
                 <pageControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="6" translatesAutoresizingMaskIntoConstraints="NO" id="qhK-QG-aq3">
-                    <rect key="frame" x="133.66666666666666" y="550.66666666666663" width="125.99999999999997" height="44"/>
+                    <rect key="frame" x="133.66666666666666" y="591.33333333333337" width="125.99999999999997" height="44"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="Sz4-Nc-0PL"/>
                     </constraints>
@@ -100,13 +100,13 @@
                 <constraint firstItem="zRN-Yl-wlD" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="JQH-l4-wjv"/>
                 <constraint firstAttribute="trailing" secondItem="uDz-Hd-YWg" secondAttribute="trailing" id="NCu-R4-7wZ"/>
                 <constraint firstItem="uDz-Hd-YWg" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="TNY-D9-9ER"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="top" secondItem="uDz-Hd-YWg" secondAttribute="top" id="TR4-cF-HWt"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="zRN-Yl-wlD" secondAttribute="bottom" constant="8" id="WQS-Rk-oiA"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="fRK-Pd-5iu" secondAttribute="trailing" priority="750" constant="36" id="dll-lZ-laf"/>
                 <constraint firstItem="fRK-Pd-5iu" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="8" id="e3P-4J-K3G"/>
                 <constraint firstItem="fRK-Pd-5iu" firstAttribute="top" relation="greaterThanOrEqual" secondItem="qhK-QG-aq3" secondAttribute="bottom" id="fFs-YF-CCA"/>
                 <constraint firstItem="qhK-QG-aq3" firstAttribute="top" secondItem="uDz-Hd-YWg" secondAttribute="bottom" constant="14" id="jIp-ni-Y5R"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="zRN-Yl-wlD" secondAttribute="trailing" constant="20" id="jgM-pq-taV"/>
-                <constraint firstItem="uDz-Hd-YWg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="qyX-nt-2wN"/>
             </constraints>
             <point key="canvasLocation" x="135.38461538461539" y="41.232227488151658"/>
         </view>

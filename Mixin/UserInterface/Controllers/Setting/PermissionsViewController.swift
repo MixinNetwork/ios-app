@@ -26,7 +26,12 @@ final class PermissionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.permissions()
-        iconView.hasShadow = true
+        let tapRecognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(presentProfile(_:)),
+        )
+        iconView.addGestureRecognizer(tapRecognizer)
+        iconView.isUserInteractionEnabled = true
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.separatorStyle = .none
@@ -75,7 +80,7 @@ final class PermissionsViewController: UIViewController {
         return vc
     }
     
-    @objc private func profileAction(_ sender: Any) {
+    @objc private func presentProfile(_ sender: Any) {
         guard let app = app else {
             return
         }
@@ -93,9 +98,10 @@ final class PermissionsViewController: UIViewController {
     private func reloadData(response: AuthorizationResponse) {
         if navigationItem.rightBarButtonItem == nil {
             let item = UIBarButtonItem(customView: iconView)
-            item.target = self
-            item.action = #selector(profileAction(_:))
             navigationItem.rightBarButtonItem = item
+            iconView.snp.makeConstraints { make in
+                make.size.equalTo(36)
+            }
         }
         iconView.setImage(with: response.app.iconUrl,
                           userId: response.app.appId,

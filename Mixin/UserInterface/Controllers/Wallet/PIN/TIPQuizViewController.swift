@@ -139,14 +139,6 @@ final class TIPQuizViewController: UIViewController {
     
 }
 
-extension TIPQuizViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension TIPQuizViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

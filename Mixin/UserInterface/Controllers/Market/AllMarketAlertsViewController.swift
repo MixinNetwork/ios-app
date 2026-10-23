@@ -81,14 +81,6 @@ final class AllMarketAlertsViewController: MarketAlertViewController {
     
 }
 
-extension AllMarketAlertsViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension AllMarketAlertsViewController: MarketAlertCoinPickerViewController.Delegate {
     
     func marketAlertCoinPickerViewController(

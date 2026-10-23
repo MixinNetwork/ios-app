@@ -1,12 +1,11 @@
 import UIKit
 import MixinServices
 
-final class SearchMarketViewController: UIViewController {
+final class SearchMarketViewController: UIViewController, SearchNavigationAnimating {
     
-    @IBOutlet weak var searchBoxView: SearchBoxView!
-    @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var contentWrapperView: UIView!
     
+    private let searchBoxView = SearchBoxView()
     private let recommendationViewController = SearchMarketRecommendationViewController()
     private let resultsViewController = SearchMarketResultsViewController()
     
@@ -28,7 +27,12 @@ final class SearchMarketViewController: UIViewController {
             action: #selector(textFieldDidChange(_:)),
             for: .editingChanged
         )
-        updateCancelButtonTarget(parent: parent)
+        navigationItem.hidesBackButton = true
+        navigationItem.titleView = searchBoxView
+        navigationItem.rightBarButtonItem = .cancelSearch(
+            target: self,
+            action: #selector(cancelSearching)
+        )
         
         addChild(resultsViewController)
         contentWrapperView.addSubview(resultsViewController.view)
@@ -42,12 +46,36 @@ final class SearchMarketViewController: UIViewController {
         recommendationViewController.didMove(toParent: self)
         recommendationViewController.view.isHidden = false
         
-        searchBoxView.textField.becomeFirstResponder()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(dismissSearch),
+            name: dismissSearchNotification,
+            object: nil,
+        )
     }
     
-    override func willMove(toParent parent: UIViewController?) {
-        super.willMove(toParent: parent)
-        updateCancelButtonTarget(parent: parent)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isMovingToParent {
+            searchBoxView.textField.becomeFirstResponder()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        searchBoxView.textField.resignFirstResponder()
+    }
+    
+    @objc private func cancelSearching() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func dismissSearch() {
+        guard let navigationController else {
+            return
+        }
+        let viewControllers = navigationController.viewControllers.filter { $0 !== self }
+        navigationController.setViewControllers(viewControllers, animated: false)
     }
     
     @objc private func textFieldDidChange(_ textField: UITextField) {
@@ -102,20 +130,6 @@ final class SearchMarketViewController: UIViewController {
                 "source": "markets_search",
             ],
         )
-    }
-    
-    private func updateCancelButtonTarget(parent: UIViewController?) {
-        guard let cancelButton else {
-            return
-        }
-        cancelButton.removeTarget(nil, action: nil, for: .touchUpInside)
-        if let parent = parent as? MarketDashboardViewController {
-            cancelButton.addTarget(
-                parent,
-                action: #selector(MarketDashboardViewController.cancelSearching(_:)),
-                for: .touchUpInside
-            )
-        }
     }
     
 }

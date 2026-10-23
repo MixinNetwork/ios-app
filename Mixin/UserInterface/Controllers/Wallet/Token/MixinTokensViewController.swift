@@ -8,7 +8,6 @@ final class MixinTokensViewController: TokensViewController {
     private var tokens: [MixinTokenItem]?
     private var earningAvailableAssetIDs: Set<String> = []
     
-    private var isDisplayingSearch = false
     private var searchTokenHandler: WalletSearchMixinTokenHandler?
     private var overviewActionHandler: PrivacyWalletOverviewActionHandler?
     private var pendingDepositObserver: PrivacyWalletPendingDepositObserver?
@@ -149,11 +148,7 @@ final class MixinTokensViewController: TokensViewController {
         modelController.delegate = searchTokenHandler
         let search = WalletSearchViewController(modelController: modelController)
         self.searchTokenHandler = searchTokenHandler
-        self.isDisplayingSearch = true
-        search.onWillDismiss = { [weak self] in
-            self?.isDisplayingSearch = false
-        }
-        search.presentAsChild(on: self)
+        navigationController?.pushViewController(search, animated: true)
     }
     
     @objc private func presentMoreMenu(_ sender: Any) {
@@ -166,7 +161,11 @@ final class MixinTokensViewController: TokensViewController {
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
             self.navigationController?.pushViewController(HiddenMixinTokensViewController(), animated: true)
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
+            sheet.popoverPresentationController?.sourceItem = source
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        }
         present(sheet, animated: true, completion: nil)
     }
     
@@ -185,14 +184,6 @@ final class MixinTokensViewController: TokensViewController {
                 self?.reloadData()
             }
         }
-    }
-    
-}
-
-extension MixinTokensViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        isDisplayingSearch ? .hide : .secondaryBackground
     }
     
 }

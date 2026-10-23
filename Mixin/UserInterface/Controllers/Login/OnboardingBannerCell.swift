@@ -7,12 +7,8 @@ final class OnboardingBannerCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     
-    @IBOutlet weak var imageViewTopConstraint: NSLayoutConstraint!
-    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // It's OK even the height is 0. Those images have enough top spacing.
-        imageViewTopConstraint.constant = UIApplication.shared.statusBarFrame.height
         imageBackgroundView.lightColors = [
             UIColor(displayP3RgbValue: 0xFFFFFF),
             UIColor(displayP3RgbValue: 0xF7F7F7),

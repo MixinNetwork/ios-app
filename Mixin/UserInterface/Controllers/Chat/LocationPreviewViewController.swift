@@ -52,7 +52,7 @@ class LocationPreviewViewController: LocationViewController {
         navigationItem.rightBarButtonItem = .tintedIcon(
             image: R.image.ic_open_external(),
             target: self,
-            action: #selector(openLocationInExternalMapApp)
+            action: #selector(openLocationInExternalMapApp(_:))
         )
         mapView.userTrackingMode = .none
         mapView.showsUserLocation = true
@@ -77,7 +77,7 @@ class LocationPreviewViewController: LocationViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        openLocationInExternalMapApp()
+        openLocationInExternalMapApp(tableView)
     }
     
     private func updateTableViewBottomInsetIfNeeded() {
@@ -88,7 +88,7 @@ class LocationPreviewViewController: LocationViewController {
         }
     }
     
-    @objc private func openLocationInExternalMapApp() {
+    @objc private func openLocationInExternalMapApp(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         if let url = googleMapUrl, UIApplication.shared.canOpenURL(url) {
             sheet.addAction(UIAlertAction(title: R.string.localizable.open_in_google_maps(), style: .default, handler: { (_) in
@@ -103,7 +103,11 @@ class LocationPreviewViewController: LocationViewController {
         sheet.addAction(UIAlertAction(title: R.string.localizable.open_in_maps(), style: .default, handler: { (_) in
             self.location.mapItem.openInMaps(launchOptions: nil)
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
+            sheet.popoverPresentationController?.sourceItem = source
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        }
         present(sheet, animated: true, completion: nil)
     }
     

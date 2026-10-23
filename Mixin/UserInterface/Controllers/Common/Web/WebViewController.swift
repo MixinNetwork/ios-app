@@ -52,6 +52,16 @@ class WebViewController: UIViewController {
         updateBackground(pageThemeColor: .background, measureDarknessWithUserInterfaceStyle: true)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         imageRequest?.cancel()
@@ -159,14 +169,6 @@ class WebViewController: UIViewController {
         }
         controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(controller, animated: true, completion: nil)
-    }
-    
-}
-
-extension WebViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .hide
     }
     
 }

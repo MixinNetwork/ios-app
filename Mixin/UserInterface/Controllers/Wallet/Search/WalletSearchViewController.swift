@@ -1,21 +1,15 @@
 import UIKit
 import MixinServices
 
-final class WalletSearchViewController<ModelController: WalletSearchModelController>: UIViewController {
+final class WalletSearchViewController<ModelController: WalletSearchModelController>: UIViewController, SearchNavigationAnimating {
     
-    @IBOutlet weak var searchBoxWrapperView: UIView!
-    @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var contentWrapperView: UIView!
     
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
-    var onWillDismiss: (() -> Void)?
-    
+    private let searchBoxView = SearchBoxView()
     private let recommendation: WalletSearchRecommendationViewController<ModelController>
     private let searchResults: WalletSearchResultsViewController<ModelController>
-    private let appearingAnimationDistance: CGFloat = 20
-    
-    private weak var viewCenterYConstraint: NSLayoutConstraint?
     
     init(modelController: ModelController) {
         self.recommendation = WalletSearchRecommendationViewController(modelController: modelController)
@@ -30,15 +24,23 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         searchBoxView.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_asset()
+        navigationItem.hidesBackButton = true
+        navigationItem.titleView = searchBoxView
+        navigationItem.rightBarButtonItem = .cancelSearch(
+            target: self,
+            action: #selector(cancelAction(_:))
+        )
+        
         view.layoutIfNeeded()
         for child in [searchResults, recommendation] {
             addChild(child)
             contentWrapperView.addSubview(child.view)
             child.view.snp.makeConstraints { (make) in
                 make.leading.trailing.bottom.equalToSuperview()
-                make.top.equalTo(searchBoxWrapperView.snp.bottom).offset(10)
+                make.top.equalToSuperview().offset(10)
             }
             child.didMove(toParent: self)
         }
@@ -50,7 +52,7 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
         )
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(dismissAsChild),
+            selector: #selector(dismissSearch),
             name: dismissSearchNotification,
             object: nil
         )
@@ -58,7 +60,9 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        searchBoxView.textField.becomeFirstResponder()
+        if isMovingToParent {
+            searchBoxView.textField.becomeFirstResponder()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -67,56 +71,15 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
     }
     
     @IBAction func cancelAction(_ sender: Any) {
-        searchBoxView.textField.resignFirstResponder()
-        dismissAsChild()
+        navigationController?.popViewController(animated: true)
     }
     
-    func presentAsChild(on parent: UIViewController) {
-        parent.navigationController?.setNavigationBarHidden(true, animated: true)
-        view.alpha = 0
-        parent.addChild(self)
-        parent.view.addSubview(view)
-        view.snp.makeConstraints { (make) in
-            make.size.equalTo(parent.view.snp.size)
-            make.centerX.equalToSuperview()
+    @objc private func dismissSearch() {
+        guard let navigationController else {
+            return
         }
-        let constraint = view.centerYAnchor.constraint(
-            equalTo: parent.view.centerYAnchor,
-            constant: -appearingAnimationDistance
-        )
-        constraint.isActive = true
-        didMove(toParent: parent)
-        parent.view.layoutIfNeeded()
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
-            self.view.alpha = 1
-            constraint.constant = 0
-            parent.view.layoutIfNeeded()
-        }
-        self.viewCenterYConstraint = constraint
-    }
-    
-    @objc func dismissAsChild() {
-        onWillDismiss?()
-        let showNavigationBar: Bool
-        if let parent = parent as? NavigationBarStyling,
-           parent.navigationBarStyle == .hide
-        {
-            showNavigationBar = false
-        } else {
-            showNavigationBar = true
-        }
-        if showNavigationBar {
-            parent?.navigationController?.setNavigationBarHidden(false, animated: true)
-        }
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
-            self.view.alpha = 0
-            self.viewCenterYConstraint?.constant = -self.appearingAnimationDistance
-            self.parent?.view.layoutIfNeeded()
-        } completion: { _ in
-            self.willMove(toParent: nil)
-            self.view.removeFromSuperview()
-            self.removeFromParent()
-        }
+        let viewControllers = navigationController.viewControllers.filter { $0 !== self }
+        navigationController.setViewControllers(viewControllers, animated: false)
     }
     
     @objc private func textFieldDidChange(_ textField: UITextField) {
@@ -142,7 +105,8 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
         guard let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
             return
         }
-        keyboardPlaceholderHeightConstraint.constant = view.bounds.height - endFrame.origin.y
+        let keyboardFrame = view.convert(endFrame, from: nil)
+        keyboardPlaceholderHeightConstraint.constant = max(0, view.bounds.maxY - keyboardFrame.minY)
         view.layoutIfNeeded()
     }
     

@@ -7,7 +7,7 @@
 //
 
 #include "setup.h"
-#include <libsignal_protocol_c/signal_protocol.h>
+#include <libsignal_protocol_c.h>
 
 #include <pthread.h>
 

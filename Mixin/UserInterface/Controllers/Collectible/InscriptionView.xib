@@ -33,72 +33,24 @@
                     </view>
                     <blurEffect style="dark"/>
                 </visualEffectView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Hb-AS-iUq">
-                    <rect key="frame" x="0.0" y="59" width="393" height="44"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RLe-tU-Nhp">
-                            <rect key="frame" x="10" y="0.0" width="44" height="44"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="RLe-tU-Nhp" secondAttribute="height" id="bB8-gq-FWd"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <state key="normal" image="ic_title_back"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                            </userDefinedRuntimeAttributes>
-                            <connections>
-                                <action selector="goBack:" destination="-1" eventType="touchUpInside" id="Gj7-wc-lRA"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="owA-0a-GCP">
-                            <rect key="frame" x="339" y="0.0" width="44" height="44"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="owA-0a-GCP" secondAttribute="height" id="nji-4p-ekp"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <state key="normal" image="ic_title_more"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                            </userDefinedRuntimeAttributes>
-                            <connections>
-                                <action selector="showMoreMenu:" destination="-1" eventType="touchUpInside" id="Fr2-bG-K7a"/>
-                            </connections>
-                        </button>
-                    </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstAttribute="bottom" secondItem="RLe-tU-Nhp" secondAttribute="bottom" id="3Cb-Tn-Kar"/>
-                        <constraint firstItem="owA-0a-GCP" firstAttribute="top" secondItem="6Hb-AS-iUq" secondAttribute="top" id="4Lq-V1-oo1"/>
-                        <constraint firstItem="RLe-tU-Nhp" firstAttribute="leading" secondItem="6Hb-AS-iUq" secondAttribute="leading" constant="10" id="EG4-VN-4ky"/>
-                        <constraint firstAttribute="height" constant="44" id="SX6-2U-BvL"/>
-                        <constraint firstAttribute="bottom" secondItem="owA-0a-GCP" secondAttribute="bottom" id="aql-pa-lns"/>
-                        <constraint firstItem="RLe-tU-Nhp" firstAttribute="top" secondItem="6Hb-AS-iUq" secondAttribute="top" id="lCA-iG-3kt"/>
-                        <constraint firstAttribute="trailing" secondItem="owA-0a-GCP" secondAttribute="trailing" constant="10" id="wxt-Bu-tIF"/>
-                    </constraints>
-                </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="61" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="g7v-1Y-KQp">
-                    <rect key="frame" x="0.0" y="103" width="393" height="749"/>
+                    <rect key="frame" x="0.0" y="59" width="393" height="793"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </tableView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstItem="6Hb-AS-iUq" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="6nC-64-LBp"/>
                 <constraint firstItem="IOQ-7n-TWb" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="AMH-ZO-wiv"/>
                 <constraint firstAttribute="bottom" secondItem="rTB-vE-icW" secondAttribute="bottom" id="Cf2-pW-wzc"/>
                 <constraint firstItem="g7v-1Y-KQp" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="EwX-ZF-eZc"/>
-                <constraint firstItem="g7v-1Y-KQp" firstAttribute="top" secondItem="6Hb-AS-iUq" secondAttribute="bottom" id="EwZ-Ie-qpc"/>
+                <constraint firstItem="g7v-1Y-KQp" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="EwZ-Ie-qpc"/>
                 <constraint firstAttribute="bottom" secondItem="IOQ-7n-TWb" secondAttribute="bottom" id="Gdu-ZT-zqX"/>
                 <constraint firstAttribute="trailing" secondItem="IOQ-7n-TWb" secondAttribute="trailing" id="JqR-J0-tDC"/>
                 <constraint firstAttribute="trailing" secondItem="rTB-vE-icW" secondAttribute="trailing" id="Mjz-ew-zht"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="6Hb-AS-iUq" secondAttribute="trailing" id="NYs-i8-1ME"/>
                 <constraint firstAttribute="bottom" secondItem="g7v-1Y-KQp" secondAttribute="bottom" id="RFJ-BP-C1h"/>
                 <constraint firstItem="rTB-vE-icW" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="VfR-Id-P1N"/>
                 <constraint firstItem="IOQ-7n-TWb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="b8a-3A-RCH"/>
-                <constraint firstItem="6Hb-AS-iUq" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="bdJ-QN-hXK"/>
                 <constraint firstItem="rTB-vE-icW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="c7a-pQ-1Ch"/>
                 <constraint firstAttribute="trailing" secondItem="g7v-1Y-KQp" secondAttribute="trailing" id="u1i-4c-BSX"/>
             </constraints>
@@ -106,8 +58,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_title_back" width="9" height="17"/>
-        <image name="ic_title_more" width="24.333333969116211" height="24"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

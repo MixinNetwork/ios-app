@@ -28,7 +28,7 @@ extension Acknowledgement {
         do {
             let data = try Data(contentsOf: url)
             let root = try PropertyListDecoder().decode(Root.self, from: data)
-            return root.acknowledgements.dropFirst().dropLast()
+            return root.acknowledgements
         } catch {
             return []
         }

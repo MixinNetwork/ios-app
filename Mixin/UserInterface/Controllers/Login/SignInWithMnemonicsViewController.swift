@@ -178,14 +178,6 @@ class SignInWithMnemonicsViewController<PhrasesCount: SignInAvailablePhrasesCoun
     
 }
 
-extension SignInWithMnemonicsViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension SignInWithMnemonicsViewController: QRCodeScannerViewControllerDelegate {
     
     func qrCodeScannerViewController(_ controller: QRCodeScannerViewController, shouldRecognizeString string: String) -> Bool {

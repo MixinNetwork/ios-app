@@ -77,10 +77,6 @@ final class TIPActionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = .customerService(
-            target: self,
-            action: #selector(presentCustomerService(_:))
-        )
         contentStackView.setCustomSpacing(24, after: iconImageView)
         let descriptionParagraphStyle = NSMutableParagraphStyle()
         descriptionParagraphStyle.lineHeightMultiple = 1.7
@@ -311,6 +307,10 @@ final class TIPActionViewController: UIViewController {
             }
         } catch {
             Logger.tip.error(category: "TIPAction", message: "Handle failed with: \(error)")
+            navigationItem.rightBarButtonItem = .customerService(
+                target: self,
+                action: #selector(presentCustomerService(_:))
+            )
             retryStackView.isHidden = false
             progressStackView.isHidden = true
             errorDescriptionLabel.text = error.localizedDescription
@@ -318,6 +318,7 @@ final class TIPActionViewController: UIViewController {
     }
     
     private func showProgress(_ progress: TIP.Progress) {
+        navigationItem.rightBarButtonItem = nil
         retryStackView.isHidden = true
         progressStackView.isHidden = false
         activityIndicatorView.startAnimating()

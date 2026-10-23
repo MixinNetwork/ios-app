@@ -25,7 +25,7 @@ class ClearStorageViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = .busyButton(
+        navigationItem.rightBarButtonItem = .button(
             title: R.string.localizable.clear(),
             target: self,
             action: #selector(confirmClear(_:))
@@ -64,11 +64,7 @@ class ClearStorageViewController: UITableViewController {
         return vc
     }
     
-    @objc private func confirmClear(_ button: BusyButton) {
-        guard !button.isBusy else {
-            return
-        }
-
+    @objc private func confirmClear(_ button: UIBarButtonItem) {
         var messageCount = 0
         var size: Int64 = 0
         if isClearPhotos, let category = categorys["_IMAGE"] {
@@ -94,20 +90,24 @@ class ClearStorageViewController: UITableViewController {
         } else {
             title = R.string.localizable.setting_storage_clear_count(messageCount, formatterSize)
         }
-        let alc = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: R.string.localizable.clear(), style: .destructive, handler: { [weak self](_) in
+        let sheet = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.clear(), style: .destructive, handler: { [weak self](_) in
             self?.clearAction(button: button)
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        self.present(alc, animated: true, completion: nil)
+        if #available(iOS 26.0, *) {
+            sheet.popoverPresentationController?.sourceItem = button
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        }
+        self.present(sheet, animated: true, completion: nil)
     }
     
-    private func clearAction(button: BusyButton) {
+    private func clearAction(button: UIBarButtonItem) {
         let clearPhotos = isClearPhotos && categorys["_IMAGE"]?.messageCount ?? 0 > 0
         let clearVideos = isClearVideos && categorys["_VIDEO"]?.messageCount ?? 0 > 0
         let clearAudios = isClearAudios && categorys["_AUDIO"]?.messageCount ?? 0 > 0
         let clearFiles = isClearFiles && categorys["_DATA"]?.messageCount ?? 0 > 0
-        button.isBusy = true
+        navigationItem.rightBarButtonItem = .busyIndicator()
 
         let conversationId = conversation.conversationId
         DispatchQueue.global().async { [weak self] in

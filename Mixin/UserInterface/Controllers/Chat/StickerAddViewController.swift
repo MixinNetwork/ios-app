@@ -20,7 +20,17 @@ final class StickerAddViewController: UIViewController {
     
     private var uploadPNGData = false
     
-    private weak var rightBarButton: BusyButton?
+    private lazy var saveButton: UIBarButtonItem = .button(
+        title: R.string.localizable.save(),
+        target: self,
+        action: #selector(save(_:)),
+    )
+    
+    private var isSaving = false {
+        didSet {
+            navigationItem.rightBarButtonItem = isSaving ? .busyIndicator() : saveButton
+        }
+    }
     
     init(source: Source) {
         self.source = source
@@ -35,17 +45,13 @@ final class StickerAddViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.add_sticker()
-        navigationItem.rightBarButtonItem = .busyButton(
-            title: R.string.localizable.save(),
-            target: self,
-            action: #selector(save(_:))
-        )
-        rightBarButton = navigationItem.rightBarButtonItem?.customView as? BusyButton
+        navigationItem.rightBarButtonItem = saveButton
+        saveButton.isEnabled = false
         switch source {
         case .message(let item):
             uploadPNGData = item.mediaMimeType == "image/png"
             let updateRightButton: SDExternalCompletionBlock = { [weak self] (image, error, _, _) in
-                self?.rightBarButton?.isEnabled = image != nil
+                self?.saveButton.isEnabled = image != nil
             }
             if let assetUrl = item.assetUrl {
                 let context = [SDWebImageContextOption.animatedImageClass: SDAnimatedImage.self]
@@ -67,12 +73,12 @@ final class StickerAddViewController: UIViewController {
         case .image(let image):
             uploadPNGData = false
             previewImageView.image = image
-            rightBarButton?.isEnabled = true
+            saveButton.isEnabled = true
         }
     }
     
-    @objc private func save(_ sender: BusyButton) {
-        guard let rightButton = rightBarButton, !rightButton.isBusy else {
+    @objc private func save(_ sender: UIBarButtonItem) {
+        guard !isSaving else {
             return
         }
         guard let image = previewImageView.image else {
@@ -80,7 +86,7 @@ final class StickerAddViewController: UIViewController {
             assertionFailure("This is not expected to happen since right button should be disabled before any image is presented")
             return
         }
-        rightButton.isBusy = true
+        isSaving = true
         if let image = previewImageView.image as? SDAnimatedImage, image.animatedImageFrameCount > 1, let data = image.animatedImageData {
             let isSizeValid = min(image.size.width, image.size.height) >= minStickerLength
                 && max(image.size.width, image.size.height) <= maxStickerLength
@@ -106,7 +112,7 @@ final class StickerAddViewController: UIViewController {
 extension StickerAddViewController {
     
     private func showMalformedAlert() {
-        rightBarButton?.isBusy = false
+        isSaving = false
         let title = R.string.localizable.sticker_add_requirements("\(minDataCount / bytesPerKiloByte)", "\(maxDataCount / bytesPerKiloByte)", "\(Int(minStickerLength))", "\(Int(maxStickerLength))")
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .default, handler: nil))
@@ -114,7 +120,7 @@ extension StickerAddViewController {
     }
     
     private func showFailureAlert() {
-        rightBarButton?.isBusy = false
+        isSaving = false
         showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
     }
     
@@ -171,7 +177,7 @@ extension StickerAddViewController {
                     }
                 }
             case let .failure(error):
-                self?.rightBarButton?.isBusy = false
+                self?.isSaving = false
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }

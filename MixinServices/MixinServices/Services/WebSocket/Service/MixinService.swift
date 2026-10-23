@@ -232,11 +232,24 @@ public class MixinService {
     @discardableResult
     internal func deliverKeys(blazeMessage: BlazeMessage) -> BlazeMessage? {
         repeat {
-            do {
-                return try WebSocketService.shared.respondedMessage(for: blazeMessage).blazeMessage
-            } catch MixinAPIResponseError.unauthorized {
+            guard LoginManager.shared.isLoggedIn else {
                 return nil
-            } catch MixinAPIResponseError.forbidden {
+            }
+            
+            do {
+                return try WebSocketService.shared.requestSync(
+                    blazeMessage,
+                    timeout: requestTimeout,
+                )
+            } catch let .response(error) {
+                switch error {
+                case .unauthorized, .forbidden:
+                    return nil
+                default:
+                    checkNetworkAndWebSocket()
+                    Thread.sleep(forTimeInterval: 2)
+                }
+            } catch .framing {
                 return nil
             } catch {
                 checkNetworkAndWebSocket()
@@ -248,18 +261,33 @@ public class MixinService {
     @discardableResult
     internal func deliverNoThrow(blazeMessage: BlazeMessage) -> (success: Bool, responseMessage: BlazeMessage?, retry: Bool) {
         repeat {
-            do {
-                let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)
-                return (response.success, response.blazeMessage, false)
-            } catch MixinAPIResponseError.unauthorized {
+            guard LoginManager.shared.isLoggedIn else {
                 return (false, nil, false)
-            } catch MixinAPIResponseError.forbidden {
-                return (true, nil, false)
-            } catch MixinAPIResponseError.invalidConversationChecksum {
-                if let conversationId = blazeMessage.params?.conversationId {
-                    syncConversation(conversationId: conversationId)
+            }
+            
+            do {
+                let response = try WebSocketService.shared.requestSync(
+                    blazeMessage,
+                    timeout: requestTimeout,
+                )
+                return (true, response, false)
+            } catch let .response(error) {
+                switch error {
+                case .unauthorized:
+                    return (false, nil, false)
+                case .forbidden:
+                    return (true, nil, false)
+                case .invalidConversationChecksum:
+                    if let conversationId = blazeMessage.params?.conversationId {
+                        syncConversation(conversationId: conversationId)
+                    }
+                    return (false, nil, true)
+                default:
+                    checkNetworkAndWebSocket()
+                    Thread.sleep(forTimeInterval: 2)
                 }
-                return (false, nil, true)
+            } catch .framing {
+                return (false, nil, false)
             } catch {
                 checkNetworkAndWebSocket()
                 Thread.sleep(forTimeInterval: 2)
@@ -280,8 +308,8 @@ public class MixinService {
             }
             
             do {
-                let response = try WebSocketService.shared.respondedMessage(for: blazeMessage)
-                return (response.success, response.blazeMessage)
+                let response = try WebSocketService.shared.requestSync(blazeMessage, timeout: requestTimeout)
+                return (true, response)
             } catch let WebSocketService.SendingError.response(error) {
                 #if DEBUG
                 print("======SendMessaegService...deliver...error:\(error)")
@@ -307,6 +335,8 @@ public class MixinService {
             } catch WebSocketService.SendingError.timedOut {
                 checkNetworkAndWebSocket()
                 throw WebSocketService.SendingError.timedOut
+            } catch WebSocketService.SendingError.framing {
+                return (false, nil)
             } catch {
                 #if DEBUG
                 print("======SendMessaegService...deliver...error:\(error)")

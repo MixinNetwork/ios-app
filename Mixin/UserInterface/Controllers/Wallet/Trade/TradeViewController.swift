@@ -33,7 +33,7 @@ final class TradeViewController: UIViewController {
     private var trading: Trading
     private var tradingViewController: UIViewController?
     
-    private weak var showOrdersItem: BadgeBarButtonItem?
+    private weak var showOrdersItem: CompatibleBadgeBarButtonItem?
     
     init?(
         wallet: Wallet,
@@ -84,7 +84,7 @@ final class TradeViewController: UIViewController {
         super.viewDidLoad()
         
         title = R.string.localizable.trade()
-        let showOrdersItem = BadgeBarButtonItem(
+        let showOrdersItem = CompatibleBadgeBarButtonItem(
             image: R.image.ic_title_transaction()!,
             target: self,
             action: #selector(showOrders(_:))
@@ -225,16 +225,12 @@ final class TradeViewController: UIViewController {
                 reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_home_menu"])
             }))
         }
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
+            sheet.popoverPresentationController?.sourceItem = source
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        }
         present(sheet, animated: true)
-    }
-    
-}
-
-extension TradeViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
     }
     
 }

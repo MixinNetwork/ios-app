@@ -248,14 +248,6 @@ final class PerpetualOrderViewController: UIViewController {
     
 }
 
-extension PerpetualOrderViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension PerpetualOrderViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

@@ -144,8 +144,10 @@ class ConversationTableView: UITableView {
     }
     
     private func registerCells() {
-        register(UINib(nibName: "ConversationDateHeaderView", bundle: .main),
-                 forHeaderFooterViewReuseIdentifier: ReuseId.header.rawValue)
+        register(
+            ConversationDateHeaderView.self,
+            forHeaderFooterViewReuseIdentifier: ReuseId.header.rawValue,
+        )
         register(SystemMessageCell.self, forCellReuseIdentifier: ReuseId.system.rawValue)
         register(TextMessageCell.self, forCellReuseIdentifier: ReuseId.text.rawValue)
         register(PhotoMessageCell.self, forCellReuseIdentifier: ReuseId.photo.rawValue)

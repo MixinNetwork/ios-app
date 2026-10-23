@@ -6,7 +6,6 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var tableView: UITableView!
     
-    let titleLabel = UILabel()
     let iconView = NavigationAvatarIconView()
     
     var conversationId = ""
@@ -24,15 +23,8 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
         return searchBoxView.textField
     }
     
-    var wantsNavigationSearchBox: Bool {
-        return false
-    }
-    
-    var navigationSearchBoxInsets: UIEdgeInsets {
-        return .zero
-    }
-    
     private let queue = OperationQueue()
+    private let titleLabel = UILabel()
     private let messageCountPerPage = 50
     private let loadMoreMessageThreshold = 5 // Distance to bottom
     private let loadConversationOp = BlockOperation()
@@ -59,6 +51,9 @@ class SearchConversationViewController: UIViewController, HomeSearchViewControll
         navigationItem.rightBarButtonItem = {
             let item = UIBarButtonItem(customView: iconView)
             item.width = 44
+            if #available(iOS 26.0, *) {
+                item.hidesSharedBackground = true
+            }
             return item
         }()
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(profileAction))

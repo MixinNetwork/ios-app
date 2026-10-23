@@ -68,7 +68,8 @@ class MobileNumberViewController: UIViewController {
     @IBAction func changeCallingCode(_ sender: Any) {
         let selector = SelectCountryViewController(library: countryLibrary, selectedCountry: country)
         selector.delegate = self
-        present(selector, animated: true, completion: nil)
+        let navigationController = GeneralAppearanceNavigationController(rootViewController: selector)
+        present(navigationController, animated: true, completion: nil)
     }
     
     @IBAction func validateMobileNumber(_ sender: Any) {

@@ -93,7 +93,11 @@ class GroupParticipantsViewController: UserItemPeerViewController<GroupParticipa
     
     private func updateRightBarButtonItem() {
         if showAdminActions {
-            navigationItem.rightBarButtonItem = .tintedIcon(image: R.image.ic_title_add(), target: self, action: #selector(presentAdminActions))
+            navigationItem.rightBarButtonItem = .tintedIcon(
+                image: R.image.ic_title_add(),
+                target: self,
+                action: #selector(presentAdminActions(_:)),
+            )
         } else {
             navigationItem.rightBarButtonItem = nil
         }
@@ -129,19 +133,23 @@ extension GroupParticipantsViewController {
         }
     }
     
-    @objc private func presentAdminActions() {
-        let alc = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alc.addAction(UIAlertAction(title: R.string.localizable.add_participants(), style: .default, handler: { (_) in
+    @objc private func presentAdminActions(_ sender: Any) {
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.add_participants(), style: .default, handler: { (_) in
             let id = self.conversation.conversationId
             let vc = AddMemberViewController.instance(appendingMembersToConversationId: id)
             self.navigationController?.pushViewController(vc, animated: true)
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.invite_to_group_via_link(), style: .default, handler: { (_) in
+        sheet.addAction(UIAlertAction(title: R.string.localizable.invite_to_group_via_link(), style: .default, handler: { (_) in
             let vc = InviteLinkViewController.instance(conversation: self.conversation)
             self.navigationController?.pushViewController(vc, animated: true)
         }))
-        alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        present(alc, animated: true, completion: nil)
+        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
+            sheet.popoverPresentationController?.sourceItem = source
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        }
+        present(sheet, animated: true, completion: nil)
     }
     
 }
@@ -194,7 +202,7 @@ extension GroupParticipantsViewController {
             return
         }
         let vc = ConversationViewController.instance(ownerUser: user)
-        navigationController?.pushViewController(withBackRoot: vc)
+        navigationController?.pushViewController(afterRoot: vc)
     }
     
     private func makeAdmin(userId: String) {

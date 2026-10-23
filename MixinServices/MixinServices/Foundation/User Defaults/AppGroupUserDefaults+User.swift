@@ -37,7 +37,7 @@ extension AppGroupUserDefaults {
             case hasRecoverMedia = "has_recover_media"
             case hasRestoreUploadAttachment = "has_restore_upload_attachment"
             
-            case circleId = "circle_id"
+            case circleID = "circle_id"
             case circleName = "circle_name"
             case isCircleSynchronized = "is_circle_synchronized"
             
@@ -82,6 +82,7 @@ extension AppGroupUserDefaults {
         
         public static let didChangeRecentlyUsedAppIdsNotification = Notification.Name(rawValue: "one.mixin.services.recently.used.app.ids.change")
         public static let didChangeUserInterfaceStyleNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeUserInterfaceStyle")
+        public static let circleIDDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.id.change")
         public static let circleNameDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.circle.name.change")
         public static let homeAppIdsDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.home.app.ids.change")
         public static let pinMessageBannerDidChangeNotification = Notification.Name("one.mixin.services.pinMessageBannerDidChange")
@@ -184,8 +185,12 @@ extension AppGroupUserDefaults {
         @Default(namespace: .user, key: Key.hasRestoreUploadAttachment, defaultValue: false)
         public static var hasRestoreUploadAttachment: Bool
         
-        @Default(namespace: .user, key: Key.circleId, defaultValue: nil)
-        public static var circleId: String?
+        @Default(namespace: .user, key: Key.circleID, defaultValue: nil)
+        public static var circleID: String? {
+            didSet {
+                NotificationCenter.default.post(onMainThread: circleIDDidChangeNotification, object: self)
+            }
+        }
 
         @Default(namespace: .user, key: Key.isCircleSynchronized, defaultValue: false)
         public static var isCircleSynchronized: Bool

@@ -8,15 +8,17 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
         true
     }
     
+    private lazy var sendButton: UIBarButtonItem = .button(
+        title: R.string.localizable.send(),
+        target: self,
+        action: #selector(send(_:)),
+    )
+    
     private var messageContent: MessageContent!
     private var selections: [MessageReceiver] = [] {
         didSet {
-            sendButton?.isEnabled = selections.count > 0
+            sendButton.isEnabled = selections.count > 0
         }
-    }
-    
-    private var sendButton: BusyButton? {
-        navigationItem.rightBarButtonItem?.customView as? BusyButton
     }
     
     class func instance(content: MessageContent) -> UIViewController {
@@ -28,11 +30,7 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = .busyButton(
-            title: R.string.localizable.send(),
-            target: self,
-            action: #selector(send(_:))
-        )
+        navigationItem.rightBarButtonItem = sendButton
         selections = [] // Disable the button
         tableView.allowsMultipleSelection = true
         collectionView.dataSource = self
@@ -157,8 +155,8 @@ class MessageReceiverViewController: PeerViewController<[MessageReceiver], Check
 
 extension MessageReceiverViewController {
     
-    @objc private func send(_ sender: Any) {
-        sendButton?.isBusy = true
+    @objc private func send(_ sender: UIBarButtonItem) {
+        navigationItem.rightBarButtonItem = .busyIndicator()
         let content = self.messageContent!
         let selections = self.selections
         DispatchQueue.global().async { [weak self] in
@@ -275,7 +273,7 @@ extension MessageReceiverViewController {
             case .user(let user):
                 vc = ConversationViewController.instance(ownerUser: user)
             }
-            navigationController?.pushViewController(withBackRoot: vc)
+            navigationController?.pushViewController(afterRoot: vc)
         } else {
             navigationController?.popViewController(animated: true)
         }

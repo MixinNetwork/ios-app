@@ -4,10 +4,15 @@ import MixinServices
 
 final class WalletSummaryViewController: UIViewController {
     
-    @IBOutlet weak var addWalletView: BadgeBarButtonView!
     @IBOutlet weak var categorySelectorCollectionView: UICollectionView!
     @IBOutlet weak var categorySelectorLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var categorySelectorHeightConstraint: NSLayoutConstraint!
+    
+    private lazy var addWalletItem = CompatibleBadgeBarButtonItem(
+        image: R.image.ic_title_add()!,
+        target: self,
+        action: #selector(addWallet(_:)),
+    )
     
     private var categorySelectorSizeObserver: NSKeyValueObservation?
     private var categorySelectorController: CategorySelectorController!
@@ -43,9 +48,18 @@ final class WalletSummaryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addWalletView.button.setImage(R.image.ic_title_add(), for: .normal)
-        addWalletView.button.addTarget(self, action: #selector(addWallet(_:)), for: .touchUpInside)
-        addWalletView.badge = BadgeManager.shared.hasViewed(identifier: .addWalletAction) ? nil : .unread
+        let titleLabel = UILabel()
+        titleLabel.text = R.string.localizable.wallets()
+        titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+        titleLabel.textColor = R.color.text()
+        let titleItem = UIBarButtonItem(customView: titleLabel)
+        if #available(iOS 26.0, *) {
+            titleItem.hidesSharedBackground = true
+        }
+        navigationItem.leftBarButtonItem = titleItem
+        
+        addWalletItem.compatibleBadge = BadgeManager.shared.hasViewed(identifier: .addWalletAction) ? nil : .unread
+        navigationItem.rightBarButtonItem = addWalletItem
         
         categorySelectorLayout.itemSize = UICollectionViewFlowLayout.automaticSize
         categorySelectorController = CategorySelectorController(
@@ -194,7 +208,7 @@ final class WalletSummaryViewController: UIViewController {
     }
     
     @objc private func addWallet(_ sender: Any) {
-        addWalletView.badge = nil
+        addWalletItem.compatibleBadge = nil
         BadgeManager.shared.setHasViewed(identifier: .addWalletAction)
         let selector = AddWalletMethodSelectorViewController()
         selector.onSelected = { [weak self] method in

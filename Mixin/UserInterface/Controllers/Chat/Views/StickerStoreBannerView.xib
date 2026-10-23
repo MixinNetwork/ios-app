@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="sticker_banner" id="mlU-XT-LVE" customClass="StickerStoreBannerView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="208"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="TCC-kH-Uue">
+                    <rect key="frame" x="0.0" y="10" width="375" height="170"/>
+                    <color key="backgroundColor" name="background"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="6" minimumInteritemSpacing="0.0" id="0dd-GT-YgM" customClass="SnapCenterFlowLayout" customModule="Mixin" customModuleProvider="target">
+                        <size key="itemSize" width="320" height="170"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <connections>
+                        <outlet property="dataSource" destination="mlU-XT-LVE" id="slc-Ed-CW7"/>
+                        <outlet property="delegate" destination="mlU-XT-LVE" id="g6P-dB-i30"/>
+                    </connections>
+                </collectionView>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="TCC-kH-Uue" firstAttribute="top" secondItem="mlU-XT-LVE" secondAttribute="top" constant="10" id="4VT-ir-KOL"/>
+                <constraint firstAttribute="bottom" secondItem="TCC-kH-Uue" secondAttribute="bottom" constant="28" id="7sk-lT-vnt"/>
+                <constraint firstAttribute="trailing" secondItem="TCC-kH-Uue" secondAttribute="trailing" id="TPU-DK-Okn"/>
+                <constraint firstItem="TCC-kH-Uue" firstAttribute="leading" secondItem="mlU-XT-LVE" secondAttribute="leading" id="yFp-Mx-Wko"/>
+            </constraints>
+            <connections>
+                <outlet property="collectionView" destination="TCC-kH-Uue" id="3yD-H0-m5c"/>
+                <outlet property="layout" destination="0dd-GT-YgM" id="HGT-VE-V35"/>
+            </connections>
+        </collectionReusableView>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -118,9 +118,19 @@ final class OnboardingViewController: UIViewController {
         Logger.login.info(category: "Onboarding", message: "App \(Bundle.main.fullVersion) onboards, device: \(Device.current.machineName) \(ProcessInfo.processInfo.operatingSystemVersionString), id: \(Device.current.id)")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         resetBannersToCenterAndScheduleAutoScrolling()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -137,14 +147,6 @@ final class OnboardingViewController: UIViewController {
         let methods = SignInMethodSelectorViewController()
         navigationController?.pushViewController(methods, animated: true)
         Logger.login.info(category: "Onboarding", message: "Sign in")
-    }
-    
-}
-
-extension OnboardingViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .hide
     }
     
 }
@@ -212,19 +214,27 @@ extension OnboardingViewController {
         bannerAutoScrollingTimer = .scheduledTimer(
             withTimeInterval: 5,
             repeats: false
-        ) { [weak collectionView, banners] _ in
+        ) { [weak collectionView, banners, sectionsCount] _ in
             guard let collectionView else {
                 return
             }
+            let visibleIndexPaths = collectionView.indexPathsForVisibleItems
             if !collectionView.isDragging,
                !collectionView.isTracking,
                !collectionView.isDecelerating,
-               collectionView.indexPathsForVisibleItems.count == 1
+               visibleIndexPaths.count == 1,
+               var indexPath = visibleIndexPaths.first
             {
-                var indexPath = IndexPath(
-                    item: collectionView.indexPathsForVisibleItems[0].item + 1,
-                    section: collectionView.indexPathsForVisibleItems[0].section
-                )
+                // Recenter before advancing so the next section is always in bounds
+                if indexPath.section != sectionsCount / 2 {
+                    indexPath.section = sectionsCount / 2
+                    collectionView.scrollToItem(
+                        at: indexPath,
+                        at: .centeredHorizontally,
+                        animated: false
+                    )
+                }
+                indexPath.item += 1
                 if indexPath.item == banners.count {
                     indexPath.item = 0
                     indexPath.section += 1

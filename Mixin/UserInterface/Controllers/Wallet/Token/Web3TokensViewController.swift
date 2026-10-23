@@ -13,7 +13,6 @@ final class Web3TokensViewController: TokensViewController {
     private var watchingAddresses: WatchingAddresses?
     private var tokens: [Web3TokenItem]?
     
-    private var isDisplayingSearch = false
     private var searchTokenHandler: WalletSearchWeb3TokenHandler?
     private var overviewActionHandler: CommonWalletOverviewActionHandler?
     private var pendingTransactionObserver: CommonWalletPendingTransactionLoader?
@@ -268,11 +267,7 @@ final class Web3TokensViewController: TokensViewController {
         modelController.delegate = searchTokenHandler
         let search = WalletSearchViewController(modelController: modelController)
         self.searchTokenHandler = searchTokenHandler
-        self.isDisplayingSearch = true
-        search.onWillDismiss = { [weak self] in
-            self?.isDisplayingSearch = false
-        }
-        search.presentAsChild(on: self)
+        navigationController?.pushViewController(search, animated: true)
     }
     
     @objc private func presentMoreMenu(_ sender: Any) {
@@ -286,7 +281,11 @@ final class Web3TokensViewController: TokensViewController {
             let hidden = HiddenWeb3TokensViewController(wallet: wallet, availability: self.availability)
             self.navigationController?.pushViewController(hidden, animated: true)
         }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
+            sheet.popoverPresentationController?.sourceItem = source
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        }
         present(sheet, animated: true, completion: nil)
     }
     
@@ -295,14 +294,6 @@ final class Web3TokensViewController: TokensViewController {
             reporter.report(event: .hideAsset, tags: ["wallet": "web3", "source": "token_list"])
             Web3TokenExtraDAO.shared.hide(walletID: token.walletID, assetID: token.assetID)
         }
-    }
-    
-}
-
-extension Web3TokensViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        isDisplayingSearch ? .hide : .secondaryBackground
     }
     
 }

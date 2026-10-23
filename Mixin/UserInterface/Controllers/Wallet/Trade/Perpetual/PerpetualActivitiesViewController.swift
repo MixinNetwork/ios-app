@@ -177,14 +177,6 @@ final class PerpetualActivitiesViewController: UIViewController {
     
 }
 
-extension PerpetualActivitiesViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension PerpetualActivitiesViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

@@ -30,6 +30,7 @@ final class WalletContainerViewController: UIViewController {
         self.viewController = nil
         let summary = WalletSummaryViewController()
         
+        wallet.willMove(toParent: nil)
         addChild(summary)
         summary.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         summary.view.frame = CGRect(
@@ -38,28 +39,21 @@ final class WalletContainerViewController: UIViewController {
             width: view.bounds.width,
             height: view.bounds.height
         )
-        view.addSubview(summary.view)
-        summary.didMove(toParent: self)
-        
-        let animation = {
-            summary.view.frame = self.view.bounds
-        }
-        let completion = { (finished: Bool) in
-            self.remove(child: wallet)
-            self.viewController = summary
-        }
-        if animated {
-            UIView.animate(
-                withDuration: 0.5,
-                delay: 0,
-                options: .overdampedCurve,
-                animations: animation,
-                completion: completion
-            )
-        } else {
-            animation()
-            completion(true)
-        }
+        updateNavigationItem(from: summary, animated: animated)
+        transition(
+            from: wallet,
+            to: summary,
+            duration: animated ? 0.5 : 0,
+            options: .overdampedCurve,
+            animations: {
+                summary.view.frame = self.view.bounds
+            },
+            completion: { _ in
+                wallet.removeFromParent()
+                summary.didMove(toParent: self)
+                self.viewController = summary
+            },
+        )
     }
     
     func switchToWallet(_ wallet: Wallet) {
@@ -76,20 +70,26 @@ final class WalletContainerViewController: UIViewController {
         case .common(let wallet):
             viewController = CommonWalletViewController(wallet: wallet)
         }
+        summary.willMove(toParent: nil)
         addChild(viewController)
-        view.insertSubview(viewController.view, at: 0)
-        viewController.view.snp.makeEdgesEqualToSuperview()
-        viewController.didMove(toParent: self)
-        
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
-            summary.view.frame.origin.x = -self.view.bounds.width
-        } completion: { _ in
-            self.remove(child: summary)
-            self.viewController = viewController
-            if let viewController = viewController as? HomeTabBarControllerChild {
-                viewController.viewControllerDidSwitchToFront()
-            }
-        }
+        viewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        viewController.view.frame = view.bounds
+        updateNavigationItem(from: viewController, animated: true)
+        transition(
+            from: summary,
+            to: viewController,
+            duration: 0.5,
+            options: .overdampedCurve,
+            animations: {
+                self.view.bringSubviewToFront(summary.view)
+                summary.view.frame.origin.x = -self.view.bounds.width
+            },
+            completion: { _ in
+                summary.removeFromParent()
+                viewController.didMove(toParent: self)
+                self.viewController = viewController
+            },
+        )
     }
     
     private func load(child: UIViewController) {
@@ -98,21 +98,45 @@ final class WalletContainerViewController: UIViewController {
         child.view.snp.makeEdgesEqualToSuperview()
         child.didMove(toParent: self)
         self.viewController = child
+        updateNavigationItem(from: child, animated: false)
     }
     
-    private func remove(child: UIViewController) {
-        child.willMove(toParent: nil)
-        child.view.removeFromSuperview()
-        child.removeFromParent()
-    }
-    
-}
-
-extension WalletContainerViewController: HomeTabBarControllerChild {
-    
-    func viewControllerDidSwitchToFront() {
-        if let viewController = viewController as? HomeTabBarControllerChild {
-            viewController.viewControllerDidSwitchToFront()
+    private func updateNavigationItem(
+        from child: UIViewController,
+        animated: Bool,
+    ) {
+        let sourceItem = child.navigationItem
+        let update = {
+            self.navigationItem.title = sourceItem.title ?? ""
+            self.navigationItem.titleView = sourceItem.titleView
+            self.navigationItem.leftBarButtonItems = sourceItem.leftBarButtonItems
+            self.navigationItem.rightBarButtonItems = sourceItem.rightBarButtonItems
+            self.navigationItem.hidesBackButton = sourceItem.hidesBackButton
+            self.navigationItem.backBarButtonItem = sourceItem.backBarButtonItem
+        }
+        guard let navigationBar = navigationController?.navigationBar else {
+            UIView.performWithoutAnimation(update)
+            return
+        }
+        UIView.performWithoutAnimation {
+            navigationBar.layoutIfNeeded()
+        }
+        let updateAndLayout = {
+            UIView.performWithoutAnimation {
+                update()
+                navigationBar.layoutIfNeeded()
+            }
+        }
+        if animated {
+            UIView.transition(
+                with: navigationBar,
+                duration: 0.5,
+                options: [.transitionCrossDissolve, .overdampedCurve],
+                animations: updateAndLayout,
+                completion: nil,
+            )
+        } else {
+            updateAndLayout()
         }
     }
     

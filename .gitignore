@@ -17,7 +17,11 @@ DerivedData/
 !default.perspectivev3
 xcuserdata/
 
-xcshareddata/
+**/xcshareddata/*
+!**/xcshareddata/swiftpm/
+!**/xcshareddata/xcschemes/
+**/xcshareddata/swiftpm/*
+!**/xcshareddata/swiftpm/Package.resolved
 !Package.resolved
 !*.xcscheme
 
@@ -37,20 +41,8 @@ timeline.xctimeline
 playground.xcworkspace
 
 # Swift Package Manager
-#
-# Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
-# Packages/
-# Package.pins
-# Package.resolved
 .build/
-
-# CocoaPods
-#
-# We recommend against adding the Pods directory to your .gitignore. However
-# you should judge for yourself, the pros and cons are mentioned at:
-# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
-#
-Pods/
+.swiftpm/
 
 GoogleService-Info.plist
 Mixin-Keys.plist

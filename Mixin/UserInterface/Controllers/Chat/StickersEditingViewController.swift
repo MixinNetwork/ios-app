@@ -1,14 +1,31 @@
 import UIKit
 import MixinServices
 
-class StickersEditingViewController: UIViewController {
+final class StickersEditingViewController: UIViewController {
     
-    @IBOutlet weak var tableView: UITableView!
+    private weak var tableView: UITableView!
     
-    private var albumItems = [AlbumItem]()
+    private var albumItems: [AlbumItem] = []
+    
+    override func loadView() {
+        let tableView = UITableView(frame: .zero, style: .plain)
+        tableView.backgroundColor = R.color.background()
+        tableView.showsHorizontalScrollIndicator = false
+        tableView.showsVerticalScrollIndicator = false
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 80
+        tableView.sectionHeaderHeight = 1
+        tableView.sectionFooterHeight = 1
+        tableView.dataSource = self
+        tableView.delegate = self
+        view = tableView
+        self.tableView = tableView
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = R.string.localizable.my_stickers()
+        tableView.register(R.nib.stickersEditingCell)
         tableView.isEditing = true
         StickerStore.loadAddedAlbums { albumItems in
             DispatchQueue.main.async {
@@ -16,10 +33,6 @@ class StickersEditingViewController: UIViewController {
                 self.reloadData()
             }
         }
-    }
-    
-    @IBAction func backAction(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
     }
     
     private func reloadData() {

@@ -93,14 +93,6 @@ class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
 }
 
-extension TokenReceiverViewController: NavigationBarStyling {
-    
-    var navigationBarStyle: NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
 extension TokenReceiverViewController: AddressInfoInputHeaderView.Delegate {
     
     func addressInfoInputHeaderView(_ headerView: AddressInfoInputHeaderView, didUpdateContent content: String) {

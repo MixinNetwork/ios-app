@@ -1,19 +1,15 @@
 # MixinServices
 
-## Example
+## Integration
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+MixinServices is a local Swift package referenced by Mixin Messenger.
+Open that project with Xcode 26.6 or later.
 
-## Requirements
+`Package.swift` declares the shared Swift services, the `CMixinServices` C and
+Objective-C support target, and the bundled TIP and XKCP binary targets. The
+Swift module re-exports the support target to preserve its public API.
 
-## Installation
-
-MixinServices is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-```ruby
-pod 'MixinServices'
-```
+The application project owns the package resolution lockfile.
 
 ## Author
 

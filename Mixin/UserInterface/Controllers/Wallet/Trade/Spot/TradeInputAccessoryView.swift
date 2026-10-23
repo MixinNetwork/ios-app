@@ -16,10 +16,22 @@ final class TradeInputAccessoryView: UIView {
     var onDone: (() -> Void)?
     
     private let buttonBackgroundHeight: CGFloat = 32
+    private let bottomInset: CGFloat = {
+        if #available(iOS 26, *) {
+            8
+        } else {
+            0
+        }
+    }()
     
+    private weak var containerView: UIView!
     private weak var itemStackView: UIStackView!
     
     private var backgroundViews: [UIView] = []
+    
+    override var intrinsicContentSize: CGSize {
+        CGSize(width: UIView.noIntrinsicMetric, height: 44 + bottomInset)
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,6 +41,13 @@ final class TradeInputAccessoryView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         loadSubviews()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if #available(iOS 26, *) {
+            containerView.layer.cornerRadius = containerView.frame.height / 2
+        }
     }
     
     @objc private func reportItem(_ sender: UIButton) {
@@ -60,7 +79,7 @@ final class TradeInputAccessoryView: UIView {
             backgroundView.isUserInteractionEnabled = false
             backgroundView.layer.cornerRadius = buttonBackgroundHeight / 2
             backgroundView.layer.masksToBounds = true
-            insertSubview(backgroundView, belowSubview: itemStackView)
+            containerView.insertSubview(backgroundView, belowSubview: itemStackView)
             backgroundView.snp.makeConstraints { make in
                 make.leading.trailing.centerY.equalTo(itemButton)
                 make.height.equalTo(buttonBackgroundHeight)
@@ -70,7 +89,27 @@ final class TradeInputAccessoryView: UIView {
     }
     
     private func loadSubviews() {
-        backgroundColor = R.color.keyboard_background_14()
+        let containerView = UIView()
+        self.containerView = containerView
+        if #available(iOS 26, *) {
+            backgroundColor = .clear
+            containerView.backgroundColor = R.color.keyboard_background_14()!
+            containerView.layer.cornerRadius = 22
+            containerView.layer.masksToBounds = true
+            addSubview(containerView)
+            containerView.snp.makeConstraints { make in
+                make.top.equalToSuperview()
+                make.bottom.equalToSuperview().offset(-bottomInset)
+                make.leading.equalToSuperview().offset(8)
+                make.trailing.equalToSuperview().offset(-8)
+            }
+        } else {
+            backgroundColor = R.color.keyboard_background_14()
+            addSubview(containerView)
+            containerView.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
+        }
         
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -79,11 +118,11 @@ final class TradeInputAccessoryView: UIView {
         stackView.spacing = 10
         stackView.setContentHuggingPriority(.defaultLow, for: .horizontal)
         stackView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        addSubview(stackView)
+        containerView.addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
             make.height.equalTo(44)
-            make.leading.equalToSuperview().offset(16)
+            make.leading.equalToSuperview().offset(12)
         }
         itemStackView = stackView
         
@@ -93,7 +132,7 @@ final class TradeInputAccessoryView: UIView {
         doneButton.addTarget(self, action: #selector(reportDone(_:)), for: .touchUpInside)
         doneButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         doneButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        addSubview(doneButton)
+        containerView.addSubview(doneButton)
         doneButton.snp.makeConstraints { make in
             make.leading.equalTo(stackView.snp.trailing)
             make.top.bottom.equalToSuperview()

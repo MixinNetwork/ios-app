@@ -2,7 +2,6 @@ import UIKit
 import Combine
 import BigInt
 import web3
-import ReownWalletKit
 import MixinServices
 
 final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
@@ -351,17 +350,15 @@ extension Web3TransferPreviewViewController {
             if manipulateNavigationStackOnFinished,
                let navigationController = UIApplication.shared.homeNavigationController
             {
-                switch proposer {
-                case let .speedUp(sender), let .cancel(sender):
-                    if let viewController = navigationController.viewControllers.last,
-                       viewController as? Web3TransactionViewController == sender
-                    {
-                        navigationController.popViewController(animated: false)
+                let coordinator = transitionCoordinator
+                ?? presentedViewController?.transitionCoordinator
+                ?? navigationController.transitionCoordinator
+                if let coordinator {
+                    coordinator.animate(alongsideTransition: nil) { _ in
+                        self.manipulateNavigationStack(in: navigationController)
                     }
-                default:
-                    if let home = navigationController.viewControllers.first {
-                        navigationController.setViewControllers([home], animated: false)
-                    }
+                } else {
+                    manipulateNavigationStack(in: navigationController)
                 }
             }
         }
@@ -590,6 +587,19 @@ extension Web3TransferPreviewViewController {
         }
         
         return rows
+    }
+    
+    private func manipulateNavigationStack(in navigationController: UINavigationController) {
+        switch proposer {
+        case let .speedUp(sender), let .cancel(sender):
+            if let viewController = navigationController.viewControllers.last,
+               viewController as? Web3TransactionViewController == sender
+            {
+                navigationController.popViewController(animated: false)
+            }
+        default:
+            navigationController.popToRootViewController(animated: false)
+        }
     }
     
 }

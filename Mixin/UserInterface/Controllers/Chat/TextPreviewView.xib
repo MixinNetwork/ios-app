@@ -9,9 +9,15 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TextPreviewViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="iN0-l3-epB" id="mX7-Ec-Gv1"/>
+                <outlet property="tapRecognizer" destination="YWi-vV-YG4" id="Ejp-Ec-EZI"/>
+                <outlet property="textView" destination="1WI-51-qrF" id="Fup-GE-s2U"/>
+            </connections>
+        </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TextPreviewView" customModule="Mixin" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -50,9 +56,6 @@
                 <constraint firstItem="gdW-3T-scd" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="un0-w3-0JT"/>
             </constraints>
             <connections>
-                <outlet property="tapRecognizer" destination="YWi-vV-YG4" id="Ejp-Ec-EZI"/>
-                <outlet property="textView" destination="1WI-51-qrF" id="Fup-GE-s2U"/>
-                <outlet property="visualEffectView" destination="gdW-3T-scd" id="bY6-dV-144"/>
                 <outletCollection property="gestureRecognizers" destination="YWi-vV-YG4" appends="YES" id="w9i-jA-CMb"/>
                 <outletCollection property="gestureRecognizers" destination="a8e-sM-GOU" appends="YES" id="wl8-GM-ob1"/>
             </connections>
@@ -60,7 +63,7 @@
         </view>
         <tapGestureRecognizer id="YWi-vV-YG4">
             <connections>
-                <action selector="finishPreview:" destination="iN0-l3-epB" id="Xsb-5r-bl8"/>
+                <action selector="finishPreview:" destination="-1" id="Xsb-5r-bl8"/>
             </connections>
         </tapGestureRecognizer>
         <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="a8e-sM-GOU">

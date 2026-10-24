@@ -694,7 +694,6 @@
 		9408C5A32FD8069800A46150 /* WalletReferralCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9408C5A22FD8069800A46150 /* WalletReferralCell.xib */; };
 		9408C5A42FD8069800A46150 /* WalletReferralCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9408C5A12FD8069800A46150 /* WalletReferralCell.swift */; };
 		94095BB725BE8BC100F44832 /* TextPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94095BB625BE8BC100F44832 /* TextPreviewView.xib */; };
-		94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */; };
 		940A3C112EB33AFA001A458F /* TradePriceInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A3C0F2EB33AFA001A458F /* TradePriceInputCell.swift */; };
 		940A3C122EB33AFA001A458F /* TradePriceInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940A3C102EB33AFA001A458F /* TradePriceInputCell.xib */; };
 		940A3C442EB60A7E001A458F /* MixinLimitOrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A3C432EB60A7A001A458F /* MixinLimitOrderRequest.swift */; };
@@ -1997,6 +1996,7 @@
 		E1E4D3D2AE8111FEA2F9C942 /* RecalledMessage+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D875CB7B470C4D1A8D3D47 /* RecalledMessage+Description.swift */; };
 		E636A3C1E7A35DBB45A6B40B /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 4E21266170FCFF12BB5636C3 /* SDWebImage */; };
 		F2B71E0D34AC482993A87501 /* SearchNavigationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2B71E0D34AC482993A87502 /* SearchNavigationAnimator.swift */; };
+		F4A85A9031EC49D097C3A101 /* TextPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A85A9031EC49D097C3A102 /* TextPreviewViewController.swift */; };
 		F5042C6E34AC6C051213FF2D /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = BA719E6D3A59F03CF3261729 /* Alamofire */; };
 		F812895A30D780F10012C401 /* CheckTIPCountersJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = F812895A30D780F10012C402 /* CheckTIPCountersJob.swift */; };
 		F946BC09D1952262A0B41050 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = BDD925B03BDD82943615F6A4 /* FirebaseCore */; };
@@ -2736,7 +2736,6 @@
 		9408C5A12FD8069800A46150 /* WalletReferralCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletReferralCell.swift; sourceTree = "<group>"; };
 		9408C5A22FD8069800A46150 /* WalletReferralCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletReferralCell.xib; sourceTree = "<group>"; };
 		94095BB625BE8BC100F44832 /* TextPreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextPreviewView.xib; sourceTree = "<group>"; };
-		94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPreviewView.swift; sourceTree = "<group>"; };
 		940A3C0F2EB33AFA001A458F /* TradePriceInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradePriceInputCell.swift; sourceTree = "<group>"; };
 		940A3C102EB33AFA001A458F /* TradePriceInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TradePriceInputCell.xib; sourceTree = "<group>"; };
 		940A3C432EB60A7A001A458F /* MixinLimitOrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinLimitOrderRequest.swift; sourceTree = "<group>"; };
@@ -4057,6 +4056,7 @@
 		E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMenuItem.swift; sourceTree = "<group>"; };
 		E1D875CB7B470C4D1A8D3D47 /* RecalledMessage+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecalledMessage+Description.swift"; sourceTree = "<group>"; };
 		F2B71E0D34AC482993A87502 /* SearchNavigationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationAnimator.swift; sourceTree = "<group>"; };
+		F4A85A9031EC49D097C3A102 /* TextPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPreviewViewController.swift; sourceTree = "<group>"; };
 		F812895A30D780F10012C402 /* CheckTIPCountersJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckTIPCountersJob.swift; sourceTree = "<group>"; };
 		FBCD12C23060000100A01101 /* ConversationTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationTitleView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -5979,6 +5979,8 @@
 				FBCD12C23060000100A01101 /* ConversationTitleView.xib */,
 				94A6E3713065011200B35852 /* ConversationTitleView.swift */,
 				7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */,
+				94095BB625BE8BC100F44832 /* TextPreviewView.xib */,
+				F4A85A9031EC49D097C3A102 /* TextPreviewViewController.swift */,
 				7B9C64302241EDC600465A6A /* ConversationInputAccessible.swift */,
 				7BEA4F862223D8C400AF3650 /* ConversationInputViewController.swift */,
 				7BD344062334CD5F005C26E3 /* UserHandleViewController.swift */,
@@ -6649,8 +6651,6 @@
 				7BFD3753249366E7006D758F /* GroupCallIndicatorView.xib */,
 				7BFD375524936763006D758F /* GroupCallIndicatorView.swift */,
 				7B3CDA6724FFF2D8003A3E80 /* AnimatedStickerView.swift */,
-				94095BB625BE8BC100F44832 /* TextPreviewView.xib */,
-				94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */,
 				94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */,
 				7CB0955026CCED420049F4C7 /* PinMessageBannerView.xib */,
 				7CB0954E26CCED2E0049F4C7 /* PinMessageBannerView.swift */,
@@ -8417,6 +8417,7 @@
 				940B6C942C72501A0003FCDB /* UserBadgeIcon.swift in Sources */,
 				940D10B22C5C9A930071E36D /* TokenBalanceCell.swift in Sources */,
 				7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */,
+				F4A85A9031EC49D097C3A101 /* TextPreviewViewController.swift in Sources */,
 				944C61F32B6BF97B00C7DF06 /* PaymentUserGroupCell.swift in Sources */,
 				94227D6E2BEF242200430CAE /* SearchCollectibleViewController.swift in Sources */,
 				94CB84D62C6A65C200135641 /* ChartView.swift in Sources */,
@@ -9116,7 +9117,6 @@
 				94E206B72F4DF86100D65D98 /* TradeViewAllFooterView.swift in Sources */,
 				944075D52E2E8B0F00591B45 /* WalletPendingDepositView.swift in Sources */,
 				7B3FD4EA24192D0C00B58006 /* RenderingModeSwitchableImageView.swift in Sources */,
-				94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */,
 				94E206EE2F4EB61100D65D98 /* PerpetualPositionValueCell.swift in Sources */,
 				941C762B2F5ECEFD005B70A9 /* LeverageLabel.swift in Sources */,
 				7CEB736229DBC894006FB5B2 /* DeviceTransferAsset.swift in Sources */,

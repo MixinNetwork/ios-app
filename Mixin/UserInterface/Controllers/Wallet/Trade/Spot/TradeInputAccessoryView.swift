@@ -16,7 +16,14 @@ final class TradeInputAccessoryView: UIView {
     var onDone: (() -> Void)?
     
     private let buttonBackgroundHeight: CGFloat = 32
-    private let bottomInset: CGFloat = {
+    private let verticalInset: CGFloat = {
+        if #available(iOS 26, *) {
+            4
+        } else {
+            0
+        }
+    }()
+    private let bottomSpacing: CGFloat = {
         if #available(iOS 26, *) {
             8
         } else {
@@ -24,13 +31,13 @@ final class TradeInputAccessoryView: UIView {
         }
     }()
     
-    private weak var containerView: UIView!
     private weak var itemStackView: UIStackView!
     
-    private var backgroundViews: [UIView] = []
-    
     override var intrinsicContentSize: CGSize {
-        CGSize(width: UIView.noIntrinsicMetric, height: 44 + bottomInset)
+        CGSize(
+            width: UIView.noIntrinsicMetric,
+            height: 44 + verticalInset * 2 + bottomSpacing
+        )
     }
     
     override init(frame: CGRect) {
@@ -41,13 +48,6 @@ final class TradeInputAccessoryView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         loadSubviews()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if #available(iOS 26, *) {
-            containerView.layer.cornerRadius = containerView.frame.height / 2
-        }
     }
     
     @objc private func reportItem(_ sender: UIButton) {
@@ -62,49 +62,50 @@ final class TradeInputAccessoryView: UIView {
         for view in itemStackView.subviews {
             view.removeFromSuperview()
         }
-        for view in backgroundViews {
-            view.removeFromSuperview()
-        }
-        backgroundViews = []
         
         for (index, item) in items.enumerated() {
-            let config = buttonConfiguration(title: item.title)
+            var config: UIButton.Configuration = .filled()
+            config.attributedTitle = AttributedString(
+                string: item.title,
+                scalingByFontSize: 14,
+            )
+            config.baseForegroundColor = R.color.text()
+            config.background.backgroundColor = R.color.background()
+            config.background.cornerRadius = buttonBackgroundHeight / 2
+            let backgroundInset = (44 - buttonBackgroundHeight) / 2
+            config.background.backgroundInsets = NSDirectionalEdgeInsets(
+                top: backgroundInset,
+                leading: 0,
+                bottom: backgroundInset,
+                trailing: 0,
+            )
             let itemButton = UIButton(configuration: config)
             itemButton.tag = index
             itemButton.addTarget(self, action: #selector(reportItem(_:)), for: .touchUpInside)
             itemStackView.addArrangedSubview(itemButton)
-            
-            let backgroundView = UIView()
-            backgroundView.backgroundColor = R.color.background()
-            backgroundView.isUserInteractionEnabled = false
-            backgroundView.layer.cornerRadius = buttonBackgroundHeight / 2
-            backgroundView.layer.masksToBounds = true
-            containerView.insertSubview(backgroundView, belowSubview: itemStackView)
-            backgroundView.snp.makeConstraints { make in
-                make.leading.trailing.centerY.equalTo(itemButton)
-                make.height.equalTo(buttonBackgroundHeight)
-            }
-            backgroundViews.append(backgroundView)
         }
     }
     
     private func loadSubviews() {
-        let containerView = UIView()
-        self.containerView = containerView
+        autoresizingMask = .flexibleHeight
+        let containerView: UIView
         if #available(iOS 26, *) {
             backgroundColor = .clear
-            containerView.backgroundColor = R.color.keyboard_background_14()!
-            containerView.layer.cornerRadius = 22
-            containerView.layer.masksToBounds = true
-            addSubview(containerView)
-            containerView.snp.makeConstraints { make in
+            let effect = UIGlassEffect()
+            effect.tintColor = R.color.background_secondary()
+            let effectView = UIVisualEffectView(effect: effect)
+            effectView.cornerConfiguration = .capsule()
+            addSubview(effectView)
+            effectView.snp.makeConstraints { make in
                 make.top.equalToSuperview()
-                make.bottom.equalToSuperview().offset(-bottomInset)
+                make.bottom.equalToSuperview().offset(-bottomSpacing)
                 make.leading.equalToSuperview().offset(8)
                 make.trailing.equalToSuperview().offset(-8)
             }
+            containerView = effectView.contentView
         } else {
             backgroundColor = R.color.keyboard_background_14()
+            containerView = UIView()
             addSubview(containerView)
             containerView.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
@@ -120,14 +121,21 @@ final class TradeInputAccessoryView: UIView {
         stackView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         containerView.addSubview(stackView)
         stackView.snp.makeConstraints { make in
-            make.top.bottom.equalToSuperview()
+            make.top.equalToSuperview().offset(verticalInset)
+            make.bottom.equalToSuperview().offset(-verticalInset)
             make.height.equalTo(44)
             make.leading.equalToSuperview().offset(12)
         }
         itemStackView = stackView
         
-        var doneButtonConfig = buttonConfiguration(title: R.string.localizable.done())
+        var doneButtonConfig: UIButton.Configuration = .plain()
+        doneButtonConfig.attributedTitle = AttributedString(
+            string: R.string.localizable.done(),
+            scalingByFontSize: 14,
+        )
         doneButtonConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 14)
+        doneButtonConfig.background = .clear()
+        doneButtonConfig.baseForegroundColor = R.color.text()
         let doneButton = UIButton(configuration: doneButtonConfig)
         doneButton.addTarget(self, action: #selector(reportDone(_:)), for: .touchUpInside)
         doneButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -135,23 +143,9 @@ final class TradeInputAccessoryView: UIView {
         containerView.addSubview(doneButton)
         doneButton.snp.makeConstraints { make in
             make.leading.equalTo(stackView.snp.trailing)
-            make.top.bottom.equalToSuperview()
+            make.top.bottom.equalTo(stackView)
             make.trailing.equalToSuperview().offset(-6)
         }
-    }
-    
-    private func buttonConfiguration(title: String) -> UIButton.Configuration {
-        var config: UIButton.Configuration = .plain()
-        config.titleTextAttributesTransformer = .init { incoming in
-            var outgoing = incoming
-            outgoing.font = UIFontMetrics.default.scaledFont(
-                for: .systemFont(ofSize: 14)
-            )
-            outgoing.foregroundColor = R.color.text()
-            return outgoing
-        }
-        config.title = title
-        return config
     }
     
 }

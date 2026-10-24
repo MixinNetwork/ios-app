@@ -432,37 +432,12 @@ extension InscriptionViewController: UITableViewDelegate {
            let cell = tableView.cellForRow(at: indexPath) as? InscriptionContentCell,
            let image = cell.contentImageView.image
         {
-            let previewView = ImagePreviewView(image: image, frame: view.bounds)
-            let startImageFrame = cell.contentImageView.convert(cell.contentImageView.bounds, to: previewView)
-            previewView.dismissAction = { [weak previewView] in
-                guard let view = previewView else {
-                    return
-                }
-                UIView.animate(withDuration: 0.3) {
-                    view.backgroundView.effect = nil
-                    view.closeButton.alpha = 0
-                    view.imageView.frame = startImageFrame
-                    view.imageView.layer.cornerRadius = cell.imageWrapperView.layer.cornerRadius
-                } completion: { _ in
-                    view.removeFromSuperview()
-                    cell.imageWrapperView.alpha = 1
-                }
-            }
-            view.addSubview(previewView)
-            previewView.imageView.frame = startImageFrame
-            previewView.imageView.layer.cornerRadius = cell.imageWrapperView.layer.cornerRadius
-            let endHeight = ceil(view.bounds.width * (image.size.height / image.size.width))
-            let endFrame = CGRect(x: 0,
-                                  y: (previewView.bounds.height - endHeight) / 2,
-                                  width: previewView.bounds.width,
-                                  height: endHeight)
-            cell.imageWrapperView.alpha = 0
-            UIView.animate(withDuration: 0.3) {
-                previewView.backgroundView.effect = UIBlurEffect(style: .dark)
-                previewView.closeButton.alpha = 1
-                previewView.imageView.frame = endFrame
-                previewView.imageView.layer.cornerRadius = 0
-            }
+            let preview = ImagePreviewViewController(
+                image: image,
+                sourceImageView: cell.contentImageView,
+                sourceWrapperView: cell.imageWrapperView,
+            )
+            present(preview, animated: true)
         }
     }
     
@@ -594,58 +569,179 @@ extension InscriptionViewController: PaymentUserGroupCellDelegate {
 
 extension InscriptionViewController {
     
-    private class ImagePreviewView: UIView {
+    private final class ImagePreviewViewController: UIViewController, UIViewControllerTransitioningDelegate {
         
         let backgroundView = UIVisualEffectView()
         let closeButton = UIButton(type: .system)
         let imageView: UIImageView
         
-        var dismissAction: (() -> Void)?
+        weak var sourceImageView: UIImageView?
+        weak var sourceWrapperView: UIView?
+        
+        var isAnimatingTransition = false
+        
+        var expandedImageFrame: CGRect {
+            let bounds = view.bounds
+            let height = ceil(bounds.width * (image.size.height / image.size.width))
+            return CGRect(
+                x: 0,
+                y: (bounds.height - height) / 2,
+                width: bounds.width,
+                height: height,
+            )
+        }
         
         private let image: UIImage
+        private let sourceAlpha: CGFloat
         
-        init(image: UIImage, frame: CGRect) {
+        init(
+            image: UIImage,
+            sourceImageView: UIImageView,
+            sourceWrapperView: UIView,
+        ) {
             self.image = image
             self.imageView = UIImageView(image: image)
-            
-            super.init(frame: frame)
-            
-            backgroundView.effect = nil
-            addSubview(backgroundView)
-            backgroundView.snp.makeEdgesEqualToSuperview()
-            
-            closeButton.setImage(R.image.ic_title_close(), for: .normal)
-            closeButton.overrideUserInterfaceStyle = .dark
-            closeButton.tintColor = R.color.icon_tint()
-            closeButton.alpha = 0
-            closeButton.addTarget(self, action: #selector(dismiss(_:)), for: .touchUpInside)
-            addSubview(closeButton)
-            closeButton.snp.makeConstraints { make in
-                make.top.equalTo(safeAreaLayoutGuide.snp.top)
-                make.leading.equalToSuperview().offset(10)
-                make.width.height.equalTo(44)
-            }
-            
-            addSubview(imageView)
-            imageView.layer.masksToBounds = true
-            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismiss(_:)))
-            let swipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(dismiss(_:)))
-            swipeRecognizer.direction = .down
-            imageView.addGestureRecognizer(tapRecognizer)
-            imageView.addGestureRecognizer(swipeRecognizer)
-            imageView.isUserInteractionEnabled = true
+            self.sourceImageView = sourceImageView
+            self.sourceWrapperView = sourceWrapperView
+            self.sourceAlpha = sourceWrapperView.alpha
+            super.init(nibName: nil, bundle: nil)
+            modalPresentationStyle = .overFullScreen
+            transitioningDelegate = self
         }
         
         required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
+            fatalError("Storyboard is not supported")
         }
         
         deinit {
             Logger.general.debug(category: "InscriptionPreview", message: "Deinitialized")
         }
         
-        @objc private func dismiss(_ sender: Any) {
-            dismissAction?()
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            view.backgroundColor = .clear
+            
+            backgroundView.effect = nil
+            view.addSubview(backgroundView)
+            backgroundView.snp.makeEdgesEqualToSuperview()
+            
+            closeButton.setImage(R.image.ic_title_close(), for: .normal)
+            closeButton.overrideUserInterfaceStyle = .dark
+            closeButton.tintColor = R.color.icon_tint()
+            closeButton.alpha = 0
+            closeButton.addTarget(self, action: #selector(closePreview(_:)), for: .touchUpInside)
+            view.addSubview(closeButton)
+            closeButton.snp.makeConstraints { make in
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+                make.leading.equalToSuperview().offset(10)
+                make.width.height.equalTo(44)
+            }
+            
+            view.addSubview(imageView)
+            imageView.layer.masksToBounds = true
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(closePreview(_:)))
+            let swipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(closePreview(_:)))
+            swipeRecognizer.direction = .down
+            imageView.addGestureRecognizer(tapRecognizer)
+            imageView.addGestureRecognizer(swipeRecognizer)
+            imageView.isUserInteractionEnabled = true
+        }
+        
+        override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+            if !isAnimatingTransition {
+                imageView.frame = expandedImageFrame
+            }
+        }
+        
+        func animationController(
+            forPresented presented: UIViewController,
+            presenting: UIViewController,
+            source: UIViewController,
+        ) -> UIViewControllerAnimatedTransitioning? {
+            ImagePreviewAnimator(isPresenting: true, sourceAlpha: sourceAlpha)
+        }
+        
+        func animationController(
+            forDismissed dismissed: UIViewController,
+        ) -> UIViewControllerAnimatedTransitioning? {
+            ImagePreviewAnimator(isPresenting: false, sourceAlpha: sourceAlpha)
+        }
+        
+        @objc private func closePreview(_ sender: Any) {
+            guard !isBeingPresented, !isBeingDismissed else {
+                return
+            }
+            dismiss(animated: true)
+        }
+        
+    }
+    
+    private final class ImagePreviewAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+        
+        private let isPresenting: Bool
+        private let sourceAlpha: CGFloat
+        
+        init(isPresenting: Bool, sourceAlpha: CGFloat) {
+            self.isPresenting = isPresenting
+            self.sourceAlpha = sourceAlpha
+            super.init()
+        }
+        
+        func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+            0.3
+        }
+        
+        func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+            let key: UITransitionContextViewControllerKey = isPresenting ? .to : .from
+            guard let controller = transitionContext.viewController(forKey: key) as? ImagePreviewViewController else {
+                transitionContext.completeTransition(false)
+                return
+            }
+            controller.isAnimatingTransition = true
+            let preview = controller.view!
+            if isPresenting {
+                preview.frame = transitionContext.finalFrame(for: controller)
+                transitionContext.containerView.addSubview(preview)
+            }
+            preview.layoutIfNeeded()
+            let sourceFrame = controller.sourceImageView.map {
+                $0.convert($0.bounds, to: preview)
+            }
+            let sourceCornerRadius = controller.sourceWrapperView?.layer.cornerRadius ?? 0
+            if isPresenting {
+                controller.backgroundView.effect = nil
+                controller.closeButton.alpha = 0
+                controller.imageView.frame = sourceFrame ?? controller.expandedImageFrame
+                controller.imageView.layer.cornerRadius = sourceCornerRadius
+            }
+            controller.sourceWrapperView?.alpha = 0
+            UIView.animate(withDuration: transitionDuration(using: transitionContext)) {
+                controller.backgroundView.effect = self.isPresenting ? UIBlurEffect(style: .dark) : nil
+                controller.closeButton.alpha = self.isPresenting ? 1 : 0
+                controller.imageView.frame = self.isPresenting
+                    ? controller.expandedImageFrame
+                    : sourceFrame ?? controller.imageView.frame
+                controller.imageView.layer.cornerRadius = self.isPresenting ? 0 : sourceCornerRadius
+                if !self.isPresenting && sourceFrame == nil {
+                    controller.imageView.alpha = 0
+                }
+            } completion: { _ in
+                let completed = !transitionContext.transitionWasCancelled
+                let previewRemainsVisible = self.isPresenting == completed
+                if previewRemainsVisible {
+                    controller.backgroundView.effect = UIBlurEffect(style: .dark)
+                    controller.closeButton.alpha = 1
+                    controller.imageView.frame = controller.expandedImageFrame
+                    controller.imageView.layer.cornerRadius = 0
+                    controller.imageView.alpha = 1
+                } else {
+                    controller.sourceWrapperView?.alpha = self.sourceAlpha
+                    preview.removeFromSuperview()
+                }
+                controller.isAnimatingTransition = false
+                transitionContext.completeTransition(completed)
+            }
         }
         
     }

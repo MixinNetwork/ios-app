@@ -1031,9 +1031,14 @@ final class ConversationViewController: UIViewController {
         guard !(tableView.isDragging && tableView.isDecelerating) else {
             return
         }
-        let textPreviewView = R.nib.textPreviewView(withOwner: nil)!
-        textPreviewView.attributedText = viewModel.contentAttributedString
-        textPreviewView.show(on: view)
+        guard presentedViewController == nil, transitionCoordinator == nil else {
+            return
+        }
+        let preview = TextPreviewViewController(
+            text: .attributed(viewModel.contentAttributedString),
+        )
+        preview.delegate = self
+        present(preview, animated: true)
     }
     
     @objc func showReportMenuAction() {
@@ -2018,15 +2023,21 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     
 }
 
-// MARK: - TextPreviewViewDelegate
-extension ConversationViewController: TextPreviewViewDelegate {
+// MARK: - TextPreviewViewControllerDelegate
+extension ConversationViewController: TextPreviewViewControllerDelegate {
     
-    func textPreviewView(_ view: TextPreviewView, didSelectURL url: URL) {
-        handleTapping(on: url)
+    func textPreviewViewController(_ controller: TextPreviewViewController, didSelectURL url: URL) {
+        if presentedViewController == controller {
+            dismiss(animated: true) {
+                self.handleTapping(on: url)
+            }
+        } else {
+            handleTapping(on: url)
+        }
     }
     
-    func textPreviewView(_ view: TextPreviewView, didLongPressURL url: URL) {
-        handleLongPressing(on: url)
+    func textPreviewViewController(_ controller: TextPreviewViewController, didLongPressURL url: URL) {
+        
     }
     
 }

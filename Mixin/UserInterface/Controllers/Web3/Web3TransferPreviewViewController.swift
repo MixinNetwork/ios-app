@@ -221,11 +221,11 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
     override func tableView(_ tableView: UITableView, didSelectRow row: Row) {
         switch row {
         case let .web3Message(_, message):
-            if let window = view.window {
-                let preview = R.nib.textPreviewView(withOwner: nil)!
-                preview.textView.text = message
-                preview.show(on: window)
+            guard presentedViewController == nil, transitionCoordinator == nil else {
+                return
             }
+            let preview = TextPreviewViewController(text: .plain(message))
+            present(preview, animated: true)
         case .waivedFee:
             let description = CrossWalletTransactionFreeIntroductionViewController()
             present(description, animated: true)

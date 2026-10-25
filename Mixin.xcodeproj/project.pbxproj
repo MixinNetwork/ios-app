@@ -4200,7 +4200,6 @@
 				94ECCCAA261A029F004E9E2A /* Window.swift */,
 				277FF7021F909A1200DBB2EB /* AppDelegate.swift */,
 				52E0A0022E59EE38006A11E9 /* SceneDelegate.swift */,
-				945FBC123041D5C80016C3CD /* ProtectedDataUnavailableViewController.swift */,
 				277FF70B1F909A1200DBB2EB /* Assets.xcassets */,
 				7B8BB58F234F36C000991ACB /* Colors.xcassets */,
 			);
@@ -6255,6 +6254,7 @@
 				DF5D9F1F1F9C78700036D5FD /* Views */,
 				DF016B2C2098B35F00B8FFDE /* Windows */,
 				DF5D9F1D1F9C77830036D5FD /* Storyboard */,
+				945FBC123041D5C80016C3CD /* ProtectedDataUnavailableViewController.swift */,
 			);
 			path = UserInterface;
 			sourceTree = "<group>";

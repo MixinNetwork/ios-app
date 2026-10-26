@@ -118,16 +118,29 @@ public final class ConversationDAO: UserDatabaseDAO {
         }
     }
     
-    public func getConversationIconUrl(conversationId: String) -> String? {
-        return db.select(column: Conversation.column(of: .iconUrl),
-                         from: Conversation.self,
-                         where: Conversation.column(of: .conversationId) == conversationId)
+    public func iconURL(conversationID: String) -> String? {
+        db.select(
+            column: Conversation.column(of: .iconUrl),
+            from: Conversation.self,
+            where: Conversation.column(of: .conversationId) == conversationID
+        )
     }
     
-    public func updateIconUrl(conversationId: String, iconUrl: String) {
-        db.update(Conversation.self,
-                  assignments: [Conversation.column(of: .iconUrl).set(to: iconUrl)],
-                  where: Conversation.column(of: .conversationId) == conversationId)
+    public func updateGeneratedGroupIcon(conversationID: String, filename: String) -> Bool {
+        var updated = false
+        let committed = db.write { database in
+            let iconURL = try String.fetchOne(
+                database,
+                sql: "SELECT icon_url FROM conversations WHERE conversation_id = ?",
+                arguments: [conversationID]
+            ) ?? ""
+            guard Conversation.groupIconType(iconURL: iconURL) != .remote else {
+                return
+            }
+            try updateGroupIcon(conversationID: conversationID, iconURL: filename, database: database)
+            updated = true
+        }
+        return committed && updated
     }
     
     public func getStartStatusConversations() -> [String] {
@@ -498,6 +511,12 @@ public final class ConversationDAO: UserDatabaseDAO {
                     .updateAll(db, assignments)
             }
             
+            try updateGroupIcon(
+                conversationID: conversationId,
+                iconURL: conversation.iconUrl,
+                database: db,
+            )
+            
             if conversation.participants.count > 0 {
                 let participants = conversation.participants.map {
                     Participant(conversationId: conversationId, userId: $0.userId, role: $0.role, status: ParticipantStatus.START.rawValue, createdAt: $0.createdAt)
@@ -587,6 +606,12 @@ public final class ConversationDAO: UserDatabaseDAO {
             try Conversation
                 .filter(Conversation.column(of: .conversationId) == conversationId)
                 .updateAll(db, assignments)
+            
+            try updateGroupIcon(
+                conversationID: conversationId,
+                iconURL: conversation.iconUrl,
+                database: db,
+            )
             
             let userIds = try ParticipantDAO.shared.getNeedSyncParticipantIds(database: db, conversationId: conversationId)
             if userIds.count > 0 {
@@ -689,6 +714,43 @@ public final class ConversationDAO: UserDatabaseDAO {
 }
 
 extension ConversationDAO {
+    
+    private func updateGroupIcon(
+        conversationID: String,
+        iconURL: String,
+        database: GRDB.Database,
+    ) throws {
+        let oldIconURL = try String.fetchOne(
+            database,
+            sql: "SELECT icon_url FROM conversations WHERE conversation_id = ?",
+            arguments: [conversationID]
+        ) ?? ""
+        guard oldIconURL != iconURL else {
+            return
+        }
+        let oldIconType = Conversation.groupIconType(iconURL: oldIconURL)
+        // Empty server icons must not discard a locally generated avatar.
+        guard !iconURL.isEmpty || oldIconType == .remote else {
+            return
+        }
+        try Conversation
+            .filter(Conversation.column(of: .conversationId) == conversationID)
+            .updateAll(database, Conversation.column(of: .iconUrl).set(to: iconURL))
+        database.afterNextTransaction { _ in
+            if oldIconType == .localGenerated {
+                let url = AppGroupContainer.groupIconsUrl.appendingPathComponent(oldIconURL)
+                try? FileManager.default.removeItem(at: url)
+            }
+            let change = ConversationChange(
+                conversationId: conversationID,
+                action: .updateGroupIcon(iconUrl: iconURL),
+            )
+            NotificationCenter.default.post(
+                onMainThread: conversationDidChangeNotification,
+                object: change
+            )
+        }
+    }
     
     private func deleteFTSContent(with conversationId: String, from db: GRDB.Database) throws {
         let sql = "DELETE FROM \(Message.ftsTableName) WHERE conversation_id MATCH ?"

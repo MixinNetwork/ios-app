@@ -271,6 +271,8 @@
 "change_24h" = "24H %%";
 "change_amount" = "Change Amount";
 "change_emergency_contact" = "Change recovery contact";
+"change_group_photo_with_camera" = "Change Group Photo with Camera";
+"change_group_photo_with_library" = "Change Group Photo with Library";
 "change_mobile_number" = "Change Mobile Number";
 "change_name" = "Change name";
 "change_number" = "Change Number";

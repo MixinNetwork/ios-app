@@ -145,6 +145,7 @@
                                                 <color key="backgroundColor" name="background"/>
                                                 <connections>
                                                     <outlet property="avatarView" destination="BtE-5x-Sut" id="r0k-3K-u1b"/>
+                                                    <outlet property="badgeImageView" destination="Jnj-lJ-Kay" id="ggB-NQ-9ou"/>
                                                     <outlet property="contentLabel" destination="BSl-Co-y1G" id="drM-bz-RG0"/>
                                                     <outlet property="expiredImageView" destination="8ET-km-tPW" id="j7X-ly-vkR"/>
                                                     <outlet property="mentionLabel" destination="a00-2x-xHL" id="rPe-FJ-pud"/>
@@ -155,7 +156,6 @@
                                                     <outlet property="pinImageView" destination="p7w-4E-Qsn" id="Fie-hf-pCP"/>
                                                     <outlet property="timeLabel" destination="8dc-8H-fbP" id="stE-qq-s5m"/>
                                                     <outlet property="unreadLabel" destination="cQr-Dj-Umd" id="ZTR-TR-7er"/>
-                                                    <outlet property="verifiedImageView" destination="Jnj-lJ-Kay" id="ggB-NQ-9ou"/>
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>

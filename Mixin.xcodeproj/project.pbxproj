@@ -1825,7 +1825,7 @@
 		C0DE00101600000000000002 /* PerpsPositionValueTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00101600000000000001 /* PerpsPositionValueTextField.swift */; };
 		C764FAFA5AF64A85A5824F01 /* PopupAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C764FAFA5AF64A85A5824F02 /* PopupAlertViewController.swift */; };
 		DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */; };
-		DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */; };
+		DF03C88D1FF4D9A100C1ED6B /* RegenerateGroupIconJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88C1FF4D9A100C1ED6B /* RegenerateGroupIconJob.swift */; };
 		DF048CCE223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CCD223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift */; };
 		DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CCF22433C6E005F1EF5 /* UILabelExtension.swift */; };
 		DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF048CD122433D69005F1EF5 /* LineHeightLabel.swift */; };
@@ -3876,7 +3876,7 @@
 		C764FAFA5AF64A85A5824F02 /* PopupAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupAlertViewController.swift; sourceTree = "<group>"; };
 		C7FEF05A2A554FAC90DA5985 /* StickersEditingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StickersEditingCell.xib; sourceTree = "<group>"; };
 		DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInviteCell.swift; sourceTree = "<group>"; };
-		DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshGroupIconJob.swift; sourceTree = "<group>"; };
+		DF03C88C1FF4D9A100C1ED6B /* RegenerateGroupIconJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegenerateGroupIconJob.swift; sourceTree = "<group>"; };
 		DF048CCD223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModernSelectedBackgroundCell.swift; sourceTree = "<group>"; };
 		DF048CCF22433C6E005F1EF5 /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
 		DF048CD122433D69005F1EF5 /* LineHeightLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineHeightLabel.swift; sourceTree = "<group>"; };
@@ -7016,7 +7016,7 @@
 				DF1F278521A59A60009A74C6 /* BackupJobQueue.swift */,
 				DF1F278321A5637B009A74C6 /* BackupJob.swift */,
 				DFB2062921AC1771006E4341 /* RestoreJob.swift */,
-				DF03C88C1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift */,
+				DF03C88C1FF4D9A100C1ED6B /* RegenerateGroupIconJob.swift */,
 				DFD089E11FE4041400A7D815 /* AttachmentUploadJob.swift */,
 				7BF3F67B22AE64FA007B6C77 /* ImageUploadJob.swift */,
 				DF3FF0542011E9B8000A0C0A /* FileUploadJob.swift */,
@@ -9156,7 +9156,7 @@
 				7B082D18242CA19F00C5E163 /* MultipleSelectionIntent.swift in Sources */,
 				9465E6772E6DF49B005974C6 /* DepositLinkPreviewViewController.swift in Sources */,
 				948FC56B2D760018000795E4 /* TokenViewController.swift in Sources */,
-				DF03C88D1FF4D9A100C1ED6B /* RefreshGroupIconJob.swift in Sources */,
+				DF03C88D1FF4D9A100C1ED6B /* RegenerateGroupIconJob.swift in Sources */,
 				94F3691E2EC626BB00D28591 /* PendingTradeOrderLoader.swift in Sources */,
 				94031D712C1C5B41007E53BC /* SafeURL.swift in Sources */,
 				943270B62E5C6F4F00DFC486 /* DepositViewModel.swift in Sources */,

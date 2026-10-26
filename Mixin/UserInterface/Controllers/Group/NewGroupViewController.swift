@@ -130,14 +130,18 @@ extension NewGroupViewController {
             return nil
         }
         do {
-            let filename = try GroupIconSaver.save(image: image,
-                                                   forGroupWith: conversationId,
-                                                   participants: participants)
-            ConversationDAO.shared.updateIconUrl(conversationId: conversationId,
-                                                 iconUrl: filename)
+            let filename = try GroupIconSaver.save(
+                image: image,
+                forGroupWith: conversationId,
+                participants: participants
+            )
+            guard ConversationDAO.shared.updateGeneratedGroupIcon(conversationID: conversationId, filename: filename) else {
+                try? FileManager.default.removeItem(at: AppGroupContainer.groupIconsUrl.appendingPathComponent(filename))
+                return nil
+            }
             return filename
         } catch let GroupIconSaver.Error.fileExists(filename) {
-            return filename
+            return ConversationDAO.shared.updateGeneratedGroupIcon(conversationID: conversationId, filename: filename) ? filename : nil
         } catch {
             reporter.report(error: error)
             return nil
@@ -151,8 +155,14 @@ extension NewGroupViewController {
                 guard let weakSelf = self else {
                     return
                 }
-                if let iconUrl = weakSelf.saveGroupImage(conversationId: conversation.conversationId, participants: participantUsers) {
-                    conversation.iconUrl = iconUrl
+                if response.iconUrl.isEmpty {
+                    let iconURL = weakSelf.saveGroupImage(
+                        conversationId: conversation.conversationId,
+                        participants: participantUsers,
+                    )
+                    if let iconURL {
+                        conversation.iconUrl = iconURL
+                    }
                 }
                 weakSelf.nameTextField.resignFirstResponder()
                 let vc = ConversationViewController.instance(conversation: conversation)

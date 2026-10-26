@@ -80,11 +80,16 @@ class AvatarImageView: UIView {
     
     func setGroupImage(with iconUrl: String) {
         titleLabel.text = nil
-        if !iconUrl.isEmpty {
+        let placeholder = R.image.ic_conversation_group()
+        switch Conversation.groupIconType(iconURL: iconUrl) {
+        case .none:
+            imageView.image = placeholder
+        case .remote:
+            let url = URL(string: iconUrl)
+            imageView.sd_setImage(with: url, placeholderImage: placeholder, options: .lowPriority)
+        case .localGenerated:
             let url = AppGroupContainer.groupIconsUrl.appendingPathComponent(iconUrl)
-            imageView.sd_setImage(with: url, placeholderImage: nil, context: localImageContext)
-        } else {
-            imageView.image = R.image.ic_conversation_group()
+            imageView.sd_setImage(with: url, placeholderImage: placeholder, context: localImageContext)
         }
     }
     

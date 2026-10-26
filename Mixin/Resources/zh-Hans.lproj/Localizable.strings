@@ -271,6 +271,8 @@
 "change_24h" = "24 小时涨跌";
 "change_amount" = "修改金额";
 "change_emergency_contact" = "修改恢复联系人";
+"change_group_photo_with_camera" = "更换群头像（相机）";
+"change_group_photo_with_library" = "更换群头像（相册）";
 "change_mobile_number" = "更改手机号码";
 "change_name" = "修改名称";
 "change_number" = "修改手机号";

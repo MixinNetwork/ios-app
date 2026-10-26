@@ -141,7 +141,7 @@ extension GroupParticipantsViewController {
             self.navigationController?.pushViewController(vc, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.invite_to_group_via_link(), style: .default, handler: { (_) in
-            let vc = InviteLinkViewController.instance(conversation: self.conversation)
+            let vc = InviteLinkViewController(conversation: self.conversation)
             self.navigationController?.pushViewController(vc, animated: true)
         }))
         if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {

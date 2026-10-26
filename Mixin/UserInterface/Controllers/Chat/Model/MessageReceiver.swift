@@ -24,7 +24,7 @@ class MessageReceiver {
             item = .user(user)
         } else if conversation.category == ConversationCategory.GROUP.rawValue {
             name = conversation.name
-            badgeImage = nil
+            badgeImage = R.image.group_indicator_small()
             item = .group(conversation)
         } else {
             return nil

@@ -62,8 +62,8 @@ extension DataAndStorageSettingsViewController: UITableViewDelegate {
             alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
             present(alert, animated: true, completion: nil)
         } else {
-            let vc = StorageUsageViewController.instance()
-            navigationController?.pushViewController(vc, animated: true)
+            let storageUsage = StorageUsageViewController()
+            navigationController?.pushViewController(storageUsage, animated: true)
         }
     }
     

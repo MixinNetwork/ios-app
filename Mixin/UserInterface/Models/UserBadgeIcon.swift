@@ -144,7 +144,9 @@ extension CircleMember {
                 isVerified: isVerified ?? false,
                 isBot: isBot
             )
-        case nil, .GROUP:
+        case .GROUP:
+            R.image.group_indicator_small()
+        case nil:
             nil
         }
     }

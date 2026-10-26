@@ -1892,7 +1892,7 @@
 		DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */ = {isa = PBXBuildFile; fileRef = DF8EF6BB2034737F00E99CE8 /* payment_success.caf */; };
 		DF9E66E5205B9AF300F1A0B9 /* HiddenTokensViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9E66E4205B9AF300F1A0B9 /* HiddenTokensViewController.swift */; };
 		DFA063D222B0D0E80031E151 /* PrivacySettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA063D122B0D0E70031E151 /* PrivacySettingViewController.swift */; };
-		DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFA5B58D1FADC88D00549728 /* Group.storyboard */; };
+		DFA5B58E1FADC88D00549728 /* InviteLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFA5B58D1FADC88D00549728 /* InviteLinkView.xib */; };
 		DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFA5B5901FB04C9C00549728 /* Wallet.storyboard */; };
 		DFAA0DEF237823DA003E26B2 /* DeviceCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA0DEE237823DA003E26B2 /* DeviceCheck.framework */; };
 		DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFAA4B36200F627500C696D3 /* SafariServices.framework */; };
@@ -2002,6 +2002,8 @@
 		F946BC09D1952262A0B41050 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = BDD925B03BDD82943615F6A4 /* FirebaseCore */; };
 		FBCD12C13060000100A01101 /* ConversationTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBCD12C23060000100A01101 /* ConversationTitleView.xib */; };
 		FF3D4D50B3F5402E92E4F729 /* StickerStorePreviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 059103962B154B85BE80C13B /* StickerStorePreviewCell.xib */; };
+		B252DE69BAED44BFB8A93D22 /* StorageUsageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8830EEC5C15D4DA08B67CA36 /* StorageUsageView.xib */; };
+		2ADE527688A1483ABE097B05 /* StorageUsageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 579E27F6EB334DF7A67CF257 /* StorageUsageCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -3947,7 +3949,7 @@
 		DF8EF6BB2034737F00E99CE8 /* payment_success.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = payment_success.caf; sourceTree = "<group>"; };
 		DF9E66E4205B9AF300F1A0B9 /* HiddenTokensViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenTokensViewController.swift; sourceTree = "<group>"; };
 		DFA063D122B0D0E70031E151 /* PrivacySettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySettingViewController.swift; sourceTree = "<group>"; };
-		DFA5B58D1FADC88D00549728 /* Group.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Group.storyboard; sourceTree = "<group>"; };
+		DFA5B58D1FADC88D00549728 /* InviteLinkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InviteLinkView.xib; sourceTree = "<group>"; };
 		DFA5B5901FB04C9C00549728 /* Wallet.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Wallet.storyboard; sourceTree = "<group>"; };
 		DFAA0DEE237823DA003E26B2 /* DeviceCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceCheck.framework; path = System/Library/Frameworks/DeviceCheck.framework; sourceTree = SDKROOT; };
 		DFAA4B36200F627500C696D3 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
@@ -4059,6 +4061,8 @@
 		F2B71E0D34AC482993A87502 /* SearchNavigationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationAnimator.swift; sourceTree = "<group>"; };
 		F812895A30D780F10012C402 /* CheckTIPCountersJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckTIPCountersJob.swift; sourceTree = "<group>"; };
 		FBCD12C23060000100A01101 /* ConversationTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationTitleView.xib; sourceTree = "<group>"; };
+		8830EEC5C15D4DA08B67CA36 /* StorageUsageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StorageUsageView.xib; sourceTree = "<group>"; };
+		579E27F6EB334DF7A67CF257 /* StorageUsageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StorageUsageCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -6265,7 +6269,6 @@
 				DF3C47441FA071CD00A07C71 /* Home.storyboard */,
 				DFE356B41FB4990100E0E3A8 /* Setting.storyboard */,
 				DFD294481FA7145F00FADAAD /* Contact.storyboard */,
-				DFA5B58D1FADC88D00549728 /* Group.storyboard */,
 				DFA5B5901FB04C9C00549728 /* Wallet.storyboard */,
 			);
 			path = Storyboard;
@@ -6543,6 +6546,7 @@
 				ABCB87DE23F1A56B00780E60 /* PermissionsTableViewCell.xib */,
 				7BDBDE6D22363E82006220DF /* SettingCell.swift */,
 				7BDBDE6F22365017006220DF /* SettingCell.xib */,
+				579E27F6EB334DF7A67CF257 /* StorageUsageCell.xib */,
 				7BC03AB12424EA9B00931D21 /* StorageUsageCell.swift */,
 				7C8CC5A6280D40E900F7CBDF /* PreviewWallpaperCell.swift */,
 				940C073A2E85061900552130 /* MembershipInviteCell.xib */,
@@ -6675,6 +6679,7 @@
 				940389CC2E1D546900A7782D /* NewGroupView.xib */,
 				7BEFDC181FB05B3E00F66885 /* NewGroupViewController.swift */,
 				7B81BF2422893F5D00266A77 /* GroupParticipantsViewController.swift */,
+				DFA5B58D1FADC88D00549728 /* InviteLinkView.xib */,
 				7B78B2451FF2170400371632 /* InviteLinkViewController.swift */,
 				7B3D46B52088BCA300A0C19C /* GroupAnnouncementViewController.swift */,
 			);
@@ -6982,6 +6987,7 @@
 				948AB7542DE5C0C2005E76A0 /* MembershipOrderViewController.swift */,
 				940C07792E850EFA00552130 /* ReferralIntroductionView.xib */,
 				940C07782E850EFA00552130 /* ReferralIntroductionViewController.swift */,
+				8830EEC5C15D4DA08B67CA36 /* StorageUsageView.xib */,
 				DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */,
 				7C1E797F29DAB701006A07A2 /* ChatsViewController.swift */,
 				9495E0AC2CEF684E00124CC7 /* LogoutHandler.swift */,
@@ -7680,7 +7686,7 @@
 				DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */,
 				DFF44175223A035000DDD5F8 /* Mixin-Keys.plist in Resources */,
 				940A3C122EB33AFA001A458F /* TradePriceInputCell.xib in Resources */,
-				DFA5B58E1FADC88D00549728 /* Group.storyboard in Resources */,
+				DFA5B58E1FADC88D00549728 /* InviteLinkView.xib in Resources */,
 				94B0B7472BECD4DE00346AF4 /* CollectibleCell.xib in Resources */,
 				9495E0812CEF5CCF00124CC7 /* LogoutValidationView.xib in Resources */,
 				94AA266D2EE18C2F0047E04B /* WalletIntroductionCell.xib in Resources */,
@@ -7736,6 +7742,8 @@
 				945A72882E59BE1F006A11E9 /* TIPQuizQuestionCell.xib in Resources */,
 				944C61082B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.xib in Resources */,
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
+				2ADE527688A1483ABE097B05 /* StorageUsageCell.xib in Resources */,
+				B252DE69BAED44BFB8A93D22 /* StorageUsageView.xib in Resources */,
 				9489247F2D572EA200D9BCCB /* TokenReceiverTrayView.xib in Resources */,
 				9459693A28B28FF8006F5421 /* TIPActionView.xib in Resources */,
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,

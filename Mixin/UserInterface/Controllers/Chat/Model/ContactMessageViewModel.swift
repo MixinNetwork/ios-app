@@ -12,7 +12,7 @@ class ContactMessageViewModel: CardMessageViewModel {
     let verifiedImage: UIImage?
     
     override init(message: MessageItem) {
-        verifiedImage = UserBadgeIcon.image(
+        verifiedImage = UserBadgeIcon.smallImage(
             membership: message.sharedUserMembership,
             isVerified: message.sharedUserIsVerified ?? false,
             identityNumber: message.sharedUserIdentityNumber

@@ -670,13 +670,7 @@ extension UserProfileViewController {
             subtitleLabel.identityNumber = nil
         }
         
-        let badge = user.badge
-        badgeImageView.image = switch badge {
-        case .membership, .verification, .none:
-            badge?.smallImage
-        case .bot:
-            R.image.badge_app_medium()
-        }
+        badgeImageView.image = user.badge?.mediumImage
         badgeImageView.isHidden = badgeImageView.image == nil
         if user.membership?.unexpiredPlan == nil {
             membershipButton?.removeFromSuperview()

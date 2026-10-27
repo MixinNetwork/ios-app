@@ -32,7 +32,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
     func render(item: ConversationItem) {
         if item.category == ConversationCategory.CONTACT.rawValue {
             avatarView.setImage(with: item.ownerAvatarUrl, userId: item.ownerId, name: item.ownerFullName)
-            let badgeImage = UserBadgeIcon.image(
+            let badgeImage = UserBadgeIcon.smallImage(
                 membership: item.ownerMembership,
                 isVerified: item.ownerIsVerified,
                 isBot: item.ownerIsBot

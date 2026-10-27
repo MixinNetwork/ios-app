@@ -26,7 +26,7 @@ final class RecipientCell: UITableViewCell {
             avatarImageView.setImage(with: conversation.avatarUrl,
                                      userId: conversation.userId,
                                      name: conversation.name)
-            badgeImageView.image = UserBadgeIcon.image(
+            badgeImageView.image = UserBadgeIcon.smallImage(
                 membership: conversation.membership,
                 isVerified: conversation.isVerified,
                 isBot: conversation.isBot

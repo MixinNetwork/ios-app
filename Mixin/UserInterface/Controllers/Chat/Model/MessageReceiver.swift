@@ -20,7 +20,7 @@ class MessageReceiver {
                 return nil
             }
             name = user.fullName
-            badgeImage = user.badgeImage
+            badgeImage = user.badge?.smallImage
             item = .user(user)
         } else if conversation.category == ConversationCategory.GROUP.rawValue {
             name = conversation.name
@@ -34,7 +34,7 @@ class MessageReceiver {
     
     init(user: UserItem) {
         name = user.fullName
-        badgeImage = user.badgeImage
+        badgeImage = user.badge?.smallImage
         item = .user(user)
         conversationId = ConversationDAO.shared.makeConversationId(userId: user.userId, ownerUserId: myUserId)
     }

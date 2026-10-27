@@ -2210,7 +2210,7 @@ extension ConversationViewController {
             subtitleLabel.alpha = 1
             titleLabel.text = user.fullName
             avatarImageView.setImage(with: user)
-            badgeImage = user.badgeImage
+            badgeImage = user.badge?.smallImage
         } else {
             subtitleLabel.text = nil
             subtitleLabel.alpha = 1

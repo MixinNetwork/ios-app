@@ -18,6 +18,7 @@
 		277FF7031F909A1200DBB2EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277FF7021F909A1200DBB2EB /* AppDelegate.swift */; };
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
+		2ADE527688A1483ABE097B05 /* StorageUsageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 579E27F6EB334DF7A67CF257 /* StorageUsageCell.xib */; };
 		3F371275E18B49AABEE569B9 /* StickerStoreBannerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25B7F9646D144D80AAE67D0D /* StickerStoreBannerView.xib */; };
 		4449DAD41B7A78A28750A5FF /* SDWebImageLottieCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 1F2D3ADA4D7F809BE0495B9D /* SDWebImageLottieCoder */; };
 		4AB7F2FE23869488D7B4D29F /* TIP in Frameworks */ = {isa = PBXBuildFile; productRef = 1E1E9C2B317A5B58128EB908 /* TIP */; };
@@ -1321,6 +1322,7 @@
 		94881FA82AD035C300CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA72AD035C300CA7A29 /* RswiftLibrary */; };
 		94881FAA2AD035CC00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA92AD035CC00CA7A29 /* RswiftLibrary */; };
 		94881FAC2AD035ED00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FAB2AD035ED00CA7A29 /* RswiftLibrary */; };
+		9488BAC8309029080039D1C2 /* UserBadgeIcon+MediumImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9488BAC7309029060039D1C2 /* UserBadgeIcon+MediumImage.swift */; };
 		948922A12D54FC5F00D9BCCB /* IBANAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948922A02D54FC5A00D9BCCB /* IBANAddress.swift */; };
 		948923512D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948923502D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift */; };
 		9489237D2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489237C2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift */; };
@@ -1818,6 +1820,7 @@
 		ABE865C223F260FE00C0167D /* PermissionsActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE865C023F260FE00C0167D /* PermissionsActionCell.swift */; };
 		B107FD9A1DBD0F62DEE16ACC /* SDWebImageLottieCoder in Frameworks */ = {isa = PBXBuildFile; productRef = F0A2554BEE2F20225F5FAFA8 /* SDWebImageLottieCoder */; };
 		B1CAB233EAB04D1CBA398642 /* AdvertisementBannerActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC5DC4D300046CDA234FBEC /* AdvertisementBannerActionHandler.swift */; };
+		B252DE69BAED44BFB8A93D22 /* StorageUsageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8830EEC5C15D4DA08B67CA36 /* StorageUsageView.xib */; };
 		B2835F729F8108B867D97B5C /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3C0B5B11F62194E6A43E28E5 /* FirebaseCrashlytics */; };
 		B8B6487C0AE89133B0181A12 /* libwebp in Frameworks */ = {isa = PBXBuildFile; productRef = 6C32415C65564CDC7EFDE84A /* libwebp */; };
 		C0DE00101500000000000002 /* ReducePerpsPositionMarginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00101500000000000001 /* ReducePerpsPositionMarginViewController.swift */; };
@@ -2002,8 +2005,6 @@
 		F946BC09D1952262A0B41050 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = BDD925B03BDD82943615F6A4 /* FirebaseCore */; };
 		FBCD12C13060000100A01101 /* ConversationTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBCD12C23060000100A01101 /* ConversationTitleView.xib */; };
 		FF3D4D50B3F5402E92E4F729 /* StickerStorePreviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 059103962B154B85BE80C13B /* StickerStorePreviewCell.xib */; };
-		B252DE69BAED44BFB8A93D22 /* StorageUsageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8830EEC5C15D4DA08B67CA36 /* StorageUsageView.xib */; };
-		2ADE527688A1483ABE097B05 /* StorageUsageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 579E27F6EB334DF7A67CF257 /* StorageUsageCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -2082,6 +2083,7 @@
 		52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionViewController.swift; sourceTree = "<group>"; };
 		52DE7B4E2BEB7C940060A364 /* TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionViewController.swift; sourceTree = "<group>"; };
 		52E0A0022E59EE38006A11E9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		579E27F6EB334DF7A67CF257 /* StorageUsageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StorageUsageCell.xib; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
 		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
@@ -2691,6 +2693,7 @@
 		7CFD7472288FC88A00D7A0EE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		7CFD7473288FC88A00D7A0EE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		842347ED2695BA6400009A39 /* InitializeBotJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeBotJob.swift; sourceTree = "<group>"; };
+		8830EEC5C15D4DA08B67CA36 /* StorageUsageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StorageUsageView.xib; sourceTree = "<group>"; };
 		94001E8E3045AE3E0098128B /* OpenPerpetualPositionFailedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenPerpetualPositionFailedViewController.swift; sourceTree = "<group>"; };
 		94001FA830472B9B0098128B /* UnlockableCommonWalletChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockableCommonWalletChain.swift; sourceTree = "<group>"; };
 		9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferTokenSelectorViewController.swift; sourceTree = "<group>"; };
@@ -3381,6 +3384,7 @@
 		948723422C9E0D8D0034BCB0 /* MarketAlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertViewModel.swift; sourceTree = "<group>"; };
 		9487234A2C9EE7150034BCB0 /* TokenAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenAction.swift; sourceTree = "<group>"; };
 		948762502E87C036002F162B /* MnemonicTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicTextField.swift; sourceTree = "<group>"; };
+		9488BAC7309029060039D1C2 /* UserBadgeIcon+MediumImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserBadgeIcon+MediumImage.swift"; sourceTree = "<group>"; };
 		948922A02D54FC5A00D9BCCB /* IBANAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IBANAddress.swift; sourceTree = "<group>"; };
 		948923502D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenSelectorViewController.swift; sourceTree = "<group>"; };
 		9489237C2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenReceiverViewController.swift; sourceTree = "<group>"; };
@@ -4061,8 +4065,6 @@
 		F2B71E0D34AC482993A87502 /* SearchNavigationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationAnimator.swift; sourceTree = "<group>"; };
 		F812895A30D780F10012C402 /* CheckTIPCountersJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckTIPCountersJob.swift; sourceTree = "<group>"; };
 		FBCD12C23060000100A01101 /* ConversationTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationTitleView.xib; sourceTree = "<group>"; };
-		8830EEC5C15D4DA08B67CA36 /* StorageUsageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StorageUsageView.xib; sourceTree = "<group>"; };
-		579E27F6EB334DF7A67CF257 /* StorageUsageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StorageUsageCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4567,6 +4569,7 @@
 				942F25BC274903550040E585 /* WebPImageDecoder.swift */,
 				941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */,
 				940B6C932C72501A0003FCDB /* UserBadgeIcon.swift */,
+				9488BAC7309029060039D1C2 /* UserBadgeIcon+MediumImage.swift */,
 				94F2FAC52DF03AE30013B820 /* UserBadgeIcon+LargeProsperityImage.swift */,
 				94DD693D2C90665700B3D089 /* MarketColor.swift */,
 			);
@@ -8409,6 +8412,7 @@
 				9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */,
 				7C2AC42928F2B384005F369A /* DepositSuspendedView.swift in Sources */,
 				948DFCEE2F192E4600200EFA /* Web3OutputsViewController.swift in Sources */,
+				9488BAC8309029080039D1C2 /* UserBadgeIcon+MediumImage.swift in Sources */,
 				7B082D1A242CACA000C5E163 /* MultipleSelectionActionView.swift in Sources */,
 				7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */,
 				7C4C03A128532575003DE0C0 /* AddContactViewController.swift in Sources */,

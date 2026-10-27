@@ -11,7 +11,7 @@ enum UserBadgeIcon {
     var smallImage: UIImage? {
         switch self {
         case .membership(let plan):
-            plan.badgeImage
+            plan.smallBadgeImage
         case .verification:
             R.image.ic_user_verified()
         case .bot:
@@ -39,7 +39,7 @@ enum UserBadgeIcon {
 
 extension UserBadgeIcon {
     
-    static let prosperityImage: SDAnimatedImage? = {
+    static let smallProsperityImage: SDAnimatedImage? = {
         let resource = R.file.user_membership_prosperityJson.url()!
         let data = try! Data(contentsOf: resource)
         let size = CGSize(width: 18, height: 18) * UIScreen.main.scale
@@ -51,20 +51,19 @@ extension UserBadgeIcon {
         return image
     }()
     
-    static func image(
+    static func smallImage(
         membership: User.Membership?,
         isVerified: Bool,
         isBot: Bool
     ) -> UIImage? {
-        let icon = UserBadgeIcon(
+        UserBadgeIcon(
             membership: membership,
             isVerified: isVerified,
             isBot: isBot
-        )
-        return icon?.smallImage
+        )?.smallImage
     }
     
-    static func image(
+    static func smallImage(
         membership: User.Membership?,
         isVerified: Bool,
         identityNumber: String?
@@ -74,10 +73,10 @@ extension UserBadgeIcon {
         } else {
             false
         }
-        return image(
+        return smallImage(
             membership: membership,
             isVerified: isVerified,
-            isBot: isBot
+            isBot: isBot,
         )
     }
     
@@ -85,31 +84,23 @@ extension UserBadgeIcon {
 
 extension User.Membership.Plan {
     
-    var badgeImage: UIImage? {
+    var smallBadgeImage: UIImage? {
         switch self {
         case .advance:
-            R.image.membership_advance()
+            R.image.membership_advance_small()
         case .elite:
-            R.image.membership_elite()
+            R.image.membership_elite_small()
         case .prosperity:
-            UserBadgeIcon.prosperityImage
+            UserBadgeIcon.smallProsperityImage
         }
-    }
-    
-}
-
-extension User.Membership {
-    
-    var badgeImage: UIImage? {
-        unexpiredPlan?.badgeImage
     }
     
 }
 
 extension User {
     
-    var badgeImage: UIImage? {
-        UserBadgeIcon.image(
+    var badge: UserBadgeIcon? {
+        UserBadgeIcon(
             membership: membership,
             isVerified: isVerified,
             isBot: isBot
@@ -128,10 +119,6 @@ extension UserItem {
         )
     }
     
-    var badgeImage: UIImage? {
-        badge?.smallImage
-    }
-    
 }
 
 extension CircleMember {
@@ -139,7 +126,7 @@ extension CircleMember {
     var badgeImage: UIImage? {
         switch ConversationCategory(rawValue: category) {
         case .CONTACT:
-            UserBadgeIcon.image(
+            UserBadgeIcon.smallImage(
                 membership: membership,
                 isVerified: isVerified ?? false,
                 isBot: isBot

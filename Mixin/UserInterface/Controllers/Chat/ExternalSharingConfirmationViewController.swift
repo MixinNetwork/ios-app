@@ -223,7 +223,7 @@ extension ExternalSharingConfirmationViewController {
                 avatarImageView?.setImage(with: user)
                 contentView.fullnameLabel.text = user.fullName
                 contentView.idLabel.text = user.identityNumber
-                if let badge = user.badgeImage {
+                if let badge = user.badge?.smallImage {
                     contentView.badgeImageView.image = badge
                     contentView.badgeImageView.isHidden = false
                 } else {

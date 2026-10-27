@@ -115,7 +115,7 @@ class PeerInfoView: UIView, XibDesignable {
     func render(user: UserItem) {
         avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
         titleLabel.text = user.fullName
-        badgeImageView.image = user.badgeImage
+        badgeImageView.image = user.badge?.smallImage
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
         prefixIconImageView.isHidden = true
@@ -126,7 +126,7 @@ class PeerInfoView: UIView, XibDesignable {
     func render(user: User, description: Description) {
         avatarImageView.setImage(with: user.avatarUrl ?? "", userId: user.userId, name: user.fullName ?? "")
         titleLabel.text = user.fullName
-        badgeImageView.image = user.badgeImage
+        badgeImageView.image = user.badge?.smallImage
         badgeImageView.isHidden = badgeImageView.image == nil
         superscriptLabel.text = nil
         prefixIconImageView.isHidden = true

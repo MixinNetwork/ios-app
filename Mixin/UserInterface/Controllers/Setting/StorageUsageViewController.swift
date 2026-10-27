@@ -79,7 +79,7 @@ extension StorageUsageViewController: UITableViewDataSource {
             cell.avatarImageView.setImage(with: conversation.ownerAvatarUrl ?? "",
                                           userId: conversation.ownerId ?? "",
                                           name: conversation.ownerFullName ?? "")
-            cell.badgeImageView.image = UserBadgeIcon.image(
+            cell.badgeImageView.image = UserBadgeIcon.smallImage(
                 membership: conversation.ownerMembership,
                 isVerified: conversation.ownerIsVerified ?? false,
                 identityNumber: conversation.ownerIdentityNumber

@@ -21,7 +21,7 @@ extension UserBadgeIcon {
         case .membership(let plan):
             plan.mediumBadgeImage
         case .verification:
-            R.image.ic_user_verified()
+            R.image.badge_user_verified_medium()
         case .bot:
             R.image.badge_app_medium()
         }

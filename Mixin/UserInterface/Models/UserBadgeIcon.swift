@@ -13,7 +13,7 @@ enum UserBadgeIcon {
         case .membership(let plan):
             plan.smallBadgeImage
         case .verification:
-            R.image.ic_user_verified()
+            R.image.badge_user_verified_small()
         case .bot:
             R.image.badge_app_small()
         }

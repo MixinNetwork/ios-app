@@ -6,11 +6,6 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     let videoView = GalleryVideoView()
     
-    private let builtInPipVideoInsets = UIEdgeInsets(top: 6, left: 10, bottom: 6, right: 10)
-    private let builtInPipCornerRadius: CGFloat = 6
-    
-    private(set) var panningController: ViewPanningController?
-    
     private var tapRecognizer: UITapGestureRecognizer!
     private var itemStatusObserver: NSKeyValueObservation?
     private var timeControlObserver: NSKeyValueObservation?
@@ -21,15 +16,8 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     private var rateBeforeSeeking: Float?
     private var playerDidReachEnd = false
     private var playerDidFailedToPlay = false
-    private var videoRatio: CGFloat = 1
-    private var avPipController: AVPictureInPictureController?
-    private var isBuiltInPipActive = false {
-        didSet {
-            panningController?.isEnabled = isBuiltInPipActive
-        }
-    }
-    
-    private var avPipPossibilityObservation: NSKeyValueObservation?
+    private var avPiPController: AVPictureInPictureController?
+    private var avPiPPossibilityObservation: NSKeyValueObservation?
     
     var hidePlayControlAfterPlaybackBegins = false
     
@@ -47,8 +35,8 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         return videoView.controlView
     }
     
-    var isAvPipActive: Bool {
-        avPipController?.isPictureInPictureActive ?? false
+    var isPictureInPictureActive: Bool {
+        avPiPController?.isPictureInPictureActive ?? false
     }
     
     override var image: UIImage? {
@@ -117,14 +105,6 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         player.currentItem?.duration ?? .invalid
     }
     
-    private var pipModeLayoutInsets: UIEdgeInsets {
-        let insets = parent?.view.safeAreaInsets ?? .zero
-        return UIEdgeInsets(top: max(20, insets.top),
-                            left: insets.left,
-                            bottom: max(5, insets.bottom),
-                            right: insets.right)
-    }
-    
     deinit {
         removeAllObservers()
     }
@@ -132,13 +112,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if AVPictureInPictureController.isPictureInPictureSupported() {
-            controlView.pipButton.addTarget(self, action: #selector(avPipAction), for: .touchUpInside)
-            controlView.pipButton.isHidden = true
-        } else {
-            controlView.pipButton.addTarget(self, action: #selector(builtInPipAction), for: .touchUpInside)
-            controlView.pipButton.isHidden = false
-        }
+        controlView.pipButton.addTarget(self, action: #selector(togglePiP), for: .touchUpInside)
         controlView.closeButton.addTarget(self, action: #selector(closeAction), for: .touchUpInside)
         controlView.reloadButton.addTarget(self, action: #selector(reloadAction(_:)), for: .touchUpInside)
         controlView.playButton.addTarget(self, action: #selector(playAction(_:)), for: .touchUpInside)
@@ -150,10 +124,6 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         for event: UIControl.Event in [.touchCancel, .touchUpInside, .touchUpOutside] {
             slider.addTarget(self, action: #selector(endScrubbingAction(_:)), for: event)
         }
-        
-        let panningController = ViewPanningController(view: view)
-        panningController.isEnabled = isBuiltInPipActive
-        self.panningController = panningController
         
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction(_:)))
         videoView.addGestureRecognizer(tapRecognizer)
@@ -170,9 +140,6 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        videoRatio = 1
-        isBuiltInPipActive = false
-        videoView.isPipMode = false
         controlView.style.remove(.loading)
         controlView.playControlStyle = .play
         updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
@@ -220,11 +187,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         guard let item = item else {
             return
         }
-        videoRatio = standardizedRatio(of: item.size)
         videoView.coverSize = item.size
-        videoView.videoRatio = videoRatio
+        videoView.videoRatio = standardizedRatio(of: item.size)
         videoView.setNeedsLayout()
-        layoutFullsized()
         if item.category == .video {
             controlView.style.remove(.liveStream)
         } else if item.category == .live {
@@ -234,23 +199,29 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             loadAssetIfPlayable(url: url, playAfterLoaded: false)
         }
         
-        if AVPictureInPictureController.isPictureInPictureSupported(), let controller = avPipController ?? AVPictureInPictureController(playerLayer: videoView.playerView.layer) {
+        if AVPictureInPictureController.isPictureInPictureSupported(),
+           let controller = avPiPController ?? AVPictureInPictureController(playerLayer: videoView.playerView.layer)
+        {
+            avPiPController = controller
             controller.delegate = self
             // [_AVPictureInPictureController setCanStartPictureInPictureAutomaticallyFromInline:] not working on macOS 11.6 (disguised as iOS 14.7)
             if !ProcessInfo.processInfo.isiOSAppOnMac {
                 // Seems not working here. Don't know the reason
                 controller.canStartPictureInPictureAutomaticallyFromInline = item.category == .live
             }
-            if avPipPossibilityObservation == nil {
-                avPipPossibilityObservation = controller.observe(\.isPictureInPicturePossible, options: [.initial, .new]) { [weak self] (_, _) in
+            if avPiPPossibilityObservation == nil {
+                avPiPPossibilityObservation = controller.observe(
+                    \.isPictureInPicturePossible,
+                     options: [.initial, .new]
+                ) { [weak self] (_, _) in
                     guard let self = self else {
                         return
                     }
                     self.updatePipButtonVisibility(viewSize: self.view.bounds.size)
                 }
             }
-            avPipController = controller
         }
+        updatePipButtonVisibility(viewSize: view.bounds.size)
     }
     
     override func saveToLibrary() {
@@ -276,93 +247,23 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     func stopPipIfActive() {
-        if isBuiltInPipActive {
-            togglePipMode(completion: nil)
-        } else if let controller = avPipController, controller.isPictureInPictureActive {
+        if let controller = avPiPController, controller.isPictureInPictureActive {
             controller.stopPictureInPicture()
         }
     }
     
-    func togglePipMode(completion: (() -> Void)?) {
-        executeInPortraitOrientation {
-            self.isBuiltInPipActive.toggle()
-            if self.isBuiltInPipActive {
-                self.galleryViewController?.dismiss(pipController: self)
-                if let container = UIApplication.shared.homeContainerViewController {
-                    container.pipController = self
-                    container.overlaysCoordinator.register(overlay: self.view)
-                }
-            } else {
-                self.galleryViewController?.show(itemViewController: self)
-                if let container = UIApplication.shared.homeContainerViewController {
-                    container.pipController = nil
-                    container.overlaysCoordinator.unregister(overlay: self.view)
-                }
-            }
-            if self.player.timeControlStatus == .playing {
-                self.updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: false)
-            }
-            self.animate(animations: {
-                self.videoView.isPipMode = self.isBuiltInPipActive
-                if self.isBuiltInPipActive {
-                    self.layoutPip()
-                } else {
-                    self.layoutFullsized()
-                }
-            }, completion: completion)
-        }
-    }
-    
-    func layoutPip() {
-        controlView.pipButton.setImage(R.image.ic_maximize(), for: .normal)
-        guard let parentView = parent?.view else {
-            return
-        }
-        let size: CGSize
-        if videoRatio > 1 {
-            let width = parentView.bounds.width * (2 / 3)
-            size = CGSize(width: width, height: width / videoRatio)
-        } else {
-            let height = parentView.bounds.height / 3
-            let width = height * videoRatio
-            if width <= parentView.bounds.width / 2 {
-                size = CGSize(width: width, height: height)
-            } else {
-                let width = parentView.bounds.width / 2
-                let height = width / videoRatio
-                size = CGSize(width: width, height: height)
-            }
-        }
-        view.frame.size = CGSize(width: size.width + builtInPipVideoInsets.horizontal,
-                                 height: size.height + builtInPipVideoInsets.vertical)
-        videoView.frame = view.bounds.inset(by: builtInPipVideoInsets)
-        videoView.layer.cornerRadius = builtInPipCornerRadius
-        
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowRadius = 4
-        updateViewShadowOpacity(to: 0.14)
-        
-        panningController?.placeViewNextToLastOverlayOrTopRight()
-    }
-    
-    func layoutFullsized() {
-        controlView.pipButton.setImage(R.image.ic_minimize(), for: .normal)
-        guard let parentView = parent?.view else {
-            return
-        }
-        view.frame = parentView.bounds
-        videoView.frame = view.bounds
-        videoView.layer.cornerRadius = 0
-        updateViewShadowOpacity(to: 0)
-    }
-    
-    func stopAvPipAndHandoverDelegate(to delegate: AVPictureInPictureControllerDelegate) {
-        if let controller = self.avPipController, controller.isPictureInPictureActive {
+    func stopPiPAndHandoverDelegate(to delegate: AVPictureInPictureControllerDelegate) {
+        if let controller = self.avPiPController, controller.isPictureInPictureActive {
             controller.delegate = delegate
             controller.stopPictureInPicture()
         }
-        restoreToFullsized()
+        willMove(toParent: nil)
+        view.removeFromSuperview()
+        removeFromParent()
+        if let container = UIApplication.shared.homeContainerViewController, container.pipController == self {
+            container.pipController = nil
+        }
+        view.alpha = 1
     }
     
 }
@@ -422,7 +323,6 @@ extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
     }
     
     func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
-        controlView.pipButton.setImage(R.image.ic_minimize(), for: .normal)
         galleryViewController?.show(itemViewController: self)
         animate {
             self.view.alpha = 1
@@ -481,29 +381,21 @@ extension GalleryVideoItemViewController {
     
     @objc func closeAction() {
         executeInPortraitOrientation {
-            if self.isBuiltInPipActive {
-                self.isBuiltInPipActive = false
-                self.restoreToFullsized()
-                self.player.replaceCurrentItem(with: nil)
-            } else if !self.isAvPipActive {
+            if !self.isPictureInPictureActive {
                 self.galleryViewController?.dismiss(transitionViewInitialOffsetY: 0)
                 self.player.replaceCurrentItem(with: nil)
             }
         }
     }
     
-    @objc private func builtInPipAction() {
-        togglePipMode(completion: nil)
-    }
-    
-    @objc private func avPipAction() {
-        guard let controller = avPipController else {
+    @objc private func togglePiP() {
+        guard let controller = avPiPController else {
             return
         }
         executeInPortraitOrientation {
             if controller.isPictureInPictureActive {
                 controller.stopPictureInPicture()
-            } else {
+            } else if controller.isPictureInPicturePossible {
                 controller.startPictureInPicture()
             }
         }
@@ -608,15 +500,6 @@ extension GalleryVideoItemViewController {
 }
 
 extension GalleryVideoItemViewController {
-    
-    private func updateViewShadowOpacity(to opacity: Float) {
-        view.layer.shadowOpacity = opacity
-        let shadowOpacityAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.shadowOpacity))
-        shadowOpacityAnimation.fromValue = view.layer.shadowOpacity
-        shadowOpacityAnimation.toValue = opacity
-        shadowOpacityAnimation.duration = animationDuration
-        view.layer.add(shadowOpacityAnimation, forKey: shadowOpacityAnimation.keyPath)
-    }
     
     private func executeInPortraitOrientation(_ work: @escaping () -> Void) {
         if let window = view.window,
@@ -748,15 +631,8 @@ extension GalleryVideoItemViewController {
     }
     
     private func updateVideoViewSize(with item: AVPlayerItem) {
-        let videoRatio = standardizedRatio(of: item.presentationSize)
-        self.videoRatio = videoRatio
-        videoView.videoRatio = videoRatio
+        videoView.videoRatio = standardizedRatio(of: item.presentationSize)
         videoView.setNeedsLayout()
-        if isBuiltInPipActive {
-            layoutPip()
-        } else {
-            layoutFullsized()
-        }
     }
     
     private func updateSliderPosition(time: CMTime) {
@@ -773,21 +649,6 @@ extension GalleryVideoItemViewController {
         let minSliderValue = slider.minimumValue
         let sliderValue = Float(Double(maxSliderValue - minSliderValue) * time / duration + Double(minSliderValue))
         slider.setValue(sliderValue, animated: false)
-    }
-    
-    private func updateProgressView(time: CMTime) {
-        guard controlView.style.contains(.pip) else {
-            return
-        }
-        guard playerItemDuration.isValid else {
-            return
-        }
-        let duration = CMTimeGetSeconds(playerItemDuration)
-        guard duration.isFinite else {
-            return
-        }
-        let time = CMTimeGetSeconds(time)
-        controlView.progressView.progress = Float(time/duration)
     }
     
     private func updateTimeLabel(time: CMTime) {
@@ -813,7 +674,6 @@ extension GalleryVideoItemViewController {
                 return
             }
             weakSelf.updateSliderPosition(time: time)
-            weakSelf.updateProgressView(time: time)
         })
         
         let timeLabelInterval = CMTime(seconds: 1, preferredTimescale: timescale)
@@ -860,24 +720,11 @@ extension GalleryVideoItemViewController {
     
     private func updatePipButtonVisibility(viewSize: CGSize) {
         let isDevicePortrait = viewSize.width < viewSize.height
-        var isPipAvailable = isDevicePortrait
-        if AVPictureInPictureController.isPictureInPictureSupported() {
-            let isAvPipPossible = avPipController?.isPictureInPicturePossible ?? false
-            isPipAvailable = isPipAvailable && isAvPipPossible
-        }
+        let isPipAvailable = isDevicePortrait
+            && AVPictureInPictureController.isPictureInPictureSupported()
+            && (avPiPController?.isPictureInPicturePossible ?? false)
         controlView.pipButton.isHidden = !isPipAvailable
-    }
-    
-    private func restoreToFullsized() {
-        layoutFullsized()
-        willMove(toParent: nil)
-        view.removeFromSuperview()
-        removeFromParent()
-        if let container = UIApplication.shared.homeContainerViewController, container.pipController == self {
-            container.pipController = nil
-            container.overlaysCoordinator.unregister(overlay: self.view)
-        }
-        view.alpha = 1
+        controlView.pipButton.isEnabled = isPipAvailable
     }
     
 }

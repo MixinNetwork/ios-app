@@ -172,13 +172,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                         }
                     }
                     if let container = UIApplication.shared.homeContainerViewController, container.galleryIsOnTopMost {
-                        let currentItemViewController = container.galleryViewController.currentItemViewController
-                        if let vc = currentItemViewController as? GalleryVideoItemViewController {
-                            vc.togglePipMode(completion: {
-                                DispatchQueue.main.async(execute: pushConversationController)
-                            })
-                        } else {
-                            container.galleryViewController.dismiss(transitionViewInitialOffsetY: 0)
+                        container.galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
                             pushConversationController()
                         }
                     } else {

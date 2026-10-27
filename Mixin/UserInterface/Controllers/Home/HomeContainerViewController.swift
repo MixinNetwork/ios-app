@@ -173,10 +173,6 @@ final class HomeContainerViewController: UIViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        if let controller = pipController {
-            // TODO: It's hard to arrange overlays in landscape mode, close it as workaround currently
-            controller.closeAction()
-        }
         let overlays = overlaysCoordinator.visibleOverlays
         overlays.forEach { $0.alpha = 0 }
         coordinator.animate(alongsideTransition: nil) { (context) in
@@ -217,7 +213,7 @@ final class HomeContainerViewController: UIViewController {
         }
         if scene.interfaceOrientation.isLandscape,
            let controller = pipController,
-           controller.isAvPipActive
+           controller.isPictureInPictureActive
         {
             if #available(iOS 16.0, *) {
                 scene.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
@@ -247,12 +243,7 @@ extension HomeContainerViewController: GalleryViewControllerDelegate {
         viewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         viewController.view.frame = view.bounds
         addChild(viewController)
-        if let pipController = pipController {
-            view.bringSubviewToFront(pipController.view)
-            view.insertSubview(viewController.view, belowSubview: pipController.view)
-        } else {
-            view.addSubview(viewController.view)
-        }
+        view.addSubview(viewController.view)
         viewController.didMove(toParent: self)
         isShowingGallery = true
         setNeedsStatusBarAppearanceUpdate()

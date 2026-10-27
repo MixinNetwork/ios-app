@@ -39,7 +39,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     
     private var transitionView: GalleryTransitionView?
     private var longPressRecognizer: UILongPressGestureRecognizer!
-    private var itemToShowAfterAvPipStops: (GalleryItem, GalleryTransitionSource)?
+    private var itemToShowAfterPiPStops: (GalleryItem, GalleryTransitionSource)?
     
     private(set) var panRecognizer: UIPanGestureRecognizer!
     
@@ -122,7 +122,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     }
     
     func show(items: [GalleryItem], index: Int, from source: GalleryTransitionSource) {
-        itemToShowAfterAvPipStops = nil
+        itemToShowAfterPiPStops = nil
         modelController.direction = source.direction
         let item = items[index]
         if let controller = UIApplication.shared.homeContainerViewController?.pipController {
@@ -130,12 +130,10 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                 controller.stopPipIfActive()
                 return
             } else if item.category == .video || item.category == .live {
-                if controller.isAvPipActive {
-                    itemToShowAfterAvPipStops = (item, source)
-                    controller.stopAvPipAndHandoverDelegate(to: self)
+                if controller.isPictureInPictureActive {
+                    itemToShowAfterPiPStops = (item, source)
+                    controller.stopPiPAndHandoverDelegate(to: self)
                     return
-                } else {
-                    controller.closeAction()
                 }
             }
         }
@@ -431,7 +429,7 @@ extension GalleryViewController: GalleryItemModelControllerDelegate {
 extension GalleryViewController: AVPictureInPictureControllerDelegate {
     
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        guard let item = itemToShowAfterAvPipStops else {
+        guard let item = itemToShowAfterPiPStops else {
             return
         }
         show(item: item.0, from: item.1)

@@ -8,10 +8,6 @@ class StaticMessagesViewController: UIViewController {
     @IBOutlet weak var wallpaperImageView: WallpaperImageView!
     @IBOutlet weak var tableView: ConversationTableView!
     
-    @IBOutlet weak var contentViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var showContentConstraint: NSLayoutConstraint!
-    @IBOutlet weak var hideContentConstraint: NSLayoutConstraint!
-    
     let conversationId: String
     let queue = DispatchQueue(label: "one.mixin.messenger.StaticMessagesViewController")
     let factory = ViewModelFactory()
@@ -41,8 +37,6 @@ class StaticMessagesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black.withAlphaComponent(0)
-        contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         wallpaperImageView.wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
         audioManager.delegate = self
         
@@ -70,16 +64,20 @@ class StaticMessagesViewController: UIViewController {
                            object: nil)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if didPlayAudioMessage {
+            audioManager.stop()
+            didPlayAudioMessage = false
+        }
+    }
+    
     @IBAction func dismissAction(_ sender: Any) {
-        dismissAsChild(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     func attachmentURL(withFilename filename: String) -> URL? {
         return nil
-    }
-    
-    func viewDidPresentAsChild() {
-        
     }
     
     func contextMenuActions(for viewModel: MessageViewModel) -> [UIAction]? {
@@ -137,39 +135,16 @@ class StaticMessagesViewController: UIViewController {
         })
     }
     
-    func dismissAsChild(animated: Bool, completion: (() -> Void)?) {
-        if didPlayAudioMessage {
-            audioManager.stop()
+    func dismissForInteraction(completion: @escaping (UIViewController) -> Void) {
+        guard var presenter = presentingViewController, !isBeingDismissed else {
+            return
         }
-        showContentConstraint.priority = .defaultLow
-        hideContentConstraint.priority = .defaultHigh
-        UIView.animate(withDuration: animated ? 0.5 : 0, delay: 0, options: .overdampedCurve) {
-            self.view.layoutIfNeeded()
-            self.view.backgroundColor = .black.withAlphaComponent(0)
-        } completion: { _ in
-            self.willMove(toParent: nil)
-            self.view.removeFromSuperview()
-            self.removeFromParent()
-            completion?()
+        // Leave the entire preview stack when navigating out of a nested transcript.
+        while presenter is StaticMessagesViewController, let next = presenter.presentingViewController {
+            presenter = next
         }
-    }
-    
-    func presentAsChild(of parent: UIViewController) {
-        parent.view.window?.endEditing(true)
-        loadViewIfNeeded()
-        view.frame = parent.view.bounds
-        view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        contentViewHeightConstraint.constant = parent.view.bounds.height - parent.view.safeAreaInsets.top
-        parent.addChild(self)
-        parent.view.addSubview(view)
-        didMove(toParent: parent)
-        UIView.performWithoutAnimation(view.layoutIfNeeded)
-        showContentConstraint.priority = .defaultHigh
-        hideContentConstraint.priority = .defaultLow
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
-            self.view.layoutIfNeeded()
-            self.view.backgroundColor = .black.withAlphaComponent(0.3)
-            self.viewDidPresentAsChild()
+        presenter.dismiss(animated: true) {
+            completion(presenter)
         }
     }
     
@@ -286,7 +261,7 @@ extension StaticMessagesViewController {
                     items.append(contentsOf: new)
                 }
                 if let index = items.firstIndex(where: { $0.messageId == message.messageId }) {
-                    galleryViewController.delegate = self
+                    galleryViewController.source = self
                     galleryViewController.conversationId = nil
                     galleryViewController.show(items: items, index: index, from: cell)
                 }
@@ -319,18 +294,26 @@ extension StaticMessagesViewController {
                     }
                     let user = UserItem.createUser(from: account)
                     let vc = UserProfileViewController(user: user)
-                    present(vc, animated: true, completion: nil)
+                    dismissForInteraction { presenter in
+                        presenter.present(vc, animated: true, completion: nil)
+                    }
                 } else if let user = UserDAO.shared.getUser(userId: shareUserId) {
                     let vc = UserProfileViewController(user: user)
-                    present(vc, animated: true, completion: nil)
+                    dismissForInteraction { presenter in
+                        presenter.present(vc, animated: true, completion: nil)
+                    }
                 }
             } else if message.category.hasSuffix("_POST") {
                 let message = Message.createMessage(message: message)
                 let post = PostWebViewController(message: message)
-                navigationController?.pushViewController(post, animated: true)
+                dismissForInteraction { _ in
+                    UIApplication.shared.homeNavigationController?.pushViewController(post, animated: true)
+                }
             } else if message.category.hasSuffix("_LOCATION"), let location = message.location {
                 let vc = LocationPreviewViewController(location: location)
-                navigationController?.pushViewController(vc, animated: true)
+                dismissForInteraction { _ in
+                    UIApplication.shared.homeNavigationController?.pushViewController(vc, animated: true)
+                }
             } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
                 guard let appId = appCard.appID, !appId.isEmpty, case let .v0(content) = appCard else {
                     return
@@ -349,24 +332,26 @@ extension StaticMessagesViewController {
                         return
                     }
                     DispatchQueue.main.async {
-                        guard !UrlWindow.checkUrl(url: content.action) else {
-                            return
+                        self.dismissForInteraction { _ in
+                            guard !UrlWindow.checkUrl(url: content.action) else {
+                                return
+                            }
+                            guard let navigationController = UIApplication.shared.homeNavigationController else {
+                                return
+                            }
+                            let context = MixinWebContext(
+                                conversationID: "",
+                                app: app,
+                                isAppVerified: verified,
+                                url: content.action
+                            )
+                            navigationController.pushWebViewController(context: context)
                         }
-                        guard let navigationController = UIApplication.shared.homeNavigationController else {
-                            return
-                        }
-                        let context = MixinWebContext(
-                            conversationID: "",
-                            app: app,
-                            isAppVerified: verified,
-                            url: content.action
-                        )
-                        navigationController.pushWebViewController(context: context)
                     }
                 }
-            } else if message.category.hasSuffix("_TRANSCRIPT"), let parent = parent {
+            } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
-                vc.presentAsChild(of: parent)
+                present(vc, animated: true, completion: nil)
             } else if message.category.hasSuffix("_STICKER") {
                 let vc = StickerPreviewViewController(message: message)
                 vc.presentAsChild(of: self)
@@ -533,7 +518,9 @@ extension StaticMessagesViewController: DetailInfoMessageCellDelegate {
             return
         }
         let vc = UserProfileViewController(user: user)
-        present(vc, animated: true, completion: nil)
+        dismissForInteraction { presenter in
+            presenter.present(vc, animated: true, completion: nil)
+        }
     }
     
 }
@@ -542,9 +529,6 @@ extension StaticMessagesViewController: DetailInfoMessageCellDelegate {
 extension StaticMessagesViewController: CoreTextLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
-        guard !openUrlOutsideApplication(url) else {
-            return
-        }
         open(url: url)
     }
     
@@ -705,15 +689,17 @@ extension StaticMessagesViewController {
     }
     
     private func open(url: URL) {
-        guard !UrlWindow.checkUrl(url: url) else {
-            return
+        dismissForInteraction { _ in
+            guard !self.openUrlOutsideApplication(url), !UrlWindow.checkUrl(url: url) else {
+                return
+            }
+            guard let navigationController = UIApplication.shared.homeNavigationController else {
+                return
+            }
+            navigationController.pushWebViewController(
+                context: .init(conversationID: "", initialURL: url)
+            )
         }
-        guard let navigationController = UIApplication.shared.homeNavigationController else {
-            return
-        }
-        navigationController.pushWebViewController(
-            context: .init(conversationID: "", initialURL: url)
-        )
     }
     
     private func contextMenuConfigurationForRow(at indexPath: IndexPath) -> UIContextMenuConfiguration? {

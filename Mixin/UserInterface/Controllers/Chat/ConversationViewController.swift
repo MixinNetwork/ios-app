@@ -883,7 +883,7 @@ final class ConversationViewController: UIViewController {
                    let galleryViewController = sceneDelegate.prepareGalleryWindow()?.galleryViewController,
                    !galleryViewController.isPresented
                 {
-                    galleryViewController.delegate = self
+                    galleryViewController.source = self
                     galleryViewController.conversationId = conversationId
                     galleryViewController.show(item: item, from: cell)
                 }
@@ -966,7 +966,8 @@ final class ConversationViewController: UIViewController {
                 navigationController?.pushViewController(vc, animated: true)
             } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
-                vc.presentAsChild(of: self)
+                view.window?.endEditing(true)
+                present(vc, animated: true, completion: nil)
             } else if message.category.hasSuffix("_STICKER") {
                 conversationInputViewController.dismiss()
                 let vc = StickerPreviewViewController(message: message)
@@ -2056,7 +2057,8 @@ extension ConversationViewController: PinMessageBannerViewDelegate {
     func pinMessageBannerViewDidTapPin(_ view: PinMessageBannerView) {
         let vc = PinMessagesPreviewViewController(conversationId: conversationId, isGroup: dataSource.category == .group)
         vc.delegate = self
-        vc.presentAsChild(of: self)
+        view.window?.endEditing(true)
+        present(vc, animated: true, completion: nil)
     }
     
     func pinMessageBannerViewDidTapClose(_ view: PinMessageBannerView) {
@@ -2077,7 +2079,7 @@ extension ConversationViewController: PinMessageBannerViewDelegate {
 extension ConversationViewController: PinMessagesPreviewViewControllerDelegate {
     
     func pinMessagesPreviewViewController(_ controller: PinMessagesPreviewViewController, needsShowMessage messageId: String) {
-        controller.dismissAsChild(animated: true) {
+        controller.dismiss(animated: true) {
             self.scrollToMessage(messageId: messageId)
         }
     }

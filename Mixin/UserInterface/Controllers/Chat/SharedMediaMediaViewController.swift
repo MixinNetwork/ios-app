@@ -132,7 +132,7 @@ extension SharedMediaMediaViewController: UICollectionViewDelegate {
            let galleryViewController = sceneDelegate.prepareGalleryWindow()?.galleryViewController,
            !galleryViewController.isPresented
         {
-            galleryViewController.delegate = self
+            galleryViewController.source = self
             galleryViewController.conversationId = conversationId
             galleryViewController.show(item: item, from: cell)
         }

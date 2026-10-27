@@ -13,9 +13,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="StaticMessagesViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="vwe-e6-MZT" id="6Ob-ax-5GD"/>
-                <outlet property="contentViewHeightConstraint" destination="obn-zl-gkP" id="gGc-7k-gL3"/>
-                <outlet property="hideContentConstraint" destination="gUe-Kr-D1A" id="OFU-45-kBy"/>
-                <outlet property="showContentConstraint" destination="zCi-Qp-voq" id="giN-zA-3dC"/>
                 <outlet property="tableView" destination="W7w-YI-rKM" id="0YP-CV-d6m"/>
                 <outlet property="titleLabel" destination="fFs-nx-Uwh" id="hz0-xM-2LQ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -28,7 +25,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vwe-e6-MZT">
-                    <rect key="frame" x="0.0" y="667" width="375" height="667"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="13U-hT-LBf">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
@@ -97,26 +94,18 @@
                         <constraint firstItem="13U-hT-LBf" firstAttribute="top" secondItem="vwe-e6-MZT" secondAttribute="top" id="c7j-lN-dX9"/>
                         <constraint firstItem="13U-hT-LBf" firstAttribute="leading" secondItem="vwe-e6-MZT" secondAttribute="leading" id="mi5-cg-Sa7"/>
                         <constraint firstAttribute="trailing" secondItem="XZe-3g-15b" secondAttribute="trailing" id="oA3-12-iiB"/>
-                        <constraint firstAttribute="height" constant="667" id="obn-zl-gkP"/>
                         <constraint firstAttribute="bottom" secondItem="XZe-3g-15b" secondAttribute="bottom" id="zgT-h4-6JZ"/>
                     </constraints>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                            <integer key="value" value="13"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" name="background"/>
             <gestureRecognizers/>
             <constraints>
                 <constraint firstItem="vwe-e6-MZT" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="16j-oh-8Ot"/>
                 <constraint firstItem="vwe-e6-MZT" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="3Yj-gT-du7"/>
-                <constraint firstItem="vwe-e6-MZT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="AgT-A3-fAC"/>
-                <constraint firstItem="vwe-e6-MZT" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="bottom" priority="750" id="gUe-Kr-D1A"/>
-                <constraint firstItem="vwe-e6-MZT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="fnl-2z-Ty3" secondAttribute="top" id="iHu-5W-hh3"/>
-                <constraint firstItem="vwe-e6-MZT" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" priority="250" id="zCi-Qp-voq"/>
+                <constraint firstAttribute="bottom" secondItem="vwe-e6-MZT" secondAttribute="bottom" id="Vr3-uN-p2K"/>
+                <constraint firstItem="vwe-e6-MZT" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="zCi-Qp-voq"/>
             </constraints>
             <connections>
                 <outletCollection property="gestureRecognizers" destination="FBP-ma-fl9" appends="YES" id="4po-x6-aiZ"/>

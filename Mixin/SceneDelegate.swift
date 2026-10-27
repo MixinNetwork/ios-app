@@ -218,6 +218,37 @@ extension SceneDelegate {
         updateKeyWindow()
     }
     
+    func dismissMessagePreviews(completion: @escaping () -> Void) {
+        let dismissStaticMessages = { [weak self] in
+            var controller = self?.mainWindow?.rootViewController
+            while let current = controller {
+                if let preview = current as? StaticMessagesViewController {
+                    if let coordinator = preview.transitionCoordinator {
+                        let waitsForTransition = coordinator.animate(alongsideTransition: nil) { _ in
+                            DispatchQueue.main.async {
+                                self?.dismissMessagePreviews(completion: completion)
+                            }
+                        }
+                        if waitsForTransition {
+                            return
+                        }
+                    }
+                    preview.dismissForInteraction { _ in
+                        completion()
+                    }
+                    return
+                }
+                controller = current.presentedViewController
+            }
+            completion()
+        }
+        if let gallery = galleryWindow?.galleryViewController, gallery.isPresented {
+            gallery.dismiss(transitionViewInitialOffsetY: 0, completion: dismissStaticMessages)
+        } else {
+            dismissStaticMessages()
+        }
+    }
+    
     func showScreenLockWindow(rootViewController: ScreenLockViewController) {
         guard screenLockWindow == nil, let windowScene = mainWindow?.windowScene else {
             return

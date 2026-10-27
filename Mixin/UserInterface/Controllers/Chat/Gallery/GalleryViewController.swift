@@ -29,12 +29,12 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         return true
     }
     
-    weak var delegate: GalleryViewControllerDelegate?
+    weak var source: (UIViewController & GalleryViewControllerDelegate)?
     
     var pipController: GalleryVideoItemViewController? {
         didSet {
             if pipController == nil {
-                pipSourceDelegate = nil
+                pipSource = nil
                 // Keep the player alive until AVKit finishes handing over to another video.
                 if itemToShowAfterPiPStops == nil {
                     pipModelController = nil
@@ -67,7 +67,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     
     private weak var sceneDelegate: SceneDelegate?
     private weak var galleryWindow: GalleryWindow?
-    private weak var pipSourceDelegate: GalleryViewControllerDelegate?
+    private weak var pipSource: (UIViewController & GalleryViewControllerDelegate)?
     
     private var modelController = GalleryItemModelController()
     private var pipModelController: GalleryItemModelController?
@@ -154,25 +154,25 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         dismiss(transitionViewInitialOffsetY: 0)
     }
     
-    func show(item: GalleryItem, from source: GalleryTransitionSource) {
-        show(items: [item], index: 0, from: source)
+    func show(item: GalleryItem, from transitionSource: GalleryTransitionSource) {
+        show(items: [item], index: 0, from: transitionSource)
     }
     
-    func show(items: [GalleryItem], index: Int, from source: GalleryTransitionSource) {
+    func show(items: [GalleryItem], index: Int, from transitionSource: GalleryTransitionSource) {
         guard presentationState == .hidden else {
             return
         }
         itemToShowAfterPiPStops = nil
-        modelController.direction = source.direction
+        modelController.direction = transitionSource.direction
         let item = items[index]
         if let controller = pipController {
             if controller.item == item {
-                pipSourceDelegate = delegate
+                pipSource = source
                 controller.stopPipIfActive()
                 return
             } else if item.category == .video || item.category == .live {
                 if controller.isPictureInPictureActive {
-                    itemToShowAfterPiPStops = (item, source)
+                    itemToShowAfterPiPStops = (item, transitionSource)
                     controller.stopPiPAndHandoverDelegate(to: self)
                     return
                 }
@@ -192,20 +192,20 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             guard presentationState != .tornDown else {
                 return
             }
-            delegate?.galleryViewController(self, willShow: item)
+            source?.galleryViewController(self, willShow: item)
             
-            if transitionView == nil || type(of: transitionView) != source.transitionViewType {
-                transitionView = source.transitionViewType.init()
+            if transitionView == nil || type(of: transitionView) != transitionSource.transitionViewType {
+                transitionView = transitionSource.transitionViewType.init()
             }
             transitionController.view.addSubview(transitionView!)
             transitionView!.transform = .identity
-            transitionView!.load(source: source)
+            transitionView!.load(source: transitionSource)
             transitionView!.alpha = 1
             transitionView!.transition(to: transitionController.view)
             
             let viewController = modelController.dequeueReusableViewController(with: items, index: index)
             viewController.isFocused = true
-            if let viewController = viewController as? GalleryImageItemViewController, case let .relativeOffset(offset) = source.imageWrapperView.position {
+            if let viewController = viewController as? GalleryImageItemViewController, case let .relativeOffset(offset) = transitionSource.imageWrapperView.position {
                 viewController.scrollView.contentOffset.y = -offset * viewController.scrollView.contentSize.height
             }
             pageViewController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
@@ -231,7 +231,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                         return
                     }
                     self.presentationState = .visible
-                    self.delegate?.galleryViewController(self, didShow: item)
+                    self.source?.galleryViewController(self, didShow: item)
                     if let offsetY = self.pendingDismissalOffsetY {
                         self.pendingDismissalOffsetY = nil
                         self.dismiss(transitionViewInitialOffsetY: offsetY, completion: nil)
@@ -256,7 +256,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         presentationState = .presenting
         let modelControllerToRestore: GalleryItemModelController?
         if viewController === pipController {
-            delegate = pipSourceDelegate
+            source = pipSource
             modelControllerToRestore = pipModelController
         } else {
             modelControllerToRestore = nil
@@ -292,7 +292,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                     }
                     self.presentationState = .visible
                     if !wasShowing {
-                        self.delegate?.galleryViewController(self, didShow: item)
+                        self.source?.galleryViewController(self, didShow: item)
                     }
                     viewController.isFocused = true
                     viewControllerToHide?.view.alpha = 1
@@ -310,7 +310,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             backgroundView.alpha = 1
             pageViewController.view.alpha = 0
             galleryWindow.beginTransition(in: mainWindow, backgroundAlpha: 0) { [self] transitionController in
-                delegate?.galleryViewController(self, willShow: item)
+                source?.galleryViewController(self, willShow: item)
                 show(transitionController)
             }
         }
@@ -350,7 +350,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             dismissalCompletions.append(completion)
         }
         presentationState = .dismissing
-        delegate?.galleryViewController(self, willDismiss: item)
+        source?.galleryViewController(self, willDismiss: item)
         galleryWindow.beginTransition(in: mainWindow, backgroundAlpha: 0) { [self] transitionController in
             guard presentationState != .tornDown else {
                 return
@@ -358,9 +358,9 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             pageViewController.view.alpha = 0
             pageViewController.view.transform = .identity
             
-            let source = delegate?.galleryViewController(self, cellFor: item)
+            let transitionSource = source?.galleryViewController(self, cellFor: item)
             if transitionView == nil {
-                transitionView = source?.transitionViewType.init() ?? GalleryTransitionView()
+                transitionView = transitionSource?.transitionViewType.init() ?? GalleryTransitionView()
             }
             if let transitionView = transitionView {
                 transitionController.view.addSubview(transitionView)
@@ -382,8 +382,8 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             } else {
                 relativeOffset = nil
             }
-            if let source {
-                transitionView?.transition(to: source)
+            if let transitionSource {
+                transitionView?.transition(to: transitionSource)
             } else {
                 animate(animations: {
                     self.transitionView?.frame.origin.y = self.view.bounds.height
@@ -397,7 +397,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                     return
                 }
                 // Restore the source before removing the snapshot that covers it.
-                self.delegate?.galleryViewController(self, didDismiss: item, relativeOffset: relativeOffset)
+                self.source?.galleryViewController(self, didDismiss: item, relativeOffset: relativeOffset)
                 mainWindow.layoutIfNeeded()
                 CATransaction.flush()
                 self.transitionView?.removeFromSuperview()
@@ -424,7 +424,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }
         presentationState = .dismissing
         self.pipController = pipController
-        pipSourceDelegate = delegate
+        pipSource = source
         pipModelController = modelController
         galleryWindow.beginTransition(in: mainWindow, backgroundAlpha: 0) { [self] transitionController in
             guard presentationState != .tornDown else {
@@ -463,7 +463,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                     container.view.addSubview(pipController.view)
                     pipController.didMove(toParent: container)
                 }
-                self.delegate?.galleryViewController(self, didDismiss: item, relativeOffset: nil)
+                self.source?.galleryViewController(self, didDismiss: item, relativeOffset: nil)
                 mainWindow.layoutIfNeeded()
                 CATransaction.flush()
                 galleryWindow.endTransition {
@@ -500,7 +500,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             content = .messages([message])
         }
         let receiver = MessageReceiverViewController.instance(content: content)
-        dismiss(transitionViewInitialOffsetY: 0) {
+        dismissForNavigation {
             UIApplication.shared.homeNavigationController?.pushViewController(receiver, animated: true)
         }
     }
@@ -517,11 +517,11 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             .first
         if let sharedMedia {
             sharedMedia.navigationController?.popViewController(animated: false)
-        } else if let pinMessagesPreview = conversationController.children.first(where: { $0 is PinMessagesPreviewViewController }) as? PinMessagesPreviewViewController {
-            pinMessagesPreview.dismissAsChild(animated: false, completion: nil)
         }
-        delegate = conversationController
-        dismiss(transitionViewInitialOffsetY: 0) {
+        if !(source is StaticMessagesViewController) {
+            source = conversationController
+        }
+        dismissForNavigation {
             conversationController.scrollToMessage(messageId: messageId)
         }
     }
@@ -533,7 +533,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         switch recognizer.state {
         case .began:
             if let item = item {
-                delegate?.galleryViewController(self, willDismiss: item)
+                source?.galleryViewController(self, willDismiss: item)
             }
             currentItemViewController?.willBeginInteractiveDismissal()
             recognizer.setTranslation(.zero, in: view)
@@ -551,7 +551,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                     self.pageViewController.view.transform = .identity
                 }, completion: {
                     if let item = item {
-                        self.delegate?.galleryViewController(self, didCancelDismissalFor: item)
+                        self.source?.galleryViewController(self, didCancelDismissalFor: item)
                     }
                 })
             }
@@ -582,7 +582,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }
         if let url = (itemViewController as? GalleryImageItemViewController)?.detectedUrl {
             alert.addAction(UIAlertAction(title: R.string.localizable.scan_qr_code(), style: .default, handler: { (_) in
-                self.dismiss(transitionViewInitialOffsetY: 0) {
+                self.dismissForNavigation {
                     UrlWindow.checkQrCodeDetection(string: url.absoluteString, clearNavigationStack: false)
                 }
             }))
@@ -608,7 +608,20 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         transitionView?.layer.removeAllAnimations()
         transitionView?.removeFromSuperview()
         galleryWindow?.endTransition(completion: nil)
-        delegate = nil
+        source = nil
+    }
+    
+    private func dismissForNavigation(completion: @escaping () -> Void) {
+        let messagesPreview = source as? StaticMessagesViewController
+        dismiss(transitionViewInitialOffsetY: 0) {
+            if let messagesPreview {
+                messagesPreview.dismissForInteraction { _ in
+                    completion()
+                }
+            } else {
+                completion()
+            }
+        }
     }
     
     private func finishDismissal() {

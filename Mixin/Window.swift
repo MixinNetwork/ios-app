@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class Window: UIWindow {
+class Window: UIWindow {
     
     private var dismissMenuResponder: UIButton?
     

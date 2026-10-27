@@ -171,8 +171,11 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                             push()
                         }
                     }
-                    if let container = UIApplication.shared.homeContainerViewController, container.galleryIsOnTopMost {
-                        container.galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
+                    if let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate,
+                       let galleryViewController = sceneDelegate.galleryWindow?.galleryViewController,
+                       galleryViewController.isPresented
+                    {
+                        galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
                             pushConversationController()
                         }
                     } else {

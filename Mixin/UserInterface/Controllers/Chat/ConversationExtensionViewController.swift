@@ -115,22 +115,24 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row < fixedExtensions.count {
             let ext = fixedExtensions[indexPath.row]
+            let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate
+            let pipController = sceneDelegate?.galleryWindow?.galleryViewController.pipController
             switch ext {
             case .camera:
-                UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
+                pipController?.pauseAction(self)
                 conversationViewController?.presentCamera()
             case .file:
-                UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
+                pipController?.pauseAction(self)
                 conversationViewController?.presentDocumentPicker()
             case .transfer:
                 conversationViewController?.showTransfer()
             case .contact:
                 conversationViewController?.showContactSelector()
             case .call:
-                UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
+                pipController?.pauseAction(self)
                 conversationViewController?.callOwnerUserIfPresent()
             case .groupCall:
-                UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
+                pipController?.pauseAction(self)
                 conversationViewController?.startOrJoinGroupCall()
             case .location:
                 conversationViewController?.showLocationPicker()

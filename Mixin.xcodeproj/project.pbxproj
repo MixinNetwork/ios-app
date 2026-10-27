@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A96D2DF95DF74A2BAE691D26 /* GalleryTransitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96D2DF95DF74A2BAE691D25 /* GalleryTransitionViewController.swift */; };
+		A96D2DF95DF74A2BAE691D24 /* GalleryWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96D2DF95DF74A2BAE691D23 /* GalleryWindow.swift */; };
 		094EE1FF13DF3C55B0BB34AB /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = B7536589F5323E0BA6DB99C4 /* Zip */; };
 		119704EDA3CD48649BB5F58B /* StickerStoreBannerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E0F99EB92C3422C954DE299 /* StickerStoreBannerCell.xib */; };
 		15F960D799B36E0B7CBE84E4 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 970A7220911FCED8F41E8DD2 /* SDWebImageSVGCoder */; };
@@ -2055,6 +2057,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A96D2DF95DF74A2BAE691D25 /* GalleryTransitionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryTransitionViewController.swift; sourceTree = "<group>"; };
+		A96D2DF95DF74A2BAE691D23 /* GalleryWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryWindow.swift; sourceTree = "<group>"; };
 		059103962B154B85BE80C13B /* StickerStorePreviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StickerStorePreviewCell.xib; sourceTree = "<group>"; };
 		1BC5DC4D300046CDA234FBEC /* AdvertisementBannerActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisementBannerActionHandler.swift; sourceTree = "<group>"; };
 		1E0F99EB92C3422C954DE299 /* StickerStoreBannerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StickerStoreBannerCell.xib; sourceTree = "<group>"; };
@@ -4147,6 +4151,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A96D2DF95DF74A2BAE691D22 /* Gallery */ = {
+			isa = PBXGroup;
+			children = (
+				7BDC2DE122F315480098AB81 /* GalleryActivityIndicatorView.swift */,
+				7BF42E4022DDF0D9005066E6 /* GalleryAnimatable.swift */,
+				7BF42E3022DC85E8005066E6 /* GalleryImageItemViewController.swift */,
+				7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */,
+				7BF42E3822DCB132005066E6 /* GalleryItemModelController.swift */,
+				7BF42E3222DC860E005066E6 /* GalleryItemViewController.swift */,
+				7B333A8523406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift */,
+				7B37B16223ED483D00590215 /* GalleryTransitionFromNonQuotingMessageCellView.swift */,
+				7B37B16023ED480000590215 /* GalleryTransitionFromQuotingMessageCellView.swift */,
+				7B333A8723406AF900FDA848 /* GalleryTransitionFromSharedMediaView.swift */,
+				7BB2831B22D88F07000731E8 /* GalleryTransitionView.swift */,
+				A96D2DF95DF74A2BAE691D25 /* GalleryTransitionViewController.swift */,
+				7B2A115A22C1EAA600AD029C /* GalleryVideoControlView.swift */,
+				7B2A115C22C1EAC900AD029C /* GalleryVideoControlView.xib */,
+				7BF42E3422DCAC93005066E6 /* GalleryVideoItemViewController.swift */,
+				7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */,
+				7B34A19E22C0E73D00665F41 /* GalleryVideoView.swift */,
+				7BD127FB22D8892200BB5316 /* GalleryViewController.swift */,
+				A96D2DF95DF74A2BAE691D23 /* GalleryWindow.swift */,
+				E090B9EA23B0BF940012C7E9 /* MessageDAO+Gallery.swift */,
+			);
+			path = Gallery;
+			sourceTree = "<group>";
+		};
+
 		275339881F975D9800DD4C26 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -4289,9 +4321,6 @@
 				7B0B01911FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift */,
 				7B836C7D1FD17D6100529754 /* DetailInfoMessageViewModel.swift */,
 				7BEEC0111FDEA19300514A48 /* EncryptionHintViewModel.swift */,
-				7BF42E4022DDF0D9005066E6 /* GalleryAnimatable.swift */,
-				7BBA1CA820692C7600B2F0CE /* GalleryItem.swift */,
-				7BF42E3822DCB132005066E6 /* GalleryItemModelController.swift */,
 				7BCAF549216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift */,
 				7B7FBF8C2282D51100644693 /* IconPrefixedTextMessageViewModel.swift */,
 				7B6351D42410F2430034D9F8 /* ImageMessageViewModel.swift */,
@@ -6005,11 +6034,8 @@
 				DFCF3BED20CF6ECD0030AD4A /* StickerManagerViewController.swift */,
 				94EC9BB22F2B9EBF00B3CD82 /* StickerAddView.xib */,
 				DFCF3BEF20CF6EE10030AD4A /* StickerAddViewController.swift */,
+				A96D2DF95DF74A2BAE691D22 /* Gallery */,
 				7BDBDE5E22327698006220DF /* LegacyTransferTypeViewController.swift */,
-				7BD127FB22D8892200BB5316 /* GalleryViewController.swift */,
-				7BF42E3222DC860E005066E6 /* GalleryItemViewController.swift */,
-				7BF42E3022DC85E8005066E6 /* GalleryImageItemViewController.swift */,
-				7BF42E3422DCAC93005066E6 /* GalleryVideoItemViewController.swift */,
 				7BE5BFA82338A59300516A00 /* InConversationSearchViewController.swift */,
 				7B369205233A3314007321A7 /* SharedMediaViewController.swift */,
 				7B36920F233B4FC6007321A7 /* SharedMediaMediaViewController.swift */,
@@ -6593,7 +6619,6 @@
 				7B0B01951FEA628F000EEE4F /* StrangerHintView.xib */,
 				E0A70A13238250EF003C3B96 /* InvitationHintView.swift */,
 				E0A70A1123825004003C3B96 /* InvitationHintView.xib */,
-				7B5EA41120B2734C00940D1A /* GalleryVideoSlider.swift */,
 				7BD38B5F20BEA03200D06E5C /* WaveformView.swift */,
 				7B0D6AD820D0CB1400C2672E /* HittestBypassWrapperView.swift */,
 				7BACA8D423602BF8007E3381 /* RecorderLongPressHintView.xib */,
@@ -6607,15 +6632,6 @@
 				7B17F0702226890C00D617A2 /* ConversationExtensionSwitch.swift */,
 				7BC51F032227E69B0032BA15 /* InteractiveDismissResponder.swift */,
 				7B49E01E22DC5D9700807F70 /* VerticalPositioningImageView.swift */,
-				7BB2831B22D88F07000731E8 /* GalleryTransitionView.swift */,
-				7B333A8523406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift */,
-				7B37B16023ED480000590215 /* GalleryTransitionFromQuotingMessageCellView.swift */,
-				7B37B16223ED483D00590215 /* GalleryTransitionFromNonQuotingMessageCellView.swift */,
-				7B333A8723406AF900FDA848 /* GalleryTransitionFromSharedMediaView.swift */,
-				7BDC2DE122F315480098AB81 /* GalleryActivityIndicatorView.swift */,
-				7B34A19E22C0E73D00665F41 /* GalleryVideoView.swift */,
-				7B2A115A22C1EAA600AD029C /* GalleryVideoControlView.swift */,
-				7B2A115C22C1EAC900AD029C /* GalleryVideoControlView.xib */,
 				7BDD444F233766CB00A0491D /* TableHeaderBypassTableView.swift */,
 				7BE036832337AB36003F4241 /* UserHandleTableHeaderView.swift */,
 				7B369207233A43C1007321A7 /* SegmentedControl.swift */,
@@ -7101,7 +7117,6 @@
 				E0B53A6823B0C2C9008DA9F1 /* AssetItem+Description.swift */,
 				E090B90E23B0B27F0012C7E9 /* ConversationDAO+Search.swift */,
 				E090B91023B0B2F20012C7E9 /* MessageDAO+Search.swift */,
-				E090B9EA23B0BF940012C7E9 /* MessageDAO+Gallery.swift */,
 				7BB0F94E2434D75D00BEDA97 /* CircleMember+Convenience.swift */,
 				94051FA32E812D61005B3A16 /* DepositFilter.swift */,
 				941DADD72E8AC6F900FE65BE /* App+URLValidation.swift */,
@@ -8514,6 +8529,7 @@
 				948AF9AB2EB9CB140035C9BF /* TradeTokenSelectorStyle.swift in Sources */,
 				94386ADB2F7E599200FF1FB9 /* PopupTipRecoveryKitOptionsView.swift in Sources */,
 				9425EAD02DC2218400BB018C /* MembershipPlansViewController.swift in Sources */,
+				A96D2DF95DF74A2BAE691D24 /* GalleryWindow.swift in Sources */,
 				7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */,
 				94D0B8892FF6302C002A8170 /* BuyTokenMethodSelectorViewController.swift in Sources */,
 				DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */,
@@ -8760,6 +8776,7 @@
 				7B81D91623E93F470031E945 /* QuotedMessageViewModel.swift in Sources */,
 				7B280DEE22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift in Sources */,
 				7BB2831C22D88F07000731E8 /* GalleryTransitionView.swift in Sources */,
+				A96D2DF95DF74A2BAE691D26 /* GalleryTransitionViewController.swift in Sources */,
 				7B7D27A02528682B006BBFAB /* ClipSwitcherThumbnailFlowLayout.swift in Sources */,
 				941C9CE8298E57BD00CB760E /* AuthenticationViewController.swift in Sources */,
 				7BBA2814246D10DE00787E61 /* GeneralAdapter.swift in Sources */,

@@ -175,6 +175,60 @@ class StaticMessagesViewController: UIViewController {
     
 }
 
+// MARK: - GalleryViewControllerDelegate
+extension StaticMessagesViewController: GalleryViewControllerDelegate {
+    
+    func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> GalleryTransitionSource? {
+        guard viewIfLoaded?.window != nil else {
+            return nil
+        }
+        return galleryCell(for: item)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
+        guard viewController.pipController?.item != item else {
+            return
+        }
+        galleryCell(for: item)?.setGalleryContentHidden(true)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didShow item: GalleryItem) {
+        galleryCell(for: item)?.setGalleryContentHidden(false)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, willDismiss item: GalleryItem) {
+        galleryCell(for: item)?.setGalleryContentHidden(true)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didCancelDismissalFor item: GalleryItem) {
+        galleryCell(for: item)?.setGalleryContentHidden(false)
+    }
+    
+    func galleryViewController(_ viewController: GalleryViewController, didDismiss item: GalleryItem, relativeOffset: CGFloat?) {
+        if let offset = relativeOffset,
+           let indexPath = indexPath(where: { $0.messageId == item.messageId }),
+           let viewModel = viewModel(at: indexPath) as? PhotoRepresentableMessageViewModel
+        {
+            viewModel.layoutPosition = .relativeOffset(offset)
+            if let cell = galleryCell(for: item) {
+                cell.contentImageWrapperView.position = .relativeOffset(offset)
+                cell.contentImageWrapperView.layoutIfNeeded()
+            }
+        }
+        galleryCell(for: item)?.setGalleryContentHidden(false)
+    }
+    
+    private func galleryCell(for item: GalleryItem) -> PhotoRepresentableMessageCell? {
+        for case let cell as PhotoRepresentableMessageCell in tableView.visibleCells {
+            if cell.viewModel?.message.messageId == item.messageId {
+                return cell
+            }
+        }
+        return nil
+    }
+    
+}
+
 // MARK: - Actions
 extension StaticMessagesViewController {
     
@@ -218,8 +272,10 @@ extension StaticMessagesViewController {
                     didPlayAudioMessage = true
                 }
             } else if (isImageOrVideo && mediaStatusIsReady) || message.category.hasSuffix("_LIVE"),
-                      let galleryViewController = UIApplication.shared.homeContainerViewController?.galleryViewController,
-                      let cell = cell as? PhotoRepresentableMessageCell
+                      let cell = cell as? PhotoRepresentableMessageCell,
+                      let sceneDelegate = cell.window?.windowScene?.delegate as? SceneDelegate,
+                      let galleryViewController = sceneDelegate.prepareGalleryWindow()?.galleryViewController,
+                      !galleryViewController.isPresented
             {
                 var items: [GalleryItem] = []
                 for date in dates {
@@ -230,6 +286,7 @@ extension StaticMessagesViewController {
                     items.append(contentsOf: new)
                 }
                 if let index = items.firstIndex(where: { $0.messageId == message.messageId }) {
+                    galleryViewController.delegate = self
                     galleryViewController.conversationId = nil
                     galleryViewController.show(items: items, index: index, from: cell)
                 }
@@ -386,7 +443,7 @@ extension StaticMessagesViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
+        (cell as? PhotoRepresentableMessageCell)?.setGalleryContentHidden(false)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

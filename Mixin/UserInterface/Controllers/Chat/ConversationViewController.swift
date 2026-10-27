@@ -879,14 +879,19 @@ final class ConversationViewController: UIViewController {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
                 conversationInputViewController.dismiss()
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
-                if let galleryViewController = UIApplication.shared.homeContainerViewController?.galleryViewController {
+                if let sceneDelegate = cell.window?.windowScene?.delegate as? SceneDelegate,
+                   let galleryViewController = sceneDelegate.prepareGalleryWindow()?.galleryViewController,
+                   !galleryViewController.isPresented
+                {
+                    galleryViewController.delegate = self
                     galleryViewController.conversationId = conversationId
                     galleryViewController.show(item: item, from: cell)
                 }
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue || viewModel.mediaStatus == MediaStatus.READ.rawValue {
                     conversationInputViewController.dismiss()
-                    UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
+                    let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate
+                    sceneDelegate?.galleryWindow?.galleryViewController.pipController?.pauseAction(self)
                     if viewModel.isListPlayable {
                         if CallService.shared.hasCall {
                             alert(R.string.localizable.call_on_another_call_hint())
@@ -1757,7 +1762,7 @@ extension ConversationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let cell = cell as? PhotoRepresentableMessageCell {
-            setCell(cell, contentViewHidden: false)
+            cell.setGalleryContentHidden(false)
         }
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
             return
@@ -1990,11 +1995,14 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
 extension ConversationViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> GalleryTransitionSource? {
+        guard viewIfLoaded?.window != nil else {
+            return nil
+        }
         return visiblePhotoRepresentableCell(of: item.messageId)
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
-        guard UIApplication.shared.homeContainerViewController?.pipController?.item != item else {
+        guard viewController.pipController?.item != item else {
             return
         }
         setCell(ofMessageId: item.messageId, contentViewHidden: true)
@@ -2379,31 +2387,7 @@ extension ConversationViewController {
         guard let id = id, let cell = visiblePhotoRepresentableCell(of: id) else {
             return
         }
-        setCell(cell, contentViewHidden: hidden)
-    }
-    
-    private func setCell(_ cell: PhotoRepresentableMessageCell, contentViewHidden hidden: Bool) {
-        var contentViews: [UIView] = [
-            cell.contentImageView,
-        ]
-        let isQuotedOrHasCaption = cell.viewModel?.quotedMessageViewModel != nil || ((cell.viewModel as? ImageMessageViewModel)?.hasCaption ?? false)
-        if !isQuotedOrHasCaption {
-            contentViews.append(cell.timeLabel)
-            contentViews.append(cell.statusImageView)
-        }
-        if let cell = cell as? AttachmentExpirationHintingMessageCell {
-            contentViews.append(cell.operationButton)
-        }
-        if let cell = cell as? VideoMessageCell {
-            contentViews.append(cell.lengthLabel)
-        }
-        if let cell = cell as? LiveMessageCell {
-            contentViews.append(cell.badgeView)
-            contentViews.append(cell.playButton)
-        }
-        contentViews.forEach {
-            $0.isHidden = hidden
-        }
+        cell.setGalleryContentHidden(hidden)
     }
     
     private func frameOfPhotoRepresentableCell(_ cell: PhotoRepresentableMessageCell) -> CGRect {

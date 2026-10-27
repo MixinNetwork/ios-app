@@ -1,11 +1,6 @@
 import UIKit
 import MixinServices
 
-protocol GalleryItemModelControllerDelegate: AnyObject {
-    func modelController(_ controller: GalleryItemModelController, didLoadItemsBefore location: GalleryItem)
-    func modelController(_ controller: GalleryItemModelController, didLoadItemsAfter location: GalleryItem)
-}
-
 final class GalleryItemModelController: NSObject {
 
     enum Direction {
@@ -13,7 +8,7 @@ final class GalleryItemModelController: NSObject {
         case backward
     }
     
-    weak var delegate: GalleryItemModelControllerDelegate?
+    weak var galleryViewController: GalleryViewController?
     
     var direction = Direction.forward
     var conversationId: String? {
@@ -80,6 +75,7 @@ final class GalleryItemModelController: NSObject {
             }
         }
         
+        viewController.galleryViewController = galleryViewController
         viewController.prepareForReuse()
         viewController.item = item
         
@@ -190,7 +186,7 @@ final class GalleryItemModelController: NSObject {
                 weakSelf.items.insert(contentsOf: items, at: 0)
                 weakSelf.didLoadEarliestItem = items.count < fetchItemsCount
                 weakSelf.isLoadingBefore = false
-                weakSelf.delegate?.modelController(weakSelf, didLoadItemsBefore: location)
+                weakSelf.galleryViewController?.modelController(weakSelf, didLoadItemsBefore: location)
             }
         }
     }
@@ -216,7 +212,7 @@ final class GalleryItemModelController: NSObject {
                 weakSelf.items.append(contentsOf: items)
                 weakSelf.didLoadLatestItem = items.count < fetchItemsCount
                 weakSelf.isLoadingAfter = false
-                weakSelf.delegate?.modelController(weakSelf, didLoadItemsAfter: location)
+                weakSelf.galleryViewController?.modelController(weakSelf, didLoadItemsAfter: location)
             }
         }
     }

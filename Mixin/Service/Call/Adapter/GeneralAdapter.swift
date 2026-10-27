@@ -79,6 +79,12 @@ extension GeneralAdapter: CallAdapter {
                 if isGranted {
                     if self.service.activeCall == nil && self.service.calls.count == 1 && self.service.calls[call.uuid] != nil {
                         self.ringtonePlayer.play(ringtone: .incoming)
+                        if let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate {
+                            sceneDelegate.galleryWindow?.galleryViewController.dismiss(
+                                transitionViewInitialOffsetY: 0,
+                                completion: nil,
+                            )
+                        }
                         self.service.showCallingInterface(call: call, animated: true)
                         self.displayAwakeningToken = DisplayAwakener.shared.retain()
                         completion(nil)

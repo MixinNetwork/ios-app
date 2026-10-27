@@ -319,8 +319,11 @@ class UrlWindow {
                     UIApplication.shared.homeNavigationController?.pushViewController(vc, animated: true)
                 }
                 
-                if UIApplication.shared.homeContainerViewController?.isShowingGallery ?? false {
-                    UIApplication.shared.homeContainerViewController?.galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
+                if let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate,
+                   let galleryViewController = sceneDelegate.galleryWindow?.galleryViewController,
+                   galleryViewController.isPresented
+                {
+                    galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
                         push()
                     }
                 } else {
@@ -350,8 +353,11 @@ class UrlWindow {
                     UIApplication.shared.homeNavigationController?.pushViewController(afterRoot: viewController)
                 }
             }
-            if let container = UIApplication.shared.homeContainerViewController, container.galleryIsOnTopMost {
-                container.galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
+            if let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate,
+               let galleryViewController = sceneDelegate.galleryWindow?.galleryViewController,
+               galleryViewController.isPresented
+            {
+                galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
                     pushController()
                 }
             } else {
@@ -494,8 +500,11 @@ class UrlWindow {
                         UIApplication.shared.homeNavigationController?.pushViewController(vc, animated: true)
                     }
                 }
-                if UIApplication.shared.homeContainerViewController?.isShowingGallery ?? false {
-                    UIApplication.shared.homeContainerViewController?.galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
+                if let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate,
+                   let galleryViewController = sceneDelegate.galleryWindow?.galleryViewController,
+                   galleryViewController.isPresented
+                {
+                    galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
                         push()
                     }
                 } else {

@@ -79,7 +79,7 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
     }
     
     override var isReusable: Bool {
-        return parent == nil && UIApplication.shared.homeContainerViewController?.pipController != self
+        return parent == nil && galleryViewController?.pipController != self
     }
     
     override var supportedActions: Action {
@@ -260,8 +260,8 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
         willMove(toParent: nil)
         view.removeFromSuperview()
         removeFromParent()
-        if let container = UIApplication.shared.homeContainerViewController, container.pipController == self {
-            container.pipController = nil
+        if galleryViewController?.pipController === self {
+            galleryViewController?.pipController = nil
         }
         view.alpha = 1
     }
@@ -289,9 +289,6 @@ extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
             self.view.alpha = 0
         }
         updateControlView(playControlsHidden: true, otherControlsHidden: true, animated: true)
-        if let container = UIApplication.shared.homeContainerViewController {
-            container.pipController = self
-        }
     }
     
     func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
@@ -308,10 +305,12 @@ extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
     
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         updateControlView(playControlsHidden: false, otherControlsHidden: false, animated: true)
-        if UIApplication.shared.homeContainerViewController?.pipController == self {
-            UIApplication.shared.homeContainerViewController?.pipController = nil
+        if galleryViewController?.pipController == self {
+            galleryViewController?.pipController = nil
         }
-        if let parent = parent, parent is HomeContainerViewController {
+        if let parent,
+           parent is HomeContainerViewController || parent is GalleryTransitionViewController
+        {
             willMove(toParent: nil)
             view.removeFromSuperview()
             removeFromParent()
@@ -336,7 +335,7 @@ extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
 extension GalleryVideoItemViewController {
     
     @objc func playAction(_ sender: Any) {
-        if let controller = UIApplication.shared.homeContainerViewController?.pipController, controller != self {
+        if let controller = galleryViewController?.pipController, controller != self {
             if controller.item == self.item {
                 controller.stopPipIfActive()
                 return
@@ -703,7 +702,7 @@ extension GalleryVideoItemViewController {
     
     private func updateControlView(playControlsHidden: Bool, otherControlsHidden: Bool, animated: Bool) {
         let hidePlayControls = playControlsHidden || !isPlayable
-        let hideOtherControls = otherControlsHidden || !isPlayable || !(isFocused || UIApplication.shared.homeContainerViewController?.pipController == self)
+        let hideOtherControls = otherControlsHidden || !isPlayable || !(isFocused || galleryViewController?.pipController == self)
         controlView.set(playControlsHidden: hidePlayControls, otherControlsHidden: hideOtherControls, animated: animated)
     }
     

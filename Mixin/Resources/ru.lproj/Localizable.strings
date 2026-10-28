@@ -271,6 +271,8 @@
 "change_24h" = "24H %%";
 "change_amount" = "Изменить сумму";
 "change_emergency_contact" = "Изменить контакт для восстановления";
+"change_group_photo_with_camera" = "Изменить фото группы с помощью камеры";
+"change_group_photo_with_library" = "Изменить фото группы с помощью библиотеки";
 "change_mobile_number" = "Изменить номер мобильного телефона";
 "change_name" = "Изменить имя";
 "change_number" = "Изменить номер";

@@ -11,13 +11,19 @@ final class StorageUsageViewController: UIViewController {
     
     private var conversations = [ConversationStorageUsage]()
     
-    class func instance() -> UIViewController {
-        R.storyboard.setting.storage_usage()!
+    init() {
+        let nib = R.nib.storageUsageView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.storage_usage()
+        tableView.register(R.nib.storageUsageCell)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()
@@ -68,20 +74,23 @@ extension StorageUsageViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.storage_usage, for: indexPath)!
         let conversation = conversations[indexPath.row]
-        if conversation.category == ConversationCategory.CONTACT.rawValue {
+        switch conversation.category.flatMap(ConversationCategory.init(rawValue:)) {
+        case .CONTACT:
             cell.avatarImageView.setImage(with: conversation.ownerAvatarUrl ?? "",
                                           userId: conversation.ownerId ?? "",
                                           name: conversation.ownerFullName ?? "")
-            cell.badgeImageView.image = UserBadgeIcon.image(
+            cell.badgeImageView.image = UserBadgeIcon.smallImage(
                 membership: conversation.ownerMembership,
                 isVerified: conversation.ownerIsVerified ?? false,
                 identityNumber: conversation.ownerIdentityNumber
             )
-            cell.badgeImageView.isHidden = cell.badgeImageView.image == nil
-        } else {
+        case .GROUP:
             cell.avatarImageView.setGroupImage(with: conversation.iconUrl ?? "")
-            cell.badgeImageView.isHidden = true
+            cell.badgeImageView.image = R.image.group_indicator_small()
+        case .none:
+            break
         }
+        cell.badgeImageView.isHidden = cell.badgeImageView.image == nil
         cell.nameLabel.text = conversation.getConversationName()
         cell.sizeLabel.text = VideoMessageViewModel.byteCountFormatter.string(fromByteCount: conversation.mediaSize ?? 0)
         return cell

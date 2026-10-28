@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class CircleMemberSearchResult: SearchResult {
+final class CircleMemberSearchResult: SearchResult {
     
     let member: CircleMember
     
@@ -10,9 +10,11 @@ class CircleMemberSearchResult: SearchResult {
     init(member: CircleMember, keyword: String) {
         self.member = member
         self.keyword = keyword
-        super.init(iconUrl: member.iconUrl,
-                   badgeImage: nil,
-                   superscript: nil)
+        super.init(
+            iconUrl: member.iconUrl,
+            badgeImage: member.badgeImage,
+            superscript: nil
+        )
     }
     
     override func updateTitleAndDescription() {

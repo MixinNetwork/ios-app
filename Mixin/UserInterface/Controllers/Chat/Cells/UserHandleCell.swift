@@ -31,7 +31,7 @@ class UserHandleCell: ModernSelectedBackgroundCell {
             }
             return fullname.copy() as? NSAttributedString
         }()
-        badgeImageView.image = user.badgeImage
+        badgeImageView.image = user.badge?.smallImage
         identityNumberLabel.attributedText = {
             let number = NSMutableAttributedString(string: user.identityNumber, attributes: normalIdAttributes)
             if let range = identityNumberKeywordRange {

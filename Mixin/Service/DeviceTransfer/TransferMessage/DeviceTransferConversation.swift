@@ -7,6 +7,7 @@ struct DeviceTransferConversation {
     let ownerId: String?
     let category: String?
     let name: String?
+    let iconURL: String?
     let announcement: String?
     let lastMessageId: String?
     let lastMessageCreatedAt: String?
@@ -25,6 +26,7 @@ struct DeviceTransferConversation {
         ownerId = conversation.ownerId
         category = conversation.category
         name = conversation.name
+        iconURL = Self.remoteIconURL(from: conversation.iconUrl)
         announcement = conversation.announcement
         lastMessageId = conversation.lastMessageId
         lastMessageCreatedAt = conversation.lastMessageCreatedAt
@@ -52,23 +54,35 @@ struct DeviceTransferConversation {
         case .other:
             conversationStatus = ConversationStatusConverter.toiOSPlatform(status: status).rawValue
         }
-        return Conversation(conversationId: conversationId,
-                            ownerId: ownerId,
-                            category: category,
-                            name: name,
-                            iconUrl: nil,
-                            announcement: announcement,
-                            lastMessageId: lastMessageId,
-                            lastMessageCreatedAt: lastMessageCreatedAt,
-                            lastReadMessageId: lastReadMessageId,
-                            unseenMessageCount: 0,
-                            status: conversationStatus,
-                            draft: draft,
-                            muteUntil: muteUntil,
-                            codeUrl: codeUrl,
-                            pinTime: pinTime,
-                            expireIn: expireIn,
-                            createdAt: createdAt)
+        return Conversation(
+            conversationId: conversationId,
+            ownerId: ownerId,
+            category: category,
+            name: name,
+            iconUrl: Self.remoteIconURL(from: iconURL),
+            announcement: announcement,
+            lastMessageId: lastMessageId,
+            lastMessageCreatedAt: lastMessageCreatedAt,
+            lastReadMessageId: lastReadMessageId,
+            unseenMessageCount: 0,
+            status: conversationStatus,
+            draft: draft,
+            muteUntil: muteUntil,
+            codeUrl: codeUrl,
+            pinTime: pinTime,
+            expireIn: expireIn,
+            createdAt: createdAt,
+        )
+    }
+    
+    private static func remoteIconURL(from iconURL: String?) -> String? {
+        if let iconURL,
+           Conversation.groupIconType(iconURL: iconURL) == .remote
+        {
+            iconURL
+        } else {
+            nil
+        }
     }
     
     private enum ConversationStatusConverter {
@@ -121,6 +135,7 @@ extension DeviceTransferConversation: DeviceTransferRecord {
         case ownerId = "owner_id"
         case category
         case name
+        case iconURL = "icon_url"
         case announcement
         case lastMessageId = "last_message_id"
         case lastMessageCreatedAt = "last_message_created_at"

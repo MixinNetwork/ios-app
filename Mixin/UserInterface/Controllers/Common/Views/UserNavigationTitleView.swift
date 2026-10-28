@@ -45,13 +45,11 @@ final class UserNavigationTitleView: UIStackView {
             make.width.height.equalTo(16)
         }
         
-        if let badgeImage = user.badgeImage {
+        if let badgeImage = user.badge?.smallImage {
             let badgeImageView = SDAnimatedImageView(frame: iconFrame)
             badgeImageView.image = badgeImage
             userStackView.addArrangedSubview(badgeImageView)
-            badgeImageView.snp.makeConstraints { make in
-                make.width.height.equalTo(16)
-            }
+            badgeImageView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         }
         
         avatarImageView.setImage(with: user)

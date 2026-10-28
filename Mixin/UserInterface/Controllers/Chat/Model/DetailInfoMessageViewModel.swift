@@ -85,7 +85,7 @@ class DetailInfoMessageViewModel: MessageViewModel {
             if let membership = message.userMembership?.badgeImage {
                 identityIconImage = membership
             } else if message.userIsBot {
-                identityIconImage = R.image.ic_user_bot()
+                identityIconImage = R.image.badge_app_small()
             } else {
                 identityIconImage = nil
             }

@@ -14,7 +14,7 @@ class MessagesWithUserSearchResult: MessagesWithinConversationSearchResult {
     ) {
         self.userId = userId
         self.userFullname = name
-        let badgeImage = UserBadgeIcon.image(
+        let badgeImage = UserBadgeIcon.smallImage(
             membership: userMembership,
             isVerified: userIsVerified,
             identityNumber: userIdentityNumber

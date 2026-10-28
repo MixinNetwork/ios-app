@@ -18,11 +18,12 @@ final class GroupProfileViewController: ProfileViewController {
     private let conversation: ConversationItem
     private let response: ConversationResponse?
     private let codeId: String?
-    private var isMember: Bool
-    private var participantsCount: Int?
     
     private lazy var notMemberPaddingView = NotMemberPaddingView()
+    private lazy var imagePicker = AvatarPickerController(parent: self, delegate: self)
     
+    private var isMember: Bool
+    private var participantsCount: Int?
     private var isAdmin = false
     
     init(conversation: ConversationItem, numberOfParticipants: Int?, isMember: Bool) {
@@ -53,6 +54,14 @@ final class GroupProfileViewController: ProfileViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        badgeImageView.image = R.image.group_indicator_medium()
+        badgeImageView.isHidden = false
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(groupIconDidChange(_:)),
+            name: MixinServices.conversationDidChangeNotification,
+            object: nil
+        )
         reloadData()
         reloadCircles(conversationId: conversationId, userId: nil)
         updatePreferredContentSizeHeight(size: size)
@@ -267,6 +276,61 @@ extension GroupProfileViewController {
         }
     }
     
+    @objc func groupIconDidChange(_ notification: Notification) {
+        guard let change = notification.object as? ConversationChange, change.conversationId == conversationId else {
+            return
+        }
+        switch change.action {
+        case let .updateGroupIcon(iconURL):
+            conversation.iconUrl = iconURL
+            reloadAvatar()
+        default:
+            break
+        }
+    }
+    
+    @objc private func changeAvatarWithCamera() {
+        imagePicker.presentCamera()
+    }
+    
+    @objc private func changeAvatarWithLibrary() {
+        imagePicker.presentPhoto()
+    }
+    
+}
+
+// MARK: - AvatarPickerControllerDelegate
+extension GroupProfileViewController: AvatarPickerControllerDelegate {
+    
+    func avatarPickerController(_ controller: AvatarPickerController, didPickImage image: UIImage) {
+        guard isMember, ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId) else {
+            return
+        }
+        guard let icon = image.imageByScaling(to: .avatar)?.asBase64Avatar() else {
+            alert(R.string.localizable.failed_to_compose_avatar())
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "")
+        ConversationAPI.updateGroupIcon(
+            conversationID: conversationId,
+            icon: icon
+        ) { [weak self] result in
+            switch result {
+            case let .success(response):
+                self?.conversation.iconUrl = response.iconUrl
+                self?.reloadAvatar()
+                DispatchQueue.global().async {
+                    ConversationDAO.shared.updateConversation(conversation: response)
+                }
+                hud.set(style: .notification, text: R.string.localizable.changed())
+            case let .failure(error):
+                hud.set(style: .error, text: error.localizedDescription)
+            }
+            hud.scheduleAutoHidden()
+        }
+    }
+    
 }
 
 // MARK: - Private works
@@ -285,7 +349,7 @@ extension GroupProfileViewController {
             view.removeFromSuperview()
         }
         
-        loadAvatar()
+        reloadAvatar()
         titleLabel.text = conversation.name
         updateSubtitle()
         
@@ -357,8 +421,8 @@ extension GroupProfileViewController {
         }
     }
     
-    private func loadAvatar() {
-        guard conversation.iconUrl.isEmpty else {
+    private func reloadAvatar() {
+        if !conversation.iconUrl.isEmpty {
             avatarImageView.setGroupImage(conversation: conversation)
             return
         }
@@ -374,7 +438,10 @@ extension GroupProfileViewController {
                     return
                 }
                 DispatchQueue.main.async {
-                    self?.avatarImageView.image = image
+                    guard let self, self.conversation.iconUrl.isEmpty else {
+                        return
+                    }
+                    self.avatarImageView.image = image
                 }
             }
             
@@ -436,15 +503,31 @@ extension GroupProfileViewController {
         ])
         
         if isAdmin {
-            groups.append([
-                ProfileMenuItem(title: R.string.localizable.edit_group_name(),
-                                subtitle: nil,
-                                style: [],
-                                action: #selector(editGroupName)),
-                ProfileMenuItem(title: R.string.localizable.edit_group_description(),
-                                subtitle: nil,
-                                style: [],
-                                action: #selector(editAnnouncement))
+            groups.append( [
+                ProfileMenuItem(
+                    title: R.string.localizable.edit_group_name(),
+                    subtitle: nil,
+                    style: [],
+                    action: #selector(editGroupName)
+                ),
+                ProfileMenuItem(
+                    title: R.string.localizable.edit_group_description(),
+                    subtitle: nil,
+                    style: [],
+                    action: #selector(editAnnouncement)
+                ),
+                ProfileMenuItem(
+                    title: R.string.localizable.change_group_photo_with_camera(),
+                    subtitle: nil,
+                    style: [],
+                    action: #selector(changeAvatarWithCamera)
+                ),
+                ProfileMenuItem(
+                    title: R.string.localizable.change_group_photo_with_library(),
+                    subtitle: nil,
+                    style: [],
+                    action: #selector(changeAvatarWithLibrary)
+                ),
             ])
         }
         let chatBackgroundGroup = [

@@ -670,9 +670,8 @@ extension UserProfileViewController {
             subtitleLabel.identityNumber = nil
         }
         
-        let badgeImage = user.badgeImage
-        badgeImageView.image = badgeImage
-        badgeImageView.isHidden = badgeImage == nil
+        badgeImageView.image = user.badge?.mediumImage
+        badgeImageView.isHidden = badgeImageView.image == nil
         if user.membership?.unexpiredPlan == nil {
             membershipButton?.removeFromSuperview()
         } else if membershipButton == nil {

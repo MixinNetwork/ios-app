@@ -15,7 +15,7 @@ class MultisigUserCell: ModernSelectedBackgroundCell {
         avatarView.setImage(with: user)
         nameLabel.text = user.fullName
         idLabel.text = user.identityNumber
-        verifiedImageView.image = user.badgeImage
+        verifiedImageView.image = user.badge?.smallImage
         verifiedImageView.isHidden = verifiedImageView.image == nil
     }
     

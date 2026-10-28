@@ -1,13 +1,11 @@
 import UIKit
 import MixinServices
 
-class InviteLinkViewController: UIViewController {
-
+final class InviteLinkViewController: UIViewController {
+    
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var groupNameLabel: UILabel!
     @IBOutlet weak var linkLabel: UILabel!
-
-    private var conversation: ConversationItem!
     
     private lazy var shareLinkController: UIActivityViewController? = {
         if let codeUrl = conversation.codeUrl {
@@ -16,6 +14,18 @@ class InviteLinkViewController: UIViewController {
             return nil
         }
     }()
+    
+    private var conversation: ConversationItem
+    
+    init(conversation: ConversationItem) {
+        self.conversation = conversation
+        let nib = R.nib.inviteLinkView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,21 +57,18 @@ class InviteLinkViewController: UIViewController {
     }
     
     @IBAction func qrCodeAction(_ sender: Any) {
-        guard let conversation, let code = conversation.codeUrl else {
+        let conversation = self.conversation
+        guard let code = conversation.codeUrl else {
             return
         }
-        let qrCode = QRCodeViewController(title: conversation.name,
-                                          content: code,
-                                          foregroundColor: .black,
-                                          description: R.string.localizable.group_qr_code_prompt(),
-                                          centerContent: .avatar({ $0.setGroupImage(conversation: conversation) }))
+        let qrCode = QRCodeViewController(
+            title: conversation.name,
+            content: code,
+            foregroundColor: .black,
+            description: R.string.localizable.group_qr_code_prompt(),
+            centerContent: .avatar({ $0.setGroupImage(conversation: conversation) })
+        )
         present(qrCode, animated: true)
-    }
-    
-    class func instance(conversation: ConversationItem) -> UIViewController {
-        let vc = R.storyboard.group.invite_link()!
-        vc.conversation = conversation
-        return vc
     }
     
     @objc private func confirmRevokeLink(_ button: BusyButton) {

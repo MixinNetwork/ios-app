@@ -75,11 +75,11 @@ final class SettingsViewController: SettingsTableViewController {
         let membership = LoginManager.shared.account?.membership
         membershipRow.subtitle = switch membership?.unexpiredPlan {
         case .advance:
-                .icon(R.image.membership_advance()!)
+                .icon(R.image.membership_advance_small()!)
         case .elite:
-                .icon(R.image.membership_elite()!)
+                .icon(R.image.membership_elite_small()!)
         case .prosperity:
-                .icon(UserBadgeIcon.prosperityImage!)
+                .icon(UserBadgeIcon.smallProsperityImage!)
         case nil:
             if membership?.plan == nil {
                 .text(R.string.localizable.upgrade_plan())

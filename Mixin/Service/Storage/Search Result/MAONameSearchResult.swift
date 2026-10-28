@@ -16,8 +16,8 @@ final class MAONameSearchResult: SearchResult {
         self.app = response.app
         super.init(
             iconUrl: response.avatarUrl,
-            badgeImage: user.badgeImage,
-            superscript: nil
+            badgeImage: user.badge?.smallImage,
+            superscript: nil,
         )
     }
     

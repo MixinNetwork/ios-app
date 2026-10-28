@@ -218,34 +218,42 @@ extension SceneDelegate {
         updateKeyWindow()
     }
     
-    func dismissMessagePreviews(completion: @escaping () -> Void) {
-        let dismissStaticMessages = { [weak self] in
-            var controller = self?.mainWindow?.rootViewController
+    func dismissModalPresentations(completion: @escaping () -> Void) {
+        let dismissModals = { [weak self] in
+            guard let root = self?.mainWindow?.rootViewController else {
+                completion()
+                return
+            }
+            var controller: UIViewController? = root
             while let current = controller {
-                if let preview = current as? StaticMessagesViewController {
-                    if let coordinator = preview.transitionCoordinator {
-                        let waitsForTransition = coordinator.animate(alongsideTransition: nil) { _ in
-                            DispatchQueue.main.async {
-                                self?.dismissMessagePreviews(completion: completion)
-                            }
-                        }
-                        if waitsForTransition {
-                            return
+                if let coordinator = current.transitionCoordinator {
+                    let waitsForTransition = coordinator.animate(alongsideTransition: nil) { _ in
+                        DispatchQueue.main.async {
+                            self?.dismissModalPresentations(completion: completion)
                         }
                     }
-                    preview.dismissForInteraction { _ in
-                        completion()
+                    if waitsForTransition {
+                        return
+                    }
+                }
+                if current.isBeingPresented || current.isBeingDismissed {
+                    DispatchQueue.main.async {
+                        self?.dismissModalPresentations(completion: completion)
                     }
                     return
                 }
                 controller = current.presentedViewController
             }
-            completion()
+            if root.presentedViewController != nil {
+                root.dismiss(animated: true, completion: completion)
+            } else {
+                completion()
+            }
         }
         if let gallery = galleryWindow?.galleryViewController, gallery.isPresented {
-            gallery.dismiss(transitionViewInitialOffsetY: 0, completion: dismissStaticMessages)
+            gallery.dismiss(transitionViewInitialOffsetY: 0, completion: dismissModals)
         } else {
-            dismissStaticMessages()
+            dismissModals()
         }
     }
     

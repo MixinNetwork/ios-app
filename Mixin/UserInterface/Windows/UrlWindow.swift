@@ -320,7 +320,7 @@ class UrlWindow {
                 }
                 
                 if let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate {
-                    sceneDelegate.dismissMessagePreviews(completion: push)
+                    sceneDelegate.dismissModalPresentations(completion: push)
                 } else {
                     push()
                 }
@@ -349,7 +349,7 @@ class UrlWindow {
                 }
             }
             if let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate {
-                sceneDelegate.dismissMessagePreviews(completion: pushController)
+                sceneDelegate.dismissModalPresentations(completion: pushController)
             } else {
                 pushController()
             }
@@ -491,7 +491,7 @@ class UrlWindow {
                     }
                 }
                 if let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate {
-                    sceneDelegate.dismissMessagePreviews(completion: push)
+                    sceneDelegate.dismissModalPresentations(completion: push)
                 } else {
                     push()
                 }

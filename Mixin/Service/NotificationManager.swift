@@ -172,7 +172,7 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                         }
                     }
                     if let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate {
-                        sceneDelegate.dismissMessagePreviews(completion: pushConversationController)
+                        sceneDelegate.dismissModalPresentations(completion: pushConversationController)
                     } else {
                         pushConversationController()
                     }

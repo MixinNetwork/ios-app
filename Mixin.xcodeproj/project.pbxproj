@@ -290,7 +290,6 @@
 		7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8261FA1AE19000B838B /* CountDownButton.swift */; };
 		7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */; };
 		7B951DAC2440A7C100E55761 /* SolidBackgroundColorImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4FCCDF2440A66600360F65 /* SolidBackgroundColorImageView.swift */; };
-		7B955338224375D600CE95E6 /* SearchFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B955337224375D600CE95E6 /* SearchFooterView.swift */; };
 		7B95533A224380B200CE95E6 /* PinValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B955339224380B200CE95E6 /* PinValidationViewController.swift */; };
 		7B9553402243860C00CE95E6 /* PinValidationPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B95533D2243860B00CE95E6 /* PinValidationPresentationManager.swift */; };
 		7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B95533E2243860C00CE95E6 /* PinValidationPresentationController.swift */; };
@@ -1322,6 +1321,11 @@
 		94881FAA2AD035CC00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA92AD035CC00CA7A29 /* RswiftLibrary */; };
 		94881FAC2AD035ED00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FAB2AD035ED00CA7A29 /* RswiftLibrary */; };
 		9488BAC8309029080039D1C2 /* UserBadgeIcon+MediumImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9488BAC7309029060039D1C2 /* UserBadgeIcon+MediumImage.swift */; };
+		9488BBE430917FF90039D1C2 /* SearchFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9488BBE330917FF90039D1C2 /* SearchFooterView.swift */; };
+		9488BBF1309180400039D1C2 /* NewChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9488BBF0309180400039D1C2 /* NewChatView.xib */; };
+		9488BBF2309180400039D1C2 /* NewChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9488BBEF309180400039D1C2 /* NewChatViewController.swift */; };
+		9488BC07309186400039D1C2 /* NewChatActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9488BC06309186400039D1C2 /* NewChatActionCell.xib */; };
+		9488BC08309186400039D1C2 /* NewChatActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9488BC05309186400039D1C2 /* NewChatActionCell.swift */; };
 		948922A12D54FC5F00D9BCCB /* IBANAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948922A02D54FC5A00D9BCCB /* IBANAddress.swift */; };
 		948923512D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948923502D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift */; };
 		9489237D2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489237C2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift */; };
@@ -2333,7 +2337,6 @@
 		7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphySearchViewController.swift; sourceTree = "<group>"; };
 		7B92F8261FA1AE19000B838B /* CountDownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownButton.swift; sourceTree = "<group>"; };
 		7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateResponsiveButton.swift; sourceTree = "<group>"; };
-		7B955337224375D600CE95E6 /* SearchFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchFooterView.swift; path = Mixin/UserInterface/Controllers/Home/SearchFooterView.swift; sourceTree = SOURCE_ROOT; };
 		7B955339224380B200CE95E6 /* PinValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinValidationViewController.swift; sourceTree = "<group>"; };
 		7B95533D2243860B00CE95E6 /* PinValidationPresentationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinValidationPresentationManager.swift; sourceTree = "<group>"; };
 		7B95533E2243860C00CE95E6 /* PinValidationPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinValidationPresentationController.swift; sourceTree = "<group>"; };
@@ -3386,6 +3389,11 @@
 		9487234A2C9EE7150034BCB0 /* TokenAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenAction.swift; sourceTree = "<group>"; };
 		948762502E87C036002F162B /* MnemonicTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicTextField.swift; sourceTree = "<group>"; };
 		9488BAC7309029060039D1C2 /* UserBadgeIcon+MediumImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserBadgeIcon+MediumImage.swift"; sourceTree = "<group>"; };
+		9488BBE330917FF90039D1C2 /* SearchFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFooterView.swift; sourceTree = "<group>"; };
+		9488BBEF309180400039D1C2 /* NewChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatViewController.swift; sourceTree = "<group>"; };
+		9488BBF0309180400039D1C2 /* NewChatView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewChatView.xib; sourceTree = "<group>"; };
+		9488BC05309186400039D1C2 /* NewChatActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatActionCell.swift; sourceTree = "<group>"; };
+		9488BC06309186400039D1C2 /* NewChatActionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewChatActionCell.xib; sourceTree = "<group>"; };
 		948922A02D54FC5A00D9BCCB /* IBANAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IBANAddress.swift; sourceTree = "<group>"; };
 		948923502D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenSelectorViewController.swift; sourceTree = "<group>"; };
 		9489237C2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenReceiverViewController.swift; sourceTree = "<group>"; };
@@ -4581,7 +4589,7 @@
 			children = (
 				7BC3559E2265B7C30073C7BF /* DragDownIndicator.swift */,
 				7B595352226736BD00D59DB4 /* SearchHeaderView.swift */,
-				7B955337224375D600CE95E6 /* SearchFooterView.swift */,
+				9488BBE330917FF90039D1C2 /* SearchFooterView.swift */,
 				7BA9D9C7226DE71E00255943 /* NavigationAvatarIconView.swift */,
 				7BE5BFAC2338A62900516A00 /* SearchConversationView.xib */,
 				7B7A243A236A9B86003F1458 /* RoundedInsetLabel.swift */,
@@ -4706,13 +4714,6 @@
 				C764FAFA5AF64A85A5824F02 /* PopupAlertViewController.swift */,
 			);
 			path = Common;
-			sourceTree = "<group>";
-		};
-		7BAE1B42223B51E9004F2D16 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		7BB3854C21E74B2B0070FF8F /* Login */ = {
@@ -6468,6 +6469,8 @@
 				944731512E71865F00ACC49B /* HomeNavigationTitleView.swift */,
 				94B61EC22B344A7A00BD39AF /* HomeTabBarController.swift */,
 				DF3C47461FA071F400A07C71 /* HomeViewController.swift */,
+				9488BBF0309180400039D1C2 /* NewChatView.xib */,
+				9488BBEF309180400039D1C2 /* NewChatViewController.swift */,
 				7BA9D9ED226F114700255943 /* HomeSearchViewController.swift */,
 				946575AE2BC9672800C4C4F4 /* QuickAccessSearchResult.swift */,
 				7BDEE5C61FA72EB9004CB189 /* HomeAggregatedSearchViewController.swift */,
@@ -6840,7 +6843,6 @@
 			isa = PBXGroup;
 			children = (
 				7B3F78512264689B00029D48 /* View */,
-				7BAE1B42223B51E9004F2D16 /* Model */,
 				DFD294391FA7066500FADAAD /* Cells */,
 				7C5DFE2F284F23F6008733FC /* UserCenterViewController.swift */,
 				7C4C039E28530C9E003DE0C0 /* ContactViewController.swift */,
@@ -6949,6 +6951,8 @@
 				94ED08B42B5FB1C300493312 /* ExploreActionCell.swift */,
 				946E05592CBE52FF004B264E /* ExploreRecentSearchCell.xib */,
 				946E05582CBE52FF004B264E /* ExploreRecentSearchCell.swift */,
+				9488BC06309186400039D1C2 /* NewChatActionCell.xib */,
+				9488BC05309186400039D1C2 /* NewChatActionCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -7656,6 +7660,7 @@
 				9419C1922E66E7E100BEAB42 /* DepositTaggingEntryFooterView.xib in Resources */,
 				ABE865C123F260FE00C0167D /* PermissionsActionCell.xib in Resources */,
 				94682F252E029B2700B1C6D3 /* BuyingPairView.xib in Resources */,
+				9488BC07309186400039D1C2 /* NewChatActionCell.xib in Resources */,
 				94FB2E1F2F5050BD00F85AB4 /* PerpetualIntroductionCell.xib in Resources */,
 				94FB2E932F5050BD00F85AB4 /* PerpsMarketDescriptionCell.xib in Resources */,
 				7CB0955126CCED420049F4C7 /* PinMessageBannerView.xib in Resources */,
@@ -7773,6 +7778,7 @@
 				94E682E92E603B38003304DF /* DepositTaggingEntryCell.xib in Resources */,
 				7BE73BFC230A8D0300B97FC6 /* group_separator_3.png in Resources */,
 				9427D51525E0D31100B1EF0E /* MusicInfoView.xib in Resources */,
+				9488BBF1309180400039D1C2 /* NewChatView.xib in Resources */,
 				943CAA062CC6908F00346677 /* OnboardingView.xib in Resources */,
 				942D90F12B05F8FE00E81358 /* NetworkFeeCell.xib in Resources */,
 				94B8206A2E00613100D580C9 /* AddTokenMethodCell.xib in Resources */,
@@ -8238,6 +8244,7 @@
 				94F237562C6915B70057D1AB /* PriceHistory.swift in Sources */,
 				9495E0DC2CEF7D6B00124CC7 /* MnemonicPhraseCell.swift in Sources */,
 				E0FE4CCE237421F0009A14F6 /* ProfileMenuItem.swift in Sources */,
+				9488BBE430917FF90039D1C2 /* SearchFooterView.swift in Sources */,
 				942E2B052FD3FB6B00E5E6FB /* TransactionCell.swift in Sources */,
 				94C688B728978BCD00C69537 /* TIPDiagnosticViewController.swift in Sources */,
 				94E9C0CD2BC6CF7A00D6157C /* Web3Worker.swift in Sources */,
@@ -8497,7 +8504,7 @@
 				7C5B65CE27701A49004EDD53 /* DeleteAccountHintWindow.swift in Sources */,
 				945D867B2C21754A0066C61D /* CGSize+Constants.swift in Sources */,
 				7B35AF7A228AA61400E8101D /* MessagesWithGroupSearchResult.swift in Sources */,
-				7B955338224375D600CE95E6 /* SearchFooterView.swift in Sources */,
+				9488BBF2309180400039D1C2 /* NewChatViewController.swift in Sources */,
 				7BAB5D3E20C520F2009F4EE6 /* AudioUploadJob.swift in Sources */,
 				946332012C63E36800C54B76 /* CheckmarkTokenCell.swift in Sources */,
 				E039AB06237277E40071386E /* ProfileScrollView.swift in Sources */,
@@ -9273,6 +9280,7 @@
 				9451E86E2D6DFF0A00A6C4FD /* PrivacyWalletViewController.swift in Sources */,
 				7B2C8B2D2524D26900347AC3 /* ClipSwitcherViewController.swift in Sources */,
 				94DD0D872DC327ED00C70CA2 /* MembershipPlanSelectorCell.swift in Sources */,
+				9488BC08309186400039D1C2 /* NewChatActionCell.swift in Sources */,
 				7B34A19722C0B59200665F41 /* PopupNavigationAnimating.swift in Sources */,
 				F2B71E0D34AC482993A87501 /* SearchNavigationAnimator.swift in Sources */,
 				DFE1F9811FAB40A800537D43 /* CornerButton.swift in Sources */,

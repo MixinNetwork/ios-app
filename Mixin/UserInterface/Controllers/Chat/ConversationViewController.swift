@@ -2036,17 +2036,11 @@ extension ConversationViewController: GalleryViewControllerDelegate {
 extension ConversationViewController: TextPreviewViewControllerDelegate {
     
     func textPreviewViewController(_ controller: TextPreviewViewController, didSelectURL url: URL) {
-        if presentedViewController == controller {
-            dismiss(animated: true) {
-                self.handleTapping(on: url)
-            }
-        } else {
-            handleTapping(on: url)
-        }
+        handleTapping(on: url)
     }
     
     func textPreviewViewController(_ controller: TextPreviewViewController, didLongPressURL url: URL) {
-        
+        handleLongPressing(on: url)
     }
     
 }
@@ -2980,7 +2974,13 @@ extension ConversationViewController {
             return
         }
         UserOperationAnalytics.tradeSource = .url
-        open(url: url)
+        if presentedViewController == nil {
+            open(url: url)
+        } else {
+            dismiss(animated: true) {
+                self.open(url: url)
+            }
+        }
     }
     
     private func handleLongPressing(on url: URL) {
@@ -2988,17 +2988,30 @@ extension ConversationViewController {
             return
         }
         let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: R.string.localizable.open_url(), style: .default, handler: { [weak self](_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.open_url(), style: .default, handler: { [weak self, weak alert] (_) in
             UserOperationAnalytics.tradeSource = .url
-            self?.open(url: url)
+            guard let self else {
+                return
+            }
+            switch self.presentedViewController {
+            case alert, nil:
+                self.open(url: url)
+            default:
+                self.dismiss(animated: true) {
+                    self.open(url: url)
+                }
+            }
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.copy(), style: .default, handler: { (_) in
             UIPasteboard.general.string = url.absoluteString
             showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
-            
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        present(alert, animated: true, completion: nil)
+        var presenter: UIViewController = self
+        while let presentedViewController = presenter.presentedViewController {
+            presenter = presentedViewController
+        }
+        presenter.present(alert, animated: true, completion: nil)
     }
     
     private func viewModel(_ viewModel: MessageViewModel, availabilityForMultipleSelectionWith intent: MultipleSelectionIntent) -> SelectionAvailability {

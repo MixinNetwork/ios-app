@@ -51,7 +51,7 @@ final class PaymentUserItemView: UIView {
     }
     
     func load(user: UserItem) {
-        let badgeImage = user.badgeImage
+        let badgeImage = user.badge?.smallImage
         avatarImageView.setImage(with: user)
         usernameLabel.text = user.fullName
         identityNumberLabel.text = "(\(user.identityNumber))"

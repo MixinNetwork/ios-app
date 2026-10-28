@@ -2193,13 +2193,11 @@ extension ConversationViewController {
     
     private func updateNavigationBar() {
         let badgeImage: UIImage?
-        let showsMembershipIcon: Bool
         if dataSource.category == .group {
             let conversation = dataSource.conversation
             titleLabel.text = conversation.name
             avatarImageView.setGroupImage(with: conversation.iconUrl)
-            badgeImage = nil
-            showsMembershipIcon = false
+            badgeImage = R.image.group_indicator_small()
             if let count = numberOfParticipants {
                 subtitleLabel.text = R.string.localizable.participants_count("\(count)")
                 subtitleLabel.alpha = 1
@@ -2212,13 +2210,11 @@ extension ConversationViewController {
             subtitleLabel.alpha = 1
             titleLabel.text = user.fullName
             avatarImageView.setImage(with: user)
-            badgeImage = user.badgeImage
-            showsMembershipIcon = user.membership?.badgeImage != nil
+            badgeImage = user.badge?.smallImage
         } else {
             subtitleLabel.text = nil
             subtitleLabel.alpha = 1
             badgeImage = nil
-            showsMembershipIcon = false
         }
         opponentUserBadgeView.image = badgeImage
         opponentUserBadgeView.isHidden = badgeImage == nil

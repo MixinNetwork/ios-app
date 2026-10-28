@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -26,28 +26,24 @@
                     <rect key="frame" x="0.0" y="0.0" width="200" height="36"/>
                     <subviews>
                         <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-st-ack">
-                            <rect key="frame" x="0.0" y="0.0" width="200" height="36"/>
+                            <rect key="frame" x="0.0" y="4" width="200" height="28"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-ro-wst">
                                     <rect key="frame" x="75" y="0.0" width="50" height="0.0"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="750" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-la-bel">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ttl-la-bel">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="0.0"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" name="text"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="mem-ic-onv" customClass="SDAnimatedImageView">
+                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="mem-ic-onv" customClass="SDAnimatedImageView">
                                             <rect key="frame" x="0.0" y="-10" width="20" height="20"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="20" id="mem-he-ght"/>
-                                                <constraint firstAttribute="width" constant="20" id="mem-wi-dth"/>
-                                            </constraints>
                                         </imageView>
                                     </subviews>
                                 </stackView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="750" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sub-la-bel">
-                                    <rect key="frame" x="75" y="1" width="50" height="35"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sub-la-bel">
+                                    <rect key="frame" x="75" y="1" width="50" height="27"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                     <color key="textColor" name="text_tertiary"/>
                                     <nil key="highlightedColor"/>
@@ -77,9 +73,9 @@
                 </view>
             </subviews>
             <constraints>
-                <constraint firstItem="ttl-co-ntl" firstAttribute="top" secondItem="con-te-ntv" secondAttribute="top" id="ctl-to-top"/>
-                <constraint firstItem="ttl-co-ntl" firstAttribute="leading" secondItem="con-te-ntv" secondAttribute="leading" id="ctl-to-led"/>
                 <constraint firstAttribute="bottom" secondItem="ttl-co-ntl" secondAttribute="bottom" id="ctl-to-bot"/>
+                <constraint firstItem="ttl-co-ntl" firstAttribute="leading" secondItem="con-te-ntv" secondAttribute="leading" id="ctl-to-led"/>
+                <constraint firstItem="ttl-co-ntl" firstAttribute="top" secondItem="con-te-ntv" secondAttribute="top" id="ctl-to-top"/>
                 <constraint firstAttribute="trailing" secondItem="ttl-co-ntl" secondAttribute="trailing" id="ctl-to-trl"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -87,8 +83,8 @@
                 <outlet property="contentControl" destination="ttl-co-ntl" id="out-ctl-con"/>
                 <outlet property="contentLeadingConstraint" destination="stk-le-adg" id="ssr-7V-ouV"/>
                 <outlet property="contentTrailingConstraint" destination="stk-tr-alg" id="dMA-0L-21f"/>
-                <outlet property="titleLabel" destination="ttl-la-bel" id="out-ctl-ttl"/>
                 <outlet property="subtitleLabel" destination="sub-la-bel" id="out-ctl-sub"/>
+                <outlet property="titleLabel" destination="ttl-la-bel" id="out-ctl-ttl"/>
             </connections>
             <point key="canvasLocation" x="-240" y="28"/>
         </view>
@@ -101,7 +97,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

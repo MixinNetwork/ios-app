@@ -35,13 +35,13 @@ final class MembershipPlanSelectorCell: UICollectionViewCell {
         switch plan {
         case .basic:
             nameLabel.text = R.string.localizable.membership_advance()
-            iconImageView.image = R.image.membership_advance()
+            iconImageView.image = R.image.membership_advance_small()
         case .standard:
             nameLabel.text = R.string.localizable.membership_elite()
-            iconImageView.image = R.image.membership_elite()
+            iconImageView.image = R.image.membership_elite_small()
         case .premium:
             nameLabel.text = R.string.localizable.membership_prosperity()
-            iconImageView.image = UserBadgeIcon.prosperityImage
+            iconImageView.image = UserBadgeIcon.smallProsperityImage
         }
     }
     

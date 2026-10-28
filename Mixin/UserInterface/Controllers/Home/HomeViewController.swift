@@ -268,7 +268,7 @@ final class HomeViewController: UIViewController {
         guard let conversationId = notification.userInfo?[ReceiveMessageService.UserInfoKey.conversationId] as? String else {
             return
         }
-        let job = RefreshGroupIconJob(conversationId: conversationId)
+        let job = RegenerateGroupIconJob(conversationId: conversationId)
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     
@@ -443,9 +443,24 @@ extension HomeViewController {
 
             DispatchQueue.global().async { [weak self] in
                 let conversations = ConversationDAO.shared.conversationList(limit: limit, circleId: circleID)
-                let groupIcons = conversations.filter({ $0.isNeedCachedGroupIcon() })
-                for conversation in groupIcons {
-                    ConcurrentJobQueue.shared.addJob(job: RefreshGroupIconJob(conversationId: conversation.conversationId))
+                let pendingIconRegenerateGroups = conversations.filter { conversation in
+                    guard conversation.isGroup() else {
+                        return false
+                    }
+                    switch Conversation.groupIconType(iconURL: conversation.iconUrl) {
+                    case .none:
+                        return true
+                    case .localGenerated:
+                        let url = AppGroupContainer.groupIconsUrl.appendingPathComponent(conversation.iconUrl)
+                        return !FileManager.default.fileExists(atPath: url.path)
+                    case .remote:
+                        return false
+                    }
+                }
+                for group in pendingIconRegenerateGroups {
+                    ConcurrentJobQueue.shared.addJob(
+                        job: RegenerateGroupIconJob(conversationId: group.conversationId)
+                    )
                 }
                 let hasUnreadMessagesOutsideCircle: Bool = {
                     if let id = circleID {

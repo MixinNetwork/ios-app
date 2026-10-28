@@ -51,7 +51,7 @@ class MessageSearchResult: SearchResult {
         self.userFullname = fullname
         self.createdAt = createdAt
         self.keyword = keyword
-        let badgeImage = UserBadgeIcon.image(
+        let badgeImage = UserBadgeIcon.smallImage(
             membership: membership,
             isVerified: isVerified,
             identityNumber: identityNumber

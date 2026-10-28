@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -56,10 +56,10 @@
                                                                             <color key="textColor" name="text"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
-                                                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_user_bot" translatesAutoresizingMaskIntoConstraints="NO" id="Jnj-lJ-Kay" customClass="SDAnimatedImageView">
+                                                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" placeholderIntrinsicWidth="16" placeholderIntrinsicHeight="16" translatesAutoresizingMaskIntoConstraints="NO" id="Jnj-lJ-Kay" customClass="SDAnimatedImageView">
                                                                             <rect key="frame" x="71.5" y="0.0" width="0.0" height="19.5"/>
                                                                         </imageView>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="4:03 pm" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dc-8H-fbP">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="4:03 pm" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8dc-8H-fbP">
                                                                             <rect key="frame" x="74.5" y="0.0" width="194.5" height="19.5"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                             <color key="textColor" name="text_tertiary"/>
@@ -145,6 +145,7 @@
                                                 <color key="backgroundColor" name="background"/>
                                                 <connections>
                                                     <outlet property="avatarView" destination="BtE-5x-Sut" id="r0k-3K-u1b"/>
+                                                    <outlet property="badgeImageView" destination="Jnj-lJ-Kay" id="ggB-NQ-9ou"/>
                                                     <outlet property="contentLabel" destination="BSl-Co-y1G" id="drM-bz-RG0"/>
                                                     <outlet property="expiredImageView" destination="8ET-km-tPW" id="j7X-ly-vkR"/>
                                                     <outlet property="mentionLabel" destination="a00-2x-xHL" id="rPe-FJ-pud"/>
@@ -155,7 +156,6 @@
                                                     <outlet property="pinImageView" destination="p7w-4E-Qsn" id="Fie-hf-pCP"/>
                                                     <outlet property="timeLabel" destination="8dc-8H-fbP" id="stE-qq-s5m"/>
                                                     <outlet property="unreadLabel" destination="cQr-Dj-Umd" id="ZTR-TR-7er"/>
-                                                    <outlet property="verifiedImageView" destination="Jnj-lJ-Kay" id="ggB-NQ-9ou"/>
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>
@@ -660,7 +660,6 @@
         <image name="ic_chat_pin" width="14" height="14"/>
         <image name="ic_chat_time" width="9" height="9"/>
         <image name="ic_message_photo" width="14" height="12"/>
-        <image name="ic_user_bot" width="14" height="11"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
@@ -671,7 +670,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

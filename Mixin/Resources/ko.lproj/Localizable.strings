@@ -271,6 +271,8 @@
 "change_24h" = "24시간 %%";
 "change_amount" = "금액 변경";
 "change_emergency_contact" = "복구 연락처 변경";
+"change_group_photo_with_camera" = "카메라로 그룹 사진 변경";
+"change_group_photo_with_library" = "라이브러리로 그룹 사진 변경";
 "change_mobile_number" = "휴대폰번호 변경";
 "change_name" = "이름 변경";
 "change_number" = "번호 변경";

@@ -85,6 +85,21 @@ public class ConversationAPI : MixinAPI {
         request(method: .post, path: Path.conversations(id: conversationId), parameters: conversationRequest, completion: completion)
     }
     
+    public static func updateGroupIcon(
+        conversationID: String,
+        icon: String,
+        completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: Path.conversations(id: conversationID),
+            parameters: [
+                "icon_base64": icon,
+            ],
+            completion: completion
+        )
+    }
+    
     public static func mute(conversationId: String, conversationRequest: ConversationRequest, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         request(method: .post, path: Path.mute(conversationId: conversationId), parameters: conversationRequest, completion: completion)
     }

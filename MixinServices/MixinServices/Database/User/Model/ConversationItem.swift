@@ -198,10 +198,6 @@ public final class ConversationItem {
         return category == ConversationCategory.GROUP.rawValue
     }
     
-    public func isNeedCachedGroupIcon() -> Bool {
-        return category == ConversationCategory.GROUP.rawValue && (iconUrl.isEmpty || !FileManager.default.fileExists(atPath: AppGroupContainer.groupIconsUrl.appendingPathComponent(iconUrl).path))
-    }
-    
 }
 
 extension ConversationItem: Decodable, MixinFetchableRecord {

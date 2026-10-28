@@ -271,6 +271,8 @@
 "change_24h" = "24 時間 %%";
 "change_amount" = "数量を変更";
 "change_emergency_contact" = "回復連絡先の変更";
+"change_group_photo_with_camera" = "グループ画像をカメラから選択";
+"change_group_photo_with_library" = "グループ画像をライブラリから選択";
 "change_mobile_number" = "携帯電話番号を変更する";
 "change_name" = "名前を変更";
 "change_number" = "電話番号を変更";

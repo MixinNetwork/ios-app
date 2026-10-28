@@ -13,7 +13,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var unreadLabel: InsetLabel!
     @IBOutlet weak var mentionLabel: InsetLabel!
     @IBOutlet weak var messageStatusImageView: UIImageView!
-    @IBOutlet weak var verifiedImageView: SDAnimatedImageView!
+    @IBOutlet weak var badgeImageView: SDAnimatedImageView!
     @IBOutlet weak var pinImageView: UIImageView!
     @IBOutlet weak var expiredImageView: UIImageView!
     
@@ -32,16 +32,17 @@ class ConversationCell: ModernSelectedBackgroundCell {
     func render(item: ConversationItem) {
         if item.category == ConversationCategory.CONTACT.rawValue {
             avatarView.setImage(with: item.ownerAvatarUrl, userId: item.ownerId, name: item.ownerFullName)
-            let badgeImage = UserBadgeIcon.image(
+            let badgeImage = UserBadgeIcon.smallImage(
                 membership: item.ownerMembership,
                 isVerified: item.ownerIsVerified,
                 isBot: item.ownerIsBot
             )
-            verifiedImageView.image = badgeImage
-            verifiedImageView.isHidden = badgeImage == nil
+            badgeImageView.image = badgeImage
+            badgeImageView.isHidden = badgeImage == nil
         } else {
             avatarView.setGroupImage(with: item.iconUrl)
-            verifiedImageView.isHidden = true
+            badgeImageView.image = R.image.group_indicator_small()
+            badgeImageView.isHidden = false
         }
         nameLabel.text = item.getConversationName()
         if item.createdAt.isEmpty {

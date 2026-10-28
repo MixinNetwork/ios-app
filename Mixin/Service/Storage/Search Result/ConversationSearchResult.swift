@@ -10,9 +10,16 @@ class ConversationSearchResult: SearchResult {
     init(conversation: ConversationItem, keyword: String) {
         self.conversation = conversation
         self.keyword = keyword
-        super.init(iconUrl: conversation.iconUrl,
-                   badgeImage: nil,
-                   superscript: nil)
+        let badgeImage: UIImage? = if conversation.isGroup() {
+            R.image.group_indicator_small()
+        } else {
+            nil
+        }
+        super.init(
+            iconUrl: conversation.iconUrl,
+            badgeImage: badgeImage,
+            superscript: nil
+        )
     }
     
     override func updateTitleAndDescription() {

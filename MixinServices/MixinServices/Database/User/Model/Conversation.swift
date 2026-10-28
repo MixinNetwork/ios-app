@@ -60,10 +60,6 @@ public struct Conversation {
         return Conversation(conversationId: conversationId, ownerId: recipientId, category: category, name: nil, iconUrl: nil, announcement: nil, lastMessageId: nil, lastMessageCreatedAt: nil, lastReadMessageId: nil, unseenMessageCount: 0, status: status, draft: nil, muteUntil: nil, codeUrl: nil, pinTime: nil, expireIn: 0, createdAt: Date().toUTCString())
     }
     
-    public func isGroup() -> Bool {
-        return category == ConversationCategory.GROUP.rawValue
-    }
-    
 }
 
 extension Conversation: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
@@ -114,5 +110,30 @@ extension Conversation: Codable, DatabaseColumnConvertible, MixinFetchableRecord
 extension Conversation: TableRecord, PersistableRecord {
     
     public static let databaseTableName = "conversations"
+    
+}
+
+extension Conversation {
+    
+    public enum GroupIconType {
+        case none
+        case localGenerated
+        case remote
+    }
+    
+    public static func groupIconType(iconURL: String?) -> GroupIconType {
+        guard let iconURL, !iconURL.isEmpty else {
+            return .none
+        }
+        if URL(string: iconURL)?.scheme == nil {
+            return .localGenerated
+        } else {
+            return .remote
+        }
+    }
+    
+    public func isGroup() -> Bool {
+        category == ConversationCategory.GROUP.rawValue
+    }
     
 }

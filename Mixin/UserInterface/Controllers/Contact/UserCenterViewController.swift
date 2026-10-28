@@ -153,15 +153,10 @@ extension UserCenterViewController {
             }
             headerView.identityNumberLabel.text = R.string.localizable.contact_mixin_id(account.identityNumber)
         }
-        membershipRow.subtitle = switch account.membership?.unexpiredPlan {
-        case .advance:
-                .icon(R.image.membership_advance()!)
-        case .elite:
-                .icon(R.image.membership_elite()!)
-        case .prosperity:
-                .icon(UserBadgeIcon.prosperityImage!)
-        case nil:
-            if account.membership?.plan == nil {
+        if let badge = account.membership?.unexpiredPlan?.mediumBadgeImage {
+            membershipRow.subtitle = .icon(badge)
+        } else {
+            membershipRow.subtitle = if account.membership?.plan == nil {
                 .text(R.string.localizable.upgrade_plan())
             } else {
                 .text(R.string.localizable.renew_plan())

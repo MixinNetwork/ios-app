@@ -10,9 +10,11 @@ final class AppUserSearchResult: SearchResult {
     init(user: User, keyword: String) {
         self.user = user
         self.keyword = keyword
-        super.init(iconUrl: user.avatarUrl ?? "",
-                   badgeImage: user.badgeImage,
-                   superscript: nil)
+        super.init(
+            iconUrl: user.avatarUrl ?? "",
+            badgeImage: user.badge?.smallImage,
+            superscript: nil,
+        )
     }
     
     override func updateTitleAndDescription() {

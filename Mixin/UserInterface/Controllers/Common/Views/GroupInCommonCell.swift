@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class GroupInCommonCell: UITableViewCell {
+final class GroupInCommonCell: UITableViewCell {
     
     @IBOutlet weak var avatarView: AvatarImageView!
     @IBOutlet weak var nameLabel: UILabel!

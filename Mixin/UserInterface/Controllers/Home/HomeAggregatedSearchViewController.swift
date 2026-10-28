@@ -43,14 +43,10 @@ final class HomeAggregatedSearchViewController: UIViewController, HomeSearchView
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.maxConcurrentOperationCount = 1
-        let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.configureWithOpaqueBackground()
-        navigationBarAppearance.backgroundColor = R.color.background()
-        navigationBarAppearance.shadowColor = nil
-        navigationItem.standardAppearance = navigationBarAppearance
-        navigationItem.scrollEdgeAppearance = navigationBarAppearance
-        navigationItem.compactAppearance = navigationBarAppearance
-        navigationItem.compactScrollEdgeAppearance = navigationBarAppearance
+        navigationItem.standardAppearance = .backgroundColored
+        navigationItem.scrollEdgeAppearance = .backgroundColored
+        navigationItem.compactAppearance = .backgroundColored
+        navigationItem.compactScrollEdgeAppearance = .backgroundColored
         navigationItem.hidesBackButton = true
         navigationItem.titleView = searchBoxView
         navigationItem.rightBarButtonItem = .cancelSearch(

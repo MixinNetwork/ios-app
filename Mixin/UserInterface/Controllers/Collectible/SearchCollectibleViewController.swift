@@ -31,6 +31,10 @@ final class SearchCollectibleViewController: UIViewController, SearchNavigationA
         searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_collectible()
         searchBoxView.textField.addTarget(self, action: #selector(searchKeyword(_:)), for: .editingChanged)
         navigationItem.hidesBackButton = true
+        navigationItem.standardAppearance = .backgroundColored
+        navigationItem.scrollEdgeAppearance = .backgroundColored
+        navigationItem.compactAppearance = .backgroundColored
+        navigationItem.compactScrollEdgeAppearance = .backgroundColored
         navigationItem.titleView = searchBoxView
         navigationItem.rightBarButtonItem = .cancelSearch(
             target: self,

@@ -24,6 +24,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     var perpsPositionsCount = 0
     var hasMorePerpsPositions = false
     
+    var hasMoreCollectibles = false
     var hasMoreTransactions = false
     
     var perpsTopMovers: OrderedDictionary<String, PerpetualMarketViewModel> = [:]
@@ -274,6 +275,11 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                     ) { [weak self] indexPath in
                         self?.hideTokenAction(indexPath: indexPath)
                     }
+                case .collectibles:
+                    return listSection(
+                        showFooter: self.hasMoreCollectibles,
+                        trailingSwipeActionsConfigurationProvider: nil
+                    )
                 case .transactions:
                     return listSection(
                         showFooter: self.hasMoreTransactions,
@@ -430,6 +436,13 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.token, for: indexPath)!
                 self?.configure(tokenCell: cell, withTokenOf: assetID)
                 return cell
+            case let .collectible(outputID):
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: WalletCollectibleCell.reuseIdentifier,
+                    for: indexPath
+                ) as! WalletCollectibleCell
+                self?.configure(collectibleCell: cell, withCollectibleOf: outputID)
+                return cell
             case let .transaction(id):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.transaction, for: indexPath)!
                 self?.configure(transactionCell: cell, withTransactionOf: id)
@@ -509,6 +522,26 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                 default:
                     return nil
                 }
+            case .collectibles:
+                switch elementKind {
+                case UICollectionView.elementKindSectionHeader:
+                    let header = collectionView.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
+                    header.titleLabel.text = R.string.localizable.collectibles()
+                    header.subtitleLabel.text = nil
+                    header.disclosureImageView.isHidden = false
+                    header.onShowAll = { _ in
+                        self?.viewAllCollectibles()
+                    }
+                    return header
+                case UICollectionView.elementKindSectionFooter:
+                    let footer = collectionView.dequeueReusableSupplementaryView(ofKind: elementKind, withReuseIdentifier: TradeViewAllFooterView.reuseIdentifier, for: indexPath) as! TradeViewAllFooterView
+                    footer.onViewAll = { _ in
+                        self?.viewAllCollectibles()
+                    }
+                    return footer
+                default:
+                    return nil
+                }
             case .transactions:
                 switch elementKind {
                 case UICollectionView.elementKindSectionHeader:
@@ -555,6 +588,10 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         collectionView.register(R.nib.perpetualActivityCell)
         collectionView.register(R.nib.perpetualMarketCell)
         collectionView.register(R.nib.tokenCell)
+        collectionView.register(
+            WalletCollectibleCell.self,
+            forCellWithReuseIdentifier: WalletCollectibleCell.reuseIdentifier
+        )
         collectionView.register(R.nib.transactionCell)
         collectionView.register(R.nib.perpetualTopMoverCell)
         collectionView.register(
@@ -636,6 +673,10 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         
     }
     
+    func configure(collectibleCell: WalletCollectibleCell, withCollectibleOf outputID: String) {
+        
+    }
+    
     func configure(transactionCell: TransactionCell, withTransactionOf id: String) {
         
     }
@@ -653,6 +694,10 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     }
     
     func viewAllTokens() {
+        
+    }
+    
+    func viewAllCollectibles() {
         
     }
     
@@ -685,6 +730,7 @@ extension WalletViewController {
         case valueAddedServices
         case perpsPositions
         case tokens
+        case collectibles
         case transactions
         case perpsTopMovers
         case referral
@@ -700,6 +746,7 @@ extension WalletViewController {
         case earn
         case perpsPosition(positionID: String)
         case token(assetID: String)
+        case collectible(outputID: String)
         case transaction(id: String)
         case perpsTopMover(marketID: String)
         case referral

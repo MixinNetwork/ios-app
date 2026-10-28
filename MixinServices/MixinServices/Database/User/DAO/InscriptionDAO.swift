@@ -62,9 +62,13 @@ public final class InscriptionDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [hash])
     }
     
-    public func allInscriptionOutputs(collectionHash: String? = nil, sortedBy order: CollectibleDisplayOrdering) -> [InscriptionOutput] {
+    public func allInscriptionOutputs(
+        collectionHash: String?,
+        sortedBy order: CollectibleDisplayOrdering,
+        limit: Int?,
+    ) -> [InscriptionOutput] {
         var sql = SQL.selector + " AND o.inscription_hash IS NOT NULL"
-        let arguments: StatementArguments
+        var arguments: StatementArguments
         if let collectionHash {
             sql += " AND c.collection_hash = ?"
             arguments = [collectionHash]
@@ -72,6 +76,10 @@ public final class InscriptionDAO: UserDatabaseDAO {
             arguments = StatementArguments()
         }
         sql += SQL.ordering(from: order)
+        if let limit {
+            sql += "\nLIMIT ?"
+            arguments += [limit]
+        }
         return db.select(with: sql, arguments: arguments)
     }
     

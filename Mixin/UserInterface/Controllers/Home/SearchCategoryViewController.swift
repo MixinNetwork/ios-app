@@ -84,6 +84,10 @@ final class SearchCategoryViewController: UIViewController, HomeSearchViewContro
         tableView.rowHeight = 70
         
         queue.maxConcurrentOperationCount = 1
+        navigationItem.standardAppearance = .backgroundColored
+        navigationItem.scrollEdgeAppearance = .backgroundColored
+        navigationItem.compactAppearance = .backgroundColored
+        navigationItem.compactScrollEdgeAppearance = .backgroundColored
         navigationItem.title = ""
         navigationItem.titleView = searchBoxView
         navigationItem.rightBarButtonItem = .cancelSearch(

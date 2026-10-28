@@ -91,7 +91,11 @@ final class CollectibleCollectionViewController: UIViewController {
     @objc private func reloadData() {
         DispatchQueue.global().async { [collection, weak self] in
             let token = TokenDAO.shared.tokenItem(kernelAssetID: collection.asset)
-            let items = InscriptionDAO.shared.allInscriptionOutputs(collectionHash: collection.collectionHash, sortedBy: .recent)
+            let items = InscriptionDAO.shared.allInscriptionOutputs(
+                collectionHash: collection.collectionHash,
+                sortedBy: .recent,
+                limit: nil,
+            )
             DispatchQueue.main.async {
                 guard let self else {
                     return

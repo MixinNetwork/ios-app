@@ -16,6 +16,20 @@ final class CollectiblesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.collectibles()
+        navigationItem.standardAppearance = .transparent
+        navigationItem.scrollEdgeAppearance = .transparent
+        navigationItem.compactAppearance = .transparent
+        navigationItem.compactScrollEdgeAppearance = .transparent
+        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+            title: R.string.localizable.collectibles(),
+            wallet: .privacy
+        )
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_title_search(),
+            target: self,
+            action: #selector(search(_:)),
+        )
         sortButton.semanticContentAttribute = .forceRightToLeft
         contentSegmentedControl.items = [
             R.image.collectible_tab_item()!,
@@ -104,6 +118,11 @@ final class CollectiblesViewController: UIViewController {
         reloadData()
     }
     
+    @IBAction func search(_ sender: Any) {
+        let search = SearchCollectibleViewController()
+        navigationController?.pushViewController(search, animated: true)
+    }
+    
     @objc private func reloadCollection(_ notification: Notification) {
         guard content == .collection else {
             return
@@ -132,7 +151,11 @@ final class CollectiblesViewController: UIViewController {
             let collections: [InscriptionCollectionPreview]
             switch content {
             case .item:
-                items = InscriptionDAO.shared.allInscriptionOutputs(sortedBy: order)
+                items = InscriptionDAO.shared.allInscriptionOutputs(
+                    collectionHash: nil,
+                    sortedBy: order,
+                    limit: nil,
+                )
                 collections = []
             case .collection:
                 items = []

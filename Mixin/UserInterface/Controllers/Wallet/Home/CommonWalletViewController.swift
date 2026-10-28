@@ -506,7 +506,7 @@ extension CommonWalletViewController: UICollectionViewDelegate {
             return
         }
         switch item {
-        case .overview, .emptyWalletInstruction, .cash, .earn, .perpsPosition, .perpsTopMover, .referral, .benefit:
+        case .overview, .emptyWalletInstruction, .cash, .earn, .perpsPosition, .collectible, .perpsTopMover, .referral, .benefit:
             break
         case let .banner(banner, _):
             bannerController.handleSelection(of: banner)

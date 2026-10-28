@@ -1461,7 +1461,6 @@
 		94B2FA4C2EC473BD001DD158 /* Web3LimitOrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2FA4B2EC473B8001DD158 /* Web3LimitOrderRequest.swift */; };
 		94B2FA692EC474C7001DD158 /* Web3LimitOrderResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2FA682EC474C4001DD158 /* Web3LimitOrderResponse.swift */; };
 		94B5776A2B5E554800AE576E /* ExploreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577692B5E554800AE576E /* ExploreViewController.swift */; };
-		94B5776F2B5E555B00AE576E /* ExploreView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B5776E2B5E555B00AE576E /* ExploreView.xib */; };
 		94B5777D2B5E755100AE576E /* SeparatorHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B5777C2B5E755100AE576E /* SeparatorHeaderFooterView.swift */; };
 		94B577822B5E79B800AE576E /* ExploreBotsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577812B5E79B800AE576E /* ExploreBotsViewController.swift */; };
 		94B577872B5EC11500AE576E /* ExploreAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577862B5EC11500AE576E /* ExploreAction.swift */; };
@@ -1817,6 +1816,7 @@
 		A2FC57C7CD17245C024CB8A8 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = B399FDB6D835A212B15CA4E1 /* FirebasePerformance */; };
 		A96D2DF95DF74A2BAE691D24 /* GalleryWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96D2DF95DF74A2BAE691D23 /* GalleryWindow.swift */; };
 		A96D2DF95DF74A2BAE691D26 /* GalleryTransitionOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96D2DF95DF74A2BAE691D25 /* GalleryTransitionOverlayView.swift */; };
+		A9D22F8A2FF0010000000001 /* WalletCollectibleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D22F8A2FF0010000000002 /* WalletCollectibleCell.swift */; };
 		ABCB87DD23F18A3D00780E60 /* PermissionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */; };
 		ABCB87E023F1A56B00780E60 /* PermissionsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABCB87DE23F1A56B00780E60 /* PermissionsTableViewCell.xib */; };
 		ABCB87E123F1A56B00780E60 /* PermissionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCB87DF23F1A56B00780E60 /* PermissionsTableViewCell.swift */; };
@@ -3528,7 +3528,6 @@
 		94B2FA4B2EC473B8001DD158 /* Web3LimitOrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3LimitOrderRequest.swift; sourceTree = "<group>"; };
 		94B2FA682EC474C4001DD158 /* Web3LimitOrderResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3LimitOrderResponse.swift; sourceTree = "<group>"; };
 		94B577692B5E554800AE576E /* ExploreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreViewController.swift; sourceTree = "<group>"; };
-		94B5776E2B5E555B00AE576E /* ExploreView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreView.xib; sourceTree = "<group>"; };
 		94B5777C2B5E755100AE576E /* SeparatorHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorHeaderFooterView.swift; sourceTree = "<group>"; };
 		94B577812B5E79B800AE576E /* ExploreBotsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreBotsViewController.swift; sourceTree = "<group>"; };
 		94B577862B5EC11500AE576E /* ExploreAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreAction.swift; sourceTree = "<group>"; };
@@ -3881,6 +3880,7 @@
 		9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDateHeaderView.swift; sourceTree = "<group>"; };
 		A96D2DF95DF74A2BAE691D23 /* GalleryWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryWindow.swift; sourceTree = "<group>"; };
 		A96D2DF95DF74A2BAE691D25 /* GalleryTransitionOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryTransitionOverlayView.swift; sourceTree = "<group>"; };
+		A9D22F8A2FF0010000000002 /* WalletCollectibleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletCollectibleCell.swift; sourceTree = "<group>"; };
 		ABCB87DC23F18A3D00780E60 /* PermissionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsViewController.swift; sourceTree = "<group>"; };
 		ABCB87DE23F1A56B00780E60 /* PermissionsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PermissionsTableViewCell.xib; sourceTree = "<group>"; };
 		ABCB87DF23F1A56B00780E60 /* PermissionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsTableViewCell.swift; sourceTree = "<group>"; };
@@ -5528,6 +5528,7 @@
 				94FCC9F12FD7C03300AA6AA7 /* WalletOverviewFooterView.swift */,
 				94ECDEC62FD1DA3100617524 /* TokenCell.xib */,
 				94ECDEBE2FD1DA1200617524 /* TokenCell.swift */,
+				A9D22F8A2FF0010000000002 /* WalletCollectibleCell.swift */,
 				942E2B062FD3FB6C00E5E6FB /* TransactionCell.xib */,
 				942E2B042FD3FB6B00E5E6FB /* TransactionCell.swift */,
 				94A161822FD417DC0022D855 /* WalletSupport.swift */,
@@ -6485,7 +6486,6 @@
 				7B2C8B2C2524D26900347AC3 /* ClipSwitcherViewController.swift */,
 				9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */,
 				947B36AD25DEB75A00146111 /* PlaylistViewController.swift */,
-				94B5776E2B5E555B00AE576E /* ExploreView.xib */,
 				94B577692B5E554800AE576E /* ExploreViewController.swift */,
 				94B577812B5E79B800AE576E /* ExploreBotsViewController.swift */,
 				946E05992CBFD841004B264E /* ExploreSearchViewController.swift */,
@@ -7552,7 +7552,6 @@
 				94735E742E28FED90001C179 /* PrivateKeyView.xib in Resources */,
 				941C9CE9298E57BD00CB760E /* AuthenticationView.xib in Resources */,
 				7B5F966B241424CD003A087B /* LocationInformationView.xib in Resources */,
-				94B5776F2B5E555B00AE576E /* ExploreView.xib in Resources */,
 				9413A4002C367D8D00B655AC /* TradeSpotView.xib in Resources */,
 				944F54382E45E7FB0064A9A2 /* WatchWalletAddressCell.xib in Resources */,
 				94ECDEC72FD1DA3100617524 /* TokenCell.xib in Resources */,
@@ -8614,6 +8613,7 @@
 				94ABA8F62FBC48A800FC536D /* PerpsMarginInputViewController.swift in Sources */,
 				7BEDF9F820510CD300371266 /* ConversationDataSource.swift in Sources */,
 				94ECDEBF2FD1DA1200617524 /* TokenCell.swift in Sources */,
+				A9D22F8A2FF0010000000001 /* WalletCollectibleCell.swift in Sources */,
 				94C359F628B506D40010F53C /* TIPFullscreenInputViewController.swift in Sources */,
 				E0B53A6923B0C2C9008DA9F1 /* AssetItem+Description.swift in Sources */,
 				941994D22CCAEB9100F5425C /* SignInWithMixinMnemonicsViewController.swift in Sources */,

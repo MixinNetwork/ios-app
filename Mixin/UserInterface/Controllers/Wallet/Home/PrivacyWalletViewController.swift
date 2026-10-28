@@ -13,6 +13,7 @@ final class PrivacyWalletViewController: WalletViewController {
     private var hasAssetInLegacyNetwork = false
     private var tokens: OrderedDictionary<String, MixinTokenItem> = [:]
     private var earningAvailableAssetIDs: Set<String> = []
+    private var collectibles: OrderedDictionary<String, InscriptionOutput> = [:]
     private var transactions: OrderedDictionary<String, SafeSnapshotItem> = [:]
     
     private var pendingDepositObserver: PrivacyWalletPendingDepositObserver?
@@ -56,6 +57,10 @@ final class PrivacyWalletViewController: WalletViewController {
             TokenExtraDAO.tokenVisibilityDidChangeNotification,
             UTXOService.balanceDidUpdateNotification,
             SafeSnapshotDAO.snapshotDidSaveNotification,
+            InscriptionDAO.didSaveCollectionNotification,
+            RefreshInscriptionJob.didFinishNotification,
+            OutputDAO.didSignOutputNotification,
+            OutputDAO.didInsertInscriptionOutputsNotification,
         ].map { name in
             NotificationCenter.default.publisher(for: name)
         }
@@ -164,6 +169,13 @@ final class PrivacyWalletViewController: WalletViewController {
         tokenCell.load(token: token, availableForEarning: availableForEarning)
     }
     
+    override func configure(collectibleCell: WalletCollectibleCell, withCollectibleOf outputID: String) {
+        guard let collectible = collectibles[outputID] else {
+            return
+        }
+        collectibleCell.load(item: collectible)
+    }
+    
     override func configure(transactionCell: TransactionCell, withTransactionOf id: String) {
         guard let snapshot = transactions[id] else {
             return
@@ -251,6 +263,11 @@ final class PrivacyWalletViewController: WalletViewController {
         navigationController?.pushViewController(tokens, animated: true)
     }
     
+    override func viewAllCollectibles() {
+        let collectibles = CollectiblesViewController()
+        navigationController?.pushViewController(collectibles, animated: true)
+    }
+    
     override func viewAllTransactions() {
         let transactionHistory = MixinTransactionHistoryViewController(type: nil)
         navigationController?.pushViewController(transactionHistory, animated: true)
@@ -335,6 +352,18 @@ final class PrivacyWalletViewController: WalletViewController {
                     result[item.assetID] = item
                 }
             
+            let collectibles = InscriptionDAO.shared.allInscriptionOutputs(
+                collectionHash: nil,
+                sortedBy: .recent,
+                limit: hasMoreDeterminatingItemsCount,
+            )
+            let hasMoreCollectibles = collectibles.count > displayItemsCount
+            let displayCollectibles = collectibles
+                .prefix(displayItemsCount)
+                .reduce(into: OrderedDictionary()) { result, item in
+                    result[item.output.id] = item
+                }
+            
             let transactions = SafeSnapshotDAO.shared.snapshots(
                 filter: .init(),
                 order: .newest,
@@ -359,7 +388,7 @@ final class PrivacyWalletViewController: WalletViewController {
                     )
                 }
             let perpsTopMovers: OrderedDictionary<String, PerpetualMarketViewModel>
-            if hasPositiveBalanceToken || hasTransaction {
+            if hasPositiveBalanceToken || !collectibles.isEmpty || hasTransaction {
                 snapshot.appendSections([.overview])
                 snapshot.appendItems([.overview], toSection: .overview)
             } else {
@@ -385,6 +414,13 @@ final class PrivacyWalletViewController: WalletViewController {
                 snapshot.appendItems(
                     displayTokens.values.map({ Item.token(assetID: $0.assetID) }),
                     toSection: .tokens
+                )
+            }
+            if !displayCollectibles.isEmpty {
+                snapshot.appendSections([.collectibles])
+                snapshot.appendItems(
+                    displayCollectibles.values.map({ Item.collectible(outputID: $0.output.id) }),
+                    toSection: .collectibles
                 )
             }
             if hasTransaction {
@@ -421,6 +457,9 @@ final class PrivacyWalletViewController: WalletViewController {
                 self.tokens = displayTokens
                 self.tokensValue = formattedTokensValue
                 self.hasMoreTokens = hasMoreToken
+                
+                self.collectibles = displayCollectibles
+                self.hasMoreCollectibles = hasMoreCollectibles
                 
                 self.transactions = displayTransactions
                 self.hasMoreTransactions = hasMoreTransactions
@@ -620,6 +659,24 @@ final class PrivacyWalletViewController: WalletViewController {
 
 extension PrivacyWalletViewController: UICollectionViewDelegate {
     
+    func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplay cell: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
+        if let item = dataSource.itemIdentifier(for: indexPath),
+           case let .collectible(outputID) = item,
+           let collectible = collectibles[outputID],
+           collectible.inscription == nil,
+           !collectible.inscriptionHash.isEmpty
+        {
+            let refreshInscription = RefreshInscriptionJob(
+                inscriptionHash: collectible.inscriptionHash
+            )
+            ConcurrentJobQueue.shared.addJob(job: refreshInscription)
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         guard let item = dataSource.itemIdentifier(for: indexPath) else {
@@ -654,6 +711,11 @@ extension PrivacyWalletViewController: UICollectionViewDelegate {
                 let viewController = MixinTokenViewController(token: token)
                 navigationController?.pushViewController(viewController, animated: true)
                 reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "wallet_home"])
+            }
+        case .collectible(let outputID):
+            if let collectible = collectibles[outputID] {
+                let preview = InscriptionViewController(output: collectible)
+                navigationController?.pushViewController(preview, animated: true)
             }
         case .transaction(let id):
             if let transaction = transactions[id],

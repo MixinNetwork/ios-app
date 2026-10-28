@@ -93,7 +93,7 @@
                                                     <color key="textColor" name="text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="16" placeholderIntrinsicHeight="16" image="ic_user_verified" translatesAutoresizingMaskIntoConstraints="NO" id="Uvu-hB-dd9" customClass="SDAnimatedImageView">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="16" placeholderIntrinsicHeight="16" translatesAutoresizingMaskIntoConstraints="NO" id="Uvu-hB-dd9" customClass="SDAnimatedImageView">
                                                     <rect key="frame" x="185.5" y="27" width="16" height="16"/>
                                                 </imageView>
                                             </subviews>
@@ -173,7 +173,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic_user_verified" width="14" height="14"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

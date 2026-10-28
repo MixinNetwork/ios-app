@@ -35,7 +35,7 @@ final class RecipientCell: UITableViewCell {
             avatarImageView.setGroupImage(with: conversation.iconUrl)
             badgeImageView.image = R.image.group_indicator_small()
         case .none:
-            break
+            badgeImageView.image = nil
         }
         badgeImageView.isHidden = badgeImageView.image == nil
     }

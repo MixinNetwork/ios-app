@@ -8,6 +8,7 @@ final class Web3TransactionViewController: TransactionViewController {
     }
     
     private let wallet: Web3Wallet
+    private let availability: Web3Wallet.Availability
     
     private var transaction: Web3Transaction
     private var rows: [Row] = []
@@ -17,9 +18,14 @@ final class Web3TransactionViewController: TransactionViewController {
     
     private var reviewPendingTransactionJobID: String?
     
-    init(wallet: Web3Wallet, transaction: Web3Transaction) {
+    init(
+        wallet: Web3Wallet,
+        transaction: Web3Transaction,
+        availability: Web3Wallet.Availability,
+    ) {
         self.wallet = wallet
         self.transaction = transaction
+        self.availability = availability
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .custom
         self.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
@@ -187,6 +193,7 @@ extension Web3TransactionViewController: UITableViewDataSource {
                 row.networkLabel.text = nil
                 row.leverageLabel?.removeFromSuperview()
             }
+            cell.delegate = self
             return cell
         case let .fee(token, fiatMoney):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
@@ -229,6 +236,7 @@ extension Web3TransactionViewController: UITableViewDataSource {
                 row.amountLabel.attributedText = amount
                 row.networkLabel.text = nil
             }
+            cell.delegate = self
             return cell
         }
     }
@@ -257,6 +265,37 @@ extension Web3TransactionViewController: UITableViewDelegate {
         default:
             break
         }
+    }
+    
+}
+
+extension Web3TransactionViewController: MultipleAssetChangeCell.Delegate {
+    
+    func multipleAssetChangeCell(_ cell: MultipleAssetChangeCell, didSelectRowAt index: Int) {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            return
+        }
+        let assetID: String
+        switch rows[indexPath.row] {
+        case let .assetChanges(changes):
+            guard changes.indices.contains(index), let token = changes[index].token else {
+                return
+            }
+            assetID = token.assetID
+        case let .approval(token, _):
+            assetID = token.assetID
+        default:
+            return
+        }
+        guard let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: assetID) else {
+            return
+        }
+        let viewController = Web3TokenViewController(
+            wallet: wallet,
+            token: token,
+            availability: availability,
+        )
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
 }

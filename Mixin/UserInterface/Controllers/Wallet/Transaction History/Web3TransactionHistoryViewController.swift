@@ -9,6 +9,8 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     
     let wallet: Web3Wallet
     
+    private let availability: Web3Wallet.Availability
+    
     private var reputationFilterView = TransactionHistoryReputationFilterView()
     
     private var filter: Web3Transaction.Filter
@@ -25,15 +27,25 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     
     private var reviewPendingTransactionJobID: String?
     
-    init(wallet: Web3Wallet, token: Web3TokenItem) {
+    init(
+        wallet: Web3Wallet,
+        token: Web3TokenItem,
+        availability: Web3Wallet.Availability,
+    ) {
         let reputationOptions = Web3Reputation.FilterOption.options(token: token)
         self.wallet = wallet
+        self.availability = availability
         self.filter = .init(tokens: [token], reputationOptions: reputationOptions)
         super.init()
     }
     
-    init(wallet: Web3Wallet, type: Web3Transaction.DisplayType?) {
+    init(
+        wallet: Web3Wallet,
+        type: Web3Transaction.DisplayType?,
+        availability: Web3Wallet.Availability,
+    ) {
         self.wallet = wallet
+        self.availability = availability
         self.filter = .init(type: type)
         super.init()
     }
@@ -295,7 +307,11 @@ extension Web3TransactionHistoryViewController: UITableViewDelegate {
         guard let id = dataSource.itemIdentifier(for: indexPath), let item = items[id] else {
             return
         }
-        let viewController = Web3TransactionViewController(wallet: wallet, transaction: item)
+        let viewController = Web3TransactionViewController(
+            wallet: wallet,
+            transaction: item,
+            availability: availability,
+        )
         navigationController?.pushViewController(viewController, animated: true)
     }
     

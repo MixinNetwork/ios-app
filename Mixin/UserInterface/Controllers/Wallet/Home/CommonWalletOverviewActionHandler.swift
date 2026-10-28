@@ -4,6 +4,7 @@ import MixinServices
 final class CommonWalletOverviewActionHandler {
     
     private let wallet: Web3Wallet
+    private let availability: Web3Wallet.Availability
     private let supportedChainIDs: Set<String>
     private let watchingAddresses: WatchingAddresses?
     private let tradeSource: UserOperationAnalytics.TradeSource
@@ -12,12 +13,14 @@ final class CommonWalletOverviewActionHandler {
     
     init(
         wallet: Web3Wallet,
+        availability: Web3Wallet.Availability,
         supportedChainIDs: Set<String>,
         watchingAddresses: WatchingAddresses?,
         tradeSource: UserOperationAnalytics.TradeSource,
         responder: UIViewController?,
     ) {
         self.wallet = wallet
+        self.availability = availability
         self.supportedChainIDs = supportedChainIDs
         self.watchingAddresses = watchingAddresses
         self.tradeSource = tradeSource
@@ -136,7 +139,11 @@ extension CommonWalletOverviewActionHandler: WalletOverviewCell.Delegate {
     }
     
     func walletOverviewCellDidSelectPendingTransactions(_ cell: WalletOverviewCell) {
-        let transactionHistory = Web3TransactionHistoryViewController(wallet: wallet, type: .pending)
+        let transactionHistory = Web3TransactionHistoryViewController(
+            wallet: wallet,
+            type: .pending,
+            availability: availability,
+        )
         responder?.navigationController?.pushViewController(transactionHistory, animated: true)
     }
     

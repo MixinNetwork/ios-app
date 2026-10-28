@@ -148,7 +148,7 @@ final class ExploreBotsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard let explore = parent as? ExploreViewController else {
+        guard let explore = parent as? ExploreMoreViewController else {
             return
         }
         switch FixedSection(rawValue: indexPath.section) {

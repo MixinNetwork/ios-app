@@ -8,23 +8,17 @@ final class HomeTabBarController: UITabBarController {
         case wallet
     }
     
-    private let homeViewController = R.storyboard.home.home()!
-    private let walletContainerViewController = WalletContainerViewController()
-    private let marketDashboardViewController = MarketDashboardViewController()
-    private let exploreViewController = ExploreViewController()
+    private let chatNavigationController: HomeNavigationController
+    private let homeViewController: HomeViewController
     
-    private lazy var chatNavigationController = HomeNavigationController(
-        rootViewController: homeViewController,
-    )
-    private lazy var walletNavigationController = HomeNavigationController(
-        rootViewController: walletContainerViewController,
-    )
-    private lazy var marketNavigationController = HomeNavigationController(
-        rootViewController: marketDashboardViewController,
-    )
-    private lazy var exploreNavigationController = HomeNavigationController(
-        rootViewController: exploreViewController,
-    )
+    private let walletNavigationController: HomeNavigationController
+    private let walletContainerViewController: WalletContainerViewController
+    
+    private let marketNavigationController: HomeNavigationController
+    private let marketDashboardViewController: MarketDashboardViewController
+    
+    private let exploreMoreNavigationController: HomeNavigationController
+    private let exploreMoreViewController: ExploreMoreViewController
     
     var selectedNavigationController: HomeNavigationController {
         loadViewIfNeeded()
@@ -62,6 +56,31 @@ final class HomeTabBarController: UITabBarController {
     private var pendingInitialWalletValidation: Bool
     
     init(initialTab: InitialTab) {
+        let homeViewController = R.storyboard.home.home()!
+        let walletContainerViewController = WalletContainerViewController()
+        let marketDashboardViewController = MarketDashboardViewController()
+        let exploreMoreViewController = ExploreMoreViewController()
+        
+        self.homeViewController = homeViewController
+        self.chatNavigationController = HomeNavigationController(
+            rootViewController: homeViewController,
+        )
+        
+        self.walletContainerViewController = walletContainerViewController
+        self.walletNavigationController = HomeNavigationController(
+            rootViewController: walletContainerViewController,
+        )
+        
+        self.marketDashboardViewController = marketDashboardViewController
+        self.marketNavigationController = HomeNavigationController(
+            rootViewController: marketDashboardViewController,
+        )
+        
+        self.exploreMoreViewController = exploreMoreViewController
+        self.exploreMoreNavigationController = HomeNavigationController(
+            rootViewController: exploreMoreViewController,
+        )
+        
         pendingInitialWalletValidation = initialTab == .wallet
         super.init(nibName: nil, bundle: nil)
     }
@@ -116,7 +135,7 @@ final class HomeTabBarController: UITabBarController {
             image: R.image.home_tab_market(),
             selectedImage: R.image.home_tab_market_selected(),
         )
-        exploreNavigationController.tabBarItem = UITabBarItem(
+        exploreMoreNavigationController.tabBarItem = UITabBarItem(
             title: R.string.localizable.more(),
             image: R.image.home_tab_more(),
             selectedImage: R.image.home_tab_more_selected(),
@@ -125,7 +144,7 @@ final class HomeTabBarController: UITabBarController {
             chatNavigationController,
             walletNavigationController,
             marketNavigationController,
-            exploreNavigationController,
+            exploreMoreNavigationController,
         ]
         customizableViewControllers = nil
         if pendingInitialWalletValidation {
@@ -159,9 +178,9 @@ final class HomeTabBarController: UITabBarController {
     
     @objc private func reloadItemBadges() {
         if BadgeManager.shared.hasViewed(identifier: .moreTab) {
-            exploreNavigationController.tabBarItem.badgeValue = nil
+            exploreMoreNavigationController.tabBarItem.badgeValue = nil
         } else {
-            exploreNavigationController.tabBarItem.badgeValue = "●"
+            exploreMoreNavigationController.tabBarItem.badgeValue = "●"
         }
     }
     
@@ -182,7 +201,7 @@ final class HomeTabBarController: UITabBarController {
         }.forEach { viewController in
             (viewController as? UINavigationController)?.popToRootViewController(animated: false)
         }
-        if selectedViewController === exploreNavigationController {
+        if selectedViewController === exploreMoreNavigationController {
             BadgeManager.shared.setHasViewed(identifier: .moreTab)
         }
     }
@@ -248,7 +267,7 @@ extension HomeTabBarController: UITabBarControllerDelegate {
             method = "wallets"
         case marketNavigationController:
             method = "markets"
-        case exploreNavigationController:
+        case exploreMoreNavigationController:
             method = "more"
         default:
             return false

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryChecking {
+final class ExploreMoreViewController: UIViewController, AssetChangeAccountRecoveryChecking {
     
     override func viewDidLoad() {
         super.viewDidLoad()

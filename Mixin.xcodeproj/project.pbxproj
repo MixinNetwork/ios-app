@@ -1460,7 +1460,7 @@
 		94B1E56C2C4A05BF00A2349F /* MultipleAssetChangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B1E5692C4A05BF00A2349F /* MultipleAssetChangeCell.swift */; };
 		94B2FA4C2EC473BD001DD158 /* Web3LimitOrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2FA4B2EC473B8001DD158 /* Web3LimitOrderRequest.swift */; };
 		94B2FA692EC474C7001DD158 /* Web3LimitOrderResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2FA682EC474C4001DD158 /* Web3LimitOrderResponse.swift */; };
-		94B5776A2B5E554800AE576E /* ExploreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577692B5E554800AE576E /* ExploreViewController.swift */; };
+		94B5776A2B5E554800AE576E /* ExploreMoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577692B5E554800AE576E /* ExploreMoreViewController.swift */; };
 		94B5777D2B5E755100AE576E /* SeparatorHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B5777C2B5E755100AE576E /* SeparatorHeaderFooterView.swift */; };
 		94B577822B5E79B800AE576E /* ExploreBotsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577812B5E79B800AE576E /* ExploreBotsViewController.swift */; };
 		94B577872B5EC11500AE576E /* ExploreAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577862B5EC11500AE576E /* ExploreAction.swift */; };
@@ -3527,7 +3527,7 @@
 		94B1E56A2C4A05BF00A2349F /* MultipleAssetChangeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MultipleAssetChangeCell.xib; sourceTree = "<group>"; };
 		94B2FA4B2EC473B8001DD158 /* Web3LimitOrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3LimitOrderRequest.swift; sourceTree = "<group>"; };
 		94B2FA682EC474C4001DD158 /* Web3LimitOrderResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3LimitOrderResponse.swift; sourceTree = "<group>"; };
-		94B577692B5E554800AE576E /* ExploreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreViewController.swift; sourceTree = "<group>"; };
+		94B577692B5E554800AE576E /* ExploreMoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreMoreViewController.swift; sourceTree = "<group>"; };
 		94B5777C2B5E755100AE576E /* SeparatorHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorHeaderFooterView.swift; sourceTree = "<group>"; };
 		94B577812B5E79B800AE576E /* ExploreBotsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreBotsViewController.swift; sourceTree = "<group>"; };
 		94B577862B5EC11500AE576E /* ExploreAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreAction.swift; sourceTree = "<group>"; };
@@ -6486,7 +6486,7 @@
 				7B2C8B2C2524D26900347AC3 /* ClipSwitcherViewController.swift */,
 				9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */,
 				947B36AD25DEB75A00146111 /* PlaylistViewController.swift */,
-				94B577692B5E554800AE576E /* ExploreViewController.swift */,
+				94B577692B5E554800AE576E /* ExploreMoreViewController.swift */,
 				94B577812B5E79B800AE576E /* ExploreBotsViewController.swift */,
 				946E05992CBFD841004B264E /* ExploreSearchViewController.swift */,
 				94B13FC02B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift */,
@@ -8540,7 +8540,7 @@
 				940FC50D2F502C49000C4260 /* OpenPerpetualActionView.swift in Sources */,
 				7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */,
 				DFB19002233219650021CAF3 /* LogViewController.swift in Sources */,
-				94B5776A2B5E554800AE576E /* ExploreViewController.swift in Sources */,
+				94B5776A2B5E554800AE576E /* ExploreMoreViewController.swift in Sources */,
 				94E207402F4EE34E00D65D98 /* PerpetualTimeFrame.swift in Sources */,
 				7B054052243CCCD500C1FCB6 /* HomeTitleButton.swift in Sources */,
 				948AF9AB2EB9CB140035C9BF /* TradeTokenSelectorStyle.swift in Sources */,

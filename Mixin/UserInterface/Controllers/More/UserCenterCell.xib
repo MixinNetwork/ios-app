@@ -12,14 +12,14 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="user_center" id="Usr-ce-ll1" customClass="UserCenterCell" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="370" height="64"/>
+            <rect key="frame" x="0.0" y="0.0" width="370" height="66"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Usr-co-nt1">
-                <rect key="frame" x="0.0" y="0.0" width="370" height="64"/>
+                <rect key="frame" x="0.0" y="0.0" width="370" height="66"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-av-at1" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="16" y="11" width="42" height="42"/>
+                        <rect key="frame" x="16" y="12" width="42" height="42"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="42" id="Usr-ah-001"/>
@@ -27,14 +27,14 @@
                         </constraints>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-in-fo1">
-                        <rect key="frame" x="66" y="14" width="236" height="36"/>
+                        <rect key="frame" x="66" y="14" width="236" height="38"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-na-me1">
                                 <rect key="frame" x="0.0" y="0.0" width="106" height="18"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="84" placeholderIntrinsicHeight="21.333333333333332" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-na-lb1">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="84" placeholderIntrinsicHeight="21.333333333333332" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-na-lb1">
                                         <rect key="frame" x="0.0" y="0.0" width="84" height="18"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <color key="textColor" name="text_secondary"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -48,7 +48,7 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="239" placeholderIntrinsicHeight="17" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-id-lb1">
-                                <rect key="frame" x="0.0" y="22" width="236" height="14"/>
+                                <rect key="frame" x="0.0" y="22" width="236" height="16"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" name="text_tertiary"/>
                                 <nil key="highlightedColor"/>
@@ -56,7 +56,7 @@
                         </subviews>
                     </stackView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_user_qr_code" translatesAutoresizingMaskIntoConstraints="NO" id="Yl4-90-uBm">
-                        <rect key="frame" x="310" y="17" width="30" height="30"/>
+                        <rect key="frame" x="310" y="18" width="30" height="30"/>
                         <color key="tintColor" name="icon_tint_tertiary"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="30" id="hGT-aC-M6B"/>
@@ -64,7 +64,7 @@
                         </constraints>
                     </imageView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-di-sc1">
-                        <rect key="frame" x="344" y="27" width="10" height="10"/>
+                        <rect key="frame" x="344" y="28" width="10" height="10"/>
                         <color key="tintColor" name="text_tertiary"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="10" id="5A0-bj-dzJ"/>

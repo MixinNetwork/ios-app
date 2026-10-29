@@ -20,10 +20,6 @@ final class UserCenterCell: UICollectionViewCell {
             view.layer.masksToBounds = true
             return view
         }()
-        nameLabel.setFont(
-            scaledFor: .systemFont(ofSize: 14),
-            adjustForContentSize: true
-        )
         isAccessibilityElement = true
         accessibilityTraits = .button
     }

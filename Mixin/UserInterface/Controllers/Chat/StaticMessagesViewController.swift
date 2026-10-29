@@ -385,6 +385,9 @@ extension StaticMessagesViewController: UITableViewDataSource {
         if let cell = cell as? PhotoMessageCell {
             cell.captionLabel.delegate = self
         }
+        if let cell = cell as? AppButtonGroupMessageCell {
+            cell.appButtonDelegate = self
+        }
         if let cell = cell as? AudioMessageCell {
             cell.audioMessagePlayingManager = audioManager
         }
@@ -393,6 +396,10 @@ extension StaticMessagesViewController: UITableViewDataSource {
                 cell.render(viewModel: viewModel)
                 cell.layoutIfNeeded()
             }
+        }
+        if let cell = cell as? AppCardV1MessageCell {
+            cell.appButtonDelegate = self
+            cell.cardContentView.descriptionLabel?.delegate = self
         }
         return cell
     }
@@ -475,6 +482,81 @@ extension StaticMessagesViewController: UITableViewDelegate {
     
 }
 
+// MARK: - AppButtonDelegate
+extension StaticMessagesViewController: AppButtonDelegate {
+    
+    func appButtonCell(_ cell: MessageCell, didSelectActionAt index: Int) {
+        guard
+            let indexPath = tableView.indexPath(for: cell),
+            let message = viewModel(at: indexPath)?.message
+        else {
+            return
+        }
+        let action: String
+        let appID: String
+        let shareable: Bool?
+        if let buttons = message.appButtons, buttons.indices.contains(index) {
+            action = buttons[index].action
+            appID = message.userId
+            shareable = nil
+            UserOperationAnalytics.tradeSource = .url
+        } else if case let .v1(content) = message.appCard, content.actions.indices.contains(index) {
+            action = content.actions[index].action
+            appID = content.appID
+            shareable = content.isShareable
+            UserOperationAnalytics.tradeSource = .appCard
+        } else {
+            return
+        }
+        // Input actions require a conversation composer, which previews do not have.
+        guard let url = URL(string: action), url.scheme?.lowercased() != "input" else {
+            return
+        }
+        DispatchQueue.global().async { [weak self] in
+            var app = AppDAO.shared.getApp(appId: appID)
+            var verified = UserDAO.shared.isVerified(userID: appID)
+            if app == nil, !appID.isEmpty {
+                if case let .success(response) = UserAPI.showUser(userId: appID) {
+                    UserDAO.shared.updateUsers(users: [response])
+                    app = response.app
+                    verified = response.isVerified
+                }
+            }
+            DispatchQueue.main.async {
+                self?.open(
+                    url: url,
+                    appEnvironment: app.map { ($0, verified) },
+                    shareable: shareable,
+                )
+            }
+        }
+    }
+    
+    func contextMenuConfigurationForAppButtonGroupMessageCell(
+        _ cell: MessageCell,
+    ) -> UIContextMenuConfiguration? {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            return nil
+        }
+        return contextMenuConfigurationForRow(at: indexPath)
+    }
+    
+    func previewForHighlightingContextMenuOfAppButtonGroupMessageCell(
+        _ cell: MessageCell,
+        with configuration: UIContextMenuConfiguration,
+    ) -> UITargetedPreview? {
+        previewForContextMenu(with: configuration)
+    }
+    
+    func previewForDismissingContextMenuOfAppButtonGroupMessageCell(
+        _ cell: MessageCell,
+        with configuration: UIContextMenuConfiguration,
+    ) -> UITargetedPreview? {
+        previewForContextMenu(with: configuration)
+    }
+    
+}
+
 // MARK: - AttachmentLoadingMessageCellDelegate
 extension StaticMessagesViewController: AttachmentLoadingMessageCellDelegate {
     
@@ -529,7 +611,7 @@ extension StaticMessagesViewController: DetailInfoMessageCellDelegate {
 extension StaticMessagesViewController: CoreTextLabelDelegate {
     
     func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
-        open(url: url)
+        open(url: url, appEnvironment: nil, shareable: nil)
     }
     
     func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
@@ -538,7 +620,7 @@ extension StaticMessagesViewController: CoreTextLabelDelegate {
         }
         let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.open_url(), style: .default, handler: { [weak self](_) in
-            self?.open(url: url)
+            self?.open(url: url, appEnvironment: nil, shareable: nil)
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.copy(), style: .default, handler: { (_) in
             UIPasteboard.general.string = url.absoluteString
@@ -554,6 +636,13 @@ extension StaticMessagesViewController: CoreTextLabelDelegate {
 extension StaticMessagesViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        var touchedView = touch.view
+        while let view = touchedView {
+            if view is UIControl {
+                return false
+            }
+            touchedView = view.superview
+        }
         if let view = touch.view as? CoreTextLabel {
             return !view.canResponseTouch(at: touch.location(in: view))
         } else {
@@ -688,7 +777,11 @@ extension StaticMessagesViewController {
         return viewModels[date]
     }
     
-    private func open(url: URL) {
+    private func open(
+        url: URL,
+        appEnvironment: (app: App, isVerified: Bool)?,
+        shareable: Bool?,
+    ) {
         dismissForInteraction { _ in
             guard !self.openUrlOutsideApplication(url), !UrlWindow.checkUrl(url: url) else {
                 return
@@ -696,9 +789,19 @@ extension StaticMessagesViewController {
             guard let navigationController = UIApplication.shared.homeNavigationController else {
                 return
             }
-            navigationController.pushWebViewController(
-                context: .init(conversationID: "", initialURL: url)
-            )
+            let context: MixinWebContext
+            if let appEnvironment {
+                context = MixinWebContext(
+                    conversationID: "",
+                    app: appEnvironment.app,
+                    isAppVerified: appEnvironment.isVerified,
+                    url: url,
+                    shareable: shareable,
+                )
+            } else {
+                context = MixinWebContext(conversationID: "", initialURL: url, shareable: shareable)
+            }
+            navigationController.pushWebViewController(context: context)
         }
     }
     

@@ -404,15 +404,27 @@ extension Web3TransactionViewController {
     }
     
     private func viewToken(assetID: String) {
-        guard let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: assetID) else {
+        guard let navigationController else {
             return
         }
-        let viewController = Web3TokenViewController(
-            wallet: wallet,
-            token: token,
-            availability: availability,
-        )
-        navigationController?.pushViewController(viewController, animated: true)
+        let viewController = navigationController.viewControllers.first(where: { viewController in
+            if let tokenViewController = viewController as? Web3TokenViewController  {
+                tokenViewController.token.assetID == assetID
+                && tokenViewController.token.walletID == wallet.walletID
+            } else {
+                false
+            }
+        })
+        if let viewController {
+            navigationController.popToViewController(viewController, animated: true)
+        } else if let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: assetID) {
+            let viewController = Web3TokenViewController(
+                wallet: wallet,
+                token: token,
+                availability: availability,
+            )
+            navigationController.pushViewController(viewController, animated: true)
+        }
     }
     
     private func reloadData() {

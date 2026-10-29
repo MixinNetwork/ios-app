@@ -3,7 +3,7 @@ import MixinServices
 
 final class ExploreMoreViewController: UIViewController, AssetChangeAccountRecoveryChecking {
     
-    private enum Section: Int, CaseIterable {
+    private enum Section: Int, CaseIterable, Hashable {
         case account
         case actions
         case contacts
@@ -30,6 +30,15 @@ final class ExploreMoreViewController: UIViewController, AssetChangeAccountRecov
     private var botsCount = 0
     private var hasMoreBots = false
     private var favoriteBotsCount = 0
+    
+    private var pendingSections: Set<Section> = [.contacts, .bots]
+    private var reloadWorkItem: DispatchWorkItem?
+    private var isVisible = false
+    private var isReloading = false
+    
+    deinit {
+        reloadWorkItem?.cancel()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -224,13 +233,7 @@ final class ExploreMoreViewController: UIViewController, AssetChangeAccountRecov
         )
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(reloadContacts),
-            name: UserDAO.usersDidChangeNotification,
-            object: nil,
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(reloadBots),
+            selector: #selector(usersDidChange(_:)),
             name: UserDAO.usersDidChangeNotification,
             object: nil,
         )
@@ -242,18 +245,16 @@ final class ExploreMoreViewController: UIViewController, AssetChangeAccountRecov
         )
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(reloadActions),
+            selector: #selector(reloadActions(_:)),
             name: BadgeManager.viewedNotification,
             object: nil,
         )
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(reloadActions),
+            selector: #selector(reloadActions(_:)),
             name: AppGroupUserDefaults.Account.extensionSessionDidChangeNotification,
             object: nil,
         )
-        reloadContacts()
-        reloadBots()
         ContactAPI.syncContacts()
         UserAPI.getFavoriteApps(ofUserWith: myUserId) { [weak self] result in
             guard case let .success(apps) = result else {
@@ -261,7 +262,9 @@ final class ExploreMoreViewController: UIViewController, AssetChangeAccountRecov
             }
             DispatchQueue.global().async { [weak self] in
                 FavoriteAppsDAO.shared.updateFavoriteApps(apps, forUserWith: myUserId)
-                self?.reloadBots()
+                DispatchQueue.main.async { [weak self] in
+                    self?.reloadBots()
+                }
                 UserAPI.showUsers(userIds: apps.map(\.appId)) { result in
                     guard case let .success(users) = result else {
                         return
@@ -270,6 +273,19 @@ final class ExploreMoreViewController: UIViewController, AssetChangeAccountRecov
                 }
             }
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        isVisible = true
+        reloadPendingSections()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        isVisible = false
+        reloadWorkItem?.cancel()
+        reloadWorkItem = nil
     }
     
     @IBAction func search(_ sender: Any) {
@@ -490,53 +506,110 @@ extension ExploreMoreViewController {
     }
     
     @objc private func reloadAccount() {
-        reload(section: .account)
+        setNeedsReload(sections: [.account])
     }
     
-    @objc private func reloadActions() {
-        reload(section: .actions)
-    }
-    
-    @objc private func reloadContacts() {
-        dataQueue.async { [weak self] in
-            guard let self else {
+    @objc private func reloadActions(_ notification: Notification) {
+        if notification.name == BadgeManager.viewedNotification {
+            guard let identifier = notification.userInfo?[BadgeManager.identifierUserInfoKey] as? BadgeManager.Identifier,
+                  [.buy, .trade, .membership, .referral].contains(identifier)
+            else {
                 return
             }
-            let contacts = UserDAO.shared.contactsWithoutApp(limit: contactsLimit)
-            let count = UserDAO.shared.contactsWithoutAppCount()
-            DispatchQueue.main.async { [weak self] in
-                guard let self else {
-                    return
-                }
-                self.contacts = contacts
-                self.contactsCount = count
-                self.hasMoreContacts = count > contactsLimit
-                self.reload(section: .contacts)
-            }
         }
+        setNeedsReload(sections: [.actions])
+    }
+    
+    @objc private func usersDidChange(_ notification: Notification) {
+        if let users = notification.userInfo?[UserDAO.UserInfoKey.users] as? [UserResponse],
+           users.allSatisfy({ $0.userId == myUserId })
+        {
+            return
+        }
+        setNeedsReload(sections: [.contacts, .bots])
     }
     
     @objc private func reloadBots() {
-        dataQueue.async { [weak self, botsLimit] in
-            guard let self else {
+        setNeedsReload(sections: [.bots])
+    }
+    
+    private func setNeedsReload(sections: Set<Section>) {
+        pendingSections.formUnion(sections)
+        reloadWorkItem?.cancel()
+        guard isVisible else {
+            return
+        }
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.reloadPendingSections()
+        }
+        reloadWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: workItem)
+    }
+    
+    private func reloadPendingSections() {
+        reloadWorkItem?.cancel()
+        reloadWorkItem = nil
+        guard isVisible, !isReloading, !pendingSections.isEmpty else {
+            return
+        }
+        let sections = pendingSections
+        pendingSections.removeAll()
+        let immediateSections = sections.intersection([.account, .actions])
+        if !immediateSections.isEmpty {
+            reload(sections: immediateSections)
+        }
+        guard sections.contains(.contacts) || sections.contains(.bots) else {
+            return
+        }
+        isReloading = true
+        dataQueue.async { [weak self, contactsLimit, botsLimit] in
+            guard self != nil else {
                 return
             }
-            let favorites = FavoriteAppsDAO.shared.favoriteAppUsersOfUser(withId: myUserId)
-            let bots = if favorites.count < botsLimit {
-                favorites + UserDAO.shared.appUsers(limit: botsLimit - favorites.count)
+            let contacts: (users: [UserItem], count: Int)? = if sections.contains(.contacts) {
+                (
+                    UserDAO.shared.contactsWithoutApp(limit: contactsLimit),
+                    UserDAO.shared.contactsWithoutAppCount(),
+                )
             } else {
-                favorites
+                nil
             }
-            let count = UserDAO.shared.appUsersCount()
+            let bots: (users: [User], count: Int, favoritesCount: Int)?
+            if sections.contains(.bots) {
+                let favorites = FavoriteAppsDAO.shared.favoriteAppUsersOfUser(withId: myUserId)
+                let favoriteIDs = Set(favorites.map(\.userId))
+                let allBots = UserDAO.shared.appUsers(limit: nil)
+                let combinedBots = favorites + allBots.filter { !favoriteIDs.contains($0.userId) }
+                bots = (
+                    Array(combinedBots.prefix(botsLimit)),
+                    combinedBots.count,
+                    min(favorites.count, botsLimit),
+                )
+            } else {
+                bots = nil
+            }
             DispatchQueue.main.async { [weak self] in
                 guard let self else {
                     return
                 }
-                self.bots = bots
-                self.botsCount = count
-                self.hasMoreBots = count > botsLimit
-                self.favoriteBotsCount = favorites.count
-                self.reload(section: .bots)
+                self.isReloading = false
+                if self.isVisible {
+                    if let contacts {
+                        self.contacts = contacts.users
+                        self.contactsCount = contacts.count
+                        self.hasMoreContacts = contacts.count > contactsLimit
+                    }
+                    if let bots {
+                        self.bots = bots.users
+                        self.botsCount = bots.count
+                        self.hasMoreBots = bots.count > botsLimit
+                        self.favoriteBotsCount = bots.favoritesCount
+                    }
+                    self.reload(sections: sections.intersection([.contacts, .bots]))
+                } else {
+                    self.pendingSections.formUnion(sections)
+                }
+                self.reloadPendingSections()
             }
         }
     }
@@ -611,10 +684,9 @@ extension ExploreMoreViewController {
         navigationController?.pushViewController(bots, animated: true)
     }
     
-    private func reload(section: Section) {
+    private func reload(sections: Set<Section>) {
         UIView.performWithoutAnimation {
-            let sections = IndexSet(integer: section.rawValue)
-            collectionView.reloadSections(sections)
+            collectionView.reloadSections(IndexSet(sections.map(\.rawValue)))
         }
     }
     

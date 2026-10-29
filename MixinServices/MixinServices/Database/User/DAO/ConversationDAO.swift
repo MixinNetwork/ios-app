@@ -219,6 +219,7 @@ public final class ConversationDAO: UserDatabaseDAO {
         let shouldCleanUpWallpaper = shouldCleanUpWallpaper(conversationId: conversationId)
         db.write { db in
             let deletedTranscriptIds = try deleteTranscriptChildrenReferenced(by: conversationId, from: db)
+            try deleteExpiredMessages(with: conversationId, from: db)
             try Message
                 .filter(Message.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
@@ -258,6 +259,7 @@ public final class ConversationDAO: UserDatabaseDAO {
             NotificationCenter.default.post(onMainThread: Self.willClearConversationNotification,
                                             object: self,
                                             userInfo: [Self.conversationIdUserInfoKey: conversationId])
+            try deleteExpiredMessages(with: conversationId, from: db)
             try Message
                 .filter(Message.column(of: .conversationId) == conversationId)
                 .deleteAll(db)
@@ -755,6 +757,14 @@ extension ConversationDAO {
     private func deleteFTSContent(with conversationId: String, from db: GRDB.Database) throws {
         let sql = "DELETE FROM \(Message.ftsTableName) WHERE conversation_id MATCH ?"
         try db.execute(sql: sql, arguments: [uuidTokenString(uuidString: conversationId)])
+    }
+    
+    private func deleteExpiredMessages(with conversationId: String, from db: GRDB.Database) throws {
+        let sql = """
+            DELETE FROM expired_messages
+            WHERE message_id IN (SELECT id FROM expired_messages WHERE conversation_id = ?)
+        """
+        try db.execute(sql: sql, arguments: [conversationId])
     }
     
     private func deleteTranscriptChildrenReferenced(by conversationId: String, from db: GRDB.Database) throws -> [String] {

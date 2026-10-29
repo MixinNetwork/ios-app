@@ -184,6 +184,9 @@ public final class MessageDAO: UserDatabaseDAO {
                 .filter(condition)
                 .fetchAll(db)
             try Message.filter(condition).deleteAll(db)
+            try MessageMention
+                .filter(messageIds.contains(MessageMention.column(of: .messageId)))
+                .deleteAll(db)
             try ConversationDAO.shared.updateLastMessageIdOnDeleteMessage(conversationId: conversationId, database: db)
             try PinMessageDAO.shared.delete(messageIds: messageIds, conversationId: conversationId, from: db)
             try clearPinMessageContent(quoteMessageIds: messageIds, conversationId: conversationId, from: db)
@@ -824,6 +827,9 @@ public final class MessageDAO: UserDatabaseDAO {
         }
         try MessageMention
             .filter(MessageMention.column(of: .messageId) == id)
+            .deleteAll(database)
+        try ExpiredMessage
+            .filter(ExpiredMessage.column(of: .messageId) == id)
             .deleteAll(database)
         try deleteFTSContent(database, messageId: id)
         childMessageIds = try TranscriptMessage

@@ -109,7 +109,11 @@ final class CommonWalletViewController: WalletViewController {
         let wallet = self.wallet
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
-            let history = Web3TransactionHistoryViewController(wallet: wallet, type: nil)
+            let history = Web3TransactionHistoryViewController(
+                wallet: wallet,
+                type: nil,
+                availability: self.availability,
+            )
             self.navigationController?.pushViewController(history, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
@@ -219,7 +223,11 @@ final class CommonWalletViewController: WalletViewController {
     }
     
     override func viewAllTransactions() {
-        let history = Web3TransactionHistoryViewController(wallet: wallet, type: nil)
+        let history = Web3TransactionHistoryViewController(
+            wallet: wallet,
+            type: nil,
+            availability: availability,
+        )
         self.navigationController?.pushViewController(history, animated: true)
     }
     
@@ -447,6 +455,7 @@ final class CommonWalletViewController: WalletViewController {
                 }
                 self.walletActionHandler = CommonWalletOverviewActionHandler(
                     wallet: wallet,
+                    availability: availability,
                     supportedChainIDs: chainIDs,
                     watchingAddresses: watchingAddresses,
                     tradeSource: .walletHome,
@@ -512,7 +521,11 @@ extension CommonWalletViewController: UICollectionViewDelegate {
             }
         case .transaction(let id):
             if let transaction = transactions[id] {
-                let viewController = Web3TransactionViewController(wallet: wallet, transaction: transaction)
+                let viewController = Web3TransactionViewController(
+                    wallet: wallet,
+                    transaction: transaction,
+                    availability: availability,
+                )
                 navigationController?.pushViewController(viewController, animated: true)
             }
         case .support(let support):

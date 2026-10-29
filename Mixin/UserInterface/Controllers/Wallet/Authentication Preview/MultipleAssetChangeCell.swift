@@ -3,6 +3,10 @@ import MixinServices
 
 final class MultipleAssetChangeCell: UITableViewCell {
     
+    protocol Delegate: AnyObject {
+        func multipleAssetChangeCell(_ cell: MultipleAssetChangeCell, didSelectRowAt index: Int)
+    }
+    
     typealias PerpsPosition = (iconURL: URL?, name: String, side: PerpetualOrderSide, leverage: String?)
     
     @IBOutlet weak var contentStackView: UIStackView!
@@ -11,6 +15,14 @@ final class MultipleAssetChangeCell: UITableViewCell {
     @IBOutlet weak var contentTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentTrailingConstraint: NSLayoutConstraint!
+    
+    weak var delegate: (any Delegate)? {
+        didSet {
+            for row in rowViews {
+                row.gestureRecognizers?.forEach { $0.isEnabled = delegate != nil }
+            }
+        }
+    }
     
     private var rowViews: [RowStackView] = []
     
@@ -21,6 +33,7 @@ final class MultipleAssetChangeCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        delegate = nil
         for iconView in rowViews.map(\.iconView) {
             iconView.prepareForReuse()
         }
@@ -147,6 +160,16 @@ final class MultipleAssetChangeCell: UITableViewCell {
         }
     }
     
+    @objc private func didTapRow(_ recognizer: UITapGestureRecognizer) {
+        guard
+            let row = recognizer.view as? RowStackView,
+            let index = rowViews.firstIndex(of: row)
+        else {
+            return
+        }
+        delegate?.multipleAssetChangeCell(self, didSelectRowAt: index)
+    }
+    
     private func loadRowViews(count: Int) {
         let diff = rowViews.count - count
         if diff > 0 {
@@ -157,6 +180,9 @@ final class MultipleAssetChangeCell: UITableViewCell {
         } else if diff < 0 {
             for _ in (0 ..< -diff) {
                 let view = RowStackView()
+                let recognizer = UITapGestureRecognizer(target: self, action: #selector(didTapRow(_:)))
+                recognizer.isEnabled = delegate != nil
+                view.addGestureRecognizer(recognizer)
                 rowViews.append(view)
                 contentStackView.addArrangedSubview(view)
             }

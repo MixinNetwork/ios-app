@@ -139,12 +139,20 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     }
     
     override func view(transaction: Web3Transaction) {
-        let viewController = Web3TransactionViewController(wallet: wallet, transaction: transaction)
+        let viewController = Web3TransactionViewController(
+            wallet: wallet,
+            transaction: transaction,
+            availability: availability,
+        )
         navigationController?.pushViewController(viewController, animated: true)
     }
     
     override func viewAllTransactions() {
-        let history = Web3TransactionHistoryViewController(wallet: wallet, token: token)
+        let history = Web3TransactionHistoryViewController(
+            wallet: wallet,
+            token: token,
+            availability: availability,
+        )
         navigationController?.pushViewController(history, animated: true)
     }
     

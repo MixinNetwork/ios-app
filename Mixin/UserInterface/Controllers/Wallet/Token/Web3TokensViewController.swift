@@ -244,6 +244,7 @@ final class Web3TokensViewController: TokensViewController {
                 self.watchingAddresses = watchingAddresses
                 self.overviewActionHandler = CommonWalletOverviewActionHandler(
                     wallet: wallet,
+                    availability: self.availability,
                     supportedChainIDs: chainIDs,
                     watchingAddresses: watchingAddresses,
                     tradeSource: .tokenList,
@@ -274,7 +275,11 @@ final class Web3TokensViewController: TokensViewController {
         let wallet = self.wallet
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
-            let history = Web3TransactionHistoryViewController(wallet: wallet, type: nil)
+            let history = Web3TransactionHistoryViewController(
+                wallet: wallet,
+                type: nil,
+                availability: self.availability,
+            )
             self.navigationController?.pushViewController(history, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in

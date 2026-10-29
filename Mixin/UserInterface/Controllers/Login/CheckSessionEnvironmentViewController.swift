@@ -570,42 +570,6 @@ extension CheckSessionEnvironmentViewController {
     
     private final class RestoreChatNavigationHandler: NSObject, UINavigationControllerDelegate {
         
-        func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-            if viewController is QRCodeScannerViewController && !navigationController.isNavigationBarHidden {
-                navigationController.setNavigationBarHidden(true, animated: animated)
-            } else if !(viewController is QRCodeScannerViewController) && navigationController.isNavigationBarHidden {
-                navigationController.setNavigationBarHidden(false, animated: animated)
-            }
-        }
-        
-        func navigationController(
-            _ navigationController: UINavigationController,
-            animationControllerFor operation: UINavigationController.Operation,
-            from fromVC: UIViewController,
-            to toVC: UIViewController
-        ) -> UIViewControllerAnimatedTransitioning? {
-            switch operation {
-            case .push where toVC is PopupNavigationAnimating:
-                PopInNavigationAnimator()
-            case .pop where fromVC is PopupNavigationAnimating:
-                PopOutNavigationAnimator()
-            default:
-                nil
-            }
-        }
-        
-    }
-    
-    private final class FetchWalletNavigationController: GeneralAppearanceNavigationController {
-        
-        func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-            if viewController is QRCodeScannerViewController && !navigationController.isNavigationBarHidden {
-                navigationController.setNavigationBarHidden(true, animated: animated)
-            } else if !(viewController is QRCodeScannerViewController) && navigationController.isNavigationBarHidden {
-                navigationController.setNavigationBarHidden(false, animated: animated)
-            }
-        }
-        
         func navigationController(
             _ navigationController: UINavigationController,
             animationControllerFor operation: UINavigationController.Operation,

@@ -407,23 +407,28 @@ extension Web3TransactionViewController {
         guard let navigationController else {
             return
         }
-        let viewController = navigationController.viewControllers.first(where: { viewController in
-            if let tokenViewController = viewController as? Web3TokenViewController  {
-                tokenViewController.token.assetID == assetID
-                && tokenViewController.token.walletID == wallet.walletID
+        var viewControllers = navigationController.viewControllers
+        if let index = viewControllers.firstIndex(where: { $0 is Web3TokenViewController }),
+           let tokenViewController = viewControllers[index] as? Web3TokenViewController
+        {
+            viewControllers.removeSubrange((index + 1)..<viewControllers.endIndex)
+            if tokenViewController.token.assetID == assetID,
+               tokenViewController.token.walletID == wallet.walletID
+            {
+                navigationController.setViewControllers(viewControllers, animated: true)
+                return
             } else {
-                false
+                viewControllers.removeLast()
             }
-        })
-        if let viewController {
-            navigationController.popToViewController(viewController, animated: true)
-        } else if let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: assetID) {
+        }
+        if let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: assetID) {
             let viewController = Web3TokenViewController(
                 wallet: wallet,
                 token: token,
                 availability: availability,
             )
-            navigationController.pushViewController(viewController, animated: true)
+            viewControllers.append(viewController)
+            navigationController.setViewControllers(viewControllers, animated: true)
         }
     }
     

@@ -58,10 +58,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
     
     override var supportedActions: Action {
         if let item = item {
-            let isTranscriptPreviewPresented = UIApplication.shared
-                .currentConversationViewController()?
-                .children
-                .contains(where: { $0 is TranscriptPreviewViewController }) ?? false
+            let isTranscriptPreviewPresented = galleryViewController?.source is TranscriptPreviewViewController
             if isTranscriptPreviewPresented {
                 if item.url == nil {
                     return [.forward]

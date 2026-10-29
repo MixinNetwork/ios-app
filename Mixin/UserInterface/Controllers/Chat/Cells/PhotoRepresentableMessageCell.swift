@@ -71,6 +71,30 @@ class PhotoRepresentableMessageCell: ImageMessageCell {
         statusImageView.alpha = 0.9
     }
     
+    func setGalleryContentHidden(_ hidden: Bool) {
+        var contentViews: [UIView] = [
+            contentImageView,
+        ]
+        let isQuotedOrHasCaption = viewModel?.quotedMessageViewModel != nil || ((viewModel as? ImageMessageViewModel)?.hasCaption ?? false)
+        if !isQuotedOrHasCaption {
+            contentViews.append(timeLabel)
+            contentViews.append(statusImageView)
+        }
+        if let cell = self as? AttachmentExpirationHintingMessageCell {
+            contentViews.append(cell.operationButton)
+        }
+        if let cell = self as? VideoMessageCell {
+            contentViews.append(cell.lengthLabel)
+        }
+        if let cell = self as? LiveMessageCell {
+            contentViews.append(cell.badgeView)
+            contentViews.append(cell.playButton)
+        }
+        contentViews.forEach {
+            $0.isHidden = hidden
+        }
+    }
+    
     func reloadMedia(viewModel: PhotoRepresentableMessageViewModel) {
         
     }

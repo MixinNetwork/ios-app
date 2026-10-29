@@ -253,10 +253,13 @@ extension AppDelegate {
 extension AppDelegate {
     
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        if let homeContainerVC = UIApplication.shared.homeContainerViewController, homeContainerVC.galleryIsOnTopMost,  homeContainerVC.galleryViewController.currentItemViewController is GalleryVideoItemViewController {
+        if let gallery = window?.rootViewController as? GalleryViewController,
+           gallery.currentItemViewController is GalleryVideoItemViewController
+        {
             return .all
+        } else {
+            return .portrait
         }
-        return .portrait
     }
     
 }

@@ -11,17 +11,6 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     
     var coverSize = CGSize(width: 1, height: 1)
     var videoRatio: CGFloat = 1
-    var isPipMode = false {
-        didSet {
-            if isPipMode {
-                controlView.style.insert(.pip)
-            } else {
-                controlView.style.remove(.pip)
-            }
-            layoutIfNeeded()
-        }
-    }
-    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         prepare()
@@ -56,7 +45,7 @@ final class GalleryVideoView: UIView, GalleryAnimatable {
     }
     
     private func layoutControlView() {
-        if isPipMode || safeAreaInsets.top <= 20 {
+        if safeAreaInsets.top <= 20 {
             controlView.frame = bounds
         } else {
             controlView.frame = bounds.inset(by: safeAreaInsets)

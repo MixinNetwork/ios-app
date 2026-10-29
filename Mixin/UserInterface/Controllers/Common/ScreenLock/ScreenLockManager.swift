@@ -23,9 +23,6 @@ final class ScreenLockManager {
     
     private(set) var isLocked = false
     private(set) var isLastAuthenticationStillValid = false
-    private(set) var lockWindow: Window?
-    
-    private weak var mainWindow: UIWindow?
     
     private var context: LAContext!
     private var viewController: ScreenLockViewController?
@@ -93,34 +90,26 @@ extension ScreenLockManager {
     }
     
     private func showScreenLockView() {
-        guard lockWindow == nil else {
+        guard !isLocked,
+              let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate,
+              sceneDelegate.mainWindow != nil
+        else {
             return
         }
         isLocked = true
-        mainWindow = UIApplication.shared.firstWindowScene?.keyWindow
-        mainWindow?.endEditing(true)
-        viewController = ScreenLockViewController()
-        viewController!.tapUnlockAction = { [weak self] in
+        let viewController = ScreenLockViewController()
+        self.viewController = viewController
+        viewController.tapUnlockAction = { [weak self] in
             self?.performBiometricAuthentication()
         }
-        let lockWindow = if let windowScene = mainWindow?.windowScene {
-            Window(windowScene: windowScene)
-        } else {
-            Window(frame: UIScreen.main.bounds)
-        }
-        lockWindow.rootViewController = viewController
-        lockWindow.makeKeyAndVisible()
-        self.lockWindow = lockWindow
+        sceneDelegate.showScreenLockWindow(rootViewController: viewController)
     }
     
     private func hideScreenLockView() {
         let wasLocked = isLocked
-        if let mainWindow {
-            mainWindow.makeKeyAndVisible()
-        }
+        let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate
         viewController = nil
-        lockWindow?.isHidden = true
-        lockWindow = nil
+        sceneDelegate?.hideScreenLockWindow()
         isLocked = false
         if wasLocked {
             NotificationCenter.default.post(name: Self.didUnlockNotification, object: self)

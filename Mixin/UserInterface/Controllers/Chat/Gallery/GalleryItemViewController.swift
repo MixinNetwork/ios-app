@@ -36,9 +36,7 @@ class GalleryItemViewController: UIViewController {
         return false
     }
     
-    var galleryViewController: GalleryViewController? {
-        return UIApplication.shared.homeContainerViewController?.galleryViewController
-    }
+    weak var galleryViewController: GalleryViewController?
     
     var isReusable: Bool {
         return parent == nil

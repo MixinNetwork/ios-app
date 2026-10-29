@@ -13,15 +13,6 @@ final class HomeContainerViewController: UIViewController {
     let clipSwitcher = ClipSwitcher()
     let overlaysCoordinator = HomeOverlaysCoordinator()
     
-    var pipController: GalleryVideoItemViewController?
-    
-    lazy var galleryViewController: GalleryViewController = {
-        let controller = GalleryViewController()
-        controller.delegate = self
-        galleryViewControllerIfLoaded = controller
-        return controller
-    }()
-    
     lazy var minimizedCallViewController: MinimizedCallViewController = {
         let controller: MinimizedCallViewController = makeAndAddOverlay()
         minimizedCallViewControllerIfLoaded = controller
@@ -46,27 +37,16 @@ final class HomeContainerViewController: UIViewController {
     public var topMostChild: UIViewController {
         if let switcher = clipSwitcher.fullscreenSwitcherIfLoaded, switcher.isShowing {
             return switcher
-        } else if galleryIsOnTopMost {
-            return galleryViewController
         } else {
             return homeTabBarController
         }
     }
-    
-    private(set) var isShowingGallery = false
-    private(set) var galleryViewControllerIfLoaded: GalleryViewController?
     
     private(set) weak var minimizedCallViewControllerIfLoaded: MinimizedCallViewController?
     
     private let sessionReporter = SessionReporter()
     
     private var refreshAccountAfterViewAppears: Bool
-    private var navigationInteractiveGestureWasEnabled = true
-    private weak var galleryNavigationController: HomeNavigationController?
-    
-    var galleryIsOnTopMost: Bool {
-        isShowingGallery && galleryViewController.parent != nil
-    }
     
     init(initialTab: HomeTabBarController.InitialTab) {
         homeTabBarController = HomeTabBarController(initialTab: initialTab)
@@ -107,12 +87,6 @@ final class HomeContainerViewController: UIViewController {
             }
         }
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(applicationWillEnterForeground(_:)),
-            name: UIApplication.willEnterForegroundNotification,
-            object: nil
-        )
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(applicationDidBecomeActive(_:)),
@@ -173,10 +147,6 @@ final class HomeContainerViewController: UIViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        if let controller = pipController {
-            // TODO: It's hard to arrange overlays in landscape mode, close it as workaround currently
-            controller.closeAction()
-        }
         let overlays = overlaysCoordinator.visibleOverlays
         overlays.forEach { $0.alpha = 0 }
         coordinator.animate(alongsideTransition: nil) { (context) in
@@ -211,79 +181,9 @@ final class HomeContainerViewController: UIViewController {
         present(qrCode, animated: true)
     }
     
-    @objc private func applicationWillEnterForeground(_ notification: Notification) {
-        guard let window = view.window, let scene = window.windowScene else {
-            return
-        }
-        if scene.interfaceOrientation.isLandscape,
-           let controller = pipController,
-           controller.isAvPipActive
-        {
-            if #available(iOS 16.0, *) {
-                scene.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
-            } else {
-                let portrait = Int(UIInterfaceOrientation.portrait.rawValue)
-                UIDevice.current.setValue(portrait, forKey: "orientation")
-            }
-        }
-    }
-    
     @objc private func applicationDidBecomeActive(_ sender: Notification) {
         initializeFTSIfNeeded()
         refreshExternalSchemesIfNeeded()
-    }
-    
-}
-
-extension HomeContainerViewController: GalleryViewControllerDelegate {
-    
-    func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> GalleryTransitionSource? {
-        return chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, cellFor: item)
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
-        removeGalleryFromItsParentIfNeeded()
-        galleryNavigationController = homeNavigationController
-        viewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        viewController.view.frame = view.bounds
-        addChild(viewController)
-        if let pipController = pipController {
-            view.bringSubviewToFront(pipController.view)
-            view.insertSubview(viewController.view, belowSubview: pipController.view)
-        } else {
-            view.addSubview(viewController.view)
-        }
-        viewController.didMove(toParent: self)
-        isShowingGallery = true
-        setNeedsStatusBarAppearanceUpdate()
-        setNeedsUpdateOfHomeIndicatorAutoHidden()
-        chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, willShow: item)
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, didShow item: GalleryItem) {
-        if let recognizer = galleryNavigationController?.interactivePopGestureRecognizer {
-            navigationInteractiveGestureWasEnabled = recognizer.isEnabled
-            recognizer.isEnabled = false
-        }
-        chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, didShow: item)
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, willDismiss item: GalleryItem) {
-        chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, willDismiss: item)
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, didDismiss item: GalleryItem, relativeOffset: CGFloat?) {
-        removeGalleryFromItsParentIfNeeded()
-        isShowingGallery = false
-        setNeedsStatusBarAppearanceUpdate()
-        setNeedsUpdateOfHomeIndicatorAutoHidden()
-        chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, didDismiss: item, relativeOffset: relativeOffset)
-        galleryNavigationController?.interactivePopGestureRecognizer?.isEnabled = navigationInteractiveGestureWasEnabled
-        galleryNavigationController = nil
-    }
-    
-    func galleryViewController(_ viewController: GalleryViewController, didCancelDismissalFor item: GalleryItem) {
-        chainingDelegate(of: item.conversationId)?.galleryViewController(viewController, didCancelDismissalFor: item)
     }
     
 }
@@ -317,43 +217,6 @@ extension HomeContainerViewController {
         controller.panningController.placeViewNextToLastOverlayOrTopRight()
         overlaysCoordinator.register(overlay: controller.view)
         return controller
-    }
-    
-    private func chainingDelegate(of conversationId: String) -> GalleryViewControllerDelegate? {
-        let navigationController = galleryNavigationController ?? homeNavigationController
-        let sharedMedia = navigationController.viewControllers
-            .compactMap({ $0 as? SharedMediaViewController })
-            .first(where: { $0.conversationId == conversationId })?
-            .children
-            .compactMap({ $0 as? SharedMediaMediaViewController })
-            .first
-        if let delegate = sharedMedia {
-            return delegate
-        }
-        let conversation = navigationController.viewControllers
-            .compactMap({ $0 as? ConversationViewController })
-            .first(where: { $0.conversationId == conversationId })
-        if let conversation = conversation {
-            let isShowingStaticMessages = conversation.children.contains { child in
-                child is TranscriptPreviewViewController || child is PinMessagesPreviewViewController
-            }
-            if isShowingStaticMessages {
-                return nil
-            } else {
-                return conversation
-            }
-        } else {
-            return nil
-        }
-    }
-    
-    private func removeGalleryFromItsParentIfNeeded() {
-        guard galleryViewController.parent != nil else {
-            return
-        }
-        galleryViewController.willMove(toParent: nil)
-        galleryViewController.view.removeFromSuperview()
-        galleryViewController.removeFromParent()
     }
     
 }

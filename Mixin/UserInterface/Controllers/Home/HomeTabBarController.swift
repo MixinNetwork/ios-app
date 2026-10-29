@@ -131,7 +131,7 @@ final class HomeTabBarController: UITabBarController {
         if pendingInitialWalletValidation {
             selectedViewController = walletNavigationController
         }
-        updateSelectionAppearance()
+        handleTabSelection()
         
         NotificationCenter.default.addObserver(
             self,
@@ -170,15 +170,18 @@ final class HomeTabBarController: UITabBarController {
             return
         }
         selectedViewController = walletNavigationController
-        updateSelectionAppearance()
+        handleTabSelection()
     }
     
-    private func updateSelectionAppearance() {
+    private func handleTabSelection() {
         guard let selectedViewController else {
             return
         }
-        setNeedsStatusBarAppearanceUpdate()
-        setNeedsUpdateOfHomeIndicatorAutoHidden()
+        viewControllers?.filter { viewController in
+            viewController != selectedViewController
+        }.forEach { viewController in
+            (viewController as? UINavigationController)?.popToRootViewController(animated: false)
+        }
         if selectedViewController === exploreNavigationController {
             BadgeManager.shared.setHasViewed(identifier: .moreTab)
         }
@@ -219,7 +222,7 @@ final class HomeTabBarController: UITabBarController {
                         return
                     }
                     self.selectedViewController = self.chatNavigationController
-                    self.updateSelectionAppearance()
+                    self.handleTabSelection()
                 },
             )
             present(validator, animated: true)
@@ -258,7 +261,7 @@ extension HomeTabBarController: UITabBarControllerDelegate {
         _ tabBarController: UITabBarController,
         didSelect viewController: UIViewController,
     ) {
-        updateSelectionAppearance()
+        handleTabSelection()
     }
     
 }

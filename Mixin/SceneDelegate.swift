@@ -3,7 +3,9 @@ import MixinServices
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
-    private(set) var window: Window?
+    private(set) var mainWindow: Window?
+    private(set) var galleryWindow: GalleryWindow?
+    private(set) var screenLockWindow: Window?
     
     private var pendingShortcutItem: UIApplicationShortcutItem?
     private var pendingURL: (url: URL, source: UrlWindow.Source)?
@@ -56,8 +58,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
         }
         
-        let window = Window(windowScene: windowScene)
-        self.window = window
+        let mainWindow = Window(windowScene: windowScene)
+        mainWindow.windowLevel = .normal
+        mainWindow.backgroundColor = .black
+        self.mainWindow = mainWindow
         setupRootViewController()
         ScreenLockManager.shared.lockScreenIfNeeded()
         
@@ -118,7 +122,18 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func sceneWillEnterForeground(_ scene: UIScene) {
-        
+        if let windowScene = scene as? UIWindowScene,
+           windowScene.interfaceOrientation.isLandscape,
+           let pipController = galleryWindow?.galleryViewController.pipController,
+           pipController.isPictureInPictureActive
+        {
+            if #available(iOS 16.0, *) {
+                windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+            } else {
+                let portrait = Int(UIInterfaceOrientation.portrait.rawValue)
+                UIDevice.current.setValue(portrait, forKey: "orientation")
+            }
+        }
     }
     
     func sceneDidEnterBackground(_ scene: UIScene) {
@@ -157,7 +172,131 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         _ windowScene: UIWindowScene,
         supportedInterfaceOrientationsFor window: UIWindow?
     ) -> UIInterfaceOrientationMask {
-        AppDelegate.current.application(UIApplication.shared, supportedInterfaceOrientationsFor: window)
+        let window = window ?? windowScene.keyWindow
+        if let gallery = window?.rootViewController as? GalleryViewController,
+           gallery.currentItemViewController is GalleryVideoItemViewController
+        {
+            return .all
+        } else {
+            return .portrait
+        }
+    }
+    
+}
+
+extension SceneDelegate {
+    
+    func prepareGalleryWindow() -> GalleryWindow? {
+        if let galleryWindow {
+            return galleryWindow
+        } else if let scene = mainWindow?.windowScene {
+            let window = GalleryWindow(windowScene: scene)
+            window.windowLevel = .normal + 1
+            self.galleryWindow = window
+            return window
+        } else {
+            return nil
+        }
+    }
+    
+    func showGalleryWindow() {
+        guard let galleryWindow else {
+            return
+        }
+        galleryWindow.isHidden = false
+        updateKeyWindow()
+        galleryWindow.layoutIfNeeded()
+        // Commit the prepared gallery content before starting its transition animation.
+        CATransaction.flush()
+    }
+    
+    func hideGalleryWindow() {
+        guard let galleryWindow else {
+            return
+        }
+        galleryWindow.isHidden = true
+        updateKeyWindow()
+    }
+    
+    func dismissModalPresentations(completion: @escaping () -> Void) {
+        let dismissModals = { [weak self] in
+            guard let root = self?.mainWindow?.rootViewController else {
+                completion()
+                return
+            }
+            var controller: UIViewController? = root
+            while let current = controller {
+                if let coordinator = current.transitionCoordinator {
+                    let waitsForTransition = coordinator.animate(alongsideTransition: nil) { _ in
+                        DispatchQueue.main.async {
+                            self?.dismissModalPresentations(completion: completion)
+                        }
+                    }
+                    if waitsForTransition {
+                        return
+                    }
+                }
+                if current.isBeingPresented || current.isBeingDismissed {
+                    DispatchQueue.main.async {
+                        self?.dismissModalPresentations(completion: completion)
+                    }
+                    return
+                }
+                controller = current.presentedViewController
+            }
+            if root.presentedViewController != nil {
+                root.dismiss(animated: true, completion: completion)
+            } else {
+                completion()
+            }
+        }
+        if let gallery = galleryWindow?.galleryViewController, gallery.isPresented {
+            gallery.dismiss(transitionViewInitialOffsetY: 0, completion: dismissModals)
+        } else {
+            dismissModals()
+        }
+    }
+    
+    func showScreenLockWindow(rootViewController: ScreenLockViewController) {
+        guard screenLockWindow == nil, let windowScene = mainWindow?.windowScene else {
+            return
+        }
+        windowScene.keyWindow?.endEditing(true)
+        let screenLockWindow = Window(windowScene: windowScene)
+        screenLockWindow.windowLevel = .normal + 2
+        screenLockWindow.rootViewController = rootViewController
+        self.screenLockWindow = screenLockWindow
+        screenLockWindow.isHidden = false
+        updateKeyWindow()
+    }
+    
+    func hideScreenLockWindow() {
+        screenLockWindow?.isHidden = true
+        screenLockWindow?.rootViewController = nil
+        screenLockWindow = nil
+        updateKeyWindow()
+    }
+    
+    private func updateKeyWindow() {
+        // A transition or logout must never take focus away from the lock screen.
+        if let screenLockWindow, !screenLockWindow.isHidden {
+            screenLockWindow.makeKey()
+        } else if let galleryWindow, !galleryWindow.isHidden {
+            galleryWindow.makeKey()
+        } else {
+            mainWindow?.makeKey()
+        }
+    }
+    
+    private func tearDownGalleryWindow() {
+        guard let galleryWindow else {
+            return
+        }
+        galleryWindow.galleryViewController.tearDown()
+        galleryWindow.isHidden = true
+        galleryWindow.rootViewController = nil
+        self.galleryWindow = nil
+        updateKeyWindow()
     }
     
 }
@@ -165,12 +304,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 extension SceneDelegate {
     
     @objc func setupRootViewController() {
-        guard let window else {
+        guard let mainWindow else {
             return
         }
-        window.backgroundColor = .black
+        tearDownGalleryWindow()
         if let account = LoginManager.shared.account {
-            window.rootViewController = CheckSessionEnvironmentViewController(localAccount: account)
+            mainWindow.rootViewController = CheckSessionEnvironmentViewController(localAccount: account)
             if ContactsManager.shared.authorization == .authorized && AppGroupUserDefaults.User.autoUploadsContacts {
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
                     PhoneContactAPI.upload(contacts: ContactsManager.shared.contacts)
@@ -181,38 +320,42 @@ extension SceneDelegate {
                 if AppDelegate.current.isFirstLaunch ?? false {
                     AppGroupKeychain.removeItemsForCurrentSession()
                 }
-                window.rootViewController = LoginNavigationController()
+                mainWindow.rootViewController = LoginNavigationController()
             } else {
-                window.rootViewController = ProtectedDataUnavailableViewController()
+                mainWindow.rootViewController = ProtectedDataUnavailableViewController()
             }
         }
         UIApplication.shared.setShortcutItemsEnabled(LoginManager.shared.isLoggedIn)
-        window.makeKeyAndVisible()
+        mainWindow.isHidden = false
+        updateKeyWindow()
     }
     
     @objc private func setupLoginViewController() {
         pendingShortcutItem = nil
         pendingURL = nil
         pendingUserActivity = nil
-        guard let window else {
+        tearDownGalleryWindow()
+        guard let mainWindow else {
             return
         }
-        window.endEditing(true)
-        window.rootViewController = LoginNavigationController()
+        mainWindow.endEditing(true)
+        mainWindow.rootViewController = LoginNavigationController()
+        updateKeyWindow()
     }
     
     @objc private func handleClockSkew() {
-        guard let window else {
+        guard let mainWindow else {
             return
         }
-        if let controller = window.rootViewController as? CheckSessionEnvironmentViewController,
+        tearDownGalleryWindow()
+        if let controller = mainWindow.rootViewController as? CheckSessionEnvironmentViewController,
            controller.contentViewController is ClockSkewViewController
         {
             // Do nothing, the view controller can handle the error by itself
         } else if let account = LoginManager.shared.account {
-            window.rootViewController = CheckSessionEnvironmentViewController(localAccount: account)
+            mainWindow.rootViewController = CheckSessionEnvironmentViewController(localAccount: account)
         } else {
-            window.rootViewController = LoginNavigationController()
+            mainWindow.rootViewController = LoginNavigationController()
         }
     }
     

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -14,13 +14,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HPi-eF-W69">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                    <rect key="frame" x="0.0" y="12" width="414" height="44"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_video_visual_control" translatesAutoresizingMaskIntoConstraints="NO" id="2mC-M8-6Y5">
                             <rect key="frame" x="0.0" y="-56" width="414" height="88"/>
                         </imageView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q7h-05-TmK" customClass="RoundedBlurButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="10" y="4" width="46" height="36"/>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q7h-05-TmK" customClass="RoundedBlurButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="23" y="4" width="46" height="36"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="36" id="5bC-Nw-u4w"/>
                                 <constraint firstAttribute="width" constant="46" id="mgT-aK-uHo"/>
@@ -29,7 +29,7 @@
                             <state key="normal" image="ic_minimize"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ykM-27-EvN" customClass="RoundedBlurButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="358" y="4" width="46" height="36"/>
+                            <rect key="frame" x="345" y="4" width="46" height="36"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="36" id="jOg-yz-hy3"/>
                                 <constraint firstAttribute="width" constant="46" id="voG-p4-Ie2"/>
@@ -42,14 +42,14 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="Q7h-05-TmK" firstAttribute="leading" secondItem="HPi-eF-W69" secondAttribute="leading" constant="10" id="6fv-sK-AcP"/>
+                        <constraint firstItem="Q7h-05-TmK" firstAttribute="leading" secondItem="HPi-eF-W69" secondAttribute="leading" constant="23" id="6fv-sK-AcP"/>
                         <constraint firstItem="OSM-5H-FgV" firstAttribute="centerX" secondItem="HPi-eF-W69" secondAttribute="centerX" id="Mgy-CF-54O"/>
                         <constraint firstAttribute="bottom" secondItem="2mC-M8-6Y5" secondAttribute="bottom" constant="12" id="adl-kf-IhN"/>
                         <constraint firstAttribute="height" constant="44" id="hVG-22-m5p"/>
                         <constraint firstItem="ykM-27-EvN" firstAttribute="centerY" secondItem="HPi-eF-W69" secondAttribute="centerY" id="jxU-nt-eOL"/>
                         <constraint firstItem="OSM-5H-FgV" firstAttribute="centerY" secondItem="HPi-eF-W69" secondAttribute="centerY" id="ktA-Mf-dET"/>
                         <constraint firstItem="Q7h-05-TmK" firstAttribute="centerY" secondItem="HPi-eF-W69" secondAttribute="centerY" id="nca-yb-Co6"/>
-                        <constraint firstAttribute="trailing" secondItem="ykM-27-EvN" secondAttribute="trailing" constant="10" id="uZL-Jt-pDo"/>
+                        <constraint firstAttribute="trailing" secondItem="ykM-27-EvN" secondAttribute="trailing" constant="23" id="uZL-Jt-pDo"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TKP-4B-OUV">
@@ -109,7 +109,7 @@
                             <rect key="frame" x="14" y="12" width="358" height="37"/>
                             <subviews>
                                 <slider opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="7CY-zg-LG0" customClass="GalleryVideoSlider" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="-2" y="0.0" width="362" height="18.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="358" height="17.5"/>
                                     <color key="minimumTrackTintColor" red="1" green="1" blue="1" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                     <color key="maximumTrackTintColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 </slider>
@@ -167,19 +167,6 @@
                         <outletCollection property="gestureRecognizers" destination="G7F-Ys-1fr" appends="YES" id="Enl-Pj-1bn"/>
                     </connections>
                 </view>
-                <progressView clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aSq-x1-aA2">
-                    <rect key="frame" x="25" y="366" width="364" height="3"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="3" id="Xix-Tv-Mgq"/>
-                    </constraints>
-                    <color key="progressTintColor" red="1" green="1" blue="1" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
-                    <color key="trackTintColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                            <real key="value" value="1.5"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </progressView>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
@@ -190,34 +177,26 @@
                 <constraint firstItem="TKP-4B-OUV" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="DLM-o6-VTX"/>
                 <constraint firstAttribute="bottom" secondItem="gga-kw-mqs" secondAttribute="bottom" constant="16" id="Fti-Ug-7nF"/>
                 <constraint firstItem="2mC-M8-6Y5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="G4O-7x-H1l"/>
-                <constraint firstAttribute="trailing" secondItem="aSq-x1-aA2" secondAttribute="trailing" constant="25" id="MaB-0Y-SMD"/>
-                <constraint firstItem="HPi-eF-W69" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="UxV-ZI-U3f"/>
-                <constraint firstAttribute="bottom" secondItem="aSq-x1-aA2" secondAttribute="bottom" constant="10" id="WWd-KH-ixJ"/>
+                <constraint firstItem="HPi-eF-W69" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="12" id="UxV-ZI-U3f"/>
                 <constraint firstItem="gga-kw-mqs" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="14" id="gES-N4-V9M"/>
                 <constraint firstAttribute="trailing" secondItem="HPi-eF-W69" secondAttribute="trailing" id="j8F-lV-H4U"/>
                 <constraint firstItem="TKP-4B-OUV" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="k0V-Je-0g5"/>
                 <constraint firstItem="jT8-96-b2D" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="odC-3D-4Vh"/>
-                <constraint firstItem="aSq-x1-aA2" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="25" id="xcX-dI-NKa"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="activityIndicatorView" destination="jT8-96-b2D" id="9He-4Q-IFe"/>
                 <outlet property="closeButton" destination="ykM-27-EvN" id="MJL-ww-ocf"/>
-                <outlet property="closeButtonTrailingConstraint" destination="uZL-Jt-pDo" id="gq6-79-OCj"/>
                 <outlet property="liveBadgeView" destination="OSM-5H-FgV" id="HNS-nX-WPn"/>
                 <outlet property="pauseButton" destination="Hyw-t1-hLS" id="LEj-vs-Jdu"/>
                 <outlet property="pipButton" destination="Q7h-05-TmK" id="EGd-AX-cAZ"/>
-                <outlet property="pipButtonLeadingConstraint" destination="6fv-sK-AcP" id="XhW-Qf-atY"/>
                 <outlet property="playButton" destination="yED-yG-s6z" id="ZFL-Ks-4Tc"/>
                 <outlet property="playControlWrapperView" destination="TKP-4B-OUV" id="RVX-l9-lxU"/>
                 <outlet property="playedTimeLabel" destination="Zk4-gl-otk" id="KT1-mN-NJy"/>
-                <outlet property="progressView" destination="aSq-x1-aA2" id="SCT-5m-EP9"/>
                 <outlet property="reloadButton" destination="VCF-sg-yOy" id="Pjq-9Z-FWO"/>
                 <outlet property="remainingTimeLabel" destination="Hl0-e0-d3X" id="lvN-pH-SOc"/>
                 <outlet property="slider" destination="7CY-zg-LG0" id="WrQ-QJ-jgr"/>
                 <outlet property="timeControlWrapperView" destination="gga-kw-mqs" id="NdO-Li-2bE"/>
-                <outlet property="visualControlBackgroundImageView" destination="2mC-M8-6Y5" id="GSv-8k-VMz"/>
-                <outlet property="visualControlTopConstraint" destination="UxV-ZI-U3f" id="Gel-Vm-2pA"/>
                 <outlet property="visualControlWrapperView" destination="HPi-eF-W69" id="kKi-Jd-l8j"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="187.16517857142856"/>

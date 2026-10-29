@@ -879,14 +879,19 @@ final class ConversationViewController: UIViewController {
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = false
                 conversationInputViewController.dismiss()
                 adjustTableViewContentOffsetWhenInputWrapperHeightChanges = true
-                if let galleryViewController = UIApplication.shared.homeContainerViewController?.galleryViewController {
+                if let sceneDelegate = cell.window?.windowScene?.delegate as? SceneDelegate,
+                   let galleryViewController = sceneDelegate.prepareGalleryWindow()?.galleryViewController,
+                   !galleryViewController.isPresented
+                {
+                    galleryViewController.source = self
                     galleryViewController.conversationId = conversationId
                     galleryViewController.show(item: item, from: cell)
                 }
             } else if message.category.hasSuffix("_DATA"), let viewModel = viewModel as? DataMessageViewModel, let cell = cell as? DataMessageCell {
                 if viewModel.mediaStatus == MediaStatus.DONE.rawValue || viewModel.mediaStatus == MediaStatus.READ.rawValue {
                     conversationInputViewController.dismiss()
-                    UIApplication.shared.homeContainerViewController?.pipController?.pauseAction(self)
+                    let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate
+                    sceneDelegate?.galleryWindow?.galleryViewController.pipController?.pauseAction(self)
                     if viewModel.isListPlayable {
                         if CallService.shared.hasCall {
                             alert(R.string.localizable.call_on_another_call_hint())
@@ -961,7 +966,8 @@ final class ConversationViewController: UIViewController {
                 navigationController?.pushViewController(vc, animated: true)
             } else if message.category.hasSuffix("_TRANSCRIPT") {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
-                vc.presentAsChild(of: self)
+                view.window?.endEditing(true)
+                present(vc, animated: true, completion: nil)
             } else if message.category.hasSuffix("_STICKER") {
                 conversationInputViewController.dismiss()
                 let vc = StickerPreviewViewController(message: message)
@@ -1031,9 +1037,14 @@ final class ConversationViewController: UIViewController {
         guard !(tableView.isDragging && tableView.isDecelerating) else {
             return
         }
-        let textPreviewView = R.nib.textPreviewView(withOwner: nil)!
-        textPreviewView.attributedText = viewModel.contentAttributedString
-        textPreviewView.show(on: view)
+        guard presentedViewController == nil, transitionCoordinator == nil else {
+            return
+        }
+        let preview = TextPreviewViewController(
+            text: .attributed(viewModel.contentAttributedString),
+        )
+        preview.delegate = self
+        present(preview, animated: true)
     }
     
     @objc func showReportMenuAction() {
@@ -1752,7 +1763,7 @@ extension ConversationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let cell = cell as? PhotoRepresentableMessageCell {
-            setCell(cell, contentViewHidden: false)
+            cell.setGalleryContentHidden(false)
         }
         guard let viewModel = dataSource?.viewModel(for: indexPath) else {
             return
@@ -1985,11 +1996,14 @@ extension ConversationViewController: UIDocumentInteractionControllerDelegate {
 extension ConversationViewController: GalleryViewControllerDelegate {
     
     func galleryViewController(_ viewController: GalleryViewController, cellFor item: GalleryItem) -> GalleryTransitionSource? {
+        guard viewIfLoaded?.window != nil else {
+            return nil
+        }
         return visiblePhotoRepresentableCell(of: item.messageId)
     }
     
     func galleryViewController(_ viewController: GalleryViewController, willShow item: GalleryItem) {
-        guard UIApplication.shared.homeContainerViewController?.pipController?.item != item else {
+        guard viewController.pipController?.item != item else {
             return
         }
         setCell(ofMessageId: item.messageId, contentViewHidden: true)
@@ -2018,14 +2032,14 @@ extension ConversationViewController: GalleryViewControllerDelegate {
     
 }
 
-// MARK: - TextPreviewViewDelegate
-extension ConversationViewController: TextPreviewViewDelegate {
+// MARK: - TextPreviewViewControllerDelegate
+extension ConversationViewController: TextPreviewViewControllerDelegate {
     
-    func textPreviewView(_ view: TextPreviewView, didSelectURL url: URL) {
+    func textPreviewViewController(_ controller: TextPreviewViewController, didSelectURL url: URL) {
         handleTapping(on: url)
     }
     
-    func textPreviewView(_ view: TextPreviewView, didLongPressURL url: URL) {
+    func textPreviewViewController(_ controller: TextPreviewViewController, didLongPressURL url: URL) {
         handleLongPressing(on: url)
     }
     
@@ -2037,7 +2051,8 @@ extension ConversationViewController: PinMessageBannerViewDelegate {
     func pinMessageBannerViewDidTapPin(_ view: PinMessageBannerView) {
         let vc = PinMessagesPreviewViewController(conversationId: conversationId, isGroup: dataSource.category == .group)
         vc.delegate = self
-        vc.presentAsChild(of: self)
+        view.window?.endEditing(true)
+        present(vc, animated: true, completion: nil)
     }
     
     func pinMessageBannerViewDidTapClose(_ view: PinMessageBannerView) {
@@ -2058,7 +2073,7 @@ extension ConversationViewController: PinMessageBannerViewDelegate {
 extension ConversationViewController: PinMessagesPreviewViewControllerDelegate {
     
     func pinMessagesPreviewViewController(_ controller: PinMessagesPreviewViewController, needsShowMessage messageId: String) {
-        controller.dismissAsChild(animated: true) {
+        controller.dismiss(animated: true) {
             self.scrollToMessage(messageId: messageId)
         }
     }
@@ -2364,31 +2379,7 @@ extension ConversationViewController {
         guard let id = id, let cell = visiblePhotoRepresentableCell(of: id) else {
             return
         }
-        setCell(cell, contentViewHidden: hidden)
-    }
-    
-    private func setCell(_ cell: PhotoRepresentableMessageCell, contentViewHidden hidden: Bool) {
-        var contentViews: [UIView] = [
-            cell.contentImageView,
-        ]
-        let isQuotedOrHasCaption = cell.viewModel?.quotedMessageViewModel != nil || ((cell.viewModel as? ImageMessageViewModel)?.hasCaption ?? false)
-        if !isQuotedOrHasCaption {
-            contentViews.append(cell.timeLabel)
-            contentViews.append(cell.statusImageView)
-        }
-        if let cell = cell as? AttachmentExpirationHintingMessageCell {
-            contentViews.append(cell.operationButton)
-        }
-        if let cell = cell as? VideoMessageCell {
-            contentViews.append(cell.lengthLabel)
-        }
-        if let cell = cell as? LiveMessageCell {
-            contentViews.append(cell.badgeView)
-            contentViews.append(cell.playButton)
-        }
-        contentViews.forEach {
-            $0.isHidden = hidden
-        }
+        cell.setGalleryContentHidden(hidden)
     }
     
     private func frameOfPhotoRepresentableCell(_ cell: PhotoRepresentableMessageCell) -> CGRect {
@@ -2983,7 +2974,13 @@ extension ConversationViewController {
             return
         }
         UserOperationAnalytics.tradeSource = .url
-        open(url: url)
+        if presentedViewController == nil {
+            open(url: url)
+        } else {
+            dismiss(animated: true) {
+                self.open(url: url)
+            }
+        }
     }
     
     private func handleLongPressing(on url: URL) {
@@ -2991,17 +2988,30 @@ extension ConversationViewController {
             return
         }
         let alert = UIAlertController(title: url.absoluteString, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: R.string.localizable.open_url(), style: .default, handler: { [weak self](_) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.open_url(), style: .default, handler: { [weak self, weak alert] (_) in
             UserOperationAnalytics.tradeSource = .url
-            self?.open(url: url)
+            guard let self else {
+                return
+            }
+            switch self.presentedViewController {
+            case alert, nil:
+                self.open(url: url)
+            default:
+                self.dismiss(animated: true) {
+                    self.open(url: url)
+                }
+            }
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.copy(), style: .default, handler: { (_) in
             UIPasteboard.general.string = url.absoluteString
             showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
-            
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        present(alert, animated: true, completion: nil)
+        var presenter: UIViewController = self
+        while let presentedViewController = presenter.presentedViewController {
+            presenter = presentedViewController
+        }
+        presenter.present(alert, animated: true, completion: nil)
     }
     
     private func viewModel(_ viewModel: MessageViewModel, availabilityForMultipleSelectionWith intent: MultipleSelectionIntent) -> SelectionAvailability {

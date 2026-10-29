@@ -319,10 +319,8 @@ class UrlWindow {
                     UIApplication.shared.homeNavigationController?.pushViewController(vc, animated: true)
                 }
                 
-                if UIApplication.shared.homeContainerViewController?.isShowingGallery ?? false {
-                    UIApplication.shared.homeContainerViewController?.galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
-                        push()
-                    }
+                if let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate {
+                    sceneDelegate.dismissModalPresentations(completion: push)
                 } else {
                     push()
                 }
@@ -350,16 +348,8 @@ class UrlWindow {
                     UIApplication.shared.homeNavigationController?.pushViewController(afterRoot: viewController)
                 }
             }
-            if let container = UIApplication.shared.homeContainerViewController, container.galleryIsOnTopMost {
-                let currentItemViewController = container.galleryViewController.currentItemViewController
-                if let vc = currentItemViewController as? GalleryVideoItemViewController {
-                    vc.togglePipMode(completion: {
-                        DispatchQueue.main.async(execute: pushController)
-                    })
-                } else {
-                    container.galleryViewController.dismiss(transitionViewInitialOffsetY: 0)
-                    pushController()
-                }
+            if let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate {
+                sceneDelegate.dismissModalPresentations(completion: pushController)
             } else {
                 pushController()
             }
@@ -500,10 +490,8 @@ class UrlWindow {
                         UIApplication.shared.homeNavigationController?.pushViewController(vc, animated: true)
                     }
                 }
-                if UIApplication.shared.homeContainerViewController?.isShowingGallery ?? false {
-                    UIApplication.shared.homeContainerViewController?.galleryViewController.dismiss(transitionViewInitialOffsetY: 0) {
-                        push()
-                    }
+                if let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate {
+                    sceneDelegate.dismissModalPresentations(completion: push)
                 } else {
                     push()
                 }

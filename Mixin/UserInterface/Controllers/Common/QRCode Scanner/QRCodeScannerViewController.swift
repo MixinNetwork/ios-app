@@ -15,7 +15,6 @@ final class QRCodeScannerViewController: UIViewController, PopupNavigationAnimat
     @IBOutlet weak var scanningLineView: UIView!
     @IBOutlet weak var toolbarView: UIStackView!
     
-    @IBOutlet weak var navigationOverridesStatusBarConstraint: NSLayoutConstraint!
     @IBOutlet weak var showScanningLineConstraint: NSLayoutConstraint!
     @IBOutlet weak var hideScanningLineConstraint: NSLayoutConstraint!
     
@@ -43,6 +42,32 @@ final class QRCodeScannerViewController: UIViewController, PopupNavigationAnimat
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = R.string.localizable.scan_qr_code()
+        navigationItem.leftBarButtonItem = if #available(iOS 26, *) {
+            UIBarButtonItem(
+                barButtonSystemItem: .close,
+                target: self,
+                action: #selector(goBack(_:)),
+            )
+        } else {
+            UIBarButtonItem(
+                image: R.image.ic_camera_close()?.withRenderingMode(.alwaysOriginal),
+                style: .plain,
+                target: self,
+                action: #selector(goBack(_:)),
+            )
+        }
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.configureWithTransparentBackground()
+        navigationBarAppearance.titleTextAttributes = [
+            .font: UIFont.systemFont(ofSize: 18, weight: .semibold),
+            .foregroundColor: UIColor.white,
+        ]
+        navigationItem.standardAppearance = navigationBarAppearance
+        navigationItem.scrollEdgeAppearance = navigationBarAppearance
+        navigationItem.compactAppearance = navigationBarAppearance
+        navigationItem.compactScrollEdgeAppearance = navigationBarAppearance
+        
         previewView.videoPreviewLayer.videoGravity = .resizeAspectFill
         previewView.session = session
         sessionQueue.async { [session, metadataOutput] in
@@ -83,15 +108,9 @@ final class QRCodeScannerViewController: UIViewController, PopupNavigationAnimat
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
         sessionQueue.async { [session] in
             session.startRunning()
         }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -108,19 +127,6 @@ final class QRCodeScannerViewController: UIViewController, PopupNavigationAnimat
         }
     }
     
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        if view.safeAreaInsets.top > 24 {
-            navigationOverridesStatusBarConstraint.priority = .defaultLow
-        } else {
-            navigationOverridesStatusBarConstraint.priority = .defaultHigh
-        }
-    }
-    
-    @IBAction func backAction(_ sender: UIButton) {
-        navigationController?.popViewController(animated: true)
-    }
-    
     @IBAction func albumAction(_ sender: Any) {
         sessionQueue.async { [session] in
             session.stopRunning()
@@ -135,6 +141,10 @@ final class QRCodeScannerViewController: UIViewController, PopupNavigationAnimat
     
     @IBAction func changeFlashAction(_ sender: Any) {
         updateTorchAndCameraFlashButton(toggleFlashMode: true)
+    }
+    
+    @objc private func goBack(_ sender: UIBarButtonItem) {
+        navigationController?.popViewController(animated: true)
     }
     
     @objc private func setFocus(_ recognizer: UITapGestureRecognizer) {

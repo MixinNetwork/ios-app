@@ -24,6 +24,10 @@ final class ExploreMoreActionCell: UICollectionViewCell {
         accessibilityTraits = .button
         iconImageView.shouldCustomLoopCount = true
         iconImageView.animationRepeatCount = 3
+        titleLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
     }
     
     func load(action: ExploreMoreAction) {

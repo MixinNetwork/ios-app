@@ -33,9 +33,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" name="text"/>
                                 <nil key="highlightedColor"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="24" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MOr-su-bt1">
                                 <rect key="frame" x="0.0" y="21" width="120" height="24"/>
@@ -60,7 +57,7 @@
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="MOr-st-ak1" secondAttribute="bottom" constant="16" id="MOr-sb-001"/>
                     <constraint firstItem="MOr-st-ak1" firstAttribute="leading" secondItem="MOr-ic-on1" secondAttribute="trailing" constant="10" id="MOr-sl-001"/>
                     <constraint firstAttribute="trailing" secondItem="MOr-st-ak1" secondAttribute="trailing" constant="10" id="MOr-sr-001"/>
-                    <constraint firstItem="MOr-st-ak1" firstAttribute="top" secondItem="MOr-co-nt1" secondAttribute="top" constant="12" id="MOr-st-001"/>
+                    <constraint firstItem="MOr-st-ak1" firstAttribute="top" secondItem="MOr-co-nt1" secondAttribute="top" priority="999" constant="12" id="MOr-st-001"/>
                     <constraint firstItem="MOr-ba-dg1" firstAttribute="top" secondItem="MOr-ti-tl1" secondAttribute="top" constant="2" id="Ydq-EO-STt"/>
                     <constraint firstItem="MOr-ba-dg1" firstAttribute="leading" secondItem="MOr-ti-tl1" secondAttribute="trailing" constant="1" id="mSL-Gg-MbI"/>
                 </constraints>
@@ -83,7 +80,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

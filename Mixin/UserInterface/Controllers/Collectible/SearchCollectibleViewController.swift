@@ -25,6 +25,10 @@ final class SearchCollectibleViewController: UIViewController, SearchNavigationA
         fatalError("Storyboard not supported")
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,6 +51,12 @@ final class SearchCollectibleViewController: UIViewController, SearchNavigationA
         collectionView.register(R.nib.collectibleCell)
         collectionView.dataSource = self
         collectionView.delegate = self
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(dismissSearch),
+            name: dismissSearchNotification,
+            object: nil,
+        )
     }
     
     override func viewWillLayoutSubviews() {
@@ -84,6 +94,17 @@ final class SearchCollectibleViewController: UIViewController, SearchNavigationA
     
     @IBAction func cancelSearching(_ sender: Any) {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func dismissSearch() {
+        guard let navigationController else {
+            return
+        }
+        let viewControllers = navigationController.viewControllers.filter { $0 !== self }
+        guard viewControllers.count != navigationController.viewControllers.count else {
+            return
+        }
+        navigationController.setViewControllers(viewControllers, animated: false)
     }
     
     @objc private func searchKeyword(_ sender: Any) {

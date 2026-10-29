@@ -66,7 +66,7 @@ final class ContactsViewController: UIViewController {
             }
             let itemSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1),
-                heightDimension: .estimated(50),
+                heightDimension: .estimated(58),
             )
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             let group = NSCollectionLayoutGroup.vertical(
@@ -279,6 +279,7 @@ extension ContactsViewController: UICollectionViewDataSource, UICollectionViewDe
             withReuseIdentifier: ExploreContactCell.reuseIdentifier,
             for: indexPath,
         ) as! ExploreContactCell
+        cell.peerInfoViewHeight = 50
         if isSearching {
             cell.load(result: searchResults[indexPath.item])
         } else {

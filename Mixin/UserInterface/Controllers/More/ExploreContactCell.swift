@@ -5,10 +5,18 @@ final class ExploreContactCell: UICollectionViewCell {
     
     static let reuseIdentifier = "ExploreContactCell"
     
+    var peerInfoViewHeight: CGFloat = 42 {
+        didSet {
+            peerInfoViewHeightConstraint.constant = peerInfoViewHeight
+        }
+    }
+    
     private let peerInfoView = PeerInfoView()
     private let externalIndicatorImageView = UIImageView(
         image: R.image.external_indicator_arrow_bold()?.withRenderingMode(.alwaysTemplate),
     )
+    
+    private weak var peerInfoViewHeightConstraint: NSLayoutConstraint!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,9 +44,12 @@ final class ExploreContactCell: UICollectionViewCell {
         externalIndicatorImageView.snp.makeConstraints { make in
             make.size.equalTo(16)
         }
-        peerInfoView.snp.makeConstraints { make in
-            make.height.equalTo(42)
-        }
+        peerInfoView.translatesAutoresizingMaskIntoConstraints = false
+        let peerInfoViewHeightConstraint = peerInfoView.heightAnchor.constraint(
+            equalToConstant: peerInfoViewHeight,
+        )
+        peerInfoViewHeightConstraint.isActive = true
+        self.peerInfoViewHeightConstraint = peerInfoViewHeightConstraint
     }
     
     required init?(coder: NSCoder) {

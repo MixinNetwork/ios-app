@@ -49,7 +49,7 @@ final class BotsViewController: UIViewController {
             }
             let itemSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1),
-                heightDimension: .estimated(50),
+                heightDimension: .estimated(58),
             )
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             let group = NSCollectionLayoutGroup.vertical(
@@ -291,6 +291,7 @@ extension BotsViewController: UICollectionViewDataSource, UICollectionViewDelega
             withReuseIdentifier: ExploreContactCell.reuseIdentifier,
             for: indexPath,
         ) as! ExploreContactCell
+        cell.peerInfoViewHeight = 50
         if isSearching {
             let result = searchResults[indexPath.item]
             cell.load(result: result, isFavorite: favoriteBotIDs.contains(result.user.userId))

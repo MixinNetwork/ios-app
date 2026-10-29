@@ -344,6 +344,7 @@ extension ExploreMoreViewController: UICollectionViewDataSource, UICollectionVie
                 withReuseIdentifier: ExploreContactCell.reuseIdentifier,
                 for: indexPath,
             ) as! ExploreContactCell
+            cell.peerInfoViewHeight = 42
             cell.load(user: contacts[indexPath.item])
             return cell
         case .bots:
@@ -351,6 +352,7 @@ extension ExploreMoreViewController: UICollectionViewDataSource, UICollectionVie
                 withReuseIdentifier: ExploreContactCell.reuseIdentifier,
                 for: indexPath,
             ) as! ExploreContactCell
+            cell.peerInfoViewHeight = 42
             let user = bots[indexPath.item]
             cell.load(
                 user: user,

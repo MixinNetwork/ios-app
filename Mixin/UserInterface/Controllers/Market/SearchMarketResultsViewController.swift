@@ -74,7 +74,7 @@ final class SearchMarketResultsViewController: UIViewController {
         
         let categoryController = CategoryController(collectionView: categorySelectorCollectionView)
         categoryController.resultsViewController = self
-        categorySelectorCollectionView.register(R.nib.exploreSegmentCell)
+        categorySelectorCollectionView.register(R.nib.segmentCell)
         categorySelectorCollectionView.dataSource = categoryController
         categorySelectorCollectionView.delegate = categoryController
         self.categoryController = categoryController

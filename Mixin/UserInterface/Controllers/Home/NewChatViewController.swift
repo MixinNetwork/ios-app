@@ -121,7 +121,8 @@ final class NewChatViewController: UIViewController {
             guard self != nil, !operation.isCancelled else {
                 return
             }
-            let objcAccessibleUsers = UserDAO.shared.contactsWithoutApp()
+            let objcAccessibleUsers = UserDAO.shared
+                .contactsWithoutApp(limit: nil)
                 .map(ObjcAccessibleUser.init)
             let (titles, objcUsers) = UILocalizedIndexedCollation.current()
                 .catalog(objcAccessibleUsers, usingSelector: #selector(getter: ObjcAccessibleUser.fullName))

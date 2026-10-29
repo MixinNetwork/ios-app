@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class UserCenterViewController: SettingsTableViewController, PopupNavigationAnimating {
+final class UserCenterViewController: SettingsTableViewController {
     
     private lazy var dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
@@ -52,11 +52,6 @@ final class UserCenterViewController: SettingsTableViewController, PopupNavigati
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.leftBarButtonItem = .tintedIcon(
-            image: R.image.ic_title_close(),
-            target: self,
-            action: #selector(close(_:))
-        )
         tableView.tableHeaderView = R.nib.userCenterTableHeaderView(withOwner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
@@ -67,10 +62,6 @@ final class UserCenterViewController: SettingsTableViewController, PopupNavigati
             object: nil
         )
         reloadAccount()
-    }
-    
-    @objc private func close(_ sender: Any) {
-        navigationController?.popViewController(animated: true)
     }
     
 }
@@ -114,7 +105,7 @@ extension UserCenterViewController: UITableViewDelegate {
         case 2:
             switch indexPath.row {
             case 0:
-                controller = ContactViewController.instance(showAddContactButton: false)
+                controller = ContactsViewController(showAddContactButton: false)
             default:
                 controller = AddMemberViewController.instance()
             }
@@ -123,7 +114,7 @@ extension UserCenterViewController: UITableViewDelegate {
             case 0:
                 controller = AddContactViewController()
             default:
-                controller = ContactViewController.instance()
+                controller = ContactsViewController(showAddContactButton: true)
             }
         default:
             controller = SettingsViewController()

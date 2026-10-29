@@ -74,7 +74,7 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader
         )
         collectionView.register(R.nib.exploreRecentSearchCell)
-        collectionView.register(R.nib.exploreSegmentCell)
+        collectionView.register(R.nib.segmentCell)
         collectionView.register(R.nib.tradeTokenCell)
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { [weak self, recentGroupHorizontalMargin] (sectionIndex, environment) in
             switch Section(rawValue: sectionIndex)! {

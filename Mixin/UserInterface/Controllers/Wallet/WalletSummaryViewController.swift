@@ -65,7 +65,7 @@ final class WalletSummaryViewController: UIViewController {
         categorySelectorController = CategorySelectorController(
             collectionView: categorySelectorCollectionView
         )
-        categorySelectorCollectionView.register(R.nib.exploreSegmentCell)
+        categorySelectorCollectionView.register(R.nib.segmentCell)
         categorySelectorCollectionView.dataSource = categorySelectorController
         categorySelectorCollectionView.delegate = categorySelectorController
         categorySelectorController.delegate = self
@@ -616,7 +616,7 @@ extension WalletSummaryViewController {
             switch category {
             case .safe:
                 BadgeManager.shared.setHasViewed(identifier: .safeVault)
-                if let cell = collectionView.cellForItem(at: indexPath) as? ExploreSegmentCell {
+                if let cell = collectionView.cellForItem(at: indexPath) as? SegmentCell {
                     cell.badgeView.isHidden = true
                 }
             default:

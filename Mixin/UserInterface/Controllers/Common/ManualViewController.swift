@@ -86,7 +86,7 @@ class ManualViewController: UIViewController {
         }
         collectionView.backgroundColor = R.color.background_secondary()
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(R.nib.exploreSegmentCell)
+        collectionView.register(R.nib.segmentCell)
         collectionView.dataSource = self
         collectionView.delegate = self
         pageSelectorCollectionView = collectionView

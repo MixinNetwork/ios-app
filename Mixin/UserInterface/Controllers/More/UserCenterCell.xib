@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="user_center" id="Usr-ce-ll1" customClass="UserCenterCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="370" height="64"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Usr-co-nt1">
+                <rect key="frame" x="0.0" y="0.0" width="370" height="64"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-av-at1" customClass="AvatarImageView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="16" y="11" width="42" height="42"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="42" id="Usr-ah-001"/>
+                            <constraint firstAttribute="width" constant="42" id="Usr-aw-001"/>
+                        </constraints>
+                    </view>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-in-fo1">
+                        <rect key="frame" x="66" y="14" width="236" height="36"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-na-me1">
+                                <rect key="frame" x="0.0" y="0.0" width="106" height="18"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="84" placeholderIntrinsicHeight="21.333333333333332" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-na-lb1">
+                                        <rect key="frame" x="0.0" y="0.0" width="84" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" name="text_secondary"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-me-mb1" customClass="SDAnimatedImageView">
+                                        <rect key="frame" x="88" y="0.0" width="18" height="18"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="18" id="Usr-mh-001"/>
+                                            <constraint firstAttribute="width" priority="999" constant="18" id="Usr-mw-001"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="239" placeholderIntrinsicHeight="17" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-id-lb1">
+                                <rect key="frame" x="0.0" y="22" width="236" height="14"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                <color key="textColor" name="text_tertiary"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_user_qr_code" translatesAutoresizingMaskIntoConstraints="NO" id="Yl4-90-uBm">
+                        <rect key="frame" x="310" y="17" width="30" height="30"/>
+                        <color key="tintColor" name="icon_tint_tertiary"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="30" id="hGT-aC-M6B"/>
+                            <constraint firstAttribute="height" constant="30" id="y2u-Us-l3D"/>
+                        </constraints>
+                    </imageView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-di-sc1">
+                        <rect key="frame" x="344" y="27" width="10" height="10"/>
+                        <color key="tintColor" name="text_tertiary"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="10" id="5A0-bj-dzJ"/>
+                            <constraint firstAttribute="height" constant="10" id="Kje-2o-qRc"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstItem="Yl4-90-uBm" firstAttribute="centerY" secondItem="Usr-co-nt1" secondAttribute="centerY" id="BjC-r7-WZn"/>
+                    <constraint firstItem="Usr-di-sc1" firstAttribute="leading" secondItem="Yl4-90-uBm" secondAttribute="trailing" constant="4" id="KFH-9f-ddu"/>
+                    <constraint firstItem="Usr-av-at1" firstAttribute="leading" secondItem="Usr-co-nt1" secondAttribute="leading" constant="16" id="Usr-al-001"/>
+                    <constraint firstItem="Usr-av-at1" firstAttribute="centerY" secondItem="Usr-co-nt1" secondAttribute="centerY" id="Usr-ay-001"/>
+                    <constraint firstAttribute="trailing" secondItem="Usr-di-sc1" secondAttribute="trailing" constant="16" id="Usr-dr-001"/>
+                    <constraint firstItem="Usr-di-sc1" firstAttribute="centerY" secondItem="Usr-co-nt1" secondAttribute="centerY" id="Usr-dy-001"/>
+                    <constraint firstAttribute="bottom" secondItem="Usr-in-fo1" secondAttribute="bottom" constant="14" id="Usr-ib-001"/>
+                    <constraint firstItem="Usr-in-fo1" firstAttribute="leading" secondItem="Usr-av-at1" secondAttribute="trailing" constant="8" id="Usr-il-001"/>
+                    <constraint firstItem="Usr-in-fo1" firstAttribute="top" secondItem="Usr-co-nt1" secondAttribute="top" constant="14" id="Usr-it-001"/>
+                    <constraint firstItem="Yl4-90-uBm" firstAttribute="leading" secondItem="Usr-in-fo1" secondAttribute="trailing" constant="8" id="lUo-pz-fIm"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="avatarImageView" destination="Usr-av-at1" id="Usr-oa-001"/>
+                <outlet property="identityNumberLabel" destination="Usr-id-lb1" id="Usr-oi-001"/>
+                <outlet property="membershipImageView" destination="Usr-me-mb1" id="Usr-om-001"/>
+                <outlet property="nameLabel" destination="Usr-na-lb1" id="Usr-on-001"/>
+            </connections>
+            <point key="canvasLocation" x="48" y="42"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="ic_accessory_disclosure" width="6" height="10"/>
+        <image name="ic_user_qr_code" width="24" height="24"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="icon_tint_tertiary">
+            <color red="0.72156862745098038" green="0.74117647058823533" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_secondary">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

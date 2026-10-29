@@ -130,7 +130,7 @@ final class WalletSelectorViewController: UIViewController {
             }
         }
         collectionView.allowsMultipleSelection = true
-        collectionView.register(R.nib.exploreSegmentCell)
+        collectionView.register(R.nib.segmentCell)
         collectionView.register(R.nib.walletCell)
         collectionView.register(R.nib.walletIntroductionCell)
         collectionView.register(

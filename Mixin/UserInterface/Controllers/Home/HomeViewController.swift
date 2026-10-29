@@ -148,7 +148,7 @@ final class HomeViewController: UIViewController {
             )
             present(editor, animated: true, completion: nil)
         } else {
-            let vc = ContactViewController.instance(showAddContactButton: false)
+            let vc = ContactsViewController(showAddContactButton: false)
             navigationController?.pushViewController(vc, animated: true)
         }
     }

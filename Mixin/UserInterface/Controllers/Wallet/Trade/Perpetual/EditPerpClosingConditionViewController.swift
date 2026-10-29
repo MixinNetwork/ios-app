@@ -148,7 +148,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
         inputTextField.delegate = self
         inputTextField.becomeFirstResponder()
         inputContentSelectorLayout.itemSize = UICollectionViewFlowLayout.automaticSize
-        inputContentSelectorCollectionView.register(R.nib.exploreSegmentCell)
+        inputContentSelectorCollectionView.register(R.nib.segmentCell)
         inputContentSelectorSizeObserver = inputContentSelectorCollectionView.observe(
             \.contentSize,
              options: [.new]

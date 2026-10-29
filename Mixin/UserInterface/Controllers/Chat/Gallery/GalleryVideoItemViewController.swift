@@ -309,7 +309,7 @@ extension GalleryVideoItemViewController: AVPictureInPictureControllerDelegate {
             galleryViewController?.pipController = nil
         }
         if let parent,
-           parent is HomeContainerViewController || parent is GalleryTransitionViewController
+           parent is HomeContainerViewController || parent is GalleryViewController
         {
             willMove(toParent: nil)
             view.removeFromSuperview()

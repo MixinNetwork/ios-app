@@ -26,7 +26,22 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     }
     
     override var prefersStatusBarHidden: Bool {
-        return true
+        isStatusBarHidden
+    }
+    
+    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        .fade
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        if presentationState != .tornDown,
+           transitionOverlayView == nil,
+           currentItemViewController is GalleryVideoItemViewController
+        {
+            .all
+        } else {
+            .portrait
+        }
     }
     
     weak var source: (UIViewController & GalleryViewControllerDelegate)?
@@ -66,15 +81,17 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     private let backgroundView = UIView()
     
     private weak var sceneDelegate: SceneDelegate?
-    private weak var galleryWindow: GalleryWindow?
     private weak var pipSource: (UIViewController & GalleryViewControllerDelegate)?
     
     private var modelController = GalleryItemModelController()
     private var pipModelController: GalleryItemModelController?
     private var presentationState: PresentationState = .hidden
+    private var isStatusBarHidden = false
+    private var statusBarHiddenBeforePresentation = false
     private var pendingDismissalOffsetY: CGFloat?
     private var dismissalCompletions: [() -> Void] = []
     private var transitionView: GalleryTransitionView?
+    private var transitionOverlayView: GalleryTransitionOverlayView?
     private var longPressRecognizer: UILongPressGestureRecognizer!
     private var itemToShowAfterPiPStops: (GalleryItem, GalleryTransitionSource)?
     
@@ -180,28 +197,31 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }
         guard let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate,
               let mainWindow = sceneDelegate.mainWindow,
-              let galleryWindow = prepareWindow(in: sceneDelegate)
+              prepareWindow(in: sceneDelegate)
         else {
             return
         }
         mainWindow.endEditing(true)
         presentationState = .presenting
-        backgroundView.alpha = 1
+        backgroundView.alpha = 0
         pageViewController.view.alpha = 0
-        galleryWindow.beginTransition(in: mainWindow, backgroundAlpha: 0) { [self] transitionController in
+        let didBeginTransition = beginTransition(
+            backgroundAlpha: 0,
+        ) { [self] transitionOverlayView in
             guard presentationState != .tornDown else {
                 return
             }
+            // Attach the transparent window before converting the source's coordinates.
+            sceneDelegate.showGalleryWindow()
             source?.galleryViewController(self, willShow: item)
             
             if transitionView == nil || type(of: transitionView) != transitionSource.transitionViewType {
                 transitionView = transitionSource.transitionViewType.init()
             }
-            transitionController.view.addSubview(transitionView!)
+            transitionOverlayView.addSubview(transitionView!)
             transitionView!.transform = .identity
             transitionView!.load(source: transitionSource)
             transitionView!.alpha = 1
-            transitionView!.transition(to: transitionController.view)
             
             let viewController = modelController.dequeueReusableViewController(with: items, index: index)
             viewController.isFocused = true
@@ -210,8 +230,10 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             }
             pageViewController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
             
+            transitionView!.transition(to: transitionOverlayView)
             animate(animations: {
-                transitionController.backgroundView.alpha = 1
+                self.setStatusBarHidden(true)
+                transitionOverlayView.backgroundView.alpha = 1
             }, completion: {
                 guard self.presentationState != .tornDown else {
                     return
@@ -223,14 +245,15 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                     videoController.hidePlayControlAfterPlaybackBegins = true
                     videoController.playAction(self)
                 }
+                self.backgroundView.alpha = 1
                 self.pageViewController.view.alpha = 1
-                sceneDelegate.showGalleryWindow()
                 self.transitionView?.removeFromSuperview()
-                galleryWindow.endTransition {
+                self.endTransition {
                     guard self.presentationState != .tornDown else {
                         return
                     }
                     self.presentationState = .visible
+                    self.setNeedsUpdateOfSupportedInterfaceOrientationsIfNeeded()
                     self.source?.galleryViewController(self, didShow: item)
                     if let offsetY = self.pendingDismissalOffsetY {
                         self.pendingDismissalOffsetY = nil
@@ -240,6 +263,9 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             })
             setNeedsUpdateOfSupportedInterfaceOrientationsIfNeeded()
         }
+        if !didBeginTransition, presentationState != .tornDown {
+            finishDismissal()
+        }
     }
     
     func show(itemViewController viewController: GalleryItemViewController) {
@@ -247,7 +273,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
               let item = viewController.item,
               let sceneDelegate = UIApplication.shared.firstWindowScene?.delegate as? SceneDelegate,
               let mainWindow = sceneDelegate.mainWindow,
-              let galleryWindow = prepareWindow(in: sceneDelegate)
+              prepareWindow(in: sceneDelegate)
         else {
             return
         }
@@ -262,14 +288,19 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             modelControllerToRestore = nil
         }
         let viewControllerToHide = wasShowing ? currentItemViewController : nil
-        let show = { [self] (transitionController: GalleryTransitionViewController?) in
+        let show = { [self] (transitionOverlayView: GalleryTransitionOverlayView?) in
             guard presentationState != .tornDown else {
                 return
             }
+            sceneDelegate.showGalleryWindow()
             animate(animations: {
+                self.setStatusBarHidden(true)
                 viewControllerToHide?.view.alpha = 0
-                self.backgroundView.alpha = 1
-                transitionController?.backgroundView.alpha = 1
+                if let transitionOverlayView {
+                    transitionOverlayView.backgroundView.alpha = 1
+                } else {
+                    self.backgroundView.alpha = 1
+                }
             }, completion: {
                 guard self.presentationState != .tornDown else {
                     return
@@ -284,13 +315,14 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                     self.pageViewController.dataSource = modelControllerToRestore
                 }
                 self.pageViewController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
+                self.backgroundView.alpha = 1
                 self.pageViewController.view.alpha = 1
-                sceneDelegate.showGalleryWindow()
-                galleryWindow.endTransition {
+                self.endTransition {
                     guard self.presentationState != .tornDown else {
                         return
                     }
                     self.presentationState = .visible
+                    self.setNeedsUpdateOfSupportedInterfaceOrientationsIfNeeded()
                     if !wasShowing {
                         self.source?.galleryViewController(self, didShow: item)
                     }
@@ -307,11 +339,16 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         if wasShowing {
             show(nil)
         } else {
-            backgroundView.alpha = 1
+            backgroundView.alpha = 0
             pageViewController.view.alpha = 0
-            galleryWindow.beginTransition(in: mainWindow, backgroundAlpha: 0) { [self] transitionController in
+            let didBeginTransition = beginTransition(
+                backgroundAlpha: 0,
+            ) { [self] transitionOverlayView in
                 source?.galleryViewController(self, willShow: item)
-                show(transitionController)
+                show(transitionOverlayView)
+            }
+            if !didBeginTransition, presentationState != .tornDown {
+                finishDismissal()
             }
         }
     }
@@ -341,8 +378,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         guard let itemViewController = currentItemViewController,
               let item = itemViewController.item,
               let sceneDelegate,
-              let mainWindow = sceneDelegate.mainWindow,
-              let galleryWindow
+              let mainWindow = sceneDelegate.mainWindow
         else {
             return
         }
@@ -351,7 +387,9 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }
         presentationState = .dismissing
         source?.galleryViewController(self, willDismiss: item)
-        galleryWindow.beginTransition(in: mainWindow, backgroundAlpha: 0) { [self] transitionController in
+        let didBeginTransition = beginTransition(
+            backgroundAlpha: 0,
+        ) { [self] transitionOverlayView in
             guard presentationState != .tornDown else {
                 return
             }
@@ -359,21 +397,22 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             pageViewController.view.transform = .identity
             
             let transitionSource = source?.galleryViewController(self, cellFor: item)
+                .flatMap { $0.window === mainWindow ? $0 : nil }
             if transitionView == nil {
                 transitionView = transitionSource?.transitionViewType.init() ?? GalleryTransitionView()
             }
             if let transitionView = transitionView {
-                transitionController.view.addSubview(transitionView)
+                transitionOverlayView.addSubview(transitionView)
                 transitionView.load(viewController: itemViewController)
                 transitionView.center.y += transitionViewInitialOffsetY
                 transitionView.alpha = 1
             }
             
-            // Transfer dimming without stacking the two windows' backdrops.
+            // Let the overlay own dimming while the gallery window stays visible.
             CATransaction.begin()
             CATransaction.setDisableActions(true)
-            transitionController.backgroundView.alpha = backgroundView.alpha
-            sceneDelegate.hideGalleryWindow()
+            transitionOverlayView.backgroundView.alpha = backgroundView.alpha
+            backgroundView.alpha = 0
             CATransaction.commit()
             
             let relativeOffset: CGFloat?
@@ -391,7 +430,8 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             }
             currentItemViewController?.isFocused = false
             animate(animations: {
-                transitionController.backgroundView.alpha = 0
+                self.setStatusBarHidden(self.statusBarHiddenBeforePresentation)
+                transitionOverlayView.backgroundView.alpha = 0
             }, completion: {
                 guard self.presentationState != .tornDown else {
                     return
@@ -400,8 +440,9 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                 self.source?.galleryViewController(self, didDismiss: item, relativeOffset: relativeOffset)
                 mainWindow.layoutIfNeeded()
                 CATransaction.flush()
+                sceneDelegate.hideGalleryWindow()
                 self.transitionView?.removeFromSuperview()
-                galleryWindow.endTransition {
+                self.endTransition {
                     guard self.presentationState != .tornDown else {
                         return
                     }
@@ -410,6 +451,12 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                 }
             })
         }
+        if !didBeginTransition, presentationState != .tornDown {
+            currentItemViewController?.isFocused = false
+            source?.galleryViewController(self, didDismiss: item, relativeOffset: nil)
+            sceneDelegate.hideGalleryWindow()
+            finishDismissal()
+        }
     }
     
     func dismiss(pipController: GalleryVideoItemViewController) {
@@ -417,8 +464,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
               let item = pipController.item,
               let sceneDelegate,
               let mainWindow = sceneDelegate.mainWindow,
-              let container = mainWindow.rootViewController as? HomeContainerViewController,
-              let galleryWindow
+              let container = mainWindow.rootViewController as? HomeContainerViewController
         else {
             return
         }
@@ -426,11 +472,14 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         self.pipController = pipController
         pipSource = source
         pipModelController = modelController
-        galleryWindow.beginTransition(in: mainWindow, backgroundAlpha: 0) { [self] transitionController in
+        let didBeginTransition = beginTransition(
+            backgroundAlpha: 0,
+        ) { [self] transitionOverlayView in
             guard presentationState != .tornDown else {
                 return
             }
             pageViewController.setViewControllers([UIViewController()], direction: .forward, animated: false, completion: nil)
+            pageViewController.view.alpha = 0
             // Keep the PiP item's browsing context intact while another gallery is opened.
             let nextModelController = GalleryItemModelController()
             nextModelController.galleryViewController = self
@@ -439,23 +488,26 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
             modelController = nextModelController
             pageViewController.dataSource = nextModelController
             
-            transitionController.addChild(pipController)
-            transitionController.view.addSubview(pipController.view)
-            pipController.didMove(toParent: transitionController)
-            // Transfer dimming without stacking the two windows' backdrops.
+            addChild(pipController)
+            transitionOverlayView.addSubview(pipController.view)
+            pipController.didMove(toParent: self)
+            // Keep the player in the visible gallery window throughout the PiP animation.
             CATransaction.begin()
             CATransaction.setDisableActions(true)
-            transitionController.backgroundView.alpha = backgroundView.alpha
-            sceneDelegate.hideGalleryWindow()
+            transitionOverlayView.backgroundView.alpha = backgroundView.alpha
+            backgroundView.alpha = 0
             CATransaction.commit()
             
             animate(animations: {
-                transitionController.backgroundView.alpha = 0
+                self.setStatusBarHidden(self.statusBarHiddenBeforePresentation)
+                transitionOverlayView.backgroundView.alpha = 0
             }, completion: {
                 guard self.presentationState != .tornDown else {
                     return
                 }
-                if pipController.parent === transitionController {
+                if pipController.parent === self,
+                   pipController.view.superview === transitionOverlayView
+                {
                     pipController.willMove(toParent: nil)
                     pipController.view.removeFromSuperview()
                     pipController.removeFromParent()
@@ -466,13 +518,31 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
                 self.source?.galleryViewController(self, didDismiss: item, relativeOffset: nil)
                 mainWindow.layoutIfNeeded()
                 CATransaction.flush()
-                galleryWindow.endTransition {
+                sceneDelegate.hideGalleryWindow()
+                self.endTransition {
                     guard self.presentationState != .tornDown else {
                         return
                     }
                     self.finishDismissal()
                 }
             })
+        }
+        if !didBeginTransition, presentationState != .tornDown {
+            // PiP is already starting; finish the handoff without a transition overlay.
+            pageViewController.setViewControllers([UIViewController()], direction: .forward, animated: false, completion: nil)
+            let nextModelController = GalleryItemModelController()
+            nextModelController.galleryViewController = self
+            nextModelController.conversationId = modelController.conversationId
+            nextModelController.direction = modelController.direction
+            modelController = nextModelController
+            pageViewController.dataSource = nextModelController
+            
+            container.addChild(pipController)
+            container.view.addSubview(pipController.view)
+            pipController.didMove(toParent: container)
+            source?.galleryViewController(self, didDismiss: item, relativeOffset: nil)
+            sceneDelegate.hideGalleryWindow()
+            finishDismissal()
         }
     }
     
@@ -561,7 +631,11 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     }
     
     @objc func longPressAction(_ recognizer: UILongPressGestureRecognizer) {
-        guard recognizer.state == .began, let itemViewController = currentItemViewController, !itemViewController.supportedActions.isEmpty else {
+        guard presentationState == .visible,
+              recognizer.state == .began,
+              let itemViewController = currentItemViewController,
+              !itemViewController.supportedActions.isEmpty
+        else {
             return
         }
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -607,8 +681,34 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         pipController = nil
         transitionView?.layer.removeAllAnimations()
         transitionView?.removeFromSuperview()
-        galleryWindow?.endTransition(completion: nil)
+        endTransition(completion: nil)
         source = nil
+    }
+    
+    func beginTransition(
+        backgroundAlpha: CGFloat,
+        completion: @escaping (GalleryTransitionOverlayView) -> Void,
+    ) -> Bool {
+        guard presentationState != .tornDown, transitionOverlayView == nil else {
+            return false
+        }
+        let overlayView = GalleryTransitionOverlayView(
+            frame: view.bounds,
+            backgroundAlpha: backgroundAlpha,
+        )
+        transitionOverlayView = overlayView
+        overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(overlayView)
+        completion(overlayView)
+        return true
+    }
+    
+    func endTransition(completion: (() -> Void)?) {
+        let overlayView = transitionOverlayView
+        transitionOverlayView = nil
+        overlayView?.backgroundView.layer.removeAllAnimations()
+        overlayView?.removeFromSuperview()
+        completion?()
     }
     
     private func dismissForNavigation(completion: @escaping () -> Void) {
@@ -626,6 +726,9 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
     
     private func finishDismissal() {
         presentationState = .hidden
+        pendingDismissalOffsetY = nil
+        pageViewController.view.alpha = 1
+        pageViewController.view.transform = .identity
         let completions = dismissalCompletions
         dismissalCompletions.removeAll()
         for completion in completions {
@@ -636,23 +739,33 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }
     }
     
-    private func prepareWindow(in sceneDelegate: SceneDelegate) -> GalleryWindow? {
+    private func prepareWindow(in sceneDelegate: SceneDelegate) -> Bool {
         guard let galleryWindow = sceneDelegate.galleryWindow,
               galleryWindow.galleryViewController === self
         else {
-            return nil
+            return false
         }
         self.sceneDelegate = sceneDelegate
-        self.galleryWindow = galleryWindow
+        if presentationState == .hidden {
+            statusBarHiddenBeforePresentation = galleryWindow.windowScene?.statusBarManager?.isStatusBarHidden ?? false
+            setStatusBarHidden(statusBarHiddenBeforePresentation)
+        }
         loadViewIfNeeded()
         view.frame = galleryWindow.bounds
         view.layoutIfNeeded()
-        return galleryWindow
+        return true
+    }
+    
+    private func setStatusBarHidden(_ hidden: Bool) {
+        isStatusBarHidden = hidden
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     private func setNeedsUpdateOfSupportedInterfaceOrientationsIfNeeded() {
         if #available(iOS 16.0, *) {
             setNeedsUpdateOfSupportedInterfaceOrientations()
+        } else {
+            UIViewController.attemptRotationToDeviceOrientation()
         }
     }
     

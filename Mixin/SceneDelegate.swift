@@ -206,7 +206,7 @@ extension SceneDelegate {
         galleryWindow.isHidden = false
         updateKeyWindow()
         galleryWindow.layoutIfNeeded()
-        // Commit the incoming window before removing the main window's transition overlay.
+        // Commit the prepared gallery content before starting its transition animation.
         CATransaction.flush()
     }
     
@@ -293,7 +293,6 @@ extension SceneDelegate {
             return
         }
         galleryWindow.galleryViewController.tearDown()
-        galleryWindow.endTransition(completion: nil)
         galleryWindow.isHidden = true
         galleryWindow.rootViewController = nil
         self.galleryWindow = nil

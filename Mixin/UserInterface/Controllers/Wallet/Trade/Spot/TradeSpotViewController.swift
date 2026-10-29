@@ -399,7 +399,7 @@ class TradeSpotViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewDidDisappear(true)
+        super.viewWillDisappear(true)
         view.endEditing(true)
     }
     

@@ -287,15 +287,20 @@ extension Web3TransactionViewController: MultipleAssetChangeCell.Delegate {
         default:
             return
         }
-        guard let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: assetID) else {
+        viewToken(assetID: assetID)
+    }
+    
+}
+
+extension Web3TransactionViewController: SimpleWeb3TransactionTableHeaderView.Delegate {
+    
+    func simpleWeb3TransactionTableHeaderViewDidSelectToken(
+        _ view: SimpleWeb3TransactionTableHeaderView,
+    ) {
+        guard let transfer = transaction.simpleTransfer else {
             return
         }
-        let viewController = Web3TokenViewController(
-            wallet: wallet,
-            token: token,
-            availability: availability,
-        )
-        navigationController?.pushViewController(viewController, animated: true)
+        viewToken(assetID: transfer.assetID)
     }
     
 }
@@ -398,10 +403,23 @@ extension Web3TransactionViewController {
         
     }
     
+    private func viewToken(assetID: String) {
+        guard let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: assetID) else {
+            return
+        }
+        let viewController = Web3TokenViewController(
+            wallet: wallet,
+            token: token,
+            availability: availability,
+        )
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
     private func reloadData() {
         if let transfer = transaction.simpleTransfer {
             let simpleHeaderView = tableView.tableHeaderView as? SimpleWeb3TransactionTableHeaderView
             ?? R.nib.simpleWeb3TransactionTableHeaderView(withOwner: nil)!
+            simpleHeaderView.delegate = self
             if let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: transfer.assetID) {
                 simpleHeaderView.iconView.setIcon(web3Token: token)
                 simpleHeaderView.symbolLabel.text = token.symbol

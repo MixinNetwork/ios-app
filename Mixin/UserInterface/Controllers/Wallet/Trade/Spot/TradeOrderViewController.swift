@@ -99,6 +99,7 @@ final class TradeOrderViewController: UITableViewController {
                 cell.contentTopConstraint.constant = 20
                 cell.contentLeadingConstraint.constant = 16
                 cell.contentTrailingConstraint.constant = 16
+                cell.delegate = self
                 return cell
             case .receives:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
@@ -113,6 +114,7 @@ final class TradeOrderViewController: UITableViewController {
                 cell.contentTopConstraint.constant = 10
                 cell.contentLeadingConstraint.constant = 16
                 cell.contentTrailingConstraint.constant = 16
+                cell.delegate = self
                 return cell
             case let .filling(filling):
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
@@ -343,6 +345,91 @@ extension TradeOrderViewController: PillActionView.Delegate {
                 let receiverSelector = MessageReceiverViewController.instance(content: .appCard(.v1(content)))
                 navigationController.pushViewController(receiverSelector, animated: true)
             }
+        }
+    }
+    
+}
+
+extension TradeOrderViewController: MultipleAssetChangeCell.Delegate {
+    
+    func multipleAssetChangeCell(_ cell: MultipleAssetChangeCell, didSelectRowAt index: Int) {
+        guard
+            let navigationController,
+            let indexPath = tableView.indexPath(for: cell),
+            indexPath.section == Section.info.rawValue
+        else {
+            return
+        }
+        let assetID: String
+        switch infoRows[indexPath.row] {
+        case .paid:
+            guard index == 0, let token = viewModel.paying.token else {
+                return
+            }
+            assetID = token.assetID
+        case .receives:
+            guard viewModel.receivings.indices.contains(index), let token = viewModel.receivings[index].token else {
+                return
+            }
+            assetID = token.assetID
+        default:
+            return
+        }
+        switch viewModel.wallet {
+        case .safe:
+            return
+        case .privacy:
+            var viewControllers = navigationController.viewControllers
+            if let index = viewControllers.firstIndex(where: { $0 is MixinTokenViewController }) {
+                viewControllers.removeSubrange((index + 1)..<viewControllers.endIndex)
+                if let tokenViewController = viewControllers[index] as? MixinTokenViewController,
+                   tokenViewController.token.assetID == assetID
+                {
+                    navigationController.setViewControllers(viewControllers, animated: true)
+                    return
+                } else {
+                    viewControllers.removeLast()
+                }
+            }
+            guard let token = TokenDAO.shared.tokenItem(assetID: assetID) else {
+                return
+            }
+            let viewController = MixinTokenViewController(token: token)
+            viewControllers.append(viewController)
+            navigationController.setViewControllers(viewControllers, animated: true)
+        case .common(let wallet):
+            var viewControllers = navigationController.viewControllers
+            if let index = viewControllers.firstIndex(where: { $0 is Web3TokenViewController }) {
+                viewControllers.removeSubrange((index + 1)..<viewControllers.endIndex)
+                if let tokenViewController = viewControllers[index] as? Web3TokenViewController,
+                   tokenViewController.token.assetID == assetID,
+                   tokenViewController.token.walletID == wallet.walletID
+                {
+                    navigationController.setViewControllers(viewControllers, animated: true)
+                    return
+                } else {
+                    viewControllers.removeLast()
+                }
+            }
+            guard let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: assetID) else {
+                return
+            }
+            let availability: Web3Wallet.Availability = if wallet.hasSecret() {
+                .always
+            } else {
+                Web3Wallet.Availability(
+                    wallet: wallet,
+                    importedSecret: nil,
+                    supportedChainIDs: Web3AddressDAO.shared.chainIDs(walletID: wallet.walletID),
+                )
+            }
+            let viewController = Web3TokenViewController(
+                wallet: wallet,
+                token: token,
+                availability: availability,
+            )
+            viewControllers.append(viewController)
+            navigationController.setViewControllers(viewControllers, animated: true)
         }
     }
     

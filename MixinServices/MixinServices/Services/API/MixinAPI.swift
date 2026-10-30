@@ -258,7 +258,7 @@ extension MixinAPI {
         let requestTime = Date()
         let host = MixinHost.http
         
-        func handleDeauthorization(response: HTTPURLResponse?) {
+        func handleDeauthorization(requestID: String, response: HTTPURLResponse?) {
             let xServerTime = TimeInterval(response?.value(forHTTPHeaderField: "x-server-time") ?? "0") ?? 0
             let serverTimeIntervalSince1970 = xServerTime / TimeInterval(NSEC_PER_SEC)
             let serverTime = Date(timeIntervalSince1970: serverTimeIntervalSince1970)
@@ -267,7 +267,7 @@ extension MixinAPI {
                     "options": options,
                     "interval": requestTime.timeIntervalSinceNow,
                     "isAsync": isAsync,
-                    "url": (response as? HTTPURLResponse)?.url?.path ?? ""
+                    "url": response?.url?.path ?? ""
                 ]
                 Logger.general.info(category: "MixinAPI", message: "Request signing timeout", userInfo: info)
                 if !options.contains(.disableRetryOnRequestSigningTimeout) {
@@ -285,7 +285,9 @@ extension MixinAPI {
             } else {
                 completion(.failure(.response(.unauthorized)))
                 reporter.report(error: MixinServicesError.logout(isAsyncRequest: true))
-                LoginManager.shared.logout(reason: "API access unauthorized, request: \(response?.url?.absoluteString ?? "(null)")")
+                LoginManager.shared.logout(
+                    reason: "API access unauthorized, request: \(response?.url?.absoluteString ?? "(null)"), id: \(requestID)"
+                )
             }
         }
         
@@ -311,7 +313,7 @@ extension MixinAPI {
                         {
                             switch error {
                             case .unauthorized:
-                                handleDeauthorization(response: response.response)
+                                handleDeauthorization(requestID: requestId, response: response.response)
                             default:
                                 Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)")
                                 completion(.failure(.response(error)))
@@ -332,7 +334,7 @@ extension MixinAPI {
                             if let data = responseObject.data {
                                 completion(.success(data))
                             } else if case .some(.unauthorized) = responseObject.error {
-                                handleDeauthorization(response: response.response)
+                                handleDeauthorization(requestID: requestId, response: response.response)
                             } else if let error = responseObject.error {
                                 Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)")
                                 completion(.failure(.response(error)))

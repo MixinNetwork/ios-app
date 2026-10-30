@@ -604,14 +604,13 @@ extension ExploreMoreViewController {
             let bots: (users: [User], count: Int, favoritesCount: Int)?
             if sections.contains(.bots) {
                 let favorites = FavoriteAppsDAO.shared.favoriteAppUsersOfUser(withId: myUserId)
-                let favoriteIDs = Set(favorites.map(\.userId))
-                let allBots = UserDAO.shared.appUsers(limit: nil)
-                let combinedBots = favorites + allBots.filter { !favoriteIDs.contains($0.userId) }
-                bots = (
-                    Array(combinedBots.prefix(botsLimit)),
-                    combinedBots.count,
-                    min(favorites.count, botsLimit),
-                )
+                let allBots = if favorites.count < botsLimit {
+                    favorites + UserDAO.shared.friendAppUsers(limit: botsLimit - favorites.count)
+                } else {
+                    favorites
+                }
+                let count = UserDAO.shared.friendAppUsersCount()
+                bots = (allBots, count, favorites.count)
             } else {
                 bots = nil
             }

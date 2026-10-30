@@ -206,7 +206,7 @@ final class BotsViewController: UIViewController {
         queue.addOperation { [weak self] in
             let favorites = FavoriteAppsDAO.shared.favoriteAppUsersOfUser(withId: myUserId)
             let favoriteBotIDs = Set(favorites.map(\.userId))
-            let allUsers = UserDAO.shared.appUsers(limit: nil)
+            let allUsers = UserDAO.shared.friendAppUsers(limit: nil)
             let objcAccessibleUsers = allUsers.map(ObjcAccessibleUser.init)
             let (titles, objcUsers) = UILocalizedIndexedCollation.current()
                 .catalog(objcAccessibleUsers, usingSelector: #selector(getter: ObjcAccessibleUser.fullName))

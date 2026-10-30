@@ -188,22 +188,12 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId])
     }
     
-    public func getAppUsersAppId() -> [String] {
-        let sql = """
-            SELECT u.app_id
-            FROM apps a, users u
-            WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
-            ORDER BY u.full_name ASC
-        """
-        return db.select(with: sql)
-    }
-    
-    public func appUsers(limit: Int?) -> [User] {
+    public func friendAppUsers(limit: Int?) -> [User] {
         var sql = """
             SELECT u.*
             FROM apps a, users u
             WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
-            ORDER BY u.full_name ASC
+            ORDER BY a.updated_at DESC
         """
         if let limit {
             sql += "\nLIMIT \(limit)"
@@ -211,7 +201,7 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(with: sql)
     }
     
-    public func appUsersCount() -> Int {
+    public func friendAppUsersCount() -> Int {
         let sql = """
             SELECT COUNT(*)
             FROM apps a, users u

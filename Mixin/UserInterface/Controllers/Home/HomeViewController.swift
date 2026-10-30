@@ -39,6 +39,8 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Mixin"
+        navigationItem.titleView = TransparentView()
         connectingView.hidesWhenStopped = true
         connectingView.tintColor = UIColor(displayP3RgbValue: 0xBCBEC3, alpha: 1)
         connectingView.snp.makeConstraints { make in

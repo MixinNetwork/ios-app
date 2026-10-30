@@ -43,6 +43,8 @@ final class ExploreMoreViewController: UIViewController, AssetChangeAccountRecov
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = R.string.localizable.more()
+        navigationItem.titleView = TransparentView()
         let titleLabel = UILabel()
         titleLabel.text = R.string.localizable.more()
         titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)

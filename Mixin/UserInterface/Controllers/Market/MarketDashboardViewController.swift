@@ -81,8 +81,9 @@ final class MarketDashboardViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = R.color.background()
         
+        title = R.string.localizable.markets()
+        navigationItem.titleView = TransparentView()
         let titleLabel = UILabel()
         titleLabel.text = R.string.localizable.markets()
         titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
@@ -92,27 +93,25 @@ final class MarketDashboardViewController: UIViewController {
             titleItem.hidesSharedBackground = true
         }
         navigationItem.leftBarButtonItem = titleItem
-        
-        let searchItem = UIBarButtonItem.tintedIcon(
-            image: R.image.ic_title_search(),
-            target: self,
-            action: #selector(searchCoins(_:)),
-        )
-        let scanItem = UIBarButtonItem.tintedIcon(
-            image: R.image.ic_app_category_scan(),
-            target: self,
-            action: #selector(scanQRCode(_:)),
-        )
-        let settingItem = UIBarButtonItem.tintedIcon(
-            image: R.image.ic_sticker_setting(),
-            target: self,
-            action: #selector(openSettings(_:)),
-        )
         navigationItem.rightBarButtonItems = [
-            settingItem,
-            scanItem,
-            searchItem,
+            UIBarButtonItem.tintedIcon(
+                image: R.image.ic_sticker_setting(),
+                target: self,
+                action: #selector(openSettings(_:)),
+            ),
+            UIBarButtonItem.tintedIcon(
+                image: R.image.ic_app_category_scan(),
+                target: self,
+                action: #selector(scanQRCode(_:)),
+            ),
+            UIBarButtonItem.tintedIcon(
+                image: R.image.ic_title_search(),
+                target: self,
+                action: #selector(searchCoins(_:)),
+            ),
         ]
+        
+        view.backgroundColor = R.color.background()
         
         let categorySelectorLayout = UICollectionViewFlowLayout()
         categorySelectorLayout.scrollDirection = .horizontal

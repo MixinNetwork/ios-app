@@ -52,6 +52,7 @@ final class UserCenterViewController: SettingsTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.titleView = TransparentView()
         tableView.tableHeaderView = R.nib.userCenterTableHeaderView(withOwner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
@@ -130,6 +131,7 @@ extension UserCenterViewController {
         guard let account = LoginManager.shared.account else {
             return
         }
+        title = account.fullName
         if let headerView = tableView.tableHeaderView as? UserCenterTableHeaderView {
             headerView.avatarImageView.setImage(with: account.avatarURL, userId: account.userID, name: account.fullName)
             headerView.nameLabel.text = account.fullName

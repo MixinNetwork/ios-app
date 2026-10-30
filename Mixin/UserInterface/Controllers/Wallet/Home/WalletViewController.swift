@@ -12,6 +12,12 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
         sectionBottomInset: 0,
     )
     
+    override var title: String? {
+        didSet {
+            onTitleChange?(title)
+        }
+    }
+    
     var overview: WalletOverview?
     var overviewAction: WalletOverview.Action?
     var overviewTray: WalletOverview.Tray?
@@ -33,6 +39,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     var earnAccount: EarnAccount?
     
     var walletActionHandler: (any WalletActionHandler)?
+    var onTitleChange: ((String?) -> Void)?
     
     private(set) weak var titleView: UIView!
     private(set) weak var titleInfoStackView: UIStackView!
@@ -59,6 +66,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.titleView = TransparentView()
         let walletSwitchImageView = UIImageView(image: R.image.hamburger())
         walletSwitchImageView.tintColor = R.color.icon_tint()
         walletSwitchImageView.contentMode = .center

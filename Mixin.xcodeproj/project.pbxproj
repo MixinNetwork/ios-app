@@ -999,6 +999,7 @@
 		94428D742CA2A8F200157E93 /* EditMarketAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94428D732CA2A8F200157E93 /* EditMarketAlertViewController.swift */; };
 		94428E482CA3435300157E93 /* SwapQuote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94428E472CA3435300157E93 /* SwapQuote.swift */; };
 		94438D57252DAD73005760AF /* Clip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94438D56252DAD73005760AF /* Clip.swift */; };
+		944393683094181B00CC9C52 /* TransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944393673094181700CC9C52 /* TransparentView.swift */; };
 		9443A9212CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9443A9202CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift */; };
 		944506602C1C5D9700F9C583 /* TIPURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445065F2C1C5D9700F9C583 /* TIPURL.swift */; };
 		944531702EFA76BE00E056D1 /* SafeRole+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445316C2EFA76B900E056D1 /* SafeRole+Localization.swift */; };
@@ -3058,6 +3059,7 @@
 		94428D732CA2A8F200157E93 /* EditMarketAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMarketAlertViewController.swift; sourceTree = "<group>"; };
 		94428E472CA3435300157E93 /* SwapQuote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapQuote.swift; sourceTree = "<group>"; };
 		94438D56252DAD73005760AF /* Clip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clip.swift; sourceTree = "<group>"; };
+		944393673094181700CC9C52 /* TransparentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentView.swift; sourceTree = "<group>"; };
 		9443A9202CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertCoinPickerViewController.swift; sourceTree = "<group>"; };
 		9445065F2C1C5D9700F9C583 /* TIPURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPURL.swift; sourceTree = "<group>"; };
 		9445316C2EFA76B900E056D1 /* SafeRole+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SafeRole+Localization.swift"; sourceTree = "<group>"; };
@@ -4420,6 +4422,7 @@
 				948668A32CF912910032B9BE /* BadgeDotView.swift */,
 				948762502E87C036002F162B /* MnemonicTextField.swift */,
 				946CB9DB2E9F73310099FFCB /* UserNavigationTitleView.swift */,
+				944393673094181700CC9C52 /* TransparentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -7947,6 +7950,7 @@
 				94E206702AF37F2600CCF6D8 /* SnapshotMessageCell.swift in Sources */,
 				94FCC9092FD67A4D00AA6AA7 /* TokensViewController.swift in Sources */,
 				94EC9B7E2F2B8E5F00B3CD82 /* PhotoLibrary.swift in Sources */,
+				944393683094181B00CC9C52 /* TransparentView.swift in Sources */,
 				7CEB736A29DBCF09006FB5B2 /* DeviceTransferTranscriptMessage.swift in Sources */,
 				942D90F32B0606C700E81358 /* WithdrawFeeItem.swift in Sources */,
 				DF8CECED1FC41A9A00E40064 /* ConversationSettingViewController.swift in Sources */,

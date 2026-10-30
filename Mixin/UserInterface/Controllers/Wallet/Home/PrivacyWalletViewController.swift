@@ -28,6 +28,7 @@ final class PrivacyWalletViewController: WalletViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = R.string.localizable.privacy_wallet()
         titleLabel.text = R.string.localizable.privacy_wallet()
         titleInfoStackView.setCustomSpacing(6, after: titleLabel)
         addIconIntoTitleView(image: R.image.privacy_wallet())

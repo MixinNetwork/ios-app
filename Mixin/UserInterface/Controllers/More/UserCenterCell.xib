@@ -27,7 +27,7 @@
                         </constraints>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-in-fo1">
-                        <rect key="frame" x="66" y="14" width="236" height="38"/>
+                        <rect key="frame" x="66" y="14" width="228" height="38"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-na-me1">
                                 <rect key="frame" x="0.0" y="0.0" width="106" height="18"/>
@@ -48,20 +48,20 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="239" placeholderIntrinsicHeight="17" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-id-lb1">
-                                <rect key="frame" x="0.0" y="22" width="236" height="16"/>
+                                <rect key="frame" x="0.0" y="22" width="228" height="16"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" name="text_tertiary"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                     </stackView>
-                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="custom" translatesAutoresizingMaskIntoConstraints="NO" id="Yl4-90-uBm">
-                        <rect key="frame" x="303" y="11" width="44" height="44"/>
-                        <color key="tintColor" name="icon_tint_tertiary"/>
+                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yl4-90-uBm">
+                        <rect key="frame" x="295" y="11" width="44" height="44"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="hGT-aC-M6B"/>
                             <constraint firstAttribute="height" constant="44" id="y2u-Us-l3D"/>
                         </constraints>
+                        <color key="tintColor" name="icon_tint_tertiary"/>
                         <state key="normal" image="ic_user_qr_code"/>
                         <connections>
                             <action selector="showQRCode:" destination="Usr-ce-ll1" eventType="touchUpInside" id="Usr-qr-act"/>
@@ -79,7 +79,6 @@
                 <color key="backgroundColor" name="background"/>
                 <constraints>
                     <constraint firstItem="Yl4-90-uBm" firstAttribute="centerY" secondItem="Usr-co-nt1" secondAttribute="centerY" id="BjC-r7-WZn"/>
-                    <constraint firstItem="Usr-di-sc1" firstAttribute="leading" secondItem="Yl4-90-uBm" secondAttribute="trailing" constant="-3" id="KFH-9f-ddu"/>
                     <constraint firstItem="Usr-av-at1" firstAttribute="leading" secondItem="Usr-co-nt1" secondAttribute="leading" constant="16" id="Usr-al-001"/>
                     <constraint firstItem="Usr-av-at1" firstAttribute="centerY" secondItem="Usr-co-nt1" secondAttribute="centerY" id="Usr-ay-001"/>
                     <constraint firstAttribute="trailing" secondItem="Usr-di-sc1" secondAttribute="trailing" constant="16" id="Usr-dr-001"/>
@@ -87,6 +86,7 @@
                     <constraint firstAttribute="bottom" secondItem="Usr-in-fo1" secondAttribute="bottom" constant="14" id="Usr-ib-001"/>
                     <constraint firstItem="Usr-in-fo1" firstAttribute="leading" secondItem="Usr-av-at1" secondAttribute="trailing" constant="8" id="Usr-il-001"/>
                     <constraint firstItem="Usr-in-fo1" firstAttribute="top" secondItem="Usr-co-nt1" secondAttribute="top" constant="14" id="Usr-it-001"/>
+                    <constraint firstItem="Usr-di-sc1" firstAttribute="leading" secondItem="Yl4-90-uBm" secondAttribute="trailing" constant="5" id="fw3-wZ-O3a"/>
                     <constraint firstItem="Yl4-90-uBm" firstAttribute="leading" secondItem="Usr-in-fo1" secondAttribute="trailing" constant="1" id="lUo-pz-fIm"/>
                 </constraints>
             </collectionViewCellContentView>
@@ -114,7 +114,7 @@
             <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

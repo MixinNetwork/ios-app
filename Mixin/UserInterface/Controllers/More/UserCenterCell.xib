@@ -55,14 +55,18 @@
                             </label>
                         </subviews>
                     </stackView>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_user_qr_code" translatesAutoresizingMaskIntoConstraints="NO" id="Yl4-90-uBm">
-                        <rect key="frame" x="310" y="18" width="30" height="30"/>
+                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="custom" translatesAutoresizingMaskIntoConstraints="NO" id="Yl4-90-uBm">
+                        <rect key="frame" x="303" y="11" width="44" height="44"/>
                         <color key="tintColor" name="icon_tint_tertiary"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="30" id="hGT-aC-M6B"/>
-                            <constraint firstAttribute="height" constant="30" id="y2u-Us-l3D"/>
+                            <constraint firstAttribute="width" constant="44" id="hGT-aC-M6B"/>
+                            <constraint firstAttribute="height" constant="44" id="y2u-Us-l3D"/>
                         </constraints>
-                    </imageView>
+                        <state key="normal" image="ic_user_qr_code"/>
+                        <connections>
+                            <action selector="showQRCode:" destination="Usr-ce-ll1" eventType="touchUpInside" id="Usr-qr-act"/>
+                        </connections>
+                    </button>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="Usr-di-sc1">
                         <rect key="frame" x="344" y="28" width="10" height="10"/>
                         <color key="tintColor" name="text_tertiary"/>
@@ -75,7 +79,7 @@
                 <color key="backgroundColor" name="background"/>
                 <constraints>
                     <constraint firstItem="Yl4-90-uBm" firstAttribute="centerY" secondItem="Usr-co-nt1" secondAttribute="centerY" id="BjC-r7-WZn"/>
-                    <constraint firstItem="Usr-di-sc1" firstAttribute="leading" secondItem="Yl4-90-uBm" secondAttribute="trailing" constant="4" id="KFH-9f-ddu"/>
+                    <constraint firstItem="Usr-di-sc1" firstAttribute="leading" secondItem="Yl4-90-uBm" secondAttribute="trailing" constant="-3" id="KFH-9f-ddu"/>
                     <constraint firstItem="Usr-av-at1" firstAttribute="leading" secondItem="Usr-co-nt1" secondAttribute="leading" constant="16" id="Usr-al-001"/>
                     <constraint firstItem="Usr-av-at1" firstAttribute="centerY" secondItem="Usr-co-nt1" secondAttribute="centerY" id="Usr-ay-001"/>
                     <constraint firstAttribute="trailing" secondItem="Usr-di-sc1" secondAttribute="trailing" constant="16" id="Usr-dr-001"/>
@@ -83,7 +87,7 @@
                     <constraint firstAttribute="bottom" secondItem="Usr-in-fo1" secondAttribute="bottom" constant="14" id="Usr-ib-001"/>
                     <constraint firstItem="Usr-in-fo1" firstAttribute="leading" secondItem="Usr-av-at1" secondAttribute="trailing" constant="8" id="Usr-il-001"/>
                     <constraint firstItem="Usr-in-fo1" firstAttribute="top" secondItem="Usr-co-nt1" secondAttribute="top" constant="14" id="Usr-it-001"/>
-                    <constraint firstItem="Yl4-90-uBm" firstAttribute="leading" secondItem="Usr-in-fo1" secondAttribute="trailing" constant="8" id="lUo-pz-fIm"/>
+                    <constraint firstItem="Yl4-90-uBm" firstAttribute="leading" secondItem="Usr-in-fo1" secondAttribute="trailing" constant="1" id="lUo-pz-fIm"/>
                 </constraints>
             </collectionViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -92,6 +96,7 @@
                 <outlet property="identityNumberLabel" destination="Usr-id-lb1" id="Usr-oi-001"/>
                 <outlet property="membershipImageView" destination="Usr-me-mb1" id="Usr-om-001"/>
                 <outlet property="nameLabel" destination="Usr-na-lb1" id="Usr-on-001"/>
+                <outlet property="qrCodeButton" destination="Yl4-90-uBm" id="Usr-oq-001"/>
             </connections>
             <point key="canvasLocation" x="48" y="42"/>
         </collectionViewCell>

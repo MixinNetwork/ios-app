@@ -336,6 +336,7 @@ extension ExploreMoreViewController: UICollectionViewDataSource, UICollectionVie
             if let account = LoginManager.shared.account {
                 cell.load(account: account)
             }
+            cell.delegate = self
             return cell
         case .actions:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_more_action, for: indexPath)!
@@ -442,6 +443,18 @@ extension ExploreMoreViewController: UICollectionViewDataSource, UICollectionVie
                 presentProfile(user: user)
             }
         }
+    }
+    
+}
+
+extension ExploreMoreViewController: UserCenterCellDelegate {
+    
+    func userCenterCellDidSelectQRCode(_ cell: UserCenterCell) {
+        guard let account = LoginManager.shared.account else {
+            return
+        }
+        let qrCode = QRCodeViewController(account: account)
+        present(qrCode, animated: true)
     }
     
 }

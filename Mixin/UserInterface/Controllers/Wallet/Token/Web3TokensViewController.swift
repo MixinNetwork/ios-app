@@ -325,7 +325,7 @@ extension Web3TokensViewController: UICollectionViewDataSource {
         case .overview:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_overview, for: indexPath)!
             cell.load(overview: overview)
-            cell.load(action: .general)
+            cell.load(action: overviewAction)
             cell.load(tray: overviewTray)
             cell.delegate = overviewActionHandler
             return cell

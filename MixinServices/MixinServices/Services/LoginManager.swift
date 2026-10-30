@@ -101,7 +101,8 @@ public final class LoginManager {
         guard let sessionID = account?.sessionID else {
             return
         }
-
+        
+        Logger.login.error(category: "LoginManager", message: "Logout because: \(reason), isAppExtension: \(isAppExtension)")
         Logger.general.error(category: "LoginManager", message: "Logout because: \(reason), isAppExtension: \(isAppExtension)")
 
         pthread_rwlock_wrlock(&lock)

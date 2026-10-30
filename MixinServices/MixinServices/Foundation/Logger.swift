@@ -241,9 +241,6 @@ extension Logger {
             let output = "\(formattedDate) \(appExtensionMark)\(level.output)[\(category)] \(message)\(formattedUserInfo)\n"
             if redirectLogsToLogin {
                 write(output: output, toFileAt: Logger.login.fileURL)
-            } else if "LoginManager" == category.description {
-                write(output: output, toFileAt: Logger.login.fileURL)
-                write(output: output, toFileAt: url)
             } else {
                 write(output: output, toFileAt: url)
             }

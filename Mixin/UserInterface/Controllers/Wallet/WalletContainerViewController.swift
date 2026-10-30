@@ -120,30 +120,19 @@ final class WalletContainerViewController: UIViewController {
             self.navigationItem.hidesBackButton = sourceItem.hidesBackButton
             self.navigationItem.backBarButtonItem = sourceItem.backBarButtonItem
         }
-        guard let navigationBar = navigationController?.navigationBar else {
+        guard animated, let navigationBar = navigationController?.navigationBar else {
             UIView.performWithoutAnimation(update)
             return
         }
-        UIView.performWithoutAnimation {
-            navigationBar.layoutIfNeeded()
-        }
-        let updateAndLayout = {
-            UIView.performWithoutAnimation {
-                update()
-                navigationBar.layoutIfNeeded()
-            }
-        }
-        if animated {
-            UIView.transition(
-                with: navigationBar,
-                duration: 0.5,
-                options: [.transitionCrossDissolve, .overdampedCurve],
-                animations: updateAndLayout,
-                completion: nil,
-            )
-        } else {
-            updateAndLayout()
-        }
+        UIView.transition(
+            with: navigationBar,
+            duration: 0.5,
+            options: [.transitionCrossDissolve, .overdampedCurve],
+            animations: {
+                UIView.performWithoutAnimation(update)
+            },
+            completion: nil,
+        )
     }
     
 }

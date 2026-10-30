@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class PinValidationViewController: UIViewController {
+class PINValidationViewController: UIViewController {
     
     typealias SuccessCallback = ((String) -> Void) // param is verified PIN
     typealias FailedCallback = (() -> Void)
@@ -15,7 +15,7 @@ class PinValidationViewController: UIViewController {
     
     @IBOutlet weak var numberPadViewBottomConstraint: NSLayoutConstraint!
     
-    let presentationManager = PinValidationPresentationManager()
+    let presentationManager = PINValidationPresentationManager()
     
     private var onSuccess: SuccessCallback?
     private var onFailed: FailedCallback?

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class RemoveRecoveryContactValidationViewController: PinValidationViewController {
+class RemoveRecoveryContactValidationViewController: PINValidationViewController {
     
     convenience init() {
         self.init(nib: R.nib.pinValidationView)

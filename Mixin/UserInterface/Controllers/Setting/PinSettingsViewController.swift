@@ -99,7 +99,7 @@ final class PinSettingsViewController: SettingsTableViewController {
                 tips = R.string.localizable.enable_face_pay_hint()
                 prompt = R.string.localizable.enable_pay_confirmation(R.string.localizable.face_id())
             }
-            let validator = PinValidationViewController(tips: tips, onSuccess: { (pin) in
+            let validator = PINValidationViewController(tips: tips, onSuccess: { (pin) in
                 guard Keychain.shared.storePIN(pin: pin, prompt: prompt) else {
                     self.isBiometricPaymentChangingInProgress = true
                     self.biometricSwitchRow.accessory = .switch(isOn: false)
@@ -149,7 +149,7 @@ extension PinSettingsViewController {
     }
     
     private func setNewPinInterval(interval: Double) {
-        let validator = PinValidationViewController(tips: R.string.localizable.change_pin_interval_hint(), onSuccess: { (_) in
+        let validator = PINValidationViewController(tips: R.string.localizable.change_pin_interval_hint(), onSuccess: { (_) in
             AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval = interval
             self.updatePinIntervalRow()
         })

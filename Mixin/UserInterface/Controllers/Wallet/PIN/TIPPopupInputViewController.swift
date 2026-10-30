@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class TIPPopupInputViewController: PinValidationViewController {
+final class TIPPopupInputViewController: PINValidationViewController {
     
     typealias ContinueActionSuccess = @MainActor @Sendable (_ pin: String) -> Void
     

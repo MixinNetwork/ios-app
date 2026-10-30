@@ -1,5 +1,4 @@
 import Foundation
-import web3
 import MixinServices
 
 extension Web3Wallet {
@@ -81,7 +80,7 @@ extension Web3Wallet {
         }
     }
     
-    func ethereumAccount(pin: String, address: Web3Address) async throws -> EthereumAccount {
+    func evmPrivateKey(pin: String, address: Web3Address) async throws -> Data {
         let privateKey: Data
         switch category.knownCase {
         case .classic:
@@ -115,8 +114,7 @@ extension Web3Wallet {
         case .none:
             throw DerivationError.unknownCategory
         }
-        let keyStorage = InPlaceKeyStorage(raw: privateKey)
-        return try EthereumAccount(keyStorage: keyStorage)
+        return privateKey
     }
     
     func solanaPrivateKey(pin: String, address: Web3Address) async throws -> Data {

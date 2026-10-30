@@ -1,5 +1,4 @@
 import UIKit
-import web3
 import MixinServices
 import TIP
 
@@ -196,9 +195,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                 guard let privateKey, privateKey.count == 32 else {
                     throw LoadKeyError.invalidInput
                 }
-                let keyStorage = InPlaceKeyStorage(raw: privateKey)
-                let account = try EthereumAccount(keyStorage: keyStorage)
-                let address = account.address.toChecksumAddress()
+                let address = try EVM.address(privateKey: privateKey).checksumString
                 let crossCheckAddress = try {
                     let key = if input.hasPrefix("0x") {
                         String(input.dropFirst(2))
@@ -230,7 +227,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                         path: nil,
                         userID: userID
                     ) { message in
-                        try account.signMessage(message: message)
+                        try EVM.signPersonalMessage(message, privateKey: privateKey)
                     }
                 )
             case .solana:

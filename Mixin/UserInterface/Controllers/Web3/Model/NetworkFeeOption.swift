@@ -1,17 +1,23 @@
 import Foundation
-import BigInt
 import MixinServices
 
 struct NetworkFeeOption {
     
-    let gasPrice: BigUInt // In Wei
-    let gasLimit: BigUInt
+    let gasPrice: EVMQuantity // In Wei
+    let gasLimit: UInt64
     let speed: String
     let cost: String // In fiat money
     let duration: String
     let gasValue: String // In cryptocurrency
     
-    init?(speed: String, tokenPrice: Decimal, duration: String, gas: BigUInt, gasPrice: String, gasLimit: String) {
+    init?(
+        speed: String,
+        tokenPrice: Decimal,
+        duration: String,
+        gas: UInt64,
+        gasPrice: String,
+        gasLimit: String,
+    ) {
         guard let decimalGasPrice = Decimal(string: gasPrice, locale: .enUSPOSIX) else {
             return nil
         }
@@ -19,7 +25,7 @@ struct NetworkFeeOption {
         let gasPriceInWei = NSDecimalNumber(decimal: decimalGasPrice)
             .multiplying(byPowerOf10: 18)
             .rounding(accordingToBehavior: nil)
-        guard let gasPrice = BigUInt(gasPriceInWei.description) else {
+        guard let gasPrice = EVMQuantity(gasPriceInWei.description) else {
             return nil
         }
         
@@ -28,7 +34,7 @@ struct NetworkFeeOption {
         }
         let decimalFee = decimalGas * decimalGasPrice
         
-        guard let gasLimit = BigUInt(gasLimit) else {
+        guard let gasLimit = UInt64(gasLimit) else {
             return nil
         }
         

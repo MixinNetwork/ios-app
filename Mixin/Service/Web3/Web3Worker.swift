@@ -1,6 +1,5 @@
 import Foundation
 import WebKit
-import web3
 import MixinServices
 
 final class Web3Worker {
@@ -172,7 +171,7 @@ final class Web3Worker {
         }
         let humanReadable = String(data: data, encoding: .utf8) ?? ""
         do {
-            let typedData = try JSONDecoder.default.decode(TypedData.self, from: data)
+            let typedData = try EVMTypedData(json: data)
             let signable: WalletConnectDecodedSigningRequest.Signable = .typed(typedData)
             let operation = Web3SignWithBrowserWalletOperation(
                 wallet: wallet,

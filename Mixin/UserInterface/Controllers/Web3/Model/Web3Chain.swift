@@ -1,6 +1,5 @@
 import Foundation
 import OrderedCollections
-import web3
 import WalletConnectUtils
 import MixinServices
 

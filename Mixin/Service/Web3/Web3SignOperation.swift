@@ -1,5 +1,4 @@
 import Foundation
-import web3
 import WalletConnectSign
 import MixinServices
 
@@ -60,12 +59,12 @@ class Web3SignOperation {
                 case .bitcoin, .pearl:
                     throw SigningError.unsupportedChain
                 case .evm:
-                    let account = try await wallet.ethereumAccount(pin: pin, address: address)
+                    let privateKey = try await wallet.evmPrivateKey(pin: pin, address: address)
                     signature = switch signable {
                     case .raw(let data):
-                        try account.signMessage(message: data)
+                        try EVM.signPersonalMessage(data, privateKey: privateKey)
                     case .typed(let data):
-                        try account.signMessage(message: data)
+                        try EVM.signTypedData(data, privateKey: privateKey)
                     }
                 case .solana:
                     switch signable {

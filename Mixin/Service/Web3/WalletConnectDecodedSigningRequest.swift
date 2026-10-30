@@ -1,5 +1,4 @@
 import Foundation
-import web3
 import WalletConnectSign
 
 struct WalletConnectDecodedSigningRequest {
@@ -13,7 +12,7 @@ struct WalletConnectDecodedSigningRequest {
     
     enum Signable {
         case raw(Data)
-        case typed(TypedData)
+        case typed(EVMTypedData)
     }
     
     let raw: WalletConnectSign.Request
@@ -34,7 +33,7 @@ struct WalletConnectDecodedSigningRequest {
         }
         let address = params[1]
         let encodedMessage = params[0]
-        guard let decodedMessage = Data(hex: encodedMessage) else {
+        guard let decodedMessage = EVM.data(hex: encodedMessage) else {
             throw Error.hexDecoding
         }
         let humanReadable = String(data: decodedMessage, encoding: .utf8) ?? encodedMessage
@@ -60,7 +59,7 @@ struct WalletConnectDecodedSigningRequest {
         guard let messageData = messageString.data(using: .utf8) else {
             throw Error.utf8Encoding
         }
-        let typedData = try JSONDecoder.default.decode(TypedData.self, from: messageData)
+        let typedData = try EVMTypedData(json: messageData)
         let humanReadable = typedData.description
         return WalletConnectDecodedSigningRequest(raw: request,
                                                   chain: chain,

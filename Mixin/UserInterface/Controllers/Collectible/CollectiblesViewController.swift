@@ -6,7 +6,7 @@ final class CollectiblesViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var contentSegmentedControl: OutlineSegmentedControl!
-    @IBOutlet weak var sortButton: OutlineButton!
+    @IBOutlet weak var sortButton: ConfigurationBasedOutlineButton!
     
     private var order = AppGroupUserDefaults.User.collectibleOrdering
     private var content = AppGroupUserDefaults.User.collectibleContent
@@ -16,7 +16,20 @@ final class CollectiblesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        sortButton.semanticContentAttribute = .forceRightToLeft
+        title = R.string.localizable.collectibles()
+        navigationItem.standardAppearance = .transparent
+        navigationItem.scrollEdgeAppearance = .transparent
+        navigationItem.compactAppearance = .transparent
+        navigationItem.compactScrollEdgeAppearance = .transparent
+        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+            title: R.string.localizable.collectibles(),
+            wallet: .privacy
+        )
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_title_search(),
+            target: self,
+            action: #selector(search(_:)),
+        )
         contentSegmentedControl.items = [
             R.image.collectible_tab_item()!,
             R.image.collectible_tab_collection()!,
@@ -28,8 +41,6 @@ final class CollectiblesViewController: UIViewController {
             contentSegmentedControl.selectItem(at: 1)
         }
         updateOrderingSelection()
-        sortButton.layer.cornerRadius = 19
-        sortButton.layer.masksToBounds = true
         sortButton.menu = UIMenu(children: [
             UIAction(
                 title: R.string.localizable.recent(),
@@ -104,6 +115,11 @@ final class CollectiblesViewController: UIViewController {
         reloadData()
     }
     
+    @IBAction func search(_ sender: Any) {
+        let search = SearchCollectibleViewController()
+        navigationController?.pushViewController(search, animated: true)
+    }
+    
     @objc private func reloadCollection(_ notification: Notification) {
         guard content == .collection else {
             return
@@ -132,7 +148,11 @@ final class CollectiblesViewController: UIViewController {
             let collections: [InscriptionCollectionPreview]
             switch content {
             case .item:
-                items = InscriptionDAO.shared.allInscriptionOutputs(sortedBy: order)
+                items = InscriptionDAO.shared.allInscriptionOutputs(
+                    collectionHash: nil,
+                    sortedBy: order,
+                    limit: nil,
+                )
                 collections = []
             case .collection:
                 items = []
@@ -170,16 +190,19 @@ final class CollectiblesViewController: UIViewController {
             .outline_primary()!
             .resolvedColor(with: traitCollection)
             .cgColor
-        sortButton.updateColors()
     }
     
     private func updateOrderingSelection() {
-        switch order {
+        let title = switch order {
         case .recent:
-            sortButton.setTitle(R.string.localizable.recent(), for: .normal)
+            R.string.localizable.recent()
         case .alphabetical:
-            sortButton.setTitle(R.string.localizable.alphabetical(), for: .normal)
+            R.string.localizable.alphabetical()
         }
+        sortButton.configuration?.attributedTitle = AttributedString(
+            string: title,
+            scalingByFontSize: 14,
+        )
     }
     
 }

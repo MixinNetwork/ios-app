@@ -48,6 +48,7 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = token.symbol
         navigationItem.rightBarButtonItem = .tintedIcon(
             image: R.image.ic_title_more(),
             target: self,

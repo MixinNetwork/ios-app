@@ -19,8 +19,8 @@ extension ExploreSearchViewController where Self: UIViewController {
         }
     }
     
-    var exploreViewController: ExploreViewController? {
-        navigationController?.viewControllers.first(where: { $0 is ExploreViewController }) as? ExploreViewController
+    var exploreViewController: ExploreMoreViewController? {
+        navigationController?.viewControllers.first(where: { $0 is ExploreMoreViewController }) as? ExploreMoreViewController
     }
     
     func pushTokenViewController(token: MixinTokenItem) {

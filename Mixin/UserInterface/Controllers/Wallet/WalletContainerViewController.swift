@@ -27,6 +27,7 @@ final class WalletContainerViewController: UIViewController {
         guard let wallet = viewController as? WalletViewController else {
             return
         }
+        wallet.onTitleChange = nil
         self.viewController = nil
         let summary = WalletSummaryViewController()
         
@@ -106,6 +107,11 @@ final class WalletContainerViewController: UIViewController {
         animated: Bool,
     ) {
         let sourceItem = child.navigationItem
+        if let wallet = child as? WalletViewController {
+            wallet.onTitleChange = { [weak self] title in
+                self?.navigationItem.title = title ?? ""
+            }
+        }
         let update = {
             self.navigationItem.title = sourceItem.title ?? ""
             self.navigationItem.titleView = sourceItem.titleView

@@ -1,6 +1,6 @@
 import UIKit
 
-final class ExploreSegmentCell: UICollectionViewCell {
+final class SegmentCell: UICollectionViewCell {
     
     @IBOutlet weak var label: InsetLabel!
     @IBOutlet weak var badgeView: BadgeDotView!

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NewChatViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="searchBoxView" destination="HKu-qm-w8p" id="lC5-NN-Jvs"/>
+                <outlet property="tableView" destination="yeR-8z-Wl0" id="K6A-iM-EVj"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HKu-qm-w8p" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="16" y="128" width="361" height="40"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="y0b-kZ-B1s"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" keyboardDismissMode="onDrag" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="yeR-8z-Wl0">
+                    <rect key="frame" x="0.0" y="178" width="393" height="674"/>
+                    <color key="backgroundColor" name="background"/>
+                </tableView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="HKu-qm-w8p" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="0Cs-a3-HP3"/>
+                <constraint firstItem="yeR-8z-Wl0" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Btv-Qh-L6D"/>
+                <constraint firstItem="HKu-qm-w8p" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="10" id="Dxx-ND-Fev"/>
+                <constraint firstAttribute="trailing" secondItem="yeR-8z-Wl0" secondAttribute="trailing" id="Jk2-Is-npw"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="HKu-qm-w8p" secondAttribute="trailing" constant="16" id="OI4-J4-sY6"/>
+                <constraint firstItem="yeR-8z-Wl0" firstAttribute="top" secondItem="HKu-qm-w8p" secondAttribute="bottom" constant="10" id="gbu-lL-Xsk"/>
+                <constraint firstAttribute="bottom" secondItem="yeR-8z-Wl0" secondAttribute="bottom" id="rt8-pH-7A6"/>
+            </constraints>
+            <point key="canvasLocation" x="136.64122137404578" y="153.52112676056339"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

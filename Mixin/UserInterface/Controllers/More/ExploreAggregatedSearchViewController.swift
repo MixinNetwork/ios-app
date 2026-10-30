@@ -49,7 +49,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         navigationItem.titleView = searchBoxView
         navigationItem.rightBarButtonItem = .cancelSearch(
             target: exploreViewController,
-            action: #selector(ExploreViewController.cancelSearching(_:)),
+            action: #selector(ExploreMoreViewController.cancelSearching(_:)),
         )
         searchBoxView.textField.delegate = self
         searchBoxView.textField.rightViewMode = .always

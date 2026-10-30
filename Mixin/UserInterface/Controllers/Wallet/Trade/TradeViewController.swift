@@ -102,7 +102,7 @@ final class TradeViewController: UIViewController {
         ]
         self.showOrdersItem = showOrdersItem
         
-        collectionView.register(R.nib.exploreSegmentCell)
+        collectionView.register(R.nib.segmentCell)
         if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.itemSize = UICollectionViewFlowLayout.automaticSize
             layout.estimatedItemSize = CGSize(width: 100, height: 38)
@@ -284,7 +284,7 @@ extension TradeViewController {
         case .perpetualFutures:
             BadgeManager.shared.setHasViewed(identifier: .perps)
         }
-        if let cell = collectionView.cellForItem(at: indexPath) as? ExploreSegmentCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? SegmentCell {
             cell.badgeView.isHidden = true
         }
         AppGroupUserDefaults.Wallet.tradeMode = trading.rawValue

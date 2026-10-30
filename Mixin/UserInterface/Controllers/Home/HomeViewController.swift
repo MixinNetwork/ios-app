@@ -14,7 +14,6 @@ final class HomeViewController: UIViewController {
     
     private let connectingView = ActivityIndicatorView()
     private let titleButton = HomeTitleButton()
-    private let myAvatarImageView = AvatarImageView()
     
     private let dragDownThreshold: CGFloat = 80
     private let dragDownIndicator = DragDownIndicator()
@@ -40,6 +39,8 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Mixin"
+        navigationItem.titleView = TransparentView()
         connectingView.hidesWhenStopped = true
         connectingView.tintColor = UIColor(displayP3RgbValue: 0xBCBEC3, alpha: 1)
         connectingView.snp.makeConstraints { make in
@@ -58,39 +59,25 @@ final class HomeViewController: UIViewController {
             titleItem.hidesSharedBackground = true
         }
         navigationItem.leftBarButtonItem = titleItem
-        
-        let searchItem = UIBarButtonItem.tintedIcon(
-            image: R.image.ic_title_search(),
-            target: self,
-            action: #selector(showSearchAction),
-        )
-        let scanItem = UIBarButtonItem.tintedIcon(
-            image: R.image.ic_app_category_scan(),
-            target: self,
-            action: #selector(scanQRCode),
-        )
-        
-        myAvatarImageView.titleFontSize = 12
-        let contactsButton = UIButton(type: .custom)
-        contactsButton.addSubview(myAvatarImageView)
-        myAvatarImageView.isUserInteractionEnabled = false
-        myAvatarImageView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.width.height.equalTo(24)
-        }
-        contactsButton.snp.makeConstraints { make in
-            make.width.height.equalTo(44)
-        }
-        contactsButton.addTarget(self, action: #selector(contactsAction(_:)), for: .touchUpInside)
-        let contactsItem = UIBarButtonItem(customView: contactsButton)
         navigationItem.rightBarButtonItems = [
-            contactsItem,
-            scanItem,
-            searchItem,
+            UIBarButtonItem.tintedIcon(
+                image: R.image.new_message(),
+                target: self,
+                action: #selector(newChat(_:)),
+            ),
+            UIBarButtonItem.tintedIcon(
+                image: R.image.ic_app_category_scan(),
+                target: self,
+                action: #selector(scanQRCode),
+            ),
+            UIBarButtonItem.tintedIcon(
+                image: R.image.ic_title_search(),
+                target: self,
+                action: #selector(showSearchAction),
+            ),
         ]
         
         if let account = LoginManager.shared.account {
-            myAvatarImageView.setImage(with: account)
             reporter.updateUserProperties(.all, account: account)
         }
         presentPopupTipIfNeeded()
@@ -152,22 +139,6 @@ final class HomeViewController: UIViewController {
         dragDownIndicator.center.x = tableView.frame.width / 2
     }
     
-    @IBAction func scanQRCode() {
-        UIApplication.shared.homeNavigationController?.pushQRCodeScannerViewController()
-    }
-    
-    @IBAction func showSearchAction() {
-        guard navigationController?.topViewController === self else {
-            return
-        }
-        let search = R.storyboard.home.search()!
-        navigationController?.pushViewController(search, animated: true)
-    }
-    
-    @IBAction func contactsAction(_ sender: Any) {
-        navigationController?.pushViewController(UserCenterViewController(), animated: true)
-    }
-    
     @IBAction func guideAction(_ sender: Any) {
         if let circleID = AppGroupUserDefaults.User.circleID,
            let name = AppGroupUserDefaults.User.circleName
@@ -179,7 +150,7 @@ final class HomeViewController: UIViewController {
             )
             present(editor, animated: true, completion: nil)
         } else {
-            let vc = ContactViewController.instance(showAddContactButton: false)
+            let vc = ContactsViewController(showAddContactButton: false)
             navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -188,6 +159,24 @@ final class HomeViewController: UIViewController {
         let circles = CirclesViewController()
         let navigation = GeneralAppearanceNavigationController(rootViewController: circles)
         present(navigation, animated: true)
+    }
+    
+    @objc private func scanQRCode() {
+        UIApplication.shared.homeNavigationController?.pushQRCodeScannerViewController()
+    }
+    
+    @objc private func showSearchAction() {
+        guard navigationController?.topViewController === self else {
+            return
+        }
+        let search = R.storyboard.home.search()!
+        navigationController?.pushViewController(search, animated: true)
+    }
+    
+    @objc private func newChat(_ sender: Any) {
+        let newChat = NewChatViewController(actionNavigationController: navigationController)
+        let navigationController = GeneralAppearanceNavigationController(rootViewController: newChat)
+        present(navigationController, animated: true)
     }
     
     @objc private func applicationDidBecomeActive(_ sender: Notification) {
@@ -211,15 +200,11 @@ final class HomeViewController: UIViewController {
     }
     
     @objc private func reloadAccount() {
-        guard let account = LoginManager.shared.account else {
-            return
-        }
         if LoginManager.shared.isLoggedIn {
             StickerStore.refreshStickersIfNeeded()
             ExpiredMessageManager.shared.removeExpiredMessages()
         }
         DispatchQueue.main.async {
-            self.myAvatarImageView.setImage(with: account)
             self.presentPopupTipIfNeeded()
         }
     }
@@ -434,7 +419,7 @@ extension HomeViewController {
         refreshing = true
         needRefresh = false
 
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [self] in
             let circleID = AppGroupUserDefaults.User.circleID
             if circleID == nil {
                 self.titleButton.showsTopRightDot = false

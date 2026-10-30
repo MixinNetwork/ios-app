@@ -128,7 +128,7 @@ final class DepositViewController: UIViewController {
         collectionView.backgroundColor = R.color.background_secondary()
         view.addSubview(collectionView)
         collectionView.snp.makeEdgesEqualToSuperview()
-        collectionView.register(R.nib.exploreSegmentCell)
+        collectionView.register(R.nib.segmentCell)
         collectionView.register(R.nib.depositGeneralEntryCell)
         collectionView.register(R.nib.depositTaggingEntryCell)
         collectionView.register(R.nib.depositInfoCell)

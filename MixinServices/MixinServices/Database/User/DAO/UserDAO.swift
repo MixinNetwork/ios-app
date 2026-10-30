@@ -188,24 +188,27 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [conversationId])
     }
     
-    public func getAppUsersAppId() -> [String] {
-        let sql = """
-            SELECT u.app_id
-            FROM apps a, users u
-            WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
-            ORDER BY u.full_name ASC
-        """
-        return db.select(with: sql)
-    }
-    
-    public func getAppUsers() -> [User] {
-        let sql = """
+    public func friendAppUsers(limit: Int?) -> [User] {
+        var sql = """
             SELECT u.*
             FROM apps a, users u
             WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
-            ORDER BY u.full_name ASC
+            ORDER BY a.updated_at DESC
         """
+        if let limit {
+            sql += "\nLIMIT \(limit)"
+        }
         return db.select(with: sql)
+    }
+    
+    public func friendAppUsersCount() -> Int {
+        let sql = """
+            SELECT COUNT(*)
+            FROM apps a, users u
+            WHERE a.app_id = u.app_id AND u.relationship = 'FRIEND'
+        """
+        let count: Int? = db.select(with: sql)
+        return count ?? 0
     }
     
     public func getSearchableAppUsers(priorAppIds: [String]) -> [User] {
@@ -278,9 +281,18 @@ public final class UserDAO: UserDatabaseDAO {
         return db.select(with: sql)
     }
     
-    public func contactsWithoutApp() -> [UserItem] {
-        let sql = "\(Self.sqlQueryColumns) WHERE u.app_id IS NULL AND u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
+    public func contactsWithoutApp(limit: Int?) -> [UserItem] {
+        var sql = "\(Self.sqlQueryColumns) WHERE u.app_id IS NULL AND u.relationship = 'FRIEND' AND u.identity_number > '0' ORDER BY u.created_at DESC"
+        if let limit {
+            sql += "\nLIMIT \(limit)"
+        }
         return db.select(with: sql)
+    }
+    
+    public func contactsWithoutAppCount() -> Int {
+        let sql = "SELECT COUNT(*) FROM users WHERE app_id IS NULL AND relationship = 'FRIEND' AND identity_number > '0'"
+        let count: Int? = db.select(with: sql)
+        return count ?? 0
     }
     
     public func users(limit: Int, after userId: String?) -> [User] {

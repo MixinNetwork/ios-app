@@ -25,12 +25,20 @@ final class SearchCollectibleViewController: UIViewController, SearchNavigationA
         fatalError("Storyboard not supported")
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_collectible()
         searchBoxView.textField.addTarget(self, action: #selector(searchKeyword(_:)), for: .editingChanged)
         navigationItem.hidesBackButton = true
+        navigationItem.standardAppearance = .backgroundColored
+        navigationItem.scrollEdgeAppearance = .backgroundColored
+        navigationItem.compactAppearance = .backgroundColored
+        navigationItem.compactScrollEdgeAppearance = .backgroundColored
         navigationItem.titleView = searchBoxView
         navigationItem.rightBarButtonItem = .cancelSearch(
             target: self,
@@ -43,6 +51,12 @@ final class SearchCollectibleViewController: UIViewController, SearchNavigationA
         collectionView.register(R.nib.collectibleCell)
         collectionView.dataSource = self
         collectionView.delegate = self
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(dismissSearch),
+            name: dismissSearchNotification,
+            object: nil,
+        )
     }
     
     override func viewWillLayoutSubviews() {
@@ -80,6 +94,17 @@ final class SearchCollectibleViewController: UIViewController, SearchNavigationA
     
     @IBAction func cancelSearching(_ sender: Any) {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func dismissSearch() {
+        guard let navigationController else {
+            return
+        }
+        let viewControllers = navigationController.viewControllers.filter { $0 !== self }
+        guard viewControllers.count != navigationController.viewControllers.count else {
+            return
+        }
+        navigationController.setViewControllers(viewControllers, animated: false)
     }
     
     @objc private func searchKeyword(_ sender: Any) {

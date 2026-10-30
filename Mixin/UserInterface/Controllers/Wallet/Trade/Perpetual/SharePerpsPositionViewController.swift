@@ -39,7 +39,7 @@ final class SharePerpsPositionViewController: UIViewController {
         super.viewDidLoad()
         
         styleSelectorLayout.itemSize = UICollectionViewFlowLayout.automaticSize
-        styleSelectorCollectionView.register(R.nib.exploreSegmentCell)
+        styleSelectorCollectionView.register(R.nib.segmentCell)
         styleSelectorSizeObserver = styleSelectorCollectionView.observe(
             \.contentSize,
              options: [.new]

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_12" orientation="portrait" appearance="dark"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -28,13 +28,13 @@
                     <subviews>
                         <view contentMode="scaleToFill" placeholderIntrinsicWidth="97" placeholderIntrinsicHeight="38" translatesAutoresizingMaskIntoConstraints="NO" id="gTf-S6-Nbv" customClass="OutlineSegmentedControl" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="20" y="12" width="97" height="38"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="backgroundColor" name="background"/>
                             <connections>
                                 <action selector="segmentValueChanged:" destination="-1" eventType="valueChanged" id="Zr9-W0-caY"/>
                             </connections>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yql-9Q-cdY" customClass="OutlineButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="279" y="12" width="94" height="38"/>
+                        <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yql-9Q-cdY" customClass="ConfigurationBasedOutlineButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="279.66666666666669" y="12" width="93.333333333333314" height="38"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="38" id="JpZ-pC-SqF"/>
                             </constraints>
@@ -43,12 +43,14 @@
                             <state key="normal" title="Recent" image="ic_arrow_down">
                                 <color key="titleColor" name="text"/>
                             </state>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="recent"/>
-                            </userDefinedRuntimeAttributes>
+                            <buttonConfiguration key="configuration" style="plain" image="ic_arrow_down" imagePlacement="trailing" title="Recent" cornerStyle="capsule">
+                                <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                <directionalEdgeInsets key="contentInsets" top="0.0" leading="14" bottom="0.0" trailing="4"/>
+                                <color key="baseForegroundColor" name="text"/>
+                            </buttonConfiguration>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" name="background"/>
+                    <color key="backgroundColor" name="background_secondary"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="Bip-P0-HOA"/>
                         <constraint firstAttribute="trailing" secondItem="yql-9Q-cdY" secondAttribute="trailing" constant="20" id="hEX-pi-rK3"/>
@@ -59,7 +61,7 @@
                 </view>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="q3X-vD-KBB">
                     <rect key="frame" x="0.0" y="178" width="393" height="674"/>
-                    <color key="backgroundColor" name="background"/>
+                    <color key="backgroundColor" name="background_secondary"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="oyq-su-z6K" customClass="LeftAlignedCollectionViewFlowLayout" customModule="Mixin" customModuleProvider="target">
                         <size key="itemSize" width="128" height="128"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -69,7 +71,7 @@
                 </collectionView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <color key="backgroundColor" name="background"/>
+            <color key="backgroundColor" name="background_secondary"/>
             <constraints>
                 <constraint firstItem="6Sl-Ci-wRr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="372-ij-RYb"/>
                 <constraint firstAttribute="bottom" secondItem="q3X-vD-KBB" secondAttribute="bottom" id="GdD-rJ-Jom"/>
@@ -86,6 +88,9 @@
         <image name="ic_arrow_down" width="30" height="30"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

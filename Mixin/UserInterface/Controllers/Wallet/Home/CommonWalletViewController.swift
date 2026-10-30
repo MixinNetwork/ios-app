@@ -448,9 +448,11 @@ final class CommonWalletViewController: WalletViewController {
                 self.legacyRenaming = renaming
                 switch renaming {
                 case .required:
+                    self.title = R.string.localizable.common_wallet()
                     self.titleLabel.text = R.string.localizable.common_wallet()
                     self.renameLegacyClassicWallet()
                 case .notInvolved, .done:
+                    self.title = wallet.name
                     self.titleLabel.text = wallet.name
                 }
                 self.walletActionHandler = CommonWalletOverviewActionHandler(
@@ -506,7 +508,7 @@ extension CommonWalletViewController: UICollectionViewDelegate {
             return
         }
         switch item {
-        case .overview, .emptyWalletInstruction, .cash, .earn, .perpsPosition, .perpsTopMover, .referral, .benefit:
+        case .overview, .emptyWalletInstruction, .cash, .earn, .perpsPosition, .collectible, .perpsTopMover, .referral, .benefit:
             break
         case let .banner(banner, _):
             bannerController.handleSelection(of: banner)
@@ -563,6 +565,7 @@ extension CommonWalletViewController {
                     }
                     self.wallet = wallet
                     self.legacyRenaming = .done
+                    self.title = wallet.name
                     self.titleLabel.text = wallet.name
                 }
             } catch {
@@ -615,6 +618,7 @@ extension CommonWalletViewController {
                 }
                 if let self {
                     self.wallet = wallet
+                    self.title = wallet.name
                     self.titleLabel.text = wallet.name
                 }
                 hud.set(style: .notification, text: R.string.localizable.changed())

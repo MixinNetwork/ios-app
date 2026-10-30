@@ -52,10 +52,19 @@ final class InscriptionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.standardAppearance = .transparent
-        navigationItem.scrollEdgeAppearance = .transparent
-        navigationItem.compactAppearance = .transparent
-        navigationItem.compactScrollEdgeAppearance = .transparent
+        if #available(iOS 27.0, *) {
+            let appearance = UINavigationBarAppearance.transparent.copy()
+            appearance.overrideUserInterfaceStyle = .dark
+            navigationItem.standardAppearance = appearance
+            navigationItem.scrollEdgeAppearance = appearance
+            navigationItem.compactAppearance = appearance
+            navigationItem.compactScrollEdgeAppearance = appearance
+        } else {
+            navigationItem.standardAppearance = .transparent
+            navigationItem.scrollEdgeAppearance = .transparent
+            navigationItem.compactAppearance = .transparent
+            navigationItem.compactScrollEdgeAppearance = .transparent
+        }
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: R.image.ic_title_back(),
             style: .plain,

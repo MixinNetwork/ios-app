@@ -13,7 +13,7 @@ class PhoneContactViewController: PeerViewController<[PhoneContact], PhoneContac
     
     override func initData() {
         initDataOperation.addExecutionBlock { [weak self] in
-            let contacts = UserDAO.shared.contactsWithoutApp()
+            let contacts = UserDAO.shared.contactsWithoutApp(limit: nil)
             let contactPhoneNumbers = Set(contacts.compactMap({ $0.phone }))
             let phoneContacts = ContactsManager.shared.contacts
                 .filter({ !contactPhoneNumbers.contains($0.phoneNumber) })

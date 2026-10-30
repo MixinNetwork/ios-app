@@ -249,11 +249,19 @@ final class ContactsViewController: UIViewController {
     private func reloadData() {
         collectionView.collectionViewLayout.invalidateLayout()
         collectionView.reloadData()
-        collectionView.checkEmpty(
-            dataCount: contacts.count,
-            text: R.string.localizable.no_contacts(),
-            photo: R.image.emptyIndicator.ic_data()!,
-        )
+        if isSearching {
+            collectionView.checkEmpty(
+                dataCount: searchResults.count,
+                text: R.string.localizable.no_results(),
+                photo: R.image.emptyIndicator.ic_search_result()!,
+            )
+        } else {
+            collectionView.checkEmpty(
+                dataCount: contacts.count,
+                text: R.string.localizable.no_contacts(),
+                photo: R.image.emptyIndicator.ic_data()!,
+            )
+        }
     }
     
 }

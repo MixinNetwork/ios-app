@@ -344,8 +344,8 @@ extension ContactsViewController: UICollectionViewDataSource, UICollectionViewDe
         } else {
             user = contacts[indexPath.section][indexPath.item]
         }
-        let conversation = ConversationViewController.instance(ownerUser: user)
-        navigationController?.pushViewController(conversation, animated: true)
+        let profile = UserProfileViewController(user: user)
+        present(profile, animated: true, completion: nil)
     }
     
 }

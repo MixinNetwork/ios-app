@@ -429,18 +429,28 @@ extension ExploreMoreViewController: UICollectionViewDataSource, UICollectionVie
         collectionView.deselectItem(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section)! {
         case .account:
-            navigationController?.pushViewController(UserCenterViewController(), animated: true)
+            let userCenter = UserCenterViewController()
+            navigationController?.pushViewController(userCenter, animated: true)
         case .actions:
             perform(action: actions[indexPath.item])
         case .contacts:
-            let conversation = ConversationViewController.instance(ownerUser: contacts[indexPath.item])
-            navigationController?.pushViewController(conversation, animated: true)
+            let contact = contacts[indexPath.item]
+            let profile = UserProfileViewController(user: contact)
+            present(profile, animated: true, completion: nil)
         case .bots:
-            let user = bots[indexPath.item]
+            let bot = bots[indexPath.item]
             if indexPath.item < favoriteBotsCount {
-                openApp(user: user)
+                if let app = AppDAO.shared.getApp(ofUserId: bot.userId) {
+                    AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
+                    let appHome = MixinWebViewController(
+                        context: .init(conversationID: "", app: app, isAppVerified: bot.isVerified)
+                    )
+                    navigationController?.pushViewController(appHome, animated: true)
+                }
             } else {
-                presentProfile(user: user)
+                let item = UserItem.createUser(from: bot)
+                let profile = UserProfileViewController(user: item)
+                present(profile, animated: true, completion: nil)
             }
         }
     }
@@ -675,21 +685,6 @@ extension ExploreMoreViewController {
         }
     }
     
-    private func presentProfile(user: User) {
-        let item = UserItem.createUser(from: user)
-        let profile = UserProfileViewController(user: item)
-        present(profile, animated: true, completion: nil)
-    }
-    
-    private func openApp(user: User) {
-        guard let app = AppDAO.shared.getApp(ofUserId: user.userId) else {
-            return
-        }
-        AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
-        let web = MixinWebViewController(context: .init(conversationID: "", app: app, isAppVerified: user.isVerified))
-        navigationController?.pushViewController(web, animated: true)
-    }
-    
     private func showContacts() {
         let contacts = ContactsViewController(showAddContactButton: true)
         navigationController?.pushViewController(contacts, animated: true)
@@ -697,7 +692,6 @@ extension ExploreMoreViewController {
     
     private func showBots() {
         let bots = BotsViewController()
-        bots.title = R.string.localizable.bots_title()
         navigationController?.pushViewController(bots, animated: true)
     }
     

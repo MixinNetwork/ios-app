@@ -28,6 +28,7 @@ final class BotsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = R.string.localizable.bots_title()
         view.backgroundColor = R.color.background_secondary()
         searchBoxView.contentView.backgroundColor = R.color.background()
         searchBoxView.textField.placeholder = R.string.localizable.setting_auth_search_hint()
@@ -370,10 +371,10 @@ extension BotsViewController: UICollectionViewDataSource, UICollectionViewDelega
                 return
             }
             AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
-            let web = MixinWebViewController(
+            let appHome = MixinWebViewController(
                 context: .init(conversationID: "", app: app, isAppVerified: user.isVerified),
             )
-            navigationController?.pushViewController(web, animated: true)
+            navigationController?.pushViewController(appHome, animated: true)
         } else {
             let item = UserItem.createUser(from: user)
             let profile = UserProfileViewController(user: item)

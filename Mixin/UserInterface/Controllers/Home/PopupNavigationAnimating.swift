@@ -29,17 +29,43 @@ final class PopInNavigationAnimator: NSObject, UIViewControllerAnimatedTransitio
         }
         let duration = transitionDuration(using: transitionContext)
         let containerView = transitionContext.containerView
+        let tabBar: UITabBar?
+        let tabBarSnapshot: UIView?
+        if let fromVC = transitionContext.viewController(forKey: .from),
+           !fromVC.hidesBottomBarWhenPushed,
+           toVC.hidesBottomBarWhenPushed,
+           let visibleTabBar = fromVC.tabBarController?.tabBar,
+           !visibleTabBar.isHidden,
+           let snapshot = visibleTabBar.snapshotView(afterScreenUpdates: false)
+        {
+            // UIKit slides the real tab bar horizontally when hiding it for a push.
+            // Fade a stationary snapshot beneath the incoming popup instead.
+            snapshot.frame = visibleTabBar.convert(visibleTabBar.bounds, to: containerView)
+            containerView.addSubview(snapshot)
+            tabBar = visibleTabBar
+            tabBarSnapshot = snapshot
+        } else {
+            tabBar = nil
+            tabBarSnapshot = nil
+        }
+        let tabBarAlpha = tabBar?.alpha
+        tabBar?.alpha = 0
         toView.frame = transitionContext.finalFrame(for: toVC)
         toView.frame.origin.y = toView.frame.size.height
         containerView.addSubview(toView)
         UIView.animate(withDuration: duration, delay: 0, options: .overdampedCurve) {
             toView.frame = transitionContext.finalFrame(for: toVC)
+            tabBarSnapshot?.alpha = 0
         } completion: { _ in
             let isCancelled = transitionContext.transitionWasCancelled
             if isCancelled {
                 toView.removeFromSuperview()
             }
             transitionContext.completeTransition(!isCancelled)
+            if let tabBarAlpha {
+                tabBar?.alpha = tabBarAlpha
+            }
+            tabBarSnapshot?.removeFromSuperview()
         }
     }
     

@@ -291,9 +291,9 @@
 		7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F8261FA1AE19000B838B /* CountDownButton.swift */; };
 		7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */; };
 		7B951DAC2440A7C100E55761 /* SolidBackgroundColorImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4FCCDF2440A66600360F65 /* SolidBackgroundColorImageView.swift */; };
-		7B95533A224380B200CE95E6 /* PinValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B955339224380B200CE95E6 /* PinValidationViewController.swift */; };
-		7B9553402243860C00CE95E6 /* PinValidationPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B95533D2243860B00CE95E6 /* PinValidationPresentationManager.swift */; };
-		7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B95533E2243860C00CE95E6 /* PinValidationPresentationController.swift */; };
+		7B95533A224380B200CE95E6 /* PINValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B955339224380B200CE95E6 /* PINValidationViewController.swift */; };
+		7B9553402243860C00CE95E6 /* PINValidationPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B95533D2243860B00CE95E6 /* PINValidationPresentationManager.swift */; };
+		7B9553412243860C00CE95E6 /* PINValidationPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B95533E2243860C00CE95E6 /* PINValidationPresentationController.swift */; };
 		7B95534322438ECD00CE95E6 /* TopRoundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B95534222438ECD00CE95E6 /* TopRoundedView.swift */; };
 		7B95860F2369599800F1F6E1 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B95860E2369599800F1F6E1 /* ProfileViewController.swift */; };
 		7B9650AE248794FD00DE86B9 /* MinimizedCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9650AD248794FD00DE86B9 /* MinimizedCallViewController.swift */; };
@@ -371,7 +371,7 @@
 		7BB2831C22D88F07000731E8 /* GalleryTransitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB2831B22D88F07000731E8 /* GalleryTransitionView.swift */; };
 		7BB3855821E770BE0070FF8F /* ProvisionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB3855721E770BE0070FF8F /* ProvisionMessage.swift */; };
 		7BB5250324160F3D0060DAE1 /* LocationPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB5250224160F3D0060DAE1 /* LocationPreviewViewController.swift */; };
-		7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB6111922BA4179000E758C /* PinValidationView.xib */; };
+		7BB6111A22BA4179000E758C /* PINValidationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BB6111922BA4179000E758C /* PINValidationView.xib */; };
 		7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */; };
 		7BB78724245132570057B4ED /* SettingsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB78723245132570057B4ED /* SettingsHeaderView.swift */; };
 		7BB78726245133A40057B4ED /* SettingsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB78725245133A40057B4ED /* SettingsHeaderFooterView.swift */; };
@@ -2345,9 +2345,9 @@
 		7B915F73215FB0C100A562C6 /* GiphySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphySearchViewController.swift; sourceTree = "<group>"; };
 		7B92F8261FA1AE19000B838B /* CountDownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownButton.swift; sourceTree = "<group>"; };
 		7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateResponsiveButton.swift; sourceTree = "<group>"; };
-		7B955339224380B200CE95E6 /* PinValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinValidationViewController.swift; sourceTree = "<group>"; };
-		7B95533D2243860B00CE95E6 /* PinValidationPresentationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinValidationPresentationManager.swift; sourceTree = "<group>"; };
-		7B95533E2243860C00CE95E6 /* PinValidationPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinValidationPresentationController.swift; sourceTree = "<group>"; };
+		7B955339224380B200CE95E6 /* PINValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINValidationViewController.swift; sourceTree = "<group>"; };
+		7B95533D2243860B00CE95E6 /* PINValidationPresentationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PINValidationPresentationManager.swift; sourceTree = "<group>"; };
+		7B95533E2243860C00CE95E6 /* PINValidationPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PINValidationPresentationController.swift; sourceTree = "<group>"; };
 		7B95534222438ECD00CE95E6 /* TopRoundedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopRoundedView.swift; sourceTree = "<group>"; };
 		7B95860E2369599800F1F6E1 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		7B9650AD248794FD00DE86B9 /* MinimizedCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedCallViewController.swift; sourceTree = "<group>"; };
@@ -2423,7 +2423,7 @@
 		7BB2831B22D88F07000731E8 /* GalleryTransitionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryTransitionView.swift; sourceTree = "<group>"; };
 		7BB3855721E770BE0070FF8F /* ProvisionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisionMessage.swift; sourceTree = "<group>"; };
 		7BB5250224160F3D0060DAE1 /* LocationPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPreviewViewController.swift; sourceTree = "<group>"; };
-		7BB6111922BA4179000E758C /* PinValidationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PinValidationView.xib; sourceTree = "<group>"; };
+		7BB6111922BA4179000E758C /* PINValidationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PINValidationView.xib; sourceTree = "<group>"; };
 		7BB6FD242011AD3400E84C5C /* CardMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardMessageViewModel.swift; sourceTree = "<group>"; };
 		7BB78723245132570057B4ED /* SettingsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsHeaderView.swift; sourceTree = "<group>"; };
 		7BB78725245133A40057B4ED /* SettingsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsHeaderFooterView.swift; sourceTree = "<group>"; };
@@ -4629,8 +4629,8 @@
 		7B95533B2243856800CE95E6 /* Pin Validation Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				7B95533E2243860C00CE95E6 /* PinValidationPresentationController.swift */,
-				7B95533D2243860B00CE95E6 /* PinValidationPresentationManager.swift */,
+				7B95533E2243860C00CE95E6 /* PINValidationPresentationController.swift */,
+				7B95533D2243860B00CE95E6 /* PINValidationPresentationManager.swift */,
 			);
 			path = "Pin Validation Presentation";
 			sourceTree = "<group>";
@@ -4674,8 +4674,8 @@
 				7B54F94F22B22E2900908A9D /* FullscreenPINValidationView.xib */,
 				7BF4047C2048FA0E004C54E4 /* FullscreenPINValidationViewController.swift */,
 				9462A6CF2E27920B001E4C3E /* ErrorReportingPINValidationViewController.swift */,
-				7BB6111922BA4179000E758C /* PinValidationView.xib */,
-				7B955339224380B200CE95E6 /* PinValidationViewController.swift */,
+				7BB6111922BA4179000E758C /* PINValidationView.xib */,
+				7B955339224380B200CE95E6 /* PINValidationViewController.swift */,
 				7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */,
 				7B4ADA96243C633B00F04CA6 /* ResizablePopupViewController.swift */,
 				7B95860E2369599800F1F6E1 /* ProfileViewController.swift */,
@@ -7583,7 +7583,7 @@
 				94A0C8C22C77259E00BDE672 /* AddressReceiversCell.xib in Resources */,
 				7BE5BFAD2338A62900516A00 /* SearchConversationView.xib in Resources */,
 				94D9DD622F59D26D00B3B990 /* PerpetualPositionHeaderCell.xib in Resources */,
-				7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */,
+				7BB6111A22BA4179000E758C /* PINValidationView.xib in Resources */,
 				9417EF352DC3549C005079CB /* MembershipBenefitCell.xib in Resources */,
 				941979552BA47782002BA19F /* Web3MessageCell.xib in Resources */,
 				940EADA22EAA12AC009B3DAA /* referral@2x.json in Resources */,
@@ -8554,7 +8554,7 @@
 				E05D991B2390C632009F9E8D /* FavoriteAppCell.swift in Sources */,
 				94DF6CDE2E4B8C5700808028 /* SequentialWalletPathGenerator.swift in Sources */,
 				7B894AF3205BF8660065A1B8 /* AddressBookViewController.swift in Sources */,
-				7B95533A224380B200CE95E6 /* PinValidationViewController.swift in Sources */,
+				7B95533A224380B200CE95E6 /* PINValidationViewController.swift in Sources */,
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				940FC4B12F500A8B000C4260 /* PerpetualMarketSelectorViewController.swift in Sources */,
 				7C8CC5A4280D347A00F7CBDF /* PreviewWallpaperViewController.swift in Sources */,
@@ -8691,7 +8691,7 @@
 				948AB7722DE5DC40005E76A0 /* MembershipOrderStatusCell.swift in Sources */,
 				E090B9EB23B0BF940012C7E9 /* MessageDAO+Gallery.swift in Sources */,
 				946CB9DC2E9F73320099FFCB /* UserNavigationTitleView.swift in Sources */,
-				7B9553402243860C00CE95E6 /* PinValidationPresentationManager.swift in Sources */,
+				7B9553402243860C00CE95E6 /* PINValidationPresentationManager.swift in Sources */,
 				940B30492A16050D00B45D26 /* NetworkSpeedInspector.swift in Sources */,
 				94046B93272DC28B007C1D4A /* GroupCallMembersManager.swift in Sources */,
 				942E2B1B2FD3FF4500E5E6FB /* InscriptionIconView.swift in Sources */,
@@ -9007,7 +9007,7 @@
 				94038B342E1F88E900A7782D /* Wallet+UI.swift in Sources */,
 				94838A442C02ADFB005B6A27 /* Solana.swift in Sources */,
 				E0C7674B23CC8F54003F9215 /* TrailingInfoBackgroundView.swift in Sources */,
-				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,
+				7B9553412243860C00CE95E6 /* PINValidationPresentationController.swift in Sources */,
 				940BAE222629741C00FFF753 /* MixinAuthorizationsContentViewController.swift in Sources */,
 				94F7BCE22D2B9ED700BA27D9 /* TradeInputAccessoryView.swift in Sources */,
 				942816A4301B8EB3009C8CA1 /* WatchlistRecommendationFooterView.swift in Sources */,

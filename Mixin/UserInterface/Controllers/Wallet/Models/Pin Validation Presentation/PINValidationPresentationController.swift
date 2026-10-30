@@ -1,9 +1,9 @@
 import UIKit
 
-class PinValidationPresentationController: UIPresentationController {
+final class PINValidationPresentationController: UIPresentationController {
     
-    lazy var blurEffect = UIBlurEffect(style: .dark)
-    lazy var backgroundView = UIVisualEffectView(effect: nil)
+    private let blurEffect = UIBlurEffect(style: .dark)
+    private let backgroundView = UIVisualEffectView(effect: nil)
     
     override func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
@@ -20,12 +20,9 @@ class PinValidationPresentationController: UIPresentationController {
             backgroundView.effect = blurEffect
             return
         }
-        presentingViewController.beginAppearanceTransition(false, animated: true)
         coordinator.animate(alongsideTransition: { (_) in
             self.backgroundView.effect = self.blurEffect
-        }) { (_) in
-            self.presentingViewController.endAppearanceTransition()
-        }
+        })
     }
     
     override func dismissalTransitionWillBegin() {
@@ -33,12 +30,9 @@ class PinValidationPresentationController: UIPresentationController {
             backgroundView.effect = nil
             return
         }
-        presentingViewController.beginAppearanceTransition(true, animated: true)
         coordinator.animate(alongsideTransition: { (_) in
             self.backgroundView.effect = nil
-        }) { (_) in
-            self.presentingViewController.endAppearanceTransition()
-        }
+        })
     }
     
 }

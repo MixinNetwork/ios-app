@@ -232,7 +232,7 @@ final class HomeTabBarController: UITabBarController {
             shouldValidatePIN = true
         }
         if shouldValidatePIN {
-            let validator = PinValidationViewController(
+            let validator = PINValidationViewController(
                 onSuccess: { [weak self] _ in
                     self?.selectWallet()
                 },

@@ -77,7 +77,7 @@ final class AuthenticationViewController: UIViewController {
     init(intent: AuthenticationIntent) {
         self.intent = intent
         self.presentationManager = if intent.options.contains(.blurBackground) {
-            PinValidationPresentationManager()
+            PINValidationPresentationManager()
         } else {
             PopupPresentationManager()
         }

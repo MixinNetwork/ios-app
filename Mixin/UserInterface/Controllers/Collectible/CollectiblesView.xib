@@ -33,8 +33,8 @@
                                 <action selector="segmentValueChanged:" destination="-1" eventType="valueChanged" id="Zr9-W0-caY"/>
                             </connections>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yql-9Q-cdY" customClass="OutlineButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="279" y="12" width="94" height="38"/>
+                        <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yql-9Q-cdY" customClass="ConfigurationBasedOutlineButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="279.66666666666669" y="12" width="93.333333333333314" height="38"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="38" id="JpZ-pC-SqF"/>
                             </constraints>
@@ -43,9 +43,11 @@
                             <state key="normal" title="Recent" image="ic_arrow_down">
                                 <color key="titleColor" name="text"/>
                             </state>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="recent"/>
-                            </userDefinedRuntimeAttributes>
+                            <buttonConfiguration key="configuration" style="plain" image="ic_arrow_down" imagePlacement="trailing" title="Recent" cornerStyle="capsule">
+                                <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                <directionalEdgeInsets key="contentInsets" top="0.0" leading="14" bottom="0.0" trailing="4"/>
+                                <color key="baseForegroundColor" name="text"/>
+                            </buttonConfiguration>
                         </button>
                     </subviews>
                     <color key="backgroundColor" name="background_secondary"/>

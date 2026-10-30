@@ -6,7 +6,7 @@ final class CollectiblesViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var collectionViewLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var contentSegmentedControl: OutlineSegmentedControl!
-    @IBOutlet weak var sortButton: OutlineButton!
+    @IBOutlet weak var sortButton: ConfigurationBasedOutlineButton!
     
     private var order = AppGroupUserDefaults.User.collectibleOrdering
     private var content = AppGroupUserDefaults.User.collectibleContent
@@ -30,7 +30,6 @@ final class CollectiblesViewController: UIViewController {
             target: self,
             action: #selector(search(_:)),
         )
-        sortButton.semanticContentAttribute = .forceRightToLeft
         contentSegmentedControl.items = [
             R.image.collectible_tab_item()!,
             R.image.collectible_tab_collection()!,
@@ -42,8 +41,6 @@ final class CollectiblesViewController: UIViewController {
             contentSegmentedControl.selectItem(at: 1)
         }
         updateOrderingSelection()
-        sortButton.layer.cornerRadius = 19
-        sortButton.layer.masksToBounds = true
         sortButton.menu = UIMenu(children: [
             UIAction(
                 title: R.string.localizable.recent(),
@@ -193,16 +190,19 @@ final class CollectiblesViewController: UIViewController {
             .outline_primary()!
             .resolvedColor(with: traitCollection)
             .cgColor
-        sortButton.updateColors()
     }
     
     private func updateOrderingSelection() {
-        switch order {
+        let title = switch order {
         case .recent:
-            sortButton.setTitle(R.string.localizable.recent(), for: .normal)
+            R.string.localizable.recent()
         case .alphabetical:
-            sortButton.setTitle(R.string.localizable.alphabetical(), for: .normal)
+            R.string.localizable.alphabetical()
         }
+        sortButton.configuration?.attributedTitle = AttributedString(
+            string: title,
+            scalingByFontSize: 14,
+        )
     }
     
 }

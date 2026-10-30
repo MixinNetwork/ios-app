@@ -12,12 +12,14 @@ final class WalletCollectibleCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        titleLabel.font = .scaledFont(ofSize: 16, weight: .medium)
-        titleLabel.textColor = R.color.text()
+        titleLabel.font = .preferredFont(forTextStyle: .callout)
         titleLabel.adjustsFontForContentSizeCategory = true
-        subtitleLabel.font = .preferredFont(forTextStyle: .caption1)
+        titleLabel.textColor = R.color.text()
+        subtitleLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
         subtitleLabel.textColor = R.color.text_tertiary()
-        subtitleLabel.adjustsFontForContentSizeCategory = true
         
         let labels = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
         labels.axis = .vertical
@@ -28,13 +30,11 @@ final class WalletCollectibleCell: UICollectionViewCell {
             make.leading.equalToSuperview().offset(16)
             make.centerY.equalToSuperview()
             make.width.height.equalTo(42)
-            make.top.greaterThanOrEqualToSuperview().offset(4)
-            make.bottom.lessThanOrEqualToSuperview().offset(-4)
         }
         labels.snp.makeConstraints { make in
             make.leading.equalTo(iconView.snp.trailing).offset(14)
             make.trailing.equalToSuperview().offset(-16)
-            make.top.bottom.equalToSuperview().inset(6)
+            make.top.bottom.equalToSuperview().inset(4)
         }
         isAccessibilityElement = true
         accessibilityTraits = .button

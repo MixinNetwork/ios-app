@@ -100,8 +100,12 @@ final class ExploreMoreViewController: UIViewController, AssetChangeAccountRecov
                     heightDimension: heightDimension,
                 )
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let groupSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(77),
+                )
                 let group = NSCollectionLayoutGroup.horizontal(
-                    layoutSize: itemSize,
+                    layoutSize: groupSize,
                     subitem: item,
                     count: 2,
                 )

@@ -54,7 +54,7 @@
                 <constraints>
                     <constraint firstItem="MOr-ic-on1" firstAttribute="leading" secondItem="MOr-co-nt1" secondAttribute="leading" constant="10" id="MOr-il-001"/>
                     <constraint firstItem="MOr-ic-on1" firstAttribute="top" secondItem="MOr-co-nt1" secondAttribute="top" constant="12" id="MOr-it-001"/>
-                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="MOr-st-ak1" secondAttribute="bottom" priority="999" constant="16" id="MOr-sb-001"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="MOr-st-ak1" secondAttribute="bottom" constant="16" id="MOr-sb-001"/>
                     <constraint firstItem="MOr-st-ak1" firstAttribute="leading" secondItem="MOr-ic-on1" secondAttribute="trailing" constant="10" id="MOr-sl-001"/>
                     <constraint firstAttribute="trailing" secondItem="MOr-st-ak1" secondAttribute="trailing" constant="10" id="MOr-sr-001"/>
                     <constraint firstItem="MOr-st-ak1" firstAttribute="top" secondItem="MOr-co-nt1" secondAttribute="top" constant="12" id="MOr-st-001"/>

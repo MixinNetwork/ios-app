@@ -417,13 +417,6 @@ final class PrivacyWalletViewController: WalletViewController {
                     toSection: .tokens
                 )
             }
-            if !displayCollectibles.isEmpty {
-                snapshot.appendSections([.collectibles])
-                snapshot.appendItems(
-                    displayCollectibles.values.map({ Item.collectible(outputID: $0.output.id) }),
-                    toSection: .collectibles
-                )
-            }
             if hasTransaction {
                 snapshot.appendSections([.transactions])
                 snapshot.appendItems(
@@ -436,6 +429,13 @@ final class PrivacyWalletViewController: WalletViewController {
                 snapshot.appendItems(
                     perpsTopMovers.values.map({ Item.perpsTopMover(marketID: $0.market.marketID) }),
                     toSection: .perpsTopMovers
+                )
+            }
+            if !displayCollectibles.isEmpty {
+                snapshot.appendSections([.collectibles])
+                snapshot.appendItems(
+                    displayCollectibles.values.map({ Item.collectible(outputID: $0.output.id) }),
+                    toSection: .collectibles
                 )
             }
             

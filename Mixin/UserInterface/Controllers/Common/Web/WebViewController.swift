@@ -54,7 +54,28 @@ class WebViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
+        guard let navigationController else {
+            return
+        }
+        let navigationBar = navigationController.navigationBar
+        if animated,
+           isMovingToParent,
+           !navigationController.isNavigationBarHidden,
+           let coordinator = transitionCoordinator,
+           let fromView = coordinator.viewController(forKey: .from)?.view,
+           let snapshot = navigationBar.snapshotView(afterScreenUpdates: false)
+        {
+            // Hiding the bar with animation slides it up during the popup transition.
+            // Hide it immediately and leave a stationary snapshot on the covered view instead.
+            snapshot.frame = navigationBar.convert(navigationBar.bounds, to: fromView)
+            fromView.addSubview(snapshot)
+            navigationController.setNavigationBarHidden(true, animated: false)
+            coordinator.animate(alongsideTransition: nil) { _ in
+                snapshot.removeFromSuperview()
+            }
+        } else {
+            navigationController.setNavigationBarHidden(true, animated: animated)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

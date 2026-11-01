@@ -54,10 +54,8 @@ class WebViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if #available(iOS 26, *) {
-            navigationController?.setNavigationBarHidden(true, animated: false)
-        } else {
-            navigationController?.setNavigationBarHidden(true, animated: animated)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+            self?.navigationController?.setNavigationBarHidden(true, animated: animated)
         }
     }
     

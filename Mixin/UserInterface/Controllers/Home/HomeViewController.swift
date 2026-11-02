@@ -39,7 +39,7 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Mixin"
+        title = R.string.localizable.chats()
         navigationItem.titleView = TransparentView()
         connectingView.hidesWhenStopped = true
         connectingView.tintColor = UIColor(displayP3RgbValue: 0xBCBEC3, alpha: 1)

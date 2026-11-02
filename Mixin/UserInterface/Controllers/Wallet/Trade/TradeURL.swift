@@ -9,6 +9,7 @@ struct TradeURL {
         let leverage: Int?
         let margin: Decimal?
         let id: String?
+        let orderID: String?
     }
     
     enum TradingType {
@@ -65,6 +66,7 @@ struct TradeURL {
                         leverage: leverage,
                         margin: margin,
                         id: items["leader_position"],
+                        orderID: items["order_id"],
                     )
                     self.type = .perpsOpen(position)
                 } else if action == "add_margin" {

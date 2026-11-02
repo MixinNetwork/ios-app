@@ -410,8 +410,9 @@ extension MixinWebViewController: WebViewMessageHandler.Delegate {
     }
     
     func webViewMessageHander(_ handler: WebViewMessageHandler, allowsSignBotWith appID: String) -> Bool {
-        if let environment = context.appEnvironment {
-            environment.isAppVerified && environment.app.appId == appID
+        if let environment = context.appEnvironment, environment.app.appId == appID {
+            environment.isAppVerified
+            || DiagnoseSwitches.botSigningWhitelist.contains(myUserId)
         } else {
             false
         }

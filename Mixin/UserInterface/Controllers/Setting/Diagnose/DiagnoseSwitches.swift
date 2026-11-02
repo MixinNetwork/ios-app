@@ -10,4 +10,6 @@ enum DiagnoseSwitches {
 #endif
     }()
     
+    static var botSigningWhitelist: Set<String> = []
+    
 }

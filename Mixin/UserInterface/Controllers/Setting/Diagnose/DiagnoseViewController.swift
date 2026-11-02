@@ -39,6 +39,10 @@ final class DiagnoseViewController: SettingsTableViewController {
         ]),
         SettingsSection(rows: [
             SettingsRow(title: "Inspect WebView", accessory: .switch(isOn: DiagnoseSwitches.isWebViewInspectable)),
+            SettingsRow(
+                title: "Bot Signing Slacken",
+                accessory: .switch(isOn: !DiagnoseSwitches.botSigningWhitelist.isEmpty)
+            ),
         ]),
         SettingsSection(rows: [
             SettingsRow(title: "Reset Perps Orders"),
@@ -76,6 +80,12 @@ final class DiagnoseViewController: SettingsTableViewController {
         )
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(signingForTestBotsDidSwitch(_:)),
+            name: SettingsRow.accessoryDidChangeNotification,
+            object: dataSource.sections[11].rows[1]
+        )
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(reloadPushNotificationStatus(_:)),
             name: PushNotificationDiagnostic.statusDidUpdateNotification,
             object: nil
@@ -100,6 +110,27 @@ final class DiagnoseViewController: SettingsTableViewController {
             return
         }
         DiagnoseSwitches.isWebViewInspectable = isOn
+    }
+    
+    @objc private func signingForTestBotsDidSwitch(_ notification: Notification) {
+        guard let row = notification.object as? SettingsRow else {
+            return
+        }
+        guard case let .switch(isOn, _) = row.accessory else {
+            return
+        }
+        DiagnoseSwitches.botSigningWhitelist = if isOn {
+            [
+                "39312e2f-5e4a-4eae-94cd-355f38341be3",
+                "04379bf8-87fb-41c6-a247-ee19bf9cf4a3",
+                "3bdefc26-28fc-4e7c-8848-67272ff95879",
+                "b26b9a74-40dd-4e8d-8e41-94d9fce0b5c0",
+                "7766b24c-1a03-4c3a-83a3-b4358266875d",
+                "47694216-9714-495b-9992-034c8ce91a50",
+            ]
+        } else {
+            []
+        }
     }
     
     @objc private func reloadPushNotificationStatus(_ notification: Notification) {
@@ -158,8 +189,8 @@ extension DiagnoseViewController: UITableViewDelegate {
             AppGroupUserDefaults.User.verifyPhoneTipDismissalDate = nil
             AppGroupUserDefaults.Wallet.closedBannerIDs = []
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
-        case (11, 0):
-            // Inspect WebView
+        case (11, _):
+            // Inspect WebView or Sign Bot
             break
         case (12, 0):
             PerpsOrderDAO.shared.deleteAll()

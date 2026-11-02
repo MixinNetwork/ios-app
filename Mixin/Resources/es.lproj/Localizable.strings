@@ -1280,6 +1280,7 @@
 "perps_position_tip" = "Aumentar la posición amplifica las ganancias y los riesgos";
 "perps_product" = "Mercado";
 "perps_realized_pnl" = "PnL realizado";
+"perps_realized_pnl_tip" = "Las posiciones abiertas no se incluyen en las estadísticas.";
 "perps_receive" = "Recibir";
 "perps_reduce_invalid_quantity" = "Introduce un importe mayor que cero que no supere el valor de la posición actual.";
 "perps_reduce_margin" = "Reducir margen";

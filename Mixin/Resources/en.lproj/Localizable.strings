@@ -1280,6 +1280,7 @@
 "perps_position_tip" = "Increase position for more gains and losses";
 "perps_product" = "Market";
 "perps_realized_pnl" = "Realized PnL";
+"perps_realized_pnl_tip" = "Open positions are not included in the statistics.";
 "perps_receive" = "Receive";
 "perps_reduce_invalid_quantity" = "Enter a positive amount within the current position size.";
 "perps_reduce_margin" = "Reduce Margin";

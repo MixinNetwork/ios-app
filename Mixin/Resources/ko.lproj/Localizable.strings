@@ -1280,6 +1280,7 @@
 "perps_position_tip" = "포지션을 늘리면 수익과 위험이 커집니다";
 "perps_product" = "시장";
 "perps_realized_pnl" = "실현 손익";
+"perps_realized_pnl_tip" = "미청산 포지션은 통계에 포함되지 않습니다.";
 "perps_receive" = "수신";
 "perps_reduce_invalid_quantity" = "0보다 크고 현재 포지션 규모를 초과하지 않는 금액을 입력하세요.";
 "perps_reduce_margin" = "증거금 감소";

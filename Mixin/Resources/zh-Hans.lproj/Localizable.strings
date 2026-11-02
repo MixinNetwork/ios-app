@@ -1280,6 +1280,7 @@
 "perps_position_tip" = "加仓会放大收益和风险";
 "perps_product" = "合约";
 "perps_realized_pnl" = "净盈亏";
+"perps_realized_pnl_tip" = "未平仓的合约不计入统计";
 "perps_receive" = "收到";
 "perps_reduce_invalid_quantity" = "请输入大于零且不超过当前仓位的金额。";
 "perps_reduce_margin" = "减少保证金";

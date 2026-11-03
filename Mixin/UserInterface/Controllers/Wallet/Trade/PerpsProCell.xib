@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="perps_pro" id="2Be-rs-zDY" customClass="PerpsProCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="343" height="352"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="e3K-MU-Or4">
+                <rect key="frame" x="0.0" y="0.0" width="343" height="352"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="perps_pro" translatesAutoresizingMaskIntoConstraints="NO" id="ANf-h7-MLg">
+                        <rect key="frame" x="38" y="30.333333333333329" width="267" height="154"/>
+                    </imageView>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="2qX-rA-jtt">
+                        <rect key="frame" x="28" y="204.33333333333334" width="287" height="68.666666666666657"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="j18-SP-WLY">
+                                <rect key="frame" x="88.666666666666686" y="0.0" width="110" height="23"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mixin Perps" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vcc-G9-rea">
+                                        <rect key="frame" x="0.0" y="2" width="86.666666666666671" height="19.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                        <color key="textColor" name="text"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pro" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Je-NV-2ow" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="90.666666666666671" y="4.3333333333333153" width="19.333333333333329" height="14.333333333333336"/>
+                                        <color key="backgroundColor" red="0.90980392156862744" green="0.95686274509803915" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                        <color key="textColor" name="theme"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Advanced charts, cross margin, and limitorders." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lWv-bP-TTx">
+                                <rect key="frame" x="26" y="35" width="235" height="33.666666666666657"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text_tertiary"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qI2-BS-goJ">
+                        <rect key="frame" x="111" y="293" width="121.33333333333331" height="29"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="filled" title="Trade Now" cornerStyle="capsule">
+                            <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                            <directionalEdgeInsets key="contentInsets" top="6" leading="26" bottom="6" trailing="26"/>
+                            <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="baseBackgroundColor" name="theme"/>
+                        </buttonConfiguration>
+                        <connections>
+                            <action selector="enterPerpsPro:" destination="2Be-rs-zDY" eventType="touchUpInside" id="ENI-LN-DuA"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <constraints>
+                    <constraint firstItem="2qX-rA-jtt" firstAttribute="leading" secondItem="e3K-MU-Or4" secondAttribute="leading" constant="28" id="C3m-DB-fka"/>
+                    <constraint firstItem="qI2-BS-goJ" firstAttribute="centerX" secondItem="e3K-MU-Or4" secondAttribute="centerX" id="I0j-Ep-aNU"/>
+                    <constraint firstAttribute="trailing" secondItem="2qX-rA-jtt" secondAttribute="trailing" constant="28" id="Mpn-NS-FW5"/>
+                    <constraint firstItem="ANf-h7-MLg" firstAttribute="centerX" secondItem="e3K-MU-Or4" secondAttribute="centerX" id="SIX-lo-93V"/>
+                    <constraint firstItem="ANf-h7-MLg" firstAttribute="width" secondItem="e3K-MU-Or4" secondAttribute="width" multiplier="267:343" id="TYX-bi-Mm9"/>
+                    <constraint firstItem="2qX-rA-jtt" firstAttribute="top" secondItem="ANf-h7-MLg" secondAttribute="bottom" constant="20" id="a9c-El-UTl"/>
+                    <constraint firstAttribute="bottom" secondItem="qI2-BS-goJ" secondAttribute="bottom" constant="30" id="dKe-66-TaU"/>
+                    <constraint firstItem="qI2-BS-goJ" firstAttribute="top" secondItem="2qX-rA-jtt" secondAttribute="bottom" constant="20" id="qZk-zD-g3Q"/>
+                    <constraint firstItem="ANf-h7-MLg" firstAttribute="centerY" secondItem="e3K-MU-Or4" secondAttribute="centerY" multiplier="0.61" id="tlg-sx-ftP"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <connections>
+                <outlet property="descriptionLabel" destination="lWv-bP-TTx" id="TT0-dU-6yo"/>
+                <outlet property="enterButton" destination="qI2-BS-goJ" id="b3n-Mu-J9p"/>
+                <outlet property="tagLabel" destination="0Je-NV-2ow" id="es3-gP-Asp"/>
+                <outlet property="titleLabel" destination="Vcc-G9-rea" id="0OC-oG-urq"/>
+            </connections>
+            <point key="canvasLocation" x="28.244274809160306" y="153.52112676056339"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="perps_pro" width="267" height="154"/>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

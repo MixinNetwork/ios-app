@@ -1298,6 +1298,8 @@
 		94812DDA26E082C400213F79 /* mixin_condensed.otf in Resources */ = {isa = PBXBuildFile; fileRef = 94812DD926E082C400213F79 /* mixin_condensed.otf */; };
 		94818F472D0C86C100F852CC /* CustomerServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94818F462D0C86C100F852CC /* CustomerServiceViewController.swift */; };
 		9481C03C2A49A9AA0009DAF8 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 9481C03B2A49A9AA0009DAF8 /* Starscream */; };
+		9482A0EF3099CC1C00500DFF /* TradeOrderCategoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9482A0EE3099CC1C00500DFF /* TradeOrderCategoryCell.xib */; };
+		9482A0F03099CC1C00500DFF /* TradeOrderCategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9482A0ED3099CC1C00500DFF /* TradeOrderCategoryCell.swift */; };
 		9482FE782F8E5424006A463A /* SignedEVMGaslessTransactionProposal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9482FE772F8E541F006A463A /* SignedEVMGaslessTransactionProposal.swift */; };
 		9482FE832F8E54A7006A463A /* GaslessTransactionEVMPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9482FE7F2F8E5498006A463A /* GaslessTransactionEVMPayload.swift */; };
 		9482FEA72F8F69C5006A463A /* Web3Transaction+Simulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9482FEA62F8F69C1006A463A /* Web3Transaction+Simulation.swift */; };
@@ -1794,6 +1796,9 @@
 		94FB8E072D1A92CF002DCA20 /* TokenSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FB8E052D1A92CF002DCA20 /* TokenSelectorView.xib */; };
 		94FB8E0D2D1ACB32002DCA20 /* TradeTokenCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FB8E0C2D1ACB32002DCA20 /* TradeTokenCell.xib */; };
 		94FB8E0E2D1ACB32002DCA20 /* TradeTokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB8E0B2D1ACB32002DCA20 /* TradeTokenCell.swift */; };
+		94FBD6C630999A87007CFDB8 /* TradeTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FBD6C530999A83007CFDB8 /* TradeTitleView.swift */; };
+		94FBD6F53099A879007CFDB8 /* TradeMoreMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FBD6F43099A879007CFDB8 /* TradeMoreMenuViewController.swift */; };
+		94FBD7093099B0CA007CFDB8 /* PerpsProCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FBD7083099B0CA007CFDB8 /* PerpsProCell.xib */; };
 		94FCB5FF264673C400CCC8FD /* TranscriptPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */; };
 		94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */; };
 		94FCC9092FD67A4D00AA6AA7 /* TokensViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCC9082FD67A4D00AA6AA7 /* TokensViewController.swift */; };
@@ -1835,6 +1840,7 @@
 		C0DE00101500000000000002 /* ReducePerpsPositionMarginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00101500000000000001 /* ReducePerpsPositionMarginViewController.swift */; };
 		C0DE00101500000000000004 /* ClosePerpsPositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00101500000000000003 /* ClosePerpsPositionViewController.swift */; };
 		C0DE00101600000000000002 /* PerpsPositionValueTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE00101600000000000001 /* PerpsPositionValueTextField.swift */; };
+		C0DE11030000000000000002 /* PerpsProCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE11030000000000000001 /* PerpsProCell.swift */; };
 		C764FAFA5AF64A85A5824F01 /* PopupAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C764FAFA5AF64A85A5824F02 /* PopupAlertViewController.swift */; };
 		DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */; };
 		DF03C88D1FF4D9A100C1ED6B /* RegenerateGroupIconJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03C88C1FF4D9A100C1ED6B /* RegenerateGroupIconJob.swift */; };
@@ -3374,6 +3380,8 @@
 		9480FB412BC6D623001B5D57 /* Web3SignOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SignOperation.swift; sourceTree = "<group>"; };
 		94812DD926E082C400213F79 /* mixin_condensed.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mixin_condensed.otf; sourceTree = "<group>"; };
 		94818F462D0C86C100F852CC /* CustomerServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerServiceViewController.swift; sourceTree = "<group>"; };
+		9482A0ED3099CC1C00500DFF /* TradeOrderCategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOrderCategoryCell.swift; sourceTree = "<group>"; };
+		9482A0EE3099CC1C00500DFF /* TradeOrderCategoryCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TradeOrderCategoryCell.xib; sourceTree = "<group>"; };
 		9482FE772F8E541F006A463A /* SignedEVMGaslessTransactionProposal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignedEVMGaslessTransactionProposal.swift; sourceTree = "<group>"; };
 		9482FE7F2F8E5498006A463A /* GaslessTransactionEVMPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaslessTransactionEVMPayload.swift; sourceTree = "<group>"; };
 		9482FEA62F8F69C1006A463A /* Web3Transaction+Simulation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Transaction+Simulation.swift"; sourceTree = "<group>"; };
@@ -3866,6 +3874,9 @@
 		94FB8E052D1A92CF002DCA20 /* TokenSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenSelectorView.xib; sourceTree = "<group>"; };
 		94FB8E0B2D1ACB32002DCA20 /* TradeTokenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeTokenCell.swift; sourceTree = "<group>"; };
 		94FB8E0C2D1ACB32002DCA20 /* TradeTokenCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TradeTokenCell.xib; sourceTree = "<group>"; };
+		94FBD6C530999A83007CFDB8 /* TradeTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeTitleView.swift; sourceTree = "<group>"; };
+		94FBD6F43099A879007CFDB8 /* TradeMoreMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeMoreMenuViewController.swift; sourceTree = "<group>"; };
+		94FBD7083099B0CA007CFDB8 /* PerpsProCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpsProCell.xib; sourceTree = "<group>"; };
 		94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptPreviewViewController.swift; sourceTree = "<group>"; };
 		94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAttachmentUploadJob.swift; sourceTree = "<group>"; };
 		94FCC9082FD67A4D00AA6AA7 /* TokensViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokensViewController.swift; sourceTree = "<group>"; };
@@ -3898,6 +3909,7 @@
 		C0DE00101500000000000001 /* ReducePerpsPositionMarginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducePerpsPositionMarginViewController.swift; sourceTree = "<group>"; };
 		C0DE00101500000000000003 /* ClosePerpsPositionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosePerpsPositionViewController.swift; sourceTree = "<group>"; };
 		C0DE00101600000000000001 /* PerpsPositionValueTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsPositionValueTextField.swift; sourceTree = "<group>"; };
+		C0DE11030000000000000001 /* PerpsProCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsProCell.swift; sourceTree = "<group>"; };
 		C764FAFA5AF64A85A5824F02 /* PopupAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupAlertViewController.swift; sourceTree = "<group>"; };
 		C7FEF05A2A554FAC90DA5985 /* StickersEditingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StickersEditingCell.xib; sourceTree = "<group>"; };
 		DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInviteCell.swift; sourceTree = "<group>"; };
@@ -5267,12 +5279,18 @@
 				940FC4E72F502B0B000C4260 /* Perpetual */,
 				941C764A2F5EFB0A005B70A9 /* TradeURL.swift */,
 				94D4EA4F2EE015CC006BC2DC /* Wallet+TradingWalletID.swift */,
+				94FBD6C530999A83007CFDB8 /* TradeTitleView.swift */,
 				94FB2E3F2F509F9E00F85AB4 /* TradeSectionBackgroundView.swift */,
 				940A3D232EB7BEF0001A458F /* TradeSectionHeaderView.xib */,
 				940A3D222EB7BEF0001A458F /* TradeSectionHeaderView.swift */,
 				94E206B62F4DF86000D65D98 /* TradeViewAllFooterView.swift */,
 				94EF9DC82F3E17CE007CCCEC /* TradeView.xib */,
 				94EF9DC72F3E17CE007CCCEC /* TradeViewController.swift */,
+				94FBD6F43099A879007CFDB8 /* TradeMoreMenuViewController.swift */,
+				9482A0ED3099CC1C00500DFF /* TradeOrderCategoryCell.swift */,
+				9482A0EE3099CC1C00500DFF /* TradeOrderCategoryCell.xib */,
+				94FBD7083099B0CA007CFDB8 /* PerpsProCell.xib */,
+				C0DE11030000000000000001 /* PerpsProCell.swift */,
 			);
 			path = Trade;
 			sourceTree = "<group>";
@@ -7442,6 +7460,7 @@
 				945A72782E59BC48006A11E9 /* TIPQuizView.xib in Resources */,
 				274264A920011C79000A8808 /* mixin.caf in Resources */,
 				94317D082AFBE57200FDC9C9 /* MemoCell.xib in Resources */,
+				9482A0EF3099CC1C00500DFF /* TradeOrderCategoryCell.xib in Resources */,
 				9424F62C2FD1AD3000D43106 /* AdvertisementBannerCell.xib in Resources */,
 				94095BB725BE8BC100F44832 /* TextPreviewView.xib in Resources */,
 				940A3D142EB7BE52001A458F /* NoOpenTradeOrderCell.xib in Resources */,
@@ -7833,6 +7852,7 @@
 				940FC4BD2F500BEC000C4260 /* PerpetualMarketCell.xib in Resources */,
 				94A1618D2FD418E80022D855 /* WalletSupportCell.xib in Resources */,
 				94FB8E0D2D1ACB32002DCA20 /* TradeTokenCell.xib in Resources */,
+				94FBD7093099B0CA007CFDB8 /* PerpsProCell.xib in Resources */,
 				948AB7902DE5EF27005E76A0 /* MembershipOrderInfoCell.xib in Resources */,
 				9491E6C02E32340600A869F1 /* OverlayTipView.xib in Resources */,
 				94FB2EEA2F51672200F85AB4 /* LeverageMultiplierInputView.xib in Resources */,
@@ -7971,6 +7991,7 @@
 				7B9D825822F1BFEA0099381E /* NetworkOperationIconSet.swift in Sources */,
 				94ED08B02B5FAFC900493312 /* AppUserSearchResult.swift in Sources */,
 				DF1F278621A59A60009A74C6 /* BackupJobQueue.swift in Sources */,
+				94FBD6C630999A87007CFDB8 /* TradeTitleView.swift in Sources */,
 				9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */,
 				7C07A17D29D8FDBC00D4835C /* NetworkInterface.swift in Sources */,
 				94F209D52C06C1A300550060 /* SolanaTransferOperation.swift in Sources */,
@@ -8974,6 +8995,7 @@
 				940DC5922B075E03009A15D1 /* SafePaymentURL.swift in Sources */,
 				9495E0802CEF5CCF00124CC7 /* LogoutValidationViewController.swift in Sources */,
 				7B75E6471FE0E20000CD66F1 /* InsetLabel.swift in Sources */,
+				9482A0F03099CC1C00500DFF /* TradeOrderCategoryCell.swift in Sources */,
 				949569A8263B13BF00E043FE /* TranscriptMessageViewModel.swift in Sources */,
 				7BD7534C2182CD7A00BAC172 /* CallMessageViewModel.swift in Sources */,
 				7B2D174F22B11A8600AE3DD8 /* LoginInfoInputViewController.swift in Sources */,
@@ -9277,6 +9299,8 @@
 				94CEEAC4277E06A9001E7A24 /* Date+Holiday.swift in Sources */,
 				9428169A301B8C32009C8CA1 /* WatchlistRecommendationItemCell.swift in Sources */,
 				941C764B2F5EFB10005B70A9 /* TradeURL.swift in Sources */,
+				94FBD6F53099A879007CFDB8 /* TradeMoreMenuViewController.swift in Sources */,
+				C0DE11030000000000000002 /* PerpsProCell.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* AvatarPickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				94073AF330599312004767E3 /* ReduceToPerpsPositionViewController.swift in Sources */,

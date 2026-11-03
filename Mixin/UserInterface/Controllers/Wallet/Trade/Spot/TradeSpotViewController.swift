@@ -65,15 +65,12 @@ class TradeSpotViewController: UIViewController {
         pricingModel.receiveToken
     }
     
-    var orderWalletID: String {
-        fatalError("Must override")
-    }
-    
     // Key is asset id
     private(set) var swappableTokens: OrderedDictionary<String, BalancedSwapToken> = [:]
     private(set) var stockTokens: [BalancedSwapToken] = []
     private(set) var quote: SwapQuote?
     
+    private let wallet: Wallet
     private let tokenSource: RouteTokenSource
     private let maxOpenOrderCount = 10
     private let marketCount = 8
@@ -161,17 +158,24 @@ class TradeSpotViewController: UIViewController {
     
     init(
         mode: Mode,
-        tokenSource: RouteTokenSource,
+        wallet: Wallet,
         sendAssetID: String?,
         sendAmount: Decimal?,
         receiveAssetID: String?,
         focusOnInput: Bool,
     ) {
+        let tokenSource: RouteTokenSource = switch wallet {
+        case .privacy, .safe:
+                .mixin
+        case .common:
+                .web3
+        }
         self.mode = mode
         self.pricingModel = TradePricingModel(
             source: tokenSource,
             sendAmount: sendAmount
         )
+        self.wallet = wallet
         self.tokenSource = tokenSource
         self.arbitrarySendAssetID = sendAssetID
         self.arbitraryReceiveAssetID = receiveAssetID
@@ -379,7 +383,17 @@ class TradeSpotViewController: UIViewController {
             name: UIResponder.keyboardDidShowNotification,
             object: nil
         )
-        startOpenOrderRequester()
+        switch mode {
+        case .simple:
+            break
+        case .advanced:
+            let openOrderRequester = PendingTradeOrderLoader(
+                behavior: .watchOpeningLimitOrders(walletID: wallet.tradingWalletID)
+            )
+            openOrderRequester.delegate = self as? PendingTradeOrderLoader.Delegate
+            self.openOrderRequester = openOrderRequester
+            openOrderRequester.start(after: 0)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -392,7 +406,6 @@ class TradeSpotViewController: UIViewController {
         switch mode {
         case .simple:
             quoteRequester?.start(delay: 0)
-            openOrderRequester?.start(after: 0)
         case .advanced:
             openOrderRequester?.start(after: 0)
         }
@@ -450,6 +463,15 @@ class TradeSpotViewController: UIViewController {
     
     @objc private func switchToAdvancedTrade(_ sender: Any) {
         tradeViewController?.switchTo(trading: .advancedSpot)
+    }
+    
+    @objc private func showOrders(_ sender: Any) {
+        let orders = TradeOrdersViewController(
+            wallet: wallet,
+            type: nil,
+            status: .pending
+        )
+        navigationController?.pushViewController(orders, animated: true)
     }
     
     func prepareForReuse(sender: Any) {
@@ -833,15 +855,15 @@ extension TradeSpotViewController {
                 let count = allOpenOrdersCount ?? openOrders.count
                 header.titleLabel.text = R.string.localizable.open_orders_count(count)
                 header.disclosureImageView.isHidden = false
-                header.onShowAll = { [weak tradeViewController] (sender) in
-                    tradeViewController?.showOrders(sender)
+                header.onShowAll = { [weak self] (sender) in
+                    self?.showOrders(sender)
                 }
                 return header
             case UICollectionView.elementKindSectionFooter:
                 let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TradeViewAllFooterView.reuseIdentifier, for: indexPath) as! TradeViewAllFooterView
                 view.viewAllButton.isHidden = allOpenOrdersCount == nil
-                view.onViewAll = { [weak tradeViewController] (sender) in
-                    tradeViewController?.showOrders(sender)
+                view.onViewAll = { [weak self] (sender) in
+                    self?.showOrders(sender)
                 }
                 return view
             default:
@@ -1571,22 +1593,6 @@ extension TradeSpotViewController {
         pricingModel.price = TradePricingModel.rounded(
             price: price * multiplier
         )
-    }
-    
-    private func startOpenOrderRequester() {
-        let openOrderRequester = switch mode {
-        case .simple:
-            PendingTradeOrderLoader(
-                behavior: .syncOrders(walletID: orderWalletID)
-            )
-        case .advanced:
-            PendingTradeOrderLoader(
-                behavior: .watchOpeningLimitOrders(walletID: orderWalletID)
-            )
-        }
-        openOrderRequester.delegate = self as? PendingTradeOrderLoader.Delegate
-        self.openOrderRequester = openOrderRequester
-        openOrderRequester.start(after: 0)
     }
     
     private func updateMarkets() {

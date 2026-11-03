@@ -1750,7 +1750,7 @@
 "spot_trade_guide_feature_1" = "最优聚合：接入 Uniswap、 1inch、Jupiter、MixPay、BigONE 等 DEX 和 CEX。";
 "spot_trade_guide_feature_2" = "跨链交易：支持 Bitcoin、Ethereum、Solana 等多链资产交易。";
 "spot_trade_guide_fees" = "费用说明";
-"spot_trade_guide_limit_desc" = "专业模式支持限价挂单，用户可自行设定成交价格，达到预期价格时才会成交。";
+"spot_trade_guide_limit_desc" = "限价支持挂单，用户可自行设定成交价格，达到预期价格时才会成交。";
 "spot_trade_guide_limit_risk" = "市场波动较大时，价格可能快速越过挂单价格，订单可能无法成交";
 "spot_trade_guide_limit_scenario_1" = "有明确交易策略，如低买高卖";
 "spot_trade_guide_limit_scenario_2" = "对成交价格敏感";
@@ -1758,7 +1758,7 @@
 "spot_trade_guide_limit_strategy_buy_low" = "低价买入";
 "spot_trade_guide_limit_strategy_sell_high" = "高价卖出";
 "spot_trade_guide_note_1" = "交易手续费主要由交易所和网络提现手续费构成，Mixin 不额外收取交易手续费";
-"spot_trade_guide_overview_desc" = "Mixin 交易支持简单闪兑和专业模式，支持多链、多币种交易，并聚合多个 DEX 与 CEX 的流动性。";
+"spot_trade_guide_overview_desc" = "Mixin 交易支持闪兑和限价，支持多链、多币种交易，并聚合多个 DEX 与 CEX 的流动性。";
 "spot_trade_guide_pricing" = "报价说明";
 "spot_trade_guide_swap_desc" = "闪兑是一种按当前最优市场价格立即成交的兑换方式。";
 "spot_trade_guide_swap_quote_1" = "价格来自 DEX 与 CEX 的聚合最优报价";
@@ -1861,7 +1861,7 @@
 "touch_id" = "指纹";
 "track_not_found" = "Track 无效";
 "trade" = "交易";
-"trade_advanced" = "专业模式";
+"trade_advanced" = "限价";
 "trade_again" = "再来一笔";
 "trade_expiration" = "有效期至";
 "trade_expiry" = "过期";
@@ -1872,9 +1872,16 @@
 "trade_guide_pay_amount" = "支付金额";
 "trade_guide_strategy" = "交易策略";
 "trade_guide_trading_pair" = "交易对";
+"trade_limit_orders" = "限价订单";
+"trade_lite" = "简易版";
 "trade_native_tokens" = "交易数千种原生代币";
+"trade_now" = "立即交易";
 "trade_order_pending" = "待成交";
-"trade_simple" = "简单兑换";
+"trade_perpetual_activity" = "合约记录";
+"trade_pro" = "专业版";
+"trade_pro_description" = "专业图表、全仓保证金及限价订单。";
+"trade_simple" = "闪兑";
+"trade_swap_orders" = "闪兑订单";
 "trading_fee" = "手续费";
 "transaction" = "交易详情";
 "transaction_approved" = "批准成功";

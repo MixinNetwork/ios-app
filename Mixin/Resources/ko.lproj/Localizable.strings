@@ -1750,7 +1750,7 @@
 "spot_trade_guide_feature_1" = "유동성 집계: Uniswap, 1inch, Jupiter, MixPay, BigONE 및 기타 DEX 및 CEX의 유동성에 액세스합니다.";
 "spot_trade_guide_feature_2" = "크로스체인 거래: 비트코인, 이더리움, 솔라나 등에서 자산을 지원합니다.";
 "spot_trade_guide_fees" = "수수료";
-"spot_trade_guide_limit_desc" = "Advanced는 지정가 주문을 지원하므로 원하는 실행 가격을 설정할 수 있습니다. 주문은 시장이 귀하가 지정한 가격에 도달한 경우에만 실행됩니다.";
+"spot_trade_guide_limit_desc" = "지정가는 원하는 체결 가격을 설정할 수 있습니다. 주문은 시장이 지정한 가격에 도달한 경우에만 체결됩니다.";
 "spot_trade_guide_limit_risk" = "시장 가격이 제한 가격을 넘어설 수 있으며 주문이 체결되지 않을 수 있습니다.";
 "spot_trade_guide_limit_scenario_1" = "전략적 거래용";
 "spot_trade_guide_limit_scenario_2" = "정확한 가격은";
@@ -1758,9 +1758,9 @@
 "spot_trade_guide_limit_strategy_buy_low" = "낮은 가격으로 구매";
 "spot_trade_guide_limit_strategy_sell_high" = "최고가 매도";
 "spot_trade_guide_note_1" = "거래 수수료는 주로 교환 수수료와 네트워크 수수료로 구성됩니다. Mixin은 추가 플랫폼 수수료를 청구하지 않습니다.";
-"spot_trade_guide_overview_desc" = "Mixin은 단순 및 고급 거래 모드를 모두 지원하므로 DEX 및 CEX에서 집계된 유동성을 사용하여 여러 체인과 자산에 걸쳐 거래할 수 있습니다.";
+"spot_trade_guide_overview_desc" = "Mixin은 스왑과 지정가 거래를 모두 지원하므로 DEX 및 CEX에서 집계된 유동성으로 여러 체인과 자산을 거래할 수 있습니다.";
 "spot_trade_guide_pricing" = "가격";
-"spot_trade_guide_swap_desc" = "간단 모드를 사용하면 가장 좋은 시장 가격으로 즉시 교환할 수 있습니다.";
+"spot_trade_guide_swap_desc" = "스왑은 가장 좋은 시장 가격으로 즉시 거래할 수 있습니다.";
 "spot_trade_guide_swap_quote_1" = "가격은 DEX 및 CEX에서 집계되어 최상의 견적을 제공합니다.";
 "spot_trade_guide_swap_quote_2" = "견적에는 교환 및 네트워크 수수료가 포함됩니다.";
 "spot_trade_guide_swap_risk" = "실제 실행 가격은 변동성이 높을 때 공시 가격과 다를 수 있습니다.";
@@ -1861,7 +1861,7 @@
 "touch_id" = "터치 ID";
 "track_not_found" = "트랙을 찾을 수 없음";
 "trade" = "거래";
-"trade_advanced" = "고급";
+"trade_advanced" = "지정가";
 "trade_again" = "다시 거래하세요";
 "trade_expiration" = "만료";
 "trade_expiry" = "만료";
@@ -1872,9 +1872,16 @@
 "trade_guide_pay_amount" = "당신이 지불";
 "trade_guide_strategy" = "전략";
 "trade_guide_trading_pair" = "거래 쌍";
+"trade_limit_orders" = "지정가 주문";
+"trade_lite" = "라이트";
 "trade_native_tokens" = "수천 개의 기본 토큰을 거래하세요";
+"trade_now" = "지금 거래";
 "trade_order_pending" = "보류 중";
-"trade_simple" = "간단함";
+"trade_perpetual_activity" = "무기한 선물 거래 내역";
+"trade_pro" = "프로";
+"trade_pro_description" = "고급 차트, 교차 마진 및 지정가 주문.";
+"trade_simple" = "스왑";
+"trade_swap_orders" = "스왑 주문";
 "trading_fee" = "거래 수수료";
 "transaction" = "거래";
 "transaction_approved" = "거래 승인됨";

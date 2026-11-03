@@ -32,8 +32,16 @@ final class TradeOrdersViewController: UIViewController {
     
     private var pendingOrdersLoader: PendingTradeOrderLoader?
     
-    init(wallet: Wallet, status: TradeOrder.Status?) {
-        self.filter = TradeOrder.Filter(wallets: [wallet], status: status)
+    init(
+        wallet: Wallet,
+        type: TradeOrder.OrderType?,
+        status: TradeOrder.Status?
+    ) {
+        self.filter = TradeOrder.Filter(
+            wallets: [wallet],
+            type: type,
+            status: status,
+        )
         let nib = R.nib.tradeOrdersView
         super.init(nibName: nib.name, bundle: nib.bundle)
         self.queue.maxConcurrentOperationCount = 1

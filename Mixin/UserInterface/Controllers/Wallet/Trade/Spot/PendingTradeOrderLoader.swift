@@ -10,9 +10,6 @@ final class PendingTradeOrderLoader {
     
     enum Behavior {
         
-        // Sync all orders periodically, including opening ones that updated to closed, until manually paused. Delegate object is not called.
-        case syncOrders(walletID: String)
-        
         // Load periodically until manually paused
         case watchOpeningLimitOrders(walletID: String)
         
@@ -69,7 +66,7 @@ final class PendingTradeOrderLoader {
                     }
                 }
             }
-        case .syncOrders, .watchOrder:
+        case .watchOrder:
             scheduleRemoteDataLoading(timeInterval: timeInterval)
         }
     }
@@ -91,17 +88,6 @@ final class PendingTradeOrderLoader {
         Task.detached { [behavior, refreshInterval, weak self] in
             do {
                 switch behavior {
-                case let .syncOrders(walletID):
-                    let job = SyncWeb3OrdersJob(
-                        walletID: walletID,
-                        reloadOpeningOrdersOnFinished: true
-                    )
-                    ConcurrentJobQueue.shared.addJob(job: job)
-                    if let self {
-                        await MainActor.run {
-                            self.scheduleRemoteDataLoading(timeInterval: refreshInterval)
-                        }
-                    }
                 case let .watchOpeningLimitOrders(walletID):
                     let orders = try await RouteAPI.tradeOrders(
                         walletID: walletID,

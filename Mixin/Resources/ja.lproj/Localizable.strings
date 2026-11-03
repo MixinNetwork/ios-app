@@ -828,6 +828,7 @@
 "invalid_address" = "無効なアドレス";
 "invalid_candidate" = "無効な候補";
 "invalid_format" = "無効な形式です";
+"invalid_gasless_transaction" = "無効なガスレス取引です。もう一度お試しください。";
 "invalid_height" = "無効な高さ";
 "invalid_malformed_address_eos_hint" = "無効なアドレスです。MixinはEOSアドレスへの引き出しに対応していません。";
 "invalid_malformed_address_hint" = "無効なアドレスです。%@の有効なアドレスでもう一度試してください。";

@@ -41,13 +41,6 @@ typedef struct EVMBuffer {
   size_t len;
 } EVMBuffer;
 
-/**
- * Unsigned 128-bit integer in big-endian byte order.
- */
-typedef struct EVMUInt128 {
-  uint8_t bytes[16];
-} EVMUInt128;
-
 typedef struct EVMAddressBytes {
   uint8_t bytes[20];
 } EVMAddressBytes;
@@ -58,6 +51,29 @@ typedef struct EVMAddressBytes {
 typedef struct EVMUInt256 {
   uint8_t bytes[32];
 } EVMUInt256;
+
+/**
+ * Locally confirmed transfer, independent of the untrusted server payload.
+ * Token flags must be 0 (native currency) or 1 (ERC-20); amounts are base units.
+ */
+typedef struct EVMGaslessTransfer {
+  uint64_t chain_id;
+  struct EVMAddressBytes sender;
+  struct EVMAddressBytes recipient;
+  uint8_t has_token;
+  struct EVMAddressBytes token;
+  struct EVMUInt256 amount;
+  uint8_t has_fee_token;
+  struct EVMAddressBytes fee_token;
+  struct EVMUInt256 fee_amount;
+} EVMGaslessTransfer;
+
+/**
+ * Unsigned 128-bit integer in big-endian byte order.
+ */
+typedef struct EVMUInt128 {
+  uint8_t bytes[16];
+} EVMUInt128;
 
 /**
  * Borrowed EIP-1559 fields. All pointers must remain valid for the call.
@@ -118,6 +134,17 @@ enum EVMErrorCode evm_sign_personal_message(struct EVMBytes message,
  * Input slices must be readable; out must be writable and not alias inputs.
  */
 enum EVMErrorCode evm_sign_hash(struct EVMBytes hash, struct EVMBytes key, struct EVMBuffer *out);
+
+/**
+ * Validate a gasless transfer against locally confirmed fields, returning the rebuilt
+ * user-operation digest followed by the optional EIP-7702 authorization digest.
+ * No digest is returned unless the entire payload passes validation.
+ * # Safety
+ * Input slices and expected must be readable; out must be writable and not alias inputs.
+ */
+enum EVMErrorCode evm_validate_gasless_transfer(struct EVMBytes json,
+                                                const struct EVMGaslessTransfer *expected,
+                                                struct EVMBuffer *out);
 
 /**
  * Hash EIP-712 UTF-8 JSON, returning 32 bytes.

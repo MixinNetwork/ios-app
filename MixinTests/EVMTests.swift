@@ -365,4 +365,103 @@ struct EVMTests {
         }
     }
     
+    @Test func gaslessTransferAmountsPreserveUnitsAndRejectRounding() throws {
+        #expect(try EVM.gaslessTransferAmount(Decimal(string: "1.25")!, precision: 6) == EVMQuantity("1250000"))
+        #expect(try EVM.gaslessTransferAmount(1, precision: 18) == EVMQuantity("1000000000000000000"))
+        #expect(try EVM.gaslessTransferAmount(0, precision: 6) == 0)
+        let preciseAmount = try #require(Decimal(string: "12345678901234567890.123456789012345678"))
+        #expect(try EVM.gaslessTransferAmount(preciseAmount, precision: 18) == EVMQuantity("12345678901234567890123456789012345678"))
+        for (amount, precision): (Decimal, Int16) in [
+            (-1, 18), (Decimal(string: "0.0000001")!, 6),
+            (1, -1), (1, 256), (1, 78), (.nan, 18),
+        ] {
+            #expect(throws: EVM.Error.self) {
+                try EVM.gaslessTransferAmount(amount, precision: precision)
+            }
+        }
+    }
+    
+    @Test func gaslessTransferValidationUsesRebuiltHashesAndConfirmedFields() throws {
+        // The user-operation vector is produced by an independent EIP-712 encoder.
+        let json = #"""
+        {
+          "signing": {
+            "userOperation": {
+              "message": "0x3ae5154e1f40ed8838a70dc8f2585ad90320652984302b8965f21fa26f81380d",
+              "signType": ""
+            }
+          },
+          "userOperation": {
+            "callData": "0xb61d27f60000000000000000000000001111111111111111111111111111111111111111000000000000000000000000000000000000000000000000000000000000006400000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000000",
+            "callGasLimit": "0x186a0",
+            "initCode": "0x7702",
+            "maxFeePerGas": "0x3b9aca00",
+            "maxPriorityFeePerGas": "0x5f5e100",
+            "nonce": "0x0",
+            "paymasterAndData": "0x22222222222222222222222222222222222222220000000000000000000000000000000000000000000000000000000000000000",
+            "preVerificationGas": "0xc350",
+            "sender": "0xe6cae83bde06e4c305530e199d7217f42808555b",
+            "signature": "0x",
+            "verificationGasLimit": "0x30d40"
+          }
+        }
+        """#
+        let sender = try EVM.Address("0xe6cae83bde06e4c305530e199d7217f42808555b")
+        let recipient = try EVM.Address("0x1111111111111111111111111111111111111111")
+        let payload = try JSONDecoder().decode(GaslessTransactionEVMPayload.self, from: Data(json.utf8))
+        let hashes = try EVM.validateGaslessTransfer(
+            payload,
+            chainID: 1,
+            sender: sender,
+            recipient: recipient,
+            token: nil,
+            amount: 100,
+            feeToken: nil,
+            feeAmount: 2,
+        )
+        #expect(hashes.userOperation.hexEncodedString() == "3ae5154e1f40ed8838a70dc8f2585ad90320652984302b8965f21fa26f81380d")
+        #expect(hashes.authorization == nil)
+        for (chainID, amount, destination) in [(0, 100, recipient), (8453, 100, recipient), (1, 101, recipient), (1, 100, sender)] {
+            #expect(throws: EVM.Error.self) {
+                try EVM.validateGaslessTransfer(
+                    payload,
+                    chainID: chainID,
+                    sender: sender,
+                    recipient: destination,
+                    token: nil,
+                    amount: EVMQuantity(UInt64(amount)),
+                    feeToken: nil,
+                    feeAmount: 2,
+                )
+            }
+        }
+        let authorizationHash = "0x5ff19acadaf683f545b800216672c273bcb8563df38a3f451ad080f8b936979b"
+        for authorization in [
+            GaslessTransactionEVMPayload.Signing.EIP7702Auth(
+                signType: nil,
+                message: authorizationHash,
+                chainID: "1",
+                address: sender.checksumString,
+                nonce: "0",
+            ),
+            .init(signType: nil, message: "", chainID: nil, address: nil, nonce: nil),
+        ] {
+            let candidate = GaslessTransactionEVMPayload(
+                userOperation: payload.userOperation,
+                signing: .init(userOperation: payload.signing.userOperation, eip7702Auth: authorization),
+            )
+            let hashes = try EVM.validateGaslessTransfer(
+                candidate,
+                chainID: 1,
+                sender: sender,
+                recipient: recipient,
+                token: nil,
+                amount: 100,
+                feeToken: nil,
+                feeAmount: 2,
+            )
+            #expect(hashes.authorization == (authorization.message == "" ? nil : EVM.data(hex: authorizationHash)))
+        }
+    }
+    
 }

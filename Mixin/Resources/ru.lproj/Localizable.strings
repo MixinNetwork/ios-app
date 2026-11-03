@@ -828,6 +828,7 @@
 "invalid_address" = "Неверный адрес";
 "invalid_candidate" = "Недействительный кандидат";
 "invalid_format" = "Неверный формат";
+"invalid_gasless_transaction" = "Недействительная транзакция без газа. Повторите попытку.";
 "invalid_height" = "Неверный рост";
 "invalid_malformed_address_eos_hint" = "Неверный формат адреса. Mixin не поддерживает вывод средств на адрес контракта EOS!";
 "invalid_malformed_address_hint" = "Неверный формат адреса. Повторите попытку с действительным адресом %@";

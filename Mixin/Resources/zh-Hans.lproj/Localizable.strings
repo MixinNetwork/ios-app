@@ -828,6 +828,7 @@
 "invalid_address" = "无效的地址";
 "invalid_candidate" = "无效的 Candidate";
 "invalid_format" = "格式无效";
+"invalid_gasless_transaction" = "免 Gas 交易无效，请重试。";
 "invalid_height" = "高度无效";
 "invalid_malformed_address_eos_hint" = "地址格式错误。Mixin 不支持提现到 EOS 合约地址！";
 "invalid_malformed_address_hint" = "地址格式错误。请输入正确的 %@ 地址";

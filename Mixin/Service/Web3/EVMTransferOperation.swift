@@ -431,11 +431,20 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
 // MARK: - User Initiated Transactions
 final class EVMTransferToAddressOperation: EVMTransferOperation {
     
+    enum GaslessValidationError: LocalizedError {
+        
+        case invalidTransaction
+        
+        var errorDescription: String? {
+            R.string.localizable.invalid_gasless_transaction()
+        }
+        
+    }
+    
     private let payment: Web3SendingTokenToAddressPayment
     private let decimalAmount: Decimal
     private let simulation: TransactionSimulation
     private let feePolicy: FeePolicy
-    private let eip7702AuthAddress = "0xe6cae83bde06e4c305530e199d7217f42808555b"
     
     init(
         evmChainID: Int,
@@ -625,32 +634,39 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
                 throw RequestError.mismatchedAddress
             }
             Logger.web3.info(category: "EVMTransfer(Gasless)", message: "Will sign")
-            let signedUserOperation = try {
-                var message = payload.signing.userOperation.message
-                if message.hasPrefix("0x") {
-                    message.removeFirst(2)
+            let digests: (userOperation: Data, authorization: Data?)
+            do {
+                guard case let .evm(evmChainID) = payment.chain.specification,
+                      payment.token.chainID == chainID,
+                      fee.token.chainID == chainID else {
+                    throw EVM.Error.invalidTransaction
                 }
-                guard let messageData = Data(hexEncodedString: message) else {
-                    throw SigningError.invalidUserOperation
-                }
-                return try EVM.signHash(messageData, privateKey: privateKey)
-            }()
-            let signedAuth: String? = try {
-                guard let auth = payload.signing.eip7702Auth else {
-                    return nil
-                }
-                guard auth.address.lowercased() == eip7702AuthAddress else {
-                    throw SigningError.invalidEIP7702AuthAddress
-                }
-                var message = auth.message
-                if message.hasPrefix("0x") {
-                    message.removeFirst(2)
-                }
-                guard let messageData = Data(hexEncodedString: message) else {
-                    throw SigningError.invalidEIP7702AuthMessage
-                }
-                return try EVM.signHash(messageData, privateKey: privateKey)
-            }()
+                let feeTokenAddress = try EVM.Address(fee.token.assetKey)
+                let amount = try EVM.gaslessTransferAmount(
+                    decimalAmount,
+                    precision: payment.sendingNativeToken ? 18 : payment.token.precision,
+                )
+                let feeAmount = try EVM.gaslessTransferAmount(
+                    fee.amount,
+                    precision: feeTokenAddress.isZero ? 18 : fee.token.precision,
+                )
+                digests = try EVM.validateGaslessTransfer(
+                    payload,
+                    chainID: evmChainID,
+                    sender: EVM.Address(fromAddress.destination),
+                    recipient: EVM.Address(payment.toAddress),
+                    token: payment.sendingNativeToken ? nil : EVM.Address(payment.token.assetKey),
+                    amount: amount,
+                    feeToken: feeTokenAddress.isZero ? nil : feeTokenAddress,
+                    feeAmount: feeAmount,
+                )
+            } catch {
+                throw GaslessValidationError.invalidTransaction
+            }
+            let signedUserOperation = try EVM.signHash(digests.userOperation, privateKey: privateKey)
+            let signedAuth = try digests.authorization.map { digest in
+                try EVM.signHash(digest, privateKey: privateKey)
+            }
             signedTransaction = SignedEVMGaslessTransactionProposal(
                 chainID: chainID,
                 payload: payload,

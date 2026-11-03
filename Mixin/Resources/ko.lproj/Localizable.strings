@@ -828,6 +828,7 @@
 "invalid_address" = "잘못된 주소";
 "invalid_candidate" = "잘못된 후보자";
 "invalid_format" = "잘못된 형식";
+"invalid_gasless_transaction" = "유효하지 않은 가스리스 거래입니다. 다시 시도해 주세요.";
 "invalid_height" = "잘못된 높이";
 "invalid_malformed_address_eos_hint" = "잘못된 주소 형식입니다. Mixin은 EOS 계약 주소로의 출금을 지원하지 않습니다!";
 "invalid_malformed_address_hint" = "잘못된 주소 형식입니다. %@의 유효한 주소로 다시 시도하세요.";

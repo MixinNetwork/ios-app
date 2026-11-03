@@ -24,11 +24,18 @@ struct GaslessTransactionEVMPayload: Codable {
         }
         
         struct EIP7702Auth: Codable {
-            let signType: String
-            let message: String
-            let chainId: String
-            let address: String
-            let nonce: String
+            
+            enum CodingKeys: String, CodingKey {
+                case signType, message, address, nonce
+                case chainID = "chainId"
+            }
+            
+            let signType: String?
+            let message: String?
+            let chainID: String?
+            let address: String?
+            let nonce: String?
+            
         }
         
         let userOperation: UserOperation

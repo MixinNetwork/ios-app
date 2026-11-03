@@ -828,6 +828,7 @@
 "invalid_address" = "Dirección no válida";
 "invalid_candidate" = "Candidato inválido";
 "invalid_format" = "Formato no válido";
+"invalid_gasless_transaction" = "Transacción sin gas no válida. Inténtalo de nuevo.";
 "invalid_height" = "Altura inválida";
 "invalid_malformed_address_eos_hint" = "Formato de dirección inválido. ¡Mixin no admite el retiro a la dirección del contrato EOS!";
 "invalid_malformed_address_hint" = "Formato de dirección inválido. Vuelve a intentarlo con una dirección válida de %@";

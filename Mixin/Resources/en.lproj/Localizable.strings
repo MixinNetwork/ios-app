@@ -828,6 +828,7 @@
 "invalid_address" = "Invalid Address";
 "invalid_candidate" = "Invalid candidate";
 "invalid_format" = "Invalid format";
+"invalid_gasless_transaction" = "Invalid gasless transaction. Please try again.";
 "invalid_height" = "Invalid height";
 "invalid_malformed_address_eos_hint" = "Invalid address format. Mixin does not support withdrawal to the EOS contract address!";
 "invalid_malformed_address_hint" = "Invalid address format. Try again with a valid address of %@";

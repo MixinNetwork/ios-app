@@ -47,8 +47,7 @@ enum EVM {
         return "0x" + signature.hexEncodedString()
     }
     
-    // Gasless user operations and EIP-7702 authorizations supply a digest.
-    // Sign it directly without adding an EIP-191 prefix or hashing again.
+    // Sign a locally verified digest without an EIP-191 prefix or hashing again.
     static func signHash(_ hash: Data, privateKey: Data) throws(Error) -> String {
         let signature = try output { output in
             hash.withEVMBytes { hash in
@@ -63,6 +62,66 @@ enum EVM {
     static func data(hex: String) -> Data? {
         let digits = hex.hasPrefix("0x") ? String(hex.dropFirst(2)) : hex
         return digits.isEmpty ? Data() : Data(hexEncodedString: digits)
+    }
+    
+    static func gaslessTransferAmount(
+        _ amount: Decimal,
+        precision: Int16,
+    ) throws(Error) -> EVMQuantity {
+        guard (0...255).contains(precision), !amount.isNaN, amount >= 0 else {
+            throw .invalidTransaction
+        }
+        var amount = amount
+        var units = Decimal()
+        guard NSDecimalMultiplyByPowerOf10(&units, &amount, precision, .plain) == .noError else {
+            throw .integerOverflow
+        }
+        var integral = Decimal()
+        NSDecimalRound(&integral, &units, 0, .down)
+        guard units == integral, let quantity = EVMQuantity(NSDecimalNumber(decimal: units).stringValue) else {
+            throw .invalidTransaction
+        }
+        return quantity
+    }
+    
+    static func validateGaslessTransfer(
+        _ payload: GaslessTransactionEVMPayload,
+        chainID: Int,
+        sender: Address,
+        recipient: Address,
+        token: Address?,
+        amount: EVMQuantity,
+        feeToken: Address?,
+        feeAmount: EVMQuantity,
+    ) throws -> (userOperation: Data, authorization: Data?) {
+        guard let chainID = UInt64(exactly: chainID), chainID > 0 else {
+            throw Error.invalidTransaction
+        }
+        var expected = EVMGaslessTransfer()
+        expected.chain_id = chainID
+        try copyBytes(sender.data, into: &expected.sender)
+        try copyBytes(recipient.data, into: &expected.recipient)
+        expected.amount = amount.raw
+        expected.fee_amount = feeAmount.raw
+        if let token {
+            expected.has_token = 1
+            try copyBytes(token.data, into: &expected.token)
+        }
+        if let feeToken {
+            expected.has_fee_token = 1
+            try copyBytes(feeToken.data, into: &expected.fee_token)
+        }
+        let json = try JSONEncoder().encode(payload)
+        let hashes = try output { output in
+            json.withEVMBytes { evm_validate_gasless_transfer($0, &expected, output) }
+        }
+        guard hashes.count == 32 || hashes.count == 64 else {
+            throw Error.invalidResponse
+        }
+        return (
+            Data(hashes.prefix(32)),
+            hashes.count == 64 ? Data(hashes.suffix(32)) : nil,
+        )
     }
     
     fileprivate static func output(

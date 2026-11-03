@@ -13,7 +13,11 @@ class ConversationSearchResult: SearchResult {
         let badgeImage: UIImage? = if conversation.isGroup() {
             R.image.group_indicator_small()
         } else {
-            nil
+            UserBadgeIcon(
+                membership: conversation.ownerMembership,
+                isVerified: conversation.ownerIsBot,
+                isBot: conversation.ownerIsBot
+            )?.smallImage
         }
         super.init(
             iconUrl: conversation.iconUrl,

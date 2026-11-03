@@ -127,6 +127,7 @@ final class DiagnoseViewController: SettingsTableViewController {
                 "b26b9a74-40dd-4e8d-8e41-94d9fce0b5c0",
                 "7766b24c-1a03-4c3a-83a3-b4358266875d",
                 "47694216-9714-495b-9992-034c8ce91a50",
+                "e14c1573-3aca-48b1-b437-766b4757b50d",
             ]
         } else {
             []

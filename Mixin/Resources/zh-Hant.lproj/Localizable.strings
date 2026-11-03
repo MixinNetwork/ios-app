@@ -1280,6 +1280,7 @@
 "perps_position_tip" = "加倉會放大收益和風險";
 "perps_product" = "合約";
 "perps_realized_pnl" = "淨盈虧";
+"perps_realized_pnl_tip" = "未平倉的合約不計入統計";
 "perps_receive" = "收到";
 "perps_reduce_invalid_quantity" = "請輸入大於零且不超過當前倉位的金額。";
 "perps_reduce_margin" = "減少保證金";

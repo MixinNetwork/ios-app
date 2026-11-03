@@ -5,8 +5,12 @@ final class PerpetualPositionValueCell: UICollectionViewCell {
     
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var infoImageView: UIImageView!
     @IBOutlet weak var valueLabel: MarketColoredLabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
+    @IBOutlet weak var infoButton: UIButton!
+    
+    var presentTip: ((PerpetualPositionValueCell) -> Void)?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,6 +24,7 @@ final class PerpetualPositionValueCell: UICollectionViewCell {
     
     func loadOpenPositions(value: PerpetualPositionValue?) {
         titleLabel.text = R.string.localizable.total_position_value()
+        infoImageView.isHidden = true
         changeLabel.isHidden = false
         if let value {
             valueLabel.text = value.value
@@ -37,10 +42,12 @@ final class PerpetualPositionValueCell: UICollectionViewCell {
         case .neutral, .none:
             changeLabel.textColor = R.color.text_secondary()
         }
+        infoButton.isEnabled = false
     }
     
     func loadClosedActivities(value: PerpetualPositionValue?) {
         titleLabel.text = R.string.localizable.total_realized_pnl()
+        infoImageView.isHidden = false
         changeLabel.isHidden = true
         if let value {
             valueLabel.text = value.value
@@ -55,6 +62,11 @@ final class PerpetualPositionValueCell: UICollectionViewCell {
         case .neutral, .none:
             valueLabel.textColor = R.color.text_secondary()
         }
+        infoButton.isEnabled = true
+    }
+    
+    @IBAction func requestTip(_ sender: Any) {
+        presentTip?(self)
     }
     
 }

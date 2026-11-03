@@ -374,6 +374,7 @@ final class OpenPerpsPositionViewController: PerpsMarginInputViewController {
         reporter.report(event: .tradePerpsOpenPreview)
         marginAmountTextField.resignFirstResponder()
         let request = OpenPerpetualOrderRequest(
+            orderID: leaderPosition?.orderID,
             assetID: marginToken.assetID,
             marketID: viewModel.market.marketID,
             side: side,

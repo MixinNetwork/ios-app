@@ -109,9 +109,9 @@ final class PerpetualActivitiesViewController: UIViewController {
     }
     
     @objc private func reloadData() {
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
             let value = PerpsOrderDAO.shared.activitiesValue()
-            DispatchQueue.main.async { [weak self] in
+            DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
@@ -201,6 +201,18 @@ extension PerpetualActivitiesViewController: UICollectionViewDataSource {
         case .value:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_positions_value, for: indexPath)!
             cell.loadClosedActivities(value: value)
+            cell.presentTip = { [weak self] (cell) in
+                guard let self else {
+                    return
+                }
+                let tipView = R.nib.overlayTipView(withOwner: nil)!
+                self.view.addSubview(tipView)
+                tipView.snp.makeEdgesEqualToSuperview()
+                tipView.label.text = R.string.localizable.perps_realized_pnl_tip()
+                self.view.layoutIfNeeded()
+                let center = cell.convert(cell.infoButton.center, to: tipView)
+                tipView.placeTip(at: center)
+            }
             return cell
         case .activities:
             if let viewModels, !viewModels.isEmpty {

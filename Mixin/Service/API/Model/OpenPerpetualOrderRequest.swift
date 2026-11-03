@@ -1,8 +1,9 @@
 import Foundation
 
-struct OpenPerpetualOrderRequest: Encodable {
+struct OpenPerpetualOrderRequest: Encodable, Hashable {
     
     enum CodingKeys: String, CodingKey {
+        case orderID = "order_id"
         case assetID = "asset_id"
         case marketID = "market_id"
         case side = "side"
@@ -15,6 +16,7 @@ struct OpenPerpetualOrderRequest: Encodable {
         case leaderPositionID = "leader_position_id"
     }
     
+    let orderID: String?
     let assetID: String
     let marketID: String
     let side: PerpetualOrderSide

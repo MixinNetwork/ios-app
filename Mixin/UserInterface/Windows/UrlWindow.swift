@@ -1701,6 +1701,7 @@ extension UrlWindow {
                                 amount: margin
                             )
                             let request = OpenPerpetualOrderRequest(
+                                orderID: leaderPosition.orderID,
                                 assetID: marginToken.assetID,
                                 marketID: viewModel.market.marketID,
                                 side: side,

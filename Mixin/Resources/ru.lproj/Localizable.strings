@@ -1280,6 +1280,7 @@
 "perps_position_tip" = "Увеличение позиции повышает прибыль и риски";
 "perps_product" = "Рынок";
 "perps_realized_pnl" = "Реализованная прибыль/убыток";
+"perps_realized_pnl_tip" = "Открытые позиции не учитываются в статистике.";
 "perps_receive" = "Получить";
 "perps_reduce_invalid_quantity" = "Введите сумму больше нуля, не превышающую текущую стоимость позиции.";
 "perps_reduce_margin" = "Уменьшить маржу";

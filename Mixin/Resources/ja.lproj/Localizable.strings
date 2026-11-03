@@ -1280,6 +1280,7 @@
 "perps_position_tip" = "ポジションを増やすと利益とリスクが拡大します";
 "perps_product" = "市場";
 "perps_realized_pnl" = "実現損益";
+"perps_realized_pnl_tip" = "未決済のポジションは統計に含まれません。";
 "perps_receive" = "受け取る";
 "perps_reduce_invalid_quantity" = "現在のポジション金額以下の、ゼロより大きい金額を入力してください。";
 "perps_reduce_margin" = "証拠金を減らす";

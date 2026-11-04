@@ -169,7 +169,6 @@
 "approve_transaction" = "批准交易";
 "approving_transaction" = "正在批准";
 "approving_transaction_failed" = "批准失敗";
-"ask_me_anything" = "向我提問";
 "asset" = "資產";
 "asset_key" = "資產標識";
 "asset_not_found" = "找不到該資產";
@@ -1464,6 +1463,7 @@
 "read_your_public_address" = "讀取你的地址";
 "read_your_public_profile" = "讀取你的個人資料";
 "read_your_snapshots" = "讀取你的轉賬記錄";
+"real_people_real_support" = "真人客服，隨時為您服務。";
 "rebate" = "退款";
 "receive" = "充值";
 "receive_from_address_description" = "通過區塊鏈網路從其他交易所或鏈上錢包接收";

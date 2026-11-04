@@ -169,7 +169,6 @@
 "approve_transaction" = "取引の承認";
 "approving_transaction" = "トランザクションの承認";
 "approving_transaction_failed" = "トランザクションの承認に失敗しました";
-"ask_me_anything" = "何でも聞いてください";
 "asset" = "資産";
 "asset_key" = "資産のキー";
 "asset_not_found" = "資産が存在しません";
@@ -1464,6 +1463,7 @@
 "read_your_public_address" = "公開アドレスを読む";
 "read_your_public_profile" = "公開プロフィールを読む";
 "read_your_snapshots" = "スナップショットを読む";
+"real_people_real_support" = "本物の人による、本物のサポート。";
 "rebate" = "払い戻し";
 "receive" = "入金";
 "receive_from_address_description" = "暗号ネットワークを使用して別の取引所またはオンチェーンウォレットから受け取る";

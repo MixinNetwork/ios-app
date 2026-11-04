@@ -169,7 +169,6 @@
 "approve_transaction" = "Approve Transaction";
 "approving_transaction" = "Approving Transaction";
 "approving_transaction_failed" = "Approving Transaction Failed";
-"ask_me_anything" = "Ask me anything";
 "asset" = "Asset";
 "asset_key" = "Asset Key";
 "asset_not_found" = "Asset not found.";
@@ -1464,6 +1463,7 @@
 "read_your_public_address" = "Read your public address";
 "read_your_public_profile" = "Read your public profile";
 "read_your_snapshots" = "Read your snapshots";
+"real_people_real_support" = "Real People. Real Support.";
 "rebate" = "Rebate";
 "receive" = "Receive";
 "receive_from_address_description" = "Receive from another exchange or an on-chain wallet using a crypto network";

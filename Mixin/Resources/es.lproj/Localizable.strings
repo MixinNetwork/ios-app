@@ -169,7 +169,6 @@
 "approve_transaction" = "Aprobar transacción";
 "approving_transaction" = "Aprobación de transacción";
 "approving_transaction_failed" = "Error al aprobar la transacción";
-"ask_me_anything" = "Pregúntame cualquier cosa";
 "asset" = "Activo";
 "asset_key" = "Clave de activo";
 "asset_not_found" = "Activo no encontrado.";
@@ -1464,6 +1463,7 @@
 "read_your_public_address" = "Lea su dirección pública";
 "read_your_public_profile" = "Lee tu perfil público";
 "read_your_snapshots" = "Lee tus instantáneas";
+"real_people_real_support" = "Personas reales. Soporte real.";
 "rebate" = "Reembolso";
 "receive" = "Recibir";
 "receive_from_address_description" = "Recibir de otro intercambio o de una billetera en cadena usando una red criptográfica";

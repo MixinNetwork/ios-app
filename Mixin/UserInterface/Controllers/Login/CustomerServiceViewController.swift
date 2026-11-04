@@ -35,7 +35,7 @@ final class CustomerServiceViewController: PopupTitledWebViewController {
         self.reportingTags = reportingTags
         super.init(
             title: R.string.localizable.mixin_support(),
-            subtitle: R.string.localizable.ask_me_anything(),
+            subtitle: R.string.localizable.real_people_real_support(),
             url: url
         )
         Logger.general.debug(category: "CustomerService", message: "Init \(ObjectIdentifier(self))")

@@ -169,7 +169,6 @@
 "approve_transaction" = "거래 승인";
 "approving_transaction" = "거래 승인 중";
 "approving_transaction_failed" = "거래 승인 실패";
-"ask_me_anything" = "무엇이든 물어보세요";
 "asset" = "자산";
 "asset_key" = "자산 키";
 "asset_not_found" = "자산을 찾을 수 없습니다.";
@@ -1464,6 +1463,7 @@
 "read_your_public_address" = "공개 주소 읽기";
 "read_your_public_profile" = "공개 프로필 읽기";
 "read_your_snapshots" = "스냅샷 읽기";
+"real_people_real_support" = "진짜 사람, 진짜 지원.";
 "rebate" = "리베이트";
 "receive" = "수신";
 "receive_from_address_description" = "암호화 네트워크를 사용하여 다른 거래소나 온체인 지갑에서 수신";

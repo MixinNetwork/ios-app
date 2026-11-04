@@ -197,8 +197,7 @@ final class TradeOrderViewController: UITableViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(reportingTags: ["source": "trade_detail"])
-        present(customerService, animated: true)
+        CustomerServiceViewController.invoke(reportingTags: ["source": "trade_detail"])
     }
     
     @objc private func reloadOrderIfContains(_ notification: Notification) {

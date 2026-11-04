@@ -156,11 +156,10 @@ final class AddWalletSelectorViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(
+        CustomerServiceViewController.invoke(
             presentLoginLogsOnLongPressingTitle: true,
             reportingTags: ["source": "add_wallet_selector"],
         )
-        present(customerService, animated: true)
     }
     
     private func updateViewsWithSelectionCount() {

@@ -81,8 +81,7 @@ final class ReceiveMoneyViewController: UIViewController {
     }
     
     @objc func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(reportingTags: nil)
-        present(customerService, animated: true)
+        CustomerServiceViewController.invoke(reportingTags: nil)
     }
     
 }

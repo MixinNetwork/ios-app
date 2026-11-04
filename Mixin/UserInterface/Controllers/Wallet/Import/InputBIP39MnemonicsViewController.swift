@@ -117,8 +117,7 @@ class InputBIP39MnemonicsViewController: TitledMnemonicsViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(reportingTags: nil)
-        present(customerService, animated: true)
+        CustomerServiceViewController.invoke(reportingTags: nil)
     }
     
     @objc private func switchWordCount(_ button: UIButton) {

@@ -169,7 +169,6 @@
 "approve_transaction" = "Одобрить транзакцию";
 "approving_transaction" = "Одобрение транзакции";
 "approving_transaction_failed" = "Не удалось утвердить транзакцию";
-"ask_me_anything" = "Спросите меня о чем угодно";
 "asset" = "Актив";
 "asset_key" = "Ключ актива";
 "asset_not_found" = "Актив не найден.";
@@ -1464,6 +1463,7 @@
 "read_your_public_address" = "Прочитайте свой публичный адрес";
 "read_your_public_profile" = "Прочитать свой общедоступный профиль";
 "read_your_snapshots" = "Прочитайте свои снимки";
+"real_people_real_support" = "Живые люди. Настоящая поддержка.";
 "rebate" = "Скидка";
 "receive" = "ПОЛУЧИТЬ";
 "receive_from_address_description" = "Получение с другой биржи или сетевого кошелька с использованием криптосети";

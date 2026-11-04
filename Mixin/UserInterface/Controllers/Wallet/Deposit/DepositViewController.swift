@@ -171,8 +171,7 @@ final class DepositViewController: UIViewController {
     }
     
     @objc private func contactSupport(_ sender: Any) {
-        let customerService = CustomerServiceViewController(reportingTags: nil)
-        present(customerService, animated: true)
+        CustomerServiceViewController.invoke(reportingTags: nil)
     }
     
     private func updateCollectionViewBottomInset() {

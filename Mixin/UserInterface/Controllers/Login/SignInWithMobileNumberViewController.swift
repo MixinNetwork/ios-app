@@ -122,11 +122,10 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(
+        CustomerServiceViewController.invoke(
             presentLoginLogsOnLongPressingTitle: true,
             reportingTags: ["source": "sign_in_phone_number"],
         )
-        present(customerService, animated: true)
     }
     
     @objc private func signup(_ sender: Any) {

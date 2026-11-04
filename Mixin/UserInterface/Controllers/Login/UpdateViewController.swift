@@ -38,10 +38,7 @@ final class UpdateViewController: UIViewController {
     }
     
     @IBAction func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(
-            reportingTags: ["source": "update"]
-        )
-        present(customerService, animated: true)
+        CustomerServiceViewController.invoke(reportingTags: ["source": "update"])
     }
     
 }

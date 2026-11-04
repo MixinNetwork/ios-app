@@ -167,13 +167,6 @@ public final class PerpsDatabase: Database {
         }
         
         migrator.registerMigration("reduce_position") { db in
-            let positionsColumns = try TableInfo
-                .fetchAll(db, sql: "PRAGMA table_info(positions)")
-                .map(\.name)
-            if !positionsColumns.contains("estimated_close_fee") {
-                try db.execute(sql: "ALTER TABLE positions ADD COLUMN estimated_close_fee TEXT NOT NULL DEFAULT ''")
-            }
-            
             let marketColumns = try TableInfo
                 .fetchAll(db, sql: "PRAGMA table_info(markets)")
                 .map(\.name)
@@ -221,6 +214,15 @@ public final class PerpsDatabase: Database {
                 .map(\.name)
             if !positionsColumns.contains("funding_amount") {
                 try db.execute(sql: "ALTER TABLE positions ADD COLUMN funding_amount TEXT NOT NULL DEFAULT ''")
+            }
+        }
+        
+        migrator.registerMigration("market_fee_rate") { db in
+            let marketColumns = try TableInfo
+                .fetchAll(db, sql: "PRAGMA table_info(markets)")
+                .map(\.name)
+            if !marketColumns.contains("fee_rate") {
+                try db.execute(sql: "ALTER TABLE markets ADD COLUMN fee_rate TEXT NOT NULL DEFAULT ''")
             }
         }
         

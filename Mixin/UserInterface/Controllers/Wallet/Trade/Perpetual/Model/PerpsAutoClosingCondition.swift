@@ -16,6 +16,7 @@ final class PerpsAutoClosingCondition {
     enum InvalidInputError: Error {
         case mustHigherThan(Decimal)
         case mustLowerThan(Decimal)
+        case unavailableFeeRate
     }
     
     let behavior: Behavior
@@ -26,14 +27,14 @@ final class PerpsAutoClosingCondition {
     let currentPrice: Decimal
     let liquidationPrice: Decimal
     
-    // 0 for invalid
     private(set) var percentage: Decimal
+    // 0 for invalid
     private(set) var price: Decimal
     
     private let orderState: OrderState
     private let margin: Decimal
     private let priceChangeForFullMargin: Decimal
-    private let percentageDerivationScale = 2
+    private let feeRate: Decimal?
     
     init(
         behavior: Behavior,
@@ -59,8 +60,9 @@ final class PerpsAutoClosingCondition {
         case .draft:
             entryPrice / leverage
         case .open(_, let quantity):
-            margin / quantity
+            quantity == 0 ? 0 : margin / abs(quantity)
         }
+        self.feeRate = marketViewModel.market.decimalFeeRate
         self.priceScale = marketViewModel.market.priceScale
         self.entryPrice = entryPrice
         self.currentPrice = marketViewModel.decimalLastPrice
@@ -75,23 +77,27 @@ final class PerpsAutoClosingCondition {
             self.price = 0
             return
         }
-        try check(price: price)
-        let longPercentage = (price - entryPrice) / priceChangeForFullMargin
-        let percentage = side == .long ? longPercentage : -longPercentage
-        let roundedPercentage = withUnsafePointer(to: percentage * 100) { percentage in
-            var result: Decimal = 0
-            NSDecimalRound(&result, percentage, percentageDerivationScale, .plain)
-            return result / 100
+        guard let feeRate else {
+            throw .unavailableFeeRate
         }
-        self.percentage = roundedPercentage
+        try check(price: price)
+        let priceChange = (price - entryPrice) * (side == .long ? 1 : -1)
+        self.percentage = priceChangeForFullMargin > 0
+            ? (priceChange - (entryPrice + price) * feeRate) / priceChangeForFullMargin
+            : 0
         self.price = price
     }
     
     func setPercentage(_ percentage: Decimal) throws(InvalidInputError) {
-        if let roundedPrice = roundedPrice(percentage: percentage) {
+        guard feeRate != nil else {
+            throw .unavailableFeeRate
+        }
+        if let price = triggerPrice(percentage: percentage),
+           let roundedPrice = roundedPrice(percentage: percentage)
+        {
             try check(price: roundedPrice)
             self.percentage = percentage
-            self.price = roundedPrice
+            self.price = price
         } else {
             self.percentage = 0
             self.price = 0
@@ -99,17 +105,28 @@ final class PerpsAutoClosingCondition {
     }
     
     func roundedPrice(percentage: Decimal) -> Decimal? {
-        guard percentage != 0 else {
+        guard let price = triggerPrice(percentage: percentage) else {
             return nil
         }
-        let priceChange = percentage * priceChangeForFullMargin
-        let price = side == .long ? entryPrice + priceChange : entryPrice - priceChange
         let roundedPrice = withUnsafePointer(to: price) { price in
             var result: Decimal = 0
             NSDecimalRound(&result, price, priceScale, .plain)
             return result
         }
         return roundedPrice
+    }
+    
+    private func triggerPrice(percentage: Decimal) -> Decimal? {
+        guard let feeRate, feeRate >= 0, feeRate < 1, entryPrice > 0 else {
+            return nil
+        }
+        let profitPerQuantity = percentage * priceChangeForFullMargin
+        return switch side {
+        case .long:
+            (profitPerQuantity + entryPrice * (1 + feeRate)) / (1 - feeRate)
+        case .short:
+            (entryPrice * (1 - feeRate) - profitPerQuantity) / (1 + feeRate)
+        }
     }
     
     private func check(price: Decimal) throws(InvalidInputError) {
@@ -164,18 +181,21 @@ extension PerpsAutoClosingCondition {
         behavior: PerpsAutoClosingCondition.Behavior,
         currentPrice: Decimal,
         closingPrice: Decimal,
+        feeRate: Decimal?,
     ) -> String {
         assert(margin != 0, "Only results 0")
-        let percentage = switch side {
-        case .long:
-            (closingPrice - currentPrice) * leverage / currentPrice
-        case .short:
-            (closingPrice - currentPrice) * leverage / currentPrice * -1
+        guard let feeRate, currentPrice > 0 else {
+            return "-"
         }
-        var marginChange = margin * percentage
-        if behavior == .stopLoss, marginChange < 0 {
-            marginChange = max(-margin, marginChange)
-        }
+        let quantity = abs(margin * leverage / currentPrice)
+        let marginChange = netPNL(
+            side: side,
+            quantity: quantity,
+            entryPrice: currentPrice,
+            closingPrice: closingPrice,
+            feeRate: feeRate,
+        )
+        let percentage = margin != 0 ? marginChange / margin : 0
         var localizedChange = CurrencyFormatter.localizedString(
             from: marginChange,
             format: .fiatMoneyPretty,
@@ -188,7 +208,7 @@ extension PerpsAutoClosingCondition {
             + PercentageFormatter.string(
                 from: percentage,
                 format: .pretty,
-                sign: .never
+                sign: .whenNegative
             )
             + ")"
         case .stopLoss:
@@ -199,11 +219,20 @@ extension PerpsAutoClosingCondition {
     
     func maxChange() -> (value: Decimal, localized: String) {
         assert(margin != 0, "Only results 0")
+        guard let feeRate else {
+            return (value: 0, localized: "-")
+        }
         let pnl: Decimal = switch orderState {
         case .draft:
             margin * percentage
         case .open(_, let quantity):
-            (price - entryPrice) * quantity * (side == .long ? 1 : -1)
+            Self.netPNL(
+                side: side,
+                quantity: quantity,
+                entryPrice: entryPrice,
+                closingPrice: price,
+                feeRate: feeRate,
+            )
         }
         var maxChange = CurrencyFormatter.localizedString(
             from: pnl,
@@ -216,12 +245,26 @@ extension PerpsAutoClosingCondition {
             maxChange += " (" + PercentageFormatter.string(
                 from: percentage,
                 format: .pretty,
-                sign: .never
+                sign: .whenNegative
             ) + ")"
         case .stopLoss:
             break
         }
         return (value: pnl, localized: maxChange)
+    }
+    
+    private static func netPNL(
+        side: PerpetualOrderSide,
+        quantity: Decimal,
+        entryPrice: Decimal,
+        closingPrice: Decimal,
+        feeRate: Decimal,
+    ) -> Decimal {
+        let quantity = abs(quantity)
+        let grossPNL = (closingPrice - entryPrice) * quantity * (side == .long ? 1 : -1)
+        let openingFee = quantity * entryPrice * feeRate
+        let closingFee = quantity * closingPrice * feeRate
+        return grossPNL - openingFee - closingFee
     }
     
 }

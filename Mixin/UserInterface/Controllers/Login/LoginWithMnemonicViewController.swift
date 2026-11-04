@@ -78,11 +78,10 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(
+        CustomerServiceViewController.invoke(
             presentLoginLogsOnLongPressingTitle: true,
             reportingTags: ["source": "login_mnemonic_phrase"],
         )
-        present(customerService, animated: true)
     }
     
     @objc private func login(_ sender: Any) {

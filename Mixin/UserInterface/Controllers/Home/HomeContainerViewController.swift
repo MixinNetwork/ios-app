@@ -154,14 +154,6 @@ final class HomeContainerViewController: UIViewController {
         }
     }
     
-    func presentOnTopMostPresentedController(_ viewControllerToPresent: UIViewController, animated: Bool) {
-        var topMost: UIViewController = self
-        while let next = topMost.presentedViewController, !next.isBeingDismissed {
-            topMost = next
-        }
-        topMost.present(viewControllerToPresent, animated: true)
-    }
-    
     func showWalletViewController() {
         homeTabBarController.showWallet()
     }

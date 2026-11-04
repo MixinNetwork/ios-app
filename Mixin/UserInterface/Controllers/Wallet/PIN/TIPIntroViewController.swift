@@ -174,11 +174,10 @@ final class TIPIntroViewController: UIViewController {
     }
     
     @objc func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(
+        CustomerServiceViewController.invoke(
             presentLoginLogsOnLongPressingTitle: true,
             reportingTags: ["source": "tip_intro"],
         )
-        present(customerService, animated: true)
     }
     
     @objc private func presentMoreActions(_ sender: Any) {

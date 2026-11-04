@@ -209,8 +209,7 @@ final class TradeViewController: UIViewController {
             case .perpetualFutures:
                 "perps_home_menu"
             }
-            let customerService = CustomerServiceViewController(reportingTags: ["source": source])
-            self.present(customerService, animated: true)
+            CustomerServiceViewController.invoke(reportingTags: ["source": source])
         }))
         switch trading {
         case .simpleSpot, .advancedSpot:

@@ -141,8 +141,7 @@ class InputOnChainInfoViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(reportingTags: ["source": "input_private_key"])
-        present(customerService, animated: true)
+        CustomerServiceViewController.invoke(reportingTags: ["source": "input_private_key"])
     }
     
     @objc private func rearrangeInputButtons(_ sender: Any) {

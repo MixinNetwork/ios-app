@@ -41,11 +41,10 @@ final class UnlockCommonWalletChainsInputPINViewController: FullscreenPINValidat
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(
+        CustomerServiceViewController.invoke(
             presentLoginLogsOnLongPressingTitle: true,
             reportingTags: ["source": "unlock_common_wallet_chain"],
         )
-        present(customerService, animated: true)
     }
     
 }

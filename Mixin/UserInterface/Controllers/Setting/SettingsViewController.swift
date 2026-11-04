@@ -124,8 +124,7 @@ extension SettingsViewController: UITableViewDelegate {
             navigationController?.pushViewController(setting, animated: true)
         case 4:
             if indexPath.row == 0 {
-                let customerService = CustomerServiceViewController(reportingTags: nil)
-                present(customerService, animated: true)
+                CustomerServiceViewController.invoke(reportingTags: nil)
             } else {
                 let content = R.string.localizable.chat_on_mixin_content(myIdentityNumber)
                 let controller = UIActivityViewController(activityItems: [content], applicationActivities: nil)

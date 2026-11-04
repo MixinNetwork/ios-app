@@ -12,6 +12,7 @@
 		119704EDA3CD48649BB5F58B /* StickerStoreBannerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E0F99EB92C3422C954DE299 /* StickerStoreBannerCell.xib */; };
 		15F960D799B36E0B7CBE84E4 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 970A7220911FCED8F41E8DD2 /* SDWebImageSVGCoder */; };
 		1B92B8E60B19F116E808E88C /* MixinServices in Frameworks */ = {isa = PBXBuildFile; productRef = 67872A9DDFA92A9E1A6E7F40 /* MixinServices */; };
+		1C0D72AEFD684C6688206493 /* ModernSegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F5AB57642D4A2184DC1DFC /* ModernSegmentCell.swift */; };
 		212903A0CD44B64F189F9DF1 /* XKCP_FIPS202 in Frameworks */ = {isa = PBXBuildFile; productRef = E96DD255EFFC4EC60EDA5F1C /* XKCP_FIPS202 */; };
 		2307E2E00C293C8213637DB9 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = A7DA4A415893F20D86BE0542 /* SDWebImage */; };
 		273A5E0C1F95EA5100AE802F /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 273A5E0B1F95EA4500AE802F /* Contacts.framework */; };
@@ -1830,6 +1831,7 @@
 		ABE865BE23F2455800C0167D /* AuthorizationScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE865BD23F2455800C0167D /* AuthorizationScope.swift */; };
 		ABE865C123F260FE00C0167D /* PermissionsActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ABE865BF23F260FE00C0167D /* PermissionsActionCell.xib */; };
 		ABE865C223F260FE00C0167D /* PermissionsActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE865C023F260FE00C0167D /* PermissionsActionCell.swift */; };
+		ACAC87118E3C49B88831D88F /* ModernSegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57C808B7FE2849EB88E93C26 /* ModernSegmentCell.xib */; };
 		B107FD9A1DBD0F62DEE16ACC /* SDWebImageLottieCoder in Frameworks */ = {isa = PBXBuildFile; productRef = F0A2554BEE2F20225F5FAFA8 /* SDWebImageLottieCoder */; };
 		B1CAB233EAB04D1CBA398642 /* AdvertisementBannerActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC5DC4D300046CDA234FBEC /* AdvertisementBannerActionHandler.swift */; };
 		B252DE69BAED44BFB8A93D22 /* StorageUsageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8830EEC5C15D4DA08B67CA36 /* StorageUsageView.xib */; };
@@ -2103,6 +2105,7 @@
 		52DE7B4E2BEB7C940060A364 /* TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionViewController.swift; sourceTree = "<group>"; };
 		52E0A0022E59EE38006A11E9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		579E27F6EB334DF7A67CF257 /* StorageUsageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StorageUsageCell.xib; sourceTree = "<group>"; };
+		57C808B7FE2849EB88E93C26 /* ModernSegmentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ModernSegmentCell.xib; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
 		5E5CA7852674AC8E00C1E113 /* ScreenLockManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenLockManager.swift; sourceTree = "<group>"; };
 		5E5CA86C2674B09100C1E113 /* ScreenLockSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenLockSettingViewController.swift; sourceTree = "<group>"; };
@@ -3912,6 +3915,7 @@
 		C0DE11030000000000000001 /* PerpsProCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsProCell.swift; sourceTree = "<group>"; };
 		C764FAFA5AF64A85A5824F02 /* PopupAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupAlertViewController.swift; sourceTree = "<group>"; };
 		C7FEF05A2A554FAC90DA5985 /* StickersEditingCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StickersEditingCell.xib; sourceTree = "<group>"; };
+		D0F5AB57642D4A2184DC1DFC /* ModernSegmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModernSegmentCell.swift; sourceTree = "<group>"; };
 		DF03C88A1FF3A58C00C1ED6B /* GroupInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupInviteCell.swift; sourceTree = "<group>"; };
 		DF03C88C1FF4D9A100C1ED6B /* RegenerateGroupIconJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegenerateGroupIconJob.swift; sourceTree = "<group>"; };
 		DF048CCD223FCA02005F1EF5 /* ModernSelectedBackgroundCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModernSelectedBackgroundCell.swift; sourceTree = "<group>"; };
@@ -6992,6 +6996,8 @@
 				943B5EAA2B600D77001C1F6E /* AppCell.swift */,
 				940AE02B2BA0D88100E7A9FE /* SegmentCell.xib */,
 				940AE02A2BA0D88100E7A9FE /* SegmentCell.swift */,
+				57C808B7FE2849EB88E93C26 /* ModernSegmentCell.xib */,
+				D0F5AB57642D4A2184DC1DFC /* ModernSegmentCell.swift */,
 				9488BC06309186400039D1C2 /* NewChatActionCell.xib */,
 				9488BC05309186400039D1C2 /* NewChatActionCell.swift */,
 			);
@@ -7730,6 +7736,7 @@
 				7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */,
 				94DD0DBC2DC3528B00C70CA2 /* MembershipPlanBadgeCell.xib in Resources */,
 				940AE02D2BA0D88100E7A9FE /* SegmentCell.xib in Resources */,
+				ACAC87118E3C49B88831D88F /* ModernSegmentCell.xib in Resources */,
 				7B9A18162428932A00187693 /* PageControlView.xib in Resources */,
 				7BCEAA782350A29000F07635 /* SharedMediaDataCell.xib in Resources */,
 				94EF9DCA2F3E17CE007CCCEC /* TradeView.xib in Resources */,
@@ -8241,6 +8248,7 @@
 				9468E08D2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift in Sources */,
 				940FC5EB2CDBC4F10056BFF2 /* ViewMnemonicsViewController.swift in Sources */,
 				940AE02C2BA0D88100E7A9FE /* SegmentCell.swift in Sources */,
+				1C0D72AEFD684C6688206493 /* ModernSegmentCell.swift in Sources */,
 				7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */,
 				94668D682DF06C640068078D /* MembershipOrderRewardsCell.swift in Sources */,
 				944124A42E715CEB00705462 /* EnableNotificationHeaderView.swift in Sources */,

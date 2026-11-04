@@ -89,13 +89,22 @@ final class TradeViewController: UIViewController {
             action: #selector(presentOrders(_:)),
         )
         
-        collectionView.register(R.nib.segmentCell)
-        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.itemSize = UICollectionViewFlowLayout.automaticSize
-            layout.estimatedItemSize = CGSize(width: 100, height: 38)
-            layout.minimumInteritemSpacing = 0
-        }
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .estimated(100),
+            heightDimension: .estimated(38),
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 10
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 25, bottom: 0, trailing: 25)
+        let configuration = UICollectionViewCompositionalLayoutConfiguration()
+        configuration.scrollDirection = .horizontal
+        collectionView.collectionViewLayout = UICollectionViewCompositionalLayout(
+            section: section,
+            configuration: configuration,
+        )
+        collectionView.register(R.nib.modernSegmentCell)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
@@ -146,7 +155,7 @@ extension TradeViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.modern_segment, for: indexPath)!
         switch allTradings[indexPath.item] {
         case .simpleSpot:
             cell.label.text = R.string.localizable.trade_simple()
@@ -188,7 +197,7 @@ extension TradeViewController {
         case .perpetualFutures:
             BadgeManager.shared.setHasViewed(identifier: .perps)
         }
-        if let cell = collectionView.cellForItem(at: indexPath) as? SegmentCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? ModernSegmentCell {
             cell.badgeView.isHidden = true
         }
         AppGroupUserDefaults.Wallet.tradeMode = trading.rawValue

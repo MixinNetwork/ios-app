@@ -135,6 +135,7 @@
 "all_conversations" = "所有會話";
 "all_dates" = "所有日期";
 "all_invoices" = "全部賬單";
+"all_networks" = "所有網路";
 "all_signer_failure" = "所有節點失敗";
 "all_time_high" = "歷史最高";
 "all_time_low" = "歷史最低";
@@ -868,6 +869,7 @@
 "large_amount_reminder" = "本次轉賬 %1$@ 的價值高達 %2$@，請注意金額是否正確。";
 "last_active_time" = "最後登入於 %@";
 "last_backup_hint" = "上次備份是 %@，佔用空間 %@。";
+"last_updated_at" = "最後更新：%@";
 "later" = "稍後";
 "learn_how_to_trade_perps" = "瞭解如何交易永續合約";
 "learn_more" = "瞭解更多";
@@ -1088,6 +1090,8 @@
 "no_orders" = "沒有訂單";
 "no_position" = "暫無倉位";
 "no_posts" = "沒有文章";
+"no_records" = "暫無記錄";
+"no_records_found" = "未找到相關記錄";
 "no_results" = "未找到相關結果";
 "no_stickers" = "還未新增任何表情";
 "no_tag" = "點選不使用 Tag（標籤）";
@@ -1114,6 +1118,7 @@
 "now_an_addmin" = "%@現在是管理員";
 "number_of_assets" = "%d 資產";
 "number_of_days" = "%d天";
+"number_of_networks" = "%d 個網路";
 "number_of_opponents" = "%d 收發人";
 "number_of_recipients" = "%d 收款人";
 "number_of_words" = "%d 個詞";

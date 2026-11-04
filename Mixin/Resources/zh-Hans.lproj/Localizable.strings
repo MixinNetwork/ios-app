@@ -135,6 +135,7 @@
 "all_conversations" = "所有会话";
 "all_dates" = "所有日期";
 "all_invoices" = "全部账单";
+"all_networks" = "所有网络";
 "all_signer_failure" = "所有节点失败";
 "all_time_high" = "历史最高";
 "all_time_low" = "历史最低";
@@ -868,6 +869,7 @@
 "large_amount_reminder" = "本次转账 %1$@ 的价值高达 %2$@，请注意金额是否正确。";
 "last_active_time" = "最后登入于 %@";
 "last_backup_hint" = "上次备份是 %@，占用空间 %@。";
+"last_updated_at" = "最后更新：%@";
 "later" = "稍后";
 "learn_how_to_trade_perps" = "了解如何交易永续合约";
 "learn_more" = "了解更多";
@@ -1088,6 +1090,8 @@
 "no_orders" = "没有订单";
 "no_position" = "暂无仓位";
 "no_posts" = "没有文章";
+"no_records" = "暂无记录";
+"no_records_found" = "未找到相关记录";
 "no_results" = "未找到相关结果";
 "no_stickers" = "还未添加任何表情";
 "no_tag" = "点击不使用 Tag（标签）";
@@ -1114,6 +1118,7 @@
 "now_an_addmin" = "%@现在是管理员";
 "number_of_assets" = "%d 资产";
 "number_of_days" = "%d天";
+"number_of_networks" = "%d 个网络";
 "number_of_opponents" = "%d 收发人";
 "number_of_recipients" = "%d 收款人";
 "number_of_words" = "%d 个词";

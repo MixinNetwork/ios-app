@@ -21,6 +21,7 @@ public final class BadgeManager {
         case perpsStopLoss = "perps_stop_loss"
         case addWalletBanner = "add_wallet_tip"
         case walletHomeReferral = "wallet_home_referral"
+        case addressBook = "address_book"
     }
     
     public static let shared = BadgeManager()

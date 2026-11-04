@@ -100,6 +100,95 @@ final class AddressInfoInputHeaderView: UIView {
         contentStackView.addArrangedSubview(stackView)
     }
     
+    func loadNetwork(name: String, isSwitchable: Bool, target: Any, action: Selector) {
+        titleStackView.isHidden = true
+        
+        let captionLabel = UILabel()
+        captionLabel.textColor = R.color.text_tertiary()
+        captionLabel.setFont(scaledFor: .systemFont(ofSize: 12), adjustForContentSize: true)
+        captionLabel.text = R.string.localizable.network()
+        
+        let nameLabel = UILabel()
+        nameLabel.textColor = R.color.text()
+        nameLabel.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
+        nameLabel.text = name
+        
+        let labelStackView = UIStackView(arrangedSubviews: [captionLabel, nameLabel])
+        labelStackView.axis = .vertical
+        labelStackView.spacing = 6
+        
+        let networkView = UIView()
+        networkView.backgroundColor = R.color.background()
+        networkView.layer.cornerRadius = 8
+        networkView.layer.masksToBounds = true
+        networkView.addSubview(labelStackView)
+        labelStackView.snp.makeConstraints { make in
+            make.top.leading.equalToSuperview().offset(16)
+            make.bottom.equalToSuperview().offset(-16)
+        }
+        if isSwitchable {
+            let arrowView = UIImageView(image: R.image.arrow_down_compact())
+            arrowView.tintColor = R.color.icon_tint_tertiary()
+            arrowView.contentMode = .center
+            networkView.addSubview(arrowView)
+            arrowView.snp.makeConstraints { make in
+                make.leading.equalTo(labelStackView.snp.trailing).offset(16)
+                make.trailing.equalToSuperview().offset(-16)
+                make.centerY.equalToSuperview()
+            }
+            arrowView.setContentHuggingPriority(.required, for: .horizontal)
+            let button = UIButton(type: .custom)
+            button.addTarget(target, action: action, for: .touchUpInside)
+            networkView.addSubview(button)
+            button.snp.makeEdgesEqualToSuperview()
+        } else {
+            labelStackView.snp.makeConstraints { make in
+                make.trailing.equalToSuperview().offset(-16)
+            }
+        }
+        contentStackView.insertArrangedSubview(networkView, at: 0)
+    }
+    
+    func addInfoView(title: String, content: String, iconURL: String?) {
+        titleStackView.isHidden = true
+        
+        let titleLabel = UILabel()
+        titleLabel.textColor = R.color.text_tertiary()
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        titleLabel.text = title
+        
+        let contentLabel = UILabel()
+        contentLabel.textColor = R.color.text_tertiary()
+        contentLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        contentLabel.numberOfLines = 0
+        contentLabel.textAlignment = .right
+        contentLabel.lineBreakMode = .byCharWrapping
+        contentLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        contentLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        contentLabel.text = content
+        
+        let contentStackView = UIStackView(arrangedSubviews: [contentLabel])
+        contentStackView.axis = .horizontal
+        contentStackView.alignment = .center
+        contentStackView.spacing = 4
+        if let iconURL {
+            let iconView = PlainTokenIconView(frame: .zero)
+            iconView.setIcon(urlString: iconURL)
+            iconView.snp.makeConstraints { make in
+                make.width.height.equalTo(16)
+            }
+            contentStackView.insertArrangedSubview(iconView, at: 0)
+        }
+        
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, contentStackView])
+        stackView.axis = .horizontal
+        stackView.alignment = .top
+        stackView.spacing = 16
+        self.contentStackView.addArrangedSubview(stackView)
+    }
+    
     @objc private func textViewDidChange(_ notification: Notification) {
         placeholderLabel.isHidden = !textView.text.isEmpty
         updateActionButton()

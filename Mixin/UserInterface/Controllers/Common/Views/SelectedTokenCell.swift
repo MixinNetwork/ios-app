@@ -13,6 +13,15 @@ final class SelectedTokenCell: SelectedItemCell<PlainTokenIconView> {
         nameLabel.text = address.label
     }
     
+    func load(network: AddressBookNetwork) {
+        if let chain = network.chain {
+            iconView.setIcon(urlString: chain.iconUrl)
+        } else {
+            iconView.image = R.image.unknown_session()
+        }
+        nameLabel.text = network.name
+    }
+    
     func load(token: any Token) {
         iconView.setIcon(token: token)
         nameLabel.text = token.symbol

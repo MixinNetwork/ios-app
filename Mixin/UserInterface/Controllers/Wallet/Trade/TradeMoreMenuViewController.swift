@@ -47,7 +47,11 @@ final class TradeMoreMenuViewController: UIViewController {
         navigationItem.compactScrollEdgeAppearance = .backgroundSecondaryColored
         let titleView = TradeTitleView(wallet: wallet)
         titleView.alignment = .leading
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleView)
+        let titleItem = UIBarButtonItem(customView: titleView)
+        if #available(iOS 26.0, *) {
+            titleItem.hidesSharedBackground = true
+        }
+        navigationItem.leftBarButtonItem = titleItem
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .close,
             target: self,

@@ -123,8 +123,9 @@ final class AddressInfoInputHeaderView: UIView {
         networkView.layer.masksToBounds = true
         networkView.addSubview(labelStackView)
         labelStackView.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(16)
-            make.bottom.equalToSuperview().offset(-16)
+            make.top.equalToSuperview().offset(14)
+            make.leading.equalToSuperview().offset(16)
+            make.bottom.equalToSuperview().offset(-14)
         }
         if isSwitchable {
             let arrowView = UIImageView(image: R.image.arrow_down_compact())

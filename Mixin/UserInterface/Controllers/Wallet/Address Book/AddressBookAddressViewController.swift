@@ -231,6 +231,7 @@ extension AddressBookAddressViewController: UITableViewDataSource {
             cell.titleLabel.text = row.title.localizedUppercase
             cell.subtitleLabel.text = row.value
             cell.subtitleLabel.textColor = R.color.text()
+            cell.subtitleLabel.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
             cell.disclosureIndicatorImageView.isHidden = true
             return cell
         case .transactions:
@@ -238,6 +239,7 @@ extension AddressBookAddressViewController: UITableViewDataSource {
             case .title:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
                 cell.label.text = R.string.localizable.transactions()
+                cell.label.textColor = R.color.text_secondary()
                 cell.disclosureIndicatorView.isHidden = !hasMoreTransactions
                 return cell
             case .emptyIndicator:
@@ -262,7 +264,7 @@ extension AddressBookAddressViewController: UITableViewDataSource {
                     var content = cell.defaultContentConfiguration()
                     content.text = R.string.localizable.view_all()
                     content.textProperties.alignment = .center
-                    content.textProperties.font = .scaledFont(ofSize: 14, weight: .regular)
+                    content.textProperties.font = .scaledFont(ofSize: 14, weight: .medium)
                     content.textProperties.color = R.color.theme()!
                     return content
                 }()
@@ -315,12 +317,7 @@ extension AddressBookAddressViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        switch Section(rawValue: section)! {
-        case .info:
-            8
-        case .transactions:
-            .leastNormalMagnitude
-        }
+        .leastNormalMagnitude
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

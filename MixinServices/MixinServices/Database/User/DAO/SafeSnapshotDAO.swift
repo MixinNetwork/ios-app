@@ -127,7 +127,7 @@ extension SafeSnapshotDAO {
         }
         for address in filter.addresses {
             let keyword = "%\(address.destination.sqlEscaped)%"
-            let condition: GRDB.SQL = "s.deposit LIKE \(keyword) OR s.withdrawal LIKE \(keyword)"
+            let condition: GRDB.SQL = "t.chain_id = \(address.chainId) AND (s.deposit LIKE \(keyword) OR s.withdrawal LIKE \(keyword))"
             recipientConditions.append(condition)
         }
         if !recipientConditions.isEmpty {

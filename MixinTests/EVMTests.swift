@@ -11,10 +11,33 @@ import UIKit
 import CommonCrypto
 import CryptoKit
 import TIP
+import WalletConnectSigner
 @testable import Mixin
 @testable import MixinServices
 
 struct EVMTests {
+    
+    @Test func walletConnectPublicKeyRecovery() throws {
+        let provider = Web3CryptoProvider()
+        let message = Data("\u{19}Ethereum Signed Message:\n7Message".utf8)
+        let serialized = try #require(Data(hexEncodedString: "66121e60cccc01fbf7fcba694a1e08ac5db35fb4ec6c045bedba7860445b95c021cad2c595f0bf68ff896964c7c02bb2f3a3e9540e8e4595c98b737ce264cc541b"))
+        let signature = EthereumSignature(serialized: serialized)
+        let publicKey = try provider.recoverPubKey(signature: signature, message: message)
+        #expect(publicKey.count == 64)
+        #expect(provider.keccak256(publicKey).suffix(20).hexEncodedString() == "15bca56b6e2728aec2532df9d436bd1600e86688")
+        let wrongKey = try provider.recoverPubKey(signature: signature, message: Data("Wrong message".utf8))
+        #expect(wrongKey != publicKey)
+        let invalidSignatures = [
+            EthereumSignature(v: 0, r: [], s: signature.s),
+            EthereumSignature(v: 255, r: signature.r, s: signature.s),
+            EthereumSignature(v: 0, r: [UInt8](repeating: 0, count: 32), s: signature.s),
+        ]
+        for signature in invalidSignatures {
+            #expect(throws: EVM.Error.self) {
+                try provider.recoverPubKey(signature: signature, message: message)
+            }
+        }
+    }
     
     @Test func addressAndGaslessSignatureVector() throws {
         let privateKey = try #require(Data(hexEncodedString: "774681694ad86635346b6e9b92fa8aa4806265336dc6766623029a6264a162c1"))

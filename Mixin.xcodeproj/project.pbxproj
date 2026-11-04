@@ -1820,7 +1820,6 @@
 		9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D57991F9F0ADA008A7957 /* Chat.storyboard */; };
 		9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */; };
 		A11000000000000000000001 /* ethereum_rust_sdk.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A11000000000000000000002 /* ethereum_rust_sdk.xcframework */; };
-		A11000000000000000000005 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = A11000000000000000000006 /* secp256k1 */; };
 		A2FC57C7CD17245C024CB8A8 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = B399FDB6D835A212B15CA4E1 /* FirebasePerformance */; };
 		A96D2DF95DF74A2BAE691D24 /* GalleryWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96D2DF95DF74A2BAE691D23 /* GalleryWindow.swift */; };
 		A96D2DF95DF74A2BAE691D26 /* GalleryTransitionOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96D2DF95DF74A2BAE691D25 /* GalleryTransitionOverlayView.swift */; };
@@ -4119,7 +4118,6 @@
 				94881FAC2AD035ED00CA7A29 /* RswiftLibrary in Frameworks */,
 				94341BF92862F302009C9147 /* libopusfile.xcframework in Frameworks */,
 				A11000000000000000000001 /* ethereum_rust_sdk.xcframework in Frameworks */,
-				A11000000000000000000005 /* secp256k1 in Frameworks */,
 				94787E182A7C071E00BB0124 /* QRCode in Frameworks */,
 				DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */,
 				DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */,
@@ -7242,7 +7240,6 @@
 				9481C03B2A49A9AA0009DAF8 /* Starscream */,
 				94787E172A7C071E00BB0124 /* QRCode */,
 				94881FAB2AD035ED00CA7A29 /* RswiftLibrary */,
-				A11000000000000000000006 /* secp256k1 */,
 				94ED93892E37592700A3E337 /* WalletConnect */,
 				67872A9DDFA92A9E1A6E7F40 /* MixinServices */,
 				BDD925B03BDD82943615F6A4 /* FirebaseCore */,
@@ -7416,7 +7413,6 @@
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
 				94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */,
 				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */,
-				94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
 				94ED93882E37592700A3E337 /* XCRemoteSwiftPackageReference "reown-swift" */,
 				B2D11002B538DB894D288770 /* XCLocalSwiftPackageReference "MixinServices" */,
 				3BA479A94806B05ECA85DE40 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
@@ -10272,14 +10268,6 @@
 				minimumVersion = 7.8.0;
 			};
 		};
-		94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift.git";
-			requirement = {
-				kind = exactVersion;
-				version = 0.16.0;
-			};
-		};
 		94ED93882E37592700A3E337 /* XCRemoteSwiftPackageReference "reown-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/reown-com/reown-swift";
@@ -10439,11 +10427,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 77A8F6D16AC3A412DC8C7F5E /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */;
 			productName = SDWebImageSVGCoder;
-		};
-		A11000000000000000000006 /* secp256k1 */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
-			productName = secp256k1;
 		};
 		A52627F6436E72A082FD1998 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;

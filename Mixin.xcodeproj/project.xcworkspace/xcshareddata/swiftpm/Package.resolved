@@ -1,5 +1,5 @@
 {
-  "originHash" : "7d9382ecf92f453084272c0c6aa60ce777ddfb0894c7637276a229f327b81dd9",
+  "originHash" : "8aedf54ef2418bda0cffea2a397b9527e6afef88b5ed595b5f7d16a03c2e84f8",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -278,15 +278,6 @@
       "state" : {
         "revision" : "85b5d58ad02c207c496fa34426dc6560d6ae32f0",
         "version" : "1.8.0"
-      }
-    },
-    {
-      "identity" : "secp256k1.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/GigaBitcoin/secp256k1.swift.git",
-      "state" : {
-        "revision" : "347b84ed2aad2305a7233f2a48d76f41e52062a1",
-        "version" : "0.16.0"
       }
     },
     {

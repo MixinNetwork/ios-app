@@ -8,6 +8,7 @@ enum EVM {
         case sdk(Int32)
         case invalidAddress
         case invalidResponse
+        case invalidSignature
         case invalidTransaction
         case invalidTypedData
         case integerOverflow
@@ -57,6 +58,23 @@ enum EVM {
             }
         }
         return "0x" + signature.hexEncodedString()
+    }
+    
+    static func recoverPublicKey(
+        hash: Data,
+        signature: Data,
+    ) throws(Error) -> Data {
+        let publicKey = try output { output in
+            hash.withEVMBytes { hash in
+                signature.withEVMBytes { signature in
+                    evm_recover_public_key(hash, signature, output)
+                }
+            }
+        }
+        guard publicKey.count == 65, publicKey.first == 0x04 else {
+            throw .invalidResponse
+        }
+        return publicKey
     }
     
     static func data(hex: String) -> Data? {

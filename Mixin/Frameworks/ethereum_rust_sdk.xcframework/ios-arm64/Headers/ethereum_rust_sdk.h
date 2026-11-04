@@ -18,6 +18,7 @@ typedef enum EVMErrorCode {
   EVMErrorCode_SigningFailed = -7,
   EVMErrorCode_Panic = -8,
   EVMErrorCode_IntegerOverflow = -9,
+  EVMErrorCode_InvalidSignature = -10,
 } EVMErrorCode;
 
 /**
@@ -134,6 +135,18 @@ enum EVMErrorCode evm_sign_personal_message(struct EVMBytes message,
  * Input slices must be readable; out must be writable and not alias inputs.
  */
 enum EVMErrorCode evm_sign_hash(struct EVMBytes hash, struct EVMBytes key, struct EVMBuffer *out);
+
+/**
+ * Recover a 65-byte uncompressed SEC1 public key (0x04 || X || Y) from a
+ * 32-byte digest and r || s || v signature. v must be 0/1 or 27/28.
+ * The digest is used directly without additional hashing or message prefixes.
+ * # Safety
+ * Input slices must be readable; out must be writable and not alias inputs.
+ * On error out is empty. Free successful output with evm_free_buffer.
+ */
+enum EVMErrorCode evm_recover_public_key(struct EVMBytes hash,
+                                         struct EVMBytes signature,
+                                         struct EVMBuffer *out);
 
 /**
  * Validate a gasless transfer against locally confirmed fields, returning the rebuilt

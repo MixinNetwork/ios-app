@@ -52,6 +52,10 @@ extension AddressBookNetworkSelectorViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.currency, for: indexPath)!
         let network = networkModels[indexPath.row]
+        cell.iconImageView.contentMode = .scaleAspectFit
+        cell.iconImageView.layer.shadowOpacity = 0
+        cell.iconImageView.layer.cornerRadius = 21
+        cell.iconImageView.layer.masksToBounds = true
         cell.iconImageView.sd_cancelCurrentImageLoad()
         if let iconURL = network.chain?.iconUrl, let url = URL(string: iconURL) {
             cell.iconImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)

@@ -41,6 +41,10 @@ public final class PerpsOrderDAO: PerpsDAO {
         return db.select(with: query)
     }
     
+    public func activitiesCount() -> Int {
+        db.select(with: "SELECT COUNT(*) FROM perps_orders WHERE order_type = 'close'") ?? 0
+    }
+    
     public func activitiesValue() -> PerpetualPositionValue {
         let sql = """
         SELECT net_realized_pnl, realized_pnl

@@ -110,7 +110,7 @@ final class TradeMoreMenuViewController: UIViewController {
             let positionsCount: Int
             switch wallet {
             case .privacy:
-                positionsCount = PerpsPositionDAO.shared.count()
+                positionsCount = PerpsOrderDAO.shared.activitiesCount()
             case .common, .safe:
                 positionsCount = 0
             }
@@ -185,7 +185,7 @@ extension TradeMoreMenuViewController: UICollectionViewDelegate {
         case .limitOrders:
             next = TradeOrdersViewController(wallet: wallet, type: .limit, status: nil)
         case .perpetualActivity:
-            next = PerpetualPositionsViewController(wallet: wallet)
+            next = PerpetualActivitiesViewController(wallet: wallet)
         case .perpsPro:
             return
         }

@@ -191,19 +191,7 @@ extension CustomerServiceViewController: WebViewMessageHandler.Delegate {
         case .tipSign(let callback):
             webView.evaluateJavaScript(callback)
         case .getAssets(let assetIDs, let callback):
-            DispatchQueue.global().async { [weak webView] in
-                let tokens = TokenDAO.shared.appTokens(ids: assetIDs)
-                if let data = try? JSONEncoder.default.encode(tokens), let string = String(data: data, encoding: .utf8) {
-                    let assets = string.replacingOccurrences(of: "'", with: "\\'")
-                    DispatchQueue.main.async {
-                        webView?.evaluateJavaScript("\(callback)('\(assets)');")
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        webView?.evaluateJavaScript("\(callback)('[]');")
-                    }
-                }
-            }
+            webView.evaluateJavaScript("\(callback)('[]');")
         case .web3Bridge:
             break
         case .signBotSignature(let callback):

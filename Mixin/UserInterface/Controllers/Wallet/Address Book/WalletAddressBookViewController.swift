@@ -123,7 +123,7 @@ final class WalletAddressBookViewController: UIViewController {
         tableView.delegate = self
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(networkFilterView.snp.bottom).offset(8)
+            make.top.equalTo(networkFilterView.snp.bottom).offset(6)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(addButton.snp.top).offset(-16)
         }

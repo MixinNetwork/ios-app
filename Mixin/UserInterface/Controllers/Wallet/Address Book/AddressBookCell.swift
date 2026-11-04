@@ -68,7 +68,7 @@ final class AddressBookCell: UITableViewCell {
         networkLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         
         networkIconView.snp.makeConstraints { make in
-            make.width.height.equalTo(16)
+            make.width.height.equalTo(18)
         }
         let networkStackView = UIStackView(arrangedSubviews: [networkIconView, networkLabel])
         networkStackView.axis = .horizontal
@@ -91,7 +91,6 @@ final class AddressBookCell: UITableViewCell {
         let contentStackView = UIStackView(arrangedSubviews: [titleStackView, addressLabel, dateLabel])
         contentStackView.axis = .vertical
         contentStackView.spacing = 6
-        contentStackView.setCustomSpacing(8, after: addressLabel)
         cardView.addSubview(contentStackView)
         contentStackView.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(16)

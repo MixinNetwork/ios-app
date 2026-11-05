@@ -85,6 +85,8 @@ extension Market.Ordering {
             watchlistDefault
         case .trending:
             Market.Ordering(field: .rowid, direction: .ascending)
+        case .stock:
+            stocksDefault
         case .topGainer:
             Market.Ordering(
                 field: .change(AppGroupUserDefaults.User.cryptoMarketChangePeriod),
@@ -113,6 +115,8 @@ extension PerpetualMarket.Ordering {
             watchlistDefault
         case .trending:
             PerpetualMarket.Ordering(field: .score, direction: .descending)
+        case .stock:
+            stocksDefault
         case .topGainers:
             PerpetualMarket.Ordering(field: .change, direction: .descending)
         case .topLosers:

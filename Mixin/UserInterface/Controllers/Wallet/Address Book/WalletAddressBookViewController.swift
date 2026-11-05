@@ -57,6 +57,7 @@ final class WalletAddressBookViewController: UIViewController {
             make.top.leading.trailing.equalToSuperview()
             make.height.equalTo(70)
         }
+        searchBoxView.contentView.backgroundColor = R.color.background()
         searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_address()
         searchBoxView.textField.addTarget(self, action: #selector(reloadFilteredAddresses), for: .editingChanged)
         searchWrapperView.addSubview(searchBoxView)

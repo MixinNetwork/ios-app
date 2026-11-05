@@ -34,7 +34,7 @@ final class AddressBookAddressViewController: UIViewController {
     
     private var source: Source?
     private var transactionRows: [TransactionRow] = [.title]
-    private var hasMoreTransactions = false
+    private var hasTransactions = false
     private var transactionTokenSymbols: [String: String] = [:]
     
     init(address: AddressItem, network: AddressBookNetwork?) {
@@ -197,7 +197,7 @@ final class AddressBookAddressViewController: UIViewController {
                 self.source = source
                 self.transactionTokenSymbols = tokenSymbols
                 self.transactionRows = rows
-                self.hasMoreTransactions = hasMore
+                self.hasTransactions = !transactions.isEmpty
                 UIView.performWithoutAnimation {
                     self.tableView.reloadSections(IndexSet(integer: Section.transactions.rawValue), with: .none)
                 }
@@ -240,7 +240,7 @@ extension AddressBookAddressViewController: UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
                 cell.label.text = R.string.localizable.transactions()
                 cell.label.textColor = R.color.text_secondary()
-                cell.disclosureIndicatorView.isHidden = !hasMoreTransactions
+                cell.disclosureIndicatorView.isHidden = !hasTransactions
                 return cell
             case .emptyIndicator:
                 return tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.no_transaction_indicator, for: indexPath)!
@@ -337,7 +337,7 @@ extension AddressBookAddressViewController: UITableViewDelegate {
         }
         switch transactionRows[indexPath.row] {
         case .title, .viewAll:
-            guard hasMoreTransactions else {
+            guard hasTransactions else {
                 return
             }
             switch source {

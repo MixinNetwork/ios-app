@@ -209,7 +209,7 @@ public final class PerpsMarketDAO: PerpsDAO {
         FROM markets m
             LEFT JOIN favorites f ON m.market_id = f.market_id
         WHERE CAST(m.volume AS REAL) > 0
-            AND (m.display_symbol LIKE :keyword OR m.token_symbol LIKE :keyword)
+            AND (m.display_symbol LIKE :keyword OR m.token_symbol LIKE :keyword OR m.tags LIKE :keyword)
         ORDER BY CAST(m.volume AS REAL) DESC,
             m.token_symbol ASC,
             m.display_symbol ASC

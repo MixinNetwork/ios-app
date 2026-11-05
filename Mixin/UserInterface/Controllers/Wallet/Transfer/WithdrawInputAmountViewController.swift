@@ -265,8 +265,7 @@ extension WithdrawInputAmountViewController: WalletHintViewControllerDelegate {
     }
     
     func walletHintViewControllerWantsContactSupport(_ controller: WalletHintViewController) {
-        let customerService = CustomerServiceViewController(reportingTags: nil)
-        present(customerService, animated: true)
+        CustomerServiceViewController.invoke(reportingTags: nil)
     }
     
 }

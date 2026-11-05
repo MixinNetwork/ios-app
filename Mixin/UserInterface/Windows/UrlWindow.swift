@@ -987,11 +987,31 @@ extension UrlWindow {
     enum AppAction {
         case presentProfile
         case presentHomePage(additionalQueries: [String: String])
+        case customerService(
+            presentLoginLogsOnLongPressingTitle: Bool,
+            reportingTags: [String: String]?,
+        )
     }
     
     class func checkApp(userID: String, action: AppAction) -> Bool {
         guard !userID.isEmpty, UUID(uuidString: userID) != nil else {
             return false
+        }
+        guard LoginManager.shared.isLoggedIn else {
+            switch action {
+            case .presentProfile, .presentHomePage:
+                break
+            case let .customerService(presentLoginLogsOnLongPressingTitle, reportingTags):
+                let customerService = CustomerServiceViewController(
+                    context: nil,
+                    presentLoginLogsOnLongPressingTitle: presentLoginLogsOnLongPressingTitle,
+                    reportingTags: reportingTags
+                )
+                if let window = UIApplication.shared.firstWindowScene?.keyWindow {
+                    window.rootViewController?.presentOnTopMostPresentedController(customerService, animated: true)
+                }
+            }
+            return true
         }
         DispatchQueue.global().async {
             var appItem = AppDAO.shared.getApp(ofUserId: userID)
@@ -1041,6 +1061,24 @@ extension UrlWindow {
                             additionalURLQueries: additionalQueries
                         )
                     )
+                case let .customerService(presentLoginLogsOnLongPressingTitle, reportingTags):
+                    let context = MixinWebContext(
+                        conversationID: conversationId,
+                        app: app,
+                        isAppVerified: user.isVerified,
+                        additionalURLQueries: [
+                            "action": "open",
+                            "page": "support",
+                        ]
+                    )
+                    let customerService = CustomerServiceViewController(
+                        context: context,
+                        presentLoginLogsOnLongPressingTitle: presentLoginLogsOnLongPressingTitle,
+                        reportingTags: reportingTags,
+                    )
+                    if let window = UIApplication.shared.firstWindowScene?.keyWindow {
+                        window.rootViewController?.presentOnTopMostPresentedController(customerService, animated: true)
+                    }
                 }
             }
         }

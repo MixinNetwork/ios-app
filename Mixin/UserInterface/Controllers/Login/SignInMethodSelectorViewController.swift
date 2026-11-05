@@ -63,11 +63,10 @@ final class SignInMethodSelectorViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(
+        CustomerServiceViewController.invoke(
             presentLoginLogsOnLongPressingTitle: true,
             reportingTags: ["source": "login_mnemonic_phrase"],
         )
-        present(customerService, animated: true)
     }
     
 }

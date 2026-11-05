@@ -170,7 +170,6 @@
 "approve_transaction" = "取引の承認";
 "approving_transaction" = "トランザクションの承認";
 "approving_transaction_failed" = "トランザクションの承認に失敗しました";
-"ask_me_anything" = "何でも聞いてください";
 "asset" = "資産";
 "asset_key" = "資産のキー";
 "asset_not_found" = "資産が存在しません";
@@ -1469,6 +1468,7 @@
 "read_your_public_address" = "公開アドレスを読む";
 "read_your_public_profile" = "公開プロフィールを読む";
 "read_your_snapshots" = "スナップショットを読む";
+"real_people_real_support" = "本物の人による、本物のサポート。";
 "rebate" = "払い戻し";
 "receive" = "入金";
 "receive_from_address_description" = "暗号ネットワークを使用して別の取引所またはオンチェーンウォレットから受け取る";
@@ -1755,7 +1755,7 @@
 "spot_trade_guide_feature_1" = "流動性の集約: Uniswap、1inch、Jupiter、MixPay、BigONE、その他の DEX および CEX からの流動性へのアクセス。";
 "spot_trade_guide_feature_2" = "クロスチェーン取引: ビットコイン、イーサリアム、ソラナなどの資産をサポートします。";
 "spot_trade_guide_fees" = "手数料";
-"spot_trade_guide_limit_desc" = "アドバンストでは指値注文がサポートされており、希望の約定価格を設定できます。注文は、市場が指定した価格に達した場合にのみ実行されます。";
+"spot_trade_guide_limit_desc" = "指値注文では、希望する約定価格を設定できます。市場価格が指定した価格に達した場合にのみ注文が約定します。";
 "spot_trade_guide_limit_risk" = "市場価格が指値価格を超えて変動し、注文が成立しない可能性があります。";
 "spot_trade_guide_limit_scenario_1" = "戦略的な取引のため";
 "spot_trade_guide_limit_scenario_2" = "正確な価格については";
@@ -1763,9 +1763,9 @@
 "spot_trade_guide_limit_strategy_buy_low" = "安く買う";
 "spot_trade_guide_limit_strategy_sell_high" = "高く売る";
 "spot_trade_guide_note_1" = "取引手数料は主に為替手数料とネットワーク手数料で構成されます。 Mixin は追加のプラットフォーム料金を請求しません。";
-"spot_trade_guide_overview_desc" = "Mixin は、シンプル取引モードとアドバンスト取引モードの両方をサポートしており、DEX と CEX からの流動性を集約して複数のチェーンと資産間で取引できるようになります。";
+"spot_trade_guide_overview_desc" = "Mixin はスワップと指値注文に対応しており、DEX と CEX から集約した流動性を活用して、複数のチェーンや資産を取引できます。";
 "spot_trade_guide_pricing" = "価格";
-"spot_trade_guide_swap_desc" = "シンプル モードでは、利用可能な最良の市場価格で即時にスワップできます。";
+"spot_trade_guide_swap_desc" = "スワップでは、利用可能な最良の市場価格で即座に取引できます。";
 "spot_trade_guide_swap_quote_1" = "価格は DEX と CEX から集計され、利用可能な最良の見積もりが提供されます。";
 "spot_trade_guide_swap_quote_2" = "見積もりには為替手数料とネットワーク手数料が含まれます";
 "spot_trade_guide_swap_risk" = "ボラティリティが高い場合、実際の約定価格は見積価格と異なる場合があります。";
@@ -1866,7 +1866,7 @@
 "touch_id" = "指紋認証";
 "track_not_found" = "トラックが見つかりません";
 "trade" = "取引";
-"trade_advanced" = "上級者向け";
+"trade_advanced" = "指値";
 "trade_again" = "再度取引する";
 "trade_expiration" = "有効期限";
 "trade_expiry" = "有効期限";
@@ -1877,9 +1877,17 @@
 "trade_guide_pay_amount" = "あなたが支払います";
 "trade_guide_strategy" = "戦略";
 "trade_guide_trading_pair" = "取引ペア";
+"trade_limit_orders" = "指値注文";
+"trade_lite" = "ライト";
 "trade_native_tokens" = "何千ものネイティブ トークンを取引する";
+"trade_now" = "今すぐ取引";
 "trade_order_pending" = "保留中";
-"trade_simple" = "シンプル";
+"trade_order_pending_count" = "未約定 %d 件";
+"trade_perpetual_activity" = "無期限契約の取引履歴";
+"trade_pro" = "Pro";
+"trade_pro_description" = "高度なチャート、クロスマージン、指値注文。";
+"trade_simple" = "スワップ";
+"trade_swap_orders" = "スワップ注文";
 "trading_fee" = "取引手数料";
 "transaction" = "トランザクション";
 "transaction_approved" = "トランザクションが承認されました";

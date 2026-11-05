@@ -669,8 +669,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
     func request(support: WalletSupport) {
         switch support {
         case .contactUs:
-            let customerService = CustomerServiceViewController(reportingTags: nil)
-            present(customerService, animated: true)
+            CustomerServiceViewController.invoke(reportingTags: nil)
         case .helpCenter:
             let safari = SFSafariViewController(url: .support)
             present(safari, animated: true)

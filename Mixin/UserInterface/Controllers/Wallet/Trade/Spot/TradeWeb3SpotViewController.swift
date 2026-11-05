@@ -12,10 +12,6 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
         sendToken?.decimals ?? Int(MixinToken.internalPrecision)
     }
     
-    override var orderWalletID: String {
-        wallet.walletID
-    }
-    
     private var walletID: String {
         wallet.walletID
     }
@@ -34,7 +30,7 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
         ?? Web3AddressDAO.shared.chainIDs(walletID: wallet.walletID)
         super.init(
             mode: mode,
-            tokenSource: .web3,
+            wallet: .common(wallet),
             sendAssetID: sendAssetID,
             sendAmount: sendAmount,
             receiveAssetID: receiveAssetID,
@@ -463,9 +459,7 @@ extension TradeWeb3SpotViewController: PendingTradeOrderLoader.Delegate {
     func pendingSwapOrder(_ loader: PendingTradeOrderLoader, didLoad orders: [TradeOrder]) {
         switch mode {
         case .simple:
-            DispatchQueue.main.async {
-                self.tradeViewController?.updateOrdersButton()
-            }
+            break
         case .advanced:
             let tokens = Web3OrderDAO.shared.tradeOrderTokens(orders: orders)
             let viewModels = orders.map { order in
@@ -480,7 +474,6 @@ extension TradeWeb3SpotViewController: PendingTradeOrderLoader.Delegate {
             }
             DispatchQueue.main.async {
                 self.reload(openOrders: viewModels)
-                self.tradeViewController?.updateOrdersButton()
             }
         }
     }

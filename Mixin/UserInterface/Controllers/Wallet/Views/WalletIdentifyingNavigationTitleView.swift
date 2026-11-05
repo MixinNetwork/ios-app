@@ -1,8 +1,9 @@
 import UIKit
 import MixinServices
 
-final class WalletIdentifyingNavigationTitleView: UIStackView {
+class WalletIdentifyingNavigationTitleView: UIStackView {
     
+    weak var titleStackView: UIStackView!
     weak var titleLabel: UILabel!
     
     init(title: String, wallet: Wallet) {
@@ -24,7 +25,13 @@ final class WalletIdentifyingNavigationTitleView: UIStackView {
             label.text = title
             return label
         }()
-        addArrangedSubview(titleLabel)
+        let titleStackView = UIStackView(arrangedSubviews: [titleLabel])
+        titleStackView.axis = .horizontal
+        titleStackView.distribution = .fill
+        titleStackView.alignment = .center
+        titleStackView.spacing = 2
+        addArrangedSubview(titleStackView)
+        self.titleStackView = titleStackView
         self.titleLabel = titleLabel
         
         let subtitleStackView = {

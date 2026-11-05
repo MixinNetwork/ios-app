@@ -49,11 +49,10 @@ final class UsernameViewController: LoginInfoInputViewController, CheckSessionEn
     }
     
     @objc func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(
+        CustomerServiceViewController.invoke(
             presentLoginLogsOnLongPressingTitle: true,
             reportingTags: ["source": "username"],
         )
-        present(customerService, animated: true)
     }
     
     private func makeDefaultUsername() -> String? {

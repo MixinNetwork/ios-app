@@ -9,6 +9,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             viewModel: PerpetualPositionViewModel,
             reducingQuantity: Decimal,
             canonicalFormatStyle: Decimal.FormatStyle,
+            feeRate: Decimal?,
         )
     }
     
@@ -40,6 +41,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         reducing viewModel: PerpetualPositionViewModel,
         quantity: Decimal,
         canonicalFormatStyle: Decimal.FormatStyle,
+        feeRate: Decimal?,
         onDismissAfterSuccess: @escaping () -> Void,
     ) {
         self.wallet = viewModel.wallet
@@ -47,6 +49,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             viewModel: viewModel,
             reducingQuantity: quantity,
             canonicalFormatStyle: canonicalFormatStyle,
+            feeRate: feeRate,
         )
         self.onDismissAfterSuccess = onDismissAfterSuccess
         super.init(wallet: viewModel.wallet, warnings: [])
@@ -62,7 +65,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         let viewModels: [PerpetualPositionViewModel] = switch position {
         case .batch(let viewModels):
             viewModels
-        case .single(let viewModel, _, _):
+        case .single(let viewModel, _, _, _):
             [viewModel]
         }
         if viewModels.count == 1, let viewModel = viewModels.first {
@@ -90,18 +93,13 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         rows.append(.perpsPositions(positions))
         
         switch position {
-        case let .single(viewModel, quantity, _):
+        case let .single(viewModel, quantity, _, feeRate):
             let position = viewModel.position
             let proportion = quantity / viewModel.decimalQuantity
             let marginPlusPnL = viewModel.decimalMargin + position.decimalUnrealizedPnL
             
-            let receivingAmount = {
-                var amount = marginPlusPnL
-                if let fee = position.decimalEstimatedCloseFee {
-                    amount -= fee
-                }
-                return amount * proportion
-            }()
+            let amounts = position.estimatedClosingAmounts(quantity: quantity, feeRate: feeRate)
+            let receivingAmount = amounts?.receiving ?? max(marginPlusPnL * proportion, 0)
             rows.append(.info(
                 caption: .string(R.string.localizable.estimated_receive()),
                 content: CurrencyFormatter.localizedString(
@@ -171,9 +169,9 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 },
             ))
             
-            if let fee = viewModel.position.decimalEstimatedCloseFee {
+            if let amounts {
                 let fee = CurrencyFormatter.localizedString(
-                    from: fee * proportion,
+                    from: amounts.fee,
                     format: .fiatMoneyPretty,
                     sign: .never,
                     symbol: .dollarSign,
@@ -187,22 +185,26 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 ))
             }
         case .batch(let viewModels):
-            let hasEstimatedFees = viewModels.allSatisfy { viewModel in
-                viewModel.position.decimalEstimatedCloseFee != nil
+            let closingAmounts = viewModels.map { viewModel in
+                viewModel.position.estimatedClosingAmounts(
+                    quantity: viewModel.decimalQuantity,
+                    feeRate: viewModel.position.decimalFeeRate,
+                )
             }
+            let hasEstimatedFees = closingAmounts.allSatisfy { $0 != nil }
             var totalPnL: Decimal = 0
             var totalMarginPlusPnL: Decimal = 0
             var totalFee: Decimal = 0
             var totalReceivingAmount: Decimal = 0
-            for viewModel in viewModels {
+            for (viewModel, amounts) in zip(viewModels, closingAmounts) {
                 let pnl = viewModel.position.decimalUnrealizedPnL
                 let marginPlusPnL = viewModel.decimalMargin + pnl
                 let receivingAmount: Decimal
-                if hasEstimatedFees, let fee = viewModel.position.decimalEstimatedCloseFee {
-                    receivingAmount = marginPlusPnL - fee
-                    totalFee += fee
+                if hasEstimatedFees, let amounts {
+                    receivingAmount = amounts.receiving
+                    totalFee += amounts.fee
                 } else {
-                    receivingAmount = marginPlusPnL
+                    receivingAmount = max(marginPlusPnL, 0)
                 }
                 totalPnL += pnl
                 totalMarginPlusPnL += marginPlusPnL
@@ -339,7 +341,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                     if errors.count == viewModels.count, let firstError = errors.first {
                         throw firstError
                     }
-                case let .single(viewModel, reducingQuantity, canonicalFormatStyle):
+                case let .single(viewModel, reducingQuantity, canonicalFormatStyle, _):
                     let quantity = if reducingQuantity == viewModel.decimalQuantity {
                         viewModel.position.quantity
                     } else {

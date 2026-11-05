@@ -141,7 +141,7 @@ final class ConversationViewController: UIViewController {
         indicator.snp.makeConstraints { (make) in
             make.trailing.equalToSuperview()
         }
-        let constraint = indicator.centerYAnchor.constraint(equalTo: view.topAnchor)
+        let constraint = indicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
         constraint.constant = groupCallIndicatorCenterYLimitation.min
         constraint.isActive = true
         
@@ -227,11 +227,11 @@ final class ConversationViewController: UIViewController {
     private var groupCallIndicatorCenterYLimitation: (min: CGFloat, max: CGFloat) {
         let min: CGFloat
         if let banner = pinMessageBannerViewIfLoaded, !banner.isHidden {
-            min = view.safeAreaInsets.top + pinMessageBannerHeight + 33
+            min = pinMessageBannerHeight + 33
         } else {
-            min = view.safeAreaInsets.top + 30
+            min = 30
         }
-        let max = inputWrapperView.frame.minY - 30
+        let max = inputWrapperView.frame.minY - view.safeAreaInsets.top - 30
         return (min, max)
     }
     
@@ -2583,11 +2583,11 @@ extension ConversationViewController {
     }
     
     private func layoutGroupCallIndicatorView() {
-        guard let indicator = groupCallIndicatorViewIfLoaded, let constraint = groupCallIndicatorCenterYConstraint else {
+        guard let constraint = groupCallIndicatorCenterYConstraint else {
             return
         }
         let (minY, maxY) = groupCallIndicatorCenterYLimitation
-        let y = max(minY, min(maxY, indicator.center.y))
+        let y = max(minY, min(maxY, constraint.constant))
         constraint.constant = y
     }
     

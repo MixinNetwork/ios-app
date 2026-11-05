@@ -683,8 +683,7 @@ extension ExploreMoreViewController {
             let desktop = DesktopViewController()
             navigationController?.pushViewController(desktop, animated: true)
         case .customerService:
-            let customerService = CustomerServiceViewController(reportingTags: nil)
-            present(customerService, animated: true)
+            CustomerServiceViewController.invoke(reportingTags: nil)
         }
     }
     

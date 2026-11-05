@@ -150,6 +150,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 behavior: .takeProfit,
                 currentPrice: context.viewModel.decimalLastPrice,
                 closingPrice: takeProfitPrice,
+                feeRate: context.viewModel.market.decimalFeeRate,
             )
             let simulation = R.string.localizable.price_change_tpsl(
                 PercentageFormatter.string(
@@ -191,6 +192,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 behavior: .stopLoss,
                 currentPrice: context.viewModel.decimalLastPrice,
                 closingPrice: stopLossPrice,
+                feeRate: context.viewModel.market.decimalFeeRate,
             )
             let simulation = R.string.localizable.price_change_tpsl(
                 PercentageFormatter.string(

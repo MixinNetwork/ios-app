@@ -220,8 +220,7 @@ class InputAmountViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(reportingTags: ["source": "send_amount"])
-        present(customerService, animated: true)
+        CustomerServiceViewController.invoke(reportingTags: ["source": "send_amount"])
     }
     
 }

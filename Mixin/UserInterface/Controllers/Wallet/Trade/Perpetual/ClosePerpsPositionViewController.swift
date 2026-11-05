@@ -195,16 +195,18 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
                 ))
                 return description
             }()
-            if let estimatedCloseFee = positionViewModel.position.decimalEstimatedCloseFee {
-                let fee = estimatedCloseFee * proportion
+            if let amounts = positionViewModel.position.estimatedClosingAmounts(
+                quantity: reducingQuantity,
+                feeRate: marketViewModel.market.decimalFeeRate,
+            ) {
                 receivingDescription.contentLabel.text = CurrencyFormatter.localizedString(
-                    from: marginPlusPnL - fee,
+                    from: amounts.receiving,
                     format: .fiatMoneyPretty,
                     sign: .whenNegative,
                     symbol: .dollarSign,
                 )
                 feeDescription.contentLabel.text = CurrencyFormatter.localizedString(
-                    from: fee,
+                    from: amounts.fee,
                     format: .fiatMoneyPretty,
                     sign: .whenNegative,
                     symbol: .dollarSign,
@@ -244,6 +246,7 @@ final class ClosePerpsPositionViewController: ReduceToPerpsPositionViewControlle
             reducing: positionViewModel,
             quantity: reducingQuantity,
             canonicalFormatStyle: marketViewModel.market.canonicalQuantityFormatStyle,
+            feeRate: marketViewModel.market.decimalFeeRate,
             onDismissAfterSuccess: { [weak self] in
                 self?.presentingViewController?.dismiss(animated: true)
             },

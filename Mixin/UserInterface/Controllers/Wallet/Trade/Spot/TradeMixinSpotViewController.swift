@@ -9,10 +9,6 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
         Int(MixinToken.internalPrecision)
     }
     
-    override var orderWalletID: String {
-        myUserId
-    }
-    
     private let referral: String?
     
     private weak var depositTokenRequest: Request?
@@ -33,7 +29,7 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
         self.referral = referral
         super.init(
             mode: mode,
-            tokenSource: .mixin,
+            wallet: .privacy,
             sendAssetID: sendAssetID,
             sendAmount: sendAmount,
             receiveAssetID: receiveAssetID,
@@ -329,9 +325,7 @@ extension TradeMixinSpotViewController: PendingTradeOrderLoader.Delegate {
     func pendingSwapOrder(_ loader: PendingTradeOrderLoader, didLoad orders: [TradeOrder]) {
         switch mode {
         case .simple:
-            DispatchQueue.main.async {
-                self.tradeViewController?.updateOrdersButton()
-            }
+            break
         case .advanced:
             let tokens = Web3OrderDAO.shared.tradeOrderTokens(orders: orders)
             let viewModels = orders.map { order in
@@ -346,7 +340,6 @@ extension TradeMixinSpotViewController: PendingTradeOrderLoader.Delegate {
             }
             DispatchQueue.main.async {
                 self.reload(openOrders: viewModels)
-                self.tradeViewController?.updateOrdersButton()
             }
         }
     }

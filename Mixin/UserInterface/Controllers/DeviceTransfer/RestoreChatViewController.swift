@@ -36,11 +36,10 @@ final class RestoreChatViewController: UIViewController, CheckSessionEnvironment
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(
+        CustomerServiceViewController.invoke(
             presentLoginLogsOnLongPressingTitle: true,
             reportingTags: ["source": "sign_up"],
         )
-        present(customerService, animated: true)
     }
     
 }

@@ -115,11 +115,10 @@ class SignInWithMnemonicsViewController<PhrasesCount: SignInAvailablePhrasesCoun
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(
+        CustomerServiceViewController.invoke(
             presentLoginLogsOnLongPressingTitle: true,
             reportingTags: ["source": "login_mnemonic_phrase"],
         )
-        present(customerService, animated: true)
     }
     
     @objc private func switchWordCount(_ button: UIButton) {

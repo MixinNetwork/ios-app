@@ -34,6 +34,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
         case tradeVolumeScore1D = "trade_volume_score_1d"
         case quantityScale = "quantity_scale"
         case minOrderValue = "min_order_value"
+        case feeRate = "fee_rate"
     }
     
     public enum Category: String, CaseIterable {
@@ -75,6 +76,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
     public let tradeVolumeScore1D: Int
     public let quantityScale: Int
     public let minOrderValue: String
+    public let feeRate: String
     
     public var canonicalPriceFormatStyle: Decimal.FormatStyle {
         Decimal.FormatStyle.number
@@ -112,6 +114,8 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
     public private(set) lazy var decimalMinAmount = Decimal(string: minAmount, locale: .enUSPOSIX) ?? 1
     public private(set) lazy var decimalMinOrderValue = Decimal(string: minOrderValue, locale: .enUSPOSIX) ?? 0
     
+    public private(set) lazy var decimalFeeRate = Decimal(string: feeRate, locale: .enUSPOSIX)
+    
     init(
         marketID: String,
         displaySymbol: String,
@@ -143,6 +147,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
         tradeVolumeScore1D: Int,
         quantityScale: Int,
         minOrderValue: String,
+        feeRate: String,
     ) {
         self.marketID = marketID
         self.displaySymbol = displaySymbol
@@ -174,6 +179,7 @@ public class PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchable
         self.tradeVolumeScore1D = tradeVolumeScore1D
         self.quantityScale = quantityScale
         self.minOrderValue = minOrderValue
+        self.feeRate = feeRate
     }
     
 }

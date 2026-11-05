@@ -12,15 +12,12 @@ public final class PerpsPositionDAO: PerpsDAO {
         m.token_symbol AS \(PerpetualPositionItem.JoinedQueryCodingKeys.tokenSymbol.rawValue),
         m.display_symbol AS \(PerpetualPositionItem.JoinedQueryCodingKeys.displaySymbol.rawValue),
         m.icon_url AS \(PerpetualPositionItem.JoinedQueryCodingKeys.iconURL.rawValue),
-        m.price_scale AS \(PerpetualPositionItem.JoinedQueryCodingKeys.priceScale.rawValue)
+        m.price_scale AS \(PerpetualPositionItem.JoinedQueryCodingKeys.priceScale.rawValue),
+        m.fee_rate AS \(PerpetualPositionItem.JoinedQueryCodingKeys.feeRate.rawValue)
     FROM positions p
         LEFT JOIN markets m ON p.market_id = m.market_id
     
     """
-    
-    public func count() -> Int {
-        db.select(with: "SELECT COUNT(*) FROM positions") ?? 0
-    }
     
     public func positionValue() -> PerpetualPositionValue {
         let sql = "SELECT SUM(margin), SUM(unrealized_pnl) FROM positions"

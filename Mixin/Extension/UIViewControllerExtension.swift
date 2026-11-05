@@ -2,10 +2,6 @@ import UIKit
 
 extension UIViewController {
     
-    public func isPad() -> Bool {
-        return UIDevice.current.userInterfaceIdiom == .pad
-    }
-
     func alert(_ message: String, actionTitle: String = R.string.localizable.ok(), cancelHandler: ((UIAlertAction) -> Void)? = nil) {
         let alc = UIAlertController(title: message, message: nil, preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: actionTitle, style: .default, handler: cancelHandler))
@@ -56,12 +52,20 @@ extension UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
+}
+
+extension UIViewController {
+    
     var topPresentedViewController: UIViewController {
         var topMost = self
         while let next = topMost.presentedViewController, !next.isBeingDismissed {
             topMost = next
         }
         return topMost
+    }
+    
+    func presentOnTopMostPresentedController(_ viewControllerToPresent: UIViewController, animated: Bool) {
+        topPresentedViewController.present(viewControllerToPresent, animated: animated)
     }
     
 }

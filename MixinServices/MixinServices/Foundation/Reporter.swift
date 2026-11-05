@@ -34,6 +34,8 @@ open class Reporter {
         case tradeSpotPreview       = "trade_spot_preview"
         case tradeSpotOrders        = "trade_spot_orders"
         case tradeSpotOrderDetail   = "trade_spot_order_detail"
+        case tradeMoreMenu          = "trade_more_menu"
+        case tradeProClick          = "trade_pro_click"
         
         case tradePerpsOpenStart                      = "trade_perps_open_start"
         case tradePerpsOpenTokenSelect                = "trade_perps_open_token_select"

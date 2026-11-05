@@ -48,15 +48,16 @@ public final class Web3OrderDAO: Web3DAO {
         )
     }
     
-    public func openOrdersCount(walletID: String) -> Int {
+    public func openOrdersCount(walletID: String, type: TradeOrder.OrderType) -> Int {
         let count: Int? = db.select(
             with: """
             SELECT COUNT(*)
             FROM orders
             WHERE wallet_id = ?
+                AND order_type = ?
                 AND state IN ('created','pending','cancelling')
             """,
-            arguments: [walletID]
+            arguments: [walletID, type.rawValue]
         )
         return count ?? 0
     }

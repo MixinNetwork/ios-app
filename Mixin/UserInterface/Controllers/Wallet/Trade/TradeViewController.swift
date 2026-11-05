@@ -33,8 +33,6 @@ final class TradeViewController: UIViewController {
     private var trading: Trading
     private var tradingViewController: UIViewController?
     
-    private weak var showOrdersItem: CompatibleBadgeBarButtonItem?
-    
     init?(
         wallet: Wallet,
         supportedChainIDs: Set<String>? = nil, // nil for all
@@ -84,47 +82,33 @@ final class TradeViewController: UIViewController {
         super.viewDidLoad()
         
         title = R.string.localizable.trade()
-        let showOrdersItem = CompatibleBadgeBarButtonItem(
-            image: R.image.ic_title_transaction()!,
+        navigationItem.titleView = TradeTitleView(wallet: wallet)
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_title_more(),
             target: self,
-            action: #selector(showOrders(_:))
+            action: #selector(presentOrders(_:)),
         )
-        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
-            title: R.string.localizable.trade(),
-            wallet: wallet
-        )
-        navigationItem.rightBarButtonItems = [
-            .customerService(
-                target: self,
-                action: #selector(presentCustomerService(_:))
-            ),
-            showOrdersItem,
-        ]
-        self.showOrdersItem = showOrdersItem
         
-        collectionView.register(R.nib.segmentCell)
-        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.itemSize = UICollectionViewFlowLayout.automaticSize
-            layout.estimatedItemSize = CGSize(width: 100, height: 38)
-            layout.minimumInteritemSpacing = 0
-        }
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .estimated(100),
+            heightDimension: .estimated(38),
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize, subitems: [item])
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 10
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 25, bottom: 0, trailing: 25)
+        let configuration = UICollectionViewCompositionalLayoutConfiguration()
+        configuration.scrollDirection = .horizontal
+        collectionView.collectionViewLayout = UICollectionViewCompositionalLayout(
+            section: section,
+            configuration: configuration,
+        )
+        collectionView.register(R.nib.modernSegmentCell)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(updateOrdersButton),
-            name: Web3OrderDAO.didSaveNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(updateOrdersButton),
-            name: PerpsPositionDAO.perpsPositionDidChangeNotification,
-            object: nil
-        )
         let defaultSelection = if let item = allTradings.firstIndex(of: trading) {
             IndexPath(item: item, section: 0)
         } else {
@@ -147,89 +131,19 @@ final class TradeViewController: UIViewController {
         switchTo(trading: trading, indexPath: indexPath)
     }
     
-    @objc func showOrders(_ sender: Any) {
-        BadgeManager.shared.setHasViewed(identifier: .tradeOrder)
-        if let showOrdersItem, showOrdersItem.compatibleBadge == .unread {
-            showOrdersItem.compatibleBadge = nil
-        }
-        switch trading {
-        case .simpleSpot, .advancedSpot:
-            let showPendingOrdersOnly = sender is TradeSectionHeaderView || sender is TradeViewAllFooterView
-            let orders = TradeOrdersViewController(
-                wallet: wallet,
-                status: showPendingOrdersOnly ? .pending : nil
-            )
-            navigationController?.pushViewController(orders, animated: true)
+    @objc private func presentOrders(_ sender: Any) {
+        let menu = TradeMoreMenuViewController(wallet: wallet)
+        let navigation = UINavigationController(rootViewController: menu)
+        present(navigation, animated: true)
+        let reportingTab = switch trading {
+        case .simpleSpot:
+            "swap"
+        case .advancedSpot:
+            "limit"
         case .perpetualFutures:
-            reporter.report(event: .tradePerpsAllPositions, tags: ["source": "perps_home_menu"])
-            let positions = PerpetualPositionsViewController(wallet: wallet)
-            navigationController?.pushViewController(positions, animated: true)
+            "perps"
         }
-    }
-    
-    @objc func updateOrdersButton() {
-        assert(Thread.isMainThread)
-        guard let showOrdersItem else {
-            return
-        }
-        let spotWalletID = (tradingViewController as? TradeSpotViewController)?.orderWalletID
-        let perpsWalletID = (tradingViewController as? TradePerpetualViewController)?.tradingWalletID
-        let swapOrdersUnread = !BadgeManager.shared.hasViewed(identifier: .tradeOrder)
-        DispatchQueue.global().async { [weak showOrdersItem] in
-            let ordersCount = if let spotWalletID {
-                Web3OrderDAO.shared.openOrdersCount(walletID: spotWalletID)
-            } else if let perpsWalletID {
-                PerpsPositionDAO.shared.count()
-            } else {
-                0
-            }
-            let openOrdersCount = min(99, ordersCount)
-            let badge: BadgeBarButtonView.Badge? = if openOrdersCount != 0 {
-                .count(openOrdersCount)
-            } else if swapOrdersUnread {
-                .unread
-            } else {
-                nil
-            }
-            DispatchQueue.main.async {
-                showOrdersItem?.compatibleBadge = badge
-            }
-        }
-    }
-    
-    @objc func presentCustomerService(_ sender: Any) {
-        let trading = self.trading
-        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: R.string.localizable.contact_support(), style: .default, handler: { _ in
-            let source = switch trading {
-            case .simpleSpot:
-                "trade_simple_home_menu"
-            case .advancedSpot:
-                "trade_advanced_home_menu"
-            case .perpetualFutures:
-                "perps_home_menu"
-            }
-            CustomerServiceViewController.invoke(reportingTags: ["source": source])
-        }))
-        switch trading {
-        case .simpleSpot, .advancedSpot:
-            sheet.addAction(UIAlertAction(title: R.string.localizable.spot_trading_guide(), style: .default, handler: { _ in
-                let manual = SpotTradingManualViewController()
-                self.present(manual, animated: true)
-            }))
-        case .perpetualFutures:
-            sheet.addAction(UIAlertAction(title: R.string.localizable.perpetual_futures_guide(), style: .default, handler: { _ in
-                let manual = PerpsManual.viewController()
-                self.present(manual, animated: true)
-                reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_home_menu"])
-            }))
-        }
-        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
-            sheet.popoverPresentationController?.sourceItem = source
-        } else {
-            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        }
-        present(sheet, animated: true)
+        reporter.report(event: .tradeMoreMenu, tags: ["tab": reportingTab])
     }
     
 }
@@ -241,7 +155,7 @@ extension TradeViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.modern_segment, for: indexPath)!
         switch allTradings[indexPath.item] {
         case .simpleSpot:
             cell.label.text = R.string.localizable.trade_simple()
@@ -283,7 +197,7 @@ extension TradeViewController {
         case .perpetualFutures:
             BadgeManager.shared.setHasViewed(identifier: .perps)
         }
-        if let cell = collectionView.cellForItem(at: indexPath) as? SegmentCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? ModernSegmentCell {
             cell.badgeView.isHidden = true
         }
         AppGroupUserDefaults.Wallet.tradeMode = trading.rawValue
@@ -372,7 +286,6 @@ extension TradeViewController {
         containerView.insertSubview(tradingViewController.view, at: 0)
         tradingViewController.view.snp.makeEdgesEqualToSuperview()
         tradingViewController.didMove(toParent: self)
-        updateOrdersButton()
     }
     
 }

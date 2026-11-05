@@ -36,6 +36,7 @@ extension URL {
     static let recoveryKit          = URL(string: R.string.localizable.url_recovery_kit())!
     static let perpsTakeProfit      = URL(string: R.string.localizable.url_perps_take_profit())!
     static let perpsStopLoss        = URL(string: R.string.localizable.url_perps_stop_loss())!
+    static let perpsPro             = URL(string: "mixin://apps/af82d6d4-aec8-419a-8f7d-edfecf7a7725?action=open&page=perps-pro")!
     
     static func bindReferral(code: String) -> String {
         "https://mixin.one/referrals/" + code

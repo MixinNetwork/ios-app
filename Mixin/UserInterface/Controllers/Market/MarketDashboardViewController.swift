@@ -767,6 +767,8 @@ final class MarketDashboardViewController: UIViewController {
                 "watchlist"
             case .trending:
                 "trending"
+            case .stock:
+                "stock"
             case .topGainer:
                 "top_gainers"
             case .topLoser:
@@ -780,6 +782,8 @@ final class MarketDashboardViewController: UIViewController {
                 "watchlist"
             case .trending:
                 "trending"
+            case .stock:
+                "stock"
             case .topGainers:
                 "top_gainers"
             case .topLosers:
@@ -852,6 +856,8 @@ extension MarketDashboardViewController {
                     databaseCategory == .featured
                 case .trending:
                     databaseCategory == .trending
+                case .stock:
+                    databaseCategory == .stock
                 case .topGainer:
                     databaseCategory == .topGainer
                 case .topLoser:
@@ -1435,6 +1441,7 @@ extension MarketDashboardViewController {
         
         case watchlist
         case trending
+        case stock
         case topGainer
         case topLoser
         case all
@@ -1445,6 +1452,8 @@ extension MarketDashboardViewController {
                     .favorite
             case .trending:
                     .text(R.string.localizable.trending())
+            case .stock:
+                    .text(R.string.localizable.perps_category_stocks())
             case .topGainer:
                     .text(R.string.localizable.top_gainers())
             case .topLoser:
@@ -1460,6 +1469,7 @@ extension MarketDashboardViewController {
         
         case watchlist
         case trending
+        case stock
         case topGainers
         case topLosers
         case memes
@@ -1473,6 +1483,8 @@ extension MarketDashboardViewController {
                     .favorite
             case .trending:
                     .text(R.string.localizable.trending())
+            case .stock:
+                    .text(R.string.localizable.perps_category_stocks())
             case .topGainers:
                     .text(R.string.localizable.top_gainers())
             case .topLosers:
@@ -1821,7 +1833,7 @@ extension MarketDashboardViewController {
                     displaySubCategoryIndex: subCategoryIndex,
                     scheduleRemoteLoader: scheduleRemoteLoader,
                 )
-            case .trending, .topGainer, .topLoser, .all:
+            case .trending, .stock, .topGainer, .topLoser, .all:
                 let queryCategory: Market.QueryCategory
                 let requestCategory: Market.RequestCategory
                 switch subCategory {
@@ -1831,6 +1843,9 @@ extension MarketDashboardViewController {
                 case .trending:
                     queryCategory = .trending
                     requestCategory = .trending
+                case .stock:
+                    queryCategory = .stock
+                    requestCategory = .stocks
                 case .topGainer:
                     queryCategory = .topGainer
                     requestCategory = .topGainers
@@ -1843,7 +1858,7 @@ extension MarketDashboardViewController {
                 }
                 let markets = MarketDAO.shared.markets(category: queryCategory, order: order)
                 let info: CryptoMarketDisplayInfo = switch subCategory {
-                case .watchlist, .trending, .topGainer, .topLoser:
+                case .watchlist, .trending, .stock, .topGainer, .topLoser:
                         .volume
                 case .all:
                         .marketCap
@@ -1922,6 +1937,8 @@ extension MarketDashboardViewController {
                 return
             case .trending, .topGainers, .topLosers:
                 queryCategory = .all
+            case .stock:
+                queryCategory = .categorized(.stocks)
             case .memes:
                 queryCategory = .categorized(.memes)
             case .indices:
@@ -2127,6 +2144,8 @@ extension MarketDashboardViewController {
                     cryptoCategories.remove(.favorite)
                 case .trending:
                     cryptoCategories.remove(.trending)
+                case .stock:
+                    cryptoCategories.remove(.stocks)
                 case .topGainer:
                     cryptoCategories.remove(.topGainers)
                 case .topLoser:
@@ -2139,7 +2158,7 @@ extension MarketDashboardViewController {
                 switch excludingSubCategory {
                 case .watchlist:
                     perpsCategories.remove(.favorite)
-                case .trending, .topGainers, .topLosers, .indices, .commodities, .forex, .memes:
+                case .trending, .stock, .topGainers, .topLosers, .indices, .commodities, .forex, .memes:
                     perpsCategories.remove(.all)
                 }
             case .stock:

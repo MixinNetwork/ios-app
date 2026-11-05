@@ -18,6 +18,7 @@ final class AddressInfoInputHeaderView: UIView {
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var placeholderLabel: UILabel!
     @IBOutlet weak var actionButton: UIButton!
+    @IBOutlet weak var contentTopConstraint: NSLayoutConstraint!
     
     weak var delegate: Delegate?
     
@@ -161,12 +162,12 @@ final class AddressInfoInputHeaderView: UIView {
         titleLabel.text = title
         
         let contentLabel = UILabel()
-        contentLabel.textColor = R.color.text_tertiary()
+        contentLabel.textColor = R.color.text_secondary()
         contentLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         contentLabel.numberOfLines = 0
         contentLabel.textAlignment = .right
         contentLabel.lineBreakMode = .byCharWrapping
-        contentLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        contentLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         contentLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         contentLabel.text = content
         
@@ -178,15 +179,26 @@ final class AddressInfoInputHeaderView: UIView {
             let iconView = PlainTokenIconView(frame: .zero)
             iconView.setIcon(urlString: iconURL)
             iconView.snp.makeConstraints { make in
-                make.width.height.equalTo(16)
+                make.width.height.equalTo(20)
             }
             contentStackView.insertArrangedSubview(iconView, at: 0)
+        } else {
+            contentLabel.snp.makeConstraints { make in
+                make.width.lessThanOrEqualTo(200)
+            }
         }
         
-        let stackView = UIStackView(arrangedSubviews: [titleLabel, contentStackView])
+        let spacerView = UIView()
+        spacerView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        spacerView.setContentCompressionResistancePriority(.fittingSizeLevel, for: .horizontal)
+        spacerView.snp.makeConstraints { make in
+            make.width.greaterThanOrEqualTo(16)
+        }
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, spacerView, contentStackView])
         stackView.axis = .horizontal
-        stackView.alignment = .top
-        stackView.spacing = 16
+        stackView.alignment = iconURL == nil ? .top : .center
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
         self.contentStackView.addArrangedSubview(stackView)
     }
     

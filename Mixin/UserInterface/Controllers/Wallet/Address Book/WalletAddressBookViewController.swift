@@ -103,7 +103,7 @@ final class WalletAddressBookViewController: UIViewController {
         let addButton = StyledButton(type: .system)
         addButton.style = .filled
         addButton.setTitle(R.string.localizable.add_address(), for: .normal)
-        addButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
+        addButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
         addButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 24, bottom: 12, right: 24)
         addButton.addTarget(self, action: #selector(addAddress(_:)), for: .touchUpInside)
         view.addSubview(addButton)

@@ -228,6 +228,11 @@ extension AddressBookAddressViewController: UITableViewDataSource {
         case .info:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot_column, for: indexPath)!
             let row = infoRows[indexPath.row]
+            cell.contentStackView.spacing = 8
+            cell.leadingConstraint.constant = 16
+            cell.trailingConstraint.constant = 16
+            cell.topConstraint.constant = indexPath.row == 0 ? 20 : 10
+            cell.bottomConstraint.constant = indexPath.row == infoRows.count - 1 ? 20 : 10
             cell.titleLabel.text = row.title.localizedUppercase
             cell.subtitleLabel.text = row.value
             cell.subtitleLabel.textColor = R.color.text()

@@ -81,6 +81,9 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         }
         headerView.load(token: token)
         headerView.delegate = self
+        if case .newAddress = intent {
+            headerView.contentTopConstraint.constant = 10
+        }
         headerView.textView.becomeFirstResponder()
         let networkName = AddressBookNetwork.name(chainID: token.chainID, chain: token.chain)
         switch inputContent {
@@ -134,6 +137,10 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         nextButton.setTitle(R.string.localizable.next(), for: .normal)
         nextButton.style = .filled
         nextButton.applyDefaultContentInsets()
+        if case .newAddress = intent {
+            nextButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
+            nextButton.contentEdgeInsets = UIEdgeInsets(top: 11, left: 0, bottom: 12, right: 0)
+        }
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillHide(_:)),

@@ -39,6 +39,7 @@ final class AddressBookNetworkFilterView: TransactionHistoryFilterView {
     
     override func loadSubviews() {
         super.loadSubviews()
+        backgroundColor = R.color.background()
         label.text = R.string.localizable.all_networks()
         iconsStackView.axis = .horizontal
         iconsStackView.spacing = 0

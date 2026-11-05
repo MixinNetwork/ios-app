@@ -1877,6 +1877,7 @@
 "trade_native_tokens" = "何千ものネイティブ トークンを取引する";
 "trade_now" = "今すぐ取引";
 "trade_order_pending" = "保留中";
+"trade_order_pending_count" = "未約定 %d 件";
 "trade_perpetual_activity" = "無期限契約の取引履歴";
 "trade_pro" = "Pro";
 "trade_pro_description" = "高度なチャート、クロスマージン、指値注文。";

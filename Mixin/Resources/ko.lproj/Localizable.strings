@@ -1877,6 +1877,7 @@
 "trade_native_tokens" = "수천 개의 기본 토큰을 거래하세요";
 "trade_now" = "지금 거래";
 "trade_order_pending" = "보류 중";
+"trade_order_pending_count" = "미체결%d건";
 "trade_perpetual_activity" = "무기한 선물 거래 내역";
 "trade_pro" = "프로";
 "trade_pro_description" = "고급 차트, 교차 마진 및 지정가 주문.";

@@ -1877,6 +1877,7 @@
 "trade_native_tokens" = "Trade thousands of native tokens";
 "trade_now" = "Trade Now";
 "trade_order_pending" = "Pending";
+"trade_order_pending_count" = "%d Pending";
 "trade_perpetual_activity" = "Perpetual Activity";
 "trade_pro" = "Pro";
 "trade_pro_description" = "Advanced charts, cross margin, and limit orders.";

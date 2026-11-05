@@ -15,6 +15,7 @@ final class TradeMoreMenuViewController: UIViewController {
     
     private weak var collectionView: UICollectionView!
     
+    private var pendingSwapOrdersCount: Int?
     private var pendingLimitOrdersCount: Int?
     
     init(wallet: Wallet) {
@@ -107,17 +108,25 @@ final class TradeMoreMenuViewController: UIViewController {
         
         DispatchQueue.global().async { [wallet, weak self] in
             let walletID = wallet.tradingWalletID
-            var pendingLimitOrdersCount: Int? = Web3OrderDAO.shared.openOrdersCount(
-                walletID: walletID,
-                type: .limit
-            )
-            if pendingLimitOrdersCount == 0 {
-                pendingLimitOrdersCount = nil
-            }
+            let pendingSwapOrdersCount = {
+                let count = Web3OrderDAO.shared.openOrdersCount(
+                    walletID: walletID,
+                    type: .swap,
+                )
+                return count == 0 ? nil : count
+            }()
+            let pendingLimitOrdersCount = {
+                let count = Web3OrderDAO.shared.openOrdersCount(
+                    walletID: walletID,
+                    type: .limit,
+                )
+                return count == 0 ? nil : count
+            }()
             DispatchQueue.main.async { [weak self] in
                 guard let self else {
                     return
                 }
+                self.pendingSwapOrdersCount = pendingSwapOrdersCount
                 self.pendingLimitOrdersCount = pendingLimitOrdersCount
                 self.collectionView.reloadData()
             }
@@ -147,10 +156,14 @@ extension TradeMoreMenuViewController: UICollectionViewDataSource {
         switch item {
         case .swapOrders:
             title = R.string.localizable.trade_swap_orders()
-            subtitle = nil
+            subtitle = pendingSwapOrdersCount.map { count in
+                R.string.localizable.trade_order_pending_count(count)
+            }
         case .limitOrders:
             title = R.string.localizable.trade_limit_orders()
-            subtitle = pendingLimitOrdersCount?.formatted()
+            subtitle = pendingLimitOrdersCount.map { count in
+                R.string.localizable.trade_order_pending_count(count)
+            }
         case .perpetualActivity:
             title = R.string.localizable.trade_perpetual_activity()
             subtitle = nil

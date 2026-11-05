@@ -1877,6 +1877,7 @@
 "trade_native_tokens" = "交易數千種原生代幣";
 "trade_now" = "立即交易";
 "trade_order_pending" = "待成交";
+"trade_order_pending_count" = "%d 待成交";
 "trade_perpetual_activity" = "合約記錄";
 "trade_pro" = "專業版";
 "trade_pro_description" = "專業圖表、全倉保證金及限價訂單。";

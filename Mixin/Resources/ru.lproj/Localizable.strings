@@ -1877,6 +1877,7 @@
 "trade_native_tokens" = "Торгуйте тысячами собственных токенов";
 "trade_now" = "Торговать сейчас";
 "trade_order_pending" = "На рассмотрении";
+"trade_order_pending_count" = "%d в ожидании";
 "trade_perpetual_activity" = "История бессрочных контрактов";
 "trade_pro" = "Pro";
 "trade_pro_description" = "Расширенные графики, кросс-маржа и лимитные ордера.";

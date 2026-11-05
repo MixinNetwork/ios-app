@@ -1,6 +1,6 @@
 import UIKit
 
-class GroupCallIndicatorView: UIView {
+final class GroupCallIndicatorView: UIView {
     
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var imageView: UIImageView!

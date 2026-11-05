@@ -15,7 +15,7 @@ final class TradeMoreMenuViewController: UIViewController {
     
     private weak var collectionView: UICollectionView!
     
-    private var orderCounts: [Item: Int] = [:]
+    private var pendingLimitOrdersCount: Int?
     
     init(wallet: Wallet) {
         self.wallet = wallet
@@ -107,24 +107,19 @@ final class TradeMoreMenuViewController: UIViewController {
         
         DispatchQueue.global().async { [wallet, weak self] in
             let walletID = wallet.tradingWalletID
-            let positionsCount: Int
-            switch wallet {
-            case .privacy:
-                positionsCount = PerpsOrderDAO.shared.activitiesCount()
-            case .common, .safe:
-                positionsCount = 0
+            var pendingLimitOrdersCount: Int? = Web3OrderDAO.shared.openOrdersCount(
+                walletID: walletID,
+                type: .limit
+            )
+            if pendingLimitOrdersCount == 0 {
+                pendingLimitOrdersCount = nil
             }
-            let counts: [Item: Int] = [
-                .swapOrders: Web3OrderDAO.shared.openOrdersCount(walletID: walletID, type: .swap),
-                .limitOrders: Web3OrderDAO.shared.openOrdersCount(walletID: walletID, type: .limit),
-                .perpetualActivity: positionsCount,
-            ]
             DispatchQueue.main.async { [weak self] in
                 guard let self else {
                     return
                 }
-                orderCounts = counts
-                collectionView.reloadData()
+                self.pendingLimitOrdersCount = pendingLimitOrdersCount
+                self.collectionView.reloadData()
             }
         }
     }
@@ -148,13 +143,17 @@ extension TradeMoreMenuViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = sections[indexPath.section][indexPath.item]
         let title: String
+        let subtitle: String?
         switch item {
         case .swapOrders:
             title = R.string.localizable.trade_swap_orders()
+            subtitle = nil
         case .limitOrders:
             title = R.string.localizable.trade_limit_orders()
+            subtitle = pendingLimitOrdersCount?.formatted()
         case .perpetualActivity:
             title = R.string.localizable.trade_perpetual_activity()
+            subtitle = nil
         case .perpsPro:
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: R.reuseIdentifier.perps_pro,
@@ -168,7 +167,7 @@ extension TradeMoreMenuViewController: UICollectionViewDataSource {
             for: indexPath
         )!
         cell.titleLabel.text = title
-        cell.countLabel.text = orderCounts[item]?.formatted()
+        cell.subtitleLabel.text = subtitle
         return cell
     }
     

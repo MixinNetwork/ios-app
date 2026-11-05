@@ -55,7 +55,7 @@
             </collectionViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
-                <outlet property="countLabel" destination="8qg-2t-BNE" id="fNd-uk-lQe"/>
+                <outlet property="subtitleLabel" destination="8qg-2t-BNE" id="fNd-uk-lQe"/>
                 <outlet property="titleLabel" destination="LCY-jr-dbx" id="6Ca-rb-EHW"/>
             </connections>
             <point key="canvasLocation" x="55" y="80"/>

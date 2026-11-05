@@ -41,12 +41,12 @@ public final class PerpetualPositionItem: PerpetualPosition {
         quantity closingQuantity: Decimal,
         feeRate: Decimal?,
     ) -> (fee: Decimal, receiving: Decimal)? {
-        let quantity = abs(Decimal(string: quantity, locale: .enUSPOSIX) ?? 0)
+        let quantity = Decimal(string: quantity, locale: .enUSPOSIX) ?? 0
         guard quantity > 0, let feeRate else {
             return nil
         }
-        let proportion = abs(closingQuantity) / quantity
-        let fee = abs(closingQuantity) * decimalMarkPrice * feeRate
+        let proportion = closingQuantity / quantity
+        let fee = closingQuantity * decimalMarkPrice * feeRate
         let margin = Decimal(string: margin, locale: .enUSPOSIX) ?? 0
         let receiving = max((margin + decimalUnrealizedPnL) * proportion - fee, 0)
         return (fee: fee, receiving: receiving)

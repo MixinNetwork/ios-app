@@ -60,7 +60,7 @@ final class PerpsAutoClosingCondition {
         case .draft:
             entryPrice / leverage
         case .open(_, let quantity):
-            quantity == 0 ? 0 : margin / abs(quantity)
+            quantity == 0 ? 0 : margin / quantity
         }
         self.feeRate = marketViewModel.market.decimalFeeRate
         self.priceScale = marketViewModel.market.priceScale
@@ -260,7 +260,6 @@ extension PerpsAutoClosingCondition {
         closingPrice: Decimal,
         feeRate: Decimal,
     ) -> Decimal {
-        let quantity = abs(quantity)
         let grossPNL = (closingPrice - entryPrice) * quantity * (side == .long ? 1 : -1)
         let openingFee = quantity * entryPrice * feeRate
         let closingFee = quantity * closingPrice * feeRate

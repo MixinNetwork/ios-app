@@ -294,11 +294,6 @@ struct EVMQuantity: Equatable, ExpressibleByIntegerLiteral {
             + withUnsafeBytes(of: value.bigEndian, Data.init(_:))
     }
     
-    init(bigEndian: Data) {
-        precondition(bigEndian.count <= 32)
-        self.bigEndian = Data(repeating: 0, count: 32 - bigEndian.count) + bigEndian
-    }
-    
     init?(_ decimalString: String) {
         var value = EVMUInt256()
         let status = Data(decimalString.utf8)

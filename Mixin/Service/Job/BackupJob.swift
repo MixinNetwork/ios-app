@@ -8,7 +8,11 @@ class BackupJob: BaseJob {
     
     static let backupDidChangeNotification = Notification.Name("one.mixin.messenger.Application.backupDidChange")
 
-    private let monitorQueue = DispatchQueue(label: "one.mixin.messenger.queue.backup")
+    private let monitorQueue: OperationQueue = {
+        let queue = OperationQueue(maxConcurrentOperationCount: 1)
+        queue.name = "one.mixin.messenger.queue.backup"
+        return queue
+    }()
     private let immediatelyBackup: Bool
     private var monitors = SafeDictionary<String, Int64>()
     private var withoutUploadSize: Int64 = 0
@@ -156,43 +160,46 @@ class BackupJob: BaseJob {
         let semaphore = DispatchSemaphore(value: 0)
         let query = NSMetadataQuery()
 
-        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: nil, queue: nil) { [weak self](notification) in
-            guard let metadataItems = (notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem]) else {
+        let observer = NotificationCenter.default.addObserver(
+            forName: .NSMetadataQueryDidUpdate,
+            object: query,
+            queue: monitorQueue
+        ) { [weak self] (notification) in
+            guard
+                let metadataItems = (notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem]),
+                let weakSelf = self
+            else {
                 return
             }
-            self?.monitorQueue.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                guard weakSelf.isContinueBackup else {
-                    weakSelf.stopQuery(query: query, semaphore: semaphore)
-                    return
-                }
-
-                for metadataItem in metadataItems {
-                    let name = metadataItem.value(forAttribute: NSMetadataItemFSNameKey) as? String
-                    let fileSize = (metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? NSNumber)?.int64Value ?? 0
-                    let percent = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentUploadedKey) as? NSNumber)?.floatValue ?? 0
-                    let isUploaded = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemIsUploadedKey) as? NSNumber)?.boolValue ?? false
-
-                    if let fileName = name, fileSize > 0, percent > 0, weakSelf.monitors[fileName] != nil {
-                        weakSelf.monitors[fileName] = isUploaded ? fileSize : Int64(Float(fileSize) * percent / 100)
-                    }
-                }
-                weakSelf.realUploadedSize = weakSelf.monitors.values.map { $0 }.reduce(0, +)
-                if weakSelf.uploadedSize >= weakSelf.totalFileSize {
-                    weakSelf.stopQuery(query: query, semaphore: semaphore)
+            guard weakSelf.isContinueBackup else {
+                weakSelf.stopQuery(query: query, semaphore: semaphore)
+                return
+            }
+            
+            for metadataItem in metadataItems {
+                let name = metadataItem.value(forAttribute: NSMetadataItemFSNameKey) as? String
+                let fileSize = (metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? NSNumber)?.int64Value ?? 0
+                let percent = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentUploadedKey) as? NSNumber)?.floatValue ?? 0
+                let isUploaded = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemIsUploadedKey) as? NSNumber)?.boolValue ?? false
+                
+                if let fileName = name, fileSize > 0, percent > 0, weakSelf.monitors[fileName] != nil {
+                    weakSelf.monitors[fileName] = isUploaded ? fileSize : Int64(Float(fileSize) * percent / 100)
                 }
             }
+            weakSelf.realUploadedSize = weakSelf.monitors.values.map { $0 }.reduce(0, +)
+            if weakSelf.uploadedSize >= weakSelf.totalFileSize {
+                weakSelf.stopQuery(query: query, semaphore: semaphore)
+            }
         }
-
+        
+        query.operationQueue = monitorQueue
         query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
         query.valueListAttributes = [ NSMetadataUbiquitousItemPercentUploadedKey,
                                       NSMetadataUbiquitousItemIsUploadingKey,
                                       NSMetadataUbiquitousItemUploadingErrorKey,
                                       NSMetadataUbiquitousItemIsUploadedKey]
         query.predicate = NSPredicate(format: "%K BEGINSWITH[c] %@ && kMDItemContentType != 'public.folder'", NSMetadataItemPathKey, backupUrl.path)
-        DispatchQueue.main.async {
+        monitorQueue.addOperation {
             query.start()
         }
 
@@ -201,6 +208,10 @@ class BackupJob: BaseJob {
         }
         for path in backupPaths {
             guard isContinueBackup else {
+                monitorQueue.addOperation {
+                    query.stop()
+                }
+                NotificationCenter.default.removeObserver(observer)
                 return
             }
             copyToCloud(from: AttachmentContainer.url.appendingPathComponent(path), destination: backupUrl.appendingPathComponent(path))
@@ -209,7 +220,7 @@ class BackupJob: BaseJob {
         isBackingUp = false
 
         if uploadedSize >= totalFileSize || !isContinueBackup {
-            DispatchQueue.main.async {
+            monitorQueue.addOperation {
                 query.stop()
             }
         } else {

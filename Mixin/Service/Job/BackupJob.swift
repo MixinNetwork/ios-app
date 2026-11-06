@@ -162,7 +162,7 @@ class BackupJob: BaseJob {
 
         let observer = NotificationCenter.default.addObserver(
             forName: .NSMetadataQueryDidUpdate,
-            object: nil,
+            object: query,
             queue: monitorQueue
         ) { [weak self] (notification) in
             guard
@@ -208,6 +208,10 @@ class BackupJob: BaseJob {
         }
         for path in backupPaths {
             guard isContinueBackup else {
+                monitorQueue.addOperation {
+                    query.stop()
+                }
+                NotificationCenter.default.removeObserver(observer)
                 return
             }
             copyToCloud(from: AttachmentContainer.url.appendingPathComponent(path), destination: backupUrl.appendingPathComponent(path))

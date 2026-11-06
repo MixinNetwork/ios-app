@@ -762,7 +762,7 @@ extension ConversationDAO {
     private func deleteExpiredMessages(with conversationId: String, from db: GRDB.Database) throws {
         let sql = """
             DELETE FROM expired_messages
-            WHERE message_id IN (SELECT id FROM expired_messages WHERE conversation_id = ?)
+            WHERE message_id IN (SELECT id FROM messages WHERE conversation_id = ?)
         """
         try db.execute(sql: sql, arguments: [conversationId])
     }

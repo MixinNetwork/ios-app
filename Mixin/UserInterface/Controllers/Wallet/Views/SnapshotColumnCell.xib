@@ -64,9 +64,14 @@
             </tableViewCellContentView>
             <color key="backgroundColor" name="background"/>
             <connections>
+                <outlet property="bottomConstraint" destination="19m-od-xkS" id="jDM-3F-e0B"/>
+                <outlet property="contentStackView" destination="RoP-ke-BJT" id="TLD-rG-9qY"/>
                 <outlet property="disclosureIndicatorImageView" destination="bp0-qk-yC1" id="LK6-B1-ReC"/>
+                <outlet property="leadingConstraint" destination="oa5-DF-dMx" id="gVY-3S-5v0"/>
                 <outlet property="subtitleLabel" destination="9Uw-6j-67C" id="WdH-Gp-z68"/>
                 <outlet property="titleLabel" destination="JUL-5V-Ezo" id="SKk-VN-TqQ"/>
+                <outlet property="topConstraint" destination="rPH-8X-1NB" id="04n-zc-sxc"/>
+                <outlet property="trailingConstraint" destination="BEg-8E-60f" id="lPS-iP-Xc7"/>
             </connections>
             <point key="canvasLocation" x="-24.427480916030532" y="41.901408450704224"/>
         </tableViewCell>

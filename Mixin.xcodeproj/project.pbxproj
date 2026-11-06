@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD5F2363F86FF166C35694CE /* AddressBookAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79552A3E007334B2C3FAA68 /* AddressBookAddressViewController.swift */; };
+		36304C069FB02A0073DF9A3B /* AddressBookCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE8279C0DB1732922155FD4 /* AddressBookCell.swift */; };
+		F8ED744D203EFB249F823B18 /* AddressBookNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26863C10810493C90CFD005B /* AddressBookNetwork.swift */; };
+		705F8E2039E2A365BC6D0E83 /* AddressBookNetworkFilterPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C6AD585D9070B6222470F0 /* AddressBookNetworkFilterPickerViewController.swift */; };
+		065DA2096078B6E0460CB95A /* AddressBookNetworkFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA9C04B1FB87877A5F86D16 /* AddressBookNetworkFilterView.swift */; };
+		E628B3984C3E0935B12D9A0C /* AddressBookNetworkSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5213FDF6DE64681522FD2B78 /* AddressBookNetworkSelectorViewController.swift */; };
+		A5D29ED8DFBE6005FCAF0812 /* AddressBookTokenLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0FB93922BC261FB993C356B /* AddressBookTokenLoader.swift */; };
+		628AC556CDA0D7736678DD99 /* WalletAddressBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8821E346AC17C601CCC197BE /* WalletAddressBookViewController.swift */; };
 		05F1AF177EC94633B8C888DF /* ExploreMoreActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E65CF4E6E6254647A9D06787 /* ExploreMoreActionCell.xib */; };
 		094EE1FF13DF3C55B0BB34AB /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = B7536589F5323E0BA6DB99C4 /* Zip */; };
 		119704EDA3CD48649BB5F58B /* StickerStoreBannerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E0F99EB92C3422C954DE299 /* StickerStoreBannerCell.xib */; };
@@ -158,7 +166,6 @@
 		7B4C6571242358D5003B78F9 /* LocationSearchNoResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4C6570242358D5003B78F9 /* LocationSearchNoResultView.swift */; };
 		7B4CA8BE249B3F840048E46D /* PeerCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4CA8BD249B3F840048E46D /* PeerCall.swift */; };
 		7B4CBDC22528533600BA66D0 /* ClipSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4CBDC12528533600BA66D0 /* ClipSwitcher.swift */; };
-		7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4D1125205B8D380074BF60 /* AddressCell.swift */; };
 		7B4E30762295659200A03F6E /* InsetTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4E30752295659200A03F6E /* InsetTextField.swift */; };
 		7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4E3077229565C200A03F6E /* SearchBoxLeftView.swift */; };
 		7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */; };
@@ -265,7 +272,6 @@
 		7B86B1F523F6AB0B00C80AD9 /* TitledCardContentWidthCalculable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B86B1F423F6AB0A00C80AD9 /* TitledCardContentWidthCalculable.swift */; };
 		7B88655920AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */; };
 		7B88655B20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B88655A20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift */; };
-		7B894AF3205BF8660065A1B8 /* AddressBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894AF2205BF8660065A1B8 /* AddressBookViewController.swift */; };
 		7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894CD520D24BE2004FA5A8 /* RecorderLockView.swift */; };
 		7B8A6A6D2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8A6A6C2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift */; };
 		7B8A6A742456E0EC00ADC9EB /* SharedMediaPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8A6A722456E0EC00ADC9EB /* SharedMediaPostCell.swift */; };
@@ -1241,8 +1247,6 @@
 		946E9F1A2AEF88DF0077CD7A /* RecoverRawTransactionJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */; };
 		946E9F5C2D455F0900DBC308 /* MixinTokenReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F5A2D455F0900DBC308 /* MixinTokenReceiverViewController.swift */; };
 		946E9FBD2D46237A00DBC308 /* TransferInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */; };
-		946EA03D2D469A4A00DBC308 /* AddressBookView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946EA03C2D469A4A00DBC308 /* AddressBookView.xib */; };
-		946EA0452D469AD200DBC308 /* AddressCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946EA0442D469AD200DBC308 /* AddressCell.xib */; };
 		946EA0862D4763BD00DBC308 /* AddressInfoInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */; };
 		946EA0882D4763CF00DBC308 /* AddressInfoInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */; };
 		946EA1142D47DD4000DBC308 /* WithdrawInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */; };
@@ -2077,6 +2081,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A79552A3E007334B2C3FAA68 /* AddressBookAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookAddressViewController.swift; sourceTree = "<group>"; };
+		3AE8279C0DB1732922155FD4 /* AddressBookCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookCell.swift; sourceTree = "<group>"; };
+		26863C10810493C90CFD005B /* AddressBookNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookNetwork.swift; sourceTree = "<group>"; };
+		06C6AD585D9070B6222470F0 /* AddressBookNetworkFilterPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookNetworkFilterPickerViewController.swift; sourceTree = "<group>"; };
+		4FA9C04B1FB87877A5F86D16 /* AddressBookNetworkFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookNetworkFilterView.swift; sourceTree = "<group>"; };
+		5213FDF6DE64681522FD2B78 /* AddressBookNetworkSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookNetworkSelectorViewController.swift; sourceTree = "<group>"; };
+		B0FB93922BC261FB993C356B /* AddressBookTokenLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookTokenLoader.swift; sourceTree = "<group>"; };
+		8821E346AC17C601CCC197BE /* WalletAddressBookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletAddressBookViewController.swift; sourceTree = "<group>"; };
 		04E294DF55B04275B8DB1642 /* ExploreMoreActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreMoreActionCell.swift; sourceTree = "<group>"; };
 		059103962B154B85BE80C13B /* StickerStorePreviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StickerStorePreviewCell.xib; sourceTree = "<group>"; };
 		1BC5DC4D300046CDA234FBEC /* AdvertisementBannerActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisementBannerActionHandler.swift; sourceTree = "<group>"; };
@@ -2221,7 +2233,6 @@
 		7B4C6570242358D5003B78F9 /* LocationSearchNoResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchNoResultView.swift; sourceTree = "<group>"; };
 		7B4CA8BD249B3F840048E46D /* PeerCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerCall.swift; sourceTree = "<group>"; };
 		7B4CBDC12528533600BA66D0 /* ClipSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipSwitcher.swift; sourceTree = "<group>"; };
-		7B4D1125205B8D380074BF60 /* AddressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressCell.swift; sourceTree = "<group>"; };
 		7B4E30752295659200A03F6E /* InsetTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetTextField.swift; sourceTree = "<group>"; };
 		7B4E3077229565C200A03F6E /* SearchBoxLeftView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBoxLeftView.swift; sourceTree = "<group>"; };
 		7B4E307922966FF900A03F6E /* MediaPreviewMaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPreviewMaskView.swift; sourceTree = "<group>"; };
@@ -2328,7 +2339,6 @@
 		7B86B1F423F6AB0A00C80AD9 /* TitledCardContentWidthCalculable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitledCardContentWidthCalculable.swift; sourceTree = "<group>"; };
 		7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRepresentableMessageViewModel.swift; sourceTree = "<group>"; };
 		7B88655A20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRepresentableMessageCell.swift; sourceTree = "<group>"; };
-		7B894AF2205BF8660065A1B8 /* AddressBookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookViewController.swift; sourceTree = "<group>"; };
 		7B894CD520D24BE2004FA5A8 /* RecorderLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderLockView.swift; sourceTree = "<group>"; };
 		7B8A6A6C2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaPostTableViewController.swift; sourceTree = "<group>"; };
 		7B8A6A722456E0EC00ADC9EB /* SharedMediaPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaPostCell.swift; sourceTree = "<group>"; };
@@ -3327,8 +3337,6 @@
 		946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverRawTransactionJob.swift; sourceTree = "<group>"; };
 		946E9F5A2D455F0900DBC308 /* MixinTokenReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinTokenReceiverViewController.swift; sourceTree = "<group>"; };
 		946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferInputAmountViewController.swift; sourceTree = "<group>"; };
-		946EA03C2D469A4A00DBC308 /* AddressBookView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressBookView.xib; sourceTree = "<group>"; };
-		946EA0442D469AD200DBC308 /* AddressCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressCell.xib; sourceTree = "<group>"; };
 		946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressInfoInputViewController.swift; sourceTree = "<group>"; };
 		946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressInfoInputView.xib; sourceTree = "<group>"; };
 		946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawInputAmountViewController.swift; sourceTree = "<group>"; };
@@ -4191,6 +4199,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		34C4CDED06464A56CCAFDBF1 /* Address Book */ = {
+			isa = PBXGroup;
+			children = (
+				A79552A3E007334B2C3FAA68 /* AddressBookAddressViewController.swift */,
+				3AE8279C0DB1732922155FD4 /* AddressBookCell.swift */,
+				26863C10810493C90CFD005B /* AddressBookNetwork.swift */,
+				06C6AD585D9070B6222470F0 /* AddressBookNetworkFilterPickerViewController.swift */,
+				4FA9C04B1FB87877A5F86D16 /* AddressBookNetworkFilterView.swift */,
+				5213FDF6DE64681522FD2B78 /* AddressBookNetworkSelectorViewController.swift */,
+				B0FB93922BC261FB993C356B /* AddressBookTokenLoader.swift */,
+				8821E346AC17C601CCC197BE /* WalletAddressBookViewController.swift */,
+			);
+			path = "Address Book";
+			sourceTree = "<group>";
+		};
 		275339881F975D9800DD4C26 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -5318,8 +5341,6 @@
 		9429C1212E059D2D00206DAA /* Transfer */ = {
 			isa = PBXGroup;
 			children = (
-				946EA03C2D469A4A00DBC308 /* AddressBookView.xib */,
-				7B894AF2205BF8660065A1B8 /* AddressBookViewController.swift */,
 				DF06D91E222FAE1300FE7FBC /* LegacyTransferOutViewController.swift */,
 				9455EA072AFE598E00C3FD3C /* WithdrawFeeView.xib */,
 				9455EA0C2AFE5A8500C3FD3C /* WithdrawFeeView.swift */,
@@ -6551,8 +6572,6 @@
 		DF736F881FC08B67001DB063 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				946EA0442D469AD200DBC308 /* AddressCell.xib */,
-				7B4D1125205B8D380074BF60 /* AddressCell.swift */,
 				DF87949B207505F4004A1E55 /* LegacyTransactionCell.swift */,
 				7BEC4DF021A7D054003336F2 /* AssetCell.xib */,
 				7B9916D321945A6800C11401 /* AssetCell.swift */,
@@ -6779,6 +6798,7 @@
 				94BE6E922BA0622B00CE65A3 /* Authentication Preview */,
 				94F952512AE60CED0025B995 /* Payment */,
 				94E9795E2D0C151B00FFCC12 /* PIN */,
+				34C4CDED06464A56CCAFDBF1 /* Address Book */,
 				9429C1052E059BDE00206DAA /* Search */,
 				9429C0E12E059B0E00206DAA /* Transaction History */,
 				9429C0FE2E059BB700206DAA /* Trade */,
@@ -7457,7 +7477,6 @@
 				94E0BB802EB11B7B0096797E /* SwapPriceCell.xib in Resources */,
 				7B833E9C22C4AED20063929D /* ic_app_loading@2x.webp in Resources */,
 				7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */,
-				946EA0452D469AD200DBC308 /* AddressCell.xib in Resources */,
 				94FB8E072D1A92CF002DCA20 /* TokenSelectorView.xib in Resources */,
 				94735E272E28EBF80001C179 /* ImportedWalletNetworkCell.xib in Resources */,
 				948D3E02303DE64F00211A98 /* TokenEarningCell.xib in Resources */,
@@ -7642,7 +7661,6 @@
 				940C073C2E85061900552130 /* MembershipInviteCell.xib in Resources */,
 				7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */,
 				944124A92E715CF600705462 /* EnableNotificationHeaderView.xib in Resources */,
-				946EA03D2D469A4A00DBC308 /* AddressBookView.xib in Resources */,
 				7BB7872B24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib in Resources */,
 				94B13FC32B5ED5F9001333BE /* Web3BrowserView.xib in Resources */,
 				7B7B5DB5230EBEBA00D0F463 /* TransferTypeCell.xib in Resources */,
@@ -8019,7 +8037,6 @@
 				7BDFAE902559008800296F8B /* WalletSearchViewController.swift in Sources */,
 				7B8BFC8C1FDD7EC8004E19DB /* UnknownMessageCell.swift in Sources */,
 				7B5E9B4824373380000AE24E /* AlertEditorController.swift in Sources */,
-				7B4D1127205B8D380074BF60 /* AddressCell.swift in Sources */,
 				9495E0AD2CEF685100124CC7 /* LogoutHandler.swift in Sources */,
 				941979562BA47782002BA19F /* Web3MessageCell.swift in Sources */,
 				7B595358226749A100D59DB4 /* PeerCell.swift in Sources */,
@@ -8582,7 +8599,6 @@
 				94F2687D2E165F0300A8A1E0 /* WalletCandidate.swift in Sources */,
 				E05D991B2390C632009F9E8D /* FavoriteAppCell.swift in Sources */,
 				94DF6CDE2E4B8C5700808028 /* SequentialWalletPathGenerator.swift in Sources */,
-				7B894AF3205BF8660065A1B8 /* AddressBookViewController.swift in Sources */,
 				7B95533A224380B200CE95E6 /* PINValidationViewController.swift in Sources */,
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				940FC4B12F500A8B000C4260 /* PerpetualMarketSelectorViewController.swift in Sources */,
@@ -8922,6 +8938,14 @@
 				7BCEAA7A2350A3A200F07635 /* SharedMediaDataCell.swift in Sources */,
 				DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */,
 				944F53FE2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift in Sources */,
+				CD5F2363F86FF166C35694CE /* AddressBookAddressViewController.swift in Sources */,
+				36304C069FB02A0073DF9A3B /* AddressBookCell.swift in Sources */,
+				F8ED744D203EFB249F823B18 /* AddressBookNetwork.swift in Sources */,
+				705F8E2039E2A365BC6D0E83 /* AddressBookNetworkFilterPickerViewController.swift in Sources */,
+				065DA2096078B6E0460CB95A /* AddressBookNetworkFilterView.swift in Sources */,
+				E628B3984C3E0935B12D9A0C /* AddressBookNetworkSelectorViewController.swift in Sources */,
+				A5D29ED8DFBE6005FCAF0812 /* AddressBookTokenLoader.swift in Sources */,
+				628AC556CDA0D7736678DD99 /* WalletAddressBookViewController.swift in Sources */,
 				7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */,
 				DF8A7521236301C500765A82 /* AuthorizationWindow.swift in Sources */,
 				9489247D2D572E9400D9BCCB /* TokenReceiverTrayView.swift in Sources */,

@@ -63,7 +63,7 @@ class InputOnChainInfoViewController: UIViewController {
             view.layer.masksToBounds = true
         }
         networkTitleLabel.text = R.string.localizable.network()
-        selectNetworkButton.showsMenuAsPrimaryAction = true
+        selectNetworkButton.addTarget(self, action: #selector(selectNetwork(_:)), for: .touchUpInside)
         reloadViews(chain: selectedChain)
         inputTextView.textContainerInset = .zero
         inputTextView.textContainer.lineFragmentPadding = 0
@@ -127,13 +127,6 @@ class InputOnChainInfoViewController: UIViewController {
     
     func reloadViews(chain: Web3Chain) {
         networkNameLabel.text = chain.name
-        selectNetworkButton.menu = UIMenu(children: Web3Chain.all.map { chain in
-            UIAction(
-                title: chain.name,
-                state: chain == selectedChain ? .on : .off,
-                handler: { [weak self] _ in self?.selectedChain = chain }
-            )
-        })
     }
     
     func detectInput() {
@@ -142,6 +135,28 @@ class InputOnChainInfoViewController: UIViewController {
     
     @objc private func presentCustomerService(_ sender: Any) {
         CustomerServiceViewController.invoke(reportingTags: ["source": "input_private_key"])
+    }
+    
+    @objc private func selectNetwork(_ sender: Any) {
+        let chains = ChainDAO.shared.chains(chainIDs: Web3Chain.all.map(\.chainID))
+        let networks = Web3Chain.all.map { chain in
+            AddressBookNetwork(
+                chainID: chain.chainID,
+                name: chain.name,
+                chain: chains[chain.chainID],
+            )
+        }
+        let selector = AddressBookNetworkSelectorViewController(
+            networks: networks,
+            selectedChainID: selectedChain.chainID,
+        )
+        selector.onSelect = { [weak self] network in
+            self?.dismiss(animated: true)
+            if let chain = Web3Chain.all.first(where: { $0.chainID == network.chainID }) {
+                self?.selectedChain = chain
+            }
+        }
+        present(selector, animated: true)
     }
     
     @objc private func rearrangeInputButtons(_ sender: Any) {

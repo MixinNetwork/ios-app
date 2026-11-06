@@ -135,6 +135,7 @@
 "all_conversations" = "Todas las conversaciones";
 "all_dates" = "Todas las fechas";
 "all_invoices" = "Todas las facturas";
+"all_networks" = "Todas las redes";
 "all_signer_failure" = "Falla de todos los nodos";
 "all_time_high" = "Máximo histórico";
 "all_time_low" = "Mínimo histórico";
@@ -867,6 +868,7 @@
 "large_amount_reminder" = "El valor de esta transferencia de %1$@ es de hasta %2$@. Asegúrese de que la cantidad sea correcta.";
 "last_active_time" = "Último Activo %@";
 "last_backup_hint" = "Última copia de seguridad en %@, tamaño total %@.";
+"last_updated_at" = "Última actualización: %@";
 "later" = "Más tarde";
 "learn_how_to_trade_perps" = "Aprenda a operar con futuros perpetuos";
 "learn_more" = "Obtener más información";
@@ -1087,6 +1089,8 @@
 "no_orders" = "SIN PEDIDOS";
 "no_position" = "Sin posición";
 "no_posts" = "SIN PUBLICACIONES";
+"no_records" = "No hay registros";
+"no_records_found" = "No se encontraron registros";
 "no_results" = "SIN RESULTADOS";
 "no_stickers" = "SIN PEGATINAS";
 "no_tag" = "Sin etiqueta";
@@ -1113,6 +1117,7 @@
 "now_an_addmin" = "%@ ahora es administrador";
 "number_of_assets" = "%d Activos";
 "number_of_days" = "%d Días";
+"number_of_networks" = "%d redes";
 "number_of_opponents" = "%d Oponentes";
 "number_of_recipients" = "%d Destinatarios";
 "number_of_words" = "%d palabras";

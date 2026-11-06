@@ -135,6 +135,7 @@
 "all_conversations" = "すべてのチャットルーム";
 "all_dates" = "すべての日付";
 "all_invoices" = "すべての請求書";
+"all_networks" = "すべてのネットワーク";
 "all_signer_failure" = "すべてのノードが失敗しました";
 "all_time_high" = "過去最高値";
 "all_time_low" = "過去最安値";
@@ -867,6 +868,7 @@
 "large_amount_reminder" = "The value of this transfer of %1$@ is up to %2$@.金額が正しいことを確認してください。";
 "last_active_time" = "直近のアクティビティ%@";
 "last_backup_hint" = "最後に行ったバックアップ %@, 合計サイズ %@.";
+"last_updated_at" = "最終更新: %@";
 "later" = "後で";
 "learn_how_to_trade_perps" = "永久先物の取引方法を学ぶ";
 "learn_more" = "こちら";
@@ -1087,6 +1089,8 @@
 "no_orders" = "注文はありません";
 "no_position" = "ポジションがありません";
 "no_posts" = "投稿がありません";
+"no_records" = "記録がありません";
+"no_records_found" = "該当する記録が見つかりません";
 "no_results" = "結果なし";
 "no_stickers" = "スタンプはありません";
 "no_tag" = "タグなし";
@@ -1113,6 +1117,7 @@
 "now_an_addmin" = "%@は管理者です";
 "number_of_assets" = "%d アセット";
 "number_of_days" = "%d 日";
+"number_of_networks" = "%d ネットワーク";
 "number_of_opponents" = "%d の対戦相手";
 "number_of_recipients" = "%d 受信者";
 "number_of_words" = "%d 単語";

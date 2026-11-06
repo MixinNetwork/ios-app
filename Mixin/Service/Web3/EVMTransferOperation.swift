@@ -61,6 +61,7 @@ class EVMTransferOperation: Web3TransferOperation {
     
     @MainActor private var evmFee: EVMFee?
     @MainActor private var transaction: EVM.Transaction
+    @MainActor private var broadcastTransactionHash: String?
     
     fileprivate init(
         wallet: Web3Wallet,
@@ -226,6 +227,7 @@ class EVMTransferOperation: Web3TransferOperation {
         assert(!fee.gasless)
         await MainActor.run {
             signedTransaction = nil
+            broadcastTransactionHash = nil
             updateState(.signing)
         }
         Logger.web3.info(category: "EVMTransfer", message: "Will sign")
@@ -310,22 +312,30 @@ class EVMTransferOperation: Web3TransferOperation {
         fee: Web3DisplayFee,
     ) async throws {
         do {
-            Logger.web3.info(category: "EVMTransfer", message: "Will send tx")
-            let rawTransaction = try await RouteAPI.postTransaction(
-                chainID: mixinChainID,
-                from: fromAddress.destination,
-                rawTransaction: "0x" + signedTransaction.hexEncodedString(),
-                feeType: isFeeWaived ? .free : nil,
-            )
-            let pendingTransaction = Web3Transaction(
-                rawTransaction: rawTransaction,
-                fee: fee,
-                myAddress: fromAddress.destination,
-            )
-            Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
-                try rawTransaction.save(db)
+            let hash: String
+            if let broadcastTransactionHash = await broadcastTransactionHash {
+                hash = broadcastTransactionHash
+            } else {
+                Logger.web3.info(category: "EVMTransfer", message: "Will send tx")
+                let rawTransaction = try await RouteAPI.postTransaction(
+                    chainID: mixinChainID,
+                    from: fromAddress.destination,
+                    rawTransaction: "0x" + signedTransaction.hexEncodedString(),
+                    feeType: isFeeWaived ? .free : nil,
+                )
+                let pendingTransaction = Web3Transaction(
+                    rawTransaction: rawTransaction,
+                    fee: fee,
+                    myAddress: fromAddress.destination,
+                )
+                Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
+                    try rawTransaction.save(db)
+                }
+                hash = rawTransaction.hash
+                await MainActor.run {
+                    self.broadcastTransactionHash = hash
+                }
             }
-            let hash = rawTransaction.hash
             Logger.web3.info(category: "EVMTransfer", message: "Will respond hash: \(hash)")
             try await respond(hash: hash)
             Logger.web3.info(category: "EVMTransfer", message: "Txn sent")

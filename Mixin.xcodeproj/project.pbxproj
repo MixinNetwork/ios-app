@@ -1270,6 +1270,7 @@
 		94735F432E2A43CD0001C179 /* WalletIntroductionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94735F422E2A43CC0001C179 /* WalletIntroductionCell.swift */; };
 		947402BA2DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947402B92DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib */; };
 		947402BF2DA69B890085C183 /* ComplexWeb3TransactionTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947402BE2DA69B860085C183 /* ComplexWeb3TransactionTableHeaderView.swift */; };
+		94751FE4309DB65600BCD106 /* PerpsAutoClosingConditionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94751FE3309DB65500BCD106 /* PerpsAutoClosingConditionTests.swift */; };
 		947584412FD948C100256E22 /* WalletSearchWeb3TokenHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947584402FD948BD00256E22 /* WalletSearchWeb3TokenHandler.swift */; };
 		947584532FD94D2900256E22 /* NoTokenIndicatorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947584522FD94D2900256E22 /* NoTokenIndicatorCell.xib */; };
 		947584542FD94D2900256E22 /* NoTokenIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947584512FD94D2900256E22 /* NoTokenIndicatorCell.swift */; };
@@ -3356,6 +3357,7 @@
 		94735F422E2A43CC0001C179 /* WalletIntroductionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletIntroductionCell.swift; sourceTree = "<group>"; };
 		947402B92DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComplexWeb3TransactionTableHeaderView.xib; sourceTree = "<group>"; };
 		947402BE2DA69B860085C183 /* ComplexWeb3TransactionTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplexWeb3TransactionTableHeaderView.swift; sourceTree = "<group>"; };
+		94751FE3309DB65500BCD106 /* PerpsAutoClosingConditionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsAutoClosingConditionTests.swift; sourceTree = "<group>"; };
 		947584402FD948BD00256E22 /* WalletSearchWeb3TokenHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSearchWeb3TokenHandler.swift; sourceTree = "<group>"; };
 		947584512FD94D2900256E22 /* NoTokenIndicatorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoTokenIndicatorCell.swift; sourceTree = "<group>"; };
 		947584522FD94D2900256E22 /* NoTokenIndicatorCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoTokenIndicatorCell.xib; sourceTree = "<group>"; };
@@ -5872,6 +5874,7 @@
 			isa = PBXGroup;
 			children = (
 				94ED30692E269B4E00B99837 /* MixinTests.swift */,
+				94751FE3309DB65500BCD106 /* PerpsAutoClosingConditionTests.swift */,
 			);
 			path = MixinTests;
 			sourceTree = "<group>";
@@ -9484,6 +9487,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				94ED306B2E269B4F00B99837 /* MixinTests.swift in Sources */,
+				94751FE4309DB65600BCD106 /* PerpsAutoClosingConditionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

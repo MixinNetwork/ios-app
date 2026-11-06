@@ -584,6 +584,7 @@
 "edit_note" = "修改转账备注";
 "editing_address" = "正在修改地址";
 "editing_address_failed" = "修改地址失败";
+"eip712_invalid_chain_id" = "结构化消息的链 ID 无效，或与签名网络不一致。";
 "emergency_contact" = "恢复联系人";
 "enable" = "启用";
 "enable_bioauth_description" = "想要启用%@支付吗？启用后，转账时可验证%@快速完成付款。";

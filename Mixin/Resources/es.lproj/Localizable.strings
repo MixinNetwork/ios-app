@@ -584,6 +584,7 @@
 "edit_note" = "Editar nota";
 "editing_address" = "Editando dirección";
 "editing_address_failed" = "Error al editar la dirección";
+"eip712_invalid_chain_id" = "El ID de cadena del mensaje tipado no es válido o no coincide con la red de firma.";
 "emergency_contact" = "Contacto de recuperación";
 "enable" = "Habilitar";
 "enable_bioauth_description" = "¿Qué pasa con %@? Una vez habilitada, puede acelerar la autenticación con %@.";

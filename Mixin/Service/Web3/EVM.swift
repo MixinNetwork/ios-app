@@ -4,14 +4,24 @@ import MixinServices
 // Offline cryptography and transaction encoding are implemented by Alloy.
 enum EVM {
     
-    enum Error: Swift.Error {
+    enum Error: Swift.Error, LocalizedError {
         case sdk(Int32)
         case invalidAddress
         case invalidResponse
         case invalidSignature
         case invalidTransaction
         case invalidTypedData
+        case invalidTypedDataChainID
         case integerOverflow
+        
+        var errorDescription: String? {
+            switch self {
+            case .invalidTypedDataChainID:
+                R.string.localizable.eip712_invalid_chain_id()
+            default:
+                nil
+            }
+        }
     }
     
     static func address(privateKey: Data) throws(Error) -> EVM.Address {
@@ -37,11 +47,18 @@ enum EVM {
         return "0x" + signature.hexEncodedString()
     }
     
-    static func signTypedData(_ message: EVMTypedData, privateKey: Data) throws(Error) -> String {
+    static func signTypedData(
+        _ message: EVMTypedData,
+        chainID: Int,
+        privateKey: Data,
+    ) throws(Error) -> String {
+        guard let chainID = UInt64(exactly: chainID), chainID > 0 else {
+            throw .invalidTypedDataChainID
+        }
         let signature = try output { output in
             message.json.withEVMBytes { json in
                 privateKey.withEVMBytes { privateKey in
-                    evm_sign_typed_data(json, privateKey, output)
+                    evm_sign_typed_data(json, chainID, privateKey, output)
                 }
             }
         }
@@ -160,6 +177,9 @@ enum EVM {
     }
     
     fileprivate static func check(_ status: EVMErrorCode) throws(Error) {
+        guard status != EVMErrorCode_InvalidChainIDInTypedData else {
+            throw .invalidTypedDataChainID
+        }
         guard status == EVMErrorCode_Success else {
             throw Error.sdk(Int32(status.rawValue))
         }
@@ -261,7 +281,11 @@ struct EVMTypedData {
     
     fileprivate let json: Data
     
-    init(json data: Data) throws(EVM.Error) {
+    init(json data: Data, chainID: Int) throws(EVM.Error) {
+        guard let chainID = UInt64(exactly: chainID), chainID > 0 else {
+            throw .invalidTypedDataChainID
+        }
+        try EVM.check(data.withEVMBytes { evm_validate_typed_data_chain_id($0, chainID) })
         // Preserve the original bytes for signing, including full-width integer literals.
         let description = try EVM.output { output in
             data.withEVMBytes { evm_typed_data_description($0, output) }

@@ -584,6 +584,7 @@
 "edit_note" = "메모 편집";
 "editing_address" = "주소 수정";
 "editing_address_failed" = "주소 수정 실패";
+"eip712_invalid_chain_id" = "타입 메시지의 체인 ID가 유효하지 않거나 서명 네트워크와 일치하지 않습니다.";
 "emergency_contact" = "복구 연락처";
 "enable" = "활성화";
 "enable_bioauth_description" = "%@은 어떻습니까? 활성화되면 %@을 사용하여 인증을 신속하게 처리할 수 있습니다.";

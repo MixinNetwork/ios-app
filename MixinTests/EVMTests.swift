@@ -12,6 +12,7 @@ import CommonCrypto
 import CryptoKit
 import TIP
 import WalletConnectSigner
+import WalletConnectSign
 @testable import Mixin
 @testable import MixinServices
 
@@ -378,13 +379,68 @@ struct EVMTests {
         let json = """
         {"types":{"EIP712Domain":[],"Amount":[{"name":"amount","type":"uint256"}]},"primaryType":"Amount","domain":{},"message":{"amount":\(amount)}}
         """
-        let numeric = try EVMTypedData(json: Data(json.utf8))
-        let quoted = try EVMTypedData(json: Data(json.replacingOccurrences(of: amount, with: "\"" + amount + "\"").utf8))
+        let numeric = try EVMTypedData(json: Data(json.utf8), chainID: 1)
+        let quoted = try EVMTypedData(
+            json: Data(json.replacingOccurrences(of: amount, with: "\"" + amount + "\"").utf8),
+            chainID: 1,
+        )
         let privateKey = Data(repeating: 0, count: 31) + Data([1])
-        #expect(try EVM.signTypedData(numeric, privateKey: privateKey) == EVM.signTypedData(quoted, privateKey: privateKey))
+        let signature = try EVM.signTypedData(numeric, chainID: 1, privateKey: privateKey)
+        #expect(try EVM.signTypedData(quoted, chainID: 1, privateKey: privateKey) == signature)
+        #expect(try EVM.signTypedData(numeric, chainID: 42161, privateKey: privateKey) == signature)
         #expect(numeric.description.contains(amount))
         #expect(throws: EVM.Error.self) {
-            try EVMTypedData(json: Data("{}".utf8))
+            try EVMTypedData(json: Data("{}".utf8), chainID: 1)
+        }
+    }
+    
+    @Test func typedDataChecksChainIDBeforePreviewAndSigning() throws {
+        let json = #"""
+        {"types":{"EIP712Domain":[{"name":"chainId","type":"uint256"}],"Message":[{"name":"text","type":"string"}]},"primaryType":"Message","domain":{"chainId":42161},"message":{"text":"Hello, \"world\"!"}}
+        """#
+        let privateKey = Data(repeating: 0, count: 31) + Data([1])
+        let canonical = try EVMTypedData(json: Data(json.utf8), chainID: 42161)
+        let signature = try EVM.signTypedData(canonical, chainID: 42161, privateKey: privateKey)
+        for chainID in ["42161", "42161.0", "4.2161e4", "\"42161\"", "\"0xa4b1\"", "\"0xA4B1\""] {
+            let data = Data(json.replacingOccurrences(of: ":42161", with: ":" + chainID).utf8)
+            let typedData = try EVMTypedData(json: data, chainID: 42161)
+            #expect(try EVM.signTypedData(typedData, chainID: 42161, privateKey: privateKey) == signature)
+        }
+        for chainID in [
+            "1", "\"1\"", "\"0x1\"", "null", "true", "[]", "{}", "1.5", "-1",
+            "\"\"", "\"0x\"", "\"0xzz\"", "\"1.0\"", "42161.000000000000000000000001",
+        ] {
+            let data = Data(json.replacingOccurrences(of: ":42161", with: ":" + chainID).utf8)
+            #expect(throws: EVM.Error.self) {
+                try EVMTypedData(json: data, chainID: 42161)
+            }
+        }
+        #expect(throws: EVM.Error.self) {
+            try EVM.signTypedData(canonical, chainID: 1, privateKey: privateKey)
+        }
+    }
+    
+    @Test func walletConnectTypedDataUsesRequestChain() throws {
+        let json = #"{"types":{"EIP712Domain":[{"name":"chainId","type":"uint256"}],"Message":[{"name":"text","type":"string"}]},"primaryType":"Message","domain":{"chainId":"0xa4b1"},"message":{"text":"Hello, \"world\"!"}}"#
+        for method in ["eth_signTypedData", "eth_signTypedData_v4"] {
+            let matching = try WalletConnectSign.Request(
+                topic: "test",
+                method: method,
+                params: AnyCodable(["0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf", json, ""]),
+                chainId: Web3Chain.arbitrumOne.caip2,
+            )
+            let decoded = try WalletConnectDecodedSigningRequest.ethSignTypedData(request: matching)
+            #expect(decoded.chain == .arbitrumOne)
+            #expect(decoded.humanReadable.contains("world"))
+            let mismatching = try WalletConnectSign.Request(
+                topic: "test",
+                method: method,
+                params: matching.params,
+                chainId: Web3Chain.ethereum.caip2,
+            )
+            #expect(throws: EVM.Error.self) {
+                try WalletConnectDecodedSigningRequest.ethSignTypedData(request: mismatching)
+            }
         }
     }
     

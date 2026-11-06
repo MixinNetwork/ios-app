@@ -584,6 +584,7 @@
 "edit_note" = "メモを編集";
 "editing_address" = "住所の編集";
 "editing_address_failed" = "アドレスの編集に失敗しました";
+"eip712_invalid_chain_id" = "型付きメッセージのチェーン ID が無効か、署名ネットワークと一致しません。";
 "emergency_contact" = "回復連絡先";
 "enable" = "有効にする";
 "enable_bioauth_description" = "%@ についてはどうですか?有効にすると、%@ による認証を迅速に行うことができます。";

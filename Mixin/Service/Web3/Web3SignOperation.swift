@@ -55,16 +55,16 @@ class Web3SignOperation {
             Logger.web3.info(category: "Sign", message: "Will sign")
             let signature: String
             do {
-                switch chain.kind {
+                switch chain.specification {
                 case .bitcoin, .pearl:
                     throw SigningError.unsupportedChain
-                case .evm:
+                case .evm(let chainID):
                     let privateKey = try await wallet.evmPrivateKey(pin: pin, address: address)
                     signature = switch signable {
                     case .raw(let data):
                         try EVM.signPersonalMessage(data, privateKey: privateKey)
                     case .typed(let data):
-                        try EVM.signTypedData(data, privateKey: privateKey)
+                        try EVM.signTypedData(data, chainID: chainID, privateKey: privateKey)
                     }
                 case .solana:
                     switch signable {

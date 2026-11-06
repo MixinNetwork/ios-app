@@ -48,6 +48,9 @@ struct WalletConnectDecodedSigningRequest {
         guard let chain = Web3Chain.chain(caip2: request.chainId) else {
             throw Error.chainNotSupported
         }
+        guard case .evm(let chainID) = chain.specification else {
+            throw Error.chainNotSupported
+        }
         let params = try request.params.get([String].self)
         guard params.count >= 2 else {
             // Some dapps send malformed `params` with 3 or more items
@@ -59,7 +62,7 @@ struct WalletConnectDecodedSigningRequest {
         guard let messageData = messageString.data(using: .utf8) else {
             throw Error.utf8Encoding
         }
-        let typedData = try EVMTypedData(json: messageData)
+        let typedData = try EVMTypedData(json: messageData, chainID: chainID)
         let humanReadable = typedData.description
         return WalletConnectDecodedSigningRequest(raw: request,
                                                   chain: chain,

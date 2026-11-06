@@ -19,6 +19,7 @@ typedef enum EVMErrorCode {
   EVMErrorCode_Panic = -8,
   EVMErrorCode_IntegerOverflow = -9,
   EVMErrorCode_InvalidSignature = -10,
+  EVMErrorCode_InvalidChainIDInTypedData = -11,
 } EVMErrorCode;
 
 /**
@@ -174,11 +175,21 @@ enum EVMErrorCode evm_typed_data_hash(struct EVMBytes json, struct EVMBuffer *ou
 enum EVMErrorCode evm_typed_data_description(struct EVMBytes json, struct EVMBuffer *out);
 
 /**
- * Sign EIP-712 UTF-8 JSON. Returns r || s || v (v = 27/28).
+ * Validate domain.chainId against the signing chain. A missing chain ID is allowed.
+ * # Safety
+ * The input slice must be readable for its length. No input is retained.
+ */
+enum EVMErrorCode evm_validate_typed_data_chain_id(struct EVMBytes json,
+                                                   uint64_t expected_chain_id);
+
+/**
+ * Sign EIP-712 UTF-8 JSON after validating domain.chainId against the signing chain.
+ * Returns r || s || v (v = 27/28). A missing chain ID is allowed.
  * # Safety
  * Input slices must be readable; out must be writable and not alias inputs.
  */
 enum EVMErrorCode evm_sign_typed_data(struct EVMBytes json,
+                                      uint64_t expected_chain_id,
                                       struct EVMBytes key,
                                       struct EVMBuffer *out);
 

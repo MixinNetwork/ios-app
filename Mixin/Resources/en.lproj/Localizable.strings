@@ -584,6 +584,7 @@
 "edit_note" = "Edit Note";
 "editing_address" = "Editing Address";
 "editing_address_failed" = "Editing Address Failed";
+"eip712_invalid_chain_id" = "The typed message chain ID is invalid or does not match the signing network.";
 "emergency_contact" = "Recovery Contact";
 "enable" = "Enable";
 "enable_bioauth_description" = "What about %@? Once enabled, you can expedite authentication with %@.";

@@ -95,6 +95,7 @@ final class PerpsAutoClosingCondition {
         if let price = triggerPrice(percentage: percentage),
            let roundedPrice = roundedPrice(percentage: percentage)
         {
+            try check(price: price)
             try check(price: roundedPrice)
             self.percentage = percentage
             self.price = price
@@ -130,11 +131,14 @@ final class PerpsAutoClosingCondition {
     }
     
     private func check(price: Decimal) throws(InvalidInputError) {
+        guard let breakEvenPrice = triggerPrice(percentage: 0) else {
+            throw .unavailableFeeRate
+        }
         switch (side, behavior) {
         case (.long, .takeProfit):
-            guard price > entryPrice else {
-                // To be a profit
-                throw .mustHigherThan(entryPrice)
+            guard price > breakEvenPrice else {
+                // To be a profit after opening and closing fees
+                throw .mustHigherThan(breakEvenPrice)
             }
             guard price > currentPrice else {
                 // Avoid immediate execution
@@ -150,9 +154,9 @@ final class PerpsAutoClosingCondition {
                 throw .mustHigherThan(liquidationPrice)
             }
         case (.short, .takeProfit):
-            guard price < entryPrice else {
-                // To be a profit
-                throw .mustLowerThan(entryPrice)
+            guard price < breakEvenPrice else {
+                // To be a profit after opening and closing fees
+                throw .mustLowerThan(breakEvenPrice)
             }
             guard price < currentPrice else {
                 // Avoid immediate execution

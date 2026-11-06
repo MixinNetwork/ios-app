@@ -14,7 +14,7 @@ class BackupJobQueue: JobQueue {
     }
     
     var backupJob: BackupJob? {
-        return findJobById(jodId: BackupJob.sharedId) as? BackupJob
+        return findJobById(jodId: BackupJob.sharedID) as? BackupJob
     }
 
     var restoreJob: RestoreJob? {

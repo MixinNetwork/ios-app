@@ -169,7 +169,7 @@ extension AppDelegate {
 
         if ReachabilityManger.shared.isReachableOnEthernetOrWiFi {
             if AppGroupUserDefaults.User.autoBackup != .off {
-                BackupJobQueue.shared.addJob(job: BackupJob())
+                BackupJobQueue.shared.addJob(job: BackupJob(immediatelyBackup: false))
             }
             if AppGroupUserDefaults.Account.canRestoreMedia {
                 BackupJobQueue.shared.addJob(job: RestoreJob())

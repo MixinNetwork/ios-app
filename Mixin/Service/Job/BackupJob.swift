@@ -2,296 +2,517 @@ import Foundation
 import GRDB
 import MixinServices
 
-class BackupJob: BaseJob {
+final class BackupJob: BaseJob, @unchecked Sendable {
     
-    static let sharedId = "backup"
-    
+    static let sharedID = "backup"
     static let backupDidChangeNotification = Notification.Name("one.mixin.messenger.Application.backupDidChange")
-
-    private let monitorQueue = DispatchQueue(label: "one.mixin.messenger.queue.backup")
+    
+    @Synchronized(value: true) private(set) var isBackingUp: Bool
+    @Synchronized(value: 0) private(set) var totalFileSize: Int64
+    @Synchronized(value: 0) private(set) var backupTotalSize: Int64
+    @Synchronized(value: 0) private(set) var backupSize: Int64
+    @Synchronized(value: 0) private(set) var uploadedSize: Int64
+    
     private let immediatelyBackup: Bool
-    private var monitors = SafeDictionary<String, Int64>()
-    private var withoutUploadSize: Int64 = 0
-    private var realUploadedSize: Int64 = 0
-    private var isStoppedQuery = false
+    
     private var isContinueBackup: Bool {
-        return !isCancelled && ReachabilityManger.shared.isReachableOnEthernetOrWiFi
+        !isCancelled && ReachabilityManger.shared.isReachableOnEthernetOrWiFi
     }
-
-    private(set) var isBackingUp = true
-    private(set) var totalFileSize: Int64 = 0
-    private(set) var backupTotalSize: Int64 = 0
-    private(set) var backupSize: Int64 = 0
-
-    var uploadedSize: Int64 {
-        return realUploadedSize + withoutUploadSize
-    }
-
-    init(immediatelyBackup: Bool = false) {
+    
+    init(immediatelyBackup: Bool) {
         self.immediatelyBackup = immediatelyBackup
         super.init()
     }
-
+    
     override func getJobId() -> String {
-         return BackupJob.sharedId
+        Self.sharedID
     }
-
+    
     override func run() throws {
-        guard FileManager.default.ubiquityIdentityToken != nil else {
+        // All file and iCloud work belongs to the job's background operation.
+        dispatchPrecondition(condition: .notOnQueue(.main))
+        defer {
+            isBackingUp = false
+            NotificationCenter.default.post(onMainThread: Self.backupDidChangeNotification, object: self)
+        }
+        guard isContinueBackup, FileManager.default.ubiquityIdentityToken != nil else {
             return
         }
-        guard let backupUrl = backupUrl else {
-            return
-        }
-
-        if !immediatelyBackup && !AppGroupUserDefaults.Account.hasUnfinishedBackup, let lastBackupDate = AppGroupUserDefaults.User.lastBackupDate {
+        if !immediatelyBackup && !AppGroupUserDefaults.Account.hasUnfinishedBackup {
+            let interval: TimeInterval
             switch AppGroupUserDefaults.User.autoBackup {
             case .off:
                 return
             case .daily:
-                if -lastBackupDate.timeIntervalSinceNow < 86400 {
-                    return
-                }
+                interval = 86400
             case .weekly:
-                if -lastBackupDate.timeIntervalSinceNow < 86400 * 7 {
-                    return
-                }
+                interval = 86400 * 7
             case .monthly:
-                if -lastBackupDate.timeIntervalSinceNow < 86400 * 30 {
-                    return
-                }
+                interval = 86400 * 30
             }
-        }
-
-        AppGroupUserDefaults.Account.hasUnfinishedBackup = true
-        
-        try FileManager.default.createDirectory(at: backupUrl, withIntermediateDirectories: true, attributes: nil)
-        
-        var categories: [AttachmentContainer.Category] = [.photos, .audios]
-        if AppGroupUserDefaults.User.backupFiles {
-            categories.append(.files)
-        } else {
-            let url = backupUrl.appendingPathComponent(AttachmentContainer.Category.files.pathComponent, isDirectory: true)
-            try? FileManager.default.removeItem(at: url)
-        }
-        if AppGroupUserDefaults.User.backupVideos {
-            categories.append(.videos)
-        } else {
-            let url = backupUrl.appendingPathComponent(AttachmentContainer.Category.videos.pathComponent, isDirectory: true)
-            try? FileManager.default.removeItem(at: url)
-        }
-
-        var localPaths = Set<String>()
-        var cloudPaths = Set<String>()
-        
-        for category in categories {
-            let localUrl = AttachmentContainer.url(for: category, filename: nil)
-            let cloudUrl = backupUrl.appendingPathComponent(category.pathComponent)
-
-            if localUrl.fileExists {
-                localPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: localUrl.path).map { "\(category.pathComponent)/\($0)" })
-            }
-            if cloudUrl.fileExists {
-                cloudPaths.formUnion(try FileManager.default.contentsOfDirectory(atPath: cloudUrl.path).map { "\(category.pathComponent)/\($0)" })
-            } else {
-                try FileManager.default.createDirectory(at: cloudUrl, withIntermediateDirectories: true, attributes: nil)
-            }
-        }
-
-        for path in cloudPaths {
-            if !localPaths.contains(path) {
-                try? FileManager.default.removeItem(at: backupUrl.appendingPathComponent(path))
-            }
-        }
-
-        guard isContinueBackup else {
-            return
-        }
-
-        var uploadPaths: [String] = []
-        var backupPaths: [String] = []
-        monitors = SafeDictionary<String, Int64>()
-        totalFileSize = 0
-        withoutUploadSize = 0
-        realUploadedSize = 0
-        backupSize = 0
-        backupTotalSize = 0
-        isStoppedQuery = false
-        isBackingUp = true
-
-        for filename in localPaths {
-            let localURL = AttachmentContainer.url.appendingPathComponent(filename)
-            let cloudURL = backupUrl.appendingPathComponent(filename)
-            let localFileSize = FileManager.default.fileSize(localURL.path)
-            let cloudExists = FileManager.default.fileExists(atPath: cloudURL.path)
-
-            if !cloudExists || FileManager.default.fileSize(cloudURL.path) != localFileSize {
-                backupPaths.append(filename)
-                backupTotalSize += localFileSize
-
-                uploadPaths.append(filename)
-            } else if cloudExists {
-                if cloudURL.isUploaded {
-                    withoutUploadSize += localFileSize
-                } else {
-                    uploadPaths.append(filename)
-                }
-            }
-            totalFileSize += localFileSize
-        }
-
-        let databaseFileSize = getDatabaseFileSize()
-        let databaseCloudURL = backupUrl.appendingPathComponent(backupDatabaseName)
-        let isBackupDatabase = !FileManager.default.fileExists(atPath: databaseCloudURL.path) || FileManager.default.fileSize(databaseCloudURL.path) != databaseFileSize
-
-        if !isBackupDatabase {
-            withoutUploadSize += databaseFileSize
-            totalFileSize += databaseFileSize
-        }
-
-        guard isContinueBackup else {
-            return
-        }
-
-        let semaphore = DispatchSemaphore(value: 0)
-        let query = NSMetadataQuery()
-
-        let observer = NotificationCenter.default.addObserver(forName: .NSMetadataQueryDidUpdate, object: nil, queue: nil) { [weak self](notification) in
-            guard let metadataItems = (notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem]) else {
+            if let date = AppGroupUserDefaults.User.lastBackupDate, -date.timeIntervalSinceNow < interval {
                 return
             }
-            self?.monitorQueue.async {
-                guard let weakSelf = self else {
-                    return
-                }
-                guard weakSelf.isContinueBackup else {
-                    weakSelf.stopQuery(query: query, semaphore: semaphore)
-                    return
-                }
-
-                for metadataItem in metadataItems {
-                    let name = metadataItem.value(forAttribute: NSMetadataItemFSNameKey) as? String
-                    let fileSize = (metadataItem.value(forAttribute: NSMetadataItemFSSizeKey) as? NSNumber)?.int64Value ?? 0
-                    let percent = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemPercentUploadedKey) as? NSNumber)?.floatValue ?? 0
-                    let isUploaded = (metadataItem.value(forAttribute: NSMetadataUbiquitousItemIsUploadedKey) as? NSNumber)?.boolValue ?? false
-
-                    if let fileName = name, fileSize > 0, percent > 0, weakSelf.monitors[fileName] != nil {
-                        weakSelf.monitors[fileName] = isUploaded ? fileSize : Int64(Float(fileSize) * percent / 100)
+        }
+        guard let backupURL = backupUrl else {
+            return
+        }
+        AppGroupUserDefaults.Account.hasUnfinishedBackup = true
+        
+        do {
+            let manager = FileManager.default
+            try manager.createDirectory(at: backupURL, withIntermediateDirectories: true, attributes: nil)
+            let temporaryDirectory = manager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+            try manager.createDirectory(at: temporaryDirectory, withIntermediateDirectories: true, attributes: nil)
+            defer {
+                try? manager.removeItem(at: temporaryDirectory)
+            }
+            
+            // A checkpoint followed by copying the live SQLite file can race with writes,
+            // and equal file sizes do not imply equal database contents. Always take a snapshot.
+            let databaseURL = temporaryDirectory.appendingPathComponent(backupDatabaseName)
+            let database = try DatabaseQueue(path: databaseURL.path)
+            do {
+                let snapshot = try UserDatabase.current.makeSnapshot()
+                try snapshot.backup(to: database, pagesPerStep: 256) { _ in
+                    guard self.isContinueBackup else {
+                        throw CancellationError()
                     }
                 }
-                weakSelf.realUploadedSize = weakSelf.monitors.values.map { $0 }.reduce(0, +)
-                if weakSelf.uploadedSize >= weakSelf.totalFileSize {
-                    weakSelf.stopQuery(query: query, semaphore: semaphore)
+            }
+            try database.close()
+            guard let databaseFileSize = try databaseURL.resourceValues(forKeys: [.fileSizeKey]).fileSize else {
+                throw CocoaError(.fileReadUnknown)
+            }
+            
+            var categories: [AttachmentContainer.Category] = [.photos, .audios]
+            if AppGroupUserDefaults.User.backupFiles {
+                categories.append(.files)
+            }
+            if AppGroupUserDefaults.User.backupVideos {
+                categories.append(.videos)
+            }
+            var filesToCopy: [(source: URL, destination: URL)] = []
+            var expectedFiles: [URL: Int64] = [:]
+            var obsoleteFiles: [URL] = []
+            
+            for category in categories {
+                guard isContinueBackup else {
+                    return
+                }
+                let localURL = AttachmentContainer.url(for: category, filename: nil)
+                let cloudURL = backupURL.appendingPathComponent(category.pathComponent, isDirectory: true)
+                try manager.createDirectory(at: cloudURL, withIntermediateDirectories: true, attributes: nil)
+                let filenames = manager.fileExists(atPath: localURL.path)
+                    ? try manager.contentsOfDirectory(atPath: localURL.path) : []
+                var localNames = Set<String>()
+                for filename in filenames {
+                    guard isContinueBackup else {
+                        return
+                    }
+                    let source = localURL.appendingPathComponent(filename)
+                    let values = try source.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey])
+                    guard values.isRegularFile == true, let size = values.fileSize else {
+                        continue
+                    }
+                    localNames.insert(filename)
+                    let destination = cloudURL.appendingPathComponent(filename)
+                    expectedFiles[destination] = Int64(size)
+                    if !manager.fileExists(atPath: destination.path) || destination.fileSize != Int64(size) {
+                        filesToCopy.append((source, destination))
+                        backupTotalSize += Int64(size)
+                    }
+                }
+                for filename in try manager.contentsOfDirectory(atPath: cloudURL.path) where !localNames.contains(filename) {
+                    obsoleteFiles.append(cloudURL.appendingPathComponent(filename))
                 }
             }
-        }
-
-        query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
-        query.valueListAttributes = [ NSMetadataUbiquitousItemPercentUploadedKey,
-                                      NSMetadataUbiquitousItemIsUploadingKey,
-                                      NSMetadataUbiquitousItemUploadingErrorKey,
-                                      NSMetadataUbiquitousItemIsUploadedKey]
-        query.predicate = NSPredicate(format: "%K BEGINSWITH[c] %@ && kMDItemContentType != 'public.folder'", NSMetadataItemPathKey, backupUrl.path)
-        DispatchQueue.main.async {
-            query.start()
-        }
-
-        if isBackupDatabase {
-            copyToCloud(from: AppGroupContainer.userDatabaseUrl, destination: databaseCloudURL, isDatabase: true)
-        }
-        for path in backupPaths {
+            for category in [AttachmentContainer.Category.files, .videos] where !categories.contains(category) {
+                obsoleteFiles.append(backupURL.appendingPathComponent(category.pathComponent, isDirectory: true))
+            }
+            
+            let databaseDestination = backupURL.appendingPathComponent(backupDatabaseName)
+            expectedFiles[databaseDestination] = Int64(databaseFileSize)
+            backupTotalSize += Int64(databaseFileSize)
+            totalFileSize = expectedFiles.values.reduce(0, +)
+            
+            for file in filesToCopy {
+                guard isContinueBackup else {
+                    return
+                }
+                try copyToCloud(from: file.source, destination: file.destination)
+                backupSize += expectedFiles[file.destination] ?? 0
+            }
             guard isContinueBackup else {
                 return
             }
-            copyToCloud(from: AttachmentContainer.url.appendingPathComponent(path), destination: backupUrl.appendingPathComponent(path))
-        }
-
-        isBackingUp = false
-
-        if uploadedSize >= totalFileSize || !isContinueBackup {
-            DispatchQueue.main.async {
-                query.stop()
+            try copyToCloud(from: databaseURL, destination: databaseDestination)
+            backupSize += Int64(databaseFileSize)
+            isBackingUp = false
+            
+            let monitor = UploadMonitor(
+                files: expectedFiles,
+                query: NSMetadataQuery(),
+                readUploadStatus: { path in
+                    do {
+                        let values = try URL(fileURLWithPath: path).resourceValues(forKeys: [
+                            .fileSizeKey,
+                            .ubiquitousItemIsUploadedKey,
+                            .ubiquitousItemUploadingErrorKey,
+                        ])
+                        return UploadStatus(
+                            size: values.fileSize.map(Int64.init),
+                            isUploaded: values.ubiquitousItemIsUploaded == true,
+                            error: values.ubiquitousItemUploadingError.map(UploadStatus.Failure.upload),
+                        )
+                    } catch {
+                        return UploadStatus(size: nil, isUploaded: false, error: .resourceRead(error))
+                    }
+                },
+            )
+            let completed = try monitor.wait(
+                stallTimeout: 600,
+                refreshInterval: 5,
+                shouldContinue: { self.isContinueBackup },
+                updateProgress: { self.uploadedSize = $0 },
+            )
+            guard completed, isContinueBackup else {
+                return
             }
-        } else {
-            semaphore.wait()
-        }
-        NotificationCenter.default.removeObserver(observer)
-
-        if uploadedSize >= totalFileSize {
-            removeOldFiles(backupDir: backupUrl)
+            
+            // Retain the previous backup's files until every new file has uploaded.
+            for url in obsoleteFiles {
+                guard isContinueBackup else {
+                    return
+                }
+                try? manager.removeItem(at: url)
+            }
+            for filename in ["mixin.backup.db", "mixin.photos.zip", "mixin.audios.zip"] {
+                try? manager.removeItem(at: backupURL.appendingPathComponent(filename))
+                if filename.hasSuffix(".zip"),
+                   let documentsURL = manager.urls(for: .documentDirectory, in: .userDomainMask).first {
+                    try? manager.removeItem(at: documentsURL.appendingPathComponent(filename))
+                }
+            }
             AppGroupUserDefaults.User.lastBackupDate = Date()
             AppGroupUserDefaults.User.lastBackupSize = totalFileSize
             AppGroupUserDefaults.Account.hasUnfinishedBackup = false
+        } catch is CancellationError {
+            return
+        } catch {
+            reporter.report(error: error)
+            throw error
         }
-
-        NotificationCenter.default.post(onMainThread: BackupJob.backupDidChangeNotification, object: self)
     }
+    
+    private func copyToCloud(from source: URL, destination: URL) throws {
+        let manager = FileManager.default
+        let temporaryURL = manager.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let stagingURL = destination.deletingLastPathComponent().appendingPathComponent(".\(UUID().uuidString).backup")
+        defer {
+            try? manager.removeItem(at: temporaryURL)
+            try? manager.removeItem(at: stagingURL)
+        }
+        try manager.copyItem(at: source, to: temporaryURL)
+        try manager.setUbiquitous(true, itemAt: temporaryURL, destinationURL: stagingURL)
+        
+        // Stage first so a failed copy never deletes the existing backup.
+        let coordinator = NSFileCoordinator(filePresenter: nil)
+        var coordinationError: NSError?
+        var replacementError: Error?
+        coordinator.coordinate(
+            writingItemAt: stagingURL,
+            options: .forMoving,
+            writingItemAt: destination,
+            options: .forReplacing,
+            error: &coordinationError,
+        ) { stagedURL, url in
+            do {
+                if manager.fileExists(atPath: url.path) || manager.isUbiquitousItem(at: url) {
+                    _ = try manager.replaceItemAt(url, withItemAt: stagedURL, options: .usingNewMetadataOnly)
+                } else {
+                    try manager.moveItem(at: stagedURL, to: url)
+                }
+            } catch {
+                replacementError = error
+            }
+        }
+        if let coordinationError {
+            throw coordinationError
+        }
+        if let replacementError {
+            throw replacementError
+        }
+    }
+    
+}
 
-    private func getDatabaseFileSize() -> Int64 {
-        try? UserDatabase.current.writeAndReturnError { (db) -> Void in
-            try db.checkpoint(.full, on: nil)
+extension BackupJob {
+    
+    struct UploadStatus {
+        
+        enum Failure {
+            case resourceRead(Error)
+            case upload(Error)
         }
         
-        if AppGroupUserDefaults.Database.isFTSInitialized && -AppGroupUserDefaults.Database.vacuumDate.timeIntervalSinceNow >= 86400 * 14 {
-            AppGroupUserDefaults.Database.vacuumDate = Date()
-            try? UserDatabase.current.vacuum()
-        }
-        return FileManager.default.fileSize(AppGroupContainer.userDatabaseUrl.path)
+        let size: Int64?
+        let isUploaded: Bool
+        let error: Failure?
     }
-
-    private func stopQuery(query: NSMetadataQuery, semaphore: DispatchSemaphore) {
-        guard !isStoppedQuery else {
-            return
+    
+    struct UploadProgress {
+        
+        private(set) var pendingFiles: [String: Int64]
+        private(set) var uploadedSize: Int64 = 0
+        
+        private var uploadedBytes: [String: Int64] = [:]
+        
+        init(files: [URL: Int64]) {
+            pendingFiles = Dictionary(uniqueKeysWithValues: files.map { (BackupJob.normalizedUploadPath($0.key), $0.value) })
         }
-        isStoppedQuery = true
-        query.stop()
-        semaphore.signal()
-    }
-
-    private func copyToCloud(from: URL, destination: URL, isDatabase: Bool = false) {
-        let tmpFile = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        monitors[destination.lastPathComponent] = 0
-        do {
-            try FileManager.default.copyItem(at: from, to: tmpFile)
-            if FileManager.default.fileExists(atPath: destination.path) {
-                try FileManager.default.removeItem(at: destination)
+        
+        mutating func update(path: String, size: Int64, percent: Double, isUploaded: Bool) {
+            guard let expectedSize = pendingFiles[path], size == expectedSize else {
+                return
             }
-            try FileManager.default.setUbiquitous(true, itemAt: tmpFile, destinationURL: destination)
-            backupSize += from.fileSize
-            if isDatabase {
-                backupTotalSize += destination.fileSize
-                totalFileSize += destination.fileSize
+            let fraction = percent.isFinite ? min(1, max(0, percent / 100)) : 0
+            let bytes = isUploaded ? expectedSize : Int64(Double(expectedSize) * fraction)
+            uploadedSize += bytes - (uploadedBytes[path] ?? 0)
+            uploadedBytes[path] = bytes
+            if isUploaded {
+                pendingFiles.removeValue(forKey: path)
+                uploadedBytes.removeValue(forKey: path)
             }
-        } catch {
-            if !isDatabase {
-                backupTotalSize -= from.fileSize
-            }
-            monitors.removeValue(forKey: destination.lastPathComponent)
-            if tmpFile.fileExists {
-                try? FileManager.default.removeItem(at: tmpFile)
-            }
-            reporter.report(error: error)
         }
+        
     }
-
-    private func removeOldFiles(backupDir: URL) {
-        let files = ["mixin.backup.db",
-                     "mixin.photos.zip",
-                     "mixin.audios.zip"]
-
-        let baseDir = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-        for file in files {
-            let cloudURL = backupDir.appendingPathComponent(file)
-            if cloudURL.isStoredCloud {
-                try? FileManager.default.removeItem(at: cloudURL)
-            }
-
-            if file.hasSuffix(".zip") {
-                let localURL = baseDir.appendingPathComponent(file)
-                if localURL.fileExists {
-                    try? FileManager.default.removeItem(at: localURL)
+    
+    static func normalizedUploadPath(_ url: URL) -> String {
+        url.resolvingSymlinksInPath().standardizedFileURL.path
+    }
+    
+    final class UploadMonitor {
+        
+        private let query: NSMetadataQuery
+        private let queue = OperationQueue()
+        private let condition = NSCondition()
+        private let uploadStatusQueue = DispatchQueue(label: "one.mixin.messenger.queue.backup.upload-status", qos: .utility)
+        private let readUploadStatus: (String) -> UploadStatus
+        
+        private var progress: UploadProgress
+        private var error: Error?
+        private var retryableFailures: [String: UploadStatus.Failure] = [:]
+        private var lastProgressTime = ProcessInfo.processInfo.systemUptime
+        private var isRefreshing = false
+        private var isStopped = false
+        
+        init(
+            files: [URL: Int64],
+            query: NSMetadataQuery,
+            readUploadStatus: @escaping (String) -> UploadStatus,
+        ) {
+            self.query = query
+            self.readUploadStatus = readUploadStatus
+            progress = UploadProgress(files: files)
+            queue.name = "one.mixin.messenger.queue.backup.metadata"
+            queue.maxConcurrentOperationCount = 1
+            queue.qualityOfService = .utility
+            query.operationQueue = queue
+            query.searchScopes = [NSMetadataQueryUbiquitousDataScope]
+            // iCloud's indexed paths can differ from filesystem paths. Filter expected
+            // paths locally, and avoid content-type predicates that resolve types via XPC.
+            query.predicate = NSPredicate(format: "%K LIKE '*'", NSMetadataItemFSNameKey)
+        }
+        
+        func wait(
+            stallTimeout: TimeInterval,
+            refreshInterval: TimeInterval,
+            shouldContinue: () -> Bool,
+            updateProgress: (Int64) -> Void,
+        ) throws -> Bool {
+            let center = NotificationCenter.default
+            let gathered = center.addObserver(forName: .NSMetadataQueryDidFinishGathering, object: query, queue: nil) { [weak self] _ in
+                guard let self else {
+                    return
+                }
+                // enumerateResults disables and reenables updates internally.
+                self.query.enumerateResults { result, _, _ in
+                    if let item = result as? NSMetadataItem {
+                        self.consume(item)
+                    }
                 }
             }
+            let updated = center.addObserver(forName: .NSMetadataQueryDidUpdate, object: query, queue: nil) { [weak self] notification in
+                let added = notification.userInfo?[NSMetadataQueryUpdateAddedItemsKey] as? [NSMetadataItem] ?? []
+                let changed = notification.userInfo?[NSMetadataQueryUpdateChangedItemsKey] as? [NSMetadataItem] ?? []
+                for item in added + changed {
+                    self?.consume(item)
+                }
+            }
+            defer {
+                condition.lock()
+                isStopped = true
+                condition.unlock()
+                center.removeObserver(gathered)
+                center.removeObserver(updated)
+                queue.addOperation { [query] in
+                    query.stop()
+                }
+            }
+            queue.addOperation { [self] in
+                if !query.start() {
+                    condition.lock()
+                    error = CocoaError(.fileReadUnknown)
+                    condition.signal()
+                    condition.unlock()
+                }
+            }
+            
+            var nextRefreshTime: TimeInterval = 0
+            while shouldContinue() {
+                condition.lock()
+                let bytes = progress.uploadedSize
+                let completed = progress.pendingFiles.isEmpty
+                let failure = error
+                let retryableFailure = retryableFailures.values.first
+                // A silent iCloud stall must not occupy the serial backup queue forever.
+                let stalled = ProcessInfo.processInfo.systemUptime - lastProgressTime >= stallTimeout
+                let now = ProcessInfo.processInfo.systemUptime
+                let shouldRefresh = !isRefreshing && now >= nextRefreshTime
+                if shouldRefresh {
+                    isRefreshing = true
+                    nextRefreshTime = now + refreshInterval
+                }
+                condition.unlock()
+                updateProgress(bytes)
+                if let failure {
+                    throw failure
+                }
+                if completed {
+                    return true
+                }
+                if stalled {
+                    switch retryableFailure {
+                    case .resourceRead(let error), .upload(let error):
+                        throw error
+                    case nil:
+                        throw URLError(.timedOut)
+                    }
+                }
+                if shouldRefresh {
+                    uploadStatusQueue.async { [self] in
+                        condition.lock()
+                        let files = progress.pendingFiles
+                        condition.unlock()
+                        defer {
+                            condition.lock()
+                            isRefreshing = false
+                            condition.signal()
+                            condition.unlock()
+                        }
+                        for (path, _) in files {
+                            condition.lock()
+                            let active = !isStopped && error == nil
+                            condition.unlock()
+                            guard active else {
+                                return
+                            }
+                            let status = readUploadStatus(path)
+                            recordProgress(
+                                path: path,
+                                size: status.size,
+                                percent: 0,
+                                isUploaded: status.isUploaded,
+                                uploadingError: status.error,
+                            )
+                        }
+                    }
+                }
+                condition.lock()
+                _ = condition.wait(until: Date().addingTimeInterval(1))
+                condition.unlock()
+            }
+            return false
         }
+        
+        private func consume(_ item: NSMetadataItem) {
+            guard let path = item.value(forAttribute: NSMetadataItemPathKey) as? String else {
+                return
+            }
+            let size = (item.value(forAttribute: NSMetadataItemFSSizeKey) as? NSNumber)?.int64Value
+            let percent = (item.value(forAttribute: NSMetadataUbiquitousItemPercentUploadedKey) as? NSNumber)?.doubleValue ?? 0
+            let isUploaded = (item.value(forAttribute: NSMetadataUbiquitousItemIsUploadedKey) as? NSNumber)?.boolValue ?? false
+            let uploadingError = item.value(forAttribute: NSMetadataUbiquitousItemUploadingErrorKey) as? Error
+            // Metadata supplies progress; only the current URL status confirms completion.
+            recordProgress(
+                path: BackupJob.normalizedUploadPath(URL(fileURLWithPath: path)),
+                size: size,
+                percent: isUploaded ? 100 : percent,
+                isUploaded: false,
+                uploadingError: uploadingError.map(UploadStatus.Failure.upload),
+            )
+        }
+        
+        private func recordProgress(
+            path: String,
+            size: Int64?,
+            percent: Double,
+            isUploaded: Bool,
+            uploadingError: UploadStatus.Failure?,
+        ) {
+            var retryMessage: String?
+            condition.lock()
+            defer {
+                condition.signal()
+                condition.unlock()
+                if let retryMessage {
+                    Logger.general.info(category: "Backup", message: retryMessage)
+                }
+            }
+            guard !isStopped, progress.pendingFiles[path] != nil else {
+                return
+            }
+            if let uploadingError {
+                switch uploadingError {
+                case .upload(let failure):
+                    let cocoaError = failure as NSError
+                    if cocoaError.domain == NSCocoaErrorDomain {
+                        switch cocoaError.code {
+                        case NSUbiquitousFileNotUploadedDueToQuotaError,
+                             NSFileReadNoPermissionError,
+                             NSFileWriteNoPermissionError,
+                             NSFileWriteOutOfSpaceError,
+                             NSFileWriteVolumeReadOnlyError:
+                            error = failure
+                            return
+                        default:
+                            break
+                        }
+                    }
+                case .resourceRead:
+                    break
+                }
+                // Status observations can fail while iCloud is retrying. Preserve the
+                // failure for the stall deadline instead of failing on the first read.
+                if retryableFailures[path] == nil {
+                    retryMessage = "Retrying upload status for \(URL(fileURLWithPath: path).lastPathComponent): \(uploadingError)"
+                }
+                retryableFailures[path] = uploadingError
+                return
+            }
+            retryableFailures.removeValue(forKey: path)
+            let previousBytes = progress.uploadedSize
+            let previousCount = progress.pendingFiles.count
+            // A status refresh without a completed upload must not reset metadata progress.
+            if let size, isUploaded || percent > 0 {
+                progress.update(path: path, size: size, percent: percent, isUploaded: isUploaded)
+            }
+            if progress.uploadedSize > previousBytes || progress.pendingFiles.count < previousCount {
+                lastProgressTime = ProcessInfo.processInfo.systemUptime
+            }
+        }
+        
     }
+    
 }

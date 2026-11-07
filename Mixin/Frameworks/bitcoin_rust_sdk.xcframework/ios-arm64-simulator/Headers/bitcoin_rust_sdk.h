@@ -42,6 +42,15 @@ typedef struct BitcoinTransactionOutput {
   uint64_t value;
 } BitcoinTransactionOutput;
 
+typedef struct BitcoinExtendedPrivateKey {
+  uint8_t key[32];
+  uint8_t chain_code[32];
+} BitcoinExtendedPrivateKey;
+
+typedef struct BitcoinCompressedPublicKey {
+  uint8_t bytes[33];
+} BitcoinCompressedPublicKey;
+
 extern const size_t BITCOIN_PRIVATE_KEY_LENGTH;
 
 extern const uint64_t BITCOIN_P2WPKH_DUST;
@@ -130,3 +139,33 @@ enum BitcoinErrorCode pearl_decode_taproot_transaction(const char *tx,
                                                        struct BitcoinTransactionOutput **out_outputs,
                                                        size_t *out_outputs_len,
                                                        bool *out_is_replaceable);
+
+/**
+ * Create a BIP-32 master key from seed bytes. No input is retained.
+ * # Safety
+ * seed must be readable for seed_len bytes. out must be writable and not alias inputs.
+ */
+enum BitcoinErrorCode bitcoin_bip32_master_key(const uint8_t *seed,
+                                               size_t seed_len,
+                                               struct BitcoinExtendedPrivateKey *out);
+
+/**
+ * Derive child keys using BIP-32 index values (high bit denotes hardened).
+ * At most 255 indices are accepted. An empty path returns the input key.
+ * # Safety
+ * key and path must be readable and aligned; a null path is allowed only for zero length.
+ * out must be writable and not alias inputs. All output fields are cleared on error.
+ */
+enum BitcoinErrorCode bitcoin_bip32_derive_key(const struct BitcoinExtendedPrivateKey *key,
+                                               const uint32_t *path,
+                                               size_t path_len,
+                                               struct BitcoinExtendedPrivateKey *out);
+
+/**
+ * Return the 33-byte compressed public key for a private key.
+ * # Safety
+ * key must be readable for exactly 32 bytes. out must be writable and not alias key.
+ */
+enum BitcoinErrorCode bitcoin_compressed_public_key(const uint8_t *key,
+                                                    size_t key_len,
+                                                    struct BitcoinCompressedPublicKey *out);

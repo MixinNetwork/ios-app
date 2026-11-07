@@ -584,6 +584,7 @@
 "edit_note" = "メモを編集";
 "editing_address" = "住所の編集";
 "editing_address_failed" = "アドレスの編集に失敗しました";
+"eip712_invalid_chain_id" = "型付きメッセージのチェーン ID が無効か、署名ネットワークと一致しません。";
 "emergency_contact" = "回復連絡先";
 "enable" = "有効にする";
 "enable_bioauth_description" = "%@ についてはどうですか?有効にすると、%@ による認証を迅速に行うことができます。";
@@ -828,6 +829,7 @@
 "invalid_address" = "無効なアドレス";
 "invalid_candidate" = "無効な候補";
 "invalid_format" = "無効な形式です";
+"invalid_gasless_transaction" = "無効なガスレス取引です。もう一度お試しください。";
 "invalid_height" = "無効な高さ";
 "invalid_malformed_address_eos_hint" = "無効なアドレスです。MixinはEOSアドレスへの引き出しに対応していません。";
 "invalid_malformed_address_hint" = "無効なアドレスです。%@の有効なアドレスでもう一度試してください。";

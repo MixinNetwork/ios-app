@@ -1,5 +1,4 @@
 import UIKit
-import web3
 import WalletConnectSign
 import MixinServices
 

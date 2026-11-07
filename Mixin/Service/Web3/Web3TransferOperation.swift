@@ -21,9 +21,6 @@ class Web3TransferOperation {
         case noFeeToken(String)
         case gaslessChainMismatch
         case gaslessPayloadMismatch
-        case invalidEIP7702AuthAddress
-        case invalidUserOperation
-        case invalidEIP7702AuthMessage
     }
     
     enum SimulationDisplay {

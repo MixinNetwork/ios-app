@@ -1,5 +1,4 @@
 import Foundation
-import BigInt
 import WalletConnectSign
 import MixinServices
 
@@ -176,7 +175,7 @@ extension WalletConnectSession {
                 guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID) else {
                     throw Error.noAddress
                 }
-                guard transactionPreview.from.toChecksumAddress() == address.destination else {
+                guard transactionPreview.from == (try EVM.Address(address.destination)) else {
                     throw Error.mismatchedFromAddress
                 }
                 let operation = try Web3TransferWithWalletConnectOperation(

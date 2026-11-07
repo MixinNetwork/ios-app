@@ -1,7 +1,5 @@
 import UIKit
 import Combine
-import BigInt
-import web3
 import MixinServices
 
 final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {

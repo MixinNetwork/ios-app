@@ -1,6 +1,4 @@
 import Foundation
-import BigInt
-import web3
 import MixinServices
 
 struct ExternalEVMTransaction {
@@ -15,10 +13,10 @@ struct ExternalEVMTransaction {
         case noToAddress
     }
     
-    let from: EthereumAddress
-    let to: EthereumAddress?
-    let value: BigUInt?
-    let gas: BigUInt?
+    let from: EVM.Address
+    let to: EVM.Address?
+    let value: EVMQuantity?
+    let gas: UInt64?
     let hexEncodedData: String?
     let data: Data?
     
@@ -32,30 +30,30 @@ struct ExternalEVMTransaction {
         let data = json["data"] as? String
         let value = json["value"] as? String
         let gas = json["gas"] as? String
-        let toAddress: EthereumAddress? = if let to {
-            EthereumAddress(to)
+        let toAddress: EVM.Address? = if let to {
+            try EVM.Address(to)
         } else {
             nil
         }
         try self.init(
-            from: EthereumAddress(from),
+            from: try EVM.Address(from),
             to: toAddress,
             hexData: data,
             hexValue: value,
-            hexGas: gas
+            hexGas: gas,
         )
     }
     
     private init(
-        from: EthereumAddress,
-        to: EthereumAddress?,
+        from: EVM.Address,
+        to: EVM.Address?,
         hexData: String?,
         hexValue: String?,
-        hexGas: String?
+        hexGas: String?,
     ) throws {
         let data: Data?
         if let hexData {
-            if let d = Data(hex: hexData) {
+            if let d = EVM.data(hex: hexData) {
                 data = d
             } else {
                 throw Error.invalidData
@@ -64,11 +62,14 @@ struct ExternalEVMTransaction {
             data = nil
         }
         
-        let value: BigUInt?
+        let value: EVMQuantity?
         let decimalValue: Decimal?
-        if let hexValue, let v = BigUInt(hex: hexValue) {
+        if let hexValue {
+            guard let v = EVMQuantity(hex: hexValue) else {
+                throw Error.invalidValue
+            }
             value = v
-            let weiValueString = v.description
+            let weiValueString = try v.decimalString()
             guard
                 weiValueString.count < 38,
                 let weiValue = Decimal(string: weiValueString, locale: .enUSPOSIX)
@@ -81,13 +82,16 @@ struct ExternalEVMTransaction {
             decimalValue = nil
         }
         
-        let gas: BigUInt?
+        let gas: UInt64?
         if let hexGas {
-            if let g = BigUInt(hex: hexGas) {
-                gas = g
-            } else {
+            let digits = hexGas.hasPrefix("0x") ? String(hexGas.dropFirst(2)) : hexGas
+            guard EVMQuantity(hex: hexGas) != nil else {
                 throw Error.invalidGas
             }
+            guard let g = UInt64(digits, radix: 16) else {
+                throw Error.gasTooLarge
+            }
+            gas = g
         } else {
             gas = nil
         }
@@ -114,14 +118,23 @@ extension ExternalEVMTransaction: Codable {
         case data
     }
     
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(from, forKey: .from)
+        try container.encodeIfPresent(to, forKey: .to)
+        try container.encodeIfPresent(value?.hexQuantity(), forKey: .value)
+        try container.encodeIfPresent(gas.map { "0x" + String($0, radix: 16) }, forKey: .gas)
+        try container.encodeIfPresent(hexEncodedData.map { "0x" + $0 }, forKey: .data)
+    }
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         try self.init(
-            from: try container.decode(EthereumAddress.self, forKey: .from),
-            to: try container.decodeIfPresent(EthereumAddress.self, forKey: .to),
+            from: try container.decode(EVM.Address.self, forKey: .from),
+            to: try container.decodeIfPresent(EVM.Address.self, forKey: .to),
             hexData: try container.decodeIfPresent(String.self, forKey: .data),
             hexValue: try container.decodeIfPresent(String.self, forKey: .value),
-            hexGas: try container.decodeIfPresent(String.self, forKey: .gas)
+            hexGas: try container.decodeIfPresent(String.self, forKey: .gas),
         )
     }
     

@@ -1,7 +1,6 @@
 import Foundation
 import Combine
 import OrderedCollections
-import BigInt
 import WalletConnectSign
 import MixinServices
 

@@ -91,7 +91,7 @@ final class SharePerpsPositionViewController: UIViewController {
         layoutContentPreviewWidth = width
     }
     
-    private func makeImage() -> UIImage? {
+    private func makeImage(padsToSquare: Bool) -> UIImage? {
         let visibleRect = CGRect(
             origin: contentPreviewCollectionView.contentOffset,
             size: contentPreviewCollectionView.frame.size
@@ -104,15 +104,10 @@ final class SharePerpsPositionViewController: UIViewController {
         guard let cell = focusCell else {
             return nil
         }
-        let canvas = cell.contentView.bounds
-        let renderer = UIGraphicsImageRenderer(bounds: canvas)
-        let cornerRadius = cell.contentView.layer.cornerRadius
-        cell.contentView.layer.cornerRadius = 0
-        let image = renderer.image { context in
-            cell.contentView.drawHierarchy(in: canvas, afterScreenUpdates: true)
-        }
-        cell.contentView.layer.cornerRadius = cornerRadius
-        return image
+        return ShareCardImage.render(
+            view: cell.contentView,
+            padsToSquare: padsToSquare
+        )
     }
     
 }
@@ -174,18 +169,37 @@ extension SharePerpsPositionViewController: UICollectionViewDelegate {
 
 extension SharePerpsPositionViewController: ModernShareContentViewController {
     
-    func shareToMixinContact() {
-        guard let image = makeImage() else {
-            return
+    func shareToMixinContact() async throws {
+        guard let image = makeImage(padsToSquare: true), let imageData = image.jpegData(compressionQuality: 0.9) else {
+            throw URLError(.cannotDecodeContentData)
         }
-        presentingViewController?.dismiss(animated: true) {
-            let receiverSelector = MessageReceiverViewController.instance(content: .photo(image))
-            UIApplication.shared.homeNavigationController?.pushViewController(receiverSelector, animated: true)
-        }
+        let coverURL = try await ShareCardImage.upload(imageData: imageData)
+        try Task.checkCancellation()
+        let symbol = dataSource.displaySymbol ?? dataSource.tokenSymbol ?? ""
+        let description = [
+            R.string.localizable.perps_share_card_market(symbol),
+            R.string.localizable.perps_share_card_side(dataSource.side, dataSource.leverageMultiplier),
+        ].joined(separator: "\n")
+        let content = AppCardData.V1Content(
+            appID: BotUserID.mixinRoute,
+            cover: .plain(coverURL),
+            title: R.string.localizable.perps_share_card_title(dataSource.tokenSymbol ?? symbol),
+            description: description,
+            actions: [
+                .init(
+                    action: "mixin://mixin.one/trade?type=perps&market=\(dataSource.marketID)",
+                    color: "#3D75E3",
+                    label: R.string.localizable.perps_share_card_trade_now()
+                ),
+            ],
+            updatedAt: nil,
+            isShareable: true
+        )
+        try presentShareConfirmation(content: content)
     }
     
     func shareAsActivity() {
-        guard let presentingViewController, let image = makeImage() else {
+        guard let presentingViewController, let image = makeImage(padsToSquare: false) else {
             return
         }
         let item = QRCodeActivityItem(image: image, title: dataSource.title)
@@ -205,7 +219,7 @@ extension SharePerpsPositionViewController: ModernShareContentViewController {
     }
     
     func savePhoto() {
-        guard let image = makeImage() else {
+        guard let image = makeImage(padsToSquare: false) else {
             return
         }
         PhotoLibrary.saveImage(source: .image(image)) { alert in

@@ -1292,9 +1292,11 @@
 "perps_scene_sl_triggered" = "손절매 트리거: 손실 제한";
 "perps_scene_tp_triggered" = "이익실현 유발: 이익 고정";
 "perps_share_card_market" = "- 📈 시장: %@";
+"perps_share_card_max_leverage" = "📈 최대 레버리지: %dx";
 "perps_share_card_side" = "- ↕️ 방향: %1$@(%2$dx)";
 "perps_share_card_title" = "🚀 Perps %@";
 "perps_share_card_trade_now" = "💰 지금 거래하세요";
+"perps_share_card_volume" = "💰 24시간 거래량: %@";
 "perps_share_mixin_contact_desc" = "친구와 함께 탑승하세요";
 "perps_share_mixin_contact_desc_with_percent" = "이 링크를 통해 %@ 커미션을 받으세요";
 "perps_share_pnl" = "손익";

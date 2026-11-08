@@ -1292,9 +1292,11 @@
 "perps_scene_sl_triggered" = "觸發止損：控制虧損";
 "perps_scene_tp_triggered" = "觸發止盈：鎖定利潤";
 "perps_share_card_market" = "- 📈 市場：%@";
+"perps_share_card_max_leverage" = "📈 最大槓桿：%dx";
 "perps_share_card_side" = "- ↕️ 方向：%1$@（%2$d倍）";
 "perps_share_card_title" = "🚀 合約 %@";
 "perps_share_card_trade_now" = "💰 立即交易";
+"perps_share_card_volume" = "💰 24小時成交量：%@";
 "perps_share_mixin_contact_desc" = "帶朋友一起上車";
 "perps_share_mixin_contact_desc_with_percent" = "通過此連結賺取 %@ 分傭";
 "perps_share_pnl" = "收益額";

@@ -5,31 +5,70 @@ import MixinServices
 final class ShareMarketContentViewController: UIViewController {
     
     @IBOutlet weak var contentView: UIView!
+    
+    @IBOutlet weak var coverView: UIView!
     @IBOutlet weak var symbolLabel: UILabel!
-    @IBOutlet weak var rankLabel: InsetLabel!
+    @IBOutlet weak var tagLabel: InsetLabel!
     @IBOutlet weak var priceLabel: UILabel!
-    @IBOutlet weak var changeLabel: MarketColoredLabel!
+    @IBOutlet weak var changeLabel: InsetLabel!
     @IBOutlet weak var tokenIconView: PlainTokenIconView!
-    @IBOutlet weak var chartView: ChartView!
+    @IBOutlet weak var chartWrapperView: UIView!
+    
     @IBOutlet weak var obiView: ShareObiView!
     
     @IBOutlet weak var contentWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentHeightConstraint: NSLayoutConstraint!
     
-    private let market: Market
-    private let points: [ChartView.Point]
+    private enum Source {
+        case spot(Market, [ChartView.Point])
+        case perpetual(PerpetualMarketViewModel, [PerpetualCandleViewModel], currentPrice: Decimal)
+    }
+    
+    private let source: Source
+    private let symbol: String
+    private let localizedPrice: String
+    private let reportingType: String
     private let obiContent: ShareObiView.Content
     private let contentMargin: CGFloat = 28
-    
-    private weak var unavailableView: UIView?
     
     init(
         market: Market,
         points: [ChartView.Point],
         rebatingCode: Referral.RebatingCode?,
     ) {
-        self.market = market
-        self.points = points
+        self.source = .spot(market, points)
+        self.symbol = market.symbol
+        self.localizedPrice = market.localizedPrice
+        self.reportingType = "spot"
+        self.obiContent = if let rebatingCode {
+            .referral(rebatingCode)
+        } else {
+            .installMixin
+        }
+        let nib = R.nib.shareMarketContentView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    init(
+        viewModel: PerpetualMarketViewModel,
+        candles: [PerpetualCandleViewModel],
+        rebatingCode: Referral.RebatingCode?,
+    ) {
+        let priceDisplay = PerpetualMarketViewModel.PriceDisplay(
+            rawValue: AppGroupUserDefaults.Wallet.perpsPriceDisplay
+        ) ?? .lastPrice
+        let currentPrice: Decimal
+        switch priceDisplay {
+        case .lastPrice:
+            currentPrice = viewModel.decimalLastPrice
+            self.localizedPrice = viewModel.localizedLastPrice
+        case .markPrice:
+            currentPrice = viewModel.market.decimalMarkPrice
+            self.localizedPrice = viewModel.market.localizedMarkPrice
+        }
+        self.source = .perpetual(viewModel, candles, currentPrice: currentPrice)
+        self.symbol = viewModel.market.displaySymbol
+        self.reportingType = "perps"
         self.obiContent = if let rebatingCode {
             .referral(rebatingCode)
         } else {
@@ -64,49 +103,88 @@ final class ShareMarketContentViewController: UIViewController {
             ofSize: 14,
             weight: .accessiblityBoldTextCounterWeight(.regular)
         )
-        symbolLabel.text = market.symbol
+        symbolLabel.text = symbol
         
-        rankLabel.contentInset = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
-        rankLabel.layer.masksToBounds = true
-        rankLabel.layer.cornerRadius = 4
-        rankLabel.font = .systemFont(
-            ofSize: 12,
-            weight: .accessiblityBoldTextCounterWeight(.medium)
-        )
-        rankLabel.text = market.numberedRank
-        rankLabel.isHidden = rankLabel.text == nil
+        tagLabel.contentInset = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
+        tagLabel.layer.masksToBounds = true
+        tagLabel.layer.cornerRadius = 4
         
         priceLabel.font = .systemFont(
             ofSize: 22,
             weight: .accessiblityBoldTextCounterWeight(.medium)
         )
-        priceLabel.text = market.localizedPrice
         
+        changeLabel.contentInset = UIEdgeInsets(top: 1, left: 3, bottom: 1, right: 3)
+        changeLabel.layer.masksToBounds = true
+        changeLabel.layer.cornerRadius = 4
         changeLabel.font = .systemFont(
-            ofSize: 14,
-            weight: .accessiblityBoldTextCounterWeight(.regular)
+            ofSize: 12,
+            weight: .accessiblityBoldTextCounterWeight(.medium)
         )
-        chartView.annotateExtremums = true
-        chartView.minPointPosition = 123 / 168
-        chartView.maxPointPosition = 21 / 168
-        chartView.delegate = self
-        tokenIconView.setIcon(market: market)
-        if points.count >= 2 {
-            let base = points[0]
-            let now = points[points.count - 1]
-            let change = (now.value - base.value) / base.value
-            if let changePercentage = NumberFormatter.percentage.string(decimal: change) {
-                changeLabel.text = changePercentage
-                changeLabel.alpha = 1
+        
+        switch source {
+        case let .spot(market, points):
+            tagLabel.font = .systemFont(
+                ofSize: 12,
+                weight: .accessiblityBoldTextCounterWeight(.medium)
+            )
+            tagLabel.text = market.numberedRank
+            tagLabel.isHidden = tagLabel.text == nil
+            priceLabel.text = localizedPrice
+            let chartView = ChartView()
+            chartView.isUserInteractionEnabled = false
+            chartWrapperView.addSubview(chartView)
+            chartView.snp.makeEdgesEqualToSuperview()
+            view.layoutIfNeeded()
+            chartView.annotateExtremums = true
+            chartView.minPointPosition = 123 / 168
+            chartView.maxPointPosition = 21 / 168
+            chartView.delegate = self
+            tokenIconView.setIcon(market: market)
+            if points.count >= 2 {
+                let base = points[0]
+                let now = points[points.count - 1]
+                let change = (now.value - base.value) / base.value
+                if let changePercentage = NumberFormatter.percentage.string(decimal: change) {
+                    changeLabel.text = changePercentage
+                    changeLabel.alpha = 1
+                } else {
+                    changeLabel.alpha = 0
+                }
+                changeLabel.backgroundColor = MarketColor.byValue(change).uiColor
+                chartView.points = points
             } else {
                 changeLabel.alpha = 0
+                let unavailableView = PriceDataUnavailableView()
+                chartWrapperView.addSubview(unavailableView)
+                unavailableView.snp.makeEdgesEqualToSuperview()
             }
-            changeLabel.marketColor = .byValue(change)
-            chartView.points = points
-            hideUnavailableView()
-        } else {
-            changeLabel.alpha = 0
-            showUnavailableView()
+        case let .perpetual(viewModel, candles, currentPrice):
+            tagLabel.font = .condensed(size: 12)
+            tagLabel.text = viewModel.leverage
+            tagLabel.backgroundColor = R.color.background_quaternary()
+            tagLabel.contentInset = UIEdgeInsets(top: 2, left: 3, bottom: 0, right: 3)
+            priceLabel.text = localizedPrice
+            changeLabel.text = viewModel.change
+            changeLabel.backgroundColor = viewModel.changeColor.uiColor
+            tokenIconView.setIcon(tokenIconURL: viewModel.iconURL)
+            if candles.isEmpty {
+                let unavailableView = PriceDataUnavailableView()
+                chartWrapperView.addSubview(unavailableView)
+                unavailableView.snp.makeEdgesEqualToSuperview()
+            } else {
+                let chartView = CandlestickChartView()
+                chartView.isUserInteractionEnabled = false
+                chartWrapperView.addSubview(chartView)
+                chartView.snp.makeEdgesEqualToSuperview()
+                view.layoutIfNeeded()
+                chartView.currentPrice = currentPrice
+                chartView.setCandles(
+                    candles,
+                    priceFormatStyle: viewModel.userDisplayPriceFormatStyle,
+                    scrollsToLast: true
+                )
+            }
         }
         
         obiView.load(gradient: true, content: obiContent)
@@ -120,37 +198,6 @@ final class ShareMarketContentViewController: UIViewController {
         contentView.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
     
-    private func showUnavailableView() {
-        let unavailableView: UIView
-        if let view = self.unavailableView {
-            unavailableView = view
-        } else {
-            unavailableView = PriceDataUnavailableView()
-            view.addSubview(unavailableView)
-            unavailableView.snp.makeConstraints { make in
-                make.edges.equalTo(chartView)
-            }
-            self.unavailableView = unavailableView
-        }
-        unavailableView.isHidden = false
-    }
-    
-    private func hideUnavailableView() {
-        unavailableView?.isHidden = true
-    }
-    
-    private func makeImage() -> UIImage {
-        let canvas = contentView.bounds
-        let renderer = UIGraphicsImageRenderer(bounds: canvas)
-        let cornerRadius = contentView.layer.cornerRadius
-        contentView.layer.cornerRadius = 0
-        let image = renderer.image { context in
-            contentView.drawHierarchy(in: canvas, afterScreenUpdates: true)
-        }
-        contentView.layer.cornerRadius = cornerRadius
-        return image
-    }
-    
 }
 
 extension ShareMarketContentViewController: ModernShareContentViewController {
@@ -161,11 +208,14 @@ extension ShareMarketContentViewController: ModernShareContentViewController {
         }
         reporter.report(
             event: .marketShare,
-            tags: ["type": "spot", "target": "share_image"]
+            tags: ["type": reportingType, "target": "share_image"]
         )
-        let image = makeImage()
+        let image = ShareCardImage.render(
+            view: contentView,
+            padsToSquare: false
+        )
         let item = ActivityItem(
-            title: market.symbol + " " + R.string.localizable.market(),
+            title: symbol + " " + R.string.localizable.market(),
             image: image
         )
         let activity = UIActivityViewController(activityItems: [item], applicationActivities: nil)
@@ -177,9 +227,27 @@ extension ShareMarketContentViewController: ModernShareContentViewController {
     func copyLink() {
         reporter.report(
             event: .marketShare,
-            tags: ["type": "spot", "target": "copy_link"]
+            tags: ["type": reportingType, "target": "copy_link"]
         )
-        UIPasteboard.general.string = obiContent.url
+        switch obiContent {
+        case .referral:
+            UIPasteboard.general.string = obiContent.url
+        case .installMixin:
+            var link: String
+            let referralParameter: String
+            switch source {
+            case let .spot(market, _):
+                link = "https://mixin.one/markets/\(market.coinID)"
+                referralParameter = "?ref="
+            case let .perpetual(viewModel, _, _):
+                link = "https://mixin.one/trade?type=perps&market=\(viewModel.market.marketID)"
+                referralParameter = "&referral="
+            }
+            if let identityNumber = LoginManager.shared.account?.identityNumber {
+                link += referralParameter + identityNumber
+            }
+            UIPasteboard.general.string = link
+        }
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         presentingViewController?.dismiss(animated: true)
     }
@@ -187,82 +255,106 @@ extension ShareMarketContentViewController: ModernShareContentViewController {
     func savePhoto() {
         reporter.report(
             event: .marketShare,
-            tags: ["type": "spot", "target": "save_to_album"]
+            tags: ["type": reportingType, "target": "save_to_album"]
         )
-        let image = makeImage()
+        let image = ShareCardImage.render(
+            view: contentView,
+            padsToSquare: false
+        )
         PhotoLibrary.saveImage(source: .image(image)) { alert in
             self.present(alert, animated: true)
         }
     }
     
-    func shareToMixinContact() {
+    func shareToMixinContact() async throws {
         reporter.report(
             event: .marketShare,
-            tags: ["type": "spot", "target": "mixin_contact"]
+            tags: ["type": reportingType, "target": "mixin_contact"]
         )
-        let description = R.string.localizable.market_share_card_asset(market.name, market.symbol) + "\n"
-        + R.string.localizable.market_share_card_market_cap(market.localizedMarketCap) + "\n"
-        + R.string.localizable.market_share_card_price(market.localizedPrice) + "\n"
-        + R.string.localizable.market_share_card_price_change(market.localizedPriceChangePercentage24H)
-        var actions: [AppCardData.V1Content.Action] = [
-            .init(
-                action: "mixin://mixin.one/markets/\(market.coinID)",
-                color: "#3D75E3",
-                label: R.string.localizable.market_share_card_market_button()
-            ),
-        ]
-        if let assetID = market.assetIDs?.first {
-            let tradingAssetID = assetID == AssetID.erc20USDT ? AssetID.erc20USDC : AssetID.erc20USDT
-            let referral = if let identityNumber = LoginManager.shared.account?.identityNumber {
-                "&referral=\(identityNumber)"
-            } else {
-                ""
+        view.layoutIfNeeded()
+        let image = ShareCardImage.render(view: coverView, padsToSquare: true)
+        guard let imageData = image.jpegData(compressionQuality: 0.9) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        let coverURL = try await ShareCardImage.upload(imageData: imageData)
+        try Task.checkCancellation()
+        let description: String
+        var actions: [AppCardData.V1Content.Action]
+        switch source {
+        case let .spot(market, _):
+            description = [
+                R.string.localizable.market_share_card_asset(market.name, market.symbol),
+                R.string.localizable.market_share_card_market_cap(market.localizedMarketCap),
+                R.string.localizable.market_share_card_price(market.localizedPrice),
+                R.string.localizable.market_share_card_price_change(market.localizedPriceChangePercentage24H),
+            ].joined(separator: "\n")
+            actions = [
+                .init(
+                    action: "mixin://mixin.one/markets/\(market.coinID)",
+                    color: "#3D75E3",
+                    label: R.string.localizable.market_share_card_market_button()
+                ),
+            ]
+            if let assetID = market.assetIDs?.first {
+                let tradingAssetID = assetID == AssetID.erc20USDT ? AssetID.erc20USDC : AssetID.erc20USDT
+                let referral = if let identityNumber = LoginManager.shared.account?.identityNumber {
+                    "&referral=\(identityNumber)"
+                } else {
+                    ""
+                }
+                actions.insert(
+                    contentsOf: [
+                        .init(
+                            action: "mixin://mixin.one/trade?type=swap&input=\(tradingAssetID)&output=\(assetID)" + referral,
+                            color: "#27AE60",
+                            label: R.string.localizable.buy_token(market.symbol)
+                        ),
+                        .init(
+                            action: "mixin://mixin.one/trade?type=swap&input=\(assetID)&output=\(tradingAssetID)" + referral,
+                            color: "#EB5757",
+                            label: R.string.localizable.sell_token(market.symbol)
+                        ),
+                    ],
+                    at: 0,
+                )
             }
-            
-            actions.insert(
-                contentsOf: [
-                    .init(
-                        action: "mixin://mixin.one/trade?type=swap&input=\(tradingAssetID)&output=\(assetID)" + referral,
-                        color: "#27AE60",
-                        label: R.string.localizable.buy_token(market.symbol)
-                    ),
-                    .init(
-                        action: "mixin://mixin.one/trade?type=swap&input=\(assetID)&output=\(tradingAssetID)" + referral,
-                        color: "#EB5757",
-                        label: R.string.localizable.sell_token(market.symbol)
-                    ),
-                ],
-                at: 0,
-            )
+        case let .perpetual(viewModel, _, _):
+            let market = viewModel.market
+            let marketLink = "mixin://mixin.one/trade?type=perps&market=\(market.marketID)"
+            description = [
+                R.string.localizable.market_share_card_asset(symbol, R.string.localizable.perpetual()),
+                R.string.localizable.perps_share_card_max_leverage(market.leverage),
+                R.string.localizable.market_share_card_price(localizedPrice),
+                R.string.localizable.perps_share_card_volume(viewModel.volume),
+            ].joined(separator: "\n")
+            actions = [
+                .init(
+                    action: marketLink + "&action=open&side=long",
+                    color: "#50BD5C",
+                    label: R.string.localizable.long()
+                ),
+                .init(
+                    action: marketLink + "&action=open&side=short",
+                    color: "#DB454F",
+                    label: R.string.localizable.short()
+                ),
+                .init(
+                    action: marketLink,
+                    color: "#3D75E3",
+                    label: R.string.localizable.market()
+                ),
+            ]
         }
         let content = AppCardData.V1Content(
-            appID: BotUserID.marketAlerts,
-            cover: .plain("https://dl.mixinpay.com/share-market-card.png"),
-            title: R.string.localizable.market_share_card_title(market.symbol),
+            appID: BotUserID.mixinRoute,
+            cover: .plain(coverURL),
+            title: R.string.localizable.market_share_card_title(symbol),
             description: description,
             actions: actions,
             updatedAt: nil,
             isShareable: true
         )
-        let cardData: AppCardData = .v1(content)
-        var message = Message.createMessage(
-            messageId: UUID().uuidString.lowercased(),
-            conversationId: "",
-            userId: myUserId,
-            category: MessageCategory.APP_CARD.rawValue,
-            status: MessageStatus.SENDING.rawValue,
-            createdAt: Date().toUTCString()
-        )
-        message.content = try! JSONEncoder.default.encode(cardData).base64EncodedString()
-        let confirmation = ExternalSharingConfirmationViewController(
-            sharingContext: ExternalSharingContext(content: .appCard(cardData)),
-            message: message,
-            webContext: nil,
-            action: .forward
-        )
-        presentingViewController?.dismiss(animated: true) {
-            UIApplication.shared.homeContainerViewController?.present(confirmation, animated: true)
-        }
+        try presentShareConfirmation(content: content)
     }
     
 }

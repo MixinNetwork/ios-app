@@ -32,6 +32,7 @@ final class MarketDashboardViewController: UIViewController {
     private var perpsMarketLoader: PerpetualMarketLoader?
     
     private weak var addToWatchlistButton: UIButton?
+    private weak var userInitiatedOperation: Operation?
     
     private var areBannersAboveVisibleBounds: Bool {
         guard let bannerSectionIndex = dataSource.index(for: .banners) else {
@@ -462,6 +463,7 @@ final class MarketDashboardViewController: UIViewController {
             subCategoryIndex: subCategoryIndex,
             order: nil,
             scheduleRemoteLoader: true,
+            isUserInitiated: false,
             debugReason: "Initial",
         )
         allDataLoader.start()
@@ -508,7 +510,7 @@ final class MarketDashboardViewController: UIViewController {
         )
         if reloadDataOnViewAppear {
             reloadDataOnViewAppear = false
-            reloadDataWithCurrentSettings(debugReason: "ViewAppear")
+            reloadDataWithCurrentSettings(isUserInitiated: false, debugReason: "ViewAppear")
         }
     }
     
@@ -549,6 +551,7 @@ final class MarketDashboardViewController: UIViewController {
         subCategoryIndex: Int,
         order: MarketDashboardOrder?, // nil to use derived order
         scheduleRemoteLoader: Bool,
+        isUserInitiated: Bool,
         debugReason: StaticString,
     ) {
         Logger.general.debug(category: "MarketDashboard", message: "\(debugReason): Reload \(category.rawValue), subCategory: \(subCategoryIndex), order: \(order?.debugDescription ?? "(null)"), loadFromRemote: \(scheduleRemoteLoader)")
@@ -564,40 +567,38 @@ final class MarketDashboardViewController: UIViewController {
             perpsMarketLoader?.stop()
             perpsMarketLoader = nil
         }
+        let op: ReloadDataOperation
         switch category {
         case .watchlist:
-            let op = ReloadWatchlistOperation(
+            op = ReloadWatchlistOperation(
                 subCategoryIndex: subCategoryIndex,
                 order: order,
                 scheduleRemoteLoader: scheduleRemoteLoader,
-                viewController: self
+                viewController: self,
             )
-            queue.addOperation(op)
         case .crypto:
-            let op = ReloadCryptoMarketsOperation(
+            op = ReloadCryptoMarketsOperation(
                 subCategoryIndex: subCategoryIndex,
                 order: order?.cryptoOrdering,
                 scheduleRemoteLoader: scheduleRemoteLoader,
                 viewController: self,
             )
-            queue.addOperation(op)
         case .perps:
-            let op = ReloadPerpsMarketsOperation(
+            op = ReloadPerpsMarketsOperation(
                 subCategoryIndex: subCategoryIndex,
                 order: order?.perpsOrdering,
                 scheduleRemoteLoader: scheduleRemoteLoader,
                 viewController: self,
             )
-            queue.addOperation(op)
         case .stock:
-            let op = ReloadStockMarketsOperation(
+            op = ReloadStockMarketsOperation(
                 subCategoryIndex: subCategoryIndex,
                 order: order,
                 scheduleRemoteLoader: scheduleRemoteLoader,
                 viewController: self,
             )
-            queue.addOperation(op)
         case .indicator:
+            self.userInitiatedOperation = nil
             self.category = .indicator
             self.subCategoryIndex = 0
             var snapshot = DataSourceSnapshot()
@@ -620,7 +621,12 @@ final class MarketDashboardViewController: UIViewController {
                 ConcurrentJobQueue.shared.addJob(job: ReloadGlobalMarketJob())
             }
             applySnapshotWithBanners(snapshot, cachedBanners: [], completion: nil)
+            return
         }
+        if isUserInitiated {
+            self.userInitiatedOperation = op
+        }
+        queue.addOperation(op)
     }
     
     private func reloadGlobalMarket(_ market: GlobalMarket) {
@@ -654,12 +660,16 @@ final class MarketDashboardViewController: UIViewController {
         }
     }
     
-    private func reloadDataWithCurrentSettings(debugReason: StaticString) {
+    private func reloadDataWithCurrentSettings(
+        isUserInitiated: Bool,
+        debugReason: StaticString,
+    ) {
         reloadData(
             category: category,
             subCategoryIndex: subCategoryIndex,
             order: order,
             scheduleRemoteLoader: false,
+            isUserInitiated: isUserInitiated,
             debugReason: debugReason,
         )
     }
@@ -841,6 +851,10 @@ extension MarketDashboardViewController {
     }
     
     @objc private func reloadDataOnDatabaseUpdate(_ notification: Notification) {
+        guard userInitiatedOperation == nil else {
+            Logger.general.debug(category: "MarketDashboard", message: "Skip reloading for user op")
+            return
+        }
         let cryptoDataSource = notification.userInfo?[MarketDAO.UserInfoKey.dataSource]
         let perpsDataSource = notification.userInfo?[PerpsMarketDAO.UserInfoKey.dataSource]
         let matchesContent = if let dataSource = cryptoDataSource as? MarketDAO.DataSource {
@@ -884,7 +898,7 @@ extension MarketDashboardViewController {
         }
         if matchesContent {
             if isViewAppearing {
-                reloadDataWithCurrentSettings(debugReason: "DBUpdate")
+                reloadDataWithCurrentSettings(isUserInitiated: false, debugReason: "DBUpdate")
             } else {
                 reloadDataOnViewAppear = true
             }
@@ -895,7 +909,7 @@ extension MarketDashboardViewController {
     
     @objc private func reloadDataOnCurrencyUpdate(_ notification: Notification) {
         marketIndicator = nil
-        reloadDataWithCurrentSettings(debugReason: "CurrencyChange")
+        reloadDataWithCurrentSettings(isUserInitiated: true, debugReason: "CurrencyChange")
     }
     
     @objc private func scheduleReloadDataOnViewAppear(_ notification: Notification) {
@@ -931,6 +945,7 @@ extension MarketDashboardViewController {
                 subCategoryIndex: subCategoryIndex,
                 order: .crypto(order),
                 scheduleRemoteLoader: false,
+                isUserInitiated: true,
                 debugReason: "ChangePeriodUpdate",
             )
         }
@@ -1000,6 +1015,7 @@ extension MarketDashboardViewController: MarketHeaderView.Delegate {
             subCategoryIndex: index,
             order: nil,
             scheduleRemoteLoader: true,
+            isUserInitiated: true,
             debugReason: "SubCategorySwitch",
         )
         AppGroupUserDefaults.User.marketSubCategoryIndices[category.rawValue] = index
@@ -1072,6 +1088,7 @@ extension MarketDashboardViewController: MarketOrderingHeaderView.Delegate {
             subCategoryIndex: subCategoryIndex,
             order: order,
             scheduleRemoteLoader: false,
+            isUserInitiated: true,
             debugReason: "OrderSwitch",
         )
         
@@ -1285,7 +1302,7 @@ extension MarketDashboardViewController: WatchlistRecommendationFooterView.Deleg
                                 return
                             }
                             self.collectionView.isUserInteractionEnabled = true
-                            self.reloadDataWithCurrentSettings(debugReason: "ApplyRcmd")
+                            self.reloadDataWithCurrentSettings(isUserInitiated: true, debugReason: "ApplyRcmd")
                         }
                     }
                 case .failure(let error):
@@ -1312,7 +1329,7 @@ extension MarketDashboardViewController: WatchlistRecommendationFooterView.Deleg
                                 return
                             }
                             self.collectionView.isUserInteractionEnabled = true
-                            self.reloadDataWithCurrentSettings(debugReason: "ApplyRcmd")
+                            self.reloadDataWithCurrentSettings(isUserInitiated: true, debugReason: "ApplyRcmd")
                         }
                     }
                 case .failure(let error):
@@ -1585,6 +1602,7 @@ extension MarketDashboardViewController {
                 subCategoryIndex: category.defaultSubCategoryIndex,
                 order: nil,
                 scheduleRemoteLoader: true,
+                isUserInitiated: true,
                 debugReason: "CategorySwitch",
             )
             AppGroupUserDefaults.User.marketCategory = category.rawValue
@@ -1655,6 +1673,9 @@ extension MarketDashboardViewController {
                 guard let self, !self.isCancelled, let viewController else {
                     return
                 }
+                if viewController.userInitiatedOperation == self {
+                    viewController.userInitiatedOperation = nil
+                }
                 viewController.category = displayCategory
                 viewController.subCategoryIndex = displaySubCategoryIndex
                 viewController.order = .crypto(order)
@@ -1724,6 +1745,9 @@ extension MarketDashboardViewController {
             DispatchQueue.main.sync { [weak self] in
                 guard let self, !self.isCancelled, let viewController else {
                     return
+                }
+                if viewController.userInitiatedOperation == self {
+                    viewController.userInitiatedOperation = nil
                 }
                 viewController.category = displayCategory
                 viewController.subCategoryIndex = displaySubCategoryIndex
@@ -1882,6 +1906,9 @@ extension MarketDashboardViewController {
                     guard let self, !self.isCancelled, let viewController else {
                         return
                     }
+                    if viewController.userInitiatedOperation == self {
+                        viewController.userInitiatedOperation = nil
+                    }
                     viewController.category = .crypto
                     viewController.subCategoryIndex = subCategoryIndex
                     viewController.order = .crypto(order)
@@ -1972,6 +1999,9 @@ extension MarketDashboardViewController {
                 guard let self, !self.isCancelled, let viewController else {
                     return
                 }
+                if viewController.userInitiatedOperation == self {
+                    viewController.userInitiatedOperation = nil
+                }
                 viewController.category = .perps
                 viewController.subCategoryIndex = subCategoryIndex
                 viewController.order = .perps(order)
@@ -2044,6 +2074,9 @@ extension MarketDashboardViewController {
                 guard let self, !self.isCancelled, let viewController else {
                     return
                 }
+                if viewController.userInitiatedOperation == self {
+                    viewController.userInitiatedOperation = nil
+                }
                 viewController.category = .stock
                 viewController.subCategoryIndex = subCategoryIndex
                 viewController.order = .crypto(order)
@@ -2086,6 +2119,9 @@ extension MarketDashboardViewController {
             DispatchQueue.main.sync { [weak self] in
                 guard let self, !self.isCancelled, let viewController else {
                     return
+                }
+                if viewController.userInitiatedOperation == self {
+                    viewController.userInitiatedOperation = nil
                 }
                 viewController.category = .stock
                 viewController.subCategoryIndex = subCategoryIndex

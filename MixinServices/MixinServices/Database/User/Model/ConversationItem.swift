@@ -18,6 +18,7 @@ public final class ConversationItem {
     public var pinTime: String?
     public var createdAt: String = ""
     public var expireIn: Int64 = 0
+    public var isExpirationResolved = false
     
     public var ownerIdentityNumber: String = ""
     public var ownerFullName: String = ""
@@ -95,6 +96,7 @@ public final class ConversationItem {
         ownerIdentityNumber = ownerUser.identityNumber
         category = ConversationCategory.CONTACT.rawValue
         contentType = MessageCategory.SIGNAL_TEXT.rawValue
+        expireIn = Conversation.defaultExpirationDuration
     }
     
     public convenience init(response: ConversationResponse) {
@@ -110,6 +112,7 @@ public final class ConversationItem {
         codeUrl = response.codeUrl
         createdAt = response.createdAt
         expireIn = response.expireIn
+        isExpirationResolved = true
     }
     
     public init(from decoder: Decoder) throws {
@@ -129,6 +132,13 @@ public final class ConversationItem {
         self.codeUrl = try container.decodeIfPresent(String.self, forKey: .codeUrl)
         self.pinTime = try container.decodeIfPresent(String.self, forKey: .pinTime)
         self.expireIn = (try container.decodeIfPresent(Int64.self, forKey: .expireIn)) ?? 0
+        self.isExpirationResolved = status == ConversationStatus.SUCCESS.rawValue || category == ConversationCategory.GROUP.rawValue
+        if status == ConversationStatus.START.rawValue,
+           category == ConversationCategory.CONTACT.rawValue,
+           expireIn == 0
+        {
+            expireIn = Conversation.defaultExpirationDuration
+        }
         self.createdAt = (try? container.decodeIfPresent(String.self, forKey: .createdAt)) ?? ""
         
         self.ownerIdentityNumber = (try? container.decodeIfPresent(String.self, forKey: .ownerIdentityNumber)) ?? ""
@@ -166,6 +176,7 @@ public final class ConversationItem {
         self.unseenMessageCount = unseenMessageCount
         self.unseenMentionCount = unseenMentionCount
         self.status = status
+        self.isExpirationResolved = status == ConversationStatus.SUCCESS.rawValue || category == ConversationCategory.GROUP.rawValue
         self.muteUntil = muteUntil
         self.codeUrl = codeUrl
         self.pinTime = pinTime

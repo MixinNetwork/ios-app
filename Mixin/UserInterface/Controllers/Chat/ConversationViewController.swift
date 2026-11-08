@@ -12,6 +12,7 @@ final class ConversationViewController: UIViewController {
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var opponentUserBadgeView: SDAnimatedImageView!
+    @IBOutlet weak var disappearingImageView: UIImageView!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var loadingView: ActivityIndicatorView!
     
@@ -438,6 +439,49 @@ final class ConversationViewController: UIViewController {
                                selector: #selector(updateGroupCallIndicatorViewHidden),
                                name: CallService.didDeactivateCallNotification,
                                object: nil)
+        }
+        
+        if !dataSource.conversation.isExpirationResolved {
+            let conversationID = conversationId
+            DispatchQueue.global().async { [weak self] in
+                let result = ConversationAPI.getConversation(conversationId: conversationID)
+                DispatchQueue.main.async {
+                    guard let self else {
+                        return
+                    }
+                    let conversation = self.dataSource.conversation
+                    guard !conversation.isExpirationResolved || conversation.status != ConversationStatus.SUCCESS.rawValue else {
+                        return
+                    }
+                    if let local = ConversationDAO.shared.getConversation(conversationId: conversationID),
+                       local.status == ConversationStatus.SUCCESS.rawValue
+                    {
+                        conversation.expireIn = local.expireIn
+                        conversation.status = local.status
+                    } else {
+                        switch result {
+                        case .success(let response):
+                            ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
+                            conversation.expireIn = response.expireIn
+                            conversation.status = ConversationStatus.SUCCESS.rawValue
+                        case .failure(.notFound):
+                            if !conversation.isExpirationResolved {
+                                conversation.expireIn = Conversation.defaultExpirationDuration
+                                conversation.status = ConversationStatus.START.rawValue
+                            }
+                        case .failure:
+                            if !conversation.isExpirationResolved {
+                                return
+                            }
+                        }
+                    }
+                    conversation.isExpirationResolved = true
+                    NotificationCenter.default.post(
+                        name: MixinServices.conversationDidChangeNotification,
+                        object: ConversationChange(conversationId: conversationID, action: .update(conversation: conversation)),
+                    )
+                }
+            }
         }
     }
     
@@ -922,6 +966,10 @@ final class ConversationViewController: UIViewController {
                 let message = Message.createMessage(message: message)
                 let post = PostWebViewController(message: message)
                 navigationController?.pushViewController(post, animated: true)
+            } else if (viewModel as? SystemMessageViewModel)?.expirationDuration != nil {
+                conversationInputViewController.dismiss()
+                let controller = MessageExpirationDurationViewController(conversation: dataSource.conversation)
+                navigationController?.pushViewController(controller, animated: true)
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 conversationInputViewController.dismiss()
                 UserOperationAnalytics.tradeSource = .url
@@ -1089,9 +1137,11 @@ final class ConversationViewController: UIViewController {
         switch change.action {
         case let .updateGroupIcon(iconUrl):
             avatarImageView.setGroupImage(with: iconUrl)
-        case .update:
+        case .update(let conversation):
+            updateDisappearingMessageIcon(expireIn: conversation.isExpirationResolved ? conversation.expireIn : nil)
             hideLoading()
         case let .updateConversation(conversation):
+            updateDisappearingMessageIcon(expireIn: conversation.expireIn)
             if !conversation.name.isEmpty {
                 titleLabel.text = conversation.name
                 dataSource?.conversation.name = conversation.name
@@ -1109,6 +1159,8 @@ final class ConversationViewController: UIViewController {
                 }
             }
             hideLoading()
+        case .updateExpireIn(let expireIn, _):
+            updateDisappearingMessageIcon(expireIn: expireIn)
         case .startedUpdateConversation:
             showLoading()
         case let .updateMessageMentionStatus(messageId, newStatus):
@@ -2207,6 +2259,8 @@ extension ConversationViewController {
 extension ConversationViewController {
     
     private func updateNavigationBar() {
+        let conversation = dataSource.conversation
+        updateDisappearingMessageIcon(expireIn: conversation.isExpirationResolved ? conversation.expireIn : nil)
         let badgeImage: UIImage?
         if dataSource.category == .group {
             let conversation = dataSource.conversation
@@ -2233,6 +2287,12 @@ extension ConversationViewController {
         }
         opponentUserBadgeView.image = badgeImage
         opponentUserBadgeView.isHidden = badgeImage == nil
+    }
+    
+    private func updateDisappearingMessageIcon(expireIn: Int64?) {
+        disappearingImageView.isHidden = (expireIn ?? 0) <= 0
+        titleView?.invalidateIntrinsicContentSize()
+        navigationController?.navigationBar.setNeedsLayout()
     }
     
     private func updateSubtitleAndInputBar() {
@@ -2917,6 +2977,9 @@ extension ConversationViewController {
                     _ = weakSelf.dataSource?.removeViewModel(at: indexPath)
                     weakSelf.tableView.reloadData()
                     weakSelf.tableView.setFloatingHeaderViewsHidden(true, animated: true)
+                }
+                if message.actionName == SystemConversationAction.EXPIRE.rawValue {
+                    weakSelf.dataSource.refreshConversationHints()
                 }
             }
         }

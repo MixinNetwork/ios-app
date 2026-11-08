@@ -598,7 +598,7 @@
 		7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */; };
 		7C8FA8F42768909300855AFD /* AccountSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */; };
 		7C8FA8F62768926D00855AFD /* SecuritySettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */; };
-		7C952CFE27E035080083F92B /* ExpiredMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C952CFD27E035080083F92B /* ExpiredMessageViewController.swift */; };
+		7C952CFE27E035080083F92B /* MessageExpirationDurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C952CFD27E035080083F92B /* MessageExpirationDurationViewController.swift */; };
 		7C952D0027E036240083F92B /* ExpiredMessageTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */; };
 		7C9A734027392FAF00E0127A /* PinSettingTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */; };
 		7C9DCDF1273901D500395F4A /* PinSettingTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C9DCDF0273901D500395F4A /* PinSettingTableHeaderView.xib */; };
@@ -1016,6 +1016,8 @@
 		944731682E71A17A00ACC49B /* SearchMarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944731672E71A17200ACC49B /* SearchMarketViewController.swift */; };
 		944731702E71A2AD00ACC49B /* SearchMarketView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9447316F2E71A2AD00ACC49B /* SearchMarketView.xib */; };
 		9447A7362CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9447A7352CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift */; };
+		94480844309DF60800AC82FB /* CustomMessageExpirationDurationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94480842309DF60800AC82FB /* CustomMessageExpirationDurationPickerViewController.swift */; };
+		94480845309DF60800AC82FB /* CustomMessageExpirationDurationPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94480843309DF60800AC82FB /* CustomMessageExpirationDurationPickerView.xib */; };
 		9449775F2F0A8E0100472465 /* BitcoinTransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9449775E2F0A8DFC00472465 /* BitcoinTransferOperation.swift */; };
 		944977612F0A8E0100472465 /* PearlTransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944977602F0A8DFC00472465 /* PearlTransferOperation.swift */; };
 		944A5A722C2604F70021460C /* CollectibleCollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944A5A712C2604F70021460C /* CollectibleCollectionHeaderView.swift */; };
@@ -2665,7 +2667,7 @@
 		7C8FA78E2768822800855AFD /* DeleteAccountTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountTableHeaderView.xib; sourceTree = "<group>"; };
 		7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingViewController.swift; sourceTree = "<group>"; };
 		7C8FA8F52768926D00855AFD /* SecuritySettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingViewController.swift; sourceTree = "<group>"; };
-		7C952CFD27E035080083F92B /* ExpiredMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiredMessageViewController.swift; sourceTree = "<group>"; };
+		7C952CFD27E035080083F92B /* MessageExpirationDurationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageExpirationDurationViewController.swift; sourceTree = "<group>"; };
 		7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExpiredMessageTableHeaderView.xib; sourceTree = "<group>"; };
 		7C9A733F27392FAF00E0127A /* PinSettingTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinSettingTableHeaderView.swift; sourceTree = "<group>"; };
 		7C9AABC329E924B400EBAAF3 /* LocalNetworkAuthorization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalNetworkAuthorization.swift; sourceTree = "<group>"; };
@@ -3084,6 +3086,8 @@
 		944731672E71A17200ACC49B /* SearchMarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMarketViewController.swift; sourceTree = "<group>"; };
 		9447316F2E71A2AD00ACC49B /* SearchMarketView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchMarketView.xib; sourceTree = "<group>"; };
 		9447A7352CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchRecommendationViewController.swift; sourceTree = "<group>"; };
+		94480842309DF60800AC82FB /* CustomMessageExpirationDurationPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMessageExpirationDurationPickerViewController.swift; sourceTree = "<group>"; };
+		94480843309DF60800AC82FB /* CustomMessageExpirationDurationPickerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomMessageExpirationDurationPickerView.xib; sourceTree = "<group>"; };
 		9449775E2F0A8DFC00472465 /* BitcoinTransferOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinTransferOperation.swift; sourceTree = "<group>"; };
 		944977602F0A8DFC00472465 /* PearlTransferOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PearlTransferOperation.swift; sourceTree = "<group>"; };
 		944A5A712C2604F70021460C /* CollectibleCollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleCollectionHeaderView.swift; sourceTree = "<group>"; };
@@ -4833,7 +4837,9 @@
 			children = (
 				7C952CFF27E036240083F92B /* ExpiredMessageTableHeaderView.xib */,
 				7C0FAAC427E03FBD008D4021 /* ExpiredMessageTableHeaderView.swift */,
-				7C952CFD27E035080083F92B /* ExpiredMessageViewController.swift */,
+				7C952CFD27E035080083F92B /* MessageExpirationDurationViewController.swift */,
+				94480843309DF60800AC82FB /* CustomMessageExpirationDurationPickerView.xib */,
+				94480842309DF60800AC82FB /* CustomMessageExpirationDurationPickerViewController.swift */,
 				7CF836F027E334B0002E2A98 /* ExpiredMessageDurationFormatter.swift */,
 				7C51F3A827E459AD0095B4D6 /* ExpiredMessageManager.swift */,
 			);
@@ -7753,6 +7759,7 @@
 				947088D02FD14B760087503E /* WalletOverviewCell.xib in Resources */,
 				944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */,
 				7BB788B2216C5A4A00EDE7B4 /* LoadingIndicatorFooterView.xib in Resources */,
+				94480845309DF60800AC82FB /* CustomMessageExpirationDurationPickerView.xib in Resources */,
 				DFA5B5911FB04C9C00549728 /* Wallet.storyboard in Resources */,
 				DFF44175223A035000DDD5F8 /* Mixin-Keys.plist in Resources */,
 				940A3C122EB33AFA001A458F /* TradePriceInputCell.xib in Resources */,
@@ -8254,6 +8261,7 @@
 				944124A42E715CEB00705462 /* EnableNotificationHeaderView.swift in Sources */,
 				945E18372F62F054003434AA /* PerpsManualLongPositionLiquidationView.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
+				94480844309DF60800AC82FB /* CustomMessageExpirationDurationPickerViewController.swift in Sources */,
 				9429C1472E059F3100206DAA /* FeeRequiredInputAmountViewController.swift in Sources */,
 				946331C22C622C3500C54B76 /* TransactionHistoryDateFilterView.swift in Sources */,
 				7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */,
@@ -9417,7 +9425,7 @@
 				7C7579D729DC573F0002DA0B /* DeviceTransferProgressViewController.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
 				946B9FBB2B0493E800DB4DC1 /* WalletHintViewController.swift in Sources */,
-				7C952CFE27E035080083F92B /* ExpiredMessageViewController.swift in Sources */,
+				7C952CFE27E035080083F92B /* MessageExpirationDurationViewController.swift in Sources */,
 				9451E1F22E6B6AC300A5CA45 /* ReceiveMoneyViewController.swift in Sources */,
 				943BEAA72F74DF5E009376AA /* SpotTradingManualIntroductionPageView.swift in Sources */,
 				9451E1F32E6B6AC300A5CA45 /* ShareDepositLinkViewController.swift in Sources */,

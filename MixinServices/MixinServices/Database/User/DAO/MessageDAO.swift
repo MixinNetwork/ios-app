@@ -260,6 +260,16 @@ public final class MessageDAO: UserDatabaseDAO {
         db.recordExists(in: Message.self, where: Message.column(of: .messageId) == messageId)
     }
     
+    public func hasExpirationSettingsMessage(conversationID: String) -> Bool {
+        let sql = """
+        SELECT EXISTS (
+            SELECT 1 FROM messages
+            WHERE conversation_id = ? AND category = 'SYSTEM_CONVERSATION' AND action = 'EXPIRE'
+        )
+        """
+        return db.select(with: sql, arguments: [conversationID]) ?? false
+    }
+    
     public func batchUpdateMessageStatus(readMessageIds: [String], mentionMessageIds: [String]) {
         var readMessageIds = readMessageIds
         var readMessages: [Message] = []

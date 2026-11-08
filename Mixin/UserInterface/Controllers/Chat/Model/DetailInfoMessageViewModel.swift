@@ -32,7 +32,6 @@ class DetailInfoMessageViewModel: MessageViewModel {
     var statusFrame = CGRect.zero
     var identityIconImage: UIImage?
     var identityIconFrame: CGRect = .zero
-    var expiredIconFrame = CGRect(x: 0, y: 0, width: 16, height: 16)
     
     var statusNormalTintColor: UIColor {
         return R.color.text_tertiary()!
@@ -123,7 +122,6 @@ class DetailInfoMessageViewModel: MessageViewModel {
             let index = message.userId.positiveHashCode() % UIColor.usernameColors.count
             fullnameColor = UIColor.usernameColors[index]
         }
-        layoutExpiredIconFrame(backgroundImageFrame: backgroundImageFrame)
         layoutEncryptedIconFrame()
         layoutForwarderIcon()
         layoutPinnedIconFrame()
@@ -140,20 +138,6 @@ class DetailInfoMessageViewModel: MessageViewModel {
         } else {
             identityIconFrame = .zero
         }
-    }
-    
-    func layoutExpiredIconFrame(backgroundImageFrame: CGRect) {
-        guard message.isExpiredMessage else {
-            return
-        }
-        let x: CGFloat
-        if style.contains(.received) {
-            x = backgroundImageFrame.maxX + 10
-        } else {
-            x = backgroundImageFrame.minX - expiredIconFrame.width - 10
-        }
-        let y = backgroundImageFrame.midY - expiredIconFrame.height / 2
-        expiredIconFrame.origin = CGPoint(x: x, y: y)
     }
     
     func layoutEncryptedIconFrame() {

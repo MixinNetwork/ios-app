@@ -246,10 +246,7 @@ extension GroupProfileViewController {
     }
     
     @objc func editExpiredMessageDuration() {
-        guard isAdmin else {
-            return
-        }
-        let controller = ExpiredMessageViewController(conversationId: conversationId, expireIn: conversation.expireIn)
+        let controller = MessageExpirationDurationViewController(conversation: conversation)
         dismissAndPush(controller)
     }
     

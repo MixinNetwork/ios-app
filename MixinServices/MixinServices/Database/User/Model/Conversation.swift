@@ -14,6 +14,8 @@ public enum ConversationStatus: Int {
 
 public struct Conversation {
     
+    public static let defaultExpirationDuration = Int64(TimeInterval.week)
+    
     public let conversationId: String
     public var ownerId: String?
     public var category: String?
@@ -53,11 +55,39 @@ public struct Conversation {
     }
     
     public static func createConversation(from conversation: ConversationResponse, ownerId: String, status: ConversationStatus) -> Conversation {
-        return Conversation(conversationId: conversation.conversationId, ownerId: ownerId, category: conversation.category, name: conversation.name, iconUrl: conversation.iconUrl, announcement: conversation.announcement, lastMessageId: nil, lastMessageCreatedAt: nil, lastReadMessageId: nil, unseenMessageCount: 0, status: status.rawValue, draft: nil, muteUntil: conversation.muteUntil, codeUrl: conversation.codeUrl, pinTime: nil, expireIn: 0, createdAt: conversation.createdAt)
+        Conversation(
+            conversationId: conversation.conversationId,
+            ownerId: ownerId,
+            category: conversation.category,
+            name: conversation.name,
+            iconUrl: conversation.iconUrl,
+            announcement: conversation.announcement,
+            lastMessageId: nil,
+            lastMessageCreatedAt: nil,
+            lastReadMessageId: nil,
+            unseenMessageCount: 0,
+            status: status.rawValue,
+            draft: nil,
+            muteUntil: conversation.muteUntil,
+            codeUrl: conversation.codeUrl,
+            pinTime: nil,
+            expireIn: conversation.expireIn,
+            createdAt: conversation.createdAt,
+        )
     }
-
+    
     public static func createConversation(conversationId: String, category: String?, recipientId: String, status: Int) -> Conversation {
-        return Conversation(conversationId: conversationId, ownerId: recipientId, category: category, name: nil, iconUrl: nil, announcement: nil, lastMessageId: nil, lastMessageCreatedAt: nil, lastReadMessageId: nil, unseenMessageCount: 0, status: status, draft: nil, muteUntil: nil, codeUrl: nil, pinTime: nil, expireIn: 0, createdAt: Date().toUTCString())
+        let expireIn = status == ConversationStatus.START.rawValue && category != nil
+            ? defaultExpirationDuration : 0
+        return Conversation(
+            conversationId: conversationId,
+            ownerId: recipientId,
+            category: category,
+            unseenMessageCount: 0,
+            status: status,
+            expireIn: expireIn,
+            createdAt: Date().toUTCString(),
+        )
     }
     
 }

@@ -287,6 +287,7 @@
 "change_your_app_language" = "言語設定";
 "changed" = "変更しました";
 "changed_disappearing_message_settings" = "%@が消えるメッセージを設定しました";
+"changed_disappearing_message_settings_hint" = "%@が消えるメッセージの設定を変更しました。タップして消えるメッセージの設定を開きます。";
 "changing_pin_terminated_unexpectedly" = "PIN の変更が予期せず終了しました。[続行] をクリックして変更を完了してください";
 "chat_background" = "チャットの背景";
 "chat_backup" = "チャットのバックアップ";
@@ -295,6 +296,8 @@
 "chat_call_warning_voice" = "通話中にボイスメッセージを録音することはできません。";
 "chat_decryption_failed" = "メッセージの取得に失敗しました。Mixinを最新バージョンにアップデートしてください。";
 "chat_decryption_failed_hint" = "%@が参加し暗号化セッションが開始するまで待機しています...";
+"chat_disappearing_message_disabled_hint" = "このチャットでは消えるメッセージが有効になっていません。タップして設定するか、詳細をご確認ください。";
+"chat_disappearing_message_enabled_hint" = "このチャットの消えるメッセージの有効時間は%@に設定されています。タップして変更するか、詳細をご確認ください。";
 "chat_group_add" = "%1$@が%2$@を追加しました";
 "chat_group_call_decline" = "%@グループ通話が終了しました";
 "chat_group_call_did_not_answer" = "%@ はグループ通話に応答しませんでした";
@@ -549,13 +552,9 @@
 "disable" = "無効にする";
 "disable_biometric_pay_confirmation" = "%@の支払いを無効にしますか?";
 "disable_disappearing_message" = "%@が消えるメッセージを無効にしました";
+"disable_disappearing_message_hint" = "%@が消えるメッセージを無効にしました。タップして消えるメッセージの設定を開きます。";
 "disappearing_message" = "消えるメッセージ";
 "disappearing_message_hint" = "有効にすると、このチャットで送受信された新しいメッセージは、見た後に消えます。詳しくは、こちらをお読みください。";
-"disappearing_option_1" = "30秒";
-"disappearing_option_2" = "10分間";
-"disappearing_option_3" = "2時間";
-"disappearing_option_4" = "1日";
-"disappearing_option_5" = "1週間";
 "discard" = "破棄";
 "disconnect" = "切断";
 "disconnected" = "切断されました";
@@ -767,6 +766,8 @@
 "group_call_has_been_declined" = "権限不足のためグループ会話はできません。";
 "group_call_participants_limit_hint" = "グループ通話の上限は %d人です";
 "group_description" = "グループアナウンス";
+"group_disappearing_message_disabled_hint" = "このグループでは消えるメッセージが有効になっていません。タップして設定するか、詳細をご確認ください。";
+"group_disappearing_message_enabled_hint" = "このグループの消えるメッセージの有効時間は%@に設定されています。タップして変更するか、詳細をご確認ください。";
 "group_name" = "グループ名";
 "group_participant_add_full" = "グループメンバーが上限に達したため追加できません";
 "group_participant_add_limit" = "一度に追加できるメンバーは最大50人です";
@@ -1665,6 +1666,7 @@
 "set_amount" = "金額を設定";
 "set_as_avatar" = "アバターとして設定";
 "set_disappearing_message_time_to" = "%1$@は、消えるメッセージの有効時間を%2$@に設定しました。";
+"set_disappearing_message_time_to_hint" = "%1$@が消えるメッセージの有効時間を%2$@に設定しました。タップして消えるメッセージの設定を開きます。";
 "set_emergency_create_successfully" = "回復連絡先が正常に設定されました";
 "set_new_pin" = "新しいPINコードを設定";
 "set_or_update_pin_failed" = "PIN の設定または更新に失敗しました";
@@ -1944,10 +1946,14 @@
 "unit_hour_count" = "時間";
 "unit_minute" = "分";
 "unit_minute_count" = "分間";
+"unit_month" = "か月";
+"unit_month_count" = "か月";
 "unit_second" = "秒";
 "unit_second_count" = "秒間";
 "unit_week" = "週";
 "unit_week_count" = "週間";
+"unit_year" = "年";
+"unit_year_count" = "年";
 "unknown" = "不明";
 "unknown_artist" = "不明なアーティスト";
 "unlimited_authorization_warning" = "このアプリケーションは、%1$@ アカウント内のすべての %3$@ (%2$@) にアクセスできます。";

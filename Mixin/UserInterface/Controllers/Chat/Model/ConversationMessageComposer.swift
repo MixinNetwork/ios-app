@@ -294,8 +294,15 @@ final class ConversationMessageComposer {
         guard let change = notification.object as? ConversationChange, change.conversationId == conversationId else {
             return
         }
-        if case .updateExpireIn(let expireIn, _) = change.action {
+        switch change.action {
+        case .updateExpireIn(let expireIn, _):
             self.expireIn = expireIn
+        case .update(let conversation):
+            expireIn = conversation.expireIn
+        case .updateConversation(let conversation):
+            expireIn = conversation.expireIn
+        default:
+            break
         }
     }
     

@@ -51,7 +51,6 @@ final class UserProfileViewController: ProfileViewController {
     private var favoriteAppViewIfLoaded: ProfileFavoriteAppsView?
     private var sharedAppUsers: [User]?
     private var centerStackViewHeightConstraint: NSLayoutConstraint?
-    private var conversationExpireIn: Int64?
     
     init(user: UserItem) {
         super.init(nibName: R.nib.profileView.name, bundle: R.nib.profileView.bundle)
@@ -568,35 +567,10 @@ extension UserProfileViewController {
     }
     
     @objc func editExpiredMessageDuration() {
-        func dismissAndPushController(expireIn: Int64) {
-            let controller = ExpiredMessageViewController(conversationId: conversationId, expireIn: expireIn)
-            dismissAndPush(controller)
-        }
-        if let expireIn = conversationExpireIn {
-            dismissAndPushController(expireIn: expireIn)
-        } else {
-            let hud = Hud()
-            hud.show(style: .busy, text: "")
-            let request = ConversationRequest(
-                conversationId: conversationId,
-                name: nil,
-                category: ConversationCategory.CONTACT.rawValue,
-                participants: [ParticipantRequest(userId: user.userId, role: "")],
-                duration: nil,
-                announcement: nil,
-                randomID: nil
-            )
-            ConversationAPI.createConversation(conversation: request) { result in
-                switch result {
-                case let .success(response):
-                    hud.hide()
-                    dismissAndPushController(expireIn: response.expireIn)
-                case let .failure(error):
-                    hud.set(style: .error, text: error.localizedDescription)
-                    hud.scheduleAutoHidden()
-                }
-            }
-        }
+        let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
+            ?? ConversationItem(ownerUser: user)
+        let controller = MessageExpirationDurationViewController(conversation: conversation)
+        dismissAndPush(controller)
     }
     
     @objc private func dismissAvatarAction() {
@@ -1049,12 +1023,12 @@ extension UserProfileViewController {
     private func reloadMessageExpiration(conversationId: String) {
         expiredMessageItemView.button.isEnabled = false
         DispatchQueue.global().async {
-            let expireIn = ConversationDAO.shared.getExpireIn(conversationId: conversationId)
+            let conversation = ConversationDAO.shared.getConversation(conversationId: conversationId)
             DispatchQueue.main.sync {
-                if let expireIn = expireIn {
-                    self.conversationExpireIn = expireIn
-                    let subtitle = ExpiredMessageDurationFormatter.string(from: expireIn)
-                    self.expiredMessageItemView.subtitleLabel.text = subtitle
+                if let conversation, conversation.isExpirationResolved {
+                    self.expiredMessageItemView.subtitleLabel.text = ExpiredMessageDurationFormatter.string(from: conversation.expireIn)
+                } else {
+                    self.expiredMessageItemView.subtitleLabel.text = nil
                 }
                 self.expiredMessageItemView.button.isEnabled = true
             }

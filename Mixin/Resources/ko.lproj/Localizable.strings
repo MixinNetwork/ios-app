@@ -287,6 +287,7 @@
 "change_your_app_language" = "앱 언어 변경";
 "changed" = "변경됨";
 "changed_disappearing_message_settings" = "%@님이 사라지는 메시지 설정을 변경했습니다.";
+"changed_disappearing_message_settings_hint" = "%@: 사라지는 메시지 설정이 변경되었습니다. 눌러서 사라지는 메시지 설정을 여세요.";
 "changing_pin_terminated_unexpectedly" = "PIN 변경이 예기치 않게 종료되었습니다. 변경을 완료하려면 \"계속\"을 클릭하세요.";
 "chat_background" = "채팅 배경";
 "chat_backup" = "채팅 백업";
@@ -295,6 +296,8 @@
 "chat_call_warning_voice" = "Mixin 통화 중에는 음성 메시지를 녹음할 수 없습니다.";
 "chat_decryption_failed" = "이 메시지 암호 해독에 실패했습니다. Mixin을 최신 버전으로 업그레이드하세요.";
 "chat_decryption_failed_hint" = "%@이(가) 온라인에 접속하여 암호화된 세션을 설정하기를 기다리는 중입니다.";
+"chat_disappearing_message_disabled_hint" = "이 채팅에서는 사라지는 메시지가 활성화되어 있지 않습니다. 눌러서 설정하거나 자세히 알아보세요.";
+"chat_disappearing_message_enabled_hint" = "이 채팅의 사라지는 메시지 시간이 %@로 설정되었습니다. 눌러서 변경하거나 자세히 알아보세요.";
 "chat_group_add" = "%1$@님이 %2$@을 추가했습니다.";
 "chat_group_call_decline" = "%@님이 그룹 통화를 거부했습니다.";
 "chat_group_call_did_not_answer" = "%@님이 그룹 통화에 응답하지 않았습니다.";
@@ -549,13 +552,9 @@
 "disable" = "비활성화";
 "disable_biometric_pay_confirmation" = "%@ 지불을 비활성화하시겠습니까?";
 "disable_disappearing_message" = "%@ 사라지는 메시지 비활성화됨";
+"disable_disappearing_message_hint" = "%@: 사라지는 메시지가 꺼졌습니다. 눌러서 사라지는 메시지 설정을 여세요.";
 "disappearing_message" = "사라지는 메시지";
 "disappearing_message_hint" = "활성화하면 이 채팅에서 주고받은 새 메시지가 확인된 후 사라집니다. 자세히 알아보려면 문서를 읽어보세요.";
-"disappearing_option_1" = "30초";
-"disappearing_option_2" = "10분";
-"disappearing_option_3" = "2시간";
-"disappearing_option_4" = "1일";
-"disappearing_option_5" = "1주";
 "discard" = "삭제";
 "disconnect" = "연결 끊기";
 "disconnected" = "연결이 끊어졌습니다.";
@@ -767,6 +766,8 @@
 "group_call_has_been_declined" = "그룹 통화가 거부되었습니다.";
 "group_call_participants_limit_hint" = "그룹 통화를 사용하면 최대 %d명의 참가자가 서로 통화할 수 있습니다.";
 "group_description" = "그룹 설명";
+"group_disappearing_message_disabled_hint" = "이 그룹에서는 사라지는 메시지가 활성화되어 있지 않습니다. 눌러서 설정하거나 자세히 알아보세요.";
+"group_disappearing_message_enabled_hint" = "이 그룹의 사라지는 메시지 시간이 %@로 설정되었습니다. 눌러서 변경하거나 자세히 알아보세요.";
 "group_name" = "그룹 이름";
 "group_participant_add_full" = "이 그룹은 꽉 차서 이 참가자를 추가할 수 없습니다.";
 "group_participant_add_limit" = "이 참가자는 한 번에 최대 50명까지만 추가할 수 있으므로 추가할 수 없습니다.";
@@ -1665,6 +1666,7 @@
 "set_amount" = "금액 설정";
 "set_as_avatar" = "아바타로 설정";
 "set_disappearing_message_time_to" = "%1$@ 메시지가 사라지는 시간을 %2$@로 설정";
+"set_disappearing_message_time_to_hint" = "%1$@: 사라지는 메시지 시간이 %2$@로 설정되었습니다. 눌러서 사라지는 메시지 설정을 여세요.";
 "set_emergency_create_successfully" = "복구 연락처가 성공적으로 설정되었습니다.";
 "set_new_pin" = "새 PIN 설정";
 "set_or_update_pin_failed" = "PIN 설정 또는 업데이트 실패";
@@ -1944,10 +1946,14 @@
 "unit_hour_count" = "시간";
 "unit_minute" = "분";
 "unit_minute_count" = "분";
+"unit_month" = "개월";
+"unit_month_count" = "개월";
 "unit_second" = "초";
 "unit_second_count" = "초";
 "unit_week" = "주";
 "unit_week_count" = "주";
+"unit_year" = "년";
+"unit_year_count" = "년";
 "unknown" = "알 수 없음";
 "unknown_artist" = "알 수 없는 아티스트";
 "unlimited_authorization_warning" = "이 애플리케이션은 %1$@ 계정(%2$@)의 모든 %3$@에 액세스할 수 있습니다.";

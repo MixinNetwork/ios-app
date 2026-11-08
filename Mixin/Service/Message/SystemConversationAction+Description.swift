@@ -8,7 +8,8 @@ extension SystemConversationAction {
         userFullName: String,
         participantId: String?,
         participantFullName: String?,
-        content: String?
+        content: String?,
+        includesSettingsHint: Bool,
     ) -> String {
         let action = actionName ?? ""
         let isParticipantMyself = participantId == myUserId
@@ -30,14 +31,20 @@ extension SystemConversationAction {
             return R.string.localizable.now_an_addmin(participantName)
         case SystemConversationAction.EXPIRE.rawValue:
             if let expireIn = content?.int64Value {
-                if expireIn == 0 {
-                    return R.string.localizable.disable_disappearing_message(operatorName)
-                } else {
+                if expireIn > 0 {
                     let title = ExpiredMessageDurationFormatter.string(from: expireIn)
-                    return R.string.localizable.set_disappearing_message_time_to(operatorName, title)
+                    return includesSettingsHint
+                        ? R.string.localizable.set_disappearing_message_time_to_hint(operatorName, title)
+                        : R.string.localizable.set_disappearing_message_time_to(operatorName, title)
+                } else {
+                    return includesSettingsHint
+                        ? R.string.localizable.disable_disappearing_message_hint(operatorName)
+                        : R.string.localizable.disable_disappearing_message(operatorName)
                 }
             } else {
-                return R.string.localizable.changed_disappearing_message_settings(operatorName)
+                return includesSettingsHint
+                    ? R.string.localizable.changed_disappearing_message_settings_hint(operatorName)
+                    : R.string.localizable.changed_disappearing_message_settings(operatorName)
             }
         default:
             if let content = content, !content.isEmpty {

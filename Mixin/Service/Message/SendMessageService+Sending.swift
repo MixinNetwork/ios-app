@@ -125,13 +125,16 @@ extension SendMessageService {
                 }
                 SendMessageService.shared.sendWebRTCMessage(message: message, recipientId: recipient.userId)
             } else {
+                // Resolve pending conversations' message expiration from the creation response.
+                let messageExpireIn = ConversationDAO.shared.getConversationStatus(conversationId: msg.conversationId) == ConversationStatus.SUCCESS.rawValue
+                    ? expireIn : 0
                 if let content = msg.content, ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix), content.utf8.count > maxTextMessageContentLength {
                     msg.content = String(content.prefix(maxTextMessageContentLength))
                 }
-                MessageDAO.shared.insertMessage(message: msg, children: children, messageSource: MessageDAO.LocalMessageSource.sendMessage, expireIn: expireIn) {
+                MessageDAO.shared.insertMessage(message: msg, children: children, messageSource: MessageDAO.LocalMessageSource.sendMessage, expireIn: messageExpireIn) {
                     NotificationCenter.default.post(onMainThread: dismissSearchNotification, object: nil)                    
                     if ["_TEXT", "_POST", "_STICKER", "_CONTACT", "_LOCATION"].contains(where: msg.category.hasSuffix) || msg.category == MessageCategory.APP_CARD.rawValue {
-                        SendMessageService.shared.sendMessage(message: msg, data: msg.content, silentNotification: silentNotification, expireIn: expireIn)
+                        SendMessageService.shared.sendMessage(message: msg, data: msg.content, silentNotification: silentNotification, expireIn: messageExpireIn)
                     } else if msg.category.hasSuffix("_IMAGE") {
                         let jobId = SendMessageService.shared.saveUploadJob(message: msg)
                         UploaderQueue.shared.addJob(job: ImageUploadJob(message: msg, jobId: jobId))
@@ -150,7 +153,7 @@ extension SendMessageService {
                         UploaderQueue.shared.addJob(job: job)
                     } else if msg.category.hasSuffix("_LIVE") {
                         let data = msg.content?.base64Encoded()
-                        SendMessageService.shared.sendMessage(message: msg, data: data, expireIn: expireIn)
+                        SendMessageService.shared.sendMessage(message: msg, data: data, expireIn: messageExpireIn)
                     }
                 }
             }

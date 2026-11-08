@@ -124,7 +124,7 @@ class ConversationDataSource {
         } else if let firstUnreadMessageId = MessageDAO.shared.firstUnreadMessage(conversationId: conversationId)?.messageId, let result = MessageDAO.shared.getMessages(conversationId: conversationId, aroundMessageId: firstUnreadMessageId, count: numberOfMessagesOnReloading) {
             (messages, didLoadEarliestMessage, didLoadLatestMessage) = result
             self.firstUnreadMessageId = firstUnreadMessageId
-        } else if let id = ConversationViewController.positions[conversationId]?.messageId, id == MessageItem.encryptionHintMessageId {
+        } else if let id = ConversationViewController.positions[conversationId]?.messageId, [MessageItem.encryptionHintMessageId, MessageItem.disappearingMessageHintID].contains(id) {
             messages = MessageDAO.shared.getFirstNMessages(conversationId: conversationId, count: numberOfMessagesOnReloading)
             didLoadEarliestMessage = true
             didLoadLatestMessage = messages.count < numberOfMessagesOnReloading
@@ -147,20 +147,17 @@ class ConversationDataSource {
             canInsertUnreadHint = false
         }
         var (dates, viewModels) = factory.viewModels(with: messages, fits: layoutSize.width)
-        if canInsertEncryptionHint && didLoadEarliestMessage {
-            let date: String
-            if let firstDate = dates.first {
-                date = firstDate
-            } else {
-                date = DateFormatter.yyyymmdd.string(from: Date())
-                dates.append(date)
-            }
-            let hint = MessageItem.encryptionHintMessage(conversationId: self.conversationId)
-            let viewModel = factory.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutSize.width)
-            if viewModels[date] != nil {
-                viewModels[date]?.insert(viewModel, at: 0)
-            } else {
-                viewModels[date] = [viewModel]
+        if didLoadEarliestMessage {
+            let hints = conversationHintViewModels(fits: layoutSize.width)
+            if !hints.isEmpty {
+                let date: String
+                if let firstDate = dates.first {
+                    date = firstDate
+                } else {
+                    date = DateFormatter.yyyymmdd.string(from: Date())
+                    dates.append(date)
+                }
+                viewModels[date, default: []].insert(contentsOf: hints, at: 0)
             }
         }
         var initialIndexPath: IndexPath?
@@ -176,7 +173,11 @@ class ConversationDataSource {
                 offset -= ConversationDateHeaderView.height
             }
         } else if let unreadHintIndexPath = firstIndexPath(ofDates: dates, viewModels: viewModels, where: { $0.category == MessageCategory.EXT_UNREAD.rawValue }) {
-            if unreadHintIndexPath == IndexPath(row: 1, section: 0), viewModels[dates[0]]?.first?.message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
+            if unreadHintIndexPath.section == 0,
+               let precedingViewModels = viewModels[dates[0]]?.prefix(unreadHintIndexPath.row),
+               !precedingViewModels.isEmpty,
+               precedingViewModels.allSatisfy({ $0.message.category == MessageCategory.EXT_ENCRYPTION.rawValue })
+            {
                 initialIndexPath = IndexPath(row: 0, section: 0)
             } else {
                 initialIndexPath = unreadHintIndexPath
@@ -302,19 +303,17 @@ class ConversationDataSource {
             var messages = MessageDAO.shared.getMessages(conversationId: conversationId, aboveMessage: location, count: requiredCount)
             let didLoadEarliestMessage = messages.count < requiredCount
             self.didLoadEarliestMessage = didLoadEarliestMessage
-            let shouldInsertEncryptionHint = self.canInsertEncryptionHint && didLoadEarliestMessage
             messages = messages.filter{ !self.loadedMessageIds.contains($0.messageId) }
             self.loadedMessageIds.formUnion(messages.map({ $0.messageId }))
             var (dates, viewModels) = self.factory.viewModels(with: messages, fits: layoutWidth)
-            if shouldInsertEncryptionHint {
-                let hint = MessageItem.encryptionHintMessage(conversationId: conversationId)
-                messages.insert(hint, at: 0)
-                let encryptionHintViewModel = self.factory.viewModel(withMessage: hint, style: .bottomSeparator, fits: layoutWidth)
+            if didLoadEarliestMessage {
+                let hints = self.conversationHintViewModels(fits: layoutWidth)
+                messages.insert(contentsOf: hints.map(\.message), at: 0)
                 if let firstDate = dates.first {
-                    viewModels[firstDate]?.insert(encryptionHintViewModel, at: 0)
+                    viewModels[firstDate]?.insert(contentsOf: hints, at: 0)
                 } else if let firstDate = self.dates.first {
                     dates = [firstDate]
-                    viewModels[firstDate] = [encryptionHintViewModel]
+                    viewModels[firstDate] = hints
                 }
             }
             let bottomDistance = DispatchQueue.main.sync {
@@ -481,6 +480,62 @@ class ConversationDataSource {
         return firstIndexPath(ofDates: dates, viewModels: viewModels, where: predicate)
     }
     
+    func refreshConversationHints() {
+        queue.async { [weak self] in
+            guard let self, self.didLoadEarliestMessage, !self.messageProcessingIsCancelled else {
+                return
+            }
+            let hints = self.conversationHintViewModels(fits: self.layoutSize.width)
+            Queue.main.autoSync {
+                guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
+                    return
+                }
+                let firstDate = self.dates.first ?? DateFormatter.yyyymmdd.string(from: Date())
+                let hintIDs = [MessageItem.encryptionHintMessageId, MessageItem.disappearingMessageHintID]
+                let currentHints = self.viewModels[firstDate, default: []].prefix {
+                    hintIDs.contains($0.message.messageId)
+                }
+                if currentHints.count == hints.count,
+                   zip(currentHints, hints).allSatisfy({
+                       $0.message.messageId == $1.message.messageId
+                           && $0.message.content == $1.message.content
+                           && $0.message.expireIn == $1.message.expireIn
+                   })
+                {
+                    return
+                }
+                let anchorIndexPath = tableView.indexPathsForVisibleRows?.sorted().first {
+                    guard let message = self.viewModel(for: $0)?.message else {
+                        return false
+                    }
+                    return !hintIDs.contains(message.messageId)
+                }
+                let anchorID = anchorIndexPath.flatMap { self.viewModel(for: $0)?.message.messageId }
+                let anchorOffset = anchorIndexPath.map { tableView.rectForRow(at: $0).minY - tableView.contentOffset.y }
+                let focusedMessageID = self.focusIndexPath.flatMap { self.viewModel(for: $0)?.message.messageId }
+                self.viewModels[firstDate]?.removeAll { hintIDs.contains($0.message.messageId) }
+                self.viewModels[firstDate, default: []].insert(contentsOf: hints, at: 0)
+                if self.dates.isEmpty {
+                    self.dates.append(firstDate)
+                }
+                if self.viewModels[firstDate]?.isEmpty == true {
+                    self.viewModels[firstDate] = nil
+                    self.dates.removeFirst()
+                }
+                if let focusedMessageID {
+                    self.focusIndexPath = self.indexPath(where: { $0.messageId == focusedMessageID }) ?? self.lastIndexPath
+                }
+                tableView.reloadData()
+                if let anchorID, let anchorOffset,
+                   let indexPath = self.indexPath(where: { $0.messageId == anchorID })
+                {
+                    tableView.setContentOffsetYSafely(tableView.rectForRow(at: indexPath).minY - anchorOffset)
+                }
+                self.selectTableViewRowsWithPreviousSelection()
+            }
+        }
+    }
+    
     func postponeMessagePinningUpdate(with messageId: String) {
         pendingPinningUpdateMessageId = messageId
     }
@@ -509,6 +564,7 @@ extension ConversationDataSource {
             reload()
         case .update(let conversation):
             self.conversation = conversation
+            refreshConversationHints()
         case .updateConversationStatus(let status):
             self.conversation.status = status.rawValue
         case .updateGroupIcon(let iconUrl):
@@ -527,10 +583,17 @@ extension ConversationDataSource {
             updateMessage(messageId: messageId)
         case .updateExpireIn(let expireIn, let messageId):
             conversation.expireIn = expireIn
+            conversation.isExpirationResolved = true
+            refreshConversationHints()
             if let messageId = messageId {
                 updateMessage(messageId: messageId)
             }
-        case .updateConversation, .startedUpdateConversation:
+        case .updateConversation(let response):
+            conversation.expireIn = response.expireIn
+            conversation.status = ConversationStatus.SUCCESS.rawValue
+            conversation.isExpirationResolved = true
+            refreshConversationHints()
+        case .startedUpdateConversation:
             break
         }
     }
@@ -544,6 +607,11 @@ extension ConversationDataSource {
         }
         guard let message = notification.userInfo?[MessageDAO.UserInfoKey.message] as? MessageItem else {
             return
+        }
+        if message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue,
+           message.actionName == SystemConversationAction.EXPIRE.rawValue
+        {
+            refreshConversationHints()
         }
         guard !loadedMessageIds.contains(message.messageId) else {
             return
@@ -766,11 +834,22 @@ extension ConversationDataSource: MessageViewModelFactoryDelegate {
 // MARK: - Private works
 extension ConversationDataSource {
     
-    private var canInsertEncryptionHint: Bool {
-        if let ownerUser = ownerUser, ownerUser.isBot {
-            return false
-        } else {
-            return true
+    private func conversationHintViewModels(fits width: CGFloat) -> [MessageViewModel] {
+        var messages: [MessageItem] = []
+        if category == .group || !(ownerUser?.isBot ?? conversation.ownerIsBot) {
+            messages.append(.encryptionHintMessage(conversationId: conversationId))
+        }
+        if conversation.isExpirationResolved,
+           !MessageDAO.shared.hasExpirationSettingsMessage(conversationID: conversationId)
+        {
+            messages.append(.disappearingMessageHint(
+                conversationID: conversationId,
+                expireIn: conversation.expireIn,
+                isGroup: category == .group,
+            ))
+        }
+        return messages.map {
+            factory.viewModel(withMessage: $0, style: .bottomSeparator, fits: width)
         }
     }
     
@@ -996,6 +1075,7 @@ extension ConversationDataSource {
 extension MessageItem {
     
     static let encryptionHintMessageId = "encryption_hint"
+    static let disappearingMessageHintID = "disappearing_message_hint"
     
     static func encryptionHintMessage(conversationId: String) -> MessageItem {
         let message = MessageItem(messageId: encryptionHintMessageId,
@@ -1006,6 +1086,30 @@ extension MessageItem {
                                   status: MessageStatus.READ.rawValue,
                                   createdAt: "")
         return message
+    }
+    
+    static func disappearingMessageHint(conversationID: String, expireIn: Int64, isGroup: Bool) -> MessageItem {
+        let text: String
+        if expireIn > 0 {
+            let duration = ExpiredMessageDurationFormatter.string(from: expireIn)
+            text = isGroup
+                ? R.string.localizable.group_disappearing_message_enabled_hint(duration)
+                : R.string.localizable.chat_disappearing_message_enabled_hint(duration)
+        } else {
+            text = isGroup
+                ? R.string.localizable.group_disappearing_message_disabled_hint()
+                : R.string.localizable.chat_disappearing_message_disabled_hint()
+        }
+        return MessageItem(
+            messageId: disappearingMessageHintID,
+            conversationId: conversationID,
+            userId: "",
+            category: MessageCategory.EXT_ENCRYPTION.rawValue,
+            content: text,
+            status: MessageStatus.READ.rawValue,
+            createdAt: "",
+            expireIn: expireIn,
+        )
     }
     
 }

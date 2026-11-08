@@ -287,6 +287,7 @@
 "change_your_app_language" = "Change your app language";
 "changed" = "Changed";
 "changed_disappearing_message_settings" = "%@ changed disappearing message settings.";
+"changed_disappearing_message_settings_hint" = "%@ changed disappearing message settings. Tap to open disappearing message settings.";
 "changing_pin_terminated_unexpectedly" = "Changing PIN terminated unexpectedly, click \"Continue\" to complete the change";
 "chat_background" = "Chat Background";
 "chat_backup" = "Chat Backup";
@@ -295,6 +296,8 @@
 "chat_call_warning_voice" = "Can't record voice messages during a Mixin call.";
 "chat_decryption_failed" = "This message decryption failed, please upgrade Mixin to the latest version.";
 "chat_decryption_failed_hint" = "Waiting for %@ to get online and establish an encrypted session.";
+"chat_disappearing_message_disabled_hint" = "Disappearing messages haven’t been enabled for this chat. Click to set them up or learn more.";
+"chat_disappearing_message_enabled_hint" = "Disappearing messages are set to %@ for this chat. Click to change it or get more information.";
 "chat_group_add" = "%1$@ added %2$@";
 "chat_group_call_decline" = "%@ has declined group call";
 "chat_group_call_did_not_answer" = "%@ did not answer group call";
@@ -549,13 +552,9 @@
 "disable" = "Disable";
 "disable_biometric_pay_confirmation" = "Disable %@ Pay?";
 "disable_disappearing_message" = "%@ disabled disappearing message";
+"disable_disappearing_message_hint" = "%@ disabled disappearing message. Click to set them up or learn more.";
 "disappearing_message" = "Disappearing Messages";
 "disappearing_message_hint" = "When enabled, new messages sent and received in this chat will disappear after they have been seen. Read the document to learn more.";
-"disappearing_option_1" = "30 seconds";
-"disappearing_option_2" = "10 minutes";
-"disappearing_option_3" = "2 hours";
-"disappearing_option_4" = "1 day";
-"disappearing_option_5" = "1 week";
 "discard" = "Discard";
 "disconnect" = "Disconnect";
 "disconnected" = "Disconnected";
@@ -767,6 +766,8 @@
 "group_call_has_been_declined" = "Group call has been declined";
 "group_call_participants_limit_hint" = "Group calling allows up to %d participants to call each other";
 "group_description" = "Group Description";
+"group_disappearing_message_disabled_hint" = "Disappearing messages haven’t been enabled for this group. Click to set them up or learn more.";
+"group_disappearing_message_enabled_hint" = "This group has set the disappearing message time to %@. Click to change it or get more information.";
 "group_name" = "Group Name";
 "group_participant_add_full" = "You can’t add this participant because this group is full.";
 "group_participant_add_limit" = "You can’t add this participant because only add up to 50 at a time.";
@@ -1665,6 +1666,7 @@
 "set_amount" = "Set Amount";
 "set_as_avatar" = "Set as Avatar";
 "set_disappearing_message_time_to" = "%1$@ set disappearing message time to %2$@";
+"set_disappearing_message_time_to_hint" = "%1$@ set disappearing message time to %2$@, click to change it or get more information.";
 "set_emergency_create_successfully" = "Recovery contact set successfully";
 "set_new_pin" = "Set a new PIN";
 "set_or_update_pin_failed" = "Set or update PIN failed";
@@ -1944,10 +1946,14 @@
 "unit_hour_count" = "hours";
 "unit_minute" = "minute";
 "unit_minute_count" = "minutes";
+"unit_month" = "month";
+"unit_month_count" = "months";
 "unit_second" = "second";
 "unit_second_count" = "seconds";
 "unit_week" = "week";
 "unit_week_count" = "weeks";
+"unit_year" = "year";
+"unit_year_count" = "years";
 "unknown" = "Unknown";
 "unknown_artist" = "Unknown Artist";
 "unlimited_authorization_warning" = "This application can access all %3$@ in your %1$@ account (%2$@).";

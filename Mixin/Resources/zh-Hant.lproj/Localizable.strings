@@ -287,6 +287,7 @@
 "change_your_app_language" = "設定語言";
 "changed" = "已修改";
 "changed_disappearing_message_settings" = "%@修改了限時訊息設定";
+"changed_disappearing_message_settings_hint" = "%@修改了限時訊息設定。點選開啟限時訊息設定。";
 "changing_pin_terminated_unexpectedly" = "更新 PIN 意外中止，點繼續完成 PIN 修改";
 "chat_background" = "聊天背景";
 "chat_backup" = "聊天記錄備份";
@@ -295,6 +296,8 @@
 "chat_call_warning_voice" = "無法在 Mixin 通話時錄製語音訊息";
 "chat_decryption_failed" = "此資訊解密失敗，請將 Mixin 升級到最新版本。";
 "chat_decryption_failed_hint" = "等待%@上線後建立加密會話。";
+"chat_disappearing_message_disabled_hint" = "本會話尚未啟用限時訊息。點選設定或瞭解更多。";
+"chat_disappearing_message_enabled_hint" = "本會話已將限時訊息時長設定為 %@。點選修改設定或瞭解詳情。";
 "chat_group_add" = "%1$@添加了%2$@";
 "chat_group_call_decline" = "%@已拒絕群組語音";
 "chat_group_call_did_not_answer" = "%@未接聽群組語音";
@@ -549,13 +552,9 @@
 "disable" = "停用";
 "disable_biometric_pay_confirmation" = "確定暫停使用%@支付？";
 "disable_disappearing_message" = "%@停用了限時訊息";
+"disable_disappearing_message_hint" = "%@關閉了限時訊息。點選開啟限時訊息設定。";
 "disappearing_message" = "限時訊息";
 "disappearing_message_hint" = "啟用後，在此聊天中傳送和接收的新資訊在被看到後會消失，閱讀檔案以瞭解更多。";
-"disappearing_option_1" = "30 秒";
-"disappearing_option_2" = "10 分";
-"disappearing_option_3" = "2 小時";
-"disappearing_option_4" = "1 天";
-"disappearing_option_5" = "1 週";
 "discard" = "廢棄";
 "disconnect" = "斷開連線";
 "disconnected" = "已斷開";
@@ -767,6 +766,8 @@
 "group_call_has_been_declined" = "已拒絕通話";
 "group_call_participants_limit_hint" = "支援最多 %d 人同時通話";
 "group_description" = "群組公告";
+"group_disappearing_message_disabled_hint" = "本群尚未啟用限時訊息。點選設定或瞭解更多。";
+"group_disappearing_message_enabled_hint" = "本群已將限時訊息時長設定為 %@。點選修改設定或瞭解詳情。";
 "group_name" = "群組名稱";
 "group_participant_add_full" = "不能再新增成員，群已經滿員了！";
 "group_participant_add_limit" = "不能再新增成員，一次最多新增 50 個。";
@@ -1665,6 +1666,7 @@
 "set_amount" = "設定金額";
 "set_as_avatar" = "設定為頭像";
 "set_disappearing_message_time_to" = "%1$@將限時訊息設定為 %2$@";
+"set_disappearing_message_time_to_hint" = "%1$@將限時訊息設定為 %2$@。點選開啟限時訊息設定。";
 "set_emergency_create_successfully" = "設定恢復聯絡人成功";
 "set_new_pin" = "設定新的 PIN";
 "set_or_update_pin_failed" = "設定或更新 PIN 失敗";
@@ -1944,10 +1946,14 @@
 "unit_hour_count" = "小時";
 "unit_minute" = "分";
 "unit_minute_count" = "分";
+"unit_month" = "個月";
+"unit_month_count" = "個月";
 "unit_second" = "秒";
 "unit_second_count" = "秒";
 "unit_week" = "週";
 "unit_week_count" = "週";
+"unit_year" = "年";
+"unit_year_count" = "年";
 "unknown" = "未知";
 "unknown_artist" = "未知藝術家";
 "unlimited_authorization_warning" = "這個應用可以提取你 %1$@ 賬號（%2$@）裡所有的 %3$@ 資產。";

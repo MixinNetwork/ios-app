@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,6 +11,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NewGroupViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="expirationLabel" destination="t95-mW-a3m" id="out-expiration-label"/>
+                <outlet property="expirationButton" destination="lBt-dY-h1g" id="out-expiration-button"/>
                 <outlet property="createButton" destination="jYQ-cb-aJp" id="xjV-Lq-Nwv"/>
                 <outlet property="groupImageView" destination="uxH-Bp-FMP" id="6FI-Ib-meR"/>
                 <outlet property="nameTextField" destination="wE1-MX-azn" id="6f8-5d-cfk"/>
@@ -23,6 +25,24 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Disappearing Messages" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t95-mW-a3m">
+                    <rect key="frame" x="36" y="335.66666666666669" width="245" height="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" name="text_tertiary"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lBt-dY-h1g">
+                    <rect key="frame" x="281" y="322.33333333333331" width="92" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="gOG-DJ-z0s"/>
+                    </constraints>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" image="ic_accessory_disclosure" imagePlacement="trailing" title="1 week" imagePadding="12">
+                        <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                        <directionalEdgeInsets key="contentInsets" top="0.0" leading="8" bottom="0.0" trailing="22"/>
+                        <color key="baseForegroundColor" name="text_quaternary"/>
+                    </buttonConfiguration>
+                </button>
                 <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Np4-ty-Qu5">
                     <rect key="frame" x="20" y="148" width="353" height="169.66666666666663"/>
                     <subviews>
@@ -110,16 +130,22 @@
             <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="jYQ-cb-aJp" firstAttribute="centerX" secondItem="m4X-Dj-phD" secondAttribute="centerX" id="KH1-eQ-yyZ"/>
+                <constraint firstItem="lBt-dY-h1g" firstAttribute="trailing" secondItem="Np4-ty-Qu5" secondAttribute="trailing" id="Mcf-9P-PEs"/>
                 <constraint firstItem="m4X-Dj-phD" firstAttribute="trailing" secondItem="Np4-ty-Qu5" secondAttribute="trailing" constant="20" id="RdI-9j-JP0"/>
+                <constraint firstItem="t95-mW-a3m" firstAttribute="top" secondItem="Np4-ty-Qu5" secondAttribute="bottom" constant="18" id="SuD-AO-0Sl"/>
+                <constraint firstItem="lBt-dY-h1g" firstAttribute="centerY" secondItem="t95-mW-a3m" secondAttribute="centerY" id="Wme-rl-a3d"/>
+                <constraint firstItem="lBt-dY-h1g" firstAttribute="leading" secondItem="t95-mW-a3m" secondAttribute="trailing" id="aFf-Mv-7Tt"/>
                 <constraint firstAttribute="bottom" secondItem="jYQ-cb-aJp" secondAttribute="bottom" priority="750" placeholder="YES" id="duM-o4-Zo0"/>
                 <constraint firstItem="Np4-ty-Qu5" firstAttribute="top" secondItem="m4X-Dj-phD" secondAttribute="top" constant="30" id="fdY-N0-SyB"/>
                 <constraint firstItem="Np4-ty-Qu5" firstAttribute="leading" secondItem="m4X-Dj-phD" secondAttribute="leading" constant="20" id="m5y-iK-fXG"/>
+                <constraint firstItem="t95-mW-a3m" firstAttribute="leading" secondItem="Np4-ty-Qu5" secondAttribute="leading" constant="16" id="n3W-1M-Bnf"/>
                 <constraint firstItem="m4X-Dj-phD" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="jYQ-cb-aJp" secondAttribute="bottom" id="vbE-vJ-P5z"/>
             </constraints>
             <point key="canvasLocation" x="-57" y="42"/>
         </view>
     </objects>
     <resources>
+        <image name="ic_accessory_disclosure" width="6" height="10"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
@@ -129,8 +155,11 @@
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
+        <namedColor name="text_quaternary">
+            <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

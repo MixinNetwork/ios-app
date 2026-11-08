@@ -163,6 +163,8 @@ class MessageViewModelFactory {
             } else if message.category == MessageCategory.EXT_UNREAD.rawValue {
                 viewModel = MessageViewModel(message: message)
                 viewModel.cellHeight = 38
+            } else if message.messageId == MessageItem.disappearingMessageHintID {
+                viewModel = SystemMessageViewModel(message: message)
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 viewModel = EncryptionHintViewModel(message: message)
             } else if MessageCategory.krakenCategories.contains(message.category) {

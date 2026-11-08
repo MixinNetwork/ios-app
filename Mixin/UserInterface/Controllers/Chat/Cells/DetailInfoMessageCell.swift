@@ -19,15 +19,6 @@ class DetailInfoMessageCell: MessageCell {
     let identityIconImageView = SDAnimatedImageView()
     let highlightAnimationDuration: TimeInterval = 0.2
     
-    lazy var expiredIconView: UIImageView = {
-        let view = UIImageView(image: R.image.ic_chat_clock_fill())
-        messageContentView.addSubview(view)
-        expiredIconViewIfLoaded = view
-        return view
-    }()
-    
-    private(set) weak var expiredIconViewIfLoaded: UIImageView?
-    
     override func render(viewModel: MessageViewModel) {
         super.render(viewModel: viewModel)
         timeLabel.font = MessageFontSet.time.scaled
@@ -62,13 +53,6 @@ class DetailInfoMessageCell: MessageCell {
             timeLabel.frame = viewModel.timeFrame
             timeLabel.text = viewModel.time
             updateStatusImageView()
-            
-            if viewModel.message.isExpiredMessage {
-                expiredIconView.frame = viewModel.expiredIconFrame
-                expiredIconView.isHidden = false
-            } else {
-                expiredIconViewIfLoaded?.isHidden = true
-            }
         }
     }
     

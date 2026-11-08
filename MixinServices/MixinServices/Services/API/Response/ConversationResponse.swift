@@ -54,19 +54,21 @@ public struct ConversationResponse: Codable {
             Participant(userId: userId, role: ParticipantRole.OWNER.rawValue, createdAt: createdAt),
             Participant(userId: myUserId, role: "", createdAt: createdAt)
         ]
-        self.init(conversationId: conversationId,
-                  name: "",
-                  category: ConversationCategory.CONTACT.rawValue,
-                  iconUrl: avatarUrl,
-                  announcement: "",
-                  createdAt: Date().toUTCString(),
-                  participants: participants,
-                  participantSessions: nil,
-                  codeUrl: "",
-                  creatorId: userId,
-                  muteUntil: "",
-                  circles: [],
-                  expireIn: 0)
+        self.init(
+            conversationId: conversationId,
+            name: "",
+            category: ConversationCategory.CONTACT.rawValue,
+            iconUrl: avatarUrl,
+            announcement: "",
+            createdAt: Date().toUTCString(),
+            participants: participants,
+            participantSessions: nil,
+            codeUrl: "",
+            creatorId: userId,
+            muteUntil: "",
+            circles: [],
+            expireIn: Conversation.defaultExpirationDuration,
+        )
     }
     
 }

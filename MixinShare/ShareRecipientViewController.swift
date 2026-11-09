@@ -508,7 +508,13 @@ extension ShareRecipientViewController {
             }
         }
         
-        let expireIn = ConversationDAO.shared.getExpireIn(conversationId: msg.conversationId) ?? 0
+        // Resolve pending conversations' message expiration from the creation response.
+        let expireIn: Int64
+        if ConversationDAO.shared.getConversationStatus(conversationId: msg.conversationId) == ConversationStatus.SUCCESS.rawValue {
+            expireIn = ConversationDAO.shared.getExpireIn(conversationId: msg.conversationId) ?? 0
+        } else {
+            expireIn = 0
+        }
         MessageDAO.shared.insertMessage(message: msg, messageSource: MessageDAO.LocalMessageSource.shareExtension, expireIn: expireIn)
 
         if ["_TEXT", "_POST"].contains(where: msg.category.hasSuffix) {

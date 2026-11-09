@@ -72,7 +72,7 @@ public final class Web3TokenDAO: Web3DAO {
         if !assetIDs.isEmpty {
             query.append(literal: " AND t.asset_id IN \(assetIDs)")
         }
-        query.append(sql: " ORDER BY t.amount DESC LIMIT 1")
+        query.append(sql: " ORDER BY CAST(t.amount AS REAL) DESC LIMIT 1")
         return db.select(with: query)
     }
     

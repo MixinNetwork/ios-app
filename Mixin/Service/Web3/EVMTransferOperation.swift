@@ -299,7 +299,7 @@ class EVMTransferOperation: Web3TransferOperation {
         }()
         
         let nonce: Int
-        let maxNonce = Web3RawTransactionDAO.shared.maxNonce(
+        let maxNonce = Web3RawTransactionDAO.shared.maxEVMNativeNonce(
             walletID: wallet.walletID,
             chainID: mixinChainID
         )

@@ -67,7 +67,6 @@ struct PerpetualOrderViewModel {
     let orderValueInToken: String
     let entryPrice: String
     let date: String
-    let offset: String
     
     init?(wallet: Wallet, order: PerpetualOrderItem) {
         let side = PerpetualOrderSide(rawValue: order.side) ?? .short
@@ -245,12 +244,11 @@ struct PerpetualOrderViewModel {
         } else {
             order.entryPrice
         }
-        self.date = if let date = DateFormatter.iso8601Full.date(from: order.updatedAt) {
+        self.date = if let date = DateFormatter.iso8601Full.date(from: order.createdAt) {
             DateFormatter.dateFull.string(from: date)
         } else {
-            order.updatedAt
+            order.createdAt
         }
-        self.offset = order.updatedAt
     }
     
 }

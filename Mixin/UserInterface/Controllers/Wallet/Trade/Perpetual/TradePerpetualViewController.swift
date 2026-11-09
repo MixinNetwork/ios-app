@@ -239,7 +239,7 @@ final class TradePerpetualViewController: UIViewController {
                 otherItemCount: generalItemCount,
             )
             let activities = PerpsOrderDAO.shared.orderItems(
-                offsetUpdatedAt: nil,
+                offsetCreatedAt: nil,
                 limit: generalItemCount
             ).compactMap { order in
                 PerpetualOrderViewModel(wallet: wallet, order: order)
@@ -839,7 +839,7 @@ extension TradePerpetualViewController {
         let limit = maxItemCount + 1
         DispatchQueue.global().async { [weak self, wallet] in
             let activities = PerpsOrderDAO.shared.orderItems(
-                offsetUpdatedAt: nil,
+                offsetCreatedAt: nil,
                 limit: limit
             ).compactMap { history in
                 PerpetualOrderViewModel(wallet: wallet, order: history)

@@ -56,7 +56,13 @@ extension Web3RawTransaction: TableRecord, DatabaseColumnConvertible, Persistabl
 
 extension Web3RawTransaction {
     
-    private static let gaslessSponsorHashPrefix = "gasless:sponsor:"
+    static let gaslessHashPrefix = "gasless:"
+    
+}
+
+extension Web3RawTransaction {
+    
+    private static let gaslessSponsorHashPrefix = gaslessHashPrefix + "sponsor:"
     
     public var isGaslessSponsorTransaction: Bool {
         raw.hasPrefix(Self.gaslessSponsorHashPrefix)
@@ -87,7 +93,7 @@ extension Web3RawTransaction {
 
 extension Web3RawTransaction {
     
-    private static let gaslessBroadcastHashPrefix = "gasless:broadcast:"
+    private static let gaslessBroadcastHashPrefix = gaslessHashPrefix + "broadcast:"
     
     public var isGaslessBroadcastTransaction: Bool {
         raw.hasPrefix(Self.gaslessBroadcastHashPrefix)

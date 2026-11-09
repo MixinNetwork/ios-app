@@ -130,7 +130,7 @@ final class PerpetualActivitiesViewController: UIViewController {
     private func loadNextPage(offset: String?) {
         DispatchQueue.global().async { [wallet, pageCount, weak self] in
             let orderItems = PerpsOrderDAO.shared.orderItems(
-                offsetUpdatedAt: offset,
+                offsetCreatedAt: offset,
                 limit: pageCount
             )
             let viewModels = orderItems.compactMap { item in
@@ -243,7 +243,7 @@ extension PerpetualActivitiesViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath == loadNextPageIndexPath {
             loadNextPageIndexPath = nil
-            if let offset = viewModels?.last?.offset {
+            if let offset = viewModels?.last?.order.createdAt {
                 loadNextPage(offset: offset)
             }
         }

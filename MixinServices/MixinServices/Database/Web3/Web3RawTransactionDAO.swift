@@ -23,16 +23,21 @@ public final class Web3RawTransactionDAO: Web3DAO {
         """, arguments: [walletID])
     }
     
-    public func maxNonce(walletID: String, chainID: String) -> String? {
-        db.select(with: """
+    public func maxEVMNativeNonce(walletID: String, chainID: String) -> String? {
+        return db.select(with: """
         SELECT nonce
         FROM raw_transactions 
         WHERE chain_id = ?
             AND \(Web3RawTransaction.CodingKeys.state.rawValue) = 'pending'
             AND account IN (SELECT DISTINCT destination FROM addresses WHERE wallet_id = ?)
-        ORDER BY nonce DESC
+            AND raw NOT LIKE ?
+        ORDER BY CAST(nonce AS INTEGER) DESC
         LIMIT 1
-        """, arguments: [chainID, walletID])
+        """, arguments: [
+            chainID,
+            walletID,
+            Web3RawTransaction.gaslessHashPrefix + "%",
+        ])
     }
     
     public func rawTransactionExists(hash: String) -> Bool {

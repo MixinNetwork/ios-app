@@ -106,7 +106,13 @@ class PeerCall: Call {
                                                   category: category,
                                                   mediaDuration: duration,
                                                   status: status)
-            let expireIn = ConversationDAO.shared.getExpireIn(conversationId: self.conversationId) ?? 0
+            // Only use expiration confirmed for a successfully created conversation.
+            let expireIn: Int64
+            if ConversationDAO.shared.getConversationStatus(conversationId: self.conversationId) == ConversationStatus.SUCCESS.rawValue {
+                expireIn = ConversationDAO.shared.getExpireIn(conversationId: self.conversationId) ?? 0
+            } else {
+                expireIn = 0
+            }
             MessageDAO.shared.insertMessage(message: end, messageSource: MessageDAO.LocalMessageSource.peerCall, expireIn: expireIn)
             
             let userInfo: [String: Any] = [

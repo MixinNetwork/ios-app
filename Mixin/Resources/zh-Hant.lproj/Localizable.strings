@@ -584,6 +584,7 @@
 "edit_note" = "修改轉賬備註";
 "editing_address" = "正在修改地址";
 "editing_address_failed" = "修改地址失敗";
+"eip712_invalid_chain_id" = "結構化訊息的鏈 ID 無效，或與簽署網路不一致。";
 "emergency_contact" = "恢復聯絡人";
 "enable" = "啟用";
 "enable_bioauth_description" = "想要啟用%@支付嗎？啟用後，轉賬時可驗證%@快速完成付款。";
@@ -828,6 +829,7 @@
 "invalid_address" = "無效的地址";
 "invalid_candidate" = "無效的 Candidate";
 "invalid_format" = "格式無效";
+"invalid_gasless_transaction" = "免 Gas 交易無效，請重試。";
 "invalid_height" = "高度無效";
 "invalid_malformed_address_eos_hint" = "地址格式錯誤。Mixin 不支援提現到 EOS 合約地址！";
 "invalid_malformed_address_hint" = "地址格式錯誤。請輸入正確的 %@ 地址";

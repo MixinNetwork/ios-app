@@ -1,7 +1,5 @@
 import Foundation
 import CryptoKit
-import BigInt
-import secp256k1
 import MixinServices
 
 // https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
@@ -14,20 +12,26 @@ struct ExtendedKey {
         case ed25519
     }
     
-    private static let secp256k1Order = BigUInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", radix: 16)!
-    
     let key: Data
     let chainCode: Data
     
-    init(seed: Data, curve: Curve) throws {
+    init(seed: Data, curve: Curve) throws(Error) {
         let key: Data, chainCode: Data
         switch curve {
         case .secp256k1:
-            (key, chainCode) = Self.hmacSHA512(seed, key: "Bitcoin seed".data(using: .utf8)!)
-            let parse256Key = BigUInt(key)
-            if parse256Key.isZero || parse256Key >= Self.secp256k1Order {
-                throw Error.invalidMasterKey
+            var result = BitcoinExtendedPrivateKey()
+            let status = seed.withUnsafeBytes { bytes in
+                bitcoin_bip32_master_key(
+                    bytes.bindMemory(to: UInt8.self).baseAddress,
+                    bytes.count,
+                    &result,
+                )
             }
+            guard status == BitcoinErrorCodeSuccess else {
+                throw .sdk(Int32(status.rawValue))
+            }
+            key = withUnsafeBytes(of: result.key, Data.init(_:))
+            chainCode = withUnsafeBytes(of: result.chain_code, Data.init(_:))
         case .ed25519:
             (key, chainCode) = Self.hmacSHA512(seed, key: "ed25519 seed".data(using: .utf8)!)
         }
@@ -35,6 +39,7 @@ struct ExtendedKey {
     }
     
     private init(key: Data, chainCode: Data) {
+        precondition(key.count == 32 && chainCode.count == 32)
         self.key = key
         self.chainCode = chainCode
     }
@@ -53,15 +58,7 @@ struct ExtendedKey {
 extension ExtendedKey {
     
     enum Error: Swift.Error {
-        case invalidMasterKey
-        case missingStorage
-        case createContext
-        case randomizeContext
-        case verifyPrivateKey
-        case createPublicKey
-        case serializePublicKey
-        case invalidIndex
-        case invalidKI
+        case sdk(Int32)
     }
     
     enum Index {
@@ -80,89 +77,36 @@ extension ExtendedKey {
         
     }
     
-    func deriveUsingSecp256k1(path: DerivationPath) throws -> ExtendedKey {
-        try path.indices.reduce(self) { key, index in
-            try key.privateKeyUsingSecp256k1(index: index)
+    func deriveUsingSecp256k1(path: DerivationPath) throws(Error) -> ExtendedKey {
+        var input = BitcoinExtendedPrivateKey()
+        _ = withUnsafeMutableBytes(of: &input.key) { key.copyBytes(to: $0) }
+        _ = withUnsafeMutableBytes(of: &input.chain_code) { chainCode.copyBytes(to: $0) }
+        var result = BitcoinExtendedPrivateKey()
+        let status = path.indices.map(\.value).withUnsafeBufferPointer { indices in
+            bitcoin_bip32_derive_key(&input, indices.baseAddress, indices.count, &result)
         }
+        guard status == BitcoinErrorCodeSuccess else {
+            throw .sdk(Int32(status.rawValue))
+        }
+        return ExtendedKey(
+            key: withUnsafeBytes(of: result.key, Data.init(_:)),
+            chainCode: withUnsafeBytes(of: result.chain_code, Data.init(_:)),
+        )
     }
     
-    func publicKey() throws -> Data {
-        try Self.point(key)
-    }
-    
-    private func privateKeyUsingSecp256k1(index: Index) throws -> ExtendedKey {
-        let n = Self.secp256k1Order
-        let il, ir: Data
-        switch index {
-        case .normal:
-            let kPoint = try Self.point(key)
-            let data = kPoint + index.value.data(endianness: .big)
-            (il, ir) = Self.hmacSHA512(data, key: chainCode)
-        case .hardened:
-            let data = Data([0x00] + key + index.value.data(endianness: .big))
-            (il, ir) = Self.hmacSHA512(data, key: chainCode)
+    func publicKey() throws(Error) -> Data {
+        var result = BitcoinCompressedPublicKey()
+        let status = key.withUnsafeBytes { bytes in
+            bitcoin_compressed_public_key(
+                bytes.bindMemory(to: UInt8.self).baseAddress,
+                bytes.count,
+                &result,
+            )
         }
-        let parse256IL = BigUInt(il)
-        guard parse256IL < n else {
-            throw Error.invalidIndex
+        guard status == BitcoinErrorCodeSuccess else {
+            throw .sdk(Int32(status.rawValue))
         }
-        let kPar = BigUInt(key)
-        let ki = (parse256IL + kPar) % n
-        guard !ki.isZero else {
-            throw Error.invalidIndex
-        }
-        let kiData = ki.serialize()
-        let key: Data
-        if kiData.count < 32 {
-            key = Data(repeating: 0, count: 32 - kiData.count) + kiData
-        } else if kiData.count == 32 {
-            key = kiData
-        } else {
-            throw Error.invalidKI
-        }
-        return ExtendedKey(key: key, chainCode: ir)
-    }
-    
-    private static func point(_ data: Data) throws -> Data {
-        let signAndVerify = UInt32(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY)
-        guard let ctx = secp256k1_context_create(signAndVerify) else {
-            throw Error.createContext
-        }
-        defer {
-            secp256k1_context_destroy(ctx)
-        }
-        
-        guard
-            let contextSeed = Data(withNumberOfSecuredRandomBytes: 32),
-            contextSeed.withUnsafeUInt8Pointer({ secp256k1_context_randomize(ctx, $0) }) == 1
-        else {
-            throw Error.randomizeContext
-        }
-        
-        return try data.withUnsafeUInt8Pointer { data in
-            guard let data else {
-                throw Error.missingStorage
-            }
-            guard secp256k1_ec_seckey_verify(ctx, data) == 1 else {
-                throw Error.verifyPrivateKey
-            }
-            
-            let publicKey = UnsafeMutablePointer<secp256k1_pubkey>.allocate(capacity: 1)
-            defer {
-                publicKey.deallocate()
-            }
-            guard secp256k1_ec_pubkey_create(ctx, publicKey, data) == 1 else {
-                throw Error.createPublicKey
-            }
-            
-            let compressed = UInt32(SECP256K1_EC_COMPRESSED)
-            var outputLength = 33
-            let output = malloc(outputLength)!
-            guard secp256k1_ec_pubkey_serialize(ctx, output, &outputLength, publicKey, compressed) == 1 else {
-                throw Error.serializePublicKey
-            }
-            return Data(bytesNoCopy: output, count: outputLength, deallocator: .free)
-        }
+        return withUnsafeBytes(of: result.bytes, Data.init(_:))
     }
     
 }

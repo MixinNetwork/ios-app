@@ -1,5 +1,4 @@
 import Foundation
-import web3
 import MixinServices
 import TIP
 
@@ -136,9 +135,7 @@ extension BIP39Mnemonics {
     func checkedDerivationForEVM(path: DerivationPath) throws -> Derivation {
         var error: NSError?
         let privateKey = try secp256k1MasterKey.deriveUsingSecp256k1(path: path)
-        let keyStorage = InPlaceKeyStorage(raw: privateKey.key)
-        let account = try EthereumAccount(keyStorage: keyStorage)
-        let evmAddress = account.address.toChecksumAddress()
+        let evmAddress = try EVM.address(privateKey: privateKey.key).checksumString
         let crossCheckEVMAddress = BlockchainGenerateEvmAddressFromMnemonic(
             joinedPhrases,
             path.string,

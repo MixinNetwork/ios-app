@@ -737,39 +737,38 @@ extension Web3TransactionViewController {
             }
         case .evm:
             DispatchQueue.global().async { [wallet, weak self] in
-                let speedUpOperation: Web3TransferOperation?
-                let cancelOperation: Web3TransferOperation?
+                var speedUpOperation: Web3TransferOperation?
+                var cancelOperation: Web3TransferOperation?
                 if let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID),
                    let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash),
                    !rawTransaction.isGaslessSponsorTransaction,
-                   !rawTransaction.isGaslessBroadcastTransaction,
-                   let transaction = EIP1559Transaction(rawTransaction: rawTransaction.raw)
+                   !rawTransaction.isGaslessBroadcastTransaction
                 {
                     do {
-                        speedUpOperation = try EVMSpeedUpOperation(
-                            wallet: wallet,
-                            fromAddress: fromAddress,
-                            transaction: transaction,
-                            chain: chain
-                        )
+                        let transaction = try EVM.Transaction(rawTransaction: rawTransaction.raw)
+                        do {
+                            speedUpOperation = try EVMSpeedUpOperation(
+                                wallet: wallet,
+                                fromAddress: fromAddress,
+                                transaction: transaction,
+                                chain: chain
+                            )
+                        } catch {
+                            Logger.general.debug(category: "Web3Txn", message: "Speed up failed: \(error)")
+                        }
+                        do {
+                            cancelOperation = try EVMCancelOperation(
+                                wallet: wallet,
+                                fromAddress: fromAddress,
+                                transaction: transaction,
+                                chain: chain
+                            )
+                        } catch {
+                            Logger.general.debug(category: "Web3Txn", message: "Cancel failed: \(error)")
+                        }
                     } catch {
-                        Logger.general.debug(category: "Web3Txn", message: "Speed up failed: \(error)")
-                        speedUpOperation = nil
+                        Logger.general.debug(category: "Web3Txn", message: "Decode EVM transaction failed: \(error)")
                     }
-                    do {
-                        cancelOperation = try EVMCancelOperation(
-                            wallet: wallet,
-                            fromAddress: fromAddress,
-                            transaction: transaction,
-                            chain: chain
-                        )
-                    } catch {
-                        Logger.general.debug(category: "Web3Txn", message: "Cancel failed: \(error)")
-                        cancelOperation = nil
-                    }
-                } else {
-                    speedUpOperation = nil
-                    cancelOperation = nil
                 }
                 DispatchQueue.main.async {
                     self?.reloadHeaderView(

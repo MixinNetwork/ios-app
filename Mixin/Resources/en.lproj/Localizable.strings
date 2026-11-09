@@ -584,6 +584,7 @@
 "edit_note" = "Edit Note";
 "editing_address" = "Editing Address";
 "editing_address_failed" = "Editing Address Failed";
+"eip712_invalid_chain_id" = "The typed message chain ID is invalid or does not match the signing network.";
 "emergency_contact" = "Recovery Contact";
 "enable" = "Enable";
 "enable_bioauth_description" = "What about %@? Once enabled, you can expedite authentication with %@.";
@@ -828,6 +829,7 @@
 "invalid_address" = "Invalid Address";
 "invalid_candidate" = "Invalid candidate";
 "invalid_format" = "Invalid format";
+"invalid_gasless_transaction" = "Invalid gasless transaction. Please try again.";
 "invalid_height" = "Invalid height";
 "invalid_malformed_address_eos_hint" = "Invalid address format. Mixin does not support withdrawal to the EOS contract address!";
 "invalid_malformed_address_hint" = "Invalid address format. Try again with a valid address of %@";

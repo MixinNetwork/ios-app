@@ -1,5 +1,4 @@
 import UIKit
-import web3
 import MixinServices
 
 final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewController {
@@ -113,11 +112,10 @@ final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewCo
                 guard input.hasPrefix("0x"), input.count == 42 else {
                     throw LoadAddressError.invalidAddress
                 }
-                let inputAddress = EthereumAddress(input)
-                guard let number = inputAddress.asNumber(), number != 0 else {
+                guard let inputAddress = try? EVM.Address(input), !inputAddress.isZero else {
                     throw LoadAddressError.invalidAddress
                 }
-                let checksumAddress = inputAddress.toChecksumAddress()
+                let checksumAddress = inputAddress.checksumString
                 if importedAddresses.contains(checksumAddress) {
                     throw LoadAddressError.alreadyImported
                 }

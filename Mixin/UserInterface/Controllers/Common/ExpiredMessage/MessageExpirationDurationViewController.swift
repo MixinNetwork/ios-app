@@ -60,9 +60,7 @@ final class MessageExpirationDurationViewController: SettingsTableViewController
                     } else {
                         switch result {
                         case .success(let response):
-                            ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
                             conversation.expireIn = response.expireIn
-                            conversation.status = ConversationStatus.SUCCESS.rawValue
                         case .failure(.notFound):
                             if !conversation.isExpirationResolved {
                                 conversation.expireIn = Conversation.defaultExpirationDuration

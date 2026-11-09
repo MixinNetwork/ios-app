@@ -1139,7 +1139,9 @@ final class ConversationViewController: UIViewController {
             updateDisappearingMessageIcon(expireIn: conversation.isExpirationResolved ? conversation.expireIn : nil)
             hideLoading()
         case let .updateConversation(conversation):
-            updateDisappearingMessageIcon(expireIn: conversation.expireIn)
+            if ConversationDAO.shared.getConversationStatus(conversationId: conversationId) == ConversationStatus.SUCCESS.rawValue {
+                updateDisappearingMessageIcon(expireIn: conversation.expireIn)
+            }
             if !conversation.name.isEmpty {
                 titleLabel.text = conversation.name
                 dataSource?.conversation.name = conversation.name

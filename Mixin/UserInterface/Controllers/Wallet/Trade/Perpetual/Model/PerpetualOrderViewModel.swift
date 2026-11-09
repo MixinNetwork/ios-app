@@ -244,10 +244,10 @@ struct PerpetualOrderViewModel {
         } else {
             order.entryPrice
         }
-        self.date = if let date = DateFormatter.iso8601Full.date(from: order.updatedAt) {
+        self.date = if let date = DateFormatter.iso8601Full.date(from: order.createdAt) {
             DateFormatter.dateFull.string(from: date)
         } else {
-            order.updatedAt
+            order.createdAt
         }
     }
     

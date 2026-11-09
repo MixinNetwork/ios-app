@@ -589,10 +589,12 @@ extension ConversationDataSource {
                 updateMessage(messageId: messageId)
             }
         case .updateConversation(let response):
-            conversation.expireIn = response.expireIn
-            conversation.status = ConversationStatus.SUCCESS.rawValue
-            conversation.isExpirationResolved = true
-            refreshConversationHints()
+            if let status = ConversationDAO.shared.getConversationStatus(conversationId: conversationId) {
+                conversation.expireIn = response.expireIn
+                conversation.status = status
+                conversation.isExpirationResolved = status == ConversationStatus.SUCCESS.rawValue
+                refreshConversationHints()
+            }
         case .startedUpdateConversation:
             break
         }

@@ -25,9 +25,11 @@ extension AddressBookNetwork {
     
     // Pinned networks keep the design order, the remaining chains follow by name.
     // Pass nil `supportedChainIDs` to include networks of all chains.
+    // Database-only mode includes every cached chain without synthesizing networks.
     static func all(
         chains: [String: Chain],
         supportedChainIDs: Set<String>?,
+        usesDatabaseChainsOnly: Bool,
     ) -> [AddressBookNetwork] {
         let pinnedChainIDs = Set(pinned.map(\.chainID))
         let pinnedNetworks = pinned.map { item in
@@ -50,7 +52,9 @@ extension AddressBookNetwork {
         let otherNetworks = (cachedNetworks + uncachedNetworks)
             .sorted { $0.name.lowercased() < $1.name.lowercased() }
         let networks = pinnedNetworks + otherNetworks
-        if let supportedChainIDs {
+        if usesDatabaseChainsOnly {
+            return networks.filter { chains[$0.chainID] != nil }
+        } else if let supportedChainIDs {
             return networks.filter { supportedChainIDs.contains($0.chainID) }
         } else {
             return networks

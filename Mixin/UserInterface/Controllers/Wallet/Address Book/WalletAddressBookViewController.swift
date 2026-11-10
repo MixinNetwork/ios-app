@@ -149,6 +149,7 @@ final class WalletAddressBookViewController: UIViewController {
                 AddressBookNetwork.all(
                     chains: ChainDAO.shared.allChains(),
                     supportedChainIDs: AddressBookNetwork.currentWalletChainIDs(),
+                    usesDatabaseChainsOnly: false,
                 ).map(\.chainID)
             }
             for chainID in syncingChainIDs {
@@ -219,6 +220,12 @@ final class WalletAddressBookViewController: UIViewController {
         case .select:
             false
         }
+        let usesDatabaseChainsOnly = switch (intent, AppGroupUserDefaults.Wallet.lastSelectedWallet) {
+        case (.manage, .privacy):
+            true
+        default:
+            false
+        }
         DispatchQueue.global().async { [weak self] in
             let supportedChainIDs = usesCurrentWalletChains ? AddressBookNetwork.currentWalletChainIDs() : nil
             var seen: Set<String> = []
@@ -229,6 +236,7 @@ final class WalletAddressBookViewController: UIViewController {
             let networks = AddressBookNetwork.all(
                 chains: ChainDAO.shared.allChains(),
                 supportedChainIDs: supportedChainIDs,
+                usesDatabaseChainsOnly: usesDatabaseChainsOnly,
             )
             DispatchQueue.main.async {
                 guard let self else {

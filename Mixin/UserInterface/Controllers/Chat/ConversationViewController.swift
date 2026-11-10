@@ -966,8 +966,14 @@ final class ConversationViewController: UIViewController {
                 navigationController?.pushViewController(post, animated: true)
             } else if (viewModel as? SystemMessageViewModel)?.expirationDuration != nil {
                 conversationInputViewController.dismiss()
-                let controller = MessageExpirationDurationViewController(conversation: dataSource.conversation)
-                navigationController?.pushViewController(controller, animated: true)
+                let canEdit = dataSource.category == .contact
+                || ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
+                if canEdit {
+                    let controller = MessageExpirationDurationViewController(conversation: dataSource.conversation)
+                    navigationController?.pushViewController(controller, animated: true)
+                } else {
+                    open(url: .disappearingMessage)
+                }
             } else if message.category == MessageCategory.EXT_ENCRYPTION.rawValue {
                 conversationInputViewController.dismiss()
                 UserOperationAnalytics.tradeSource = .url

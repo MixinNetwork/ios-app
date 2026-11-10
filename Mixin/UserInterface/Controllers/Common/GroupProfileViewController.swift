@@ -492,14 +492,15 @@ extension GroupProfileViewController {
                             action: #selector(searchConversation))
         ])
         
-        groups.append([
-            ProfileMenuItem(title: R.string.localizable.disappearing_message(),
-                            subtitle: ExpiredMessageDurationFormatter.string(from: conversation.expireIn),
-                            style: [],
-                            action: #selector(editExpiredMessageDuration))
-        ])
-        
         if isAdmin {
+            groups.append([
+                ProfileMenuItem(
+                    title: R.string.localizable.disappearing_message(),
+                    subtitle: ExpiredMessageDurationFormatter.string(from: conversation.expireIn),
+                    style: [],
+                    action: #selector(editExpiredMessageDuration)
+                )
+            ])
             groups.append( [
                 ProfileMenuItem(
                     title: R.string.localizable.edit_group_name(),

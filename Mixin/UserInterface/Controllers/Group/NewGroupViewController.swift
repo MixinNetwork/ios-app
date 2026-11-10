@@ -6,14 +6,10 @@ final class NewGroupViewController: UIViewController {
     @IBOutlet weak var groupImageView: CornerImageView!
     @IBOutlet weak var participentLabel: UILabel!
     @IBOutlet weak var nameTextField: UITextField!
-    @IBOutlet weak var expirationLabel: UILabel!
-    @IBOutlet weak var expirationButton: UIButton!
     @IBOutlet weak var createButton: RoundedButton!
     
     private let randomID = UUID().uuidString.lowercased()
     private let members: [GroupMemberCandidate]
-    
-    private var expirationDuration = Conversation.defaultExpirationDuration
     
     private var groupName: String {
         nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -33,13 +29,6 @@ final class NewGroupViewController: UIViewController {
         super.viewDidLoad()
         title = R.string.localizable.new_group()
         loadGroupIcon()
-        expirationLabel.setFont(
-            scaledFor: .systemFont(ofSize: 14),
-            adjustForContentSize: true
-        )
-        expirationLabel.text = R.string.localizable.disappearing_message()
-        expirationButton.showsMenuAsPrimaryAction = true
-        updateExpirationMenu()
         nameTextField.delegate = self
         participentLabel.text = R.string.localizable.title_participants_count(members.count + 1)
         createButton.snp.makeConstraints { make in
@@ -76,7 +65,7 @@ final class NewGroupViewController: UIViewController {
             name: groupName,
             category: ConversationCategory.GROUP.rawValue,
             participants: participants,
-            duration: expirationDuration == 0 ? nil : expirationDuration,
+            duration: nil,
             announcement: nil,
             randomID: randomID
         )
@@ -120,37 +109,6 @@ extension NewGroupViewController {
             id = UUID.uniqueObjectIDString(sorting: [id, participantID])
         }
         return id
-    }
-    
-    private func updateExpirationMenu() {
-        expirationButton.configuration?.attributedTitle = AttributedString(
-            string: ExpiredMessageDurationFormatter.string(from: expirationDuration),
-            scalingByFontSize: 14
-        )
-        let selectedOption = MessageExpirationDurationViewController.Option(expireIn: expirationDuration)
-        let actions = MessageExpirationDurationViewController.Option.allCases.map { option in
-            let title = option == .custom ? R.string.localizable.custom() : option.title
-            return UIAction(title: title, state: option == selectedOption ? .on : .off) { [weak self] _ in
-                guard let self else {
-                    return
-                }
-                if let duration = option.expireIn {
-                    self.expirationDuration = duration
-                    self.updateExpirationMenu()
-                } else {
-                    self.nameTextField.resignFirstResponder()
-                    let picker = CustomMessageExpirationDurationPickerViewController(
-                        expireIn: self.expirationDuration,
-                        onPick: { [weak self] duration in
-                            self?.expirationDuration = duration
-                            self?.updateExpirationMenu()
-                        },
-                    )
-                    self.present(picker, animated: true)
-                }
-            }
-        }
-        expirationButton.menu = UIMenu(children: actions)
     }
     
     private func loadGroupIcon() {

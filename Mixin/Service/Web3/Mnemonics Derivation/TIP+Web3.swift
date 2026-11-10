@@ -1,10 +1,9 @@
 import Foundation
 import CryptoKit
-import web3
 import MixinServices
 import TIP
 
-// ExtendedKey dependes on secp256k1 which is brought by web3 with SPM
+// Shared BIP-32 secp256k1 derivation is provided by bitcoin-rust-sdk.
 // TODO: Move this extension back to TIP.swift after dependencies are managed with SPM
 // MARK: - Common Wallet
 extension TIP {
@@ -113,12 +112,8 @@ extension TIP {
         
         let evmAddress = try {
             let path = try DerivationPath.evm(index: index)
-            let account = try {
-                let priv = try TIP.deriveEthereumPrivateKey(spendKey: spendKey, path: path)
-                let keyStorage = InPlaceKeyStorage(raw: priv)
-                return try EthereumAccount(keyStorage: keyStorage)
-            }()
-            let destination = account.address.toChecksumAddress()
+            let privateKey = try TIP.deriveEthereumPrivateKey(spendKey: spendKey, path: path)
+            let destination = try EVM.address(privateKey: privateKey).checksumString
             let crossCheckDestination = try {
                 var error: NSError?
                 let address = BlockchainGenerateEthereumAddress(hexSpendKey, path.string, &error)
@@ -137,7 +132,7 @@ extension TIP {
                 path: path.string,
                 userID: userID
             ) { message in
-                try account.signMessage(message: message)
+                try EVM.signPersonalMessage(message, privateKey: privateKey)
             }
         }()
         

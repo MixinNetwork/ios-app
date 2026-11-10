@@ -1,5 +1,4 @@
 import Foundation
-import web3
 import MixinServices
 
 enum Web3AddressValidator {

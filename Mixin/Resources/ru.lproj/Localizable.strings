@@ -583,6 +583,7 @@
 "edit_note" = "Редактировать заметку";
 "editing_address" = "Редактирование адреса";
 "editing_address_failed" = "Не удалось изменить адрес.";
+"eip712_invalid_chain_id" = "Идентификатор сети в типизированном сообщении недействителен или не совпадает с сетью подписи.";
 "emergency_contact" = "Контакт для восстановления";
 "enable" = "Включить";
 "enable_bioauth_description" = "А как насчет %@? После включения вы можете ускорить аутентификацию с помощью %@.";
@@ -829,6 +830,7 @@
 "invalid_address" = "Неверный адрес";
 "invalid_candidate" = "Недействительный кандидат";
 "invalid_format" = "Неверный формат";
+"invalid_gasless_transaction" = "Недействительная транзакция без газа. Повторите попытку.";
 "invalid_height" = "Неверный рост";
 "invalid_malformed_address_eos_hint" = "Неверный формат адреса. Mixin не поддерживает вывод средств на адрес контракта EOS!";
 "invalid_malformed_address_hint" = "Неверный формат адреса. Повторите попытку с действительным адресом %@";
@@ -1293,9 +1295,11 @@
 "perps_scene_sl_triggered" = "Триггерный стоп-лосс: контроль потерь";
 "perps_scene_tp_triggered" = "Триггерный тейк-профит: фиксация прибыли";
 "perps_share_card_market" = "- 📈 Рынок: %@";
+"perps_share_card_max_leverage" = "📈 Максимальное плечо: %dx";
 "perps_share_card_side" = "- ↕️ Направление: %1$@ (%2$dx)";
 "perps_share_card_title" = "🚀 Perps %@";
 "perps_share_card_trade_now" = "💰 Торгуйте сейчас";
+"perps_share_card_volume" = "💰 Объём за 24 ч: %@";
 "perps_share_mixin_contact_desc" = "Приглашайте друзей на борт";
 "perps_share_mixin_contact_desc_with_percent" = "Заработайте комиссию %@ по этой ссылке";
 "perps_share_pnl" = "ПнЛ";

@@ -27,12 +27,12 @@ public final class PerpsOrderDAO: PerpsDAO {
     }
     
     public func orderItems(
-        offsetUpdatedAt: String?,
+        offsetCreatedAt: String?,
         limit: Int?
     ) -> [PerpetualOrderItem] {
         var query = GRDB.SQL(sql: Self.itemSQL)
-        if let offsetUpdatedAt {
-            query.append(literal: "AND po.updated_at < \(offsetUpdatedAt)\n")
+        if let offsetCreatedAt {
+            query.append(literal: "AND po.created_at < \(offsetCreatedAt)\n")
         }
         query.append(literal: "ORDER BY po.created_at DESC\n")
         if let limit {
@@ -64,7 +64,7 @@ public final class PerpsOrderDAO: PerpsDAO {
         return .closed(pnl: pnl)
     }
     
-    public func offset() -> String? {
+    public func latestUpdatedAt() -> String? {
         db.select(with: "SELECT updated_at FROM perps_orders ORDER BY updated_at DESC LIMIT 1")
     }
     

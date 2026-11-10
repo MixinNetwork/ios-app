@@ -3,6 +3,11 @@ import MixinServices
 
 struct PerpetualMarketViewModel {
     
+    enum PriceDisplay: Int, CaseIterable {
+        case lastPrice = 0
+        case markPrice = 1
+    }
+    
     let market: PerpetualMarket
     let iconURL: URL?
     let maxLeverageMultiplier: Decimal

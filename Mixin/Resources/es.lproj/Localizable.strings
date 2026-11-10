@@ -583,6 +583,7 @@
 "edit_note" = "Editar nota";
 "editing_address" = "Editando dirección";
 "editing_address_failed" = "Error al editar la dirección";
+"eip712_invalid_chain_id" = "El ID de cadena del mensaje tipado no es válido o no coincide con la red de firma.";
 "emergency_contact" = "Contacto de recuperación";
 "enable" = "Habilitar";
 "enable_bioauth_description" = "¿Qué pasa con %@? Una vez habilitada, puede acelerar la autenticación con %@.";
@@ -829,6 +830,7 @@
 "invalid_address" = "Dirección no válida";
 "invalid_candidate" = "Candidato inválido";
 "invalid_format" = "Formato no válido";
+"invalid_gasless_transaction" = "Transacción sin gas no válida. Inténtalo de nuevo.";
 "invalid_height" = "Altura inválida";
 "invalid_malformed_address_eos_hint" = "Formato de dirección inválido. ¡Mixin no admite el retiro a la dirección del contrato EOS!";
 "invalid_malformed_address_hint" = "Formato de dirección inválido. Vuelve a intentarlo con una dirección válida de %@";
@@ -1293,9 +1295,11 @@
 "perps_scene_sl_triggered" = "Activar stop-loss: controlar las pérdidas";
 "perps_scene_tp_triggered" = "Activar la obtención de beneficios: bloquear los beneficios";
 "perps_share_card_market" = "- 📈 Mercado: %@";
+"perps_share_card_max_leverage" = "📈 Apalancamiento máximo: %dx";
 "perps_share_card_side" = "- ↕️ Dirección: %1$@ (%2$dx)";
 "perps_share_card_title" = "🚀 Perps %@";
 "perps_share_card_trade_now" = "💰 Opere ahora";
+"perps_share_card_volume" = "💰 Volumen de 24 h: %@";
 "perps_share_mixin_contact_desc" = "Trae a tus amigos a bordo";
 "perps_share_mixin_contact_desc_with_percent" = "Gane una comisión de %@ a través de este enlace";
 "perps_share_pnl" = "PnL";

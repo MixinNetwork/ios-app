@@ -1,5 +1,4 @@
 import UIKit
-import web3
 import MixinServices
 
 final class AddWalletImportingViewController: IntroductionViewController, CheckSessionEnvironmentChild {
@@ -160,9 +159,10 @@ final class AddWalletImportingViewController: IntroductionViewController, CheckS
                                 path: evmWallet.path.string,
                                 userID: userID
                             ) { message in
-                                let keyStorage = InPlaceKeyStorage(raw: evmWallet.privateKey)
-                                let account = try EthereumAccount(keyStorage: keyStorage)
-                                return try account.signMessage(message: message)
+                                try EVM.signPersonalMessage(
+                                    message,
+                                    privateKey: evmWallet.privateKey
+                                )
                             },
                             .init(
                                 destination: solanaWallet.address,

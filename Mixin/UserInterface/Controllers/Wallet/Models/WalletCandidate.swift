@@ -31,7 +31,9 @@ struct WalletCandidate {
             usdValue: usdBalanceSum,
             fontSize: 22
         )
-        let tokenDigests = tokens.map(TokenDigest.init(token:))
+        let tokenDigests = tokens
+            .map(TokenDigest.init(token:))
+            .sorted { $0.decimalValue > $1.decimalValue }
         self.init(
             bitcoinWallet: bitcoinWallet,
             pearlWallet: pearlWallet,

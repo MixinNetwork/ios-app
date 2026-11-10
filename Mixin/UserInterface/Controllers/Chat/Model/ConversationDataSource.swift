@@ -841,9 +841,7 @@ extension ConversationDataSource {
         if category == .group || !(ownerUser?.isBot ?? conversation.ownerIsBot) {
             messages.append(.encryptionHintMessage(conversationId: conversationId))
         }
-        if conversation.isExpirationResolved,
-           !MessageDAO.shared.hasExpirationSettingsMessage(conversationID: conversationId)
-        {
+        if conversation.isExpirationResolved {
             messages.append(.disappearingMessageHint(
                 conversationID: conversationId,
                 expireIn: conversation.expireIn,

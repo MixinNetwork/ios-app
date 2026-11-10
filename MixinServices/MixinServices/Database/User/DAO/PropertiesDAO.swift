@@ -15,6 +15,7 @@ public final class PropertiesDAO: UserDatabaseDAO {
         case cashAccount        = "cash_account"
         case earnProducts       = "earn_products"
         case walletBanners      = "wallet_banners"
+        case walletRecentSearches = "wallet_recent_searches"
     }
     
     public enum Change {

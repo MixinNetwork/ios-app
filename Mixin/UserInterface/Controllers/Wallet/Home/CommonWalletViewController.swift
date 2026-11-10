@@ -15,7 +15,6 @@ final class CommonWalletViewController: WalletViewController {
     private var transactionTokenSymbols: [String: String] = [:]
     private var legacyRenaming: WalletDigest.LegacyClassicWalletRenaming?
     private var pendingTransactionObserver: CommonWalletPendingTransactionLoader?
-    private var searchTokenHandler: WalletSearchWeb3TokenHandler?
     
     private weak var renamingInputController: UIAlertController?
     
@@ -90,19 +89,10 @@ final class CommonWalletViewController: WalletViewController {
     }
     
     override func searchAction(_ sender: Any) {
-        let modelController = WalletSearchWeb3TokenController(
-            walletID: wallet.walletID,
-            supportedChainIDs: supportedChainIDs
-        )
-        let searchTokenHandler = WalletSearchWeb3TokenHandler(
-            wallet: wallet,
-            availability: availability,
-            navigationController: navigationController
-        )
-        modelController.delegate = searchTokenHandler
+        let modelController = CommonWalletSearchModelController(wallet: wallet)
+        modelController.delegate = self
         let search = WalletSearchViewController(modelController: modelController)
         navigationController?.pushViewController(search, animated: true)
-        self.searchTokenHandler = searchTokenHandler
     }
     
     override func moreAction(_ sender: Any) {
@@ -533,6 +523,22 @@ extension CommonWalletViewController: UICollectionViewDelegate {
         case .support(let support):
            request(support: support)
         }
+    }
+    
+}
+
+extension CommonWalletViewController: CommonWalletSearchModelController.Delegate {
+    
+    func commonWalletSearchModelController(
+        _ controller: CommonWalletSearchModelController,
+        didSelectToken token: Web3TokenItem,
+    ) {
+        let controller = Web3TokenViewController(
+            wallet: wallet,
+            token: token,
+            availability: availability,
+        )
+        navigationController?.pushViewController(controller, animated: true)
     }
     
 }

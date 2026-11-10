@@ -12,9 +12,22 @@ final class BadgeIconView: UIView {
     @IBInspectable var badgeIconDiameter: CGFloat = 13
     @IBInspectable var badgeOutlineWidth: CGFloat = 1.5
     
+    var reportsNoIntrinsicContentSize = false
+    
     private let iconImageView = UIImageView()
     private let badgeBackgroundView = SolidBackgroundColoredView()
     private let badgeImageView = UIImageView()
+    
+    override var intrinsicContentSize: CGSize {
+        if reportsNoIntrinsicContentSize {
+            CGSize(
+                width: UIView.noIntrinsicMetric,
+                height: UIView.noIntrinsicMetric,
+            )
+        } else {
+            super.intrinsicContentSize
+        }
+    }
     
     private var corner: Corner = .round {
         didSet {
@@ -88,7 +101,7 @@ final class BadgeIconView: UIView {
         badgeImageView.image = nil
     }
     
-    func setIcon(content: InscriptionContentProvider) {
+    func setIcon(content: InscriptionContentProvider, cornerRadius: CGFloat = 12) {
         isBadgeHidden = true
         iconImageView.backgroundColor = .secondaryBackground
         switch content.inscriptionContent {
@@ -99,7 +112,7 @@ final class BadgeIconView: UIView {
         case .none:
             iconImageView.image = R.image.inscription_intaglio()
         }
-        corner = .radius(12)
+        corner = .radius(cornerRadius)
     }
     
     func setIcon(asset: AssetItem) {

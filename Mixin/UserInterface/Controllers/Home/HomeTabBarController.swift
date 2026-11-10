@@ -176,6 +176,14 @@ final class HomeTabBarController: UITabBarController {
         }
     }
     
+    func searchMarket(keyword: String, animated: Bool) {
+        selectedViewController = marketNavigationController
+        handleTabSelection()
+        let controller = SearchMarketViewController()
+        controller.search(keyword: keyword)
+        marketNavigationController.pushViewController(controller, animated: animated)
+    }
+    
     @objc private func reloadItemBadges() {
         if BadgeManager.shared.hasViewed(identifier: .moreTab) {
             exploreMoreNavigationController.tabBarItem.badgeValue = nil

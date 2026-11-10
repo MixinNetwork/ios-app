@@ -1279,6 +1279,7 @@
 "perps_position_size_pnl_1" = "Больше размер, больше PnL";
 "perps_position_size_pnl_2" = "Меньший размер, меньший PnL";
 "perps_position_tip" = "Увеличение позиции повышает прибыль и риски";
+"perps_positions" = "Позиции";
 "perps_product" = "Рынок";
 "perps_realized_pnl" = "Реализованная прибыль/убыток";
 "perps_realized_pnl_tip" = "Открытые позиции не учитываются в статистике.";
@@ -1402,7 +1403,7 @@
 "position_size" = "Размер";
 "position_submitted" = "Позиция отправлена";
 "position_submitted_description" = "Вы отправили позицию.";
-"positions" = "Должности";
+"positions" = "Позиции";
 "positions_count" = "Позиции(%d)";
 "post" = "Публикация";
 "post_sharing" = "публикация";
@@ -1609,6 +1610,7 @@
 "search_placeholder_contact" = "Mixin ID, имя, номер телефона";
 "search_placeholder_dapp" = "Имя, URL";
 "search_placeholder_number" = "Найдите Mixin ID или номер телефона:";
+"search_query_in_markets" = "Искать «%@» на рынках";
 "search_related_message" = "%d связанное сообщение";
 "search_related_message_count" = "%d похожие сообщения";
 "search_result_prefix_phone" = "Номер телефона:";

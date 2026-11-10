@@ -85,15 +85,15 @@ final class TradeMoreMenuViewController: UIViewController {
                 return nil
             }
             let background = NSCollectionLayoutDecorationItem.background(
-                elementKind: TradeSectionBackgroundView.CornerRadius.large.rawValue
+                elementKind: SectionBackgroundView.CornerRadius.large.rawValue
             )
             background.contentInsets = section.contentInsets
             section.decorationItems = [background]
             return section
         }
         layout.register(
-            TradeSectionBackgroundView.self,
-            forDecorationViewOfKind: TradeSectionBackgroundView.CornerRadius.large.rawValue
+            SectionBackgroundView.self,
+            forDecorationViewOfKind: SectionBackgroundView.CornerRadius.large.rawValue
         )
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.backgroundColor = R.color.background_secondary()

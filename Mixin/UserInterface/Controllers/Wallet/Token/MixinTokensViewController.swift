@@ -8,7 +8,6 @@ final class MixinTokensViewController: TokensViewController {
     private var tokens: [MixinTokenItem]?
     private var earningAvailableAssetIDs: Set<String> = []
     
-    private var searchTokenHandler: WalletSearchMixinTokenHandler?
     private var overviewActionHandler: PrivacyWalletOverviewActionHandler?
     private var pendingDepositObserver: PrivacyWalletPendingDepositObserver?
     
@@ -141,13 +140,9 @@ final class MixinTokensViewController: TokensViewController {
     }
     
     @objc private func presentSearch(_ sender: Any) {
-        let modelController = WalletSearchMixinTokenController()
-        let searchTokenHandler = WalletSearchMixinTokenHandler(
-            navigationController: navigationController
-        )
-        modelController.delegate = searchTokenHandler
+        let modelController = PrivacyWalletSearchModelController()
+        modelController.delegate = self
         let search = WalletSearchViewController(modelController: modelController)
-        self.searchTokenHandler = searchTokenHandler
         navigationController?.pushViewController(search, animated: true)
     }
     
@@ -264,6 +259,25 @@ extension MixinTokensViewController: PrivacyWalletPendingDepositObserver.Delegat
                 collectionView.reloadSections(sections)
             }
         }
+    }
+    
+}
+
+extension MixinTokensViewController: PrivacyWalletSearchModelController.Delegate {
+    
+    func privacyWalletSearchModelController(
+        _ controller: PrivacyWalletSearchModelController,
+        didSelectToken token: MixinTokenItem,
+    ) {
+        guard token.isDisplayable else {
+            return
+        }
+        let controller = MixinTokenViewController(token: token)
+        navigationController?.pushViewController(controller, animated: true)
+        DispatchQueue.global().async {
+            TokenDAO.shared.save(assets: [token])
+        }
+        reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "wallet_search"])
     }
     
 }

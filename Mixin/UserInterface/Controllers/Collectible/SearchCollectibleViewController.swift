@@ -126,7 +126,7 @@ final class SearchCollectibleViewController: UIViewController, SearchNavigationA
             guard !op.isCancelled else {
                 return
             }
-            let searchResults = InscriptionDAO.shared.search(keyword: keyword)
+            let searchResults = InscriptionDAO.shared.search(keyword: keyword, limit: nil)
             DispatchQueue.main.sync {
                 guard !op.isCancelled else {
                     return

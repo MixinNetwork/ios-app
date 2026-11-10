@@ -5,152 +5,179 @@ protocol WalletSearchModelController {
     
     associatedtype Item: ValuableToken & OnChainToken & ChangeReportingToken & ComparableToken
     
-    func history() -> [Item]
-    func isTrendingItemAvailable(item: AssetItem) -> Bool
-    func localItems(keyword: String) -> [Item]
-    func remoteItems(from tokens: [MixinToken]) -> [Item]
-    func reportUserSelection(trending item: AssetItem)
+    func search(keyword: String, category: WalletSearchCategory, limit: Int?) -> [WalletSearchItem<Item>]?
+    func recentItems() -> [WalletSearchItem<Item>]
     func reportUserSelection(token item: Item)
     
 }
 
-final class WalletSearchMixinTokenController: WalletSearchModelController {
+extension WalletSearchModelController {
     
-    protocol Delegate: AnyObject {
-        func walletSearchMixinTokenController(_ controller: WalletSearchMixinTokenController, didSelectToken token: MixinTokenItem)
-        func walletSearchMixinTokenController(_ controller: WalletSearchMixinTokenController, didSelectTrendingItem item: AssetItem)
-    }
-    
-    weak var delegate: Delegate?
-    
-    func history() -> [MixinTokenItem] {
-        AppGroupUserDefaults.User.assetSearchHistory
-            .compactMap(TokenDAO.shared.tokenItem(assetID:))
-            .filter(\.isDisplayable)
-    }
-    
-    func isTrendingItemAvailable(item: AssetItem) -> Bool {
-        TokenDAO.shared.tokenItem(assetID: item.assetId)?.isDisplayable ?? true
-    }
-    
-    func localItems(keyword: String) -> [MixinTokenItem] {
-        TokenDAO.shared.search(
-            keyword: keyword,
-            includesZeroBalanceItems: true,
-            sorting: false,
-            limit: nil
-        )
-    }
-    
-    func remoteItems(from tokens: [MixinToken]) -> [MixinTokenItem] {
-        let chainIDs = Set(tokens.map(\.chainID))
-        var chains = ChainDAO.shared.chains(chainIDs: chainIDs)
-        return tokens.compactMap { (token) -> MixinTokenItem? in
-            guard token.isDisplayable else {
-                return nil
+    func insertRecentSearch(_ item: RecentWalletSearch) {
+        PropertiesDAO.shared.updateValue(
+            forKey: .walletRecentSearches,
+            type: String.self,
+        ) { string in
+            var items = string?.data(using: .utf8).flatMap { data in
+                try? JSONDecoder.default.decode([RecentWalletSearch].self, from: data)
+            } ?? []
+            items.removeAll { $0 == item }
+            items.insert(item, at: 0)
+            guard let data = try? JSONEncoder.default.encode(Array(items.prefix(5))) else {
+                return string
             }
-            let chain: Chain
-            if let localChain = chains[token.chainID] {
-                chain = localChain
-            } else if case let .success(remoteChain) = NetworkAPI.chain(id: token.chainID) {
-                DispatchQueue.global().async {
-                    ChainDAO.shared.save([remoteChain])
-                    Web3ChainDAO.shared.save([remoteChain])
-                }
-                chains[remoteChain.chainId] = remoteChain
-                chain = remoteChain
-            } else {
-                return nil
-            }
-            let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
-            return item
+            return String(decoding: data, as: UTF8.self)
         }
-    }
-    
-    func reportUserSelection(trending item: AssetItem) {
-        delegate?.walletSearchMixinTokenController(self, didSelectTrendingItem: item)
-    }
-    
-    func reportUserSelection(token item: MixinTokenItem) {
-        delegate?.walletSearchMixinTokenController(self, didSelectToken: item)
     }
     
 }
 
-final class WalletSearchWeb3TokenController: WalletSearchModelController {
+final class PrivacyWalletSearchModelController: WalletSearchModelController {
     
     protocol Delegate: AnyObject {
-        func walletSearchWeb3TokenController(_ controller: WalletSearchWeb3TokenController, didSelectToken token: Web3TokenItem)
-        func walletSearchWeb3TokenController(_ controller: WalletSearchWeb3TokenController, didSelectTrendingItem item: AssetItem)
+        func privacyWalletSearchModelController(_ controller: PrivacyWalletSearchModelController, didSelectToken token: MixinTokenItem)
     }
-    
-    private let walletID: String
-    private let supportedChainIDs: Set<String>
     
     weak var delegate: Delegate?
     
-    init(walletID: String, supportedChainIDs: Set<String>) {
-        self.walletID = walletID
-        self.supportedChainIDs = supportedChainIDs
-    }
-    
-    func history() -> [Web3TokenItem] {
-        AppGroupUserDefaults.User.assetSearchHistory.compactMap { assetID in
-            // No need to filter with `supportedChainIDs`
-            // Unsupported tokens will not be in database
-            Web3TokenDAO.shared.token(walletID: walletID, assetID: assetID)
-        }
-    }
-    
-    func isTrendingItemAvailable(item: AssetItem) -> Bool {
-        supportedChainIDs.contains(item.chainId)
-    }
-    
-    func localItems(keyword: String) -> [Web3TokenItem] {
-        let items = Web3TokenDAO.shared.search(
-            walletID: walletID,
-            keyword: keyword,
-            includesZeroBalanceItems: true,
-            limit: nil
-        )
-        return items
-    }
-    
-    func remoteItems(from tokens: [MixinToken]) -> [Web3TokenItem] {
-        let chainIDs = Set(tokens.map(\.chainID))
-            .filter(supportedChainIDs.contains(_:))
-        let chains = Web3ChainDAO.shared.chains(chainIDs: chainIDs)
-        return tokens.compactMap { token in
-            guard let chain = chains[token.chainID] else {
+    func search(
+        keyword: String,
+        category: WalletSearchCategory,
+        limit: Int?,
+    ) -> [WalletSearchItem<Item>]? {
+        switch category {
+        case .all:
+            return nil
+        case .tokens:
+            var tokens = TokenDAO.shared.search(
+                keyword: keyword,
+                includesZeroBalanceItems: true,
+                sorting: limit != nil,
+                limit: limit,
+            )
+            if limit == nil {
+                tokens.sort(using: TokenComparator<Item>(keyword: keyword))
+            }
+            return tokens.map { .token($0) }
+        case .perps:
+            return PerpsPositionDAO.shared.search(
+                walletID: Wallet.privacy.tradingWalletID,
+                keyword: keyword,
+                limit: limit,
+            ).compactMap { position in
+                guard let market = PerpsMarketDAO.shared.market(marketID: position.marketID) else {
+                    return nil
+                }
+                return .perps(position, market)
+            }
+        case .earn:
+            let products = PropertiesDAO.shared.jsonObject(forKey: .earnProducts, type: [EarnProduct].self) ?? []
+            guard !products.isEmpty else {
                 return nil
             }
-            let amount = Web3TokenDAO.shared.amount(walletID: walletID, assetID: token.assetID)
-            let isHidden = Web3TokenExtraDAO.shared.isHidden(walletID: walletID, assetID: token.assetID)
-            let web3Token = Web3Token(
-                walletID: walletID,
-                assetID: token.assetID,
-                chainID: token.chainID,
-                assetKey: token.assetKey,
-                kernelAssetID: token.kernelAssetID,
-                symbol: token.symbol,
-                name: token.name,
-                precision: token.precision,
-                iconURL: token.iconURL,
-                amount: amount ?? "0",
-                usdPrice: token.usdPrice,
-                usdChange: token.usdChange,
-                level: Web3Reputation.Level.verified.rawValue,
-            )
-            return Web3TokenItem(token: web3Token, hidden: isHidden, chain: chain)
+            let matches = products.lazy.compactMap { product -> WalletSearchItem<Item>? in
+                guard let token = TokenDAO.shared.tokenItem(assetID: product.assetID),
+                      [token.name, token.symbol, product.productionID]
+                        .contains(where: { $0.localizedCaseInsensitiveContains(keyword) })
+                else {
+                    return nil
+                }
+                return .earn(product, token)
+            }
+            return Array(matches.prefix(limit ?? Int.max))
+        case .collectibles:
+            return InscriptionDAO.shared.search(keyword: keyword, limit: limit).map { .collectible($0) }
         }
     }
     
-    func reportUserSelection(trending item: AssetItem) {
-        delegate?.walletSearchWeb3TokenController(self, didSelectTrendingItem: item)
+    func recentItems() -> [WalletSearchItem<Item>] {
+        let string: String? = PropertiesDAO.shared.value(forKey: .walletRecentSearches)
+        let searches = string?.data(using: .utf8).flatMap { data in
+            try? JSONDecoder.default.decode([RecentWalletSearch].self, from: data)
+        } ?? []
+        let earnings = PropertiesDAO.shared.jsonObject(forKey: .earnProducts, type: [EarnProduct].self) ?? []
+        return searches.compactMap { recent in
+            switch recent {
+            case .token(let assetID):
+                TokenDAO.shared.tokenItem(assetID: assetID).flatMap { token in
+                        .token(token)
+                }
+            case .earn(let productionID):
+                if let product = earnings.first(where: { $0.productionID == productionID }),
+                   let token = TokenDAO.shared.tokenItem(assetID: product.assetID)
+                {
+                    .earn(product, token)
+                } else {
+                    nil
+                }
+            case .collectible(let hash):
+                InscriptionDAO.shared.inscriptionOutput(inscriptionHash: hash).flatMap { output in
+                        .collectible(output)
+                }
+            }
+        }
+    }
+    
+    func reportUserSelection(token item: MixinTokenItem) {
+        delegate?.privacyWalletSearchModelController(self, didSelectToken: item)
+    }
+    
+}
+
+final class CommonWalletSearchModelController: WalletSearchModelController {
+    
+    protocol Delegate: AnyObject {
+        func commonWalletSearchModelController(_ controller: CommonWalletSearchModelController, didSelectToken token: Web3TokenItem)
+    }
+    
+    let wallet: Web3Wallet
+    
+    weak var delegate: Delegate?
+    
+    init(wallet: Web3Wallet) {
+        self.wallet = wallet
+    }
+    
+    func search(
+        keyword: String,
+        category: WalletSearchCategory,
+        limit: Int?,
+    ) -> [WalletSearchItem<Item>]? {
+        switch category {
+        case .tokens:
+            return Web3TokenDAO.shared.search(
+                walletID: wallet.walletID,
+                keyword: keyword,
+                includesZeroBalanceItems: true,
+                limit: nil,
+            )
+            .sorted(using: TokenComparator<Item>(keyword: keyword))
+            .prefix(limit ?? .max)
+            .map { .token($0) }
+        case .all, .perps, .earn, .collectibles:
+            return nil
+        }
+    }
+    
+    func recentItems() -> [WalletSearchItem<Item>] {
+        let string: String? = PropertiesDAO.shared.value(forKey: .walletRecentSearches)
+        let searches = string?.data(using: .utf8).flatMap { data in
+            try? JSONDecoder.default.decode([RecentWalletSearch].self, from: data)
+        } ?? []
+        return searches.compactMap { recent in
+            switch recent {
+            case .token(let assetID):
+                Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: assetID).flatMap { token in
+                        .token(token)
+                }
+            case .earn, .collectible:
+                nil
+            }
+        }
     }
     
     func reportUserSelection(token item: Web3TokenItem) {
-        delegate?.walletSearchWeb3TokenController(self, didSelectToken: item)
+        delegate?.commonWalletSearchModelController(self, didSelectToken: item)
     }
     
 }

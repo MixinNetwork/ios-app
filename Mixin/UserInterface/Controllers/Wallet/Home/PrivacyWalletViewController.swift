@@ -19,7 +19,6 @@ final class PrivacyWalletViewController: WalletViewController {
     private var pendingDepositObserver: PrivacyWalletPendingDepositObserver?
     private var perpsPositionLoader: PerpetualPositionLoader?
     private var perpsTopMoverLoader: PerpetualMarketLoader?
-    private var searchTokenHandler: WalletSearchMixinTokenHandler?
     
     private var reloadingPublisher: Set<AnyCancellable> = []
     
@@ -131,14 +130,10 @@ final class PrivacyWalletViewController: WalletViewController {
     }
     
     override func searchAction(_ sender: Any) {
-        let modelController = WalletSearchMixinTokenController()
-        let searchTokenHandler = WalletSearchMixinTokenHandler(
-            navigationController: navigationController
-        )
-        modelController.delegate = searchTokenHandler
+        let modelController = PrivacyWalletSearchModelController()
+        modelController.delegate = self
         let search = WalletSearchViewController(modelController: modelController)
         navigationController?.pushViewController(search, animated: true)
-        self.searchTokenHandler = searchTokenHandler
     }
     
     override func moreAction(_ sender: Any) {
@@ -786,6 +781,25 @@ extension PrivacyWalletViewController: TransactionCell.Delegate {
         }
         let profile = UserProfileViewController(user: user)
         present(profile, animated: true, completion: nil)
+    }
+    
+}
+
+extension PrivacyWalletViewController: PrivacyWalletSearchModelController.Delegate {
+    
+    func privacyWalletSearchModelController(
+        _ controller: PrivacyWalletSearchModelController,
+        didSelectToken token: MixinTokenItem,
+    ) {
+        guard token.isDisplayable else {
+            return
+        }
+        let controller = MixinTokenViewController(token: token)
+        navigationController?.pushViewController(controller, animated: true)
+        DispatchQueue.global().async {
+            TokenDAO.shared.save(assets: [token])
+        }
+        reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "wallet_search"])
     }
     
 }

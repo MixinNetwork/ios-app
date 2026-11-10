@@ -192,7 +192,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                     
                     section.decorationItems = {
                         let background: NSCollectionLayoutDecorationItem = .background(
-                            elementKind: TradeSectionBackgroundView.elementKind
+                            elementKind: SectionBackgroundView.CornerRadius.small.rawValue
                         )
                         background.contentInsets = contentInsets
                         return [background]
@@ -322,7 +322,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                         ),
                     ]
                     let background: NSCollectionLayoutDecorationItem = .background(
-                        elementKind: TradeSectionBackgroundView.elementKind
+                        elementKind: SectionBackgroundView.CornerRadius.small.rawValue
                     )
                     background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     section.decorationItems = [background]
@@ -347,7 +347,7 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
                     ]
                     section.decorationItems = {
                         let background: NSCollectionLayoutDecorationItem = .background(
-                            elementKind: TradeSectionBackgroundView.elementKind
+                            elementKind: SectionBackgroundView.CornerRadius.small.rawValue
                         )
                         background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                         return [background]
@@ -362,8 +362,8 @@ class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking
             configuration: config
         )
         layout.register(
-            TradeSectionBackgroundView.self,
-            forDecorationViewOfKind: TradeSectionBackgroundView.elementKind
+            SectionBackgroundView.self,
+            forDecorationViewOfKind: SectionBackgroundView.CornerRadius.small.rawValue
         )
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear

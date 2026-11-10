@@ -1279,6 +1279,7 @@
 "perps_position_size_pnl_1" = "サイズが大きくなり、損益も大きくなる";
 "perps_position_size_pnl_2" = "サイズが小さく、損益が小さい";
 "perps_position_tip" = "ポジションを増やすと利益とリスクが拡大します";
+"perps_positions" = "ポジション";
 "perps_product" = "市場";
 "perps_realized_pnl" = "実現損益";
 "perps_realized_pnl_tip" = "未決済のポジションは統計に含まれません。";
@@ -1609,6 +1610,7 @@
 "search_placeholder_contact" = "Mixin ID, 名前, 電話番号";
 "search_placeholder_dapp" = "名前、URL";
 "search_placeholder_number" = "Mixin ID または電話番号を検索";
+"search_query_in_markets" = "市場で「%@」を検索";
 "search_related_message" = "%d個の関連するメッセージ";
 "search_related_message_count" = "%d個の関連するメッセージ";
 "search_result_prefix_phone" = "電話番号:";

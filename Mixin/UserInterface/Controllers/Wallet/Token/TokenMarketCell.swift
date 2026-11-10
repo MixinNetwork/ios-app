@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class TokenMarketCell: UITableViewCell {
+final class TokenMarketCell: UICollectionViewCell {
     
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!

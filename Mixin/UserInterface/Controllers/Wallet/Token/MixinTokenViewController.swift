@@ -12,8 +12,7 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
             title: token.name,
             subtitle: token.depositNetworkName
         )
-        tableView.register(R.nib.snapshotCell)
-        tableView.reloadData()
+        collectionView.reloadData()
         
         let center: NotificationCenter = .default
         center.addObserver(self, selector: #selector(balanceDidUpdate(_:)), name: UTXOService.balanceDidUpdateNotification, object: nil)
@@ -40,7 +39,7 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
                 }
                 self.earning = earning
                 UIView.performWithoutAnimation {
-                    self.tableView.reloadSections([Section.earning.rawValue], with: .none)
+                    self.collectionView.reloadSections([Section.earning.rawValue])
                 }
                 if earning != nil {
                     self.availableForEarning = true
@@ -96,9 +95,16 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
         cell.delegate = self
     }
     
-    override func tableView(_ tableView: UITableView, cellForTransaction transaction: SafeSnapshotItem) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot.identifier) as! SnapshotCell
-        cell.render(snapshot: transaction)
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        cellForTransaction transaction: SafeSnapshotItem,
+        at indexPath: IndexPath,
+    ) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: R.reuseIdentifier.transaction,
+            for: indexPath,
+        )!
+        cell.load(snapshot: transaction)
         cell.delegate = self
         return cell
     }
@@ -191,7 +197,7 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
         DispatchQueue.main.async {
             self.earning = earning
             UIView.performWithoutAnimation {
-                self.tableView.reloadSections([Section.earning.rawValue], with: .none)
+                self.collectionView.reloadSections([Section.earning.rawValue])
             }
         }
     }
@@ -207,10 +213,9 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
                     return
                 }
                 self.token = token
-                let indexPath = IndexPath(row: 0, section: Section.balance.rawValue)
-                self.tableView.beginUpdates()
-                self.tableView.reloadRows(at: [indexPath], with: .none)
-                self.tableView.endUpdates()
+                UIView.performWithoutAnimation {
+                    self.collectionView.reloadSections([Section.warning.rawValue, Section.balance.rawValue])
+                }
             }
         }
     }
@@ -224,13 +229,16 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
             let limitExceededTransactionSnapshots = dao.snapshots(assetID: assetID, pending: false, limit: limit + 1)
             let hasMoreSnapshots = limitExceededTransactionSnapshots.count > limit
             let transactionSnapshots = Array(limitExceededTransactionSnapshots.prefix(limit))
-            let transactionRows = TransactionRow.rows(
+            let transactionSections = TransactionSection.sections(
                 transactions: transactionSnapshots,
-                hasMore: hasMoreSnapshots
+                hasMore: hasMoreSnapshots,
+                dateRepresentation: { snapshot in
+                    DateFormatter.dateSimple.string(from: snapshot.createdAt.toUTCDate())
+                },
             )
             
             DispatchQueue.main.async {
-                self?.reloadTransactions(pending: pendingSnapshots, finished: transactionRows)
+                self?.reloadTransactions(pending: pendingSnapshots, finished: transactionSections)
             }
         }
     }
@@ -281,12 +289,12 @@ extension MixinTokenViewController: TokenActionView.Delegate {
     
 }
 
-extension MixinTokenViewController: SnapshotCellDelegate {
+extension MixinTokenViewController: TransactionCell.Delegate {
     
-    func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell) {
+    func transactionCellDidSelectIcon(_ cell: TransactionCell) {
         guard
-            let indexPath = tableView.indexPath(for: cell),
-            case let .transaction(snapshot) = transactionRows[indexPath.row],
+            let indexPath = collectionView.indexPath(for: cell),
+            case let .transaction(snapshot) = transactionRow(at: indexPath),
             let userId = snapshot.opponentUserID
         else {
             return

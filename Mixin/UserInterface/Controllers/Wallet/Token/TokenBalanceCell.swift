@@ -5,7 +5,7 @@ protocol TokenBalanceCellDelegate: AnyObject {
     func tokenBalanceCellWantsToRevealOutputs(_ cell: TokenBalanceCell)
 }
 
-final class TokenBalanceCell: UITableViewCell {
+final class TokenBalanceCell: UICollectionViewCell {
     
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!

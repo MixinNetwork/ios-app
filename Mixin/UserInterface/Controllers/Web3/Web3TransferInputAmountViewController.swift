@@ -1,5 +1,4 @@
 import UIKit
-import web3
 import MixinServices
 
 final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewController {

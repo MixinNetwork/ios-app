@@ -1,5 +1,4 @@
 import Foundation
-import web3
 
 struct GaslessTransactionEVMPayload: Codable {
     
@@ -25,11 +24,18 @@ struct GaslessTransactionEVMPayload: Codable {
         }
         
         struct EIP7702Auth: Codable {
-            let signType: String
-            let message: String
-            let chainId: String
-            let address: String
-            let nonce: String
+            
+            enum CodingKeys: String, CodingKey {
+                case signType, message, address, nonce
+                case chainID = "chainId"
+            }
+            
+            let signType: String?
+            let message: String?
+            let chainID: String?
+            let address: String?
+            let nonce: String?
+            
         }
         
         let userOperation: UserOperation
@@ -39,23 +45,5 @@ struct GaslessTransactionEVMPayload: Codable {
     
     let userOperation: UserOperation
     let signing: Signing
-    
-}
-
-extension EthereumAccountProtocol {
-    
-    func signGaslessPayload(message: Data) throws -> String {
-        guard var signed = try? sign(message: message) else {
-            throw EthereumAccountError.signError
-        }
-        guard var last = signed.popLast() else {
-            throw EthereumAccountError.signError
-        }
-        if last < 27 {
-            last += 27
-        }
-        signed.append(last)
-        return signed.web3.hexString
-    }
     
 }

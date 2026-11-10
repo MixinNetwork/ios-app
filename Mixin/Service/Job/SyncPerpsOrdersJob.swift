@@ -16,7 +16,7 @@ final class SyncPerpsOrdersJob: AsynchronousJob {
     }
     
     public override func execute() -> Bool {
-        let initialOffset = PerpsOrderDAO.shared.offset()
+        let initialOffset = PerpsOrderDAO.shared.latestUpdatedAt()
         Logger.general.debug(category: "SyncPerpsOrders", message: "wid: \(walletID), offset: \(initialOffset ?? "(null)")")
         Task {
             do {

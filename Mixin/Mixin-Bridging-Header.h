@@ -8,3 +8,4 @@
 #import "opusenc_set_bitrate.h"
 #import "solana_rust_sdk.h"
 #import "bitcoin_rust_sdk.h"
+#import "ethereum_rust_sdk.h"

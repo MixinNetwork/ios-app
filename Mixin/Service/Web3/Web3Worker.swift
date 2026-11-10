@@ -1,6 +1,5 @@
 import Foundation
 import WebKit
-import web3
 import MixinServices
 
 final class Web3Worker {
@@ -172,7 +171,10 @@ final class Web3Worker {
         }
         let humanReadable = String(data: data, encoding: .utf8) ?? ""
         do {
-            let typedData = try JSONDecoder.default.decode(TypedData.self, from: data)
+            guard case .evm(let chainID) = evmChain.specification else {
+                throw EVM.Error.invalidTypedDataChainID
+            }
+            let typedData = try EVMTypedData(json: data, chainID: chainID)
             let signable: WalletConnectDecodedSigningRequest.Signable = .typed(typedData)
             let operation = Web3SignWithBrowserWalletOperation(
                 wallet: wallet,
@@ -188,6 +190,10 @@ final class Web3Worker {
             }
             let sign = Web3SignViewController(operation: operation)
             Web3PopupCoordinator.enqueue(popup: .request(sign))
+        } catch EVM.Error.invalidTypedDataChainID {
+            let message = R.string.localizable.eip712_invalid_chain_id()
+            showAutoHiddenHud(style: .error, text: message)
+            send(error: message, to: request)
         } catch {
             Logger.web3.error(category: "Web3Worker", message: "\(error)")
             send(error: "Invalid Data", to: request)

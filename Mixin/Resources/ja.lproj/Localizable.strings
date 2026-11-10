@@ -585,6 +585,7 @@
 "edit_note" = "メモを編集";
 "editing_address" = "住所の編集";
 "editing_address_failed" = "アドレスの編集に失敗しました";
+"eip712_invalid_chain_id" = "型付きメッセージのチェーン ID が無効か、署名ネットワークと一致しません。";
 "emergency_contact" = "回復連絡先";
 "enable" = "有効にする";
 "enable_bioauth_description" = "%@ についてはどうですか?有効にすると、%@ による認証を迅速に行うことができます。";
@@ -829,6 +830,7 @@
 "invalid_address" = "無効なアドレス";
 "invalid_candidate" = "無効な候補";
 "invalid_format" = "無効な形式です";
+"invalid_gasless_transaction" = "無効なガスレス取引です。もう一度お試しください。";
 "invalid_height" = "無効な高さ";
 "invalid_malformed_address_eos_hint" = "無効なアドレスです。MixinはEOSアドレスへの引き出しに対応していません。";
 "invalid_malformed_address_hint" = "無効なアドレスです。%@の有効なアドレスでもう一度試してください。";
@@ -1297,9 +1299,11 @@
 "perps_scene_sl_triggered" = "トリガーストップロス: 損失のコントロール";
 "perps_scene_tp_triggered" = "利益確定のトリガー: 利益を確定する";
 "perps_share_card_market" = "- 📈 マーケット: %@";
+"perps_share_card_max_leverage" = "📈 最大レバレッジ: %dx";
 "perps_share_card_side" = "- ↕️ 方向: %1$@ (%2$dx)";
 "perps_share_card_title" = "🚀 Perps %@";
 "perps_share_card_trade_now" = "💰 今すぐ取引";
+"perps_share_card_volume" = "💰 24時間取引高: %@";
 "perps_share_mixin_contact_desc" = "友達を連れて参加しましょう";
 "perps_share_mixin_contact_desc_with_percent" = "このリンクから %@ コミッションを獲得してください";
 "perps_share_pnl" = "損益通算";

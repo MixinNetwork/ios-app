@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="25098" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25073"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,14 +11,15 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ShareMarketContentViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="changeLabel" destination="K8B-S0-X5O" id="Wlj-bt-tdq"/>
-                <outlet property="chartView" destination="Z7G-eu-Oxh" id="oMA-wp-DJA"/>
+                <outlet property="chartWrapperView" destination="Z7G-eu-Oxh" id="oMA-wp-DJA"/>
                 <outlet property="contentHeightConstraint" destination="HKA-qK-7Zh" id="Sx6-qR-TRH"/>
                 <outlet property="contentView" destination="i5M-Pr-FkT" id="gGS-ZP-UZU"/>
                 <outlet property="contentWidthConstraint" destination="S4u-AC-gTV" id="inn-dX-Mg7"/>
+                <outlet property="coverView" destination="Cvr-Rp-001" id="17H-UF-d36"/>
                 <outlet property="obiView" destination="vIt-KX-LBd" id="roo-3D-bqk"/>
                 <outlet property="priceLabel" destination="q0F-2y-DwD" id="7uw-xJ-SIY"/>
-                <outlet property="rankLabel" destination="VBa-ks-diJ" id="y4W-uQ-kk9"/>
                 <outlet property="symbolLabel" destination="1L3-kk-x4Q" id="IqY-Ls-E8D"/>
+                <outlet property="tagLabel" destination="VBa-ks-diJ" id="y4W-uQ-kk9"/>
                 <outlet property="tokenIconView" destination="eCN-Fh-B2J" id="4WM-BU-mex"/>
                 <outlet property="view" destination="kVY-h5-WTs" id="ukz-hQ-qiL"/>
             </connections>
@@ -28,63 +29,83 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i5M-Pr-FkT">
-                    <rect key="frame" x="37" y="0.0" width="319" height="413"/>
+                    <rect key="frame" x="37" y="1" width="319" height="411"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="share_branding_multicolor" translatesAutoresizingMaskIntoConstraints="NO" id="3m6-29-hVX">
-                            <rect key="frame" x="20" y="16" width="85.333333333333329" height="20"/>
-                        </imageView>
-                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="frS-U6-9tO">
-                            <rect key="frame" x="20" y="56" width="223" height="76"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cvr-Rp-001">
+                            <rect key="frame" x="0.0" y="0.0" width="319" height="319"/>
                             <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="xyR-Vt-oyl">
-                                    <rect key="frame" x="0.0" y="0.0" width="46.333333333333336" height="16.666666666666668"/>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="share_branding_multicolor" translatesAutoresizingMaskIntoConstraints="NO" id="3m6-29-hVX">
+                                    <rect key="frame" x="20" y="16" width="85.333333333333329" height="20"/>
+                                </imageView>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="frS-U6-9tO">
+                                    <rect key="frame" x="20" y="56" width="223" height="76"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1L3-kk-x4Q">
-                                            <rect key="frame" x="0.0" y="0.0" width="27.333333333333332" height="16.666666666666668"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="xyR-Vt-oyl">
+                                            <rect key="frame" x="0.0" y="0.0" width="46.333333333333336" height="19.333333333333332"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1L3-kk-x4Q">
+                                                    <rect key="frame" x="0.0" y="1.3333333333333357" width="27.333333333333332" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" name="text"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" text="#2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VBa-ks-diJ" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                                    <rect key="frame" x="31.333333333333329" y="2.6666666666666652" width="15" height="14.333333333333336"/>
+                                                    <color key="backgroundColor" name="button_background_quaternary"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" name="text_tertiary"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="$3598" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q0F-2y-DwD">
+                                            <rect key="frame" x="0.0" y="27.333333333333329" width="68.333333333333329" height="26.333333333333329"/>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
                                             <color key="textColor" name="text"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" text="#2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VBa-ks-diJ" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="31.333333333333329" y="1.3333333333333366" width="15" height="14.333333333333336"/>
-                                            <color key="backgroundColor" name="button_background_quaternary"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <color key="textColor" name="text_tertiary"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="-0.06" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K8B-S0-X5O" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="61.666666666666679" width="32" height="14.333333333333336"/>
+                                            <color key="backgroundColor" name="market_red"/>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                 </stackView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="$3598" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q0F-2y-DwD">
-                                    <rect key="frame" x="0.0" y="24.666666666666671" width="68.333333333333329" height="26.333333333333329"/>
-                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
-                                    <color key="textColor" name="text"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="-0.06" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K8B-S0-X5O" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="59" width="35.666666666666664" height="17"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <color key="textColor" name="market_red"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eCN-Fh-B2J" customClass="PlainTokenIconView" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="251" y="44" width="48" height="48"/>
+                                    <color key="backgroundColor" name="background"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="48" id="gUP-1u-Pex"/>
+                                        <constraint firstAttribute="width" constant="48" id="tdG-jR-w5u"/>
+                                    </constraints>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z7G-eu-Oxh">
+                                    <rect key="frame" x="20" y="145" width="279" height="166"/>
+                                    <color key="backgroundColor" name="background"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="166" id="Il0-if-K0F"/>
+                                    </constraints>
+                                </view>
                             </subviews>
-                        </stackView>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eCN-Fh-B2J" customClass="PlainTokenIconView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="251" y="44" width="48" height="48"/>
                             <color key="backgroundColor" name="background"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="48" id="gUP-1u-Pex"/>
-                                <constraint firstAttribute="width" constant="48" id="tdG-jR-w5u"/>
-                            </constraints>
-                        </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z7G-eu-Oxh" customClass="ChartView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="20" y="145" width="279" height="168"/>
-                            <color key="backgroundColor" name="background"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="168" id="Il0-if-K0F"/>
+                                <constraint firstItem="eCN-Fh-B2J" firstAttribute="top" secondItem="Cvr-Rp-001" secondAttribute="top" constant="44" id="1Sd-n5-W31"/>
+                                <constraint firstItem="frS-U6-9tO" firstAttribute="top" secondItem="3m6-29-hVX" secondAttribute="bottom" constant="20" id="Ba6-id-43R"/>
+                                <constraint firstItem="eCN-Fh-B2J" firstAttribute="leading" secondItem="frS-U6-9tO" secondAttribute="trailing" constant="8" id="CRV-JZ-jK5"/>
+                                <constraint firstAttribute="bottom" secondItem="Z7G-eu-Oxh" secondAttribute="bottom" constant="8" id="Cvr-Bt-001"/>
+                                <constraint firstItem="frS-U6-9tO" firstAttribute="leading" secondItem="Cvr-Rp-001" secondAttribute="leading" constant="20" id="ERf-BO-60C"/>
+                                <constraint firstAttribute="trailing" secondItem="eCN-Fh-B2J" secondAttribute="trailing" constant="20" id="Tpj-QU-96z"/>
+                                <constraint firstItem="3m6-29-hVX" firstAttribute="leading" secondItem="Cvr-Rp-001" secondAttribute="leading" constant="20" id="Ybn-zv-cl5"/>
+                                <constraint firstItem="3m6-29-hVX" firstAttribute="top" secondItem="Cvr-Rp-001" secondAttribute="top" constant="16" id="ZHX-uE-7bQ"/>
+                                <constraint firstItem="Z7G-eu-Oxh" firstAttribute="leading" secondItem="Cvr-Rp-001" secondAttribute="leading" constant="20" id="fUd-tP-WSW"/>
+                                <constraint firstAttribute="trailing" secondItem="Z7G-eu-Oxh" secondAttribute="trailing" constant="20" id="gp3-X0-9y4"/>
+                                <constraint firstItem="Z7G-eu-Oxh" firstAttribute="top" secondItem="frS-U6-9tO" secondAttribute="bottom" constant="13" id="gqj-7G-sQW"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vIt-KX-LBd" customClass="ShareObiView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="321" width="319" height="92"/>
+                            <rect key="frame" x="0.0" y="319" width="319" height="92"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="92" id="EBX-D3-RVw"/>
                             </constraints>
@@ -92,21 +113,14 @@
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
-                        <constraint firstItem="eCN-Fh-B2J" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="44" id="1Sd-n5-W31"/>
-                        <constraint firstItem="frS-U6-9tO" firstAttribute="top" secondItem="3m6-29-hVX" secondAttribute="bottom" constant="20" id="Ba6-id-43R"/>
-                        <constraint firstItem="eCN-Fh-B2J" firstAttribute="leading" secondItem="frS-U6-9tO" secondAttribute="trailing" constant="8" id="CRV-JZ-jK5"/>
-                        <constraint firstItem="frS-U6-9tO" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="ERf-BO-60C"/>
-                        <constraint firstAttribute="height" constant="413" id="HKA-qK-7Zh"/>
+                        <constraint firstItem="Cvr-Rp-001" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Cvr-Ld-001"/>
+                        <constraint firstItem="Cvr-Rp-001" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Cvr-Tp-001"/>
+                        <constraint firstAttribute="trailing" secondItem="Cvr-Rp-001" secondAttribute="trailing" id="Cvr-Tr-001"/>
+                        <constraint firstAttribute="height" constant="411" id="HKA-qK-7Zh"/>
                         <constraint firstAttribute="trailing" secondItem="vIt-KX-LBd" secondAttribute="trailing" id="KNI-RX-LU9"/>
                         <constraint firstItem="vIt-KX-LBd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="MdR-xy-Njp"/>
                         <constraint firstAttribute="width" constant="319" id="S4u-AC-gTV"/>
-                        <constraint firstAttribute="trailing" secondItem="eCN-Fh-B2J" secondAttribute="trailing" constant="20" id="Tpj-QU-96z"/>
-                        <constraint firstItem="3m6-29-hVX" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="Ybn-zv-cl5"/>
-                        <constraint firstItem="3m6-29-hVX" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="16" id="ZHX-uE-7bQ"/>
-                        <constraint firstItem="Z7G-eu-Oxh" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="fUd-tP-WSW"/>
-                        <constraint firstAttribute="trailing" secondItem="Z7G-eu-Oxh" secondAttribute="trailing" constant="20" id="gp3-X0-9y4"/>
-                        <constraint firstItem="Z7G-eu-Oxh" firstAttribute="top" secondItem="frS-U6-9tO" secondAttribute="bottom" constant="13" id="gqj-7G-sQW"/>
-                        <constraint firstItem="vIt-KX-LBd" firstAttribute="top" secondItem="Z7G-eu-Oxh" secondAttribute="bottom" constant="8" id="o3y-wD-wom"/>
+                        <constraint firstItem="vIt-KX-LBd" firstAttribute="top" secondItem="Cvr-Rp-001" secondAttribute="bottom" id="o3y-wD-wom"/>
                         <constraint firstAttribute="bottom" secondItem="vIt-KX-LBd" secondAttribute="bottom" id="r4g-yb-wWr"/>
                     </constraints>
                 </view>
@@ -117,7 +131,7 @@
                 <constraint firstItem="i5M-Pr-FkT" firstAttribute="centerY" secondItem="kVY-h5-WTs" secondAttribute="centerY" id="qJc-V5-7Um"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="88" y="-337"/>
+            <point key="canvasLocation" x="87.786259541984734" y="-337.67605633802816"/>
         </view>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
     </objects>
@@ -130,7 +144,7 @@
             <color red="0.89803921568627454" green="0.90980392156862744" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="market_red">
-            <color red="0.89803921568627454" green="0.47058823529411764" blue="0.45490196078431372" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.96078431372549022" green="0.33725490196078434" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

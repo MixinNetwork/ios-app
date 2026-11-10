@@ -585,6 +585,7 @@
 "edit_note" = "修改转账备注";
 "editing_address" = "正在修改地址";
 "editing_address_failed" = "修改地址失败";
+"eip712_invalid_chain_id" = "结构化消息的链 ID 无效，或与签名网络不一致。";
 "emergency_contact" = "恢复联系人";
 "enable" = "启用";
 "enable_bioauth_description" = "想要启用%@支付吗？启用后，转账时可验证%@快速完成付款。";
@@ -829,6 +830,7 @@
 "invalid_address" = "无效的地址";
 "invalid_candidate" = "无效的 Candidate";
 "invalid_format" = "格式无效";
+"invalid_gasless_transaction" = "免 Gas 交易无效，请重试。";
 "invalid_height" = "高度无效";
 "invalid_malformed_address_eos_hint" = "地址格式错误。Mixin 不支持提现到 EOS 合约地址！";
 "invalid_malformed_address_hint" = "地址格式错误。请输入正确的 %@ 地址";
@@ -1297,9 +1299,11 @@
 "perps_scene_sl_triggered" = "触发止损：控制亏损";
 "perps_scene_tp_triggered" = "触发止盈：锁定利润";
 "perps_share_card_market" = "- 📈 市场：%@";
+"perps_share_card_max_leverage" = "📈 最大杠杆：%dx";
 "perps_share_card_side" = "- ↕️ 方向：%1$@（%2$d倍）";
 "perps_share_card_title" = "🚀 合约 %@";
 "perps_share_card_trade_now" = "💰 立即交易";
+"perps_share_card_volume" = "💰 24小时成交量：%@";
 "perps_share_mixin_contact_desc" = "带朋友一起上车";
 "perps_share_mixin_contact_desc_with_percent" = "通过此链接赚取 %@ 分佣";
 "perps_share_pnl" = "收益额";

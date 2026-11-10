@@ -5,7 +5,7 @@ protocol ModernShareContentViewController: UIViewController {
     func shareAsActivity()
     func copyLink()
     func savePhoto()
-    func shareToMixinContact()
+    func shareToMixinContact() async throws
 }
 
 final class PopupShareViewController: UIViewController {
@@ -24,6 +24,9 @@ final class PopupShareViewController: UIViewController {
     
     private let contentViewController: any ModernShareContentViewController
     private let rebating: String?
+    
+    private var sharingTask: Task<Void, Never>?
+    private var sharingHUD: Hud?
     
     init<ContentViewController: ModernShareContentViewController>(
         contentViewController: ContentViewController,
@@ -115,8 +118,40 @@ final class PopupShareViewController: UIViewController {
         updatePreferredContentSizeHeight()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        sharingTask?.cancel()
+        sharingHUD?.hide()
+    }
+    
     @IBAction func sendToMixinContact(_ sender: Any) {
-        contentViewController.shareToMixinContact()
+        guard sharingTask == nil else {
+            return
+        }
+        sharingTask = Task { [weak self] in
+            guard let self else {
+                return
+            }
+            let hud = Hud()
+            sharingHUD = hud
+            hud.show(style: .busy, text: "")
+            view.isUserInteractionEnabled = false
+            defer {
+                hud.hide()
+                sharingHUD = nil
+                sharingTask = nil
+                view.isUserInteractionEnabled = true
+            }
+            do {
+                try await contentViewController.shareToMixinContact()
+            } catch {
+                guard !Task.isCancelled else {
+                    return
+                }
+                hud.hide()
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+            }
+        }
     }
     
     @objc private func close(_ sender: Any) {
@@ -124,14 +159,23 @@ final class PopupShareViewController: UIViewController {
     }
     
     @objc private func shareAsActivity(_ sender: Any) {
+        guard sharingTask == nil else {
+            return
+        }
         contentViewController.shareAsActivity()
     }
     
     @objc private func copyLink(_ sender: Any) {
+        guard sharingTask == nil else {
+            return
+        }
         contentViewController.copyLink()
     }
     
     @objc private func savePhoto(_ sender: Any) {
+        guard sharingTask == nil else {
+            return
+        }
         contentViewController.savePhoto()
     }
     
@@ -180,6 +224,32 @@ final class PopupShareViewController: UIViewController {
                 make.center.equalTo(imageView)
                 make.width.height.equalTo(48)
             }
+        }
+    }
+    
+}
+
+extension ModernShareContentViewController {
+    
+    func presentShareConfirmation(content: AppCardData.V1Content) throws {
+        let cardData: AppCardData = .v1(content)
+        var message = Message.createMessage(
+            messageId: UUID().uuidString.lowercased(),
+            conversationId: "",
+            userId: myUserId,
+            category: MessageCategory.APP_CARD.rawValue,
+            status: MessageStatus.SENDING.rawValue,
+            createdAt: Date().toUTCString()
+        )
+        message.content = try JSONEncoder.default.encode(cardData).base64EncodedString()
+        let confirmation = ExternalSharingConfirmationViewController(
+            sharingContext: ExternalSharingContext(content: .appCard(cardData)),
+            message: message,
+            webContext: nil,
+            action: .forward
+        )
+        presentingViewController?.dismiss(animated: true) {
+            UIApplication.shared.homeContainerViewController?.present(confirmation, animated: true)
         }
     }
     

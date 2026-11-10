@@ -1,18 +1,22 @@
 import Foundation
 import XKCP_FIPS202
-import secp256k1
 import WalletConnectSigner
 
 struct Web3CryptoProvider: CryptoProvider {
     
-    enum Error: Swift.Error {
-        case hexDecoding
-    }
-    
-    func recoverPubKey(signature: EthereumSignature, message: Data) throws -> Data {
-        let signature = try secp256k1.Recovery.ECDSASignature(dataRepresentation: signature.serialized)
-        let publicKey = try secp256k1.Recovery.PublicKey(message, signature: signature, format: .uncompressed)
-        return publicKey.dataRepresentation
+    func recoverPubKey(
+        signature: EthereumSignature,
+        message: Data,
+    ) throws(EVM.Error) -> Data {
+        guard signature.r.count == 32, signature.s.count == 32, signature.v <= 1 else {
+            throw .invalidSignature
+        }
+        let publicKey = try EVM.recoverPublicKey(
+            hash: keccak256(message),
+            signature: signature.serialized,
+        )
+        // WalletConnect hashes the raw X and Y coordinates to derive the address.
+        return Data(publicKey.dropFirst())
     }
     
     func keccak256(_ data: Data) -> Data {

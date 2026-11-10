@@ -554,7 +554,7 @@
 "disable_disappearing_message" = "%@ 사라지는 메시지 비활성화됨";
 "disable_disappearing_message_hint" = "%@: 사라지는 메시지가 꺼졌습니다. 눌러서 사라지는 메시지 설정을 여세요.";
 "disappearing_message" = "사라지는 메시지";
-"disappearing_message_hint" = "활성화하면 이 채팅에서 주고받은 새 메시지가 확인된 후 사라집니다. 자세히 알아보려면 문서를 읽어보세요.";
+"disappearing_message_hint" = "활성화하면 이 채팅에서 주고받은 새 메시지는 일정 시간이 지나면 사라집니다. 자세히 알아보려면 문서를 읽어보세요.";
 "discard" = "삭제";
 "disconnect" = "연결 끊기";
 "disconnected" = "연결이 끊어졌습니다.";

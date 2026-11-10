@@ -554,7 +554,7 @@
 "disable_disappearing_message" = "%@禁用了限时消息";
 "disable_disappearing_message_hint" = "%@关闭了限时消息。点击打开限时消息设置。";
 "disappearing_message" = "限时消息";
-"disappearing_message_hint" = "启用后，在此聊天中发送和接收的新信息在被看到后会消失，阅读文档以了解更多。";
+"disappearing_message_hint" = "启用后，在此聊天中发送和接收的新消息将在一段时间后消失，阅读文档以了解更多。";
 "discard" = "废弃";
 "disconnect" = "断开连接";
 "disconnected" = "已断开";

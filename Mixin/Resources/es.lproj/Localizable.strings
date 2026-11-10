@@ -554,7 +554,7 @@
 "disable_disappearing_message" = "%@ ha desactivado los mensajes que desaparecen";
 "disable_disappearing_message_hint" = "%@: se han desactivado los mensajes temporales. Toca para abrir los ajustes de mensajes temporales.";
 "disappearing_message" = "Mensajes que desaparecen";
-"disappearing_message_hint" = "Cuando está habilitado, los nuevos mensajes enviados y recibidos en este chat desaparecerán después de que se hayan visto, lee el documento para obtener más información.";
+"disappearing_message_hint" = "Cuando está habilitado, los nuevos mensajes enviados y recibidos en este chat desaparecerán después de un cierto período de tiempo, lee el documento para obtener más información.";
 "discard" = "Desechar";
 "disconnect" = "Desconectar";
 "disconnected" = "Desconectado";

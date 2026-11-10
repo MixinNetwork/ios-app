@@ -554,7 +554,7 @@
 "disable_disappearing_message" = "%@ disabled disappearing message";
 "disable_disappearing_message_hint" = "%@ disabled disappearing message. Click to set them up or learn more.";
 "disappearing_message" = "Disappearing Messages";
-"disappearing_message_hint" = "When enabled, new messages sent and received in this chat will disappear after they have been seen. Read the document to learn more.";
+"disappearing_message_hint" = "When enabled, new messages sent and received in this chat will disappear after a certain period of time, read the document to learn more.";
 "discard" = "Discard";
 "disconnect" = "Disconnect";
 "disconnected" = "Disconnected";

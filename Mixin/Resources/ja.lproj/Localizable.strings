@@ -554,7 +554,7 @@
 "disable_disappearing_message" = "%@が消えるメッセージを無効にしました";
 "disable_disappearing_message_hint" = "%@が消えるメッセージを無効にしました。タップして消えるメッセージの設定を開きます。";
 "disappearing_message" = "消えるメッセージ";
-"disappearing_message_hint" = "有効にすると、このチャットで送受信された新しいメッセージは、見た後に消えます。詳しくは、こちらをお読みください。";
+"disappearing_message_hint" = "有効にすると、このチャットで送受信された新しいメッセージは一定時間後に消えます。詳しくは、こちらをお読みください。";
 "discard" = "破棄";
 "disconnect" = "切断";
 "disconnected" = "切断されました";

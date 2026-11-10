@@ -554,7 +554,7 @@
 "disable_disappearing_message" = "%@停用了限時訊息";
 "disable_disappearing_message_hint" = "%@關閉了限時訊息。點選開啟限時訊息設定。";
 "disappearing_message" = "限時訊息";
-"disappearing_message_hint" = "啟用後，在此聊天中傳送和接收的新資訊在被看到後會消失，閱讀檔案以瞭解更多。";
+"disappearing_message_hint" = "啟用後，在此聊天中傳送和接收的新訊息將在一段時間後消失，閱讀檔案以瞭解更多。";
 "discard" = "廢棄";
 "disconnect" = "斷開連線";
 "disconnected" = "已斷開";

@@ -35,8 +35,6 @@ class SystemMessageCell: MessageCell {
         backgroundImageViewBottomConstraint.update(offset: -viewModel.bottomSeparatorHeight)
         if let viewModel = viewModel as? SystemMessageViewModel {
             label.text = viewModel.text
-            backgroundImageView.tintColor = nil
-            label.textColor = .black
         }
     }
     

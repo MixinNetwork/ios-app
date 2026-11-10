@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D3769BAA3010000000000001 /* ShareCardImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3769BAA3010000000000002 /* ShareCardImage.swift */; };
 		05F1AF177EC94633B8C888DF /* ExploreMoreActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E65CF4E6E6254647A9D06787 /* ExploreMoreActionCell.xib */; };
 		094EE1FF13DF3C55B0BB34AB /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = B7536589F5323E0BA6DB99C4 /* Zip */; };
 		119704EDA3CD48649BB5F58B /* StickerStoreBannerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E0F99EB92C3422C954DE299 /* StickerStoreBannerCell.xib */; };
@@ -2075,6 +2076,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D3769BAA3010000000000002 /* ShareCardImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCardImage.swift; sourceTree = "<group>"; };
 		04E294DF55B04275B8DB1642 /* ExploreMoreActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreMoreActionCell.swift; sourceTree = "<group>"; };
 		059103962B154B85BE80C13B /* StickerStorePreviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StickerStorePreviewCell.xib; sourceTree = "<group>"; };
 		1BC5DC4D300046CDA234FBEC /* AdvertisementBannerActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvertisementBannerActionHandler.swift; sourceTree = "<group>"; };
@@ -4734,6 +4736,7 @@
 				94C67F402F63C25500CB11DC /* ManualScrollView.swift */,
 				94B7FF242FC2E13D00FAE569 /* PopupShareView.xib */,
 				94B7FF232FC2E13D00FAE569 /* PopupShareViewController.swift */,
+				D3769BAA3010000000000002 /* ShareCardImage.swift */,
 				94E2A67330207F6900A96B1D /* FavoriteButton.swift */,
 				C764FAFA5AF64A85A5824F02 /* PopupAlertViewController.swift */,
 			);
@@ -9049,6 +9052,7 @@
 				94C56D342C53AFBE009F3AB8 /* SwapQuoteRequester.swift in Sources */,
 				94D0FF382BEB1CA200E3947F /* InscriptionHashView.swift in Sources */,
 				94B7FF252FC2E13D00FAE569 /* PopupShareViewController.swift in Sources */,
+				D3769BAA3010000000000001 /* ShareCardImage.swift in Sources */,
 				7B88655B20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift in Sources */,
 				7BF42E4122DDF0D9005066E6 /* GalleryAnimatable.swift in Sources */,
 				943FEB3E2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift in Sources */,

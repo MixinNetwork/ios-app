@@ -1294,9 +1294,11 @@
 "perps_scene_sl_triggered" = "Trigger stop-loss: Control losses";
 "perps_scene_tp_triggered" = "Trigger take-profit: Lock in profits";
 "perps_share_card_market" = "- 📈 Market: %@";
+"perps_share_card_max_leverage" = "📈 Max Leverage: %dx";
 "perps_share_card_side" = "- ↕️ Side: %1$@ (%2$dx)";
 "perps_share_card_title" = "🚀 Perps %@";
 "perps_share_card_trade_now" = "💰 Trade Now";
+"perps_share_card_volume" = "💰 24h Volume: %@";
 "perps_share_mixin_contact_desc" = "Bring your friends on board";
 "perps_share_mixin_contact_desc_with_percent" = "Earn %@ commission via this link";
 "perps_share_pnl" = "PnL";

@@ -1294,9 +1294,11 @@
 "perps_scene_sl_triggered" = "Триггерный стоп-лосс: контроль потерь";
 "perps_scene_tp_triggered" = "Триггерный тейк-профит: фиксация прибыли";
 "perps_share_card_market" = "- 📈 Рынок: %@";
+"perps_share_card_max_leverage" = "📈 Максимальное плечо: %dx";
 "perps_share_card_side" = "- ↕️ Направление: %1$@ (%2$dx)";
 "perps_share_card_title" = "🚀 Perps %@";
 "perps_share_card_trade_now" = "💰 Торгуйте сейчас";
+"perps_share_card_volume" = "💰 Объём за 24 ч: %@";
 "perps_share_mixin_contact_desc" = "Приглашайте друзей на борт";
 "perps_share_mixin_contact_desc_with_percent" = "Заработайте комиссию %@ по этой ссылке";
 "perps_share_pnl" = "ПнЛ";

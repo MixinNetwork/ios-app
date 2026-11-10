@@ -16,7 +16,7 @@ final class PerpetualMarketViewController: UIViewController {
     private var sections: [Section] = [.price, .statistics]
     private var positionDetailItems: [PositionDetailItem] = []
     private var statisticItems: [StatisticItem]
-    private var priceDisplay: PriceDisplay {
+    private var priceDisplay: PerpetualMarketViewModel.PriceDisplay {
         didSet {
             AppGroupUserDefaults.Wallet.perpsPriceDisplay = priceDisplay.rawValue
         }
@@ -62,7 +62,9 @@ final class PerpetualMarketViewController: UIViewController {
         )
         self.viewModel = viewModel
         self.statisticItems = StatisticItem.availableItems(in: viewModel)
-        self.priceDisplay = PriceDisplay(rawValue: AppGroupUserDefaults.Wallet.perpsPriceDisplay) ?? .lastPrice
+        self.priceDisplay = PerpetualMarketViewModel.PriceDisplay(
+            rawValue: AppGroupUserDefaults.Wallet.perpsPriceDisplay
+        ) ?? .lastPrice
         super.init(nibName: nil, bundle: nil)
         self.candleLoader.delegate = self
     }
@@ -79,10 +81,12 @@ final class PerpetualMarketViewController: UIViewController {
             title: viewModel.market.displaySymbol,
             subtitle: R.string.localizable.perpetual()
         )
-        navigationItem.rightBarButtonItem = .customerService(
+        navigationItem.rightBarButtonItem = .tintedIcon(
+            image: R.image.ic_share(),
             target: self,
-            action: #selector(presentCustomerService(_:))
+            action: #selector(shareMarket(_:))
         )
+        navigationItem.rightBarButtonItem?.isEnabled = false
         view.backgroundColor = R.color.background_secondary()
         
         let sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = {
@@ -290,11 +294,6 @@ final class PerpetualMarketViewController: UIViewController {
 
 extension PerpetualMarketViewController {
     
-    private enum PriceDisplay: Int, CaseIterable {
-        case lastPrice = 0
-        case markPrice = 1
-    }
-    
     private enum AutoClosingIntroDisplay {
         case takeProfit
         case stopLoss
@@ -453,8 +452,37 @@ extension PerpetualMarketViewController {
         }
     }
     
-    @objc private func presentCustomerService(_ sender: Any) {
-        CustomerServiceViewController.invoke(reportingTags: ["source": "perps_market"])
+    @objc private func shareMarket(_ sender: Any) {
+        guard let chart = charts[selectedTimeFrame] else {
+            return
+        }
+        let candles: [PerpetualCandleViewModel]
+        switch chart {
+        case .loading:
+            return
+        case .unavailable:
+            candles = []
+        case .candles(let loadedCandles):
+            candles = loadedCandles
+        }
+        let viewModel = self.viewModel
+        let hud = Hud()
+        hud.show(style: .busy, text: "")
+        Referral.loadAvailableCode { [weak self] code in
+            hud.hide()
+            guard let self, self.view.window != nil else {
+                return
+            }
+            let share = PopupShareViewController(
+                contentViewController: ShareMarketContentViewController(
+                    viewModel: viewModel,
+                    candles: candles,
+                    rebatingCode: code
+                ),
+                rebatingCode: code
+            )
+            self.present(share, animated: true)
+        }
     }
     
     @objc private func openLongPosition(_ sender: UIButton) {
@@ -889,8 +917,11 @@ extension PerpetualMarketViewController {
         }
     }
     
-    private func updatePrice(on cell: PerpetualMarketPriceCell, by display: PriceDisplay) {
-        cell.priceSelectorButton.menu = UIMenu(children: PriceDisplay.allCases.map { display in
+    private func updatePrice(
+        on cell: PerpetualMarketPriceCell,
+        by display: PerpetualMarketViewModel.PriceDisplay
+    ) {
+        let actions = PerpetualMarketViewModel.PriceDisplay.allCases.map { display in
             let title = switch display {
             case .lastPrice:
                 R.string.localizable.perps_last_price()
@@ -908,7 +939,8 @@ extension PerpetualMarketViewController {
                     self.updatePrice(on: cell, by: display)
                 }
             )
-        })
+        }
+        cell.priceSelectorButton.menu = UIMenu(children: actions)
         switch display {
         case .lastPrice:
             cell.loadPrice(
@@ -1133,6 +1165,7 @@ extension PerpetualMarketViewController: PerpetualMarketPriceCell.Delegate {
     
     func perpetualMarketPriceCell(_ cell: PerpetualMarketPriceCell, didSelectTimeFrame timeFrame: PerpetualTimeFrame) {
         self.selectedTimeFrame = timeFrame
+        navigationItem.rightBarButtonItems?.first?.isEnabled = charts[timeFrame] != nil
         cell.load(
             chart: charts[timeFrame] ?? .loading,
             priceFormatStyle: viewModel.userDisplayPriceFormatStyle
@@ -1286,6 +1319,7 @@ extension PerpetualMarketViewController: PerpetualCandleLoader.Delegate {
         }
         charts[timeFrame] = chart
         if selectedTimeFrame == timeFrame {
+            navigationItem.rightBarButtonItems?.first?.isEnabled = true
             priceCell?.load(
                 chart: chart,
                 priceFormatStyle: viewModel.userDisplayPriceFormatStyle

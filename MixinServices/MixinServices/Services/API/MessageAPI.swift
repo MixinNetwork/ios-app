@@ -32,6 +32,10 @@ public class MessageAPI: MixinAPI {
         return request(method: .post, path: Path.attachments)
     }
     
+    public static func requestAttachment() async throws -> AttachmentResponse {
+        try await request(method: .post, path: Path.attachments)
+    }
+    
     public static func requestAttachment(queue: DispatchQueue, completion: @escaping (MixinAPI.Result<AttachmentResponse>) -> Void) -> Request? {
         request(method: .post, path: Path.attachments, queue: queue, completion: completion)
     }

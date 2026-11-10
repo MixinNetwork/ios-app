@@ -1294,9 +1294,11 @@
 "perps_scene_sl_triggered" = "Activar stop-loss: controlar las pérdidas";
 "perps_scene_tp_triggered" = "Activar la obtención de beneficios: bloquear los beneficios";
 "perps_share_card_market" = "- 📈 Mercado: %@";
+"perps_share_card_max_leverage" = "📈 Apalancamiento máximo: %dx";
 "perps_share_card_side" = "- ↕️ Dirección: %1$@ (%2$dx)";
 "perps_share_card_title" = "🚀 Perps %@";
 "perps_share_card_trade_now" = "💰 Opere ahora";
+"perps_share_card_volume" = "💰 Volumen de 24 h: %@";
 "perps_share_mixin_contact_desc" = "Trae a tus amigos a bordo";
 "perps_share_mixin_contact_desc_with_percent" = "Gane una comisión de %@ a través de este enlace";
 "perps_share_pnl" = "PnL";

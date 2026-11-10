@@ -1294,9 +1294,11 @@
 "perps_scene_sl_triggered" = "触发止损：控制亏损";
 "perps_scene_tp_triggered" = "触发止盈：锁定利润";
 "perps_share_card_market" = "- 📈 市场：%@";
+"perps_share_card_max_leverage" = "📈 最大杠杆：%dx";
 "perps_share_card_side" = "- ↕️ 方向：%1$@（%2$d倍）";
 "perps_share_card_title" = "🚀 合约 %@";
 "perps_share_card_trade_now" = "💰 立即交易";
+"perps_share_card_volume" = "💰 24小时成交量：%@";
 "perps_share_mixin_contact_desc" = "带朋友一起上车";
 "perps_share_mixin_contact_desc_with_percent" = "通过此链接赚取 %@ 分佣";
 "perps_share_pnl" = "收益额";

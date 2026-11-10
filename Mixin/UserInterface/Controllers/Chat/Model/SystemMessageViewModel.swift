@@ -62,8 +62,10 @@ class SystemMessageViewModel: MessageViewModel {
             )
         }
         super.init(message: message)
-        if expirationDuration != nil {
-            backgroundImage = R.image.ic_chat_bubble_system()?.withRenderingMode(.alwaysTemplate)
+        if let duration = expirationDuration {
+            backgroundImage = duration > 0
+            ? R.image.chat_bubble_purple()
+            : R.image.chat_bubble_gray()
         } else {
             backgroundImage = R.image.ic_chat_bubble_system()
         }

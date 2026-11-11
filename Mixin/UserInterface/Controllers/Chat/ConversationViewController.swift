@@ -964,11 +964,9 @@ final class ConversationViewController: UIViewController {
                 let message = Message.createMessage(message: message)
                 let post = PostWebViewController(message: message)
                 navigationController?.pushViewController(post, animated: true)
-            } else if (viewModel as? SystemMessageViewModel)?.expirationDuration != nil {
+            } else if viewModel is ExpirationDurationMessageViewModel {
                 conversationInputViewController.dismiss()
-                let canEdit = dataSource.category == .contact
-                || ParticipantDAO.shared.isAdmin(conversationId: conversationId, userId: myUserId)
-                if canEdit {
+                if dataSource.canEditExpiration {
                     let controller = MessageExpirationDurationViewController(conversation: dataSource.conversation)
                     navigationController?.pushViewController(controller, animated: true)
                 } else {

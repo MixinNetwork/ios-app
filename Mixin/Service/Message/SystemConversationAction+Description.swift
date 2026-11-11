@@ -1,7 +1,13 @@
 import MixinServices
 
 extension SystemConversationAction {
-
+    
+    enum ExpirationMessageStyle {
+        case summary
+        case readOnly
+        case editable
+    }
+    
     static func getSystemMessage(
         actionName: String?,
         userId: String,
@@ -9,7 +15,7 @@ extension SystemConversationAction {
         participantId: String?,
         participantFullName: String?,
         content: String?,
-        includesSettingsHint: Bool,
+        style: ExpirationMessageStyle,
     ) -> String {
         let action = actionName ?? ""
         let isParticipantMyself = participantId == myUserId
@@ -33,18 +39,33 @@ extension SystemConversationAction {
             if let expireIn = content?.int64Value {
                 if expireIn > 0 {
                     let title = ExpiredMessageDurationFormatter.string(from: expireIn)
-                    return includesSettingsHint
-                        ? R.string.localizable.set_disappearing_message_time_to_hint(operatorName, title)
-                        : R.string.localizable.set_disappearing_message_time_to(operatorName, title)
+                    switch style {
+                    case .summary:
+                        return R.string.localizable.set_disappearing_message_time_to(operatorName, title)
+                    case .readOnly:
+                        return R.string.localizable.set_disappearing_message_time_to_read_only(operatorName, title)
+                    case .editable:
+                        return R.string.localizable.set_disappearing_message_time_to_editable(operatorName, title)
+                    }
                 } else {
-                    return includesSettingsHint
-                        ? R.string.localizable.disable_disappearing_message_hint(operatorName)
-                        : R.string.localizable.disable_disappearing_message(operatorName)
+                    switch style {
+                    case .summary:
+                        return R.string.localizable.disable_disappearing_message(operatorName)
+                    case .readOnly:
+                        return R.string.localizable.disable_disappearing_message_read_only(operatorName)
+                    case .editable:
+                        return R.string.localizable.disable_disappearing_message_editable(operatorName)
+                    }
                 }
             } else {
-                return includesSettingsHint
-                    ? R.string.localizable.changed_disappearing_message_settings_hint(operatorName)
-                    : R.string.localizable.changed_disappearing_message_settings(operatorName)
+                switch style {
+                case .summary:
+                    return R.string.localizable.changed_disappearing_message_settings(operatorName)
+                case .readOnly:
+                    return R.string.localizable.changed_disappearing_message_settings_read_only(operatorName)
+                case .editable:
+                    return R.string.localizable.changed_disappearing_message_settings_editable(operatorName)
+                }
             }
         default:
             if let content = content, !content.isEmpty {

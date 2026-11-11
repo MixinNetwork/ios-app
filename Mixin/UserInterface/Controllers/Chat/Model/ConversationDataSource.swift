@@ -36,6 +36,7 @@ class ConversationDataSource {
     private(set) var loadedMessageIds = SafeSet<String>()
     private(set) var didLoadLatestMessage = false
     private(set) var category: Category
+    private(set) var canEditExpiration: Bool
     
     private var highlight: Highlight?
     private var viewModels = [String: [MessageViewModel]]()
@@ -88,11 +89,14 @@ class ConversationDataSource {
         self.highlight = highlight
         self.ownerUser = ownerUser
         self.category = conversation.category == ConversationCategory.CONTACT.rawValue ? .contact : .group
+        self.canEditExpiration = conversation.category == ConversationCategory.CONTACT.rawValue
+            || ParticipantDAO.shared.isAdmin(conversationId: conversation.conversationId, userId: myUserId)
         factory.delegate = self
     }
     
     func initData(completion: @escaping () -> Void) {
         NotificationCenter.default.addObserver(self, selector: #selector(conversationDidChange(_:)), name: MixinServices.conversationDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidInsertMessage(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(messageDaoDidRedecryptMessage(_:)), name: MessageDAO.didRedecryptMessageNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateMediaProgress(_:)), name: AttachmentLoadingJob.progressNotification, object: nil)
@@ -564,6 +568,7 @@ extension ConversationDataSource {
             reload()
         case .update(let conversation):
             self.conversation = conversation
+            refreshExpirationPermission()
             refreshConversationHints()
         case .updateConversationStatus(let status):
             self.conversation.status = status.rawValue
@@ -589,6 +594,7 @@ extension ConversationDataSource {
                 updateMessage(messageId: messageId)
             }
         case .updateConversation(let response):
+            refreshExpirationPermission()
             if let status = ConversationDAO.shared.getConversationStatus(conversationId: conversationId) {
                 conversation.expireIn = response.expireIn
                 conversation.status = status
@@ -598,6 +604,16 @@ extension ConversationDataSource {
         case .startedUpdateConversation:
             break
         }
+    }
+    
+    @objc func participantDidChange(_ notification: Notification) {
+        guard category == .group,
+              let conversationID = notification.userInfo?[ParticipantDAO.UserInfoKey.conversationId] as? String,
+              conversationID == conversationId
+        else {
+            return
+        }
+        refreshExpirationPermission()
     }
     
     @objc func messageDaoDidInsertMessage(_ notification: Notification) {
@@ -831,26 +847,68 @@ extension ConversationDataSource: MessageViewModelFactoryDelegate {
         }
     }
     
+    func messageViewModelFactoryCanEditExpiration(_ factory: MessageViewModelFactory) -> Bool {
+        canEditExpiration
+    }
+    
 }
 
 // MARK: - Private works
 extension ConversationDataSource {
     
+    private func refreshExpirationPermission() {
+        guard category == .group else {
+            return
+        }
+        queue.async { [weak self] in
+            guard let self, !self.messageProcessingIsCancelled else {
+                return
+            }
+            let canEdit = ParticipantDAO.shared.isAdmin(conversationId: self.conversationId, userId: myUserId)
+            Queue.main.autoSync {
+                guard !self.messageProcessingIsCancelled, self.canEditExpiration != canEdit else {
+                    return
+                }
+                self.canEditExpiration = canEdit
+                var indexPaths: [IndexPath] = []
+                for (section, date) in self.dates.enumerated() {
+                    for (row, viewModel) in self.viewModels[date, default: []].enumerated() {
+                        guard let viewModel = viewModel as? ExpirationDurationMessageViewModel else {
+                            continue
+                        }
+                        viewModel.update(canEditExpiration: canEdit)
+                        indexPaths.append(IndexPath(row: row, section: section))
+                    }
+                }
+                if !indexPaths.isEmpty {
+                    self.tableView?.reloadRows(at: indexPaths, with: .none)
+                    self.selectTableViewRowsWithPreviousSelection()
+                }
+            }
+        }
+    }
+    
     private func conversationHintViewModels(fits width: CGFloat) -> [MessageViewModel] {
-        var messages: [MessageItem] = []
+        var hints: [MessageViewModel] = []
         if category == .group || !(ownerUser?.isBot ?? conversation.ownerIsBot) {
-            messages.append(.encryptionHintMessage(conversationId: conversationId))
+            let message = MessageItem.encryptionHintMessage(conversationId: conversationId)
+            hints.append(EncryptionHintViewModel(message: message))
         }
         if conversation.isExpirationResolved {
-            messages.append(.disappearingMessageHint(
+            let message = MessageItem.disappearingMessageHint(
                 conversationID: conversationId,
                 expireIn: conversation.expireIn,
-                isGroup: category == .group,
+            )
+            hints.append(ExpirationDurationMessageViewModel(
+                message: message,
+                kind: .conversationHint(isGroup: category == .group),
+                canEditExpiration: canEditExpiration,
             ))
         }
-        return messages.map {
-            factory.viewModel(withMessage: $0, style: .bottomSeparator, fits: width)
+        for hint in hints {
+            hint.layout(width: width, style: .bottomSeparator)
         }
+        return hints
     }
     
     private func firstIndexPath(ofDates dates: [String], viewModels: [String: [MessageViewModel]], where predicate: (MessageItem) -> Bool) -> IndexPath? {
@@ -1088,24 +1146,13 @@ extension MessageItem {
         return message
     }
     
-    static func disappearingMessageHint(conversationID: String, expireIn: Int64, isGroup: Bool) -> MessageItem {
-        let text: String
-        if expireIn > 0 {
-            let duration = ExpiredMessageDurationFormatter.string(from: expireIn)
-            text = isGroup
-                ? R.string.localizable.group_disappearing_message_enabled_hint(duration)
-                : R.string.localizable.chat_disappearing_message_enabled_hint(duration)
-        } else {
-            text = isGroup
-                ? R.string.localizable.group_disappearing_message_disabled_hint()
-                : R.string.localizable.chat_disappearing_message_disabled_hint()
-        }
+    static func disappearingMessageHint(conversationID: String, expireIn: Int64) -> MessageItem {
         return MessageItem(
             messageId: disappearingMessageHintID,
             conversationId: conversationID,
             userId: "",
             category: MessageCategory.EXT_ENCRYPTION.rawValue,
-            content: text,
+            content: "",
             status: MessageStatus.READ.rawValue,
             createdAt: "",
             expireIn: expireIn,

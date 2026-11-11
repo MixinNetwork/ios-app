@@ -171,7 +171,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
                         participantId: item.participantUserId,
                         participantFullName: item.participantFullName,
                         content: item.content,
-                        includesSettingsHint: false,
+                        style: .summary,
                     )
                 } else if item.messageId.isEmpty {
                     contentLabel.text = ""

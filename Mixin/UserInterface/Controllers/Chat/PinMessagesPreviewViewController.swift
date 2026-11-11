@@ -123,6 +123,10 @@ extension PinMessagesPreviewViewController: MessageViewModelFactoryDelegate {
         
     }
     
+    func messageViewModelFactoryCanEditExpiration(_ factory: MessageViewModelFactory) -> Bool {
+        false
+    }
+    
 }
 
 // MARK: - Actions

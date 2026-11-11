@@ -76,6 +76,10 @@ extension TranscriptPreviewViewController: MessageViewModelFactoryDelegate {
         }
     }
     
+    func messageViewModelFactoryCanEditExpiration(_ factory: MessageViewModelFactory) -> Bool {
+        false
+    }
+    
 }
 
 // MARK: - Callbacks

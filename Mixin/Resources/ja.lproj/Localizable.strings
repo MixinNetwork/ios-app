@@ -287,7 +287,8 @@
 "change_your_app_language" = "言語設定";
 "changed" = "変更しました";
 "changed_disappearing_message_settings" = "%@が消えるメッセージを設定しました";
-"changed_disappearing_message_settings_hint" = "%@が消えるメッセージの設定を変更しました。タップして消えるメッセージの設定を開きます。";
+"changed_disappearing_message_settings_read_only" = "%@が消えるメッセージの設定を変更しました。タップして詳細をご確認ください。";
+"changed_disappearing_message_settings_editable" = "%@が消えるメッセージの設定を変更しました。タップして設定を変更するか、詳細をご確認ください。";
 "changing_pin_terminated_unexpectedly" = "PIN の変更が予期せず終了しました。[続行] をクリックして変更を完了してください";
 "chat_background" = "チャットの背景";
 "chat_backup" = "チャットのバックアップ";
@@ -296,8 +297,8 @@
 "chat_call_warning_voice" = "通話中にボイスメッセージを録音することはできません。";
 "chat_decryption_failed" = "メッセージの取得に失敗しました。Mixinを最新バージョンにアップデートしてください。";
 "chat_decryption_failed_hint" = "%@が参加し暗号化セッションが開始するまで待機しています...";
-"chat_disappearing_message_disabled_hint" = "このチャットでは消えるメッセージが有効になっていません。タップして設定するか、詳細をご確認ください。";
-"chat_disappearing_message_enabled_hint" = "このチャットの消えるメッセージの有効時間は%@に設定されています。タップして変更するか、詳細をご確認ください。";
+"chat_disappearing_message_disabled_editable" = "このチャットでは消えるメッセージが有効になっていません。タップして設定を変更するか、詳細をご確認ください。";
+"chat_disappearing_message_enabled_editable" = "このチャットの消えるメッセージの有効時間は%@に設定されています。タップして設定を変更するか、詳細をご確認ください。";
 "chat_group_add" = "%1$@が%2$@を追加しました";
 "chat_group_call_decline" = "%@グループ通話が終了しました";
 "chat_group_call_did_not_answer" = "%@ はグループ通話に応答しませんでした";
@@ -552,7 +553,8 @@
 "disable" = "無効にする";
 "disable_biometric_pay_confirmation" = "%@の支払いを無効にしますか?";
 "disable_disappearing_message" = "%@が消えるメッセージを無効にしました";
-"disable_disappearing_message_hint" = "%@が消えるメッセージを無効にしました。タップして消えるメッセージの設定を開きます。";
+"disable_disappearing_message_read_only" = "%@が消えるメッセージを無効にしました。タップして詳細をご確認ください。";
+"disable_disappearing_message_editable" = "%@が消えるメッセージを無効にしました。タップして設定を変更するか、詳細をご確認ください。";
 "disappearing_message" = "消えるメッセージ";
 "disappearing_message_hint" = "有効にすると、このチャットで送受信された新しいメッセージは一定時間後に消えます。詳しくは、こちらをお読みください。";
 "discard" = "破棄";
@@ -767,8 +769,10 @@
 "group_call_has_been_declined" = "権限不足のためグループ会話はできません。";
 "group_call_participants_limit_hint" = "グループ通話の上限は %d人です";
 "group_description" = "グループアナウンス";
-"group_disappearing_message_disabled_hint" = "このグループでは消えるメッセージが有効になっていません。タップして設定するか、詳細をご確認ください。";
-"group_disappearing_message_enabled_hint" = "このグループの消えるメッセージの有効時間は%@に設定されています。タップして変更するか、詳細をご確認ください。";
+"group_disappearing_message_disabled_read_only" = "このグループでは消えるメッセージが有効になっていません。タップして詳細をご確認ください。";
+"group_disappearing_message_disabled_editable" = "このグループでは消えるメッセージが有効になっていません。タップして設定を変更するか、詳細をご確認ください。";
+"group_disappearing_message_enabled_read_only" = "このグループの消えるメッセージの有効時間は%@に設定されています。タップして詳細をご確認ください。";
+"group_disappearing_message_enabled_editable" = "このグループの消えるメッセージの有効時間は%@に設定されています。タップして設定を変更するか、詳細をご確認ください。";
 "group_name" = "グループ名";
 "group_participant_add_full" = "グループメンバーが上限に達したため追加できません";
 "group_participant_add_limit" = "一度に追加できるメンバーは最大50人です";
@@ -1670,7 +1674,8 @@
 "set_amount" = "金額を設定";
 "set_as_avatar" = "アバターとして設定";
 "set_disappearing_message_time_to" = "%1$@は、消えるメッセージの有効時間を%2$@に設定しました。";
-"set_disappearing_message_time_to_hint" = "%1$@が消えるメッセージの有効時間を%2$@に設定しました。タップして消えるメッセージの設定を開きます。";
+"set_disappearing_message_time_to_read_only" = "%1$@が消えるメッセージの有効時間を%2$@に設定しました。タップして詳細をご確認ください。";
+"set_disappearing_message_time_to_editable" = "%1$@が消えるメッセージの有効時間を%2$@に設定しました。タップして設定を変更するか、詳細をご確認ください。";
 "set_emergency_create_successfully" = "回復連絡先が正常に設定されました";
 "set_new_pin" = "新しいPINコードを設定";
 "set_or_update_pin_failed" = "PIN の設定または更新に失敗しました";

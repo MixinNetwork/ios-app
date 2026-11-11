@@ -104,8 +104,18 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
             reporter.report(event: .addAddressMemo)
             switch intent {
             case .newAddress:
-                headerView.addInfoView(title: R.string.localizable.network(), content: networkName, iconURL: token.chain?.iconUrl)
-                headerView.addInfoView(title: R.string.localizable.address(), content: destination, iconURL: nil)
+                headerView.addInfoView(
+                    title: R.string.localizable.network(),
+                    content: networkName,
+                    iconURL: token.chain?.iconUrl,
+                    minimumSpacing: 16,
+                )
+                headerView.addInfoView(
+                    title: R.string.localizable.address(),
+                    content: destination,
+                    iconURL: nil,
+                    minimumSpacing: 68,
+                )
             case .oneTimeWithdraw:
                 headerView.addAddressView { label in
                     label.text = destination
@@ -113,11 +123,21 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
             }
         case let .label(address):
             reporter.report(event: .addAddressLabel)
-            headerView.addInfoView(title: R.string.localizable.network(), content: networkName, iconURL: token.chain?.iconUrl)
-            headerView.addInfoView(title: R.string.localizable.address(), content: address.destination, iconURL: nil)
+            headerView.addInfoView(
+                title: R.string.localizable.network(),
+                content: networkName,
+                iconURL: token.chain?.iconUrl,
+                minimumSpacing: 16,
+            )
+            headerView.addInfoView(
+                title: R.string.localizable.address(),
+                content: address.destination,
+                iconURL: nil,
+                minimumSpacing: 68,
+            )
             if !address.tag.isEmpty {
                 let title = token.usesTag ? R.string.localizable.tag() : R.string.localizable.memo()
-                headerView.addInfoView(title: title, content: address.tag, iconURL: nil)
+                headerView.addInfoView(title: title, content: address.tag, iconURL: nil, minimumSpacing: 16)
             }
         }
         switch inputContent {

@@ -151,7 +151,7 @@ final class AddressInfoInputHeaderView: UIView {
         contentStackView.insertArrangedSubview(networkView, at: 0)
     }
     
-    func addInfoView(title: String, content: String, iconURL: String?) {
+    func addInfoView(title: String, content: String, iconURL: String?, minimumSpacing: CGFloat) {
         titleStackView.isHidden = true
         
         let titleLabel = UILabel()
@@ -192,7 +192,7 @@ final class AddressInfoInputHeaderView: UIView {
         spacerView.setContentHuggingPriority(.defaultLow, for: .horizontal)
         spacerView.setContentCompressionResistancePriority(.fittingSizeLevel, for: .horizontal)
         spacerView.snp.makeConstraints { make in
-            make.width.greaterThanOrEqualTo(16)
+            make.width.greaterThanOrEqualTo(minimumSpacing)
         }
         let stackView = UIStackView(arrangedSubviews: [titleLabel, spacerView, contentStackView])
         stackView.axis = .horizontal

@@ -15,7 +15,7 @@ enum WalletSearchCategory: CaseIterable, Hashable {
         case .tokens:
             R.string.localizable.assets()
         case .perps:
-            R.string.localizable.positions()
+            R.string.localizable.perps_positions()
         case .earn:
             R.string.localizable.earn()
         case .collectibles:

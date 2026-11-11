@@ -202,7 +202,11 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
             header.moreButton.isHidden = self.selectedCategory != .all
                 || (self.results?[category]?.count ?? 0) <= self.aggregatedDisplayCount
             header.showMoreResults = { [weak self] in
-                self?.select(category: category)
+                guard let self else {
+                    return
+                }
+                self.view.window?.endEditing(false)
+                self.select(category: category)
             }
             return header
         }

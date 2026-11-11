@@ -304,10 +304,10 @@ extension Web3TransactionDAO {
         for address in filter.addresses {
             let keyword = "%\(address.destination.sqlEscaped)%"
             recipientConditions.append(
-                "txn.transaction_type = 'transfer_in' AND txn.senders LIKE \(keyword) ESCAPE '/'"
+                "txn.chain_id = \(address.chainId) AND txn.transaction_type = 'transfer_in' AND txn.senders LIKE \(keyword) ESCAPE '/'"
             )
             recipientConditions.append(
-                "txn.transaction_type = 'transfer_out' AND txn.receivers LIKE \(keyword) ESCAPE '/'"
+                "txn.chain_id = \(address.chainId) AND txn.transaction_type = 'transfer_out' AND txn.receivers LIKE \(keyword) ESCAPE '/'"
             )
         }
         if !recipientConditions.isEmpty {

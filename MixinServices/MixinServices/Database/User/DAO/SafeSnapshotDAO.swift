@@ -127,7 +127,8 @@ extension SafeSnapshotDAO {
         }
         for address in filter.addresses {
             let keyword = "%\(address.destination.sqlEscaped)%"
-            let condition: GRDB.SQL = "s.deposit LIKE \(keyword) ESCAPE '/' OR s.withdrawal LIKE \(keyword) ESCAPE '/'"
+            // Snapshots of uncached tokens have no chain to compare, match them by destination only
+            let condition: GRDB.SQL = "(t.chain_id = \(address.chainId) OR t.chain_id IS NULL) AND (s.deposit LIKE \(keyword) ESCAPE '/' OR s.withdrawal LIKE \(keyword) ESCAPE '/')"
             recipientConditions.append(condition)
         }
         if !recipientConditions.isEmpty {

@@ -135,6 +135,7 @@
 "all_conversations" = "모든 대화";
 "all_dates" = "모든 날짜";
 "all_invoices" = "모든 인보이스";
+"all_networks" = "모든 네트워크";
 "all_signer_failure" = "모든 노드 실패";
 "all_time_high" = "역대 최고";
 "all_time_low" = "사상 최저치";
@@ -869,6 +870,7 @@
 "large_amount_reminder" = "%1$@의 이적 가치는 최대 %2$@입니다. 금액이 맞는지 확인해주세요.";
 "last_active_time" = "마지막 활성 %@";
 "last_backup_hint" = "%@의 마지막 백업, 전체 크기 %@.";
+"last_updated_at" = "마지막 업데이트: %@";
 "later" = "나중에";
 "learn_how_to_trade_perps" = "무기한 선물 거래 방법 알아보기";
 "learn_more" = "자세히 알아보기";
@@ -1089,6 +1091,8 @@
 "no_orders" = "주문 없음";
 "no_position" = "포지션 없음";
 "no_posts" = "포스트 없음";
+"no_records" = "기록이 없습니다";
+"no_records_found" = "일치하는 기록이 없습니다";
 "no_results" = "결과 없음";
 "no_stickers" = "스티커 없음";
 "no_tag" = "태그 없음";
@@ -1115,6 +1119,7 @@
 "now_an_addmin" = "%@ 이제 관리자가 되었습니다";
 "number_of_assets" = "%d 자산";
 "number_of_days" = "%d일";
+"number_of_networks" = "네트워크 %d개";
 "number_of_opponents" = "%d 반대자";
 "number_of_recipients" = "%d 수신자";
 "number_of_words" = "%d단어";

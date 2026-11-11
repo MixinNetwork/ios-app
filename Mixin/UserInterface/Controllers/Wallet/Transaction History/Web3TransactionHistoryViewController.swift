@@ -50,6 +50,17 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
         super.init()
     }
     
+    init(
+        wallet: Web3Wallet,
+        address: AddressItem,
+        availability: Web3Wallet.Availability,
+    ) {
+        self.wallet = wallet
+        self.availability = availability
+        self.filter = .init(addresses: [address])
+        super.init()
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
     }

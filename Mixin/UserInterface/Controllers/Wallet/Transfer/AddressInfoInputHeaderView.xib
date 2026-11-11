@@ -130,6 +130,7 @@
             <connections>
                 <outlet property="actionButton" destination="LZN-95-Rfg" id="1EF-rK-uni"/>
                 <outlet property="contentStackView" destination="XW4-Rh-NZw" id="4hS-1l-Uvh"/>
+                <outlet property="contentTopConstraint" destination="G6Z-UG-opj" id="Udm-lm-7Gw"/>
                 <outlet property="placeholderLabel" destination="iKv-5k-hZN" id="gep-wz-aB5"/>
                 <outlet property="textView" destination="FUb-mG-Z7f" id="RLm-qm-BN5"/>
                 <outlet property="textViewBackgroundView" destination="vaY-V7-kNi" id="UNb-Xl-lYd"/>

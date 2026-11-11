@@ -18,6 +18,9 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     
     private lazy var tagRegex = try? NSRegularExpression(pattern: "^[0-9]+$")
     
+    // Non-nil when the network can be switched before inputting the destination
+    private var switchableNetworks: [AddressBookNetwork]?
+    
     private init(token: ValuableOnChainToken, intent: Intent, inputContent: InputContent) {
         self.token = token
         self.intent = intent
@@ -30,8 +33,13 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         fatalError("Storyboard not supported")
     }
     
-    static func newAddress(token: ValuableOnChainToken) -> AddressInfoInputViewController {
-        AddressInfoInputViewController(token: token, intent: .newAddress, inputContent: .destination)
+    static func newAddress(
+        token: ValuableOnChainToken,
+        switchableNetworks: [AddressBookNetwork]?,
+    ) -> AddressInfoInputViewController {
+        let controller = AddressInfoInputViewController(token: token, intent: .newAddress, inputContent: .destination)
+        controller.switchableNetworks = switchableNetworks
+        return controller
     }
     
     // Returns non-nil result if memo/tag is needed
@@ -55,12 +63,8 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         title = switch intent {
         case .newAddress:
             switch inputContent {
-            case .destination:
-                R.string.localizable.address()
-            case .memo:
-                R.string.localizable.memo()
-            case .tag:
-                R.string.localizable.tag()
+            case .destination, .memo, .tag:
+                R.string.localizable.add_address()
             case .label:
                 R.string.localizable.label()
             }
@@ -77,19 +81,63 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         }
         headerView.load(token: token)
         headerView.delegate = self
+        if case .newAddress = intent {
+            headerView.contentTopConstraint.constant = 10
+        }
         headerView.textView.becomeFirstResponder()
+        let networkName = AddressBookNetwork.name(chainID: token.chainID, chain: token.chain)
         switch inputContent {
         case .destination:
             reporter.report(event: .addAddressStart)
+            switch intent {
+            case .newAddress:
+                headerView.loadNetwork(
+                    name: networkName,
+                    isSwitchable: switchableNetworks != nil,
+                    target: self,
+                    action: #selector(switchNetwork(_:)),
+                )
+            case .oneTimeWithdraw:
+                break
+            }
         case let .memo(destination), let .tag(destination):
             reporter.report(event: .addAddressMemo)
-            headerView.addAddressView { label in
-                label.text = destination
+            switch intent {
+            case .newAddress:
+                headerView.addInfoView(
+                    title: R.string.localizable.network(),
+                    content: networkName,
+                    iconURL: token.chain?.iconUrl,
+                    minimumSpacing: 16,
+                )
+                headerView.addInfoView(
+                    title: R.string.localizable.address(),
+                    content: destination,
+                    iconURL: nil,
+                    minimumSpacing: 68,
+                )
+            case .oneTimeWithdraw:
+                headerView.addAddressView { label in
+                    label.text = destination
+                }
             }
         case let .label(address):
             reporter.report(event: .addAddressLabel)
-            headerView.addAddressView { label in
-                label.text = address.destination
+            headerView.addInfoView(
+                title: R.string.localizable.network(),
+                content: networkName,
+                iconURL: token.chain?.iconUrl,
+                minimumSpacing: 16,
+            )
+            headerView.addInfoView(
+                title: R.string.localizable.address(),
+                content: address.destination,
+                iconURL: nil,
+                minimumSpacing: 68,
+            )
+            if !address.tag.isEmpty {
+                let title = token.usesTag ? R.string.localizable.tag() : R.string.localizable.memo()
+                headerView.addInfoView(title: title, content: address.tag, iconURL: nil, minimumSpacing: 16)
             }
         }
         switch inputContent {
@@ -109,6 +157,10 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         nextButton.setTitle(R.string.localizable.next(), for: .normal)
         nextButton.style = .filled
         nextButton.applyDefaultContentInsets()
+        if case .newAddress = intent {
+            nextButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16), adjustForContentSize: true)
+            nextButton.contentEdgeInsets = UIEdgeInsets(top: 11, left: 0, bottom: 12, right: 0)
+        }
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillHide(_:)),
@@ -223,6 +275,34 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                 assertionFailure("Only input memo/tag with this view controller when performing One-Time-Withdraw")
             }
         }
+    }
+    
+    @objc private func switchNetwork(_ sender: Any) {
+        guard let networks = switchableNetworks else {
+            return
+        }
+        let selector = AddressBookNetworkSelectorViewController(
+            networks: networks,
+            selectedChainID: token.chainID
+        )
+        selector.onSelect = { [weak self, token] network in
+            self?.dismiss(animated: true)
+            guard network.chainID != token.chainID else {
+                return
+            }
+            AddressBookTokenLoader.load(assetID: network.chainID, chain: network.chain) { token in
+                guard let self, let navigationController = self.navigationController else {
+                    return
+                }
+                let input: AddressInfoInputViewController = .newAddress(token: token, switchableNetworks: networks)
+                var viewControllers = navigationController.viewControllers
+                if let index = viewControllers.firstIndex(of: self) {
+                    viewControllers[index] = input
+                    navigationController.setViewControllers(viewControllers, animated: false)
+                }
+            }
+        }
+        present(selector, animated: true)
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {

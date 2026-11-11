@@ -118,8 +118,7 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
         case .addressBook:
             reporter.report(event: .sendRecipient, tags: ["type": "address_book"])
             let token = payment.token
-            let book = AddressBookViewController(token: token)
-            book.onSelect = { [payment] (address) in
+            let book = WalletAddressBookViewController(intent: .select(token: token, onSelect: { [payment] (address) in
                 self.dismiss(animated: true) {
                     let payment = Web3SendingTokenToAddressPayment(
                         payment: payment,
@@ -129,7 +128,7 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
                     let inputAmount = Web3TransferInputAmountViewController(payment: payment)
                     self.navigationController?.pushViewController(inputAmount, animated: true)
                 }
-            }
+            }))
             present(book, animated: true)
         case .contact:
             reporter.report(event: .sendRecipient, tags: ["type": "contact"])

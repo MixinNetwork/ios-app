@@ -135,6 +135,7 @@
 "all_conversations" = "Все разговоры";
 "all_dates" = "Все даты";
 "all_invoices" = "Все счета";
+"all_networks" = "Все сети";
 "all_signer_failure" = "Не удалось выполнить все узлы";
 "all_time_high" = "Высокий уровень за все время";
 "all_time_low" = "Низкий уровень за все время";
@@ -869,6 +870,7 @@
 "large_amount_reminder" = "Стоимость этого перевода %1$@ составляет до %2$@. Пожалуйста, убедитесь, что сумма верна.";
 "last_active_time" = "Последнее посещение %@";
 "last_backup_hint" = "Последняя резервная копия %@, общий размер %@.";
+"last_updated_at" = "Последнее обновление: %@";
 "later" = "Потом";
 "learn_how_to_trade_perps" = "Научитесь торговать бессрочными фьючерсами";
 "learn_more" = "Узнать больше";
@@ -1089,6 +1091,8 @@
 "no_orders" = "НЕТ ЗАКАЗОВ";
 "no_position" = "Нет позиции";
 "no_posts" = "НЕТ СООБЩЕНИЙ";
+"no_records" = "Нет записей";
+"no_records_found" = "Записи не найдены";
 "no_results" = "НЕТ РЕЗУЛЬТАТОВ";
 "no_stickers" = "НЕТ НАКЛЕЕК";
 "no_tag" = "Нет тега";
@@ -1115,6 +1119,7 @@
 "now_an_addmin" = "%@ теперь администратор";
 "number_of_assets" = "%d Активы";
 "number_of_days" = "%d Дней";
+"number_of_networks" = "Сетей: %d";
 "number_of_opponents" = "%d Оппоненты";
 "number_of_recipients" = "%d Получатели";
 "number_of_words" = "%d слов";

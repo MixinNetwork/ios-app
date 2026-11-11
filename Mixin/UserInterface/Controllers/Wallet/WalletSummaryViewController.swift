@@ -13,6 +13,11 @@ final class WalletSummaryViewController: UIViewController {
         target: self,
         action: #selector(addWallet(_:)),
     )
+    private lazy var moreItem = CompatibleBadgeBarButtonItem(
+        image: R.image.ic_title_more()!,
+        target: self,
+        action: #selector(showMoreActions(_:)),
+    )
     
     private var categorySelectorSizeObserver: NSKeyValueObservation?
     private var categorySelectorController: CategorySelectorController!
@@ -59,7 +64,8 @@ final class WalletSummaryViewController: UIViewController {
         navigationItem.leftBarButtonItem = titleItem
         
         addWalletItem.compatibleBadge = BadgeManager.shared.hasViewed(identifier: .addWalletAction) ? nil : .unread
-        navigationItem.rightBarButtonItem = addWalletItem
+        moreItem.compatibleBadge = BadgeManager.shared.hasViewed(identifier: .addressBook) ? nil : .unread
+        navigationItem.rightBarButtonItems = [moreItem, addWalletItem]
         
         categorySelectorLayout.itemSize = UICollectionViewFlowLayout.automaticSize
         categorySelectorController = CategorySelectorController(
@@ -216,6 +222,21 @@ final class WalletSummaryViewController: UIViewController {
             self?.navigationController?.pushViewController(introduction, animated: true)
         }
         present(selector, animated: true)
+    }
+    
+    @objc private func showMoreActions(_ sender: Any) {
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.address_book(), style: .default, handler: { _ in
+            self.moreItem.compatibleBadge = nil
+            BadgeManager.shared.setHasViewed(identifier: .addressBook)
+            self.present(WalletAddressBookViewController(intent: .manage), animated: true)
+        }))
+        if #available(iOS 26.0, *), let source = sender as? UIBarButtonItem {
+            sheet.popoverPresentationController?.sourceItem = source
+        } else {
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        }
+        present(sheet, animated: true, completion: nil)
     }
     
     @objc private func reloadTips() {

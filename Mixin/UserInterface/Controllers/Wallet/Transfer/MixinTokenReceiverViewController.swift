@@ -188,8 +188,7 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
             selector.delegate = self
             present(selector, animated: true)
         case .addressBook:
-            let book = AddressBookViewController(token: token)
-            book.onSelect = { [token] (address) in
+            let book = WalletAddressBookViewController(intent: .select(token: token, onSelect: { [token] (address) in
                 self.dismiss(animated: true) {
                     reporter.report(event: .sendRecipient, tags: ["type": "address_book"])
                     let inputAmount = WithdrawInputAmountViewController(
@@ -198,7 +197,7 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
                     )
                     self.navigationController?.pushViewController(inputAmount, animated: true)
                 }
-            }
+            }))
             present(book, animated: true)
         }
     }

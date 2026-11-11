@@ -20,6 +20,7 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
         case precision
         case collectionHash = "collection_hash"
         case primitiveAssetID = "primitive_asset_id"
+        case level
     }
     
     public static let databaseTableName = "tokens"
@@ -40,6 +41,7 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
     public let precision: Int16
     public let collectionHash: String?
     public let primitiveAssetID: String?
+    public let level: Int
     
     public private(set) lazy var decimalBTCPrice = Decimal(string: btcPrice, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDPrice = Decimal(string: usdPrice, locale: .enUSPOSIX) ?? 0
@@ -71,6 +73,7 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
         precision: Int16,
         collectionHash: String?,
         primitiveAssetID: String?,
+        level: Int,
     ) {
         self.assetID = assetID
         self.kernelAssetID = kernelAssetID
@@ -88,6 +91,7 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
         self.precision = precision
         self.collectionHash = collectionHash
         self.primitiveAssetID = primitiveAssetID
+        self.level = level
     }
     
 }

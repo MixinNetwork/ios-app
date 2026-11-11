@@ -135,6 +135,12 @@ final class WalletAddressBookViewController: UIViewController {
             name: AddressDAO.addressDidChangeNotification,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadLocalAddresses),
+            name: ChainDAO.chainsDidChangeNotification,
+            object: nil
+        )
         reloadLocalAddresses()
         let tokenChainID: String? = switch intent {
         case .manage:
@@ -228,10 +234,8 @@ final class WalletAddressBookViewController: UIViewController {
         }
         DispatchQueue.global().async { [weak self] in
             let supportedChainIDs = usesCurrentWalletChains ? AddressBookNetwork.currentWalletChainIDs() : nil
-            var seen: Set<String> = []
             let addresses = AddressDAO.shared.addressItems().filter { address in
                 (supportedChainIDs?.contains(address.chainId) ?? true)
-                && seen.insert(address.chainId + "\n" + address.destination + "\n" + address.tag).inserted
             }
             let networks = AddressBookNetwork.all(
                 chains: ChainDAO.shared.allChains(),

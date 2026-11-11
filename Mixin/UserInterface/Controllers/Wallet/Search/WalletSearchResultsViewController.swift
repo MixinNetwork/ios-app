@@ -128,6 +128,9 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
         ) { cell, _, result in
             cell.load(result: result)
         }
+        let collectibleRegistration = UICollectionView.CellRegistration<WalletCollectibleCell, InscriptionOutput> { cell, _, output in
+            cell.load(item: output)
+        }
         let marketsRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, String> { cell, _, keyword in
             var content = cell.defaultContentConfiguration()
             content.text = R.string.localizable.search_query_in_markets(keyword)
@@ -152,11 +155,20 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
                 guard let result = self.result(with: id) else {
                     return nil
                 }
-                return collectionView.dequeueConfiguredReusableCell(
-                    using: resultRegistration,
-                    for: indexPath,
-                    item: result,
-                )
+                switch result {
+                case .collectible(let output):
+                    return collectionView.dequeueConfiguredReusableCell(
+                        using: collectibleRegistration,
+                        for: indexPath,
+                        item: output,
+                    )
+                case .token, .perps, .earn:
+                    return collectionView.dequeueConfiguredReusableCell(
+                        using: resultRegistration,
+                        for: indexPath,
+                        item: result,
+                    )
+                }
             case .emptyIndicator:
                 return collectionView.dequeueConfiguredReusableCell(
                     using: emptyRegistration,

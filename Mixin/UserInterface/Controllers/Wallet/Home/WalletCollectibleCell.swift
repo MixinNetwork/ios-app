@@ -34,7 +34,9 @@ final class WalletCollectibleCell: UICollectionViewCell {
         labels.snp.makeConstraints { make in
             make.leading.equalTo(iconView.snp.trailing).offset(14)
             make.trailing.equalToSuperview().offset(-16)
-            make.top.bottom.equalToSuperview().inset(4)
+            make.centerY.equalToSuperview()
+            make.top.greaterThanOrEqualToSuperview().offset(4)
+            make.bottom.lessThanOrEqualToSuperview().offset(-4)
         }
         isAccessibilityElement = true
         accessibilityTraits = .button

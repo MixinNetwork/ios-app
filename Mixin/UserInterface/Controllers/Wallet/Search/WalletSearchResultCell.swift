@@ -72,11 +72,12 @@ final class WalletSearchResultCell: UICollectionViewCell {
             apyLabel.text = viewModel.apy
             apyLabel.isHidden = viewModel.apy == nil
         case .collectible(let output):
+            assertionFailure("This should not happening. Use WalletCollectibleCell")
             if let inscription = output.inscription {
                 iconView.setIcon(content: inscription)
             }
-            titleLabel.text = output.inscription?.collectionName ?? R.string.localizable.collectibles()
-            subtitleLabel.text = output.inscription?.sequenceRepresentation ?? output.inscriptionHash
+            titleLabel.text = output.inscription?.collectionName
+            subtitleLabel.text = output.inscription?.sequenceRepresentation
         }
         accessibilityLabel = [
             titleLabel.text,

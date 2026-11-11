@@ -34,6 +34,11 @@ final class WalletSearchRecentCell: UICollectionViewCell {
         contentView.layer.cornerRadius = contentView.bounds.height / 2
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateBorderColor()
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         iconView.prepareForReuse()

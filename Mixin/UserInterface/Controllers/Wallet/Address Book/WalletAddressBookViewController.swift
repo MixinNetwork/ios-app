@@ -304,17 +304,17 @@ extension WalletAddressBookViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        switch intent {
-        case .manage:
-            // Addresses are deleted from the detail page
-            return nil
-        case let .select(token, _):
-            let address = filteredAddresses[indexPath.row]
-            let delete = UIContextualAction(
-                style: .destructive,
-                title: R.string.localizable.delete()
-            ) { [weak self] (_, _, completionHandler) in
-                self?.searchBoxView.textField.resignFirstResponder()
+        let address = filteredAddresses[indexPath.row]
+        let delete = UIContextualAction(
+            style: .destructive,
+            title: R.string.localizable.delete()
+        ) { [weak self] (_, _, completionHandler) in
+            guard let self else {
+                completionHandler(false)
+                return
+            }
+            self.searchBoxView.textField.resignFirstResponder()
+            let presentPreview = { [weak self] (token: any OnChainToken) in
                 let preview = EditAddressPreviewViewController(
                     token: token,
                     label: address.label,
@@ -323,10 +323,21 @@ extension WalletAddressBookViewController: UITableViewDelegate {
                     action: .delete(id: address.addressId),
                 )
                 self?.present(preview, animated: true)
-                completionHandler(true)
             }
-            return UISwipeActionsConfiguration(actions: [delete])
+            switch self.intent {
+            case .manage:
+                let network = self.networks.first { $0.chainID == address.chainId }
+                AddressBookTokenLoader.load(
+                    assetID: address.assetId,
+                    chain: network?.chain,
+                    completion: presentPreview
+                )
+            case let .select(token, _):
+                presentPreview(token)
+            }
+            completionHandler(true)
         }
+        return UISwipeActionsConfiguration(actions: [delete])
     }
     
 }

@@ -149,10 +149,19 @@ final class WalletAddressBookViewController: UIViewController {
             token.chainID
         }
         DispatchQueue.global().async {
-            let syncingChainIDs: [String] = if let tokenChainID {
-                [tokenChainID]
+            let syncingChainIDs: [String]
+            if let tokenChainID {
+                syncingChainIDs = [tokenChainID]
             } else {
-                AddressBookNetwork.all(
+                // Networks follow all chains, cached ones might be incomplete
+                switch NetworkAPI.chains() {
+                case let .success(chains):
+                    ChainDAO.shared.save(chains)
+                    Web3ChainDAO.shared.save(chains)
+                case let .failure(error):
+                    Logger.general.error(category: "AddressBook", message: "Failed to refresh chains: \(error)")
+                }
+                syncingChainIDs = AddressBookNetwork.all(
                     chains: ChainDAO.shared.allChains(),
                     supportedChainIDs: AddressBookNetwork.currentWalletChainIDs(),
                     usesDatabaseChainsOnly: false,

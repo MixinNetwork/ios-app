@@ -14,6 +14,10 @@ public final class NetworkAPI: MixinAPI {
         try await request(method: .get, path: "/network/chains/" + id)
     }
     
+    public static func chains() -> MixinAPI.Result<[Chain]> {
+        request(method: .get, path: "/network/chains")
+    }
+
     public static func chains() async throws -> [Chain] {
         try await request(method: .get, path: "/network/chains")
     }

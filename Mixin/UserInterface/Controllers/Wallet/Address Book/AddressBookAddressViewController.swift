@@ -93,7 +93,18 @@ final class AddressBookAddressViewController: UIViewController {
         center.addObserver(self, selector: #selector(reloadTransactions), name: Web3TransactionDAO.transactionDidUpdateNotification, object: nil)
         reloadTransactions()
     }
-    
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        switch AppGroupUserDefaults.Wallet.lastSelectedWallet {
+        case let .common(walletID):
+            let job = SyncWeb3TransactionJob(walletID: walletID)
+            ConcurrentJobQueue.shared.addJob(job: job)
+        case .privacy, .safe:
+            break
+        }
+    }
+
     @objc private func showMoreActions(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.delete_address(), style: .destructive, handler: { [address, network] _ in

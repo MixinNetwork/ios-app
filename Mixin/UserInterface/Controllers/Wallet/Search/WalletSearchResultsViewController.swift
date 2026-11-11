@@ -194,13 +194,6 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
         applySnapshot()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if !keyword.isEmpty {
-            update(with: keyword)
-        }
-    }
-    
     func update(with keyword: String) {
         loadViewIfNeeded()
         self.keyword = keyword

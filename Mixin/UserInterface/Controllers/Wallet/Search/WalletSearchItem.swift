@@ -10,7 +10,7 @@ enum WalletSearchItem<Token> {
     
     case token(Token)
     case perps(PerpetualPositionItem, PerpetualMarket)
-    case earn(EarnProduct, MixinTokenItem)
+    case earn(WalletSearchEarnViewModel)
     case collectible(InscriptionOutput)
     
 }
@@ -23,8 +23,8 @@ extension WalletSearchItem: Identifiable where Token: ValuableToken & OnChainTok
             ID(category: .tokens, value: token.assetID)
         case .perps(let position, _):
             ID(category: .perps, value: position.positionID)
-        case .earn(let product, _):
-            ID(category: .earn, value: product.productionID)
+        case .earn(let viewModel):
+            ID(category: .earn, value: viewModel.productionID)
         case .collectible(let output):
             ID(category: .collectibles, value: output.output.id)
         }
@@ -36,8 +36,8 @@ extension WalletSearchItem: Identifiable where Token: ValuableToken & OnChainTok
             .token(assetID: token.assetID)
         case .perps:
             nil
-        case let .earn(product, _):
-            .earn(productionID: product.productionID)
+        case .earn(let viewModel):
+            .earn(productionID: viewModel.productionID)
         case .collectible(let output):
             .collectible(inscriptionHash: output.inscriptionHash)
         }

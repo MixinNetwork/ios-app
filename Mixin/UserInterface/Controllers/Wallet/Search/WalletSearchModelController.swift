@@ -86,7 +86,7 @@ final class PrivacyWalletSearchModelController: WalletSearchModelController {
                 else {
                     return nil
                 }
-                return .earn(product, token)
+                return .earn(WalletSearchEarnViewModel(product: product, token: token))
             }
             return Array(matches.prefix(limit ?? Int.max))
         case .collectibles:
@@ -110,7 +110,7 @@ final class PrivacyWalletSearchModelController: WalletSearchModelController {
                 if let product = earnings.first(where: { $0.productionID == productionID }),
                    let token = TokenDAO.shared.tokenItem(assetID: product.assetID)
                 {
-                    .earn(product, token)
+                    .earn(WalletSearchEarnViewModel(product: product, token: token))
                 } else {
                     nil
                 }

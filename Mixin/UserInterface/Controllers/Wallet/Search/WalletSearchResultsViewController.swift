@@ -320,9 +320,9 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
                     viewModel: PerpetualMarketViewModel(market: market),
                 )
                 navigationController?.pushViewController(controller, animated: true)
-            case let .earn(product, _):
+            case .earn(let viewModel):
                 UIApplication.shared.homeNavigationController?.presentEarnPage(
-                    additionalURLQueries: ["production": product.productionID]
+                    additionalURLQueries: ["production": viewModel.productionID]
                 )
             case .collectible(let output):
                 let inscription = InscriptionViewController(output: output)

@@ -4,11 +4,11 @@ import MixinServices
 final class WalletSearchViewController<ModelController: WalletSearchModelController>: UIViewController, SearchNavigationAnimating {
     
     private let searchBoxView = SearchBoxView()
-    private let recents: RecentWalletSearchesViewController<ModelController>
+    private let recents: WalletSearchRecentsViewController<ModelController>
     private let searchResults: WalletSearchResultsViewController<ModelController>
     
     init(modelController: ModelController) {
-        self.recents = RecentWalletSearchesViewController(modelController: modelController)
+        self.recents = WalletSearchRecentsViewController(modelController: modelController)
         self.searchResults = WalletSearchResultsViewController(modelController: modelController)
         super.init(nibName: nil, bundle: nil)
     }

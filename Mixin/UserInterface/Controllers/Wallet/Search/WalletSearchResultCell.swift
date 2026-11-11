@@ -61,22 +61,12 @@ final class WalletSearchResultCell: UICollectionViewCell {
             leverageLabel.text = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
             leverageLabel.color = isLong ? .long : .short
             leverageLabel.isHidden = false
-        case let .earn(product, token):
-            iconView.setIcon(token: token)
-            titleLabel.text = token.symbol
-            let principal = Decimal(string: product.account.totalPrincipal, locale: .enUSPOSIX) ?? 0
-            let earnings = Decimal(string: product.account.redeemableEarnings, locale: .enUSPOSIX) ?? 0
-            subtitleLabel.text = CurrencyFormatter.localizedString(
-                from: principal + earnings,
-                format: .precision,
-                sign: .never,
-                symbol: .custom(token.symbol),
-            )
-            if let rate = product.annualRates.compactMap({ Decimal(string: $0, locale: .enUSPOSIX) }).max() {
-                let percentage = PercentageFormatter.string(from: rate, format: .pretty, sign: .never)
-                apyLabel.text = R.string.localizable.cash_account_apy(percentage)
-                apyLabel.isHidden = false
-            }
+        case .earn(let viewModel):
+            iconView.setIcon(token: viewModel.token)
+            titleLabel.text = viewModel.symbol
+            subtitleLabel.text = viewModel.value
+            apyLabel.text = viewModel.apy
+            apyLabel.isHidden = viewModel.apy == nil
         case .collectible(let output):
             if let inscription = output.inscription {
                 iconView.setIcon(content: inscription)

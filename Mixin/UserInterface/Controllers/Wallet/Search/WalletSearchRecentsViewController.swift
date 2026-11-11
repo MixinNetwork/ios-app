@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class RecentWalletSearchesViewController<ModelController: WalletSearchModelController>: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+final class WalletSearchRecentsViewController<ModelController: WalletSearchModelController>: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     private(set) weak var collectionView: UICollectionView!
     
@@ -34,7 +34,7 @@ final class RecentWalletSearchesViewController<ModelController: WalletSearchMode
             ),
             subitems: [item],
         )
-        group.interItemSpacing = .fixed(12)
+        group.interItemSpacing = .fixed(16)
         let section = NSCollectionLayoutSection(group: group)
         section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20)
         section.supplementariesFollowContentInsets = false
@@ -117,8 +117,8 @@ final class RecentWalletSearchesViewController<ModelController: WalletSearchMode
             } else {
                 cell.iconView.setIcon(token: token, chain: token.chain)
             }
-            cell.titleLabel.text = token.symbol
-            cell.subtitleLabel.text = token.name
+            cell.titleLabel.text = token.name
+            cell.subtitleLabel.text = token.localizedBalanceWithSymbol
         case let .perps(position, market):
             cell.layout(iconSize: .medium)
             cell.iconView.setIcon(market: market)
@@ -129,16 +129,13 @@ final class RecentWalletSearchesViewController<ModelController: WalletSearchMode
                 R.string.localizable.short_asset(position.tokenSymbol)
             }
             cell.subtitleLabel.text = direction + " · " + PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
-        case let .earn(product, token):
+        case .earn(let viewModel):
             cell.layout(iconSize: .medium)
-            cell.iconView.setIcon(token: token)
-            cell.titleLabel.text = token.symbol
-            let rate = product.annualRates.compactMap { Decimal(string: $0, locale: .enUSPOSIX) }.max()
-            cell.subtitleLabel.text = if let rate {
-                R.string.localizable.earn() + " · " + PercentageFormatter.string(from: rate, format: .pretty, sign: .never)
-            } else {
-                R.string.localizable.earn()
-            }
+            cell.iconView.setIcon(token: viewModel.token)
+            cell.titleLabel.text = viewModel.symbol
+            cell.subtitleLabel.text = viewModel.value
+            cell.apyLabel.text = viewModel.apy
+            cell.apyLabel.isHidden = viewModel.apy == nil
         case .collectible(let output):
             cell.layout(iconSize: .small)
             if let inscription = output.inscription {
@@ -147,7 +144,11 @@ final class RecentWalletSearchesViewController<ModelController: WalletSearchMode
             cell.titleLabel.text = output.inscription?.collectionName ?? R.string.localizable.collectibles()
             cell.subtitleLabel.text = output.inscription?.sequenceRepresentation ?? output.inscriptionHash
         }
-        cell.accessibilityLabel = [cell.titleLabel.text, cell.subtitleLabel.text].compactMap { $0 }.joined(separator: ", ")
+        cell.accessibilityLabel = [
+            cell.titleLabel.text,
+            cell.apyLabel.isHidden ? nil : cell.apyLabel.text,
+            cell.subtitleLabel.text,
+        ].compactMap { $0 }.joined(separator: ", ")
         return cell
     }
     
@@ -184,9 +185,9 @@ final class RecentWalletSearchesViewController<ModelController: WalletSearchMode
                 viewModel: PerpetualMarketViewModel(market: market),
             )
             navigationController?.pushViewController(controller, animated: true)
-        case let .earn(product, _):
+        case .earn(let viewModel):
             UIApplication.shared.homeNavigationController?.presentEarnPage(
-                additionalURLQueries: ["production": product.productionID]
+                additionalURLQueries: ["production": viewModel.productionID]
             )
         case .collectible(let output):
             navigationController?.pushViewController(
@@ -198,7 +199,7 @@ final class RecentWalletSearchesViewController<ModelController: WalletSearchMode
     
 }
 
-extension RecentWalletSearchesViewController: RecentSearchHeaderView.Delegate {
+extension WalletSearchRecentsViewController: RecentSearchHeaderView.Delegate {
     
     func recentSearchHeaderViewDidSendAction(_ view: RecentSearchHeaderView) {
         items = []

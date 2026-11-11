@@ -199,6 +199,9 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
     
     func update(with keyword: String) {
         loadViewIfNeeded()
+        if self.keyword != keyword {
+            selectedCategory = .all
+        }
         self.keyword = keyword
         queue.cancelAllOperations()
         let searchID = UUID()
@@ -237,7 +240,9 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
                     return
                 }
                 if category == .all {
-                    self.categoryController.categories = modelController.supportedCategories.filter { $0 == .all || results[$0] != nil }
+                    self.categoryController.categories = modelController.supportedCategories.filter {
+                        $0 == .all || results[$0]?.isEmpty == false
+                    }
                 }
                 self.results = results
                 if !self.categoryController.categories.contains(self.selectedCategory) {
@@ -267,7 +272,7 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
                 let displayCount = selectedCategory == .all ? aggregatedDisplayCount : matches.count
                 snapshot.appendItems(matches.keys.prefix(displayCount).map { .result($0) }, toSection: section)
             }
-            if snapshot.numberOfItems == 0 {
+            if selectedCategory == .all, snapshot.numberOfItems == 0 {
                 snapshot.appendSections([.emptyIndicator])
                 snapshot.appendItems([.emptyIndicator], toSection: .emptyIndicator)
             }

@@ -41,7 +41,11 @@ final class WalletSearchResultCell: UICollectionViewCell {
         apyLabel.isHidden = true
         switch result {
         case .token(let token):
-            iconView.setIcon(token: token, chain: token.chain)
+            if let token = token as? MixinTokenItem {
+                iconView.setIcon(token: token)
+            } else {
+                iconView.setIcon(token: token, chain: token.chain)
+            }
             titleLabel.text = token.localizedBalanceWithSymbol
             subtitleLabel.text = token.name
         case let .perps(position, market):

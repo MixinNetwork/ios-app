@@ -49,7 +49,10 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
             make.top.leading.trailing.equalToSuperview()
             make.height.equalTo(52)
         }
-        let categoryController = CategoryController(collectionView: categorySelectorCollectionView)
+        let categoryController = CategoryController(
+            collectionView: categorySelectorCollectionView,
+            categories: modelController.supportedCategories,
+        )
         categoryController.resultsViewController = self
         categorySelectorCollectionView.dataSource = categoryController
         categorySelectorCollectionView.delegate = categoryController
@@ -207,7 +210,7 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
         }
         let operation = BlockOperation()
         let category = selectedCategory
-        let categories = category == .all ? WalletSearchCategory.allCases.filter { $0 != .all } : [category]
+        let categories = category == .all ? modelController.supportedCategories.filter { $0 != .all } : [category]
         let limit = category == .all ? aggregatedDisplayCount + 1 : nil
         operation.addExecutionBlock { [weak self, weak operation, modelController] in
             guard let operation, !operation.isCancelled else {
@@ -234,7 +237,7 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
                     return
                 }
                 if category == .all {
-                    self.categoryController.categories = WalletSearchCategory.allCases.filter { $0 == .all || results[$0] != nil }
+                    self.categoryController.categories = modelController.supportedCategories.filter { $0 == .all || results[$0] != nil }
                 }
                 self.results = results
                 if !self.categoryController.categories.contains(self.selectedCategory) {
@@ -374,12 +377,13 @@ extension WalletSearchResultsViewController {
         
         weak var resultsViewController: WalletSearchResultsViewController?
         
-        var categories: [WalletSearchCategory] = [.all, .tokens, .perps, .collectibles]
+        var categories: [WalletSearchCategory]
         
         private weak var collectionView: UICollectionView!
         
-        init(collectionView: UICollectionView) {
+        init(collectionView: UICollectionView, categories: [WalletSearchCategory]) {
             self.collectionView = collectionView
+            self.categories = categories
             super.init()
         }
         

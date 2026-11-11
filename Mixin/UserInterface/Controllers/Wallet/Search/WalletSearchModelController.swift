@@ -5,6 +5,8 @@ protocol WalletSearchModelController {
     
     associatedtype Item: ValuableToken & OnChainToken & ChangeReportingToken & ComparableToken
     
+    var supportedCategories: [WalletSearchCategory] { get }
+    
     func search(keyword: String, category: WalletSearchCategory, limit: Int?) -> [WalletSearchItem<Item>]?
     func recentItems() -> [WalletSearchItem<Item>]
     func reportUserSelection(token item: Item)
@@ -37,6 +39,8 @@ final class PrivacyWalletSearchModelController: WalletSearchModelController {
     protocol Delegate: AnyObject {
         func privacyWalletSearchModelController(_ controller: PrivacyWalletSearchModelController, didSelectToken token: MixinTokenItem)
     }
+    
+    let supportedCategories = WalletSearchCategory.allCases
     
     weak var delegate: Delegate?
     
@@ -131,6 +135,7 @@ final class CommonWalletSearchModelController: WalletSearchModelController {
     }
     
     let wallet: Web3Wallet
+    let supportedCategories: [WalletSearchCategory] = [.all, .tokens]
     
     weak var delegate: Delegate?
     

@@ -66,8 +66,7 @@ final class SearchMarketResultsViewController: UIViewController {
         categorySelectorCollectionView.showsHorizontalScrollIndicator = false
         view.addSubview(categorySelectorCollectionView)
         categorySelectorCollectionView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(12)
-            make.leading.trailing.equalToSuperview()
+            make.top.leading.trailing.equalToSuperview()
             make.height.equalTo(54)
         }
         self.categorySelectorCollectionView = categorySelectorCollectionView

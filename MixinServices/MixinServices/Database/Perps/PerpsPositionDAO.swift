@@ -67,7 +67,7 @@ public final class PerpsPositionDAO: PerpsDAO {
     ) -> [PerpetualPositionItem] {
         var sql = """
         \(Self.itemSQL)
-        WHERE (m.token_symbol LIKE :keyword ESCAPE '/') OR (m.display_symbol LIKE :keyword ESCAPE '/')
+        WHERE (m.token_symbol LIKE :keyword ESCAPE '/') OR (m.tags LIKE :keyword ESCAPE '/')
         ORDER BY p.created_at DESC
         """
         if let limit {

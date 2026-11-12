@@ -37,50 +37,48 @@ final class MessageExpirationDurationViewController: SettingsTableViewController
         dataSource.tableView = tableView
         reloadExpirationOptions()
         
-        guard !conversation.isExpirationResolved else {
-            return
-        }
-        let indicator = UIActivityIndicatorView(style: .medium)
-        indicator.startAnimating()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: indicator)
-        let conversationID = conversation.conversationId
-        DispatchQueue.global().async { [weak self] in
-            let result = ConversationAPI.getConversation(conversationId: conversationID)
-            DispatchQueue.main.async {
-                guard let self else {
-                    return
-                }
-                self.navigationItem.rightBarButtonItem = nil
-                let conversation = self.conversation
-                if !conversation.isExpirationResolved || conversation.status != ConversationStatus.SUCCESS.rawValue {
+        if conversation.status != ConversationStatus.SUCCESS.rawValue,
+           !conversation.isExpirationResolved
+        {
+            let conversationID = conversation.conversationId
+            DispatchQueue.global().async { [weak self] in
+                let result = ConversationAPI.getConversation(conversationId: conversationID)
+                DispatchQueue.main.async {
+                    guard let self else {
+                        return
+                    }
+                    let conversation = self.conversation
+                    guard !conversation.isExpirationResolved || conversation.status != ConversationStatus.SUCCESS.rawValue else {
+                        self.reloadExpirationOptions()
+                        return
+                    }
                     if let local = ConversationDAO.shared.getConversation(conversationId: conversationID),
                        local.status == ConversationStatus.SUCCESS.rawValue
                     {
                         conversation.expireIn = local.expireIn
                         conversation.status = local.status
-                    } else {
+                    } else if !conversation.isExpirationResolved {
                         switch result {
                         case .success(let response):
                             conversation.expireIn = response.expireIn
                         case .failure(.notFound):
-                            if !conversation.isExpirationResolved {
-                                conversation.expireIn = Conversation.defaultExpirationDuration
-                                conversation.status = ConversationStatus.START.rawValue
-                            }
+                            conversation.expireIn = Conversation.defaultExpirationDuration
+                            conversation.status = ConversationStatus.START.rawValue
                         case .failure(let error):
-                            if !conversation.isExpirationResolved {
-                                showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                                return
-                            }
+                            showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                            return
                         }
                     }
                     conversation.isExpirationResolved = true
                     NotificationCenter.default.post(
                         name: MixinServices.conversationDidChangeNotification,
-                        object: ConversationChange(conversationId: conversationID, action: .update(conversation: conversation)),
+                        object: ConversationChange(
+                            conversationId: conversationID,
+                            action: .update(conversation: conversation)
+                        ),
                     )
+                    self.reloadExpirationOptions()
                 }
-                self.reloadExpirationOptions()
             }
         }
     }

@@ -40,25 +40,12 @@ public class CreateConversationJob: BaseJob {
                 return
             }
 
-            let name: String?
-            let duration: Int64?
-            switch conversation.category {
-            case ConversationCategory.GROUP.rawValue:
-                name = conversation.name
-                duration = nil
-            case ConversationCategory.CONTACT.rawValue:
-                fallthrough
-            default:
-                name = nil
-                duration = Conversation.defaultExpirationDuration
-            }
-            let request = ConversationRequest(
-                conversationId: conversation.conversationId,
+            let name = conversation.category == ConversationCategory.CONTACT.rawValue ? nil : conversation.name
+            let request = CreateConversationRequest(
+                conversationID: conversation.conversationId,
                 name: name,
                 category: conversation.category,
                 participants: participants,
-                duration: duration,
-                announcement: nil,
                 randomID: nil,
             )
             let response = try ConversationAPI.createConversation(conversation: request).get()

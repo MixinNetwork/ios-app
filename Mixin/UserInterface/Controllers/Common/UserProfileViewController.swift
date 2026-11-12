@@ -179,8 +179,12 @@ final class UserProfileViewController: ProfileViewController {
         let userId = user.userId
         let hud = Hud()
         hud.show(style: .busy, text: "")
-        let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: ConversationCategory.CONTACT.rawValue, participants: [ParticipantRequest(userId: userId, role: "")], duration: interval, announcement: nil, randomID: nil)
-        ConversationAPI.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
+        ConversationAPI.mute(
+            conversationID: conversationId,
+            category: ConversationCategory.CONTACT.rawValue,
+            participants: [ParticipantRequest(userId: userId, role: "")],
+            duration: interval,
+        ) { [weak self] (result) in
             switch result {
             case let .success(response):
                 DispatchQueue.global().async {

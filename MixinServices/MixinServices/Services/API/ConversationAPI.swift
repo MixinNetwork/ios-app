@@ -29,17 +29,16 @@ public class ConversationAPI : MixinAPI {
             return "/conversations/\(conversationId)/rotate"
         }
         
-        static func disappear(id: String) -> String {
-            return "/conversations/\(id)/disappear"
-        }
-        
     }
     
-    public static func createConversation(conversation: ConversationRequest, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
+    public static func createConversation(
+        conversation: CreateConversationRequest,
+        completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void,
+    ) {
         request(method: .post, path: Path.conversations, parameters: conversation, completion: completion)
     }
     
-    public static func createConversation(conversation: ConversationRequest) -> MixinAPI.Result<ConversationResponse> {
+    public static func createConversation(conversation: CreateConversationRequest) -> MixinAPI.Result<ConversationResponse> {
         return request(method: .post, path: Path.conversations, parameters: conversation)
     }
     
@@ -76,13 +75,21 @@ public class ConversationAPI : MixinAPI {
     }
     
     public static func updateGroupName(conversationId: String, name: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
-        let conversationRequest = ConversationRequest(conversationId: conversationId, name: name, category: nil, participants: nil, duration: nil, announcement: nil, randomID: nil)
-        request(method: .post, path: Path.conversations(id: conversationId), parameters: conversationRequest, completion: completion)
+        request(
+            method: .post,
+            path: Path.conversations(id: conversationId),
+            parameters: ["name": name],
+            completion: completion,
+        )
     }
     
     public static func updateGroupAnnouncement(conversationId: String, announcement: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
-        let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: nil, participants: nil, duration: nil, announcement: announcement, randomID: nil)
-        request(method: .post, path: Path.conversations(id: conversationId), parameters: conversationRequest, completion: completion)
+        request(
+            method: .post,
+            path: Path.conversations(id: conversationId),
+            parameters: ["announcement": announcement],
+            completion: completion,
+        )
     }
     
     public static func updateGroupIcon(
@@ -100,17 +107,46 @@ public class ConversationAPI : MixinAPI {
         )
     }
     
-    public static func mute(conversationId: String, conversationRequest: ConversationRequest, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
-        request(method: .post, path: Path.mute(conversationId: conversationId), parameters: conversationRequest, completion: completion)
+    public static func mute(
+        conversationID: String,
+        category: String,
+        participants: [ParticipantRequest]?,
+        duration: Int64,
+        completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void,
+    ) {
+        var parameters: [String: Any] = [
+            "conversation_id": conversationID,
+            "category": category,
+            "duration": duration,
+        ]
+        if let participants {
+            parameters["participants"] = participants.map {
+                ["user_id": $0.userId, "role": $0.role]
+            }
+        }
+        request(
+            method: .post,
+            path: Path.mute(conversationId: conversationID),
+            parameters: parameters,
+            completion: completion,
+        )
     }
     
     public static func updateCodeId(conversationId: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
         request(method: .post, path: Path.reset(conversationId: conversationId), completion: completion)
     }
     
-    public static func updateExpireIn(conversationId: String, expireIn: Int64, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
-        let param = ["duration": expireIn]
-        request(method: .post, path: Path.disappear(id: conversationId), parameters: param, completion: completion)
+    public static func updateExpireIn(
+        conversationID: String,
+        expireIn: Int64,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/conversations/\(conversationID)/disappear",
+            parameters: ["duration": expireIn],
+            completion: completion
+        )
     }
     
 }

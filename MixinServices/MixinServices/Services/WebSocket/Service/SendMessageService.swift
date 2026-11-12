@@ -813,21 +813,16 @@ extension SendMessageService {
     
     private func createConversation(conversation: ConversationItem) throws -> Int64 {
         let participants: [ParticipantRequest]
-        let duration: Int64?
         if conversation.category == ConversationCategory.CONTACT.rawValue {
             participants = [ParticipantRequest(userId: conversation.ownerId, role: "")]
-            duration = Conversation.defaultExpirationDuration
         } else {
             participants = ParticipantDAO.shared.participantRequests(conversationId: conversation.conversationId, currentAccountId: currentAccountId)
-            duration = nil
         }
-        let request = ConversationRequest(
-            conversationId: conversation.conversationId,
+        let request = CreateConversationRequest(
+            conversationID: conversation.conversationId,
             name: nil,
             category: conversation.category,
             participants: participants,
-            duration: duration,
-            announcement: nil,
             randomID: nil,
         )
         let response = try ConversationAPI.createConversation(conversation: request).get()

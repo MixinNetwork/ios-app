@@ -1,4 +1,5 @@
 import UIKit
+import Alamofire
 import MixinServices
 
 final class MessageExpirationDurationViewController: SettingsTableViewController {
@@ -203,50 +204,46 @@ extension MessageExpirationDurationViewController {
         }
         tableView.isUserInteractionEnabled = false
         setAccessory(.busy, forRowWith: expireIn)
-        let conversationId = conversation.conversationId
-        let completion: (MixinAPI.Result<Int64>) -> Void = { [weak self] result in
+        let conversationID = conversation.conversationId
+        let completion: (MixinAPI.Result<Empty>) -> Void = { [weak self] result in
             switch result {
-            case .success(let expireIn):
-                ConversationDAO.shared.updateExpireIn(expireIn: expireIn, conversationId: conversationId)
-                self?.conversation.expireIn = expireIn
-                self?.currentExpireIn = expireIn
+            case .success:
+                ConversationDAO.shared.updateExpireIn(expireIn: expireIn, conversationId: conversationID)
+                if let self {
+                    self.conversation.expireIn = expireIn
+                    self.currentExpireIn = expireIn
+                }
             case let .failure(error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
-            if let self = self {
+            if let self {
                 self.setAccessory(.checkmark, forRowWith: self.currentExpireIn)
                 self.tableView.isUserInteractionEnabled = true
             }
         }
         let updateExpiration = {
-            ConversationAPI.updateExpireIn(conversationId: conversationId, expireIn: expireIn) { result in
-                completion(result.map { _ in expireIn })
-            }
+            ConversationAPI.updateExpireIn(conversationID: conversationID, expireIn: expireIn, completion: completion)
         }
         if !conversation.isGroup(),
-           ConversationDAO.shared.getConversationStatus(conversationId: conversationId) != ConversationStatus.SUCCESS.rawValue
+           ConversationDAO.shared.getConversationStatus(conversationId: conversationID) != ConversationStatus.SUCCESS.rawValue
         {
-            let request = ConversationRequest(
-                conversationId: conversationId,
+            let request = CreateConversationRequest(
+                conversationID: conversationID,
                 name: nil,
                 category: ConversationCategory.CONTACT.rawValue,
                 participants: [ParticipantRequest(userId: conversation.ownerId, role: "")],
-                duration: expireIn > 0 ? expireIn : nil,
-                announcement: nil,
                 randomID: nil,
             )
             ConversationAPI.createConversation(conversation: request) { [weak self] result in
                 switch result {
                 case .success(let response):
                     ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
-                    self?.conversation.status = ConversationStatus.SUCCESS.rawValue
-                    self?.conversation.expireIn = response.expireIn
-                    self?.currentExpireIn = response.expireIn
-                    if response.expireIn == expireIn {
-                        completion(.success(expireIn))
-                    } else {
-                        updateExpiration()
+                    if let self {
+                        self.conversation.status = ConversationStatus.SUCCESS.rawValue
+                        self.conversation.expireIn = response.expireIn
+                        self.currentExpireIn = response.expireIn
                     }
+                    updateExpiration()
                 case .failure(let error):
                     completion(.failure(error))
                 }

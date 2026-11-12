@@ -265,7 +265,7 @@ class TradeSpotViewController: UIViewController {
                 header.extendsBoundary = false
                 section.boundarySupplementaryItems = [header]
                 let background: NSCollectionLayoutDecorationItem = .background(
-                    elementKind: TradeSectionBackgroundView.elementKind
+                    elementKind: SectionBackgroundView.CornerRadius.small.rawValue
                 )
                 background.contentInsets = NSDirectionalEdgeInsets(top: topMargin + headerHeight, leading: 20, bottom: 0, trailing: 20)
                 section.decorationItems = [background]
@@ -320,7 +320,7 @@ class TradeSpotViewController: UIViewController {
                         ),
                     ]
                     let background: NSCollectionLayoutDecorationItem = .background(
-                        elementKind: TradeSectionBackgroundView.elementKind
+                        elementKind: SectionBackgroundView.CornerRadius.small.rawValue
                     )
                     background.contentInsets = section.contentInsets
                     section.decorationItems = [background]
@@ -354,7 +354,7 @@ class TradeSpotViewController: UIViewController {
                 return section
             }
         }
-        layout.register(TradeSectionBackgroundView.self, forDecorationViewOfKind: TradeSectionBackgroundView.elementKind)
+        layout.register(SectionBackgroundView.self, forDecorationViewOfKind: SectionBackgroundView.CornerRadius.small.rawValue)
         collectionView.collectionViewLayout = layout
         contentSizeObservation = collectionView.observe(\.contentSize) { [weak self] (collectionView, _) in
             guard let self else {

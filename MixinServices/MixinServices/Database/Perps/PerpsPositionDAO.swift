@@ -60,6 +60,22 @@ public final class PerpsPositionDAO: PerpsDAO {
         db.select(with: Self.itemSQL + "ORDER BY created_at DESC")
     }
     
+    public func search(
+        walletID: String,
+        keyword: String,
+        limit: Int?,
+    ) -> [PerpetualPositionItem] {
+        var sql = """
+        \(Self.itemSQL)
+        WHERE (m.token_symbol LIKE :keyword ESCAPE '/') OR (m.tags LIKE :keyword ESCAPE '/')
+        ORDER BY p.created_at DESC
+        """
+        if let limit {
+            sql += "\nLIMIT \(limit)"
+        }
+        return db.select(with: sql, arguments: ["keyword": "%\(keyword.sqlEscaped)%"])
+    }
+    
     public func replace(positions: [PerpetualPosition]) {
         db.write { (db) in
             try PerpetualPosition.deleteAll(db)

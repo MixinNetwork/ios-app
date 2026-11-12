@@ -127,7 +127,7 @@ final class SearchMarketResultsViewController: UIViewController {
                     )
                     section.boundarySupplementaryItems = [header]
                     let background = NSCollectionLayoutDecorationItem.background(
-                        elementKind: TradeSectionBackgroundView.elementKind,
+                        elementKind: SectionBackgroundView.CornerRadius.small.rawValue,
                     )
                     section.decorationItems = [background]
                 case .crypto, .perpetual:
@@ -146,8 +146,8 @@ final class SearchMarketResultsViewController: UIViewController {
             configuration: config,
         )
         layout.register(
-            TradeSectionBackgroundView.self,
-            forDecorationViewOfKind: TradeSectionBackgroundView.elementKind,
+            SectionBackgroundView.self,
+            forDecorationViewOfKind: SectionBackgroundView.CornerRadius.small.rawValue,
         )
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.alwaysBounceVertical = true

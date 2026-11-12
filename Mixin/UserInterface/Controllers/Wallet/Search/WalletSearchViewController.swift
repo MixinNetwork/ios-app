@@ -3,19 +3,14 @@ import MixinServices
 
 final class WalletSearchViewController<ModelController: WalletSearchModelController>: UIViewController, SearchNavigationAnimating {
     
-    @IBOutlet weak var contentWrapperView: UIView!
-    
-    @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
-    
     private let searchBoxView = SearchBoxView()
-    private let recommendation: WalletSearchRecommendationViewController<ModelController>
+    private let recents: WalletSearchRecentsViewController<ModelController>
     private let searchResults: WalletSearchResultsViewController<ModelController>
     
     init(modelController: ModelController) {
-        self.recommendation = WalletSearchRecommendationViewController(modelController: modelController)
+        self.recents = WalletSearchRecentsViewController(modelController: modelController)
         self.searchResults = WalletSearchResultsViewController(modelController: modelController)
-        let nib = R.nib.walletSearchView
-        super.init(nibName: nib.name, bundle: nib.bundle)
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -24,32 +19,25 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        searchBoxView.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_asset()
         navigationItem.hidesBackButton = true
         navigationItem.titleView = searchBoxView
         navigationItem.rightBarButtonItem = .cancelSearch(
             target: self,
             action: #selector(cancelAction(_:))
         )
-        
-        view.layoutIfNeeded()
-        for child in [searchResults, recommendation] {
+        searchBoxView.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_asset()
+        view.backgroundColor = .background
+        for child in [searchResults, recents] {
             addChild(child)
-            contentWrapperView.addSubview(child.view)
-            child.view.snp.makeConstraints { (make) in
+            view.addSubview(child.view)
+            child.view.snp.makeConstraints { make in
+                make.top.equalTo(view.safeAreaLayoutGuide)
                 make.leading.trailing.bottom.equalToSuperview()
-                make.top.equalToSuperview().offset(10)
             }
             child.didMove(toParent: self)
         }
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillChangeFrame(_:)),
-            name: UIResponder.keyboardWillChangeFrameNotification,
-            object: nil
-        )
+        searchResults.view.isHidden = true
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(dismissSearch),
@@ -70,7 +58,7 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
         searchBoxView.textField.resignFirstResponder()
     }
     
-    @IBAction func cancelAction(_ sender: Any) {
+    @objc private func cancelAction(_ sender: Any) {
         navigationController?.popViewController(animated: true)
     }
     
@@ -89,25 +77,15 @@ final class WalletSearchViewController<ModelController: WalletSearchModelControl
         let keyword = (textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         searchResults.update(with: keyword)
         if keyword.isEmpty {
-            if contentWrapperView.subviews.last == searchResults.view {
-                recommendation.tableView.setContentOffset(.zero, animated: false)
+            if !searchResults.view.isHidden {
+                recents.collectionView.setContentOffset(.zero, animated: false)
             }
-            contentWrapperView.bringSubviewToFront(recommendation.view)
+            recents.view.isHidden = false
+            searchResults.view.isHidden = true
         } else {
-            contentWrapperView.bringSubviewToFront(searchResults.view)
+            recents.view.isHidden = true
+            searchResults.view.isHidden = false
         }
-    }
-    
-    @objc private func keyboardWillChangeFrame(_ notification: Notification) {
-        guard let userInfo = notification.userInfo else {
-            return
-        }
-        guard let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
-            return
-        }
-        let keyboardFrame = view.convert(endFrame, from: nil)
-        keyboardPlaceholderHeightConstraint.constant = max(0, view.bounds.maxY - keyboardFrame.minY)
-        view.layoutIfNeeded()
     }
     
 }

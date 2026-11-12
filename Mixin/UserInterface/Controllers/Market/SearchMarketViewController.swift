@@ -96,6 +96,12 @@ final class SearchMarketViewController: UIViewController, SearchNavigationAnimat
         }
     }
     
+    func search(keyword: String) {
+        loadViewIfNeeded()
+        searchBoxView.textField.text = keyword
+        textFieldDidChange(searchBoxView.textField)
+    }
+    
     func viewCrypto(_ market: FavorableMarket) {
         searchBoxView.textField.resignFirstResponder()
         AppGroupUserDefaults.User.insertRecentMarketSearch(

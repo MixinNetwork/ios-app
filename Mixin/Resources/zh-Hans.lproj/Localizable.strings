@@ -1279,6 +1279,7 @@
 "perps_position_size_pnl_1" = "仓位越大，盈亏金额越大";
 "perps_position_size_pnl_2" = "仓位越小，盈亏金额越小";
 "perps_position_tip" = "加仓会放大收益和风险";
+"perps_positions" = "持仓";
 "perps_product" = "合约";
 "perps_realized_pnl" = "净盈亏";
 "perps_realized_pnl_tip" = "未平仓的合约不计入统计";
@@ -1609,6 +1610,7 @@
 "search_placeholder_contact" = "Mixin ID, 名称, 手机号码";
 "search_placeholder_dapp" = "名称, URL";
 "search_placeholder_number" = "搜索 Mixin ID 或手机号码：";
+"search_query_in_markets" = "在行情中搜索“%@”";
 "search_related_message" = "%d 条相关消息";
 "search_related_message_count" = "%d 条相关消息";
 "search_result_prefix_phone" = "手机号码：";

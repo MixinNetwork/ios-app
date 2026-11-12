@@ -147,7 +147,7 @@ final class ExploreMoreViewController: UIViewController, AssetChangeAccountRecov
                     section.contentInsets.bottom = 20
                 }
                 let background = NSCollectionLayoutDecorationItem.background(
-                    elementKind: TradeSectionBackgroundView.elementKind,
+                    elementKind: SectionBackgroundView.CornerRadius.small.rawValue,
                 )
                 background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
                 section.decorationItems = [background]
@@ -185,7 +185,7 @@ final class ExploreMoreViewController: UIViewController, AssetChangeAccountRecov
                     section.contentInsets.bottom = 20
                 }
                 let background = NSCollectionLayoutDecorationItem.background(
-                    elementKind: TradeSectionBackgroundView.elementKind,
+                    elementKind: SectionBackgroundView.CornerRadius.small.rawValue,
                 )
                 background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
                 section.decorationItems = [background]
@@ -196,8 +196,8 @@ final class ExploreMoreViewController: UIViewController, AssetChangeAccountRecov
         configuration.interSectionSpacing = 10
         layout.configuration = configuration
         layout.register(
-            TradeSectionBackgroundView.self,
-            forDecorationViewOfKind: TradeSectionBackgroundView.elementKind,
+            SectionBackgroundView.self,
+            forDecorationViewOfKind: SectionBackgroundView.CornerRadius.small.rawValue,
         )
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = R.color.background_secondary()

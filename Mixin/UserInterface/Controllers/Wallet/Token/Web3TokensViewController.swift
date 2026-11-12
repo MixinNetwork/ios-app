@@ -13,7 +13,6 @@ final class Web3TokensViewController: TokensViewController {
     private var watchingAddresses: WatchingAddresses?
     private var tokens: [Web3TokenItem]?
     
-    private var searchTokenHandler: WalletSearchWeb3TokenHandler?
     private var overviewActionHandler: CommonWalletOverviewActionHandler?
     private var pendingTransactionObserver: CommonWalletPendingTransactionLoader?
     
@@ -256,18 +255,11 @@ final class Web3TokensViewController: TokensViewController {
     }
     
     @objc private func presentSearch(_ sender: Any) {
-        let modelController = WalletSearchWeb3TokenController(
-            walletID: wallet.walletID,
-            supportedChainIDs: supportedChainIDs
+        let modelController = CommonWalletSearchModelController(
+            wallet: wallet
         )
-        let searchTokenHandler = WalletSearchWeb3TokenHandler(
-            wallet: wallet,
-            availability: availability,
-            navigationController: navigationController
-        )
-        modelController.delegate = searchTokenHandler
+        modelController.delegate = self
         let search = WalletSearchViewController(modelController: modelController)
-        self.searchTokenHandler = searchTokenHandler
         navigationController?.pushViewController(search, animated: true)
     }
     
@@ -354,6 +346,22 @@ extension Web3TokensViewController: UICollectionViewDelegate {
             availability: availability
         )
         navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+}
+
+extension Web3TokensViewController: CommonWalletSearchModelController.Delegate {
+    
+    func commonWalletSearchModelController(
+        _ controller: CommonWalletSearchModelController,
+        didSelectToken token: Web3TokenItem,
+    ) {
+        let controller = Web3TokenViewController(
+            wallet: wallet,
+            token: token,
+            availability: availability,
+        )
+        navigationController?.pushViewController(controller, animated: true)
     }
     
 }

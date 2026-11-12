@@ -584,7 +584,7 @@
 "edit_note" = "修改轉賬備註";
 "editing_address" = "正在修改地址";
 "editing_address_failed" = "修改地址失敗";
-"eip712_invalid_chain_id" = "結構化訊息的鏈 ID 無效，或與簽署網路不一致。";
+"eip712_invalid_chain_id" = "結構化訊息的鏈 ID 無效，或與簽名網路不一致。";
 "emergency_contact" = "恢復聯絡人";
 "enable" = "啟用";
 "enable_bioauth_description" = "想要啟用%@支付嗎？啟用後，轉賬時可驗證%@快速完成付款。";
@@ -1279,6 +1279,7 @@
 "perps_position_size_pnl_1" = "倉位越大，盈虧金額越大";
 "perps_position_size_pnl_2" = "倉位越小，盈虧金額越小";
 "perps_position_tip" = "加倉會放大收益和風險";
+"perps_positions" = "持倉";
 "perps_product" = "合約";
 "perps_realized_pnl" = "淨盈虧";
 "perps_realized_pnl_tip" = "未平倉的合約不計入統計";
@@ -1609,6 +1610,7 @@
 "search_placeholder_contact" = "Mixin ID, 名稱, 手機號碼";
 "search_placeholder_dapp" = "名稱, URL";
 "search_placeholder_number" = "搜尋 Mixin ID 或手機號碼：";
+"search_query_in_markets" = "在行情中搜索“%@”";
 "search_related_message" = "%d 條相關訊息";
 "search_related_message_count" = "%d 條相關訊息";
 "search_result_prefix_phone" = "手機號碼：";

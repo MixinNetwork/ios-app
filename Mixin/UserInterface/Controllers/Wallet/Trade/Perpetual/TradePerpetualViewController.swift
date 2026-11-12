@@ -99,7 +99,7 @@ final class TradePerpetualViewController: UIViewController {
                     ]
                     
                     let background: NSCollectionLayoutDecorationItem = .background(
-                        elementKind: TradeSectionBackgroundView.elementKind
+                        elementKind: SectionBackgroundView.CornerRadius.small.rawValue
                     )
                     background.contentInsets = section.contentInsets
                     section.decorationItems = [background]
@@ -149,7 +149,7 @@ final class TradePerpetualViewController: UIViewController {
                         ),
                     ]
                     let background: NSCollectionLayoutDecorationItem = .background(
-                        elementKind: TradeSectionBackgroundView.elementKind
+                        elementKind: SectionBackgroundView.CornerRadius.small.rawValue
                     )
                     background.contentInsets = section.contentInsets
                     section.decorationItems = [background]
@@ -165,8 +165,8 @@ final class TradePerpetualViewController: UIViewController {
             configuration: config
         )
         layout.register(
-            TradeSectionBackgroundView.self,
-            forDecorationViewOfKind: TradeSectionBackgroundView.elementKind
+            SectionBackgroundView.self,
+            forDecorationViewOfKind: SectionBackgroundView.CornerRadius.small.rawValue
         )
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.backgroundColor = R.color.background_secondary()

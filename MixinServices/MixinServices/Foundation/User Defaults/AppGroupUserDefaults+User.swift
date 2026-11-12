@@ -42,7 +42,6 @@ extension AppGroupUserDefaults {
             case isCircleSynchronized = "is_circle_synchronized"
             
             case clips = "clips"
-            case assetSearchHistory = "asset_search_history"
             case recentSearches = "recent_searches"
             
             case recoveryKitTipDismissalDate = "emergency_contact_bulletin_dismissal_date"
@@ -92,7 +91,6 @@ extension AppGroupUserDefaults {
         public static let recentSearchesDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.RecentSearchesChange")
         public static let recentMarketSearchesDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.RecentMarketSearchesChange")
         
-        private static let maxNumberOfAssetSearchHistory = 2
         private static let maxNumberOfRecentSearches = 4
         private static let maxNumberOfRecentMarketSearches = 6
         
@@ -204,10 +202,6 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.clips, defaultValue: [])
         public static var clips: [Data]
-        
-        // Stores asset id
-        @Default(namespace: .user, key: Key.assetSearchHistory, defaultValue: [])
-        public private(set) static var assetSearchHistory: [String]
         
         @Default(namespace: .user, key: Key.recentSearches, defaultValue: [])
         private static var recentSearchItems: [Data] {
@@ -336,15 +330,6 @@ extension AppGroupUserDefaults {
             }
             lastUpdateOrInstallVersion = Bundle.main.bundleVersion
             lastUpdateOrInstallDate = Date()
-        }
-        
-        public static func insertAssetSearchHistory(with id: String) {
-            guard !assetSearchHistory.contains(id) else {
-                return
-            }
-            var history = assetSearchHistory
-            history.insert(id, at: 0)
-            AppGroupUserDefaults.User.assetSearchHistory = Array(history.prefix(maxNumberOfAssetSearchHistory))
         }
         
         public static func insertRecentSearch(_ item: RecentSearch) {

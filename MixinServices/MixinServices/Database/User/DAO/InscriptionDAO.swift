@@ -83,9 +83,14 @@ public final class InscriptionDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: arguments)
     }
     
-    public func search(keyword: String) -> [InscriptionOutput] {
-        let sql = SQL.selector + " AND o.inscription_hash IS NOT NULL AND c.name LIKE ? ESCAPE '/'" + SQL.sequenceOrder
-        return db.select(with: sql, arguments: ["%\(keyword.sqlEscaped)%"])
+    public func search(keyword: String, limit: Int?) -> [InscriptionOutput] {
+        var sql = SQL.selector + " AND o.inscription_hash IS NOT NULL AND c.name LIKE ? ESCAPE '/'" + SQL.sequenceOrder
+        var arguments: StatementArguments = ["%\(keyword.sqlEscaped)%"]
+        if let limit {
+            sql += "\nLIMIT ?"
+            arguments += [limit]
+        }
+        return db.select(with: sql, arguments: arguments)
     }
     
     public func save(inscription: Inscription) {

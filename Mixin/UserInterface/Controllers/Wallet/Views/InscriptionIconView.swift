@@ -22,10 +22,6 @@ final class InscriptionIconView: UIView {
                     contentView.label.numberOfLines = 1
                     contentView.label.font = .systemFont(ofSize: 6, weight: .semibold)
                     addSubview(contentView)
-                    contentView.snp.makeConstraints { make in
-                        let inset = UIEdgeInsets(top: 4, left: 6, bottom: 5, right: 6)
-                        make.edges.equalToSuperview().inset(inset)
-                    }
                     self.textContentView = contentView
                 }
                 contentView.reloadData(collectionIconURL: collectionIconURL,
@@ -35,6 +31,20 @@ final class InscriptionIconView: UIView {
                 imageView.image = R.image.inscription_intaglio()
                 textContentView?.isHidden = true
             }
+            setNeedsLayout()
+        }
+    }
+    
+    var reportsNoIntrinsicContentSize = false
+    
+    override var intrinsicContentSize: CGSize {
+        if reportsNoIntrinsicContentSize {
+            CGSize(
+                width: UIView.noIntrinsicMetric,
+                height: UIView.noIntrinsicMetric,
+            )
+        } else {
+            super.intrinsicContentSize
         }
     }
     
@@ -53,12 +63,28 @@ final class InscriptionIconView: UIView {
     }
     
     override func layoutSubviews() {
+        super.layoutSubviews()
         if content == nil {
             imageView.frame.size = CGSize(width: bounds.width / 2, height: bounds.height / 2)
         } else {
             imageView.frame.size = CGSize(width: bounds.width, height: bounds.height)
         }
         imageView.center = CGPoint(x: bounds.width / 2, y: bounds.height / 2)
+        if let textContentView, bounds.width > 0, bounds.height > 0 {
+            // Preserve room for the text by scaling the entire 42-point icon layout.
+            let scale = min(1, min(bounds.width, bounds.height) / 42)
+            textContentView.bounds = CGRect(
+                x: 0,
+                y: 0,
+                width: bounds.width / scale - 12,
+                height: bounds.height / scale - 9,
+            )
+            textContentView.transform = CGAffineTransform(scaleX: scale, y: scale)
+            textContentView.center = CGPoint(
+                x: bounds.width / 2,
+                y: bounds.height / 2 - scale / 2,
+            )
+        }
     }
     
     func prepareForReuse() {

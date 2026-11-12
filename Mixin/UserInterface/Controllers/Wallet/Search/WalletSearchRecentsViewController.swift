@@ -54,7 +54,8 @@ final class WalletSearchRecentsViewController<ModelController: WalletSearchModel
         view.addSubview(collectionView)
         collectionView.snp.makeEdgesEqualToSuperview()
         self.collectionView = collectionView
-        collectionView.register(R.nib.walletSearchRecentCell)
+        collectionView.register(R.nib.walletSearchRecentTokenCell)
+        collectionView.register(R.nib.walletSearchRecentCollectibleCell)
         collectionView.register(R.nib.recentSearchHeaderView, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader)
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -107,10 +108,12 @@ final class WalletSearchRecentsViewController<ModelController: WalletSearchModel
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath,
     ) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_search_recent, for: indexPath)!
-        cell.iconView.prepareForReuse()
         switch items[indexPath.item] {
         case .token(let token):
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: R.reuseIdentifier.wallet_search_recent_token,
+                for: indexPath,
+            )!
             cell.layout(iconSize: .medium)
             if let mixinToken = token as? MixinTokenItem {
                 cell.iconView.setIcon(token: mixinToken)
@@ -119,37 +122,36 @@ final class WalletSearchRecentsViewController<ModelController: WalletSearchModel
             }
             cell.titleLabel.text = token.name
             cell.subtitleLabel.text = token.localizedBalanceWithSymbol
+            return cell
         case let .perps(position, market):
-            cell.layout(iconSize: .medium)
-            cell.iconView.setIcon(market: market)
-            cell.titleLabel.text = position.displaySymbol ?? position.tokenSymbol
-            let direction = if position.side == PerpetualOrderSide.long.rawValue {
-                R.string.localizable.long_asset(position.tokenSymbol)
-            } else {
-                R.string.localizable.short_asset(position.tokenSymbol)
-            }
-            cell.subtitleLabel.text = direction + " · " + PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: R.reuseIdentifier.wallet_search_recent_token,
+                for: indexPath,
+            )!
+            assertionFailure("Not displayed currently")
+            return cell
         case .earn(let viewModel):
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: R.reuseIdentifier.wallet_search_recent_token,
+                for: indexPath,
+            )!
             cell.layout(iconSize: .medium)
             cell.iconView.setIcon(token: viewModel.token)
             cell.titleLabel.text = viewModel.symbol
             cell.subtitleLabel.text = viewModel.value
             cell.apyLabel.text = viewModel.apy
             cell.apyLabel.isHidden = viewModel.apy == nil
+            return cell
         case .collectible(let output):
-            cell.layout(iconSize: .small)
-            if let inscription = output.inscription {
-                cell.iconView.setIcon(content: inscription, cornerRadius: 8)
-            }
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: R.reuseIdentifier.wallet_search_recent_collectible,
+                for: indexPath,
+            )!
+            cell.iconView.content = output.inscription?.inscriptionContent
             cell.titleLabel.text = output.inscription?.collectionName ?? R.string.localizable.collectibles()
             cell.subtitleLabel.text = output.inscription?.sequenceRepresentation ?? output.inscriptionHash
+            return cell
         }
-        cell.accessibilityLabel = [
-            cell.titleLabel.text,
-            cell.apyLabel.isHidden ? nil : cell.apyLabel.text,
-            cell.subtitleLabel.text,
-        ].compactMap { $0 }.joined(separator: ", ")
-        return cell
     }
     
     func collectionView(

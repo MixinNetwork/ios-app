@@ -1,6 +1,6 @@
 import UIKit
 
-final class WalletSearchRecentCell: UICollectionViewCell {
+final class WalletSearchRecentTokenCell: UICollectionViewCell {
     
     enum IconSize {
         case small

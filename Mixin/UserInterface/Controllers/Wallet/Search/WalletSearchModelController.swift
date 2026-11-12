@@ -104,7 +104,7 @@ final class PrivacyWalletSearchModelController: WalletSearchModelController {
             switch recent {
             case .token(let assetID):
                 TokenDAO.shared.tokenItem(assetID: assetID).flatMap { token in
-                        .token(token)
+                    token.isDisplayable ? .token(token) : nil
                 }
             case .earn(let productionID):
                 if let product = earnings.first(where: { $0.productionID == productionID }),

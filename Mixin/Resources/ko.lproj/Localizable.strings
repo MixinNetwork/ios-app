@@ -1279,6 +1279,7 @@
 "perps_mark_price" = "마크 가격";
 "perps_markets" = "시장";
 "perps_minimum_order_size" = "포지션 가치는 최소 %@ 이상이어야 합니다";
+"perps_no_reducible_margin" = "감소 가능한 증거금이 없습니다";
 "perps_position_amount" = "포지션 금액";
 "perps_position_size_overview" = "크기는 마진 × 레버리지로 계산된 포지션의 총 가치를 나타냅니다.";
 "perps_position_size_pnl_1" = "더 큰 규모, 더 큰 손익";

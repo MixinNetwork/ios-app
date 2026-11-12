@@ -226,6 +226,15 @@ public final class PerpsDatabase: Database {
             }
         }
         
+        migrator.registerMigration("max_decrease_margin") { db in
+            let positionsColumns = try TableInfo
+                .fetchAll(db, sql: "PRAGMA table_info(positions)")
+                .map(\.name)
+            if !positionsColumns.contains("max_decrease_margin") {
+                try db.execute(sql: "ALTER TABLE positions ADD COLUMN max_decrease_margin TEXT NOT NULL DEFAULT ''")
+            }
+        }
+        
         return migrator
     }
     

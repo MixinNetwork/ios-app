@@ -1279,6 +1279,7 @@
 "perps_mark_price" = "マーク価格";
 "perps_markets" = "市場";
 "perps_minimum_order_size" = "ポジション価値は最低 %@ 必要です";
+"perps_no_reducible_margin" = "減らせる証拠金がありません";
 "perps_position_amount" = "ポジション金額";
 "perps_position_size_overview" = "サイズは、証拠金 × レバレッジとして計算されたポジションの合計価値を表します。";
 "perps_position_size_pnl_1" = "サイズが大きくなり、損益も大きくなる";

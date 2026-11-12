@@ -1279,6 +1279,7 @@
 "perps_mark_price" = "Precio de marca";
 "perps_markets" = "Mercados";
 "perps_minimum_order_size" = "El valor mínimo de la posición es de %@";
+"perps_no_reducible_margin" = "No hay margen disponible para reducir";
 "perps_position_amount" = "Importe de la posición";
 "perps_position_size_overview" = "El tamaño representa el valor total de su posición, calculado como margen × apalancamiento.";
 "perps_position_size_pnl_1" = "Tamaño más grande, PnL más grande";

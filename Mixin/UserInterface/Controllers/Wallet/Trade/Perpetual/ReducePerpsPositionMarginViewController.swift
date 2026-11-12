@@ -13,7 +13,7 @@ final class ReducePerpsPositionMarginViewController: ReduceToPerpsPositionViewCo
     }
     
     override var totalAmount: Decimal {
-        positionViewModel.decimalMargin
+        positionViewModel.position.decimalMaxDecreaseMargin
     }
     
     override var absoluteAmount: Decimal {
@@ -133,7 +133,7 @@ final class ReducePerpsPositionMarginViewController: ReduceToPerpsPositionViewCo
             marginDescription.contentLabel.text = before
         }
         
-        guard reducingAmount > 0 else {
+        guard totalAmount > 0, reducingAmount > 0 else {
             show(liquidationPrice: .invalid)
             return
         }
@@ -281,7 +281,7 @@ extension ReducePerpsPositionMarginViewController {
                 hasInputFractionals = false
             }
             
-            let margin = positionViewModel.decimalMargin
+            let margin = totalAmount
             let recommendedPercentage = {
                 let percentage = margin > 0 ? amount / margin : 0
                 let scale = hasInputFractionals || percentage < 0.01 ? 4 : 2

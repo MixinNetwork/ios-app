@@ -60,13 +60,11 @@ final class NewGroupViewController: UIViewController {
             participantUserIDs: participants.map(\.userId),
             randomID: randomID
         )
-        let request = ConversationRequest(
-            conversationId: conversationID,
+        let request = CreateConversationRequest(
+            conversationID: conversationID,
             name: groupName,
             category: ConversationCategory.GROUP.rawValue,
             participants: participants,
-            duration: nil,
-            announcement: nil,
             randomID: randomID
         )
         ConversationAPI.createConversation(conversation: request) { [weak self](result) in

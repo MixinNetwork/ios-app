@@ -11,6 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ConversationViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="loadingView" destination="loa-di-ngv" id="out-loa-vie"/>
+                <outlet property="disappearingImageView" destination="dis-ap-icn" id="out-dis-icn"/>
                 <outlet property="opponentUserBadgeView" destination="mem-ic-onv" id="out-mem-img"/>
                 <outlet property="subtitleLabel" destination="sub-la-bel" id="out-sub-lbl"/>
                 <outlet property="titleLabel" destination="ttl-la-bel" id="out-ttl-lbl"/>
@@ -39,6 +40,9 @@
                                         </label>
                                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="mem-ic-onv" customClass="SDAnimatedImageView">
                                             <rect key="frame" x="0.0" y="-10" width="20" height="20"/>
+                                        </imageView>
+                                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" image="message_disappearing" translatesAutoresizingMaskIntoConstraints="NO" id="dis-ap-icn">
+                                            <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
                                         </imageView>
                                     </subviews>
                                 </stackView>
@@ -90,6 +94,7 @@
         </view>
     </objects>
     <resources>
+        <image name="message_disappearing" width="14" height="14"/>
         <namedColor name="icon_tint">
             <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

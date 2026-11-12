@@ -1,14 +1,21 @@
 import MixinServices
 
 extension SystemConversationAction {
-
+    
+    enum ExpirationMessageStyle {
+        case summary
+        case readOnly
+        case editable
+    }
+    
     static func getSystemMessage(
         actionName: String?,
         userId: String,
         userFullName: String,
         participantId: String?,
         participantFullName: String?,
-        content: String?
+        content: String?,
+        style: ExpirationMessageStyle,
     ) -> String {
         let action = actionName ?? ""
         let isParticipantMyself = participantId == myUserId
@@ -30,14 +37,35 @@ extension SystemConversationAction {
             return R.string.localizable.now_an_addmin(participantName)
         case SystemConversationAction.EXPIRE.rawValue:
             if let expireIn = content?.int64Value {
-                if expireIn == 0 {
-                    return R.string.localizable.disable_disappearing_message(operatorName)
-                } else {
+                if expireIn > 0 {
                     let title = ExpiredMessageDurationFormatter.string(from: expireIn)
-                    return R.string.localizable.set_disappearing_message_time_to(operatorName, title)
+                    switch style {
+                    case .summary:
+                        return R.string.localizable.set_disappearing_message_time_to(operatorName, title)
+                    case .readOnly:
+                        return R.string.localizable.set_disappearing_message_time_to_read_only(operatorName, title)
+                    case .editable:
+                        return R.string.localizable.set_disappearing_message_time_to_editable(operatorName, title)
+                    }
+                } else {
+                    switch style {
+                    case .summary:
+                        return R.string.localizable.disable_disappearing_message(operatorName)
+                    case .readOnly:
+                        return R.string.localizable.disable_disappearing_message_read_only(operatorName)
+                    case .editable:
+                        return R.string.localizable.disable_disappearing_message_editable(operatorName)
+                    }
                 }
             } else {
-                return R.string.localizable.changed_disappearing_message_settings(operatorName)
+                switch style {
+                case .summary:
+                    return R.string.localizable.changed_disappearing_message_settings(operatorName)
+                case .readOnly:
+                    return R.string.localizable.changed_disappearing_message_settings_read_only(operatorName)
+                case .editable:
+                    return R.string.localizable.changed_disappearing_message_settings_editable(operatorName)
+                }
             }
         default:
             if let content = content, !content.isEmpty {

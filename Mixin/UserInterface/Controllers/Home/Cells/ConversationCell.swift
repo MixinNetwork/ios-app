@@ -15,7 +15,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var messageStatusImageView: UIImageView!
     @IBOutlet weak var badgeImageView: SDAnimatedImageView!
     @IBOutlet weak var pinImageView: UIImageView!
-    @IBOutlet weak var expiredImageView: UIImageView!
+    @IBOutlet weak var disappearingImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -44,6 +44,7 @@ class ConversationCell: ModernSelectedBackgroundCell {
             badgeImageView.image = R.image.group_indicator_small()
             badgeImageView.isHidden = false
         }
+        disappearingImageView.isHidden = !item.isExpirationResolved || item.expireIn <= 0
         nameLabel.text = item.getConversationName()
         if item.createdAt.isEmpty {
             timeLabel.text = ""
@@ -61,7 +62,6 @@ class ConversationCell: ModernSelectedBackgroundCell {
             messageTypeImageView.isHidden = true
             contentLabel.text = R.string.localizable.message_not_support()
         } else {
-            expiredImageView.isHidden = item.contentExpireIn == 0 || item.contentType.hasPrefix("SYSTEM_")
             showMessageIndicate(conversation: item)
             let senderIsMe = item.senderId == myUserId
             let senderName = senderIsMe ? R.string.localizable.you() : item.senderFullName
@@ -164,12 +164,15 @@ class ConversationCell: ModernSelectedBackgroundCell {
                 contentLabel.text = R.string.localizable.content_transcript()
             } else {
                 if item.contentType.hasPrefix("SYSTEM_") {
-                    contentLabel.text = SystemConversationAction.getSystemMessage(actionName: item.actionName,
-                                                                                  userId: item.senderId,
-                                                                                  userFullName: item.senderFullName,
-                                                                                  participantId: item.participantUserId,
-                                                                                  participantFullName: item.participantFullName,
-                                                                                  content: item.content)
+                    contentLabel.text = SystemConversationAction.getSystemMessage(
+                        actionName: item.actionName,
+                        userId: item.senderId,
+                        userFullName: item.senderFullName,
+                        participantId: item.participantUserId,
+                        participantFullName: item.participantFullName,
+                        content: item.content,
+                        style: .summary,
+                    )
                 } else if item.messageId.isEmpty {
                     contentLabel.text = ""
                 } else {

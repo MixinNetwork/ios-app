@@ -5,6 +5,7 @@ protocol MessageViewModelFactoryDelegate: AnyObject {
     func messageViewModelFactory(_ factory: MessageViewModelFactory, showUsernameForMessageIfNeeded message: MessageItem) -> Bool
     func messageViewModelFactory(_ factory: MessageViewModelFactory, isMessageForwardedByBot message: MessageItem) -> Bool
     func messageViewModelFactory(_ factory: MessageViewModelFactory, updateViewModelForPresentation viewModel: MessageViewModel)
+    func messageViewModelFactoryCanEditExpiration(_ factory: MessageViewModelFactory) -> Bool
 }
 
 class MessageViewModelFactory {
@@ -144,7 +145,15 @@ class MessageViewModelFactory {
             } else if message.category == MessageCategory.SYSTEM_SAFE_INSCRIPTION.rawValue {
                 viewModel = InscriptionMessageViewModel(message: message)
             } else if message.category == MessageCategory.SYSTEM_CONVERSATION.rawValue {
-                viewModel = SystemMessageViewModel(message: message)
+                if message.actionName == SystemConversationAction.EXPIRE.rawValue {
+                    viewModel = ExpirationDurationMessageViewModel(
+                        message: message,
+                        kind: .settingChange,
+                        canEditExpiration: delegate?.messageViewModelFactoryCanEditExpiration(self) ?? false,
+                    )
+                } else {
+                    viewModel = SystemMessageViewModel(message: message)
+                }
             } else if message.category == MessageCategory.APP_BUTTON_GROUP.rawValue {
                 viewModel = AppButtonGroupMessageViewModel(message: message)
             } else if message.category == MessageCategory.APP_CARD.rawValue {

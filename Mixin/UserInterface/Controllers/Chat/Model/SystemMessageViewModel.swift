@@ -15,9 +15,16 @@ class SystemMessageViewModel: MessageViewModel {
         return style.copy() as! NSParagraphStyle
     }()
     
-    let text: String
+    var text: String
     
-    override init(message: MessageItem) {
+    init(message: MessageItem, text: String) {
+        self.text = text
+        super.init(message: message)
+        backgroundImage = R.image.ic_chat_bubble_system()
+    }
+    
+    override convenience init(message: MessageItem) {
+        let text: String
         let senderIsMe = message.userId == myUserId
         let senderName = senderIsMe ? R.string.localizable.you() : (message.userFullName ?? "")
         if message.category == MessageCategory.KRAKEN_PUBLISH.rawValue {
@@ -37,15 +44,17 @@ class SystemMessageViewModel: MessageViewModel {
             let duration = CallDurationFormatter.string(from: mediaDuration) ?? "0"
             text = R.string.localizable.group_call_end_with_duration(duration)
         } else {
-            text = SystemConversationAction.getSystemMessage(actionName: message.actionName,
-                                                             userId: message.userId,
-                                                             userFullName: message.userFullName ?? "",
-                                                             participantId: message.participantUserId,
-                                                             participantFullName: message.participantFullName,
-                                                             content: message.content)
+            text = SystemConversationAction.getSystemMessage(
+                actionName: message.actionName,
+                userId: message.userId,
+                userFullName: message.userFullName ?? "",
+                participantId: message.participantUserId,
+                participantFullName: message.participantFullName,
+                content: message.content,
+                style: .summary,
+            )
         }
-        super.init(message: message)
-        backgroundImage = R.image.ic_chat_bubble_system()
+        self.init(message: message, text: text)
     }
     
     override func layout(width: CGFloat, style: MessageViewModel.Style) {

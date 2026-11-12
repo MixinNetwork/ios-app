@@ -3,15 +3,13 @@ import MixinServices
 
 final class SearchMarketViewController: UIViewController, SearchNavigationAnimating {
     
-    @IBOutlet weak var contentWrapperView: UIView!
-    
-    private let searchBoxView = SearchBoxView()
     private let recommendationViewController = SearchMarketRecommendationViewController()
     private let resultsViewController = SearchMarketResultsViewController()
     
+    private weak var searchBoxView: SearchBoxView!
+    
     init() {
-        let nib = R.nib.searchMarketView
-        super.init(nibName: nib.name, bundle: nib.bundle)
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -21,6 +19,9 @@ final class SearchMarketViewController: UIViewController, SearchNavigationAnimat
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = R.color.background()
+        
+        let searchBoxView = SearchBoxView()
         searchBoxView.textField.rightViewMode = .always
         searchBoxView.textField.addTarget(
             self,
@@ -29,20 +30,27 @@ final class SearchMarketViewController: UIViewController, SearchNavigationAnimat
         )
         navigationItem.hidesBackButton = true
         navigationItem.titleView = searchBoxView
+        self.searchBoxView = searchBoxView
         navigationItem.rightBarButtonItem = .cancelSearch(
             target: self,
             action: #selector(cancelSearching)
         )
         
         addChild(resultsViewController)
-        contentWrapperView.addSubview(resultsViewController.view)
-        resultsViewController.view.snp.makeEdgesEqualToSuperview()
+        view.addSubview(resultsViewController.view)
+        resultsViewController.view.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
         resultsViewController.didMove(toParent: self)
         resultsViewController.view.isHidden = true
         
         addChild(recommendationViewController)
-        contentWrapperView.addSubview(recommendationViewController.view)
-        recommendationViewController.view.snp.makeEdgesEqualToSuperview()
+        view.addSubview(recommendationViewController.view)
+        recommendationViewController.view.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
         recommendationViewController.didMove(toParent: self)
         recommendationViewController.view.isHidden = false
         

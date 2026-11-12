@@ -1013,7 +1013,6 @@
 		944731522E71866400ACC49B /* HomeNavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944731512E71865F00ACC49B /* HomeNavigationTitleView.swift */; };
 		9447315A2E71867200ACC49B /* HomeNavigationTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944731592E71867200ACC49B /* HomeNavigationTitleView.xib */; };
 		944731682E71A17A00ACC49B /* SearchMarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944731672E71A17200ACC49B /* SearchMarketViewController.swift */; };
-		944731702E71A2AD00ACC49B /* SearchMarketView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9447316F2E71A2AD00ACC49B /* SearchMarketView.xib */; };
 		9447A7362CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9447A7352CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift */; };
 		9449775F2F0A8E0100472465 /* BitcoinTransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9449775E2F0A8DFC00472465 /* BitcoinTransferOperation.swift */; };
 		944977612F0A8E0100472465 /* PearlTransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944977602F0A8DFC00472465 /* PearlTransferOperation.swift */; };
@@ -3089,7 +3088,6 @@
 		944731512E71865F00ACC49B /* HomeNavigationTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationTitleView.swift; sourceTree = "<group>"; };
 		944731592E71867200ACC49B /* HomeNavigationTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeNavigationTitleView.xib; sourceTree = "<group>"; };
 		944731672E71A17200ACC49B /* SearchMarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMarketViewController.swift; sourceTree = "<group>"; };
-		9447316F2E71A2AD00ACC49B /* SearchMarketView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchMarketView.xib; sourceTree = "<group>"; };
 		9447A7352CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchRecommendationViewController.swift; sourceTree = "<group>"; };
 		9449775E2F0A8DFC00472465 /* BitcoinTransferOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinTransferOperation.swift; sourceTree = "<group>"; };
 		944977602F0A8DFC00472465 /* PearlTransferOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PearlTransferOperation.swift; sourceTree = "<group>"; };
@@ -5256,7 +5254,6 @@
 				942816D4301BA29F009C8CA1 /* MarketDisplaySettingCell.xib */,
 				942816D3301BA29F009C8CA1 /* MarketDisplaySettingCell.swift */,
 				942816CB301BA13C009C8CA1 /* MarketDisplaySettingsViewController.swift */,
-				9447316F2E71A2AD00ACC49B /* SearchMarketView.xib */,
 				944731672E71A17200ACC49B /* SearchMarketViewController.swift */,
 				94D0A0052E72000300ACC49B /* RecentMarketSearchCell.xib */,
 				94D0A0072E72000400ACC49B /* RecentMarketSearchCell.swift */,
@@ -7859,7 +7856,6 @@
 				943A14012FE11D3500D01354 /* MarketActionView.xib in Resources */,
 				7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */,
 				9447315A2E71867200ACC49B /* HomeNavigationTitleView.xib in Resources */,
-				944731702E71A2AD00ACC49B /* SearchMarketView.xib in Resources */,
 				94D0A0062E72000300ACC49B /* RecentMarketSearchCell.xib in Resources */,
 				94F0A1A72E3BB0AD001732B8 /* AuthenticationPreviewWalletCell.xib in Resources */,
 				94D635D43020A069006F2C4F /* favorite_large.png in Resources */,

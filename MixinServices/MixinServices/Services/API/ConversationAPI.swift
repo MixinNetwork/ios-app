@@ -78,7 +78,10 @@ public class ConversationAPI : MixinAPI {
         request(
             method: .post,
             path: Path.conversations(id: conversationId),
-            parameters: ["name": name],
+            parameters: [
+                "conversation_id": conversationId,
+                "name": name,
+            ],
             completion: completion,
         )
     }
@@ -87,7 +90,10 @@ public class ConversationAPI : MixinAPI {
         request(
             method: .post,
             path: Path.conversations(id: conversationId),
-            parameters: ["announcement": announcement],
+            parameters: [
+                "conversation_id": conversationId,
+                "announcement": announcement,
+            ],
             completion: completion,
         )
     }

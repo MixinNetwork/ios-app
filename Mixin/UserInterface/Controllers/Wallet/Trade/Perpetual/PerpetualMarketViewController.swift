@@ -529,7 +529,7 @@ extension PerpetualMarketViewController {
                 )
                 self.present(addPosition, animated: true)
             case .decreaseMargin:
-                if positionViewModel.position.decimalMaxDecreaseMargin > 0  {
+                if positionViewModel.position.decimalMaxDecreaseMargin >= 1 {
                     let reduce = ReducePerpsPositionMarginViewController(
                         wallet: wallet,
                         marketViewModel: viewModel,

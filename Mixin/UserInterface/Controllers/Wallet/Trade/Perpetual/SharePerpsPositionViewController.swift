@@ -177,19 +177,29 @@ extension SharePerpsPositionViewController: ModernShareContentViewController {
         try Task.checkCancellation()
         let symbol = dataSource.displaySymbol ?? dataSource.tokenSymbol ?? ""
         let description = [
-            R.string.localizable.perps_share_card_market(symbol),
-            R.string.localizable.perps_share_card_side(dataSource.side, dataSource.leverageMultiplier),
+            R.string.localizable.market_share_card_asset(symbol, R.string.localizable.perpetual()),
+            R.string.localizable.perps_share_card_entry_time(dataSource.entryTime),
         ].joined(separator: "\n")
         let content = AppCardData.V1Content(
             appID: BotUserID.mixinRoute,
             cover: .plain(coverURL),
-            title: R.string.localizable.perps_share_card_title(dataSource.tokenSymbol ?? symbol),
+            title: R.string.localizable.market_share_card_title(symbol),
             description: description,
             actions: [
                 .init(
+                    action: "mixin://mixin.one/trade?type=perps&market=\(dataSource.marketID)&action=open&side=long",
+                    color: "#00B86B",
+                    label: R.string.localizable.long()
+                ),
+                .init(
+                    action: "mixin://mixin.one/trade?type=perps&market=\(dataSource.marketID)&action=open&side=short",
+                    color: "#F55666",
+                    label: R.string.localizable.short()
+                ),
+                .init(
                     action: "mixin://mixin.one/trade?type=perps&market=\(dataSource.marketID)",
                     color: "#3D75E3",
-                    label: R.string.localizable.perps_share_card_trade_now()
+                    label: R.string.localizable.market()
                 ),
             ],
             updatedAt: nil,

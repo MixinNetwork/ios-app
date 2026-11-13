@@ -287,8 +287,8 @@
 "change_your_app_language" = "设置语言";
 "changed" = "已修改";
 "changed_disappearing_message_settings" = "%@修改了限时消息设置";
-"changed_disappearing_message_settings_read_only" = "%@修改了限时消息设置。轻触了解更多。";
 "changed_disappearing_message_settings_editable" = "%@修改了限时消息设置。轻触修改设置或了解更多。";
+"changed_disappearing_message_settings_read_only" = "%@修改了限时消息设置。轻触了解更多。";
 "changing_pin_terminated_unexpectedly" = "更新 PIN 意外中止，点继续完成 PIN 修改";
 "chat_background" = "聊天背景";
 "chat_backup" = "聊天记录备份";
@@ -553,8 +553,8 @@
 "disable" = "禁用";
 "disable_biometric_pay_confirmation" = "确定暂停使用%@支付？";
 "disable_disappearing_message" = "%@禁用了限时消息";
-"disable_disappearing_message_read_only" = "%@关闭了限时消息。轻触了解更多。";
 "disable_disappearing_message_editable" = "%@关闭了限时消息。轻触修改设置或了解更多。";
+"disable_disappearing_message_read_only" = "%@关闭了限时消息。轻触了解更多。";
 "disappearing_message" = "限时消息";
 "disappearing_message_hint" = "启用后，在此聊天中发送和接收的新消息将在一段时间后消失，阅读文档以了解更多。";
 "discard" = "废弃";
@@ -769,10 +769,10 @@
 "group_call_has_been_declined" = "已拒绝通话";
 "group_call_participants_limit_hint" = "支持最多 %d 人同时通话";
 "group_description" = "群组公告";
-"group_disappearing_message_disabled_read_only" = "本群尚未启用限时消息。轻触了解更多。";
 "group_disappearing_message_disabled_editable" = "本群尚未启用限时消息。轻触修改设置或了解更多。";
-"group_disappearing_message_enabled_read_only" = "本群已将限时消息时长设置为 %@。轻触了解更多。";
+"group_disappearing_message_disabled_read_only" = "本群尚未启用限时消息。轻触了解更多。";
 "group_disappearing_message_enabled_editable" = "本群已将限时消息时长设置为 %@。轻触修改设置或了解更多。";
+"group_disappearing_message_enabled_read_only" = "本群已将限时消息时长设置为 %@。轻触了解更多。";
 "group_name" = "群组名称";
 "group_participant_add_full" = "不能再添加成员，群已经满员了！";
 "group_participant_add_limit" = "不能再添加成员，一次最多添加 50 个。";
@@ -1299,6 +1299,7 @@
 "perps_reducing_margin_failed" = "减少保证金失败";
 "perps_scene_sl_triggered" = "触发止损：控制亏损";
 "perps_scene_tp_triggered" = "触发止盈：锁定利润";
+"perps_share_card_entry_time" = "📈 开仓时间：%@";
 "perps_share_card_market" = "- 📈 市场：%@";
 "perps_share_card_max_leverage" = "📈 最大杠杆：%dx";
 "perps_share_card_side" = "- ↕️ 方向：%1$@（%2$d倍）";
@@ -1676,8 +1677,8 @@
 "set_amount" = "设置金额";
 "set_as_avatar" = "设置为头像";
 "set_disappearing_message_time_to" = "%1$@将限时消息设置为 %2$@";
-"set_disappearing_message_time_to_read_only" = "%1$@将限时消息设置为 %2$@。轻触了解更多。";
 "set_disappearing_message_time_to_editable" = "%1$@将限时消息设置为 %2$@。轻触修改设置或了解更多。";
+"set_disappearing_message_time_to_read_only" = "%1$@将限时消息设置为 %2$@。轻触了解更多。";
 "set_emergency_create_successfully" = "设置恢复联系人成功";
 "set_new_pin" = "设置新的 PIN";
 "set_or_update_pin_failed" = "设置或更新 PIN 失败";

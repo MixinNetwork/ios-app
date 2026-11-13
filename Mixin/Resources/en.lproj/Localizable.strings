@@ -287,8 +287,8 @@
 "change_your_app_language" = "Change your app language";
 "changed" = "Changed";
 "changed_disappearing_message_settings" = "%@ changed disappearing message settings.";
-"changed_disappearing_message_settings_read_only" = "%@ changed disappearing message settings. Tap to learn more.";
 "changed_disappearing_message_settings_editable" = "%@ changed disappearing message settings. Tap to change it or learn more.";
+"changed_disappearing_message_settings_read_only" = "%@ changed disappearing message settings. Tap to learn more.";
 "changing_pin_terminated_unexpectedly" = "Changing PIN terminated unexpectedly, click \"Continue\" to complete the change";
 "chat_background" = "Chat Background";
 "chat_backup" = "Chat Backup";
@@ -553,8 +553,8 @@
 "disable" = "Disable";
 "disable_biometric_pay_confirmation" = "Disable %@ Pay?";
 "disable_disappearing_message" = "%@ disabled disappearing message";
-"disable_disappearing_message_read_only" = "%@ disabled disappearing message. Tap to learn more.";
 "disable_disappearing_message_editable" = "%@ disabled disappearing message. Tap to change it or learn more.";
+"disable_disappearing_message_read_only" = "%@ disabled disappearing message. Tap to learn more.";
 "disappearing_message" = "Disappearing Messages";
 "disappearing_message_hint" = "When enabled, new messages sent and received in this chat will disappear after a certain period of time, read the document to learn more.";
 "discard" = "Discard";
@@ -769,10 +769,10 @@
 "group_call_has_been_declined" = "Group call has been declined";
 "group_call_participants_limit_hint" = "Group calling allows up to %d participants to call each other";
 "group_description" = "Group Description";
-"group_disappearing_message_disabled_read_only" = "Disappearing messages haven’t been enabled for this group. Tap to learn more.";
 "group_disappearing_message_disabled_editable" = "Disappearing messages haven’t been enabled for this group. Tap to change it or learn more.";
-"group_disappearing_message_enabled_read_only" = "This group has set the disappearing message time to %@. Tap to learn more.";
+"group_disappearing_message_disabled_read_only" = "Disappearing messages haven’t been enabled for this group. Tap to learn more.";
 "group_disappearing_message_enabled_editable" = "This group has set the disappearing message time to %@. Tap to change it or learn more.";
+"group_disappearing_message_enabled_read_only" = "This group has set the disappearing message time to %@. Tap to learn more.";
 "group_name" = "Group Name";
 "group_participant_add_full" = "You can’t add this participant because this group is full.";
 "group_participant_add_limit" = "You can’t add this participant because only add up to 50 at a time.";
@@ -1299,6 +1299,7 @@
 "perps_reducing_margin_failed" = "Failed to Reduce Margin";
 "perps_scene_sl_triggered" = "Trigger stop-loss: Control losses";
 "perps_scene_tp_triggered" = "Trigger take-profit: Lock in profits";
+"perps_share_card_entry_time" = "📈 Entry Time: %@";
 "perps_share_card_market" = "- 📈 Market: %@";
 "perps_share_card_max_leverage" = "📈 Max Leverage: %dx";
 "perps_share_card_side" = "- ↕️ Side: %1$@ (%2$dx)";
@@ -1676,8 +1677,8 @@
 "set_amount" = "Set Amount";
 "set_as_avatar" = "Set as Avatar";
 "set_disappearing_message_time_to" = "%1$@ set disappearing message time to %2$@";
-"set_disappearing_message_time_to_read_only" = "%1$@ set disappearing message time to %2$@. Tap to learn more.";
 "set_disappearing_message_time_to_editable" = "%1$@ set disappearing message time to %2$@. Tap to change it or learn more.";
+"set_disappearing_message_time_to_read_only" = "%1$@ set disappearing message time to %2$@. Tap to learn more.";
 "set_emergency_create_successfully" = "Recovery contact set successfully";
 "set_new_pin" = "Set a new PIN";
 "set_or_update_pin_failed" = "Set or update PIN failed";

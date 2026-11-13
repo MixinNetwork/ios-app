@@ -16,6 +16,7 @@ struct SharePerpetualPositionDataSource {
     let operation: String
     let leverage: String
     let entryPrice: String
+    let entryTime: String
     let trailingPrice: TrailingPrice?
     
     let marketID: String
@@ -33,6 +34,7 @@ struct SharePerpetualPositionDataSource {
         self.operation = viewModel.directionWithSymbol
         self.leverage = viewModel.leverage
         self.entryPrice = viewModel.entryPrice
+        self.entryTime = viewModel.date
         self.trailingPrice = if let latestPrice {
             .currentPrice(latestPrice.formatted(viewModel.position.priceFormatStyle))
         } else {
@@ -58,6 +60,7 @@ struct SharePerpetualPositionDataSource {
         self.operation = viewModel.directionWithSymbol
         self.leverage = viewModel.leverage
         self.entryPrice = viewModel.entryPrice
+        self.entryTime = viewModel.date
         self.trailingPrice = .closePrice(closePrice)
         self.marketID = viewModel.order.marketID
         self.tokenSymbol = viewModel.order.tokenSymbol

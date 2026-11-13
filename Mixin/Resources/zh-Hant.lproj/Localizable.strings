@@ -287,8 +287,8 @@
 "change_your_app_language" = "設定語言";
 "changed" = "已修改";
 "changed_disappearing_message_settings" = "%@修改了限時訊息設定";
-"changed_disappearing_message_settings_read_only" = "%@修改了限時訊息設定。輕觸瞭解更多。";
 "changed_disappearing_message_settings_editable" = "%@修改了限時訊息設定。輕觸修改設定或瞭解更多。";
+"changed_disappearing_message_settings_read_only" = "%@修改了限時訊息設定。輕觸瞭解更多。";
 "changing_pin_terminated_unexpectedly" = "更新 PIN 意外中止，點繼續完成 PIN 修改";
 "chat_background" = "聊天背景";
 "chat_backup" = "聊天記錄備份";
@@ -553,8 +553,8 @@
 "disable" = "停用";
 "disable_biometric_pay_confirmation" = "確定暫停使用%@支付？";
 "disable_disappearing_message" = "%@停用了限時訊息";
-"disable_disappearing_message_read_only" = "%@關閉了限時訊息。輕觸瞭解更多。";
 "disable_disappearing_message_editable" = "%@關閉了限時訊息。輕觸修改設定或瞭解更多。";
+"disable_disappearing_message_read_only" = "%@關閉了限時訊息。輕觸瞭解更多。";
 "disappearing_message" = "限時訊息";
 "disappearing_message_hint" = "啟用後，在此聊天中傳送和接收的新訊息將在一段時間後消失，閱讀檔案以瞭解更多。";
 "discard" = "廢棄";
@@ -769,10 +769,10 @@
 "group_call_has_been_declined" = "已拒絕通話";
 "group_call_participants_limit_hint" = "支援最多 %d 人同時通話";
 "group_description" = "群組公告";
-"group_disappearing_message_disabled_read_only" = "本群尚未啟用限時訊息。輕觸瞭解更多。";
 "group_disappearing_message_disabled_editable" = "本群尚未啟用限時訊息。輕觸修改設定或瞭解更多。";
-"group_disappearing_message_enabled_read_only" = "本群已將限時訊息時長設定為 %@。輕觸瞭解更多。";
+"group_disappearing_message_disabled_read_only" = "本群尚未啟用限時訊息。輕觸瞭解更多。";
 "group_disappearing_message_enabled_editable" = "本群已將限時訊息時長設定為 %@。輕觸修改設定或瞭解更多。";
+"group_disappearing_message_enabled_read_only" = "本群已將限時訊息時長設定為 %@。輕觸瞭解更多。";
 "group_name" = "群組名稱";
 "group_participant_add_full" = "不能再新增成員，群已經滿員了！";
 "group_participant_add_limit" = "不能再新增成員，一次最多新增 50 個。";
@@ -1299,6 +1299,7 @@
 "perps_reducing_margin_failed" = "減少保證金失敗";
 "perps_scene_sl_triggered" = "觸發止損：控制虧損";
 "perps_scene_tp_triggered" = "觸發止盈：鎖定利潤";
+"perps_share_card_entry_time" = "📈 開倉時間：%@";
 "perps_share_card_market" = "- 📈 市場：%@";
 "perps_share_card_max_leverage" = "📈 最大槓桿：%dx";
 "perps_share_card_side" = "- ↕️ 方向：%1$@（%2$d倍）";
@@ -1676,8 +1677,8 @@
 "set_amount" = "設定金額";
 "set_as_avatar" = "設定為頭像";
 "set_disappearing_message_time_to" = "%1$@將限時訊息設定為 %2$@";
-"set_disappearing_message_time_to_read_only" = "%1$@將限時訊息設定為 %2$@。輕觸瞭解更多。";
 "set_disappearing_message_time_to_editable" = "%1$@將限時訊息設定為 %2$@。輕觸修改設定或瞭解更多。";
+"set_disappearing_message_time_to_read_only" = "%1$@將限時訊息設定為 %2$@。輕觸瞭解更多。";
 "set_emergency_create_successfully" = "設定恢復聯絡人成功";
 "set_new_pin" = "設定新的 PIN";
 "set_or_update_pin_failed" = "設定或更新 PIN 失敗";

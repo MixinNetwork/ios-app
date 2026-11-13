@@ -287,8 +287,8 @@
 "change_your_app_language" = "앱 언어 변경";
 "changed" = "변경됨";
 "changed_disappearing_message_settings" = "%@님이 사라지는 메시지 설정을 변경했습니다.";
-"changed_disappearing_message_settings_read_only" = "%@: 사라지는 메시지 설정이 변경되었습니다. 탭하여 자세히 알아보세요.";
 "changed_disappearing_message_settings_editable" = "%@: 사라지는 메시지 설정이 변경되었습니다. 탭하여 설정을 변경하거나 자세히 알아보세요.";
+"changed_disappearing_message_settings_read_only" = "%@: 사라지는 메시지 설정이 변경되었습니다. 탭하여 자세히 알아보세요.";
 "changing_pin_terminated_unexpectedly" = "PIN 변경이 예기치 않게 종료되었습니다. 변경을 완료하려면 \"계속\"을 클릭하세요.";
 "chat_background" = "채팅 배경";
 "chat_backup" = "채팅 백업";
@@ -553,8 +553,8 @@
 "disable" = "비활성화";
 "disable_biometric_pay_confirmation" = "%@ 지불을 비활성화하시겠습니까?";
 "disable_disappearing_message" = "%@ 사라지는 메시지 비활성화됨";
-"disable_disappearing_message_read_only" = "%@: 사라지는 메시지가 꺼졌습니다. 탭하여 자세히 알아보세요.";
 "disable_disappearing_message_editable" = "%@: 사라지는 메시지가 꺼졌습니다. 탭하여 설정을 변경하거나 자세히 알아보세요.";
+"disable_disappearing_message_read_only" = "%@: 사라지는 메시지가 꺼졌습니다. 탭하여 자세히 알아보세요.";
 "disappearing_message" = "사라지는 메시지";
 "disappearing_message_hint" = "활성화하면 이 채팅에서 주고받은 새 메시지는 일정 시간이 지나면 사라집니다. 자세히 알아보려면 문서를 읽어보세요.";
 "discard" = "삭제";
@@ -769,10 +769,10 @@
 "group_call_has_been_declined" = "그룹 통화가 거부되었습니다.";
 "group_call_participants_limit_hint" = "그룹 통화를 사용하면 최대 %d명의 참가자가 서로 통화할 수 있습니다.";
 "group_description" = "그룹 설명";
-"group_disappearing_message_disabled_read_only" = "이 그룹에서는 사라지는 메시지가 활성화되어 있지 않습니다. 탭하여 자세히 알아보세요.";
 "group_disappearing_message_disabled_editable" = "이 그룹에서는 사라지는 메시지가 활성화되어 있지 않습니다. 탭하여 설정을 변경하거나 자세히 알아보세요.";
-"group_disappearing_message_enabled_read_only" = "이 그룹의 사라지는 메시지 시간이 %@로 설정되었습니다. 탭하여 자세히 알아보세요.";
+"group_disappearing_message_disabled_read_only" = "이 그룹에서는 사라지는 메시지가 활성화되어 있지 않습니다. 탭하여 자세히 알아보세요.";
 "group_disappearing_message_enabled_editable" = "이 그룹의 사라지는 메시지 시간이 %@로 설정되었습니다. 탭하여 설정을 변경하거나 자세히 알아보세요.";
+"group_disappearing_message_enabled_read_only" = "이 그룹의 사라지는 메시지 시간이 %@로 설정되었습니다. 탭하여 자세히 알아보세요.";
 "group_name" = "그룹 이름";
 "group_participant_add_full" = "이 그룹은 꽉 차서 이 참가자를 추가할 수 없습니다.";
 "group_participant_add_limit" = "이 참가자는 한 번에 최대 50명까지만 추가할 수 있으므로 추가할 수 없습니다.";
@@ -1299,6 +1299,7 @@
 "perps_reducing_margin_failed" = "증거금 감소 실패";
 "perps_scene_sl_triggered" = "손절매 트리거: 손실 제한";
 "perps_scene_tp_triggered" = "이익실현 유발: 이익 고정";
+"perps_share_card_entry_time" = "📈 진입 시간: %@";
 "perps_share_card_market" = "- 📈 시장: %@";
 "perps_share_card_max_leverage" = "📈 최대 레버리지: %dx";
 "perps_share_card_side" = "- ↕️ 방향: %1$@(%2$dx)";
@@ -1676,8 +1677,8 @@
 "set_amount" = "금액 설정";
 "set_as_avatar" = "아바타로 설정";
 "set_disappearing_message_time_to" = "%1$@ 메시지가 사라지는 시간을 %2$@로 설정";
-"set_disappearing_message_time_to_read_only" = "%1$@: 사라지는 메시지 시간이 %2$@로 설정되었습니다. 탭하여 자세히 알아보세요.";
 "set_disappearing_message_time_to_editable" = "%1$@: 사라지는 메시지 시간이 %2$@로 설정되었습니다. 탭하여 설정을 변경하거나 자세히 알아보세요.";
+"set_disappearing_message_time_to_read_only" = "%1$@: 사라지는 메시지 시간이 %2$@로 설정되었습니다. 탭하여 자세히 알아보세요.";
 "set_emergency_create_successfully" = "복구 연락처가 성공적으로 설정되었습니다.";
 "set_new_pin" = "새 PIN 설정";
 "set_or_update_pin_failed" = "PIN 설정 또는 업데이트 실패";

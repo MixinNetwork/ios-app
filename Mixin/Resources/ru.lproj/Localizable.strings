@@ -287,8 +287,8 @@
 "change_your_app_language" = "Измените язык вашего приложения";
 "changed" = "Измененный";
 "changed_disappearing_message_settings" = "%@ изменил настройки исчезающих сообщений.";
-"changed_disappearing_message_settings_read_only" = "%@: настройки исчезающих сообщений изменены. Коснитесь, чтобы узнать больше.";
 "changed_disappearing_message_settings_editable" = "%@: настройки исчезающих сообщений изменены. Коснитесь, чтобы изменить настройки или узнать больше.";
+"changed_disappearing_message_settings_read_only" = "%@: настройки исчезающих сообщений изменены. Коснитесь, чтобы узнать больше.";
 "changing_pin_terminated_unexpectedly" = "Изменение PIN-кода неожиданно прервано. Нажмите «Продолжить», чтобы завершить изменение.";
 "chat_background" = "Фон чата";
 "chat_backup" = "Резервное копирование чата";
@@ -553,8 +553,8 @@
 "disable" = "Запретить";
 "disable_biometric_pay_confirmation" = "Отключить %@ Pay?";
 "disable_disappearing_message" = "%@ отключил исчезающие сообщения";
-"disable_disappearing_message_read_only" = "%@: исчезающие сообщения отключены. Коснитесь, чтобы узнать больше.";
 "disable_disappearing_message_editable" = "%@: исчезающие сообщения отключены. Коснитесь, чтобы изменить настройки или узнать больше.";
+"disable_disappearing_message_read_only" = "%@: исчезающие сообщения отключены. Коснитесь, чтобы узнать больше.";
 "disappearing_message" = "Исчезающие сообщения";
 "disappearing_message_hint" = "Если эта функция включена, отправленные и полученные новые сообщения в этом чате исчезнут через определённый период времени. Прочтите документ, чтобы узнать больше";
 "discard" = "Отменить";
@@ -769,10 +769,10 @@
 "group_call_has_been_declined" = "Групповой вызов отклонен";
 "group_call_participants_limit_hint" = "Групповой вызов позволяет до %d участникам звонить друг другу.";
 "group_description" = "Описание группы";
-"group_disappearing_message_disabled_read_only" = "В этой группе исчезающие сообщения не включены. Коснитесь, чтобы узнать больше.";
 "group_disappearing_message_disabled_editable" = "В этой группе исчезающие сообщения не включены. Коснитесь, чтобы изменить настройки или узнать больше.";
-"group_disappearing_message_enabled_read_only" = "В этой группе время исчезновения сообщений установлено на %@. Коснитесь, чтобы узнать больше.";
+"group_disappearing_message_disabled_read_only" = "В этой группе исчезающие сообщения не включены. Коснитесь, чтобы узнать больше.";
 "group_disappearing_message_enabled_editable" = "В этой группе время исчезновения сообщений установлено на %@. Коснитесь, чтобы изменить настройки или узнать больше.";
+"group_disappearing_message_enabled_read_only" = "В этой группе время исчезновения сообщений установлено на %@. Коснитесь, чтобы узнать больше.";
 "group_name" = "Название группы";
 "group_participant_add_full" = "Вы не можете добавить этого участника, потому что эта группа заполнена.";
 "group_participant_add_limit" = "Вы не можете добавить этого участника, потому что за раз можно добавить не более 50 человек.";
@@ -1299,6 +1299,7 @@
 "perps_reducing_margin_failed" = "Не удалось уменьшить маржу";
 "perps_scene_sl_triggered" = "Триггерный стоп-лосс: контроль потерь";
 "perps_scene_tp_triggered" = "Триггерный тейк-профит: фиксация прибыли";
+"perps_share_card_entry_time" = "📈 Время входа: %@";
 "perps_share_card_market" = "- 📈 Рынок: %@";
 "perps_share_card_max_leverage" = "📈 Максимальное плечо: %dx";
 "perps_share_card_side" = "- ↕️ Направление: %1$@ (%2$dx)";
@@ -1676,8 +1677,8 @@
 "set_amount" = "Установить сумму";
 "set_as_avatar" = "Установить как аватар";
 "set_disappearing_message_time_to" = "%1$@ установил время исчезновения сообщения на %2$@.";
-"set_disappearing_message_time_to_read_only" = "%1$@: время исчезновения сообщений установлено на %2$@. Коснитесь, чтобы узнать больше.";
 "set_disappearing_message_time_to_editable" = "%1$@: время исчезновения сообщений установлено на %2$@. Коснитесь, чтобы изменить настройки или узнать больше.";
+"set_disappearing_message_time_to_read_only" = "%1$@: время исчезновения сообщений установлено на %2$@. Коснитесь, чтобы узнать больше.";
 "set_emergency_create_successfully" = "Контакты для восстановления успешно установлены";
 "set_new_pin" = "Установить новый PIN-код";
 "set_or_update_pin_failed" = "Не удалось установить или обновить PIN-код.";

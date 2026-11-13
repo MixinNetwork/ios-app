@@ -529,13 +529,20 @@ extension PerpetualMarketViewController {
                 )
                 self.present(addPosition, animated: true)
             case .decreaseMargin:
-                let reduce = ReducePerpsPositionMarginViewController(
-                    wallet: wallet,
-                    marketViewModel: viewModel,
-                    positionViewModel: positionViewModel,
-                    initialPercentage: 0,
-                )
-                self.present(reduce, animated: true)
+                if positionViewModel.position.decimalMaxDecreaseMargin >= 1 {
+                    let reduce = ReducePerpsPositionMarginViewController(
+                        wallet: wallet,
+                        marketViewModel: viewModel,
+                        positionViewModel: positionViewModel,
+                        initialPercentage: 0,
+                    )
+                    self.present(reduce, animated: true)
+                } else {
+                    showAutoHiddenHud(
+                        style: .error,
+                        text: R.string.localizable.perps_no_reducible_margin(),
+                    )
+                }
             }
         }
         present(adjustment, animated: true)

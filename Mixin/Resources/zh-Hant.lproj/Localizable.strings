@@ -1279,6 +1279,7 @@
 "perps_mark_price" = "標記價格";
 "perps_markets" = "市場";
 "perps_minimum_order_size" = "倉位價值至少 %@";
+"perps_no_reducible_margin" = "當前沒有可減少的保證金";
 "perps_position_amount" = "倉位金額";
 "perps_position_size_overview" = "當前合約的倉位規模由「金額 × 槓桿」計算得出，表示本次交易所控制的資產規模。";
 "perps_position_size_pnl_1" = "倉位越大，盈虧金額越大";

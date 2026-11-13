@@ -13,10 +13,11 @@ final class PerpsAutoClosingCondition {
         case open(entryPrice: Decimal, quantity: Decimal)
     }
     
-    enum InvalidInputError: Error {
+    enum InvalidInputError: Error, Equatable {
         case mustHigherThan(Decimal)
         case mustLowerThan(Decimal)
         case unavailableFeeRate
+        case unavailableLastPrice
     }
     
     let behavior: Behavior
@@ -72,99 +73,90 @@ final class PerpsAutoClosingCondition {
     }
     
     func setPrice(_ price: Decimal) throws(InvalidInputError) {
-        guard price > 0 else {
+        guard price != 0 else {
             self.percentage = 0
             self.price = 0
             return
         }
-        guard let feeRate else {
+        guard let feeRate, feeRate >= 0, feeRate < 1 else {
             throw .unavailableFeeRate
         }
+        var inputPrice = price
+        var price = Decimal()
+        NSDecimalRound(&price, &inputPrice, priceScale, .plain)
         try check(price: price)
-        let priceChange = (price - entryPrice) * (side == .long ? 1 : -1)
-        self.percentage = priceChangeForFullMargin > 0
-            ? (priceChange - (entryPrice + price) * feeRate) / priceChangeForFullMargin
-            : 0
+        self.percentage = percentage(price: price) ?? 0
         self.price = price
     }
     
     func setPercentage(_ percentage: Decimal) throws(InvalidInputError) {
-        guard feeRate != nil else {
+        guard let feeRate, feeRate >= 0, feeRate < 1 else {
             throw .unavailableFeeRate
         }
-        if let price = triggerPrice(percentage: percentage),
-           let roundedPrice = roundedPrice(percentage: percentage)
-        {
-            try check(price: roundedPrice)
-            self.percentage = percentage
-            self.price = price
-        } else {
-            self.percentage = 0
-            self.price = 0
+        guard let price = roundedPrice(percentage: percentage) else {
+            throw .unavailableLastPrice
         }
+        guard price > 0 else {
+            throw .mustHigherThan(0)
+        }
+        try setPrice(price)
+    }
+    
+    func percentage(price: Decimal) -> Decimal? {
+        guard let feeRate, feeRate >= 0, feeRate < 1, priceChangeForFullMargin > 0 else {
+            return nil
+        }
+        var inputPrice = price
+        var roundedPrice = Decimal()
+        NSDecimalRound(&roundedPrice, &inputPrice, priceScale, .plain)
+        let priceChange = (roundedPrice - entryPrice) * (side == .long ? 1 : -1)
+        return (priceChange - (entryPrice + roundedPrice) * feeRate) / priceChangeForFullMargin
     }
     
     func roundedPrice(percentage: Decimal) -> Decimal? {
-        guard let price = triggerPrice(percentage: percentage) else {
-            return nil
-        }
-        let roundedPrice = withUnsafePointer(to: price) { price in
-            var result: Decimal = 0
-            NSDecimalRound(&result, price, priceScale, .plain)
-            return result
-        }
-        return roundedPrice
-    }
-    
-    private func triggerPrice(percentage: Decimal) -> Decimal? {
         guard let feeRate, feeRate >= 0, feeRate < 1, entryPrice > 0 else {
             return nil
         }
         let profitPerQuantity = percentage * priceChangeForFullMargin
-        return switch side {
+        var price = switch side {
         case .long:
             (profitPerQuantity + entryPrice * (1 + feeRate)) / (1 - feeRate)
         case .short:
             (entryPrice * (1 - feeRate) - profitPerQuantity) / (1 + feeRate)
         }
+        var roundedPrice = Decimal()
+        NSDecimalRound(&roundedPrice, &price, priceScale, side == .long ? .up : .down)
+        return roundedPrice
     }
     
     private func check(price: Decimal) throws(InvalidInputError) {
+        guard price > 0 else {
+            throw .mustHigherThan(0)
+        }
+        guard currentPrice > 0 else {
+            throw .unavailableLastPrice
+        }
         switch (side, behavior) {
         case (.long, .takeProfit):
-            guard price > entryPrice else {
-                // To be a profit
-                throw .mustHigherThan(entryPrice)
-            }
             guard price > currentPrice else {
-                // Avoid immediate execution
                 throw .mustHigherThan(currentPrice)
             }
         case (.long, .stopLoss):
             guard price < currentPrice else {
-                // Product requirements
                 throw .mustLowerThan(currentPrice)
             }
             guard price > liquidationPrice else {
-                // To reduce loss
                 throw .mustHigherThan(liquidationPrice)
             }
         case (.short, .takeProfit):
-            guard price < entryPrice else {
-                // To be a profit
-                throw .mustLowerThan(entryPrice)
-            }
             guard price < currentPrice else {
-                // Avoid immediate execution
                 throw .mustLowerThan(currentPrice)
             }
         case (.short, .stopLoss):
             guard price > currentPrice else {
-                // Product requirements
                 throw .mustHigherThan(currentPrice)
             }
             guard price < liquidationPrice else {
-                // To reduce loss
                 throw .mustLowerThan(liquidationPrice)
             }
         }

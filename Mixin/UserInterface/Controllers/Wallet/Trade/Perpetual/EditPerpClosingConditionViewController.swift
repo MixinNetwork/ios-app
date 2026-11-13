@@ -9,11 +9,20 @@ final class EditPerpClosingConditionViewController: UIViewController {
         case price
     }
     
-    private enum Input {
-        case empty
-        case invalid
-        case percentage(Decimal)
-        case price(Decimal)
+    private struct Input {
+        
+        enum Value {
+            case empty
+            case invalid
+            case percentage(Decimal)
+            case price(Decimal)
+        }
+        
+        var value: Value
+        // The sign for unsigned percentage edits, preserved across empty or invalid input.
+        var sign: FloatingPointSign
+        var hasExplicitSign: Bool
+        
     }
     
     @IBOutlet weak var titleView: EditPerpsPositionTitleView!
@@ -92,7 +101,11 @@ final class EditPerpClosingConditionViewController: UIViewController {
             [-0.05, -0.1, -0.25, -0.5]
         }
         self.previousAutoClosingPrice = currentAutoClosingPrice
-        self.input = currentAutoClosingPrice.map { .price($0) } ?? .empty
+        self.input = Input(
+            value: currentAutoClosingPrice.map { .price($0) } ?? .empty,
+            sign: behavior == .stopLoss ? .minus : .plus,
+            hasExplicitSign: false,
+        )
         self.viewModel = viewModel
         self.condition = PerpsAutoClosingCondition(
             behavior: behavior,
@@ -278,24 +291,43 @@ final class EditPerpClosingConditionViewController: UIViewController {
     }
     
     @IBAction func clearInput(_ sender: Any) {
+        input.sign = condition.behavior == .stopLoss ? .minus : .plus
         inputTextField.text = nil
         inputEditingChanged(inputTextField)
     }
     
     @IBAction func inputEditingChanged(_ textField: UITextField) {
+        input.hasExplicitSign = false
         if let text = textField.text, !text.isEmpty {
-            if let number = Decimal(string: text, locale: .current) {
-                input = switch inputContent {
+            var numberText = text
+            if inputContent == .percentage {
+                numberText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                    .replacingOccurrences(of: "−", with: "-")
+                switch numberText.first {
+                case "-":
+                    input.sign = .minus
+                    input.hasExplicitSign = true
+                case "+":
+                    input.sign = .plus
+                    input.hasExplicitSign = true
+                default:
+                    break
+                }
+            }
+            if numberText.rangeOfCharacter(from: .decimalDigits) != nil,
+               let number = Decimal(string: numberText, locale: .current)
+            {
+                input.value = switch inputContent {
                 case .percentage:
-                    .percentage(number / 100 * (condition.behavior == .stopLoss ? -1 : 1))
+                    .percentage(abs(number) / 100 * (input.sign == .minus ? -1 : 1))
                 case .price:
                     number != 0 ? .price(number) : .invalid
                 }
             } else {
-                input = .invalid
+                input.value = .invalid
             }
         } else {
-            input = .empty
+            input.value = .empty
         }
         take(input: input)
         updateInputLayout(textField)
@@ -326,10 +358,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
         if condition.price == 0 {
             onSet?(nil)
         } else {
-            var price = condition.price
-            var roundedPrice = Decimal()
-            NSDecimalRound(&roundedPrice, &price, viewModel.market.priceScale, .plain)
-            onSet?(roundedPrice)
+            onSet?(condition.price)
         }
         presentingViewController?.dismiss(animated: true)
     }
@@ -358,7 +387,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
                 )
                 self.reloadSubtitle(currentPrice: viewModel.localizedLastPrice)
                 self.take(input: self.input)
-                switch (self.input, self.inputContent) {
+                switch (self.input.value, self.inputContent) {
                 case (.percentage, .price), (.price, .percentage):
                     self.reloadInputSection(content: self.inputContent)
                 default:
@@ -411,6 +440,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
     }
     
     private func reloadInputSection(content: InputContent) {
+        input.hasExplicitSign = false
         switch content {
         case .percentage:
             inputTextField.placeholder = switch condition.behavior {
@@ -419,29 +449,20 @@ final class EditPerpClosingConditionViewController: UIViewController {
             case .stopLoss:
                 R.string.localizable.loss_reaches_percent()
             }
-            switch SignPosition.percentage {
-            case .left:
-                switch condition.behavior {
-                case .takeProfit:
-                    inputPrefixLabel.text = "+%"
-                case .stopLoss:
-                    inputPrefixLabel.text = "-%"
-                }
-                inputSuffixLabel.text = nil
-            case .right:
-                switch condition.behavior {
-                case .takeProfit:
-                    inputPrefixLabel.text = "+"
-                case .stopLoss:
-                    inputPrefixLabel.text = "-"
-                }
-                inputSuffixLabel.text = "%"
+            let percentage: Decimal? = switch input.value {
+            case .percentage(let percentage):
+                percentage
+            case .price(let price):
+                condition.percentage(price: price)
+            case .empty, .invalid:
+                nil
             }
-            if condition.price == 0 {
-                inputTextField.text = nil
-            } else {
-                inputTextField.text = (condition.percentage * 100)
+            if let percentage {
+                input.sign = percentage.sign
+                inputTextField.text = (percentage * 100)
                     .formatted(userInputSimulationFormat)
+            } else {
+                inputTextField.text = nil
             }
         case .price:
             inputTextField.placeholder = R.string.localizable.price_reaches_dollar()
@@ -453,21 +474,38 @@ final class EditPerpClosingConditionViewController: UIViewController {
                 inputPrefixLabel.text = nil
                 inputSuffixLabel.text = "$"
             }
-            if condition.price == 0 {
-                inputTextField.text = nil
-            } else {
-                inputTextField.text = condition.price
-                    .formatted(
-                        userInputSimulationFormat
-                            .rounded(rule: .toNearestOrAwayFromZero)
-                            .precision(.fractionLength(0...viewModel.market.priceScale))
-                    )
+            let price: Decimal? = switch input.value {
+            case .price(let price):
+                price
+            case .percentage(let percentage):
+                condition.roundedPrice(percentage: percentage)
+            case .empty, .invalid:
+                nil
+            }
+            inputTextField.text = price.map { price in
+                price.formatted(
+                    userInputSimulationFormat
+                        .sign(strategy: .automatic)
+                        .rounded(rule: .toNearestOrAwayFromZero)
+                        .precision(.fractionLength(0...viewModel.market.priceScale))
+                )
             }
         }
         updateInputLayout(inputTextField)
     }
     
     private func updateInputLayout(_ textField: UITextField) {
+        if inputContent == .percentage {
+            let sign = input.hasExplicitSign ? "" : (input.sign == .minus ? "-" : "+")
+            switch SignPosition.percentage {
+            case .left:
+                inputPrefixLabel.text = sign + "%"
+                inputSuffixLabel.text = nil
+            case .right:
+                inputPrefixLabel.text = sign
+                inputSuffixLabel.text = "%"
+            }
+        }
         if let input = textField.text, !input.isEmpty {
             textField.leftViewMode = .always
             textField.rightViewMode = .always
@@ -491,12 +529,12 @@ final class EditPerpClosingConditionViewController: UIViewController {
     
     private func take(input: Input) {
         do {
-            switch input {
+            switch input.value {
             case .empty, .invalid:
                 try condition.setPrice(0)
                 inputDescriptionLabel.text = R.string.localizable.auto_close_description()
                 inputErrorLabel.isHidden = true
-                switch input {
+                switch input.value {
                 case .empty:
                     confirmButton.isEnabled = previousAutoClosingPrice != nil
                 default:
@@ -527,6 +565,8 @@ final class EditPerpClosingConditionViewController: UIViewController {
             inputErrorLabel.isHidden = true
             confirmButton.isEnabled = condition.price > 0
         } catch {
+            // Keep the rejected input, but discard values validated for a previous input.
+            try? condition.setPrice(0)
             inputDescriptionLabel.text = R.string.localizable.auto_close_description()
             inputErrorLabel.text = switch error {
             case let .mustHigherThan(lowest):
@@ -537,7 +577,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
                 R.string.localizable.the_price_must_lower_than(
                     highest.formatted(viewModel.userDisplayPriceFormatStyle)
                 )
-            case .unavailableFeeRate:
+            case .unavailableFeeRate, .unavailableLastPrice:
                 nil
             }
             inputErrorLabel.isHidden = inputErrorLabel.text == nil
@@ -613,7 +653,12 @@ extension EditPerpClosingConditionViewController: UICollectionViewDelegate {
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         case fixedInputCollectionView:
             collectionView.deselectItem(at: indexPath, animated: true)
-            input = .percentage(fixedInputs[indexPath.item])
+            let percentage = fixedInputs[indexPath.item]
+            input = Input(
+                value: .percentage(percentage),
+                sign: percentage.sign,
+                hasExplicitSign: false,
+            )
             take(input: input)
             reloadInputSection(content: inputContent)
         default:
@@ -628,7 +673,10 @@ extension EditPerpClosingConditionViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let newText = ((textField.text ?? "") as NSString)
             .replacingCharacters(in: range, with: string)
-        if newText.isEmpty || inputContent == .percentage {
+        guard !newText.contains("e"), !newText.contains("E") else {
+            return false
+        }
+        if newText.isEmpty || string.isEmpty || inputContent == .percentage {
             return true
         } else if let value = Decimal(string: newText, locale: .current) {
             return value.numberOfSignificantFractionalDigits <= viewModel.market.priceScale

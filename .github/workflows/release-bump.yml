@@ -1,51 +1,65 @@
-name: Bump Version
+name: Release Bump
 
 on:
   workflow_dispatch:
     inputs:
-      full_version:
-        description: 'Enter the version and build (e.g., 5.1.0-819)'
+      marketing_version:
+        description: 'Enter the marketing version (e.g., 7.0.2)'
         required: true
         type: string
 
+permissions:
+  contents: write
+
 jobs:
-  create-release:
+  bump-and-release:
+    environment: production
     runs-on: macos-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout master
         uses: actions/checkout@v4
         with:
+          ref: master
           fetch-depth: 0
 
-      - name: Parse Version and Build
-        id: parse_version
+      - name: Validate marketing version
+        id: version
         run: |
-          INPUT="${{ inputs.full_version }}"
-          
-          VERSION=$(echo "$INPUT" | cut -d'-' -f1)
-          BUILD=$(echo "$INPUT" | cut -d'-' -f2)
-          
-          echo "Version: $VERSION"
-          echo "Build: $BUILD"
-          
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "build=$BUILD" >> $GITHUB_OUTPUT
-          echo "branch_name=release/$VERSION-$BUILD" >> $GITHUB_OUTPUT
+          MARKETING_VERSION="$(echo "${{ inputs.marketing_version }}" | xargs)"
 
-      - name: Create and Checkout Release Branch
-        run: |
-          git checkout -b "${{ steps.parse_version.outputs.branch_name }}"
+          if ! echo "$MARKETING_VERSION" | grep -qE '^[0-9]+(\.[0-9]+){1,2}$'; then
+            echo "::error::Invalid marketing_version '$MARKETING_VERSION'. Expected format like 7.0.2"
+            exit 1
+          fi
 
-      - name: Update Xcode Project Version
-        run: |
-          agvtool new-marketing-version "${{ steps.parse_version.outputs.version }}"
-          agvtool new-version -all "${{ steps.parse_version.outputs.build }}"
+          echo "Marketing Version: $MARKETING_VERSION"
+          echo "marketing_version=$MARKETING_VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Commit and Push Changes
+      - name: Update marketing version
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Bump version to ${{ inputs.full_version }}"
-          git push origin "${{ steps.parse_version.outputs.branch_name }}"
+          xcrun agvtool new-marketing-version "${{ steps.version.outputs.marketing_version }}"
+
+      - name: Commit marketing version to master if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet; then
+            echo "Marketing version is already ${{ steps.version.outputs.marketing_version }}, skipping commit"
+          else
+            git add -u
+            git commit -m "Bump marketing version to ${{ steps.version.outputs.marketing_version }}"
+            git push origin master
+          fi
+
+      - name: Merge master into production and push
+        run: |
+          if git show-ref --verify --quiet refs/remotes/origin/production; then
+            git checkout -B production origin/production
+            git merge master --no-edit -X theirs
+          else
+            git checkout -b production master
+          fi
+
+          git push origin production

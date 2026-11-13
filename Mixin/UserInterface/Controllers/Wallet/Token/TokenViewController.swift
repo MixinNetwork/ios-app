@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistinguishable, Transaction>: UIViewController, UITableViewDataSource, UITableViewDelegate, AssetChangeAccountRecoveryChecking {
+class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistinguishable, Transaction>: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, AssetChangeAccountRecoveryChecking {
     
     let queue = DispatchQueue(label: "one.mixin.messenger.TokenViewController")
     let transactionsCount = 20
@@ -9,17 +9,18 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
     var token: Token
     var earning: TokenEarningViewModel?
     
-    weak var tableView: UITableView!
+    weak var collectionView: UICollectionView!
     
     private(set) var pendingSnapshots: [Transaction] = []
-    private(set) var transactionRows: [TransactionRow] = []
     private(set) var market: MarketResult
     private(set) var chartPoints: [ChartView.Point]?
     
-    private let headerReuseIdentifier = "h"
     private let maliciousWarningReuseIdentifier = "m"
-    private let emptyCellReuseIdentifier = "e"
+    private let titleReuseIdentifier = "t"
+    private let viewAllReuseIdentifier = "v"
+    private let dateHeaderReuseIdentifier = "d"
     
+    private var transactionSections: [TransactionSection] = []
     private var performSendOnAppear: Bool
     
     init(
@@ -55,33 +56,292 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
             action: #selector(showMoreActions(_:))
         )
         
-        let tableView = UITableView(frame: view.bounds, style: .insetGrouped)
-        tableView.backgroundColor = R.color.background_secondary()
-        tableView.alwaysBounceVertical = true
-        tableView.estimatedRowHeight = 62
-        tableView.separatorStyle = .none
-        tableView.register(
-            MaliciousTokenWarningCell.self,
-            forCellReuseIdentifier: maliciousWarningReuseIdentifier
+        let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
+            guard let self else {
+                return nil
+            }
+            switch Section(collectionViewIndex: sectionIndex) {
+            case .warning:
+                let size = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(62),
+                )
+                let item = NSCollectionLayoutItem(layoutSize: size)
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
+                let horizontalInset: CGFloat = 20
+                let layoutSection = NSCollectionLayoutSection(group: group)
+                layoutSection.contentInsets = NSDirectionalEdgeInsets(
+                    top: self.token.isMalicious ? 10 : 0,
+                    leading: horizontalInset,
+                    bottom: 0,
+                    trailing: horizontalInset,
+                )
+                return layoutSection
+            case .balance:
+                let size = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(62),
+                )
+                let item = NSCollectionLayoutItem(layoutSize: size)
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
+                let horizontalInset: CGFloat = 20
+                let layoutSection = NSCollectionLayoutSection(group: group)
+                layoutSection.contentInsets = NSDirectionalEdgeInsets(
+                    top: 10,
+                    leading: horizontalInset,
+                    bottom: 0,
+                    trailing: horizontalInset,
+                )
+                let background = NSCollectionLayoutDecorationItem.background(
+                    elementKind: SectionBackgroundView.CornerRadius.small.rawValue
+                )
+                background.contentInsets = NSDirectionalEdgeInsets(
+                    top: 10,
+                    leading: horizontalInset,
+                    bottom: 0,
+                    trailing: horizontalInset,
+                )
+                layoutSection.decorationItems = [background]
+                return layoutSection
+            case .market:
+                let itemSize = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(62),
+                )
+                let title = NSCollectionLayoutItem(layoutSize: itemSize)
+                let market = NSCollectionLayoutItem(layoutSize: itemSize)
+                let group = NSCollectionLayoutGroup.vertical(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .estimated(124),
+                    ),
+                    subitems: [title, market],
+                )
+                let horizontalInset: CGFloat = 20
+                let layoutSection = NSCollectionLayoutSection(group: group)
+                layoutSection.contentInsets = NSDirectionalEdgeInsets(
+                    top: 10,
+                    leading: horizontalInset,
+                    bottom: 0,
+                    trailing: horizontalInset,
+                )
+                let background = NSCollectionLayoutDecorationItem.background(
+                    elementKind: SectionBackgroundView.CornerRadius.small.rawValue
+                )
+                background.contentInsets = NSDirectionalEdgeInsets(
+                    top: 10,
+                    leading: horizontalInset,
+                    bottom: 0,
+                    trailing: horizontalInset,
+                )
+                layoutSection.decorationItems = [background]
+                return layoutSection
+            case .earning:
+                let size = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1),
+                    heightDimension: .estimated(62),
+                )
+                let item = NSCollectionLayoutItem(layoutSize: size)
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
+                let horizontalInset: CGFloat = 20
+                let layoutSection = NSCollectionLayoutSection(group: group)
+                layoutSection.contentInsets = NSDirectionalEdgeInsets(
+                    top: self.earning == nil ? 0 : 10,
+                    leading: horizontalInset,
+                    bottom: 0,
+                    trailing: horizontalInset,
+                )
+                if self.earning != nil {
+                    let background = NSCollectionLayoutDecorationItem.background(
+                        elementKind: SectionBackgroundView.CornerRadius.small.rawValue
+                    )
+                    background.contentInsets = NSDirectionalEdgeInsets(
+                        top: 10,
+                        leading: horizontalInset,
+                        bottom: 0,
+                        trailing: horizontalInset,
+                    )
+                    layoutSection.decorationItems = [background]
+                }
+                return layoutSection
+            case .pending:
+                let title = NSCollectionLayoutItem(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .estimated(62),
+                    )
+                )
+                let transactions = self.pendingSnapshots.map { _ in
+                    let item = NSCollectionLayoutItem(
+                        layoutSize: NSCollectionLayoutSize(
+                            widthDimension: .fractionalWidth(1),
+                            heightDimension: .absolute(62),
+                        )
+                    )
+                    item.contentInsets = NSDirectionalEdgeInsets(
+                        top: 0,
+                        leading: 3,
+                        bottom: 0,
+                        trailing: 4,
+                    )
+                    return item
+                }
+                let group = NSCollectionLayoutGroup.vertical(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .estimated(CGFloat(transactions.count + 1) * 62),
+                    ),
+                    subitems: [title] + transactions,
+                )
+                let horizontalInset: CGFloat = 20
+                let layoutSection = NSCollectionLayoutSection(group: group)
+                layoutSection.contentInsets = NSDirectionalEdgeInsets(
+                    top: self.pendingSnapshots.isEmpty ? 0 : 10,
+                    leading: horizontalInset,
+                    bottom: self.pendingSnapshots.isEmpty ? 0 : 10,
+                    trailing: horizontalInset,
+                )
+                if !self.pendingSnapshots.isEmpty {
+                    let background = NSCollectionLayoutDecorationItem.background(
+                        elementKind: SectionBackgroundView.CornerRadius.small.rawValue
+                    )
+                    background.contentInsets = NSDirectionalEdgeInsets(
+                        top: 10,
+                        leading: horizontalInset,
+                        bottom: 0,
+                        trailing: horizontalInset,
+                    )
+                    layoutSection.decorationItems = [background]
+                }
+                return layoutSection
+            case .transactions:
+                let transactionSection = self.transactionSections[sectionIndex - Section.transactions.rawValue]
+                let isFirstSection = sectionIndex == Section.transactions.rawValue
+                let isLastSection = sectionIndex == Section.transactions.rawValue + self.transactionSections.count - 1
+                let rows = transactionSection.rows
+                var items = rows.map { row in
+                    switch row {
+                    case .title, .emptyIndicator, .viewAll:
+                        return NSCollectionLayoutItem(
+                            layoutSize: NSCollectionLayoutSize(
+                                widthDimension: .fractionalWidth(1),
+                                heightDimension: .estimated(62),
+                            )
+                        )
+                    case .transaction:
+                        let item = NSCollectionLayoutItem(
+                            layoutSize: NSCollectionLayoutSize(
+                                widthDimension: .fractionalWidth(1),
+                                heightDimension: .absolute(62),
+                            )
+                        )
+                        item.contentInsets = NSDirectionalEdgeInsets(
+                            top: 0,
+                            leading: 3,
+                            bottom: 0,
+                            trailing: 4,
+                        )
+                        return item
+                    }
+                }
+                if items.isEmpty {
+                    items = [NSCollectionLayoutItem(
+                        layoutSize: NSCollectionLayoutSize(
+                            widthDimension: .fractionalWidth(1),
+                            heightDimension: .estimated(62),
+                        )
+                    )]
+                }
+                let group = NSCollectionLayoutGroup.vertical(
+                    layoutSize: NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .estimated(CGFloat(items.count) * 62),
+                    ),
+                    subitems: items,
+                )
+                let hasTransactions = rows.contains { row in
+                    switch row {
+                    case .transaction: true
+                    default: false
+                    }
+                }
+                let horizontalInset: CGFloat = 20
+                let layoutSection = NSCollectionLayoutSection(group: group)
+                layoutSection.contentInsets = NSDirectionalEdgeInsets(
+                    top: isFirstSection && !rows.isEmpty ? 10 : 0,
+                    leading: horizontalInset,
+                    bottom: isLastSection && hasTransactions ? 10 : 0,
+                    trailing: horizontalInset,
+                )
+                if transactionSection.date != nil {
+                    let header = NSCollectionLayoutBoundarySupplementaryItem(
+                        layoutSize: NSCollectionLayoutSize(
+                            widthDimension: .fractionalWidth(1),
+                            heightDimension: .estimated(44),
+                        ),
+                        elementKind: UICollectionView.elementKindSectionHeader,
+                        alignment: .top,
+                    )
+                    header.pinToVisibleBounds = true
+                    layoutSection.boundarySupplementaryItems = [header]
+                }
+                if !rows.isEmpty {
+                    let cornerRadius: SectionBackgroundView.CornerRadius = switch (isFirstSection, isLastSection) {
+                    case (true, true): .small
+                    case (true, false): .smallTop
+                    case (false, true): .smallBottom
+                    case (false, false): .none
+                    }
+                    let background = NSCollectionLayoutDecorationItem.background(
+                        elementKind: cornerRadius.rawValue
+                    )
+                    background.contentInsets = NSDirectionalEdgeInsets(
+                        top: isFirstSection ? 10 : 0,
+                        leading: horizontalInset,
+                        bottom: 0,
+                        trailing: horizontalInset,
+                    )
+                    layoutSection.decorationItems = [background]
+                }
+                return layoutSection
+            }
+        }
+        for cornerRadius in [SectionBackgroundView.CornerRadius.small, .smallTop, .smallBottom, .none] {
+            layout.register(
+                SectionBackgroundView.self,
+                forDecorationViewOfKind: cornerRadius.rawValue,
+            )
+        }
+        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        collectionView.backgroundColor = R.color.background_secondary()
+        collectionView.alwaysBounceVertical = true
+        collectionView.register(
+            MaliciousTokenWarningCollectionViewCell.self,
+            forCellWithReuseIdentifier: maliciousWarningReuseIdentifier,
         )
-        tableView.register(R.nib.tokenBalanceCell)
-        tableView.register(R.nib.insetGroupedTitleCell)
-        tableView.register(R.nib.tokenMarketCell)
-        tableView.register(R.nib.tokenEarningCell)
-        tableView.register(R.nib.noTransactionIndicatorCell)
-        tableView.register(
-            UITableViewCell.self,
-            forCellReuseIdentifier: emptyCellReuseIdentifier
+        collectionView.register(
+            TokenTransactionDateHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: dateHeaderReuseIdentifier,
         )
-        tableView.register(
-            UITableViewHeaderFooterView.self,
-            forHeaderFooterViewReuseIdentifier: headerReuseIdentifier
+        collectionView.register(R.nib.tokenBalanceCell)
+        collectionView.register(R.nib.tokenMarketCell)
+        collectionView.register(R.nib.tokenEarningCell)
+        collectionView.register(R.nib.noTransactionIndicatorCell)
+        collectionView.register(R.nib.transactionCell)
+        collectionView.register(
+            TokenSectionTitleCell.self,
+            forCellWithReuseIdentifier: titleReuseIdentifier,
         )
-        view.addSubview(tableView)
-        tableView.snp.makeEdgesEqualToSuperview()
-        self.tableView = tableView
-        tableView.dataSource = self
-        tableView.delegate = self
+        collectionView.register(
+            UICollectionViewListCell.self,
+            forCellWithReuseIdentifier: viewAllReuseIdentifier,
+        )
+        view.addSubview(collectionView)
+        collectionView.snp.makeEdgesEqualToSuperview()
+        self.collectionView = collectionView
+        collectionView.dataSource = self
+        collectionView.delegate = self
         
         NotificationCenter.default.addObserver(
             self,
@@ -124,9 +384,9 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         if view.safeAreaInsets.bottom < 1 {
-            tableView.contentInset.bottom = 10
+            collectionView.contentInset.bottom = 10
         } else {
-            tableView.contentInset.bottom = 0
+            collectionView.contentInset.bottom = 0
         }
     }
     
@@ -138,13 +398,24 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
         }
     }
     
-    func reloadTransactions(pending: [Transaction], finished: [TransactionRow]) {
+    func reloadTransactions(pending: [Transaction], finished: [TransactionSection]) {
         self.pendingSnapshots = pending
-        self.transactionRows = finished
+        self.transactionSections = finished
         UIView.performWithoutAnimation {
-            let sections = IndexSet([Section.transactions.rawValue, Section.pending.rawValue])
-            self.tableView.reloadSections(sections, with: .none)
+            self.collectionView.reloadData()
         }
+    }
+    
+    func transactionRow(at indexPath: IndexPath) -> TransactionRow? {
+        let sectionIndex = indexPath.section - Section.transactions.rawValue
+        guard transactionSections.indices.contains(sectionIndex) else {
+            return nil
+        }
+        let rows = transactionSections[sectionIndex].rows
+        guard rows.indices.contains(indexPath.item) else {
+            return nil
+        }
+        return rows[indexPath.item]
     }
     
     func send() {
@@ -171,17 +442,24 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
         
     }
     
-    func tableView(_ tableView: UITableView, cellForTransaction transaction: Transaction) -> UITableViewCell {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForTransaction transaction: Transaction,
+        at indexPath: IndexPath,
+    ) -> UICollectionViewCell {
         fatalError("Must override")
     }
     
-    // MARK: - UITableViewDataSource
-    func numberOfSections(in tableView: UITableView) -> Int {
-        Section.allCases.count
+    // MARK: - UICollectionViewDataSource
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        Section.transactions.rawValue + transactionSections.count
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int,
+    ) -> Int {
+        switch Section(collectionViewIndex: section) {
         case .warning:
             token.isMalicious ? 1 : 0
         case .balance:
@@ -191,28 +469,44 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
         case .earning:
             earning == nil ? 0 : 1
         case .pending:
-            pendingSnapshots.isEmpty ? 0 : pendingSnapshots.count + 2 // Title and bottom separator
+            pendingSnapshots.isEmpty ? 0 : pendingSnapshots.count + 1 // Title
         case .transactions:
-            transactionRows.count
+            transactionSections[section - Section.transactions.rawValue].rows.count
         }
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch Section(rawValue: indexPath.section)! {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath,
+    ) -> UICollectionViewCell {
+        switch Section(collectionViewIndex: indexPath.section) {
         case .warning:
-            return tableView.dequeueReusableCell(withIdentifier: maliciousWarningReuseIdentifier, for: indexPath)
+            return collectionView.dequeueReusableCell(
+                withReuseIdentifier: maliciousWarningReuseIdentifier,
+                for: indexPath,
+            )
         case .balance:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_balance, for: indexPath)!
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: R.reuseIdentifier.token_balance,
+                for: indexPath,
+            )!
             updateBalanceCell(cell)
             return cell
         case .market:
-            switch MarketRow(rawValue: indexPath.row)! {
+            switch MarketRow(rawValue: indexPath.item)! {
             case .title:
-                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: titleReuseIdentifier,
+                    for: indexPath,
+                ) as! TokenSectionTitleCell
                 cell.label.text = R.string.localizable.market()
+                cell.disclosureIndicatorView.isHidden = false
                 return cell
             case .content:
-                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_market, for: indexPath)!
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: R.reuseIdentifier.token_market,
+                    for: indexPath,
+                )!
                 if let market = market.value {
                     cell.priceLabel.text = market.localizedPrice
                 } else {
@@ -238,46 +532,59 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
                 return cell
             }
         case .earning:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_earning, for: indexPath)!
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: R.reuseIdentifier.token_earning,
+                for: indexPath,
+            )!
             if let earning {
                 cell.load(earning: earning)
             }
             return cell
         case .pending:
-            switch indexPath.row {
+            switch indexPath.item {
             case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: titleReuseIdentifier,
+                    for: indexPath,
+                ) as! TokenSectionTitleCell
                 cell.label.text = R.string.localizable.pending()
                 cell.disclosureIndicatorView.isHidden = true
                 return cell
-            case pendingSnapshots.count + 1:
-                let cell = tableView.dequeueReusableCell(withIdentifier: emptyCellReuseIdentifier, for: indexPath)
-                cell.backgroundConfiguration = .groupedCell
-                cell.contentConfiguration = nil
-                return cell
             default:
-                let transaction = pendingSnapshots[indexPath.row - 1]
-                return self.tableView(tableView, cellForTransaction: transaction)
+                let transaction = pendingSnapshots[indexPath.item - 1]
+                return self.collectionView(
+                    collectionView,
+                    cellForTransaction: transaction,
+                    at: indexPath,
+                )
             }
         case .transactions:
-            let row = transactionRows[indexPath.row]
+            let row = transactionRow(at: indexPath)!
             switch row {
             case .title:
-                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: titleReuseIdentifier,
+                    for: indexPath,
+                ) as! TokenSectionTitleCell
                 cell.label.text = R.string.localizable.transactions()
                 cell.disclosureIndicatorView.isHidden = false
                 return cell
             case .emptyIndicator:
-                return tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.no_transaction_indicator, for: indexPath)!
+                return collectionView.dequeueReusableCell(
+                    withReuseIdentifier: R.reuseIdentifier.no_transaction_indicator,
+                    for: indexPath,
+                )!
             case .transaction(let snapshot):
-                return self.tableView(tableView, cellForTransaction: snapshot)
-            case .bottomSeparator:
-                let cell = tableView.dequeueReusableCell(withIdentifier: emptyCellReuseIdentifier, for: indexPath)
-                cell.backgroundConfiguration = .groupedCell
-                cell.contentConfiguration = nil
-                return cell
+                return self.collectionView(
+                    collectionView,
+                    cellForTransaction: snapshot,
+                    at: indexPath,
+                )
             case .viewAll:
-                let cell = tableView.dequeueReusableCell(withIdentifier: emptyCellReuseIdentifier, for: indexPath)
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: viewAllReuseIdentifier,
+                    for: indexPath,
+                ) as! UICollectionViewListCell
                 cell.backgroundConfiguration = .groupedCell
                 cell.contentConfiguration = {
                     var content = cell.defaultContentConfiguration()
@@ -292,62 +599,59 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
         }
     }
     
-    // MARK: - UITableViewDelegate
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch Section(rawValue: indexPath.section)! {
-        case .warning, .balance, .market, .earning:
-            UITableView.automaticDimension
-        case .pending:
-            switch indexPath.row {
-            case 0:
-                UITableView.automaticDimension
-            case pendingSnapshots.count + 1:
-                10
-            default:
-                62
-            }
-        case .transactions:
-            switch transactionRows[indexPath.row] {
-            case .title, .emptyIndicator:
-                UITableView.automaticDimension
-            case .transaction:
-                62
-            case .bottomSeparator:
-                10
-            case .viewAll:
-                UITableView.automaticDimension
-            }
-        }
+    func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath,
+    ) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: dateHeaderReuseIdentifier,
+            for: indexPath,
+        ) as! TokenTransactionDateHeaderView
+        header.label.text = transactionSections[indexPath.section - Section.transactions.rawValue].date
+        return header
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch Section(rawValue: section) {
-        case .warning where !token.isMalicious,
-                .earning where earning == nil,
-                .pending where pendingSnapshots.isEmpty:
-            CGFloat.leastNormalMagnitude
+    // MARK: - UICollectionViewDelegate
+    func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplay cell: UICollectionViewCell,
+        forItemAt indexPath: IndexPath,
+    ) {
+        let section = Section(collectionViewIndex: indexPath.section)
+        guard section != .warning else {
+            return
+        }
+        var corners: CACornerMask = []
+        let isFirstSection = section != .transactions || indexPath.section == Section.transactions.rawValue
+        let isLastSection = section != .transactions || indexPath.section == collectionView.numberOfSections - 1
+        if isFirstSection && indexPath.item == 0 {
+            corners.formUnion([.layerMinXMinYCorner, .layerMaxXMinYCorner])
+        }
+        if isLastSection && indexPath.item == collectionView.numberOfItems(inSection: indexPath.section) - 1 {
+            corners.formUnion([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
+        }
+        cell.layer.cornerRadius = 8
+        cell.layer.maskedCorners = corners
+        cell.layer.masksToBounds = true
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        shouldHighlightItemAt indexPath: IndexPath,
+    ) -> Bool {
+        switch Section(collectionViewIndex: indexPath.section) {
+        case .balance:
+            false
         default:
-            10
+            true
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        .leastNormalMagnitude
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseIdentifier)!
-        view.contentView.backgroundColor = R.color.background_secondary()
-        return view
-    }
-    
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        nil
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        switch Section(rawValue: indexPath.section)! {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        switch Section(collectionViewIndex: indexPath.section) {
         case .warning, .balance:
             break
         case .market:
@@ -360,21 +664,20 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
                 additionalURLQueries: ["production": productionID]
             )
         case .pending:
-            switch indexPath.row {
-            case 0, pendingSnapshots.count + 1:
+            switch indexPath.item {
+            case 0:
                 break
             default:
-                let snapshot = pendingSnapshots[indexPath.row - 1]
-                view(transaction: snapshot)
+                view(transaction: pendingSnapshots[indexPath.item - 1])
             }
         case .transactions:
-            let row = transactionRows[indexPath.row]
+            let row = transactionRow(at: indexPath)!
             switch row {
             case .title, .viewAll:
                 viewAllTransactions()
             case .transaction(let snapshot):
                 view(transaction: snapshot)
-            case .emptyIndicator, .bottomSeparator:
+            case .emptyIndicator:
                 break
             }
         }
@@ -413,12 +716,18 @@ class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistin
 extension TokenViewController {
     
     enum Section: Int, CaseIterable {
+        
         case warning
         case balance
         case market
         case earning
         case pending
         case transactions
+        
+        init(collectionViewIndex: Int) {
+            self = Section(rawValue: min(collectionViewIndex, Section.transactions.rawValue))!
+        }
+        
     }
     
     enum MarketRow: Int, CaseIterable {
@@ -444,37 +753,60 @@ extension TokenViewController {
     }
     
     enum TransactionRow {
-        
         case title
         case emptyIndicator
         case transaction(Transaction)
-        case bottomSeparator
         case viewAll
+    }
+    
+    struct TransactionSection {
         
-        static func rows(transactions: [Transaction], hasMore: Bool) -> [TransactionRow] {
-            if transactions.isEmpty {
-                [.title, .emptyIndicator]
-            } else {
-                if hasMore {
-                    [.title] + transactions.map({ .transaction($0) }) + [.viewAll, .bottomSeparator]
-                } else {
-                    [.title] + transactions.map({ .transaction($0) }) + [.bottomSeparator]
-                }
+        let date: String?
+        let rows: [TransactionRow]
+        
+        static func sections(
+            transactions: [Transaction],
+            hasMore: Bool,
+            dateRepresentation: (Transaction) -> String,
+        ) -> [TransactionSection] {
+            guard let firstTransaction = transactions.first else {
+                return [.init(date: nil, rows: [.title, .emptyIndicator])]
             }
+            var sections = [TransactionSection(date: nil, rows: [.title])]
+            var date = dateRepresentation(firstTransaction)
+            var rows: [TransactionRow] = [.transaction(firstTransaction)]
+            for transaction in transactions.dropFirst() {
+                let transactionDate = dateRepresentation(transaction)
+                if transactionDate != date {
+                    sections.append(.init(date: date, rows: rows))
+                    date = transactionDate
+                    rows = []
+                }
+                rows.append(.transaction(transaction))
+            }
+            if hasMore {
+                rows.append(.viewAll)
+            }
+            sections.append(.init(date: date, rows: rows))
+            return sections
         }
         
     }
     
     private func reloadMarket(result: MarketResult) {
         self.market = result
-        let indexPath = IndexPath(row: MarketRow.content.rawValue, section: Section.market.rawValue)
-        tableView.reloadRows(at: [indexPath], with: .none)
+        let indexPath = IndexPath(item: MarketRow.content.rawValue, section: Section.market.rawValue)
+        UIView.performWithoutAnimation {
+            collectionView.reloadItems(at: [indexPath])
+        }
     }
     
     private func reloadChart(_ points: [ChartView.Point]) {
         self.chartPoints = points
-        let indexPath = IndexPath(row: MarketRow.content.rawValue, section: Section.market.rawValue)
-        tableView.reloadRows(at: [indexPath], with: .none)
+        let indexPath = IndexPath(item: MarketRow.content.rawValue, section: Section.market.rawValue)
+        UIView.performWithoutAnimation {
+            collectionView.reloadItems(at: [indexPath])
+        }
     }
     
     private func loadMarketsFromRemote(assetID: String) {

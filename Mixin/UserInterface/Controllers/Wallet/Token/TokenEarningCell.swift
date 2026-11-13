@@ -1,6 +1,6 @@
 import UIKit
 
-final class TokenEarningCell: UITableViewCell {
+final class TokenEarningCell: UICollectionViewCell {
     
     @IBOutlet weak var totalEarningsTitleLabel: UILabel!
     @IBOutlet weak var totalEarningsValueLabel: UILabel!
@@ -12,6 +12,7 @@ final class TokenEarningCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        backgroundColor = R.color.background()
         
         totalEarningsTitleLabel.text = R.string.localizable.earn_total_earnings()
         

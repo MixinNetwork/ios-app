@@ -1,6 +1,6 @@
 import UIKit
 
-final class NoTransactionIndicatorCell: UITableViewCell {
+final class NoTransactionIndicatorCell: UICollectionViewCell {
     
     @IBOutlet weak var label: UILabel!
     

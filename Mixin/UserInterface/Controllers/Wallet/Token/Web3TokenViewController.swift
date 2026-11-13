@@ -30,8 +30,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
             title: token.name,
             subtitle: token.depositNetworkName
         )
-        tableView.register(R.nib.web3TransactionCell)
-        tableView.reloadData()
+        collectionView.reloadData()
         
         let notificationCenter: NotificationCenter = .default
         notificationCenter.addObserver(
@@ -122,8 +121,15 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         cell.delegate = self
     }
     
-    override func tableView(_ tableView: UITableView, cellForTransaction transaction: Web3Transaction) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_transaction.identifier) as! Web3TransactionCell
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        cellForTransaction transaction: Web3Transaction,
+        at indexPath: IndexPath,
+    ) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: R.reuseIdentifier.transaction,
+            for: indexPath,
+        )!
         cell.load(transaction: transaction, symbols: transactionTokenSymbols)
         return cell
     }
@@ -166,10 +172,9 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
                     return
                 }
                 self.token = token
-                let indexPath = IndexPath(row: 0, section: Section.balance.rawValue)
-                self.tableView.beginUpdates()
-                self.tableView.reloadRows(at: [indexPath], with: .none)
-                self.tableView.endUpdates()
+                UIView.performWithoutAnimation {
+                    self.collectionView.reloadSections([Section.warning.rawValue, Section.balance.rawValue])
+                }
             }
         }
     }
@@ -183,9 +188,16 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
             )
             let hasMoreTransactions = limitExceededTransactions.count > limit
             let transactions = Array(limitExceededTransactions.prefix(limit))
-            let transactionRows = TransactionRow.rows(
+            let transactionSections = TransactionSection.sections(
                 transactions: transactions,
-                hasMore: hasMoreTransactions
+                hasMore: hasMoreTransactions,
+                dateRepresentation: { transaction in
+                    if let date = transaction.transactionAtDate {
+                        DateFormatter.dateSimple.string(from: date)
+                    } else {
+                        transaction.transactionAt
+                    }
+                },
             )
             var assetIDs: Set<String> = []
             for transaction in transactions {
@@ -200,7 +212,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
                     return
                 }
                 self.transactionTokenSymbols = tokenSymbols
-                self.reloadTransactions(pending: [], finished: transactionRows)
+                self.reloadTransactions(pending: [], finished: transactionSections)
             }
         }
     }

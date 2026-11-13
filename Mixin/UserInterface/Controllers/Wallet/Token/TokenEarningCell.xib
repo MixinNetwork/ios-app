@@ -5,15 +5,16 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="token_earning" id="KGk-i7-Jjw" customClass="TokenEarningCell" customModule="Mixin" customModuleProvider="target">
+        <collectionViewCell contentMode="scaleToFill" reuseIdentifier="token_earning" id="KGk-i7-Jjw" customClass="TokenEarningCell" customModule="Mixin" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="164"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="H2p-sc-9uM">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="164"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -45,7 +46,6 @@
                         <rect key="frame" x="16" y="77.333333333333314" width="288" height="66.666666666666686"/>
                     </stackView>
                 </subviews>
-                <color key="backgroundColor" name="background"/>
                 <constraints>
                     <constraint firstItem="rB3-dc-8C7" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="2vM-dK-ouK"/>
                     <constraint firstItem="aVS-Lo-gOb" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="3eg-Yv-73T"/>
@@ -57,14 +57,14 @@
                     <constraint firstAttribute="trailing" secondItem="4QG-9s-vGz" secondAttribute="trailing" constant="16" id="xvH-F6-y1m"/>
                     <constraint firstItem="4QG-9s-vGz" firstAttribute="leading" secondItem="aVS-Lo-gOb" secondAttribute="trailing" constant="12" id="zFd-d5-EfE"/>
                 </constraints>
-            </tableViewCellContentView>
+            </collectionViewCellContentView>
             <connections>
                 <outlet property="infoStackView" destination="rB3-dc-8C7" id="a0Y-CQ-mTn"/>
                 <outlet property="totalEarningsTitleLabel" destination="LPv-V0-YhV" id="nN9-BD-yh2"/>
                 <outlet property="totalEarningsValueLabel" destination="3TT-xL-39X" id="elH-AD-Q4Z"/>
             </connections>
             <point key="canvasLocation" x="-406.1068702290076" y="153.52112676056339"/>
-        </tableViewCell>
+        </collectionViewCell>
     </objects>
     <resources>
         <image name="external_indicator_arrow_bold" width="30" height="30"/>

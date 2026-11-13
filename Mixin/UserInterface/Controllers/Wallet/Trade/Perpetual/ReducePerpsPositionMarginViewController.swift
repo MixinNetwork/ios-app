@@ -99,15 +99,6 @@ final class ReducePerpsPositionMarginViewController: ReduceToPerpsPositionViewCo
         reporter.report(event: .tradePerpsReduceMarginStart, tags: tags)
     }
     
-    override func selectReduction(percentage: Decimal, amount: Decimal) {
-        switch amountDisplay {
-        case .byAmount:
-            inputAmount(amount)
-        case .byPercentage:
-            inputPercentage(percentage)
-        }
-    }
-    
     override func updateDescriptions(refreshValidation: Bool) {
         let reducingAmount = absoluteAmount
         if refreshValidation || reducingAmount <= 0 {

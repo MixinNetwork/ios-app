@@ -25,11 +25,9 @@ extension AddressBookNetwork {
     
     // Pinned networks keep the design order, the remaining chains follow by name.
     // Pass nil `supportedChainIDs` to include networks of all chains.
-    // Database-only mode includes every cached chain without synthesizing networks.
     static func all(
         chains: [String: Chain],
         supportedChainIDs: Set<String>?,
-        usesDatabaseChainsOnly: Bool,
     ) -> [AddressBookNetwork] {
         let pinnedChainIDs = Set(pinned.map(\.chainID))
         let pinnedNetworks = pinned.map { item in
@@ -44,17 +42,14 @@ extension AddressBookNetwork {
             .map { AddressBookNetwork(chainID: $0.chainId, name: $0.name, chain: $0) }
         let uncachedNetworks = Web3Chain.all
             .filter {
-                supportedChainIDs?.contains($0.chainID) == true
-                && !pinnedChainIDs.contains($0.chainID)
+                !pinnedChainIDs.contains($0.chainID)
                 && chains[$0.chainID] == nil
             }
             .map { AddressBookNetwork(chainID: $0.chainID, name: $0.name, chain: nil) }
         let otherNetworks = (cachedNetworks + uncachedNetworks)
             .sorted { $0.name.lowercased() < $1.name.lowercased() }
         let networks = pinnedNetworks + otherNetworks
-        if usesDatabaseChainsOnly {
-            return networks.filter { chains[$0.chainID] != nil }
-        } else if let supportedChainIDs {
+        if let supportedChainIDs {
             return networks.filter { supportedChainIDs.contains($0.chainID) }
         } else {
             return networks
@@ -64,29 +59,44 @@ extension AddressBookNetwork {
     static func currentWalletChainIDs() -> Set<String>? {
         switch AppGroupUserDefaults.Wallet.lastSelectedWallet {
         case let .common(id):
-            let allChainIDs = Set(Web3Chain.all.map(\.chainID))
-            let wallet = Web3WalletDAO.shared.wallet(id: id)
-            switch wallet?.category.knownCase {
-            case .classic, .importedMnemonic:
-                return allChainIDs
-            case .importedPrivateKey, .watchAddress, .none:
-                // Each address identifies its chain family, e.g. an EVM address works on all EVM chains.
-                // Keep the address chains as well, some of them are not in `Web3Chain`,
-                // e.g. Litecoin addresses imported on Android.
-                let addressChainIDs = Web3AddressDAO.shared.chainIDs(walletID: id)
-                let familyChainIDs = addressChainIDs
-                    .compactMap { Web3Chain.chain(chainID: $0) }
-                    .flatMap { $0.kind.chains.map(\.chainID) }
-                let chainIDs = addressChainIDs.union(familyChainIDs)
-                return chainIDs.isEmpty ? allChainIDs : chainIDs
+            guard let wallet = Web3WalletDAO.shared.wallet(id: id) else {
+                return nil
             }
+            let addressChainIDs = Web3AddressDAO.shared.chainIDs(walletID: id)
+            return walletChainIDs(
+                category: wallet.category.knownCase,
+                addressChainIDs: addressChainIDs,
+            )
         case .privacy, .safe:
             return nil
         }
     }
     
+    static func walletChainIDs(
+        category: Web3Wallet.Category?,
+        addressChainIDs: Set<String>,
+    ) -> Set<String> {
+        switch category {
+        case .classic, .importedMnemonic:
+            return Set(Web3Chain.all.map(\.chainID)).union(addressChainIDs)
+        case .importedPrivateKey, .watchAddress:
+            // Each address identifies its chain family, e.g. an EVM address works on all EVM chains.
+            // Keep the address chains as well, some of them are not in `Web3Chain`,
+            // e.g. Litecoin addresses imported on Android.
+            let familyChainIDs = addressChainIDs
+                .compactMap { Web3Chain.chain(chainID: $0) }
+                .flatMap { $0.kind.chains.map(\.chainID) }
+            return addressChainIDs.union(familyChainIDs)
+        case .none:
+            return []
+        }
+    }
+    
     static func name(chainID: String, chain: Chain?) -> String {
-        pinned.first { $0.chainID == chainID }?.name ?? chain?.name ?? ""
+        pinned.first { $0.chainID == chainID }?.name
+            ?? chain?.name
+            ?? Web3Chain.chain(chainID: chainID)?.name
+            ?? ""
     }
     
     // All networks: Ethereum. Otherwise the first selected one in display order.

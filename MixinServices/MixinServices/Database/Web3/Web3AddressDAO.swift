@@ -5,6 +5,8 @@ public final class Web3AddressDAO: Web3DAO {
     
     public static let shared = Web3AddressDAO()
     
+    public static let addressDidChangeNotification = Notification.Name("one.mixin.services.Web3AddressDAO.AddressDidChange")
+    
     public func currentSelectedWalletAddress(chainID: String) -> Web3Address? {
         if let walletID = AppGroupUserDefaults.Wallet.dappConnectionWalletID {
             db.select(with: """
@@ -95,7 +97,12 @@ public final class Web3AddressDAO: Web3DAO {
     }
     
     public func save(addresses: [Web3Address]) {
-        db.save(addresses)
+        guard !addresses.isEmpty else {
+            return
+        }
+        db.save(addresses) { _ in
+            NotificationCenter.default.post(onMainThread: Self.addressDidChangeNotification, object: self)
+        }
     }
     
 }

@@ -39,7 +39,7 @@ final class AddressBookCell: UITableViewCell {
         } else {
             networkIconView.image = R.image.unknown_session()
         }
-        networkLabel.text = network?.name
+        networkLabel.text = network?.name ?? AddressBookNetwork.name(chainID: address.chainId, chain: nil)
         addressLabel.text = address.fullRepresentation
         let date = DateFormatter.dateFull.string(from: address.updatedAt.toUTCDate())
         dateLabel.text = R.string.localizable.last_updated_at(date)

@@ -141,6 +141,12 @@ final class WalletAddressBookViewController: UIViewController {
             name: ChainDAO.chainsDidChangeNotification,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadLocalAddresses),
+            name: Web3AddressDAO.addressDidChangeNotification,
+            object: nil
+        )
         reloadLocalAddresses()
         let tokenChainID: String? = switch intent {
         case .manage:
@@ -153,6 +159,26 @@ final class WalletAddressBookViewController: UIViewController {
             if let tokenChainID {
                 syncingChainIDs = [tokenChainID]
             } else {
+                switch AppGroupUserDefaults.Wallet.lastSelectedWallet {
+                case let .common(walletID):
+                    if let wallet = Web3WalletDAO.shared.wallet(id: walletID) {
+                        switch wallet.category.knownCase {
+                        case .importedPrivateKey, .watchAddress:
+                            if Web3AddressDAO.shared.chainIDs(walletID: walletID).isEmpty {
+                                switch RouteAPI.addresses(walletID: walletID) {
+                                case let .success(addresses):
+                                    Web3AddressDAO.shared.save(addresses: addresses)
+                                case let .failure(error):
+                                    Logger.general.error(category: "AddressBook", message: "Failed to sync wallet addresses: \(error)")
+                                }
+                            }
+                        case .classic, .importedMnemonic, .none:
+                            break
+                        }
+                    }
+                case .privacy, .safe:
+                    break
+                }
                 // Networks follow all chains, cached ones might be incomplete
                 switch NetworkAPI.chains() {
                 case let .success(chains):
@@ -164,7 +190,6 @@ final class WalletAddressBookViewController: UIViewController {
                 syncingChainIDs = AddressBookNetwork.all(
                     chains: ChainDAO.shared.allChains(),
                     supportedChainIDs: AddressBookNetwork.currentWalletChainIDs(),
-                    usesDatabaseChainsOnly: false,
                 ).map(\.chainID)
             }
             for chainID in syncingChainIDs {
@@ -235,12 +260,6 @@ final class WalletAddressBookViewController: UIViewController {
         case .select:
             false
         }
-        let usesDatabaseChainsOnly = switch (intent, AppGroupUserDefaults.Wallet.lastSelectedWallet) {
-        case (.manage, .privacy):
-            true
-        default:
-            false
-        }
         DispatchQueue.global().async { [weak self] in
             let supportedChainIDs = usesCurrentWalletChains ? AddressBookNetwork.currentWalletChainIDs() : nil
             let addresses = AddressDAO.shared.addressItems().filter { address in
@@ -249,7 +268,6 @@ final class WalletAddressBookViewController: UIViewController {
             let networks = AddressBookNetwork.all(
                 chains: ChainDAO.shared.allChains(),
                 supportedChainIDs: supportedChainIDs,
-                usesDatabaseChainsOnly: usesDatabaseChainsOnly,
             )
             DispatchQueue.main.async {
                 guard let self else {

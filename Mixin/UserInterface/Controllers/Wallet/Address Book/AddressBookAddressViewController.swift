@@ -43,7 +43,7 @@ final class AddressBookAddressViewController: UIViewController {
         var infoRows: [(title: String, value: String)] = [
             (R.string.localizable.label(), address.label),
             (R.string.localizable.address(), address.destination),
-            (R.string.localizable.network(), network?.name ?? ""),
+            (R.string.localizable.network(), network?.name ?? AddressBookNetwork.name(chainID: address.chainId, chain: nil)),
         ]
         if !address.tag.isEmpty {
             infoRows.append((R.string.localizable.memo(), address.tag))

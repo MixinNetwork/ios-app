@@ -258,3 +258,159 @@ struct MixinTests {
     }
     
 }
+
+struct AddressBookNetworkTests {
+    
+    private let pinnedChainIDs = [
+        ChainID.bitcoin,
+        ChainID.lightning,
+        ChainID.ethereum,
+        ChainID.solana,
+        ChainID.litecoin,
+        ChainID.bnbSmartChain,
+        ChainID.ripple,
+        ChainID.tron,
+        ChainID.dogecoin,
+    ]
+    
+    @Test func privacyNetworksIncludePinnedAndFallbackWalletChainsWhenChainsAreEmpty() {
+        let networks = AddressBookNetwork.all(chains: [:], supportedChainIDs: nil)
+        let prefix = Array(networks.prefix(pinnedChainIDs.count))
+        #expect(prefix.map(\.chainID) == pinnedChainIDs)
+        
+        let trailing = Array(networks.dropFirst(pinnedChainIDs.count))
+        let trailingNames = trailing.map { $0.name.lowercased() }
+        #expect(trailingNames == trailingNames.sorted())
+        
+        let trailingChainIDs = Set(trailing.map(\.chainID))
+        let expectedFallbackChainIDs = Set(Web3Chain.all.map(\.chainID)).subtracting(pinnedChainIDs)
+        #expect(trailingChainIDs == expectedFallbackChainIDs)
+        #expect(networks.filter { $0.chainID == ChainID.bnbSmartChain }.count == 1)
+    }
+    
+    @Test func privacyNetworksMergeCachedChainsInOrder() {
+        let ton = Chain(
+            chainId: ChainID.ton,
+            name: "TON",
+            symbol: "TON",
+            iconUrl: "",
+            threshold: 1,
+            withdrawalMemoPossibility: "possible"
+        )
+        let aptosID = "aptos-chain"
+        let aptos = Chain(
+            chainId: aptosID,
+            name: "Aptos",
+            symbol: "APT",
+            iconUrl: "",
+            threshold: 1,
+            withdrawalMemoPossibility: "negative"
+        )
+        let ethereum = Chain(
+            chainId: ChainID.ethereum,
+            name: "Server Ethereum",
+            symbol: "ETH",
+            iconUrl: "",
+            threshold: 1,
+            withdrawalMemoPossibility: "negative"
+        )
+        let chains = [
+            ChainID.ton: ton,
+            aptosID: aptos,
+            ChainID.ethereum: ethereum,
+        ]
+        
+        let networks = AddressBookNetwork.all(chains: chains, supportedChainIDs: nil)
+        #expect(Array(networks.prefix(pinnedChainIDs.count).map(\.chainID)) == pinnedChainIDs)
+        
+        let ethereumNetwork = networks.first { $0.chainID == ChainID.ethereum }
+        #expect(ethereumNetwork?.name == "Ethereum")
+        #expect(ethereumNetwork?.chain?.chainId == ChainID.ethereum)
+        
+        let trailing = Array(networks.dropFirst(pinnedChainIDs.count))
+        let trailingNames = trailing.map { $0.name.lowercased() }
+        #expect(trailingNames == trailingNames.sorted())
+        #expect(trailing.first?.chainID == aptosID)
+        #expect(trailing.contains { $0.chainID == ChainID.ton && $0.chain != nil })
+        #expect(trailing.contains { $0.chainID == ChainID.base && $0.chain == nil })
+    }
+    
+    @Test func classicAndMnemonicWalletsSupportAllWeb3Chains() {
+        let expectedChainIDs = Set(Web3Chain.all.map(\.chainID))
+        for category in [Web3Wallet.Category.classic, .importedMnemonic] {
+            let chainIDs = AddressBookNetwork.walletChainIDs(category: category, addressChainIDs: [])
+            #expect(chainIDs == expectedChainIDs)
+            
+            let networks = AddressBookNetwork.all(chains: [:], supportedChainIDs: chainIDs)
+            #expect(Set(networks.map(\.chainID)) == expectedChainIDs)
+            
+            let withLitecoin = AddressBookNetwork.walletChainIDs(
+                category: category,
+                addressChainIDs: [ChainID.litecoin]
+            )
+            #expect(withLitecoin == expectedChainIDs.union([ChainID.litecoin]))
+        }
+    }
+    
+    @Test func importedPrivateKeyAndWatchWalletsExpandEVMAndKeepSingleChain() {
+        let expectedEVMChainIDs = Set(Web3Chain.Kind.evm.chains.map(\.chainID))
+        for category in [Web3Wallet.Category.importedPrivateKey, .watchAddress] {
+            let evmChainIDs = AddressBookNetwork.walletChainIDs(
+                category: category,
+                addressChainIDs: [ChainID.ethereum]
+            )
+            #expect(evmChainIDs == expectedEVMChainIDs)
+            let evmNetworks = AddressBookNetwork.all(chains: [:], supportedChainIDs: evmChainIDs)
+            #expect(Set(evmNetworks.map(\.chainID)) == expectedEVMChainIDs)
+            
+            for singleChainID in [ChainID.solana, ChainID.bitcoin, ChainID.pearl, ChainID.litecoin] {
+                let chainIDs = AddressBookNetwork.walletChainIDs(
+                    category: category,
+                    addressChainIDs: [singleChainID]
+                )
+                #expect(chainIDs == [singleChainID])
+                let networks = AddressBookNetwork.all(chains: [:], supportedChainIDs: chainIDs)
+                #expect(networks.map(\.chainID) == [singleChainID])
+            }
+        }
+    }
+    
+    @Test func missingWalletAddressesDoNotFallBackToAllChains() {
+        for category in [Web3Wallet.Category.importedPrivateKey, .watchAddress, nil] {
+            let chainIDs = AddressBookNetwork.walletChainIDs(category: category, addressChainIDs: [])
+            #expect(chainIDs.isEmpty)
+            let networks = AddressBookNetwork.all(chains: [:], supportedChainIDs: chainIDs)
+            #expect(networks.isEmpty)
+        }
+    }
+    
+    @Test func defaultNetworkAndNameResolution() {
+        let evmNetworks = AddressBookNetwork.all(
+            chains: [:],
+            supportedChainIDs: Set(Web3Chain.Kind.evm.chains.map(\.chainID))
+        )
+        #expect(AddressBookNetwork.defaultNetwork(selectedChainIDs: [], networks: evmNetworks)?.chainID == ChainID.ethereum)
+        #expect(AddressBookNetwork.defaultNetwork(selectedChainIDs: [ChainID.polygon], networks: evmNetworks)?.chainID == ChainID.polygon)
+        #expect(AddressBookNetwork.defaultNetwork(selectedChainIDs: [ChainID.base, ChainID.polygon], networks: evmNetworks)?.chainID == ChainID.base)
+        
+        let nonEthereumNetworks = AddressBookNetwork.all(
+            chains: [:],
+            supportedChainIDs: [ChainID.solana, ChainID.bitcoin]
+        )
+        #expect(AddressBookNetwork.defaultNetwork(selectedChainIDs: [], networks: nonEthereumNetworks)?.chainID == ChainID.bitcoin)
+        
+        #expect(AddressBookNetwork.name(chainID: ChainID.bnbSmartChain, chain: nil) == "BNB Smart Chain")
+        #expect(AddressBookNetwork.name(chainID: ChainID.base, chain: nil) == "Base")
+        #expect(AddressBookNetwork.name(chainID: ChainID.pearl, chain: nil) == "Pearl")
+        let ton = Chain(
+            chainId: ChainID.ton,
+            name: "TON",
+            symbol: "TON",
+            iconUrl: "",
+            threshold: 1,
+            withdrawalMemoPossibility: "possible"
+        )
+        #expect(AddressBookNetwork.name(chainID: ChainID.ton, chain: ton) == "TON")
+    }
+    
+}

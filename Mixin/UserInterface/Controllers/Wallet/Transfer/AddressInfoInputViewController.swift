@@ -167,6 +167,21 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
             name: UIResponder.keyboardWillHideNotification,
             object: nil
         )
+        if switchableNetworks != nil {
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(reloadSwitchableNetworks),
+                name: ChainDAO.chainsDidChangeNotification,
+                object: nil,
+            )
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(reloadSwitchableNetworks),
+                name: Web3AddressDAO.addressDidChangeNotification,
+                object: nil,
+            )
+            reloadSwitchableNetworks()
+        }
     }
     
     override func layout(for keyboardFrame: CGRect) {
@@ -294,7 +309,10 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                 guard let self, let navigationController = self.navigationController else {
                     return
                 }
-                let input: AddressInfoInputViewController = .newAddress(token: token, switchableNetworks: networks)
+                let input: AddressInfoInputViewController = .newAddress(
+                    token: token,
+                    switchableNetworks: self.switchableNetworks ?? networks,
+                )
                 var viewControllers = navigationController.viewControllers
                 if let index = viewControllers.firstIndex(of: self) {
                     viewControllers[index] = input
@@ -308,6 +326,21 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     @objc private func keyboardWillHide(_ notification: Notification) {
         stackViewBottomConstraint.constant = 0
         view.layoutIfNeeded()
+    }
+    
+    @objc private func reloadSwitchableNetworks() {
+        guard switchableNetworks != nil else {
+            return
+        }
+        DispatchQueue.global().async { [weak self] in
+            let networks = AddressBookNetwork.all(
+                chains: ChainDAO.shared.allChains(),
+                supportedChainIDs: AddressBookNetwork.currentWalletChainIDs(),
+            )
+            DispatchQueue.main.async {
+                self?.switchableNetworks = networks
+            }
+        }
     }
     
     private func pushNext(inputContent: InputContent) {

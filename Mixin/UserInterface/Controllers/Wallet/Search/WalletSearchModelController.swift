@@ -53,16 +53,14 @@ final class PrivacyWalletSearchModelController: WalletSearchModelController {
         case .all:
             return nil
         case .tokens:
-            var tokens = TokenDAO.shared.search(
+            return TokenDAO.shared.search(
                 keyword: keyword,
                 includesZeroBalanceItems: true,
-                sorting: limit != nil,
+                sorting: true,
                 limit: limit,
-            )
-            if limit == nil {
-                tokens.sort(using: TokenComparator<Item>(keyword: keyword))
+            ).map { token in
+                    .token(token)
             }
-            return tokens.map { .token($0) }
         case .perps:
             return PerpsPositionDAO.shared.search(
                 walletID: Wallet.privacy.tradingWalletID,
@@ -154,11 +152,10 @@ final class CommonWalletSearchModelController: WalletSearchModelController {
                 walletID: wallet.walletID,
                 keyword: keyword,
                 includesZeroBalanceItems: true,
-                limit: nil,
-            )
-            .sorted(using: TokenComparator<Item>(keyword: keyword))
-            .prefix(limit ?? .max)
-            .map { .token($0) }
+                limit: limit,
+            ).map { token in
+                    .token(token)
+            }
         case .all, .perps, .earn, .collectibles:
             return nil
         }

@@ -395,7 +395,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                         amount: "0",
                         usdPrice: token.usdPrice,
                         usdChange: token.usdChange,
-                        level: Web3Reputation.Level.verified.rawValue,
+                        level: Reputation.Level.verified.rawValue,
                     )
                     let chain = Web3ChainDAO.shared.chain(chainID: token.chainID)
                     let item = Web3TokenItem(token: web3Token, hidden: false, chain: chain)

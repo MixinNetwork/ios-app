@@ -128,7 +128,7 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
         from swappableTokens: [SwapToken]
     ) -> OrderedDictionary<String, BalancedSwapToken> {
         let ids = swappableTokens.map(\.assetID)
-        let availableTokens = Web3TokenDAO.shared.tokens(walletID: walletID, ids: ids)
+        let availableTokens = Web3TokenDAO.shared.tokenItems(walletID: walletID, ids: ids)
             .reduce(into: [:]) { result, item in
                 result[item.assetID] = item
             }
@@ -137,24 +137,28 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
             guard let chainID = token.chain.chainID, supportedChainIDs.contains(chainID) else {
                 return
             }
-            let marketPrice: Decimal? = if let value = prices[token.assetID] {
-                Decimal(string: value, locale: .enUSPOSIX)
-            } else {
-                nil
+            var marketPrice: Decimal? {
+                prices[token.assetID].flatMap { price in
+                    Decimal(string: price, locale: .enUSPOSIX)
+                }
             }
             if let item = availableTokens[token.assetID] {
-                result[token.assetID] = BalancedSwapToken(
-                    token: token,
-                    balance: item.decimalBalance,
-                    usdPrice: marketPrice ?? item.decimalUSDPrice,
-                    isMalicious: item.isMalicious,
-                )
+                if !item.isHidden {
+                    result[token.assetID] = BalancedSwapToken(
+                        token: token,
+                        balance: item.decimalBalance,
+                        usdPrice: marketPrice ?? item.decimalUSDPrice,
+                        isMalicious: item.isMalicious,
+                        level: item.level,
+                    )
+                }
             } else {
                 result[token.assetID] = BalancedSwapToken(
                     token: token,
                     balance: 0,
-                    usdPrice: 0,
+                    usdPrice: marketPrice ?? 0,
                     isMalicious: false,
+                    level: Reputation.Level.unknown.rawValue,
                 )
             }
         }

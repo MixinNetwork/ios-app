@@ -38,11 +38,18 @@ public final class UTXOService {
         } while outputsCount >= limit
         Logger.general.debug(category: "UTXO", message: "Calculated \(totalAmount) for kernel asset: \(kernelAssetID)")
         
-        let extra = TokenExtra(assetID: assetID,
-                               kernelAssetID: kernelAssetID,
-                               isHidden: false,
-                               balance: TokenAmountFormatter.string(from: totalAmount),
-                               updatedAt: Date().toUTCString())
+        let level = try Int.fetchOne(
+            db,
+            sql: "SELECT level FROM tokens WHERE asset_id = ?",
+            arguments: [assetID]
+        ) ?? Reputation.Level.unknown.rawValue
+        let extra = TokenExtra(
+            assetID: assetID,
+            kernelAssetID: kernelAssetID,
+            isHidden: level < Reputation.Level.unknown.rawValue,
+            balance: TokenAmountFormatter.string(from: totalAmount),
+            updatedAt: Date().toUTCString()
+        )
         try TokenExtraDAO.shared.insertOrUpdateBalance(extra: extra, into: db) {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: Self.balanceDidUpdateNotification,

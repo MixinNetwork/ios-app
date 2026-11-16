@@ -52,35 +52,35 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
         super.viewDidLoad()
         let walletID = wallet.walletID
         let hasStockTokens = !stockTokens.isEmpty
-        var remoteTokens = self.defaultTokens
-        queue.async { [recentAssetIDsKey, supportedChainIDs] in
-            let comparator = TokenComparator<BalancedSwapToken>(keyword: nil)
+        let remoteTokens = self.defaultTokens
+        queue.async { [recentAssetIDsKey] in
+            var chainIDs: Set<String> = []
+            
             // No need to filter with `supportedChainIDs`, the `walletID` will do
             // Unsupported tokens will not exist with the `walletID`
-            var tokens = Web3TokenDAO.shared
+            var allTokens: [String: BalancedSwapToken] = Web3TokenDAO.shared
                 .notHiddenTokens(
                     walletID: walletID,
                     includesZeroBalanceItems: true,
                     limit: nil
                 )
                 .compactMap(BalancedSwapToken.init(tokenItem:))
-            var tokensMap = tokens.reduce(into: [:]) { results, token in
-                results[token.assetID] = token
-            }
-            remoteTokens.removeAll { token in
-                if tokensMap[token.assetID] != nil {
-                    true
-                } else if let chainID = token.chain.chainID {
-                    !supportedChainIDs.contains(chainID)
-                } else {
-                    true
+                .reduce(into: [:]) { results, token in
+                    results[token.assetID] = token
+                    if let chainID = token.chain.chainID {
+                        chainIDs.insert(chainID)
+                    }
+                }
+            for remoteToken in remoteTokens {
+                allTokens[remoteToken.assetID] = remoteToken
+                if let chainID = remoteToken.chain.chainID {
+                    chainIDs.insert(chainID)
                 }
             }
-            tokens.append(contentsOf: remoteTokens.sorted(using: comparator))
-            for token in remoteTokens {
-                tokensMap[token.assetID] = token
-            }
-            let chainIDs = Set(tokens.compactMap(\.chain.chainID))
+            let tokens = allTokens.values.sorted(
+                using: TokenComparator<BalancedSwapToken>(keyword: nil)
+            )
+            
             var groups = Group.web3Chains(ids: chainIDs)
             if hasStockTokens {
                 groups.insert(.byCategory(.stock), at: 0)
@@ -91,7 +91,7 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                 type: [String].self
             ) ?? []
             let recentTokens = recentAssetIDs.compactMap { id in
-                tokensMap[id]
+                allTokens[id]
             }
             let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
                 .priceChangePercentage24H(assetIDs: recentAssetIDs)
@@ -198,30 +198,44 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
         if remoteResults.isEmpty {
             mixedSearchResults = nil
         } else {
-            let localResultsMap = localResults.reduce(into: [:]) { results, token in
+            var tokens = localResults.reduce(into: [:]) { results, token in
                 results[token.assetID] = token
             }
-            let walletID = wallet.walletID
+            
+            // Tokens that exist in remote results, but not in local results
+            let missingAssetIDs = remoteResults.compactMap { token in
+                if let chainID = token.chain.chainID,
+                   supportedChainIDs.contains(chainID),
+                   tokens[token.assetID] == nil
+                {
+                    token.assetID
+                } else {
+                    nil
+                }
+            }
+            if !missingAssetIDs.isEmpty {
+                let missingTokens = Web3TokenDAO.shared
+                    .tokenItems(walletID: wallet.walletID, ids: missingAssetIDs)
+                    .compactMap(BalancedSwapToken.init(tokenItem:))
+                for token in missingTokens {
+                    tokens[token.assetID] = token
+                }
+            }
+            
             var hasStockTokens = false
             var allItems: [String: BalancedSwapToken] = remoteResults.reduce(into: [:]) { result, token in
                 guard let chainID = token.chain.chainID, supportedChainIDs.contains(chainID) else {
                     return
                 }
                 let assetID = token.assetID
-                let localResult = localResultsMap[assetID]
-                let balance = localResult?.decimalBalance ?? {
-                    if let amount = Web3TokenDAO.shared.amount(walletID: walletID, assetID: assetID) {
-                        Decimal(string: amount, locale: .enUSPOSIX) ?? 0
-                    } else {
-                        0
-                    }
-                }()
+                let localToken = tokens[assetID]
                 hasStockTokens = hasStockTokens || token.category == .stock
                 result[assetID] = BalancedSwapToken(
                     token: token,
-                    balance: balance,
-                    usdPrice: localResult?.decimalUSDPrice ?? 0,
-                    isMalicious: localResult?.isMalicious ?? false,
+                    balance: localToken?.decimalBalance ?? 0,
+                    usdPrice: localToken?.decimalUSDPrice ?? 0,
+                    isMalicious: localToken?.isMalicious ?? false,
+                    level: localToken?.level ?? Reputation.Level.unknown.rawValue,
                 )
             }
             for item in localResults where allItems[item.assetID] == nil {

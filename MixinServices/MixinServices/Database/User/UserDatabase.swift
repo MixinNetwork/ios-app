@@ -1046,7 +1046,7 @@ public final class UserDatabase: Database {
         migrator.registerMigration("tokens_level") { db in
             let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(tokens)").map(\.name)
             if !columns.contains("level") {
-                try db.execute(sql: "ALTER TABLE tokens ADD COLUMN level INTEGER NOT NULL DEFAULT \(Web3Reputation.Level.unknown.rawValue)")
+                try db.execute(sql: "ALTER TABLE tokens ADD COLUMN level INTEGER NOT NULL DEFAULT \(Reputation.Level.unknown.rawValue)")
             }
         }
         

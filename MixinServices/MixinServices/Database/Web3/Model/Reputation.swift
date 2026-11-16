@@ -1,6 +1,6 @@
 import Foundation
 
-public enum Web3Reputation {
+public enum Reputation {
     
     public enum Level: Int {
         case good = 12
@@ -14,9 +14,9 @@ public enum Web3Reputation {
         
         case spam
         
-        public static func options(token: Web3Token) -> Set<Web3Reputation.FilterOption> {
-            let options: Set<Web3Reputation.FilterOption>
-            if token.level <= Web3Reputation.Level.spam.rawValue {
+        public static func options(token: Web3Token) -> Set<Reputation.FilterOption> {
+            let options: Set<Reputation.FilterOption>
+            if token.level <= Reputation.Level.spam.rawValue {
                 options = [.spam]
             } else {
                 options = []

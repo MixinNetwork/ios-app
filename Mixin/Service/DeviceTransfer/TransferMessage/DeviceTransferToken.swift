@@ -59,7 +59,7 @@ struct DeviceTransferToken {
             precision: precision,
             collectionHash: collectionHash,
             primitiveAssetID: primitiveAssetID,
-            level: level ?? Web3Reputation.Level.unknown.rawValue,
+            level: level ?? Reputation.Level.unknown.rawValue,
         )
     }
     

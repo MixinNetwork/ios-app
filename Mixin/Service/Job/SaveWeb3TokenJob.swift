@@ -33,7 +33,7 @@ public final class SaveWeb3TokenJob: AsynchronousJob {
                     amount: amount ?? "0",
                     usdPrice: token.usdPrice,
                     usdChange: token.usdChange,
-                    level: Web3Reputation.Level.unknown.rawValue,
+                    level: token.level,
                 )
                 if !MixinService.isStopProcessMessages {
                     Web3TokenDAO.shared.save(tokens: [web3Token], zeroOutOthers: false)

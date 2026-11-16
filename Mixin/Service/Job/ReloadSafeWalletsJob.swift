@@ -33,7 +33,7 @@ final class ReloadSafeWalletsJob: AsynchronousJob {
                             amount: "0",
                             usdPrice: token.usdPrice,
                             usdChange: token.usdChange,
-                            level: Web3Reputation.Level.unknown.rawValue,
+                            level: Reputation.Level.unknown.rawValue,
                         )
                     }
                 }

@@ -119,7 +119,9 @@ final class TradeViewController: UIViewController {
     }
     
     func prepareForReuse() {
-        
+        if let spot = tradingViewController as? TradeSpotViewController {
+            spot.prepareForReuse()
+        }
     }
     
     func switchTo(trading: Trading) {

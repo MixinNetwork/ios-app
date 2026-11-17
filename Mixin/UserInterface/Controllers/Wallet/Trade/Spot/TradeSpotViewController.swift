@@ -474,10 +474,10 @@ class TradeSpotViewController: UIViewController {
         navigationController?.pushViewController(orders, animated: true)
     }
     
-    func prepareForReuse(sender: Any) {
+    func prepareForReuse() {
         pricingModel.prepareForReuse()
         amountInputCell?.updateSendAmountTextField(amount: nil)
-        selectedExpiry = .never
+        selectedExpiry = .oneYear
         reloadSections()
         reloadTokens() // Update send token balance
     }

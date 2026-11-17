@@ -89,18 +89,12 @@ final class PendingTradeOrderLoader {
             do {
                 switch behavior {
                 case let .watchOpeningLimitOrders(walletID):
-                    let orders = try await RouteAPI.tradeOrders(
+                    let job = SyncWeb3OrdersJob(
                         walletID: walletID,
-                        limit: nil,
-                        offset: nil,
-                        state: .pending,
-                    ).filter { order in
-                        TradeOrder.OrderType(rawValue: order.orderType) == .limit
-                    }
-                    Logger.general.debug(category: "PendingTradeOrderLoader", message: "Loaded \(orders.count) opening limit orders")
-                    if !orders.isEmpty {
-                        Web3OrderDAO.shared.save(orders: orders)
-                    }
+                        reloadOpeningOrdersOnFinished: true
+                    )
+                    ConcurrentJobQueue.shared.addJob(job: job)
+                    let orders = Web3OrderDAO.shared.openOrders(walletID: walletID, type: .limit)
                     if let self {
                         self.delegate?.pendingSwapOrder(self, didLoad: orders)
                         await MainActor.run {

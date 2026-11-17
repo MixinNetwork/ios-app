@@ -45,8 +45,6 @@ final class UserProfileViewController: ProfileViewController {
     private var isMe = false
     private var relationship = Relationship.ME
     private var developer: UserItem?
-    private var avatarPreviewImageView: UIImageView?
-    private var avatarPreviewBackgroundView: UIVisualEffectView?
     private var favoriteAppMenuItemViewIfLoaded: MyFavoriteAppProfileMenuItemView?
     private var favoriteAppViewIfLoaded: ProfileFavoriteAppsView?
     private var sharedAppUsers: [User]?
@@ -95,84 +93,12 @@ final class UserProfileViewController: ProfileViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        if let coordinator = transitionCoordinator, let imageView = avatarPreviewImageView, let backgroundView = avatarPreviewBackgroundView {
-            let containerHeight = backgroundView.bounds.height
-            coordinator.animate(alongsideTransition: { (context) in
-                imageView.frame.origin.y = containerHeight
-                backgroundView.effect = nil
-                for view in backgroundView.contentView.subviews {
-                    view.alpha = 0
-                }
-            }) { (_) in
-                backgroundView.removeFromSuperview()
-            }
-        }
-    }
-    
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return action == #selector(copy(_:))
     }
     
     override func copy(_ sender: Any?) {
         UIPasteboard.general.string = user.identityNumber
-    }
-    
-    override func previewAvatarAction(_ sender: Any) {
-        guard let image = avatarImageView.image else {
-            return
-        }
-        guard let window = view.window else {
-            return
-        }
-        let initialFrame = avatarImageView.convert(avatarImageView.bounds, to: window)
-    
-        let backgroundView = UIVisualEffectView(effect: nil)
-        backgroundView.frame = window.bounds
-        backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        window.addSubview(backgroundView)
-        avatarPreviewBackgroundView = backgroundView
-             
-        let dismissButton = UIButton()
-        dismissButton.tintColor = R.color.icon_tint()
-        dismissButton.setImage(R.image.ic_title_close(), for: .normal)
-        dismissButton.isUserInteractionEnabled = false
-        dismissButton.alpha = 0
-        backgroundView.contentView.addSubview(dismissButton)
-        dismissButton.snp.makeConstraints { (make) in
-            make.width.height.equalTo(24)
-            make.top.equalTo(backgroundView.safeAreaLayoutGuide.snp.top).offset(10)
-            make.left.equalTo(20)
-        }
-        
-        let imageView = UIImageView(frame: initialFrame)
-        imageView.layer.cornerRadius = initialFrame.height / 2
-        imageView.clipsToBounds = true
-        imageView.contentMode = .scaleAspectFit
-        imageView.isUserInteractionEnabled = false
-        imageView.image = image
-        imageView.alpha = 0
-        backgroundView.contentView.addSubview(imageView)
-        avatarPreviewImageView = imageView
-        if parent != nil {
-            let recognizer = UITapGestureRecognizer(target: self, action: #selector(dismissAvatarAction))
-            backgroundView.addGestureRecognizer(recognizer)
-        } else {
-            backgroundView.isUserInteractionEnabled = false
-            view.isUserInteractionEnabled = false
-            hideContentConstraint.priority = .defaultHigh
-        }
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
-            self.view.layoutIfNeeded()
-            let width = window.bounds.width - 28 * 2
-            imageView.bounds = CGRect(x: 0, y: 0, width: width, height: width)
-            imageView.center = CGPoint(x: window.bounds.midX, y: window.bounds.midY)
-            imageView.layer.cornerRadius = width / 2
-            backgroundView.effect = .regularBlur
-            dismissButton.alpha = 1
-            imageView.alpha = 1
-        }
     }
     
     override func updateMuteInterval(inSeconds interval: Int64) {
@@ -575,22 +501,6 @@ extension UserProfileViewController {
             ?? ConversationItem(ownerUser: user)
         let controller = MessageExpirationDurationViewController(conversation: conversation)
         dismissAndPush(controller)
-    }
-    
-    @objc private func dismissAvatarAction() {
-        guard let imageView = avatarPreviewImageView, let backgroundView = avatarPreviewBackgroundView else {
-            return
-        }
-        let containerHeight = backgroundView.bounds.height
-        UIView.animate(withDuration: 0.3) {
-            imageView.frame.origin.y = containerHeight
-            backgroundView.effect = nil
-            for view in backgroundView.contentView.subviews {
-                view.alpha = 0
-            }
-        } completion: { _ in
-            backgroundView.removeFromSuperview()
-        }
     }
     
     @objc private func favoriteAppsDidChange() {

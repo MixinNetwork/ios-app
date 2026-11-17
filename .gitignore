@@ -17,14 +17,6 @@ DerivedData/
 !default.perspectivev3
 xcuserdata/
 
-**/xcshareddata/*
-!**/xcshareddata/swiftpm/
-!**/xcshareddata/xcschemes/
-**/xcshareddata/swiftpm/*
-!**/xcshareddata/swiftpm/Package.resolved
-!Package.resolved
-!*.xcscheme
-
 ## Other
 *.moved-aside
 *.xccheckout

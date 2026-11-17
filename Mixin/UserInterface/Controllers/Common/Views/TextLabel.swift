@@ -87,7 +87,7 @@ class TextLabel: CoreTextLabel {
     
     override var bounds: CGRect {
         didSet {
-            typesetIfNeeded(oldValue: bounds.width, newValue: oldValue.width, epsilon: 1)
+            typesetIfNeeded(oldValue: oldValue.width, newValue: bounds.width)
         }
     }
     
@@ -142,13 +142,6 @@ extension TextLabel {
         
     }
     
-    private func typesetIfNeeded(oldValue: CGFloat, newValue: CGFloat, epsilon: CGFloat = 0.1) {
-        guard abs(oldValue - newValue) > epsilon else {
-            return
-        }
-        typeset()
-    }
-    
     private func typesetIfNeeded<T: Equatable>(oldValue: T, newValue: T) {
         guard oldValue != newValue else {
             return
@@ -168,36 +161,50 @@ extension TextLabel {
         var lineSpacing = self.lineSpacing
         var paragraphSpacing = self.paragraphSpacing
         var lineHeight = self.font.lineHeight
-        let settings = withUnsafeBytes(of: &textAlignment) { (textAlignment) -> [CTParagraphStyleSetting] in
-            withUnsafeBytes(of: &lineBreakMode) { (lineBreakMode) -> [CTParagraphStyleSetting] in
-                withUnsafeBytes(of: &lineSpacing) { (lineSpacing) -> [CTParagraphStyleSetting] in
-                    withUnsafeBytes(of: &paragraphSpacing) { (paragraphSpacing) -> [CTParagraphStyleSetting] in
-                        withUnsafeBytes(of: &lineHeight) { (lineHeight) -> [CTParagraphStyleSetting] in
-                            [CTParagraphStyleSetting(spec: .alignment,
-                                                     valueSize: MemoryLayout<CTTextAlignment.RawValue>.size,
-                                                     value: textAlignment.baseAddress!),
-                             CTParagraphStyleSetting(spec: .lineBreakMode,
-                                                     valueSize: MemoryLayout<CTLineBreakMode.RawValue>.size,
-                                                     value: lineBreakMode.baseAddress!),
-                             CTParagraphStyleSetting(spec: .minimumLineSpacing,
-                                                     valueSize: MemoryLayout<CGFloat>.size,
-                                                     value: lineSpacing.baseAddress!),
-                             CTParagraphStyleSetting(spec: .maximumLineSpacing,
-                                                     valueSize: MemoryLayout<CGFloat>.size,
-                                                     value: lineSpacing.baseAddress!),
-                             CTParagraphStyleSetting(spec: .paragraphSpacing,
-                                                     valueSize: MemoryLayout<CGFloat>.size,
-                                                     value: paragraphSpacing.baseAddress!),
-                             CTParagraphStyleSetting(spec: .minimumLineHeight,
-                                                     valueSize: MemoryLayout<CGFloat>.size,
-                                                     value: lineHeight.baseAddress!)]
+        let paragraphStyle = withUnsafeBytes(of: &textAlignment) { textAlignment in
+            withUnsafeBytes(of: &lineBreakMode) { lineBreakMode in
+                withUnsafeBytes(of: &lineSpacing) { lineSpacing in
+                    withUnsafeBytes(of: &paragraphSpacing) { paragraphSpacing in
+                        withUnsafeBytes(of: &lineHeight) { lineHeight in
+                            let settings = [
+                                CTParagraphStyleSetting(
+                                    spec: .alignment,
+                                    valueSize: MemoryLayout<CTTextAlignment.RawValue>.size,
+                                    value: textAlignment.baseAddress!,
+                                ),
+                                CTParagraphStyleSetting(
+                                    spec: .lineBreakMode,
+                                    valueSize: MemoryLayout<CTLineBreakMode.RawValue>.size,
+                                    value: lineBreakMode.baseAddress!,
+                                ),
+                                CTParagraphStyleSetting(
+                                    spec: .minimumLineSpacing,
+                                    valueSize: MemoryLayout<CGFloat>.size,
+                                    value: lineSpacing.baseAddress!,
+                                ),
+                                CTParagraphStyleSetting(
+                                    spec: .maximumLineSpacing,
+                                    valueSize: MemoryLayout<CGFloat>.size,
+                                    value: lineSpacing.baseAddress!,
+                                ),
+                                CTParagraphStyleSetting(
+                                    spec: .paragraphSpacing,
+                                    valueSize: MemoryLayout<CGFloat>.size,
+                                    value: paragraphSpacing.baseAddress!,
+                                ),
+                                CTParagraphStyleSetting(
+                                    spec: .minimumLineHeight,
+                                    valueSize: MemoryLayout<CGFloat>.size,
+                                    value: lineHeight.baseAddress!,
+                                ),
+                            ]
+                            return CTParagraphStyleCreate(settings, settings.count)
                         }
                     }
                 }
             }
         }
         
-        let paragraphStyle = CTParagraphStyleCreate(settings, settings.count)
         let attr: [NSAttributedString.Key: Any] = [
             .ctFont: ctFont,
             .ctParagraphStyle: paragraphStyle,
@@ -226,8 +233,8 @@ extension TextLabel {
         }
         
         let framesetter = CTFramesetterCreateWithAttributedString(str as CFAttributedString)
-        var textSize = ceil(CTFramesetterSuggestFrameSizeWithConstraints(framesetter, .zero, nil, size, nil))
-        textSize.height = min(font.lineHeight * CGFloat(maxLineCount), textSize.height)
+        var textSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, .zero, nil, size, nil)
+        textSize.height = min(font.lineHeight * CGFloat(maxLineCount), ceil(textSize.height))
         
         return (framesetter, linksMap, textSize)
     }
@@ -244,7 +251,8 @@ extension TextLabel {
         let (framesetter, linksMap, textSize) = frameset(size: layoutSize)
         self.textSize = textSize
         
-        let path = CGPath(rect: CGRect(origin: .zero, size: textSize), transform: nil)
+        let frameSize = CGSize(width: layoutSize.width, height: textSize.height)
+        let path = CGPath(rect: CGRect(origin: .zero, size: frameSize), transform: nil)
         let frame = CTFramesetterCreateFrame(framesetter, .zero, path, nil)
         let lines = CTFrameGetLines(frame) as! [CTLine]
         let lineWidths = lines.map{ ceil(CTLineGetBoundsWithOptions($0, []).size.width) }

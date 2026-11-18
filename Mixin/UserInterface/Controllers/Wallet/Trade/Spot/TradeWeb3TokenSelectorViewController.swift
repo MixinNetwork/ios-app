@@ -201,6 +201,7 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
             var tokens = localResults.reduce(into: [:]) { results, token in
                 results[token.assetID] = token
             }
+            var hiddenAssetIDs: Set<String> = []
             
             // Tokens that exist in remote results, but not in local results
             let missingAssetIDs = remoteResults.compactMap { token in
@@ -214,11 +215,16 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                 }
             }
             if !missingAssetIDs.isEmpty {
-                let missingTokens = Web3TokenDAO.shared
-                    .tokenItems(walletID: wallet.walletID, ids: missingAssetIDs)
-                    .compactMap(BalancedSwapToken.init(tokenItem:))
+                let missingTokens = Web3TokenDAO.shared.tokenItems(
+                    walletID: wallet.walletID,
+                    ids: missingAssetIDs
+                )
                 for token in missingTokens {
-                    tokens[token.assetID] = token
+                    if token.isHidden {
+                        hiddenAssetIDs.insert(token.assetID)
+                    } else {
+                        tokens[token.assetID] = BalancedSwapToken(tokenItem: token)
+                    }
                 }
             }
             
@@ -228,6 +234,9 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                     return
                 }
                 let assetID = token.assetID
+                guard !hiddenAssetIDs.contains(assetID) else {
+                    return
+                }
                 let localToken = tokens[assetID]
                 hasStockTokens = hasStockTokens || token.category == .stock
                 result[assetID] = BalancedSwapToken(

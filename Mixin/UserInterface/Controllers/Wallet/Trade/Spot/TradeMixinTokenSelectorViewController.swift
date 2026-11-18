@@ -148,23 +148,29 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
             var localTokens = localResults.reduce(into: [:]) { results, token in
                 results[token.assetID] = token
             }
+            var hiddenAssetIDs: Set<String> = []
             
             // Tokens that exist in remote results, but not in local results
             let missingAssetIDs = remoteResults.map(\.assetID).filter { id in
                 localTokens[id] == nil
             }
             if !missingAssetIDs.isEmpty {
-                let missingTokens = TokenDAO.shared
-                    .tokenItems(with: missingAssetIDs)
-                    .compactMap(BalancedSwapToken.init(tokenItem:))
+                let missingTokens = TokenDAO.shared.tokenItems(with: missingAssetIDs)
                 for token in missingTokens {
-                    localTokens[token.assetID] = token
+                    if token.isHidden {
+                        hiddenAssetIDs.insert(token.assetID)
+                    } else {
+                        localTokens[token.assetID] = BalancedSwapToken(tokenItem: token)
+                    }
                 }
             }
             
             var hasStockTokens = false
             var allItems: [String: BalancedSwapToken] = remoteResults.reduce(into: [:]) { result, token in
                 let assetID = token.assetID
+                guard !hiddenAssetIDs.contains(assetID) else {
+                    return
+                }
                 let localToken = localTokens[assetID]
                 let balance = localToken?.decimalBalance ?? 0
                 hasStockTokens = hasStockTokens || token.category == .stock

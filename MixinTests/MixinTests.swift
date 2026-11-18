@@ -257,4 +257,9 @@ struct MixinTests {
         #expect(seedTipAddress == derivation.address)
     }
     
+    @Test func testRequestSigningTokenExpiresFiveMinutesAfterIssue() {
+        let claims = RequestSigning.claims(userID: "uid", sessionID: "sid", requestID: "rid", sig: "sig", date: Date(timeIntervalSince1970: 1_700_000_000))
+        #expect(claims.exp.timeIntervalSince(claims.iat) == 300)
+    }
+    
 }

@@ -42,14 +42,6 @@ public extension String {
         return Int64(self) ?? NumberFormatter.decimal.number(from: self)?.int64Value
     }
 
-    var sqlEscaped: String {
-        return replacingOccurrences(of: "/", with: "//")
-            .replacingOccurrences(of: "%", with: "/%")
-            .replacingOccurrences(of: "_", with: "/_")
-            .replacingOccurrences(of: "[", with: "/[")
-            .replacingOccurrences(of: "]", with: "/]")
-    }
-    
     var sha1: String? {
         guard let data = self.data(using: .utf8) else {
             return nil

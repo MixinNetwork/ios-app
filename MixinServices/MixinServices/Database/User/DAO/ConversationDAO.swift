@@ -297,13 +297,13 @@ public final class ConversationDAO: UserDatabaseDAO {
     }
     
     public func getGroupOrStrangerConversation(withNameLike keyword: String, limit: Int?) -> [ConversationItem] {
-        let condition = "AND ((c.category = 'GROUP' AND c.name LIKE :escaped ESCAPE '/') OR (c.category = 'CONTACT' AND u1.relationship = 'STRANGER' AND u1.full_name LIKE :escaped ESCAPE '/'))"
+        let condition = "AND ((c.category = 'GROUP' AND c.name LIKE :escaped ESCAPE '\(SQLEscaping.escapeCharacter)') OR (c.category = 'CONTACT' AND u1.relationship = 'STRANGER' AND u1.full_name LIKE :escaped ESCAPE '\(SQLEscaping.escapeCharacter)'))"
         let order = "(c.category = 'GROUP' AND c.name = :raw COLLATE NOCASE) OR (c.category = 'CONTACT' AND u1.full_name = :raw COLLATE NOCASE) DESC, "
         var sql = String(format: Self.sqlQueryConversation, condition, order)
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        let arguments = ["escaped": "%\(keyword.sqlEscaped)%", "raw": keyword]
+        let arguments = ["escaped": "%\(SQLEscaping.escape(keyword))%", "raw": keyword]
         return db.select(with: sql, arguments: StatementArguments(arguments))
     }
     

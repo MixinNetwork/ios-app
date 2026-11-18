@@ -1,5 +1,4 @@
 import Foundation
-import SQLite3
 
 public protocol ComparableToken: ValuableToken {
     var chainName: String? { get }
@@ -54,10 +53,10 @@ public struct TokenOrdering: Hashable, Sendable {
     ]
     
     private let rules: [Rule]
-    private let keywordPattern: String?
+    private let keyword: String?
     
     public init(keyword: String?) {
-        self.keywordPattern = keyword.map { "%\($0)%" }
+        self.keyword = keyword
         self.rules = if keyword == nil {
             Self.listRules
         } else {
@@ -70,12 +69,11 @@ public struct TokenOrdering: Hashable, Sendable {
             let result: ComparisonResult
             switch rule.key {
             case .symbolMatch:
-                guard let keywordPattern else {
+                guard let keyword else {
                     continue
                 }
-                // Use the same ASCII case folding and wildcard semantics as SQL LIKE.
-                let left = sqlite3_strlike(keywordPattern, lhs.symbol, 0) == 0 ? 1 : 0
-                let right = sqlite3_strlike(keywordPattern, rhs.symbol, 0) == 0 ? 1 : 0
+                let left = KeywordMatchingRank.evaluate(text: lhs.symbol, keyword: keyword)
+                let right = KeywordMatchingRank.evaluate(text: rhs.symbol, keyword: keyword)
                 result = compareValues(left, right)
             case .usdBalance:
                 result = compareValues(
@@ -107,13 +105,13 @@ public struct TokenOrdering: Hashable, Sendable {
     }
     
     // Both DAO selectors use t for tokens and c for chains. Only the balance column differs.
-    // Search callers bind :keyword to the same %keyword% pattern used by the comparator.
+    // Search callers bind :keyword to the unwrapped keyword used by the comparator.
     func sqlOrder(balance: String) -> String {
         rules.map { rule in
             let expression: String
             switch rule.key {
             case .symbolMatch:
-                expression = "CASE WHEN t.symbol LIKE :keyword THEN 1 ELSE 0 END"
+                expression = "keyword_match(t.symbol, :keyword)"
             case .usdBalance:
                 expression = "ifnull(\(balance),0) * t.price_usd"
             case .level:

@@ -119,7 +119,7 @@ public final class TokenDAO: UserDatabaseDAO {
         var sql = """
         \(SQL.selector)
         WHERE \(SQL.displayable) AND (t.level >= 10 OR ifnull(te.hidden,FALSE) IS FALSE)
-            AND (t.name LIKE :keyword OR t.symbol LIKE :keyword)
+            AND (keyword_match(t.name, :keyword) > 0 OR keyword_match(t.symbol, :keyword) > 0)
         """
         if !includesZeroBalanceItems {
             sql += " AND CAST(te.balance AS REAL) > 0"
@@ -131,7 +131,7 @@ public final class TokenDAO: UserDatabaseDAO {
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        return db.select(with: sql, arguments: ["keyword": "%\(keyword)%"])
+        return db.select(with: sql, arguments: ["keyword": keyword])
     }
     
     public func allAssetIDs() -> [String] {

@@ -302,12 +302,12 @@ extension Web3TransactionDAO {
         
         var recipientConditions: [GRDB.SQL] = []
         for address in filter.addresses {
-            let keyword = "%\(address.destination.sqlEscaped)%"
+            let keyword = "%\(SQLEscaping.escape(address.destination))%"
             recipientConditions.append(
-                "txn.transaction_type = 'transfer_in' AND txn.senders LIKE \(keyword) ESCAPE '/'"
+                "txn.transaction_type = 'transfer_in' AND txn.senders LIKE \(keyword) ESCAPE \(String(SQLEscaping.escapeCharacter))"
             )
             recipientConditions.append(
-                "txn.transaction_type = 'transfer_out' AND txn.receivers LIKE \(keyword) ESCAPE '/'"
+                "txn.transaction_type = 'transfer_out' AND txn.receivers LIKE \(keyword) ESCAPE \(String(SQLEscaping.escapeCharacter))"
             )
         }
         if !recipientConditions.isEmpty {

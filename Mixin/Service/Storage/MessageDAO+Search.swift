@@ -34,9 +34,9 @@ extension MessageDAO {
                     AND m.category in ('SIGNAL_TEXT','SIGNAL_DATA','SIGNAL_POST','PLAIN_TEXT','PLAIN_DATA','PLAIN_POST','ENCRYPTED_TEXT','ENCRYPTED_DATA','ENCRYPTED_POST','SIGNAL_IMAGE','PLAIN_IMAGE','ENCRYPTED_IMAGE')
                     AND m.status != 'FAILED'
                     AND (
-                        (m.category in ('SIGNAL_DATA','PLAIN_DATA','ENCRYPTED_DATA') AND m.name LIKE :keyword ESCAPE '/')
-                        OR (m.category in ('SIGNAL_IMAGE','PLAIN_IMAGE','ENCRYPTED_IMAGE') AND m.caption LIKE :keyword ESCAPE '/')
-                        OR (m.category in ('SIGNAL_TEXT','SIGNAL_POST','PLAIN_TEXT','PLAIN_POST','ENCRYPTED_TEXT','ENCRYPTED_POST') AND m.content LIKE :keyword ESCAPE '/')
+                        (m.category in ('SIGNAL_DATA','PLAIN_DATA','ENCRYPTED_DATA') AND m.name LIKE :keyword ESCAPE '\(SQLEscaping.escapeCharacter)')
+                        OR (m.category in ('SIGNAL_IMAGE','PLAIN_IMAGE','ENCRYPTED_IMAGE') AND m.caption LIKE :keyword ESCAPE '\(SQLEscaping.escapeCharacter)')
+                        OR (m.category in ('SIGNAL_TEXT','SIGNAL_POST','PLAIN_TEXT','PLAIN_POST','ENCRYPTED_TEXT','ENCRYPTED_POST') AND m.content LIKE :keyword ESCAPE '\(SQLEscaping.escapeCharacter)')
                     )
             """
             if let location = location, let rowId: Int = UserDatabase.current.select(column: .rowID, from: Message.self, where: Message.column(of: .messageId) == location) {
@@ -47,7 +47,7 @@ extension MessageDAO {
             } else {
                 sql += "\nORDER BY m.created_at DESC"
             }
-            arguments = ["cid": conversationId, "keyword": "%\(keyword.sqlEscaped)%"]
+            arguments = ["cid": conversationId, "keyword": "%\(SQLEscaping.escape(keyword))%"]
         }
         
         do {

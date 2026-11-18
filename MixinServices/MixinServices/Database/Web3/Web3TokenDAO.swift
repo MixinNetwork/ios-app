@@ -182,7 +182,7 @@ public final class Web3TokenDAO: Web3DAO {
         \(SQL.selector)
         WHERE t.wallet_id = :id
             AND (t.level >= 10 OR ifnull(te.hidden,FALSE) IS FALSE)
-            AND (t.name LIKE :keyword OR t.symbol LIKE :keyword)
+            AND (keyword_match(t.name, :keyword) > 0 OR keyword_match(t.symbol, :keyword) > 0)
         """
         if !includesZeroBalanceItems {
             sql += "\nAND CAST(t.amount AS REAL) > 0"
@@ -196,7 +196,7 @@ public final class Web3TokenDAO: Web3DAO {
             with: sql,
             arguments: [
                 "id": walletID,
-                "keyword": "%\(keyword)%",
+                "keyword": keyword,
             ]
         )
     }

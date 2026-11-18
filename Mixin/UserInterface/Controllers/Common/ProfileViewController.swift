@@ -145,7 +145,7 @@ class ProfileViewController: ResizablePopupViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func previewAvatarAction(_ sender: Any) {
+    @IBAction func previewAvatar(_ sender: Any) {
         guard let image = avatarImageView.image else {
             return
         }
@@ -182,7 +182,7 @@ class ProfileViewController: ResizablePopupViewController {
         backgroundView.contentView.addSubview(imageView)
         avatarPreviewImageView = imageView
         if parent != nil {
-            let recognizer = UITapGestureRecognizer(target: self, action: #selector(dismissAvatarAction))
+            let recognizer = UITapGestureRecognizer(target: self, action: #selector(dismissAvatar))
             backgroundView.addGestureRecognizer(recognizer)
         } else {
             backgroundView.isUserInteractionEnabled = false
@@ -389,7 +389,7 @@ extension ProfileViewController {
 // MARK: - Private works
 extension ProfileViewController {
     
-    @objc private func dismissAvatarAction() {
+    @objc private func dismissAvatar() {
         guard let imageView = avatarPreviewImageView, let backgroundView = avatarPreviewBackgroundView else {
             return
         }

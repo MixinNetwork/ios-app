@@ -71,15 +71,6 @@ final class GroupProfileViewController: ProfileViewController {
                                                object: nil)
     }
     
-    override func previewAvatarAction(_ sender: Any) {
-        switch Conversation.groupIconType(iconURL: conversation.iconUrl) {
-        case .remote:
-            super.previewAvatarAction(sender)
-        case .none, .localGenerated:
-            break
-        }
-    }
-    
     override func updateMuteInterval(inSeconds interval: Int64) {
         let conversationId = conversation.conversationId
         NotificationCenter.default.post(onMainThread: MixinServices.conversationDidChangeNotification, object: ConversationChange(conversationId: conversationId, action: .startedUpdateConversation))

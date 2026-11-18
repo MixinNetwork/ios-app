@@ -51,23 +51,20 @@ extension RequestSigning {
         guard let key = edDSAPrivateKey else {
             return nil
         }
-        let claims = Self.claims(userID: account.userID, sessionID: account.sessionID, requestID: requestId, sig: sig, date: Date())
+        let date = Date()
+        let claims = Jwt.Claims(uid: account.userID,
+                                sid: account.sessionID,
+                                iat: date,
+                                exp: date.addingTimeInterval(5 * secondsPerMinute),
+                                jti: requestId,
+                                sig: sig,
+                                scp: "FULL")
         do {
             let token = try Jwt.signedToken(claims: claims, key: key)
             return "Bearer " + token
         } catch {
             return nil
         }
-    }
-    
-    static func claims(userID: String, sessionID: String, requestID: String, sig: String, date: Date) -> Jwt.Claims {
-        Jwt.Claims(uid: userID,
-                   sid: sessionID,
-                   iat: date,
-                   exp: date.addingTimeInterval(5 * secondsPerMinute),
-                   jti: requestID,
-                   sig: sig,
-                   scp: "FULL")
     }
     
     private static func sig(from request: URLRequest) -> String? {

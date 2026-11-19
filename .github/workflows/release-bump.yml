@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   bump-and-release:
@@ -25,41 +26,62 @@ jobs:
 
       - name: Validate marketing version
         id: version
+        env:
+          INPUT_MARKETING_VERSION: ${{ inputs.marketing_version }}
         run: |
-          MARKETING_VERSION="$(echo "${{ inputs.marketing_version }}" | xargs)"
-
-          if ! echo "$MARKETING_VERSION" | grep -qE '^[0-9]+(\.[0-9]+){1,2}$'; then
-            echo "::error::Invalid marketing_version '$MARKETING_VERSION'. Expected format like 7.0.2"
+          if [[ ! "$INPUT_MARKETING_VERSION" =~ ^[[:space:]]*([0-9]+(\.[0-9]+){1,2})[[:space:]]*$ ]]; then
+            echo "::error::Invalid marketing_version. Expected format like 7.0.2"
             exit 1
           fi
 
+          MARKETING_VERSION="${BASH_REMATCH[1]}"
           echo "Marketing Version: $MARKETING_VERSION"
           echo "marketing_version=$MARKETING_VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Update marketing version
-        run: |
-          xcrun agvtool new-marketing-version "${{ steps.version.outputs.marketing_version }}"
-
-      - name: Commit marketing version to master if changed
+      - name: Merge master into production
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet; then
-            echo "Marketing version is already ${{ steps.version.outputs.marketing_version }}, skipping commit"
-          else
-            git add -u
-            git commit -m "Bump marketing version to ${{ steps.version.outputs.marketing_version }}"
-            git push origin master
-          fi
-
-      - name: Merge master into production and push
-        run: |
           if git show-ref --verify --quiet refs/remotes/origin/production; then
-            git checkout -B production origin/production
+            git switch -c production origin/production
             git merge master --no-edit -X theirs
           else
-            git checkout -b production master
+            git switch -c production master
           fi
 
-          git push origin production
+      - name: Bump marketing version and push production
+        env:
+          MARKETING_VERSION: ${{ steps.version.outputs.marketing_version }}
+        run: |
+          xcrun agvtool new-marketing-version "$MARKETING_VERSION"
+
+          if git diff --quiet; then
+            echo "Marketing version is already $MARKETING_VERSION on production"
+          else
+            git add -u
+            git commit -m "Bump marketing version to $MARKETING_VERSION"
+          fi
+
+          git push origin HEAD:refs/heads/production
+
+      - name: Open a pull request from production to master
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MARKETING_VERSION: ${{ steps.version.outputs.marketing_version }}
+        run: |
+          if git merge-base --is-ancestor production master; then
+            echo "Production has no commits to merge into master"
+            exit 0
+          fi
+
+          TITLE="Bump version to $MARKETING_VERSION"
+          PR_URL="$(gh pr list --base master --head production --state open \
+            --json url,isCrossRepository --jq 'map(select(.isCrossRepository | not)) | .[0].url // empty')"
+          if [[ -n "$PR_URL" ]]; then
+            gh pr edit "$PR_URL" --title "$TITLE"
+          else
+            gh pr create --base master --head production \
+              --title "$TITLE" \
+              --body "Sync master with production after the marketing version bump."
+          fi

@@ -10,6 +10,9 @@ class PhotoRepresentableMessageCell: ImageMessageCell {
         return contentImageWrapperView.imageView
     }
     
+    // Keep the mask independent of UIKit layout to prevent reuse issue
+    private let bubbleMaskLayer = BubbleLayer()
+    
     override var contentFrame: CGRect {
         if viewModel?.quotedMessageViewModel == nil && !((viewModel as? ImageMessageViewModel)?.hasCaption ?? false) {
             return contentImageWrapperView.convert(contentImageWrapperView.bounds, to: self)
@@ -28,15 +31,20 @@ class PhotoRepresentableMessageCell: ImageMessageCell {
                 if backgroundImageView.superview != nil {
                     backgroundImageView.removeFromSuperview()
                 }
-                if maskingView.layer.mask == nil {
-                    maskingView.layer.mask = backgroundImageView.layer
-                }
+                CATransaction.begin()
+                CATransaction.setDisableActions(true)
+                bubbleMaskLayer.frame = viewModel.backgroundImageFrame
+                bubbleMaskLayer.setBubble(
+                    BubbleLayer.Bubble(style: viewModel.style),
+                    frame: bubbleMaskLayer.bounds,
+                    animationDuration: 0,
+                )
+                maskingView.layer.mask = bubbleMaskLayer
+                CATransaction.commit()
             } else {
                 maskingView.frame = viewModel.photoFrame
                 contentImageWrapperView.frame = maskingView.bounds
-                if maskingView.layer.mask == backgroundImageView.layer {
-                    maskingView.layer.mask = nil
-                }
+                maskingView.layer.mask = nil
                 if backgroundImageView.superview == nil {
                     messageContentView.insertSubview(backgroundImageView, at: 0)
                 }

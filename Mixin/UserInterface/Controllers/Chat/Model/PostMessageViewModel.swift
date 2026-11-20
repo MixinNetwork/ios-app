@@ -44,9 +44,12 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
             return lines.joined(separator: "\n")
         }()
         html = MarkdownConverter.htmlString(from: previewableMarkdown, richFormat: false)
-        contentAttributedString = MarkdownConverter.attributedString(from: previewableMarkdown,
-                                                                     maxNumberOfCharacters: frameEstimatingMaxCharacterCount,
-                                                                     maxNumberOfLines: frameEstimationMaxLineCount)
+        contentAttributedString = MarkdownConverter.attributedString(
+            from: previewableMarkdown,
+            maxNumberOfCharacters: frameEstimatingMaxCharacterCount,
+            maxNumberOfLines: frameEstimationMaxLineCount,
+            continuesAfterFirstImage: true,
+        )
         super.init(message: message)
     }
     

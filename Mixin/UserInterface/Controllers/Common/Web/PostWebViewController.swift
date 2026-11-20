@@ -32,7 +32,12 @@ final class PostWebViewController: WebViewController {
             return
         }
         DispatchQueue.global().async {
-            let title = MarkdownConverter.attributedString(from: content, maxNumberOfCharacters: 20, maxNumberOfLines: 1).string.trimmingCharacters(in: .newlines)
+            let title = MarkdownConverter.attributedString(
+                from: content,
+                maxNumberOfCharacters: 20,
+                maxNumberOfLines: 1,
+                continuesAfterFirstImage: false,
+            ).string.trimmingCharacters(in: .newlines)
             let html = MarkdownConverter.htmlString(from: content, richFormat: true)
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else {

@@ -9,7 +9,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSAttributedString *)attributedStringFromMarkdownString:(NSString *)markdownString
                                      maxNumberOfCharacters:(NSUInteger)maxNumberOfCharacters
                                           maxNumberOfLines:(NSUInteger)maxNumberOfLines
-NS_SWIFT_NAME(attributedString(from:maxNumberOfCharacters:maxNumberOfLines:));
+                                   continuesAfterFirstImage:(BOOL)continuesAfterFirstImage
+NS_SWIFT_NAME(attributedString(from:maxNumberOfCharacters:maxNumberOfLines:continuesAfterFirstImage:));
 
 @end
 

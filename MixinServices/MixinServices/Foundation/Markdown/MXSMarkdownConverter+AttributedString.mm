@@ -14,15 +14,17 @@ struct Context {
     unsigned indentationLevel;
     std::deque<MD_SPANTYPE> spanTypes;
     unsigned numberOfLines;
+    bool continuesAfterFirstImage;
     bool stop;
     
-    Context(NSMutableAttributedString *o, NSUInteger cl, NSUInteger ll)
+    Context(NSMutableAttributedString *o, NSUInteger cl, NSUInteger ll, bool continuesAfterFirstImage)
     : charactersLimit(cl)
     , linesLimit(ll)
     , output(o)
     , headerLevel(plainTextHeaderLevel)
     , indentationLevel(0)
     , numberOfLines(0)
+    , continuesAfterFirstImage(continuesAfterFirstImage)
     , stop(false) { }
     
     void detectLimit() {
@@ -41,7 +43,8 @@ struct Context {
 
 + (NSAttributedString *)attributedStringFromMarkdownString:(NSString *)markdownString
                                      maxNumberOfCharacters:(NSUInteger)maxNumberOfCharacters
-                                          maxNumberOfLines:(NSUInteger)maxNumberOfLines {
+                                          maxNumberOfLines:(NSUInteger)maxNumberOfLines
+                                  continuesAfterFirstImage:(BOOL)continuesAfterFirstImage {
     NSMutableAttributedString *output = [NSMutableAttributedString new];
     MD_PARSER parser = {
         0,
@@ -56,7 +59,7 @@ struct Context {
     };
     const char* str = markdownString.UTF8String;
     const size_t size = strlen(str);
-    Context *const ctx = new Context(output, maxNumberOfCharacters, maxNumberOfLines);
+    Context *const ctx = new Context(output, maxNumberOfCharacters, maxNumberOfLines, continuesAfterFirstImage);
     md_parse(str, (MD_SIZE)size, &parser, ctx);
     NSDictionary *attributes = attributesFromContext(ctx, 1);
     delete ctx;
@@ -237,10 +240,12 @@ int enterSpan(MD_SPANTYPE type, void* detail, void* userdata) {
     context->spanTypes.push_back(type);
     if (type == MD_SPAN_IMG) {
         bool hasEnoughTextBeforeImage = context->numberOfLines > 1 || context->output.length > 5;
+        bool shouldStop = hasEnoughTextBeforeImage && !context->continuesAfterFirstImage;
+        context->continuesAfterFirstImage = false;
         auto *attachment = [MXSMarkdownImageAttachment new];
         auto *string = [NSAttributedString attributedStringWithAttachment:attachment];
         [context->output appendAttributedString:string];
-        if (hasEnoughTextBeforeImage) {
+        if (shouldStop) {
             appendLinebreak(context, 0.7);
             context->stop = true;
             return -1;

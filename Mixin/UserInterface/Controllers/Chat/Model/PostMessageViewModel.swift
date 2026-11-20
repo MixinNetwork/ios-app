@@ -44,9 +44,12 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
             return lines.joined(separator: "\n")
         }()
         html = MarkdownConverter.htmlString(from: previewableMarkdown, richFormat: false)
-        contentAttributedString = MarkdownConverter.attributedString(from: previewableMarkdown,
-                                                                     maxNumberOfCharacters: frameEstimatingMaxCharacterCount,
-                                                                     maxNumberOfLines: frameEstimationMaxLineCount)
+        contentAttributedString = MarkdownConverter.attributedString(
+            from: previewableMarkdown,
+            maxNumberOfCharacters: frameEstimatingMaxCharacterCount,
+            maxNumberOfLines: frameEstimationMaxLineCount,
+            continuesAfterFirstImage: true,
+        )
         super.init(message: message)
     }
     
@@ -58,8 +61,7 @@ class PostMessageViewModel: DetailInfoMessageViewModel, BackgroundedTrailingInfo
         let textSize = contentAttributedString.boundingRect(with: sizeToFit,
                                                             options: [.usesLineFragmentOrigin, .usesFontLeading],
                                                             context: nil)
-        let maxTextHeight = round(widthToFit / 4 * 3)
-        let height = ceil(min(maxTextHeight, max(minTextHeight, textSize.height)))
+        let height = ceil(min(widthToFit, max(minTextHeight, textSize.height)))
         let bubbleMargin = DetailInfoMessageViewModel.bubbleMargin
         let contentLabelTopMargin: CGFloat = {
             if style.contains(.fullname) {

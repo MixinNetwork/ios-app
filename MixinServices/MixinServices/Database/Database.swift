@@ -9,6 +9,7 @@ open class Database {
     open class var config: Configuration {
         var config = Configuration()
         config.prepareDatabase { (db) in
+            db.add(function: KeywordMatchingRank.dbFunction)
             db.trace(options: .profile) { (event) in
                 guard case let .profile(statement, duration) = event else {
                     return

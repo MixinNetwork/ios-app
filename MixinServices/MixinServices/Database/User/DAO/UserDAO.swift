@@ -102,13 +102,13 @@ public final class UserDAO: UserDatabaseDAO {
         \(Self.sqlQueryColumns)
         WHERE u.relationship = 'FRIEND'
             AND u.identity_number > '0'
-            AND ((u.full_name LIKE :escaped ESCAPE '/') OR (u.identity_number LIKE :escaped ESCAPE '/') OR (u.phone LIKE :escaped ESCAPE '/'))
+            AND ((u.full_name LIKE :escaped ESCAPE '\(SQLEscaping.escapeCharacter)') OR (u.identity_number LIKE :escaped ESCAPE '\(SQLEscaping.escapeCharacter)') OR (u.phone LIKE :escaped ESCAPE '\(SQLEscaping.escapeCharacter)'))
         ORDER BY u.identity_number = :raw COLLATE NOCASE OR u.full_name = :raw COLLATE NOCASE DESC
         """
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        return db.select(with: sql, arguments: ["escaped": "%\(keyword.sqlEscaped)%", "raw": keyword])
+        return db.select(with: sql, arguments: ["escaped": "%\(SQLEscaping.escape(keyword))%", "raw": keyword])
     }
     
     public func getAppUsers(keyword: String, limit: Int?) -> [UserItem] {
@@ -117,13 +117,13 @@ public final class UserDAO: UserDatabaseDAO {
         WHERE u.relationship = 'FRIEND'
             AND u.app_id IS NOT NULL
             AND u.identity_number > '0'
-            AND ((u.full_name LIKE :escaped ESCAPE '/') OR (u.identity_number LIKE :escaped ESCAPE '/') OR (u.phone LIKE :escaped ESCAPE '/'))
+            AND ((u.full_name LIKE :escaped ESCAPE '\(SQLEscaping.escapeCharacter)') OR (u.identity_number LIKE :escaped ESCAPE '\(SQLEscaping.escapeCharacter)') OR (u.phone LIKE :escaped ESCAPE '\(SQLEscaping.escapeCharacter)'))
         ORDER BY u.identity_number = :raw COLLATE NOCASE OR u.full_name = :raw COLLATE NOCASE DESC
         """
         if let limit = limit {
             sql += "\nLIMIT \(limit)"
         }
-        return db.select(with: sql, arguments: ["escaped": "%\(keyword.sqlEscaped)%", "raw": keyword])
+        return db.select(with: sql, arguments: ["escaped": "%\(SQLEscaping.escape(keyword))%", "raw": keyword])
     }
     
     public func getFriendUser(withAppId id: String) -> User? {
@@ -260,7 +260,7 @@ public final class UserDAO: UserDatabaseDAO {
         OR u.user_id in (SELECT f.user_id FROM users f WHERE relationship = 'FRIEND'))
         AND u.user_id != :uid
         AND u.identity_number != '0'
-        AND (u.full_name LIKE '%' || :keyword || '%' ESCAPE '/' OR u.identity_number like '%' || :keyword || '%' ESCAPE '/')
+        AND (u.full_name LIKE '%' || :keyword || '%' ESCAPE '\(SQLEscaping.escapeCharacter)' OR u.identity_number like '%' || :keyword || '%' ESCAPE '\(SQLEscaping.escapeCharacter)')
         ORDER BY CASE u.relationship WHEN 'FRIEND' THEN 1 ELSE 2 END,
         u.relationship OR u.full_name = :keyword COLLATE NOCASE OR u.identity_number = :keyword COLLATE NOCASE DESC
         """

@@ -172,24 +172,29 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
             }
         let prices = MarketDAO.shared.currentPrices(assetIDs: ids)
         return swappableTokens.reduce(into: OrderedDictionary()) { result, token in
-            let marketPrice: Decimal? = if let value = prices[token.assetID] {
-                Decimal(string: value, locale: .enUSPOSIX)
-            } else {
-                nil
+            var marketPrice: Decimal? {
+                prices[token.assetID].flatMap { price in
+                    Decimal(string: price, locale: .enUSPOSIX)
+                }
             }
-            result[token.assetID] = if let item = availableTokens[token.assetID] {
-                BalancedSwapToken(
-                    token: token,
-                    balance: item.decimalBalance,
-                    usdPrice: marketPrice ?? item.decimalUSDPrice,
-                    isMalicious: false,
-                )
+            
+            if let item = availableTokens[token.assetID] {
+                if !item.isHidden {
+                    result[token.assetID] = BalancedSwapToken(
+                        token: token,
+                        balance: item.decimalBalance,
+                        usdPrice: marketPrice ?? item.decimalUSDPrice,
+                        isMalicious: false,
+                        level: item.level,
+                    )
+                }
             } else {
-                BalancedSwapToken(
+                result[token.assetID] = BalancedSwapToken(
                     token: token,
                     balance: 0,
-                    usdPrice: 0,
+                    usdPrice: marketPrice ?? 0,
                     isMalicious: false,
+                    level: Reputation.Level.unknown.rawValue,
                 )
             }
         }

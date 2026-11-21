@@ -7,23 +7,28 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
     override func viewDidLoad() {
         super.viewDidLoad()
         let hasStockTokens = !stockTokens.isEmpty
-        var remoteTokens = self.defaultTokens
+        let remoteTokens = self.defaultTokens
         queue.async { [recentAssetIDsKey] in
-            let comparator = TokenComparator<BalancedSwapToken>(keyword: nil)
-            var tokens = TokenDAO.shared
+            var chainIDs: Set<String> = []
+            var allTokens: [String: BalancedSwapToken] = TokenDAO.shared
                 .notHiddenTokens(includesZeroBalanceItems: true, limit: nil)
                 .compactMap(BalancedSwapToken.init(tokenItem:))
-            var tokensMap = tokens.reduce(into: [:]) { results, token in
-                results[token.assetID] = token
+                .reduce(into: [:]) { results, token in
+                    results[token.assetID] = token
+                    if let chainID = token.chain.chainID {
+                        chainIDs.insert(chainID)
+                    }
+                }
+            for remoteToken in remoteTokens {
+                allTokens[remoteToken.assetID] = remoteToken
+                if let chainID = remoteToken.chain.chainID {
+                    chainIDs.insert(chainID)
+                }
             }
-            remoteTokens.removeAll { token in
-                tokensMap[token.assetID] != nil
-            }
-            tokens.append(contentsOf: remoteTokens.sorted(using: comparator))
-            for token in remoteTokens {
-                tokensMap[token.assetID] = token
-            }
-            let chainIDs = Set(tokens.compactMap(\.chain.chainID))
+            let tokens = allTokens.values.sorted(
+                using: TokenComparator<BalancedSwapToken>(keyword: nil)
+            )
+            
             var groups = Group.mixinChains(ids: chainIDs)
             if hasStockTokens {
                 groups.insert(.byCategory(.stock), at: 0)
@@ -34,7 +39,7 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
                 type: [String].self
             ) ?? []
             let recentTokens = recentAssetIDs.compactMap { id in
-                tokensMap[id]
+                allTokens[id]
             }
             let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
                 .priceChangePercentage24H(assetIDs: recentAssetIDs)
@@ -140,22 +145,41 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
         if remoteResults.isEmpty {
             mixedSearchResults = nil
         } else {
-            let localResultsMap = localResults.reduce(into: [:]) { results, token in
+            var localTokens = localResults.reduce(into: [:]) { results, token in
                 results[token.assetID] = token
             }
+            var hiddenAssetIDs: Set<String> = []
+            
+            // Tokens that exist in remote results, but not in local results
+            let missingAssetIDs = remoteResults.map(\.assetID).filter { id in
+                localTokens[id] == nil
+            }
+            if !missingAssetIDs.isEmpty {
+                let missingTokens = TokenDAO.shared.tokenItems(with: missingAssetIDs)
+                for token in missingTokens {
+                    if token.isHidden {
+                        hiddenAssetIDs.insert(token.assetID)
+                    } else {
+                        localTokens[token.assetID] = BalancedSwapToken(tokenItem: token)
+                    }
+                }
+            }
+            
             var hasStockTokens = false
             var allItems: [String: BalancedSwapToken] = remoteResults.reduce(into: [:]) { result, token in
                 let assetID = token.assetID
-                let localResult = localResultsMap[assetID]
-                let balance = localResult?.decimalBalance
-                    ?? TokenExtraDAO.shared.decimalBalance(assetID: assetID)
-                    ?? 0
+                guard !hiddenAssetIDs.contains(assetID) else {
+                    return
+                }
+                let localToken = localTokens[assetID]
+                let balance = localToken?.decimalBalance ?? 0
                 hasStockTokens = hasStockTokens || token.category == .stock
                 result[assetID] = BalancedSwapToken(
                     token: token,
                     balance: balance,
-                    usdPrice: localResult?.decimalUSDPrice ?? 0,
+                    usdPrice: localToken?.decimalUSDPrice ?? 0,
                     isMalicious: false,
+                    level: localToken?.level ?? Reputation.Level.unknown.rawValue,
                 )
             }
             for item in localResults where allItems[item.assetID] == nil {

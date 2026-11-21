@@ -16,13 +16,7 @@ public final class Web3TokenDAO: Web3DAO {
                 LEFT JOIN tokens_extra te ON t.wallet_id = te.wallet_id AND t.asset_id = te.asset_id
         """
         
-        static let order = """
-            ORDER BY t.amount * t.price_usd DESC,
-                cast(t.amount AS REAL) DESC,
-                cast(t.price_usd AS REAL) DESC,
-                t.name ASC,
-                c.name ASC
-        """
+        static let order = "ORDER BY " + TokenOrdering(keyword: nil).sqlOrder(balance: "t.amount")
         
         static let tokenDigests = """
             SELECT t.asset_id, t.symbol, t.name, t.icon_url, t.price_usd, t.amount AS balance
@@ -68,7 +62,7 @@ public final class Web3TokenDAO: Web3DAO {
     
     public func greatestBalanceToken(walletID: String, assetIDs: any Collection<String>) -> Web3TokenItem? {
         var query = GRDB.SQL(sql: SQL.selector)
-        query.append(literal: " WHERE t.wallet_id = \(walletID) AND t.amount > 0")
+        query.append(literal: " WHERE t.wallet_id = \(walletID) AND CAST(t.amount AS REAL) > 0")
         if !assetIDs.isEmpty {
             query.append(literal: " AND t.asset_id IN \(assetIDs)")
         }
@@ -116,7 +110,7 @@ public final class Web3TokenDAO: Web3DAO {
         WHERE t.wallet_id = ? AND ifnull(te.hidden,FALSE) IS FALSE
         """
         if !includesZeroBalanceItems {
-            sql += " AND t.amount > 0"
+            sql += " AND CAST(t.amount AS REAL) > 0"
         }
         sql += "\n\(SQL.order)"
         if let limit {
@@ -187,12 +181,14 @@ public final class Web3TokenDAO: Web3DAO {
         var sql = """
         \(SQL.selector)
         WHERE t.wallet_id = :id
-            AND (t.level >= 10 OR hidden IS FALSE)
-            AND (t.name LIKE :keyword OR t.symbol LIKE :keyword)
+            AND (t.level >= 10 OR ifnull(te.hidden,FALSE) IS FALSE)
+            AND (keyword_match(t.name, :keyword) > 0 OR keyword_match(t.symbol, :keyword) > 0)
         """
         if !includesZeroBalanceItems {
-            sql += "\nAND t.amount > 0"
+            sql += "\nAND CAST(t.amount AS REAL) > 0"
         }
+        let order = TokenOrdering(keyword: keyword).sqlOrder(balance: "t.amount")
+        sql += "\nORDER BY \(order)"
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
@@ -200,7 +196,7 @@ public final class Web3TokenDAO: Web3DAO {
             with: sql,
             arguments: [
                 "id": walletID,
-                "keyword": "%\(keyword)%",
+                "keyword": keyword,
             ]
         )
     }
@@ -281,7 +277,7 @@ public final class Web3TokenDAO: Web3DAO {
                     // Use `token.amount` instead of calculating outputs for watch wallets
                     break
                 }
-                if token.level < Web3Reputation.Level.unknown.rawValue {
+                if token.level < Reputation.Level.unknown.rawValue {
                     let extra = Web3TokenExtra(
                         walletID: token.walletID,
                         assetID: token.assetID,

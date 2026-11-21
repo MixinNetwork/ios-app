@@ -197,7 +197,7 @@ extension Web3TransferOperation {
                     amount: "0",
                     usdPrice: token.usdPrice,
                     usdChange: token.usdChange,
-                    level: Web3Reputation.Level.verified.rawValue,
+                    level: Reputation.Level.verified.rawValue,
                 )
             }
             if !missingAssetIDs.isEmpty {
@@ -218,7 +218,7 @@ extension Web3TransferOperation {
                             amount: "0",
                             usdPrice: token.usdPrice,
                             usdChange: token.usdChange,
-                            level: Web3Reputation.Level.verified.rawValue,
+                            level: Reputation.Level.verified.rawValue,
                         )
                     }
                     madeUpTokens.append(contentsOf: remoteTokens)

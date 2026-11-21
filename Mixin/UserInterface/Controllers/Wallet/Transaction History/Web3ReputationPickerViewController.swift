@@ -11,16 +11,16 @@ final class Web3ReputationPickerViewController: PopupSelectorViewController {
         
         func web3ReputationPickerViewController(
             _ controller: Web3ReputationPickerViewController,
-            didPickOptions options: Set<Web3Reputation.FilterOption>,
+            didPickOptions options: Set<Reputation.FilterOption>,
         )
         
     }
     
     weak var delegate: Delegate?
     
-    private var options: Set<Web3Reputation.FilterOption>
+    private var options: Set<Reputation.FilterOption>
     
-    init(options: Set<Web3Reputation.FilterOption>) {
+    init(options: Set<Reputation.FilterOption>) {
         self.options = options
         super.init()
     }
@@ -55,7 +55,7 @@ extension Web3ReputationPickerViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            Web3Reputation.FilterOption.allCases.count
+            Reputation.FilterOption.allCases.count
         } else {
             1
         }
@@ -64,7 +64,7 @@ extension Web3ReputationPickerViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_reputation_option, for: indexPath)!
-            switch Web3Reputation.FilterOption.allCases[indexPath.row] {
+            switch Reputation.FilterOption.allCases[indexPath.row] {
             case .spam:
                 cell.titleLabel.text = R.string.localizable.reputation_spam()
                 cell.subtitleLabel.text = R.string.localizable.reputation_spam_description()
@@ -85,13 +85,13 @@ extension Web3ReputationPickerViewController: Web3ReputationOptionCell.Delegate 
     
     func web3ReputationCellDidTurnOnSwitch(_ cell: Web3ReputationOptionCell) {
         let indexPath = tableView.indexPath(for: cell)!
-        let option = Web3Reputation.FilterOption.allCases[indexPath.row]
+        let option = Reputation.FilterOption.allCases[indexPath.row]
         options.insert(option)
     }
     
     func web3ReputationCellDidTurnOffSwitch(_ cell: Web3ReputationOptionCell) {
         let indexPath = tableView.indexPath(for: cell)!
-        let option = Web3Reputation.FilterOption.allCases[indexPath.row]
+        let option = Reputation.FilterOption.allCases[indexPath.row]
         options.remove(option)
     }
     

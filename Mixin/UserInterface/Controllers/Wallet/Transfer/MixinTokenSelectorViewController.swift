@@ -39,22 +39,20 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
     override func viewDidLoad() {
         super.viewDidLoad()
         queue.async { [displayZeroBalanceItems] in
-            let recentAssetIDs = PropertiesDAO.shared.jsonObject(forKey: .transferRecentAssetIDs, type: [String].self) ?? []
-            let recentTokens = TokenDAO.shared.tokenItems(with: recentAssetIDs)
-                .filter(\.isDisplayable)
-                .reduce(into: [:]) { results, item in
-                    results[item.assetID] = item
-                }
-            let orderedRecentTokens = recentAssetIDs.compactMap { id in
-                recentTokens[id]
-            }
-            let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
-                .priceChangePercentage24H(assetIDs: recentAssetIDs)
-                .compactMapValues(TokenChange.init(change:))
             let tokens = TokenDAO.shared.notHiddenTokens(
                 includesZeroBalanceItems: displayZeroBalanceItems,
                 limit: nil
             )
+            let allTokens = tokens.reduce(into: [:]) { results, token in
+                results[token.assetID] = token
+            }
+            let recentAssetIDs = PropertiesDAO.shared.jsonObject(forKey: .transferRecentAssetIDs, type: [String].self) ?? []
+            let orderedRecentTokens = recentAssetIDs.compactMap { id in
+                allTokens[id]
+            }
+            let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
+                .priceChangePercentage24H(assetIDs: recentAssetIDs)
+                .compactMapValues(TokenChange.init(change:))
             let chainIDs = Set(tokens.compactMap(\.chainID))
             let groups = Group.mixinChains(ids: chainIDs)
             DispatchQueue.main.async {

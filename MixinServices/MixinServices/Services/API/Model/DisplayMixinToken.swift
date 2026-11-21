@@ -24,6 +24,7 @@ struct DisplayMixinToken {
     let precision: Int16
     let collectionHash: String?
     let primitiveAssetID: String?
+    let level: Int
     
     var asToken: MixinToken {
         MixinToken(
@@ -43,6 +44,7 @@ struct DisplayMixinToken {
             precision: precision,
             collectionHash: collectionHash,
             primitiveAssetID: primitiveAssetID,
+            level: level,
         )
     }
     
@@ -67,6 +69,7 @@ extension DisplayMixinToken: Decodable {
         case precision
         case collectionHash = "collection_hash"
         case primitiveAssetID = "primitive_asset_id"
+        case level
     }
     
 }

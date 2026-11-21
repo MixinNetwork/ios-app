@@ -5,6 +5,7 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
     
     let decimalBalance: Decimal
     let decimalUSDPrice: Decimal
+    let level: Int
     let isMalicious: Bool
     
     private(set) lazy var decimalUSDBalance = decimalBalance * decimalUSDPrice
@@ -17,10 +18,12 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
         token: SwapToken,
         balance: Decimal,
         usdPrice: Decimal,
-        isMalicious: Bool
+        isMalicious: Bool,
+        level: Int,
     ) {
         self.decimalBalance = balance
         self.decimalUSDPrice = usdPrice
+        self.level = level
         self.isMalicious = isMalicious
         super.init(
             address: token.address,
@@ -38,6 +41,7 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
         guard let chain = i.chain else {
             return nil
         }
+        self.level = (i as? MixinToken)?.level ?? (i as? Web3Token)?.level ?? 10
         self.decimalBalance = i.decimalBalance
         self.decimalUSDPrice = i.decimalUSDPrice
         self.isMalicious = (i as? MaliciousDistinguishable)?.isMalicious ?? false

@@ -126,8 +126,8 @@ extension SafeSnapshotDAO {
             recipientConditions.append("s.opponent_id IN \(filter.users.map(\.userId))")
         }
         for address in filter.addresses {
-            let keyword = "%\(address.destination.sqlEscaped)%"
-            let condition: GRDB.SQL = "s.deposit LIKE \(keyword) ESCAPE '/' OR s.withdrawal LIKE \(keyword) ESCAPE '/'"
+            let keyword = "%\(SQLEscaping.escape(address.destination))%"
+            let condition: GRDB.SQL = "s.deposit LIKE \(keyword) ESCAPE \(String(SQLEscaping.escapeCharacter)) OR s.withdrawal LIKE \(keyword) ESCAPE \(String(SQLEscaping.escapeCharacter))"
             recipientConditions.append(condition)
         }
         if !recipientConditions.isEmpty {

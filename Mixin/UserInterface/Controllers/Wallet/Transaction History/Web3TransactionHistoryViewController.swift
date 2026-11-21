@@ -32,7 +32,7 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
         token: Web3TokenItem,
         availability: Web3Wallet.Availability,
     ) {
-        let reputationOptions = Web3Reputation.FilterOption.options(token: token)
+        let reputationOptions = Reputation.FilterOption.options(token: token)
         self.wallet = wallet
         self.availability = availability
         self.filter = .init(tokens: [token], reputationOptions: reputationOptions)
@@ -368,8 +368,8 @@ extension Web3TransactionHistoryViewController: Web3ReputationPickerViewControll
     func web3ReputationPickerViewControllerDidResetOptions(
         _ controller: Web3ReputationPickerViewController
     ) {
-        let options: Set<Web3Reputation.FilterOption> = filter.tokens
-            .map(Web3Reputation.FilterOption.options(token:))
+        let options: Set<Reputation.FilterOption> = filter.tokens
+            .map(Reputation.FilterOption.options(token:))
             .reduce(into: []) { result, options in
                 result.formUnion(options)
             }
@@ -381,7 +381,7 @@ extension Web3TransactionHistoryViewController: Web3ReputationPickerViewControll
     
     func web3ReputationPickerViewController(
         _ controller: Web3ReputationPickerViewController,
-        didPickOptions options: Set<Web3Reputation.FilterOption>
+        didPickOptions options: Set<Reputation.FilterOption>
     ) {
         filter.reputationOptions = options
         reputationFilterView.reloadData(options: options)
@@ -439,7 +439,7 @@ extension Web3TransactionHistoryViewController {
             label.text = R.string.localizable.reputation()
         }
         
-        func reloadData(options: Set<Web3Reputation.FilterOption>) {
+        func reloadData(options: Set<Reputation.FilterOption>) {
             imageView?.image = if options.contains(.spam) {
                 R.image.web3_reputation_bad()
             } else {

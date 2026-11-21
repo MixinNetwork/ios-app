@@ -67,13 +67,13 @@ public final class PerpsPositionDAO: PerpsDAO {
     ) -> [PerpetualPositionItem] {
         var sql = """
         \(Self.itemSQL)
-        WHERE (m.token_symbol LIKE :keyword ESCAPE '/') OR (m.tags LIKE :keyword ESCAPE '/')
+        WHERE (m.token_symbol LIKE :keyword ESCAPE '\(SQLEscaping.escapeCharacter)') OR (m.tags LIKE :keyword ESCAPE '\(SQLEscaping.escapeCharacter)')
         ORDER BY p.created_at DESC
         """
         if let limit {
             sql += "\nLIMIT \(limit)"
         }
-        return db.select(with: sql, arguments: ["keyword": "%\(keyword.sqlEscaped)%"])
+        return db.select(with: sql, arguments: ["keyword": "%\(SQLEscaping.escape(keyword))%"])
     }
     
     public func replace(positions: [PerpetualPosition]) {

@@ -56,7 +56,7 @@ extension RequestSigning {
             uid: account.userID,
             sid: account.sessionID,
             iat: date,
-            exp: date.addingTimeInterval(5 * secondsPerMinute),
+            exp: date.addingTimeInterval(5 * .minute),
             jti: requestId,
             sig: sig,
             scp: "FULL"

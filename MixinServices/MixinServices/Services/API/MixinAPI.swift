@@ -262,7 +262,7 @@ extension MixinAPI {
             let xServerTime = TimeInterval(response?.value(forHTTPHeaderField: "x-server-time") ?? "0") ?? 0
             let serverTimeIntervalSince1970 = xServerTime / TimeInterval(NSEC_PER_SEC)
             let serverTime = Date(timeIntervalSince1970: serverTimeIntervalSince1970)
-            if abs(requestTime.timeIntervalSinceNow) > secondsPerMinute {
+            if abs(requestTime.timeIntervalSinceNow) > .minute {
                 let info: Logger.UserInfo = [
                     "options": options,
                     "interval": requestTime.timeIntervalSinceNow,
@@ -275,7 +275,7 @@ extension MixinAPI {
                 } else {
                     completion(.failure(.requestSigningTimeout))
                 }
-            } else if abs(serverTime.timeIntervalSinceNow) > 5 * secondsPerMinute {
+            } else if abs(serverTime.timeIntervalSinceNow) > 5 * .minute {
                 AppGroupUserDefaults.isClockSkewed = true
                 DispatchQueue.main.async {
                     WebSocketService.shared.disconnect()

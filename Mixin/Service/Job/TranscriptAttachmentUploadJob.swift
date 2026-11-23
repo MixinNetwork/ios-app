@@ -52,14 +52,14 @@ final class TranscriptAttachmentUploadJob: AsynchronousJob {
                areKeyDigestReady,
                child.mediaStatus == MediaStatus.DONE.rawValue,
                let createdAt = child.mediaCreatedAt?.toUTCDate(),
-               abs(createdAt.timeIntervalSinceNow) < secondsPerDay
+               abs(createdAt.timeIntervalSinceNow) < .day
             {
                 Logger.general.debug(category: "AttachmentUploadJob", message: "Using existed attachment ID: \(content)")
                 continue
             } else if let content = child.content,
                       let extra = AttachmentExtra.decode(from: content),
                       let createdAt = extra.createdAt?.toUTCDate().timeIntervalSinceNow,
-                      abs(createdAt) < secondsPerDay
+                      abs(createdAt) < .day
             {
                 Logger.general.debug(category: "AttachmentUploadJob", message: "Using existed attachment ID: \(extra.attachmentId)")
                 child.content = extra.attachmentId

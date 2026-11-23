@@ -15,7 +15,7 @@ class CacheableAssetFileManager {
     
     static let shared = CacheableAssetFileManager()
     
-    private let maxFileAge: TimeInterval = 14 * secondsPerDay
+    private let maxFileAge: TimeInterval = 14 * .day
     private let queue = DispatchQueue(label: "one.mixin.messenger.CacheableAssetFileManager")
     private let fileManager = FileManager.default
     

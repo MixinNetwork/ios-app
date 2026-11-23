@@ -49,6 +49,16 @@ open class MixinAPI {
     
     public static let userAgent = "Mixin/\(Bundle.main.shortVersionString) (iOS \(UIDevice.current.systemVersion); \(Device.current.machineName); \(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? ""))"
     
+    public static func handleRequiresUpdate() {
+        AppGroupUserDefaults.requiresUpdateVersion = Bundle.main.fullVersion
+        session.cancelAllRequests()
+        WebSocketService.shared.disconnect()
+        UploaderQueue.shared.cancelAllOperations()
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: MixinService.requiresUpdateNotification, object: self)
+        }
+    }
+    
 }
 
 extension MixinAPI {
@@ -226,6 +236,9 @@ extension MixinAPI {
         makeRequest: @escaping (Alamofire.Session) -> DataRequest,
         debugDescription: String
     ) -> MixinAPI.Result<Response> {
+        guard !AppGroupUserDefaults.isUpdateRequired else {
+            return .failure(.response(.requiresUpdate))
+        }
         let semaphore = DispatchSemaphore(value: 0)
         var result: MixinAPI.Result<Response> = .failure(.foundNilResult)
         
@@ -252,6 +265,12 @@ extension MixinAPI {
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request? {
+        guard !AppGroupUserDefaults.isUpdateRequired else {
+            queue.async {
+                completion(.failure(.response(.requiresUpdate)))
+            }
+            return nil
+        }
         guard options.contains(.authIndependent) || LoginManager.shared.isLoggedIn else {
             return nil
         }
@@ -314,6 +333,9 @@ extension MixinAPI {
                             switch error {
                             case .unauthorized:
                                 handleDeauthorization(requestID: requestId, response: response.response)
+                            case _ where error.code == MixinAPIResponseError.requiresUpdate.code:
+                                handleRequiresUpdate()
+                                completion(.failure(.response(error)))
                             default:
                                 Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)")
                                 completion(.failure(.response(error)))
@@ -335,6 +357,9 @@ extension MixinAPI {
                                 completion(.success(data))
                             } else if case .some(.unauthorized) = responseObject.error {
                                 handleDeauthorization(requestID: requestId, response: response.response)
+                            } else if let error = responseObject.error, error.code == MixinAPIResponseError.requiresUpdate.code {
+                                handleRequiresUpdate()
+                                completion(.failure(.response(error)))
                             } else if let error = responseObject.error {
                                 Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)")
                                 completion(.failure(.response(error)))

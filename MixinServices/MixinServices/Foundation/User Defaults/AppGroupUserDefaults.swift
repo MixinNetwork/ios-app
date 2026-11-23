@@ -139,6 +139,13 @@ extension AppGroupUserDefaults {
     @Default(namespace: nil, key: "clock_skew", defaultValue: false)
     public static var isClockSkewed: Bool
     
+    @Default(namespace: nil, key: "requires_update_version", defaultValue: nil)
+    public static var requiresUpdateVersion: String?
+    
+    public static var isUpdateRequired: Bool {
+        requiresUpdateVersion == Bundle.main.fullVersion
+    }
+    
     // Key is app id
     @Default(namespace: nil, key: "app_public_key", defaultValue: [:])
     public static var appPublicKey: [String: Data]

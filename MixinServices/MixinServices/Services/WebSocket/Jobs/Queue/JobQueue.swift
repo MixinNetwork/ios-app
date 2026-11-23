@@ -23,7 +23,7 @@ open class JobQueue {
     
     @discardableResult
     open func addJob(job: BaseJob) -> Bool {
-        guard LoginManager.shared.isLoggedIn else {
+        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.isUpdateRequired else {
             return false
         }
         let jobId = job.getJobId()

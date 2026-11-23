@@ -25,6 +25,7 @@ public var canProcessMessages: Bool {
         && AppGroupUserDefaults.isDocumentsMigrated
         && !AppGroupUserDefaults.User.needsUpgradeInMainApp
         && !AppGroupUserDefaults.isClockSkewed
+        && !AppGroupUserDefaults.isUpdateRequired
         && AppGroupUserDefaults.Crypto.isPrekeyLoaded
         && AppGroupUserDefaults.Crypto.isSessionSynchronized
         && !LoginManager.shared.loggedOutInDeviceTransfer

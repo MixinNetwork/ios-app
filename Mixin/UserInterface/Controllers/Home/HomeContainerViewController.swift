@@ -78,6 +78,7 @@ final class HomeContainerViewController: UIViewController {
         if AppGroupUserDefaults.Crypto.isPrekeyLoaded,
            AppGroupUserDefaults.Crypto.isSessionSynchronized,
            !AppGroupUserDefaults.isClockSkewed,
+           !AppGroupUserDefaults.isUpdateRequired,
            LoginManager.shared.account != nil
         {
             if UIApplication.shared.applicationState == .active {

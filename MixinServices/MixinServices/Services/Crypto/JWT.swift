@@ -1,6 +1,6 @@
 import Foundation
 
-enum Jwt {
+enum JWT {
     
     struct Claims: Encodable {
         let uid: String
@@ -28,26 +28,7 @@ enum Jwt {
         return encoder
     }()
     
-    private static let rs512Header = #"{"alg":"RS512","typ":"JWT"}"#.data(using: .utf8)!.base64RawURLEncodedString()
     private static let edDSAHeader = #"{"alg":"EdDSA","typ":"JWT"}"#.data(using: .utf8)!.base64RawURLEncodedString()
-    
-    static func signedToken(claims: Claims, privateKey: SecKey) throws -> String {
-        guard SecKeyIsAlgorithmSupported(privateKey, .sign, .rsaSignatureMessagePKCS1v15SHA512) else {
-            throw Error.signAlgorithmNotSupported
-        }
-        let base64EncodedClaims = try jsonEncoder.encode(claims).base64RawURLEncodedString()
-        let headerAndPayload = rs512Header + "." + base64EncodedClaims
-        guard let dataToSign = headerAndPayload.data(using: .utf8) else {
-            throw Error.building
-        }
-        var error: Unmanaged<CFError>? = nil
-        guard let signature = SecKeyCreateSignature(privateKey, .rsaSignatureMessagePKCS1v15SHA512, dataToSign as CFData, &error) else {
-            let retained = error?.takeRetainedValue()
-            throw Error.sign(underlying: retained)
-        }
-        let base64EncodedSignature = (signature as Data).base64RawURLEncodedString()
-        return headerAndPayload + "." + base64EncodedSignature
-    }
     
     static func signedToken(claims: Claims, key: Ed25519PrivateKey) throws -> String {
         let base64EncodedClaims = try jsonEncoder.encode(claims).base64RawURLEncodedString()

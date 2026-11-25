@@ -657,7 +657,6 @@ extension ConversationDataSource {
                 postNewMessageOutOfBoundsNotification(message: message)
             }
         } else {
-            loadedMessageIds.insert(message.messageId)
             queue.async {
                 guard !self.messageProcessingIsCancelled else {
                     return
@@ -959,96 +958,45 @@ extension ConversationDataSource {
     private func addMessageAndDisplay(message: MessageItem) {
         let messageIsSentByMe = message.userId == me.userID
         let date = DateFormatter.yyyymmdd.string(from: message.createdAt.toUTCDate())
-        let lastIndexPathBeforeInsertion = lastIndexPath
-        var style: MessageViewModel.Style = []
-        if !messageIsSentByMe {
-            style.insert(.received)
-        }
-        let needsInsertNewSection: Bool
-        let section: Int
-        let row: Int
-        let isLastCell: Bool
-        let viewModel: MessageViewModel
         let shouldRemoveAllHighlights = messageIsSentByMe && highlight != nil
         if shouldRemoveAllHighlights {
             highlight = nil
         }
-        if let viewModels = viewModels[date] {
-            needsInsertNewSection = false
-            section = dates.firstIndex(of: date)!
-            if let index = viewModels.firstIndex(where: { $0.message.createdAt > message.createdAt }) {
-                isLastCell = false
-                row = index
-            } else {
-                isLastCell = true
-                row = viewModels.count
-                style.insert(.tail)
-            }
-            let previousRow = row - 1
-            if previousRow >= 0 {
-                let previousViewModel = viewModels[previousRow]
-                let previousViewModelIsFromDifferentUser = previousViewModel.message.userId != message.userId
-                if previousViewModel.message.isSystemMessage || message.isSystemMessage || message.isExtensionMessage {
-                    if !messageIsSentByMe {
-                        style.insert(.fullname)
-                    }
-                    previousViewModel.style.insert(.bottomSeparator)
-                } else if previousViewModelIsFromDifferentUser {
-                    previousViewModel.style.formUnion([.bottomSeparator, .tail])
-                } else {
-                    previousViewModel.style.subtract([.bottomSeparator, .tail])
-                }
-                if message.isRepresentativeMessage(conversation: conversation) && style.contains(.received) && previousViewModelIsFromDifferentUser {
-                    style.insert(.fullname)
-                }
-                if isMessageForwardedByBot(message) {
-                    style.insert(.forwardedByBot)
-                }
-                DispatchQueue.main.sync {
-                    guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
-                        return
-                    }
-                    let previousIndexPath = IndexPath(row: previousRow, section: section)
-                    if let previousCell = tableView.cellForRow(at: previousIndexPath) as? MessageCell {
-                        previousCell.render(viewModel: previousViewModel)
-                    }
-                }
-            }
-            viewModel = factory.viewModel(withMessage: message, style: style, fits: layoutSize.width)
-            if !isLastCell {
-                let nextViewModel = viewModels[row]
-                if viewModel.message.userId != nextViewModel.message.userId {
-                    viewModel.style.formUnion([.bottomSeparator, .tail])
-                    if nextViewModel.message.isRepresentativeMessage(conversation: conversation) && nextViewModel.style.contains(.received) {
-                        nextViewModel.style.insert(.fullname)
-                    }
-                } else {
-                    viewModel.style.subtract([.bottomSeparator, .tail])
-                    nextViewModel.style.remove(.fullname)
-                }
-                DispatchQueue.main.sync {
-                    guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
-                        return
-                    }
-                    let nextIndexPath = IndexPath(row: row, section: self.dates.firstIndex(of: date)!)
-                    if let nextCell = tableView.cellForRow(at: nextIndexPath) as? MessageCell {
-                        nextCell.render(viewModel: nextViewModel)
-                    }
-                }
-            }
-        } else {
-            needsInsertNewSection = true
-            section = dates.firstIndex(where: { $0 > date }) ?? dates.count
-            row = 0
-            isLastCell = section == dates.count
-            if style.contains(.received) && message.isRepresentativeMessage(conversation: conversation) {
-                style.insert(.fullname)
-            }
-            viewModel = factory.viewModel(withMessage: message, style: style, fits: layoutSize.width)
-        }
+        let style = factory.style(forIndex: 0, messages: [message])
+        let viewModel = factory.viewModel(withMessage: message, style: style, fits: layoutSize.width)
         DispatchQueue.main.sync {
-            guard let tableView = self.tableView, !self.messageProcessingIsCancelled else {
+            guard let tableView = self.tableView, tableView.dataSource != nil, !self.messageProcessingIsCancelled else {
                 return
+            }
+            // A reload may have replaced the displayed messages while the new cell was being laid out.
+            var sectionViewModels = self.viewModels[date] ?? []
+            guard !sectionViewModels.contains(where: { $0.message.messageId == message.messageId }) else {
+                return
+            }
+            guard self.didLoadLatestMessage else {
+                if messageIsSentByMe {
+                    self.scrollToBottomAndReload()
+                } else {
+                    self.postNewMessageOutOfBoundsNotification(message: message)
+                }
+                return
+            }
+            let lastIndexPathBeforeInsertion = self.lastIndexPath
+            let existingSection = self.dates.firstIndex(of: date)
+            let section = existingSection ?? self.dates.firstIndex(where: { $0 > date }) ?? self.dates.count
+            let row = sectionViewModels.firstIndex(where: { $0.message.createdAt > message.createdAt }) ?? sectionViewModels.count
+            let isLastCell = row == sectionViewModels.count && (existingSection != nil || section == self.dates.count)
+            sectionViewModels.insert(viewModel, at: row)
+            for index in max(0, row - 1)...min(row + 1, sectionViewModels.count - 1) {
+                let model = sectionViewModels[index]
+                let style = self.factory.style(forIndex: index, viewModels: sectionViewModels)
+                if model.style != style {
+                    model.style = style
+                    if index != row {
+                        let previousIndexPath = IndexPath(row: index < row ? index : index - 1, section: section)
+                        (tableView.cellForRow(at: previousIndexPath) as? MessageCell)?.render(viewModel: model)
+                    }
+                }
             }
             tableView.indexPathsForSelectedRows?.forEach({ (indexPath) in
                 tableView.deselectRow(at: indexPath, animated: false)
@@ -1070,18 +1018,18 @@ extension ConversationDataSource {
             UIView.setAnimationsEnabled(false)
             tableView.beginUpdates()
             let indexPath = IndexPath(row: row, section: section)
-            if needsInsertNewSection {
+            self.viewModels[date] = sectionViewModels
+            self.loadedMessageIds.insert(message.messageId)
+            if existingSection == nil {
                 self.dates.insert(date, at: section)
-                self.viewModels[date] = [viewModel]
-                tableView.insertSections(IndexSet(integer: indexPath.section), with: .none)
+                tableView.insertSections(IndexSet(integer: section), with: .none)
             } else {
-                self.viewModels[date]!.insert(viewModel, at: row)
                 tableView.insertRows(at: [indexPath], with: .none)
             }
+            tableView.endUpdates()
             if tableView.tableFooterView != nil && messageIsSentByMe {
                 tableView.tableFooterView = nil
             }
-            tableView.endUpdates()
             UIView.setAnimationsEnabled(true)
             let shouldScrollToNewMessage = !tableView.isTracking
                 && !tableView.isDecelerating

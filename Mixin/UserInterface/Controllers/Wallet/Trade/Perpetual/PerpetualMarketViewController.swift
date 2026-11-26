@@ -480,7 +480,6 @@ extension PerpetualMarketViewController {
                     viewModel: viewModel,
                     candles: candles,
                     timeFrame: timeFrame,
-                    latestPrice: viewModel.decimalLastPrice,
                     rebatingCode: code
                 ),
                 rebatingCode: code
@@ -716,7 +715,11 @@ extension PerpetualMarketViewController {
         if let state = chartViewportStates[timeFrame] {
             return state
         }
-        let state = CandleChartViewportState()
+        let state = CandleChartViewportState(
+            candles: [],
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
         chartViewportStates[timeFrame] = state
         return state
     }

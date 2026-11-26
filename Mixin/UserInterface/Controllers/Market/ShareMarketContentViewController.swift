@@ -53,16 +53,19 @@ final class ShareMarketContentViewController: UIViewController {
         viewModel: PerpetualMarketViewModel,
         candles: [PerpetualCandleViewModel],
         timeFrame: PerpetualTimeFrame,
-        latestPrice: Decimal,
         rebatingCode: Referral.RebatingCode?,
     ) {
         let priceDisplay = PerpetualMarketViewModel.PriceDisplay(
             rawValue: AppGroupUserDefaults.Wallet.perpsPriceDisplay
         ) ?? .lastPrice
+        // Title, live candle and latest price line all follow the same price display
+        let latestPrice: Decimal
         switch priceDisplay {
         case .lastPrice:
+            latestPrice = viewModel.decimalLastPrice
             self.localizedPrice = viewModel.localizedLastPrice
         case .markPrice:
+            latestPrice = viewModel.market.decimalMarkPrice
             self.localizedPrice = viewModel.market.localizedMarkPrice
         }
         self.source = .perpetual(viewModel, candles, timeFrame, latestPrice: latestPrice)
@@ -181,13 +184,15 @@ final class ShareMarketContentViewController: UIViewController {
                 let liveCandles = PerpetualCandleViewModel.withLivePrice(
                     candles: candles,
                     lastPrice: latestPrice,
-                    timeFrame: timeFrame
+                    timeFrame: timeFrame,
+                    nowMillis: Int64(Date().timeIntervalSince1970 * 1000)
                 )
                 chartView.configure(
                     candles: liveCandles,
                     timeFrame: timeFrame,
                     latestPrice: latestPrice,
                     priceFormatMode: .decimal(priceScale: viewModel.market.priceScale),
+                    viewportState: nil,
                     animated: false
                 )
                 chartView.layoutIfNeeded()

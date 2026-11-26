@@ -820,6 +820,11 @@
 		941C762B2F5ECEFD005B70A9 /* LeverageLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C762A2F5ECEFA005B70A9 /* LeverageLabel.swift */; };
 		941C764B2F5EFB10005B70A9 /* TradeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C764A2F5EFB0A005B70A9 /* TradeURL.swift */; };
 		941C768C2F5F1FA5005B70A9 /* CandlestickChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C768B2F5F1FA0005B70A9 /* CandlestickChartView.swift */; };
+		D0CA00010000000000000002 /* CandleChartViewportState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA00010000000000000001 /* CandleChartViewportState.swift */; };
+		D0CA00010000000000000004 /* PriceRangeAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA00010000000000000003 /* PriceRangeAnimator.swift */; };
+		D0CA00010000000000000006 /* CandleChartGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA00010000000000000005 /* CandleChartGestureRecognizer.swift */; };
+		D0CA00010000000000000008 /* CandlePriceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA00010000000000000007 /* CandlePriceFormatter.swift */; };
+		D0CA0001000000000000000A /* PerpetualCandleChartTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA00010000000000000009 /* PerpetualCandleChartTests.swift */; };
 		941C9CE8298E57BD00CB760E /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C9CE6298E57BD00CB760E /* AuthenticationViewController.swift */; };
 		941C9CE9298E57BD00CB760E /* AuthenticationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 941C9CE7298E57BD00CB760E /* AuthenticationView.xib */; };
 		941CAE00276A3F17008F42D6 /* WebPImageDecoderInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */; };
@@ -2897,6 +2902,11 @@
 		941C762A2F5ECEFA005B70A9 /* LeverageLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeverageLabel.swift; sourceTree = "<group>"; };
 		941C764A2F5EFB0A005B70A9 /* TradeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeURL.swift; sourceTree = "<group>"; };
 		941C768B2F5F1FA0005B70A9 /* CandlestickChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandlestickChartView.swift; sourceTree = "<group>"; };
+		D0CA00010000000000000001 /* CandleChartViewportState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandleChartViewportState.swift; sourceTree = "<group>"; };
+		D0CA00010000000000000003 /* PriceRangeAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceRangeAnimator.swift; sourceTree = "<group>"; };
+		D0CA00010000000000000005 /* CandleChartGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandleChartGestureRecognizer.swift; sourceTree = "<group>"; };
+		D0CA00010000000000000007 /* CandlePriceFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandlePriceFormatter.swift; sourceTree = "<group>"; };
+		D0CA00010000000000000009 /* PerpetualCandleChartTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualCandleChartTests.swift; sourceTree = "<group>"; };
 		941C9CE6298E57BD00CB760E /* AuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		941C9CE7298E57BD00CB760E /* AuthenticationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AuthenticationView.xib; sourceTree = "<group>"; };
 		941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPImageDecoderInternal.swift; sourceTree = "<group>"; };
@@ -5057,6 +5067,10 @@
 				94073A09305910B9004767E3 /* PerpPositionAdjustmentIntroductionCell.swift */,
 				940739AA3057D81F004767E3 /* PerpPositionAdjustmentSelectorViewController.swift */,
 				941C768B2F5F1FA0005B70A9 /* CandlestickChartView.swift */,
+				D0CA00010000000000000001 /* CandleChartViewportState.swift */,
+				D0CA00010000000000000003 /* PriceRangeAnimator.swift */,
+				D0CA00010000000000000005 /* CandleChartGestureRecognizer.swift */,
+				D0CA00010000000000000007 /* CandlePriceFormatter.swift */,
 				940FC5212F5031D7000C4260 /* PerpetualMarketPriceCell.xib */,
 				940FC5202F5031D7000C4260 /* PerpetualMarketPriceCell.swift */,
 				940CA18F2F59593500914435 /* PerpetualMarketInfoCell.xib */,
@@ -5901,6 +5915,7 @@
 			children = (
 				94ED30692E269B4E00B99837 /* MixinTests.swift */,
 				94FBD61B3098588A007CFDB8 /* EVMTests.swift */,
+				D0CA00010000000000000009 /* PerpetualCandleChartTests.swift */,
 			);
 			path = MixinTests;
 			sourceTree = "<group>";
@@ -9009,6 +9024,10 @@
 				7B04142B240FA09F00BE8D73 /* LocationCell.swift in Sources */,
 				949114BF2F0B9C7300B16A16 /* SyncWeb3OutputJob.swift in Sources */,
 				941C768C2F5F1FA5005B70A9 /* CandlestickChartView.swift in Sources */,
+				D0CA00010000000000000002 /* CandleChartViewportState.swift in Sources */,
+				D0CA00010000000000000004 /* PriceRangeAnimator.swift in Sources */,
+				D0CA00010000000000000006 /* CandleChartGestureRecognizer.swift in Sources */,
+				D0CA00010000000000000008 /* CandlePriceFormatter.swift in Sources */,
 				7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */,
 				94FCC9182FD6889900AA6AA7 /* MixinTokensViewController.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
@@ -9523,6 +9542,7 @@
 			files = (
 				94FBD61C3098588B007CFDB8 /* EVMTests.swift in Sources */,
 				94ED306B2E269B4F00B99837 /* MixinTests.swift in Sources */,
+				D0CA0001000000000000000A /* PerpetualCandleChartTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

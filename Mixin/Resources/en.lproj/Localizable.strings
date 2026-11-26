@@ -864,6 +864,10 @@
 "joined_in" = "Joined on %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "keep_waiting" = "Keep Waiting";
+"kline_close" = "Close";
+"kline_high" = "High";
+"kline_low" = "Low";
+"kline_open" = "Open";
 "label" = "Label";
 "landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to log in, your account deletion will be cancelled.";
 "landing_have_account" = "I already have an account";

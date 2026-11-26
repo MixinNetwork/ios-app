@@ -864,6 +864,10 @@
 "joined_in" = "%@에 참여함";
 "keep_running_foreground" = "화면을 닫지 말고 포그라운드에서 Mixin을 계속 실행하세요.";
 "keep_waiting" = "계속 기다리세요";
+"kline_close" = "종가";
+"kline_high" = "고가";
+"kline_low" = "저가";
+"kline_open" = "시가";
 "label" = "라벨";
 "landing_delete_content" = "%1$@에서 계정 삭제를 요청하셨습니다. 계정은 %2$@에 삭제됩니다. 계속해서 로그인하시면 계정 삭제가 취소됩니다.";
 "landing_have_account" = "이미 계정이 있습니다";

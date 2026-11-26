@@ -864,6 +864,10 @@
 "joined_in" = "加入於 %@";
 "keep_running_foreground" = "不要關閉螢幕並保持 Mixin 在前臺執行";
 "keep_waiting" = "繼續等待";
+"kline_close" = "收盤";
+"kline_high" = "最高";
+"kline_low" = "最低";
+"kline_open" = "開盤";
 "label" = "標題";
 "landing_delete_content" = "您在 %1$@ 申請了刪除賬號，賬號將於 %2$@ 被刪除，如果您繼續登入，刪除您賬號的請求將被取消。";
 "landing_have_account" = "已有帳戶";

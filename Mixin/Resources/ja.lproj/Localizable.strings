@@ -864,6 +864,10 @@
 "joined_in" = "参加日 %@";
 "keep_running_foreground" = "画面を閉じずに、Mixin をフォアグラウンドで実行したままにしてください。";
 "keep_waiting" = "そのままお待ちください";
+"kline_close" = "終値";
+"kline_high" = "高値";
+"kline_low" = "安値";
+"kline_open" = "始値";
 "label" = "ラベル";
 "landing_delete_content" = "%1$@ でアカウントの削除をリクエストしました。アカウントは %2$@ に削除されます。ログインを継続すると、アカウントの削除はキャンセルされます。";
 "landing_have_account" = "すでにアカウントを持っています";

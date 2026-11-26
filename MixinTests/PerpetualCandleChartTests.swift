@@ -573,4 +573,163 @@ final class PerpetualCandleChartTests: XCTestCase {
         XCTAssertFalse(cardRect.intersects(metrics.startTimeFrame))
     }
     
+    // MARK: - Business Integration
+    
+    func testExternalViewportStateSurvivesReconfigureAndCellReuse() {
+        let size = CGSize(width: 303, height: 193)
+        let state = CandleChartViewportState()
+        let candles = makeCandles(count: 60)
+        let chart = CandlestickChartView(frame: CGRect(origin: .zero, size: size))
+        chart.configure(
+            candles: candles,
+            timeFrame: .oneMinute,
+            latestPrice: 160,
+            priceFormatMode: .decimal(priceScale: 2),
+            viewportState: state,
+            animated: false
+        )
+        XCTAssertTrue(chart.viewportState === state)
+        
+        state.zoom(factor: 1.5, anchorX: 100) // visibleCount = 20
+        XCTAssertTrue(state.scrollByPx(state.step * 10)) // 10 candles into history
+        XCTAssertFalse(state.followLatest)
+        state.selectedIndex = 40
+        let endBefore = state.end
+        let visibleCountBefore = state.visibleCount
+        let selectedTimestamp = candles[40].timestamp
+        
+        // Polling refresh: live price changes and a new candle is appended
+        let refreshed = candles + [makeCandle(timestamp: candles.last!.timestamp + 60_000)]
+        chart.configure(
+            candles: refreshed,
+            timeFrame: .oneMinute,
+            latestPrice: 161,
+            priceFormatMode: .decimal(priceScale: 2),
+            viewportState: state,
+            animated: true
+        )
+        XCTAssertTrue(chart.viewportState === state)
+        XCTAssertEqual(state.end, endBefore, accuracy: 0.001)
+        XCTAssertEqual(state.visibleCount, visibleCountBefore, accuracy: 0.001)
+        XCTAssertFalse(state.followLatest)
+        XCTAssertEqual(state.selectedIndex.map { refreshed[$0].timestamp }, selectedTimestamp)
+        
+        // Cell reuse: a different chart view bound to the same state keeps the viewport
+        let reusedChart = CandlestickChartView(frame: CGRect(origin: .zero, size: size))
+        reusedChart.configure(
+            candles: refreshed,
+            timeFrame: .oneMinute,
+            latestPrice: 161,
+            priceFormatMode: .decimal(priceScale: 2),
+            viewportState: state,
+            animated: true
+        )
+        XCTAssertTrue(reusedChart.viewportState === state)
+        XCTAssertEqual(state.end, endBefore, accuracy: 0.001)
+        XCTAssertEqual(state.visibleCount, visibleCountBefore, accuracy: 0.001)
+        XCTAssertEqual(state.selectedIndex.map { refreshed[$0].timestamp }, selectedTimestamp)
+    }
+    
+    func testConfigureWithoutAnimationSnapsPriceRangeImmediately() throws {
+        let size = CGSize(width: 303, height: 193)
+        let chart = CandlestickChartView(frame: CGRect(origin: .zero, size: size))
+        let lowCandles = makeCandles(count: 30)
+        let highCandles = lowCandles.map { candle in
+            makeCandle(timestamp: candle.timestamp, open: "1000", high: "1100", low: "900", close: "1050")
+        }
+        
+        func assertLatestLineMatchesTarget(
+            candles: [PerpetualCandleViewModel],
+            latestPrice: Double,
+            file: StaticString = #filePath,
+            line: UInt = #line
+        ) throws {
+            let metrics = try XCTUnwrap(chart.computeRenderMetrics(), file: file, line: line)
+            let indices = try XCTUnwrap(chart.viewportState.visibleIndices, file: file, line: line)
+            let target = try XCTUnwrap(
+                PriceRangeAnimator.visiblePriceRange(candles: candles, visibleIndices: indices, latestPrice: latestPrice),
+                file: file,
+                line: line
+            )
+            let expectedY = metrics.plotBottom - CGFloat((latestPrice - target.min) / (target.max - target.min)) * metrics.plotHeight
+            // latestLineY is nil if the price range still lags behind (latest price off plot)
+            let latestLineY = try XCTUnwrap(metrics.latestLineY, file: file, line: line)
+            XCTAssertEqual(latestLineY, expectedY, accuracy: 0.5, file: file, line: line)
+        }
+        
+        chart.configure(
+            candles: lowCandles,
+            timeFrame: .oneMinute,
+            latestPrice: 120,
+            priceFormatMode: .decimal(priceScale: 2),
+            animated: false
+        )
+        try assertLatestLineMatchesTarget(candles: lowCandles, latestPrice: 120)
+        
+        // Jumping to a far price level without animation lands on the new range at once
+        chart.configure(
+            candles: highCandles,
+            timeFrame: .oneMinute,
+            latestPrice: 1050,
+            priceFormatMode: .decimal(priceScale: 2),
+            animated: false
+        )
+        try assertLatestLineMatchesTarget(candles: highCandles, latestPrice: 1050)
+        
+        // Animated configure followed by an explicit snap (share card path) also lands at once
+        chart.configure(
+            candles: lowCandles,
+            timeFrame: .oneMinute,
+            latestPrice: 120,
+            priceFormatMode: .decimal(priceScale: 2),
+            animated: true
+        )
+        chart.layoutIfNeeded()
+        chart.snapPriceRangeWithoutAnimation()
+        try assertLatestLineMatchesTarget(candles: lowCandles, latestPrice: 120)
+    }
+    
+    func testLoaderViewModelsKeepRemoteTimestamps() throws {
+        let json = """
+        {
+            "market_id": "market",
+            "time_frame": "1m",
+            "updated_at": "2026-11-26T00:00:00Z",
+            "items": [
+                {"timestamp": 1700000000, "open": "1", "high": "2", "low": "0.5", "close": "1.5"},
+                {"timestamp": 1700000060000, "open": "1.5", "high": "2", "low": "1", "close": "1.8"}
+            ]
+        }
+        """
+        let candle = try JSONDecoder().decode(PerpetualMarketCandle.self, from: Data(json.utf8))
+        let viewModels = try XCTUnwrap(PerpetualCandleViewModel.viewModels(timeFrame: .oneMinute, candle: candle))
+        // Seconds are normalized to millis, millis pass through untouched
+        XCTAssertEqual(viewModels.map(\.timestamp), [1_700_000_000_000, 1_700_000_060_000])
+        
+        let fused = PerpetualCandleViewModel.withLivePrice(
+            candles: viewModels,
+            lastPrice: 3,
+            timeFrame: .oneMinute,
+            nowMillis: 1_700_000_090_000
+        )
+        XCTAssertEqual(fused.last?.timestamp, 1_700_000_060_000)
+        XCTAssertEqual(fused.last?.close, NSDecimalNumber(string: "3"))
+        XCTAssertEqual(fused.last?.high, NSDecimalNumber(string: "3"))
+        XCTAssertEqual(fused.first, viewModels.first)
+    }
+    
+    func testLocalizedChartLabelsResolveFromStrings() {
+        let labels = CandleChartLabels.localized
+        for (value, key) in [
+            (labels.open, "kline_open"),
+            (labels.close, "kline_close"),
+            (labels.high, "kline_high"),
+            (labels.low, "kline_low"),
+            (labels.date, "date"),
+        ] {
+            XCTAssertFalse(value.isEmpty)
+            XCTAssertNotEqual(value, key)
+        }
+    }
+    
 }

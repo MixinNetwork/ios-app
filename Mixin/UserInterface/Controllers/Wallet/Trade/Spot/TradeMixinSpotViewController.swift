@@ -13,11 +13,6 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
     
     private weak var depositTokenRequest: Request?
     
-    private var trendingRequester: MarketPeriodicRequester?
-    private var stocksRequester: MarketPeriodicRequester?
-    private var topGainersRequester: MarketPeriodicRequester?
-    private var topLosersRequester: MarketPeriodicRequester?
-    
     init(
         mode: Mode,
         sendAssetID: String?,
@@ -46,43 +41,10 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
         var tags = ["wallet": "main", "type": mode.rawValue]
         tags["source"] = UserOperationAnalytics.tradeSource?.rawValue
         reporter.report(event: .tradeSpotStart, tags: tags)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         
-        switch mode {
-        case .simple:
-            let trendingRequester = MarketPeriodicRequester(category: .trending)
-            self.trendingRequester = trendingRequester
-            trendingRequester.delegate = self
-            trendingRequester.start()
-            
-            let stocksRequester = MarketPeriodicRequester(category: .stocks)
-            self.stocksRequester = stocksRequester
-            stocksRequester.delegate = self
-            stocksRequester.start()
-            
-            let topGainersRequester = MarketPeriodicRequester(category: .topGainers)
-            self.topGainersRequester = topGainersRequester
-            topGainersRequester.delegate = self
-            topGainersRequester.start()
-            
-            let topLosersRequester = MarketPeriodicRequester(category: .topLosers)
-            self.topLosersRequester = topLosersRequester
-            topLosersRequester.delegate = self
-            topLosersRequester.start()
-        case .advanced:
-            break
+        if mode == .simple {
+            showMarketRecommendations()
         }
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        trendingRequester?.pause()
-        stocksRequester?.pause()
-        topGainersRequester?.pause()
-        topLosersRequester?.pause()
     }
     
     override func changeSendToken(_ sender: Any) {

@@ -1480,6 +1480,28 @@ extension MarketDashboardViewController {
             }
         }
         
+        var queryCategory: Market.QueryCategory {
+            switch self {
+            case .watchlist: .watchlist
+            case .trending: .trending
+            case .stock: .stock
+            case .topGainer: .topGainer
+            case .topLoser: .topLoser
+            case .all: .all
+            }
+        }
+        
+        var requestCategory: Market.RequestCategory {
+            switch self {
+            case .watchlist: .favorite
+            case .trending: .trending
+            case .stock: .stocks
+            case .topGainer: .topGainers
+            case .topLoser: .topLosers
+            case .all: .all
+            }
+        }
+        
     }
     
     enum PerpsSubCategory: CaseIterable {
@@ -1858,29 +1880,7 @@ extension MarketDashboardViewController {
                     scheduleRemoteLoader: scheduleRemoteLoader,
                 )
             case .trending, .stock, .topGainer, .topLoser, .all:
-                let queryCategory: Market.QueryCategory
-                let requestCategory: Market.RequestCategory
-                switch subCategory {
-                case .watchlist:
-                    queryCategory = .watchlist
-                    requestCategory = .favorite
-                case .trending:
-                    queryCategory = .trending
-                    requestCategory = .trending
-                case .stock:
-                    queryCategory = .stock
-                    requestCategory = .stocks
-                case .topGainer:
-                    queryCategory = .topGainer
-                    requestCategory = .topGainers
-                case .topLoser:
-                    queryCategory = .topLoser
-                    requestCategory = .topLosers
-                case .all:
-                    queryCategory = .all
-                    requestCategory = .all
-                }
-                let markets = MarketDAO.shared.markets(category: queryCategory, order: order)
+                let markets = MarketDAO.shared.markets(category: subCategory.queryCategory, order: order)
                 let info: CryptoMarketDisplayInfo = switch subCategory {
                 case .watchlist, .trending, .stock, .topGainer, .topLoser:
                         .volume
@@ -1920,7 +1920,7 @@ extension MarketDashboardViewController {
                         completion: nil,
                     )
                     if scheduleRemoteLoader {
-                        let requester = MarketPeriodicRequester(category: requestCategory)
+                        let requester = MarketPeriodicRequester(category: subCategory.requestCategory)
                         viewController.marketLoader = requester
                         requester.start()
                     }

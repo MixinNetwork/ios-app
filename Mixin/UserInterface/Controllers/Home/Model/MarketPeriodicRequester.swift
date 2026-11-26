@@ -71,9 +71,8 @@ final class MarketPeriodicRequester {
         timer?.invalidate()
     }
     
-    private func requestData() {
+    func requestOnce(completion: @escaping (MixinAPI.Result<[Market]>) -> Void) {
         assert(Thread.isMainThread)
-        timer?.invalidate()
         Logger.general.debug(category: "MarketPeriodicRequester", message: "Request \(modelName)")
         guard LoginManager.shared.isLoggedIn else {
             return
@@ -82,7 +81,7 @@ final class MarketPeriodicRequester {
             category: category,
             queue: .global(),
             limit: limit,
-        ) { [weak self, refreshInterval, category, modelName] result in
+        ) { [category, modelName] result in
             switch result {
             case let .success(markets):
                 Logger.general.debug(category: "MarketPeriodicRequester", message: "Loaded \(markets.count) \(modelName)")
@@ -102,6 +101,18 @@ final class MarketPeriodicRequester {
                 case .featured:
                     MarketDAO.shared.save(markets: markets, dataSource: .categorized(.featured))
                 }
+            case let .failure(error):
+                Logger.general.debug(category: "MarketPeriodicRequester", message: "Load \(modelName): \(error)")
+            }
+            completion(result)
+        }
+    }
+    
+    private func requestData() {
+        timer?.invalidate()
+        requestOnce { [weak self, refreshInterval, category, modelName] result in
+            switch result {
+            case let .success(markets):
                 let decision: NextRequestDecision = if let self, let delegate = self.delegate {
                     delegate.marketPeriodicRequester(
                         self,
@@ -125,8 +136,7 @@ final class MarketPeriodicRequester {
                         Logger.general.debug(category: "MarketPeriodicRequester", message: "Reloading cancelled")
                     }
                 }
-            case let .failure(error):
-                Logger.general.debug(category: "MarketPeriodicRequester", message: "Load \(modelName): \(error)")
+            case .failure:
                 DispatchQueue.main.async {
                     self?.scheduleNextRequestIfRunning(timeInterval: 3)
                 }

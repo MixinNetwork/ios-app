@@ -167,8 +167,7 @@ final class CandlestickChartView: UIView {
     ) {
         let didSwapState = viewportState != nil && viewportState !== self.viewportState
         if didSwapState || timeFrame != self.timeFrame {
-            // Stops the display link from driving the next viewport and resets isScrolling on the current one
-            chartGestureRecognizer.stopFling()
+            endInteraction()
         }
         isApplyingConfiguration = true
         if let viewportState, viewportState !== self.viewportState {
@@ -201,6 +200,16 @@ final class CandlestickChartView: UIView {
         syncLayoutAndRange(animated: false)
     }
     
+    func endInteraction() {
+        chartGestureRecognizer.endInteraction()
+    }
+
+    func scrollToLatest(in viewportState: CandleChartViewportState) {
+        endInteraction()
+        viewportState.clearSelection()
+        viewportState.scrollToLatest()
+    }
+
     override func draw(_ rect: CGRect) {
         guard let context = UIGraphicsGetCurrentContext() else {
             return
@@ -845,10 +854,7 @@ extension CandlestickChartView: CandleChartGestureRecognizerDelegate {
     
     func candleChartGesture(_ recognizer: CandleChartGestureRecognizer, didZoomBy factor: CGFloat, anchorX: CGFloat, panX: CGFloat) {
         viewportState.isScrolling = false
-        viewportState.zoom(factor: factor, anchorX: anchorX)
-        if panX != 0 {
-            _ = viewportState.scrollByPx(panX)
-        }
+        viewportState.zoom(factor: factor, anchorX: anchorX, panX: panX)
         updatePriceRange(animated: true)
         setNeedsDisplay()
     }

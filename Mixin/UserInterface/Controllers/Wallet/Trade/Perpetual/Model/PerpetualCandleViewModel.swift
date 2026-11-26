@@ -33,6 +33,7 @@ extension PerpetualCandleViewModel {
     
     // High and low reached so far by the active candle, including live prices
     struct LiveWick: Equatable {
+        let marketID: String
         let timeFrame: PerpetualTimeFrame
         let timestamp: Int64
         let high: NSDecimalNumber
@@ -89,25 +90,21 @@ extension PerpetualCandleViewModel {
         candles: [PerpetualCandleViewModel],
         lastPrice: Decimal?,
         timeFrame: PerpetualTimeFrame,
-        nowMillis: Int64
+        nowMillis: Int64,
     ) -> [PerpetualCandleViewModel] {
         guard let last = candles.last,
               let lastPrice,
               !lastPrice.isNaN,
-              lastPrice > 0
+              lastPrice > 0,
+              last.isOpen(timeFrame: timeFrame, nowMillis: nowMillis)
         else {
-            return candles
-        }
-        let lastStart = normalizedTimestampMillis(last.timestamp)
-        let period = timeFrame.durationMillis
-        guard nowMillis >= lastStart, nowMillis < lastStart + period else {
             return candles
         }
         let liveNumber = lastPrice as NSDecimalNumber
         let updatedHigh = last.high.compare(liveNumber) == .orderedAscending ? liveNumber : last.high
         let updatedLow = last.low.compare(liveNumber) == .orderedDescending ? liveNumber : last.low
         let updatedLast = PerpetualCandleViewModel(
-            timestamp: lastStart,
+            timestamp: last.timestamp,
             time: last.time,
             open: last.open,
             high: updatedHigh,
@@ -120,20 +117,24 @@ extension PerpetualCandleViewModel {
     }
     
     // Widens the active candle with the cached wick, so extremes pushed by earlier
-    // live prices survive later polls. The cache only applies to the same time frame and candle.
+    // live prices survive later polls.
     static func withLiveWick(
         candles: [PerpetualCandleViewModel],
+        marketID: String,
         timeFrame: PerpetualTimeFrame,
-        cachedWick: LiveWick?
+        nowMillis: Int64,
+        cachedWick: LiveWick?,
     ) -> (candles: [PerpetualCandleViewModel], wick: LiveWick?) {
-        guard let last = candles.last else {
+        guard let last = candles.last, last.isOpen(timeFrame: timeFrame, nowMillis: nowMillis) else {
             return (candles, nil)
         }
         guard let cachedWick,
+              cachedWick.marketID == marketID,
               cachedWick.timeFrame == timeFrame,
               cachedWick.timestamp == last.timestamp
         else {
             let wick = LiveWick(
+                marketID: marketID,
                 timeFrame: timeFrame,
                 timestamp: last.timestamp,
                 high: last.high,
@@ -144,6 +145,7 @@ extension PerpetualCandleViewModel {
         let high = last.high.compare(cachedWick.high) == .orderedAscending ? cachedWick.high : last.high
         let low = last.low.compare(cachedWick.low) == .orderedDescending ? cachedWick.low : last.low
         let wick = LiveWick(
+            marketID: marketID,
             timeFrame: timeFrame,
             timestamp: last.timestamp,
             high: high,
@@ -162,4 +164,8 @@ extension PerpetualCandleViewModel {
         return (result, wick)
     }
     
+    private func isOpen(timeFrame: PerpetualTimeFrame, nowMillis: Int64) -> Bool {
+        nowMillis >= timestamp && nowMillis - timestamp < timeFrame.durationMillis
+    }
+
 }

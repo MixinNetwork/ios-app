@@ -232,7 +232,15 @@ final class CandleChartGestureRecognizer: UIGestureRecognizer {
         handleTouchesFinished(touches, cancelled: true)
     }
     
+    func endInteraction() {
+        stopFling()
+        handleTouchesFinished(Set(activeTouches), cancelled: true)
+    }
+
     private func handleTouchesFinished(_ touches: Set<UITouch>, cancelled: Bool) {
+        guard touches.contains(where: activeTouches.contains) else {
+            return
+        }
         for touch in touches {
             activeTouches.removeAll { $0 === touch }
             previousLocations.removeValue(forKey: ObjectIdentifier(touch))

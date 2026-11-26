@@ -31,7 +31,6 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     private var priceScale: Int?
     private var lastPrice: Decimal?
     private var marketID: String?
-    private var liveWick: PerpetualCandleViewModel.LiveWick?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -106,14 +105,12 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         iconView.prepareForReuse()
-        liveWick = nil
+        chartView.endInteraction()
+        chart = nil
+        marketID = nil
     }
     
     func load(viewModel: PerpetualMarketViewModel) {
-        if viewModel.market.marketID != marketID {
-            marketID = viewModel.market.marketID
-            liveWick = nil
-        }
         changeLabel.text = viewModel.change
         changeLabel.marketColor = viewModel.changeColor
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
@@ -126,15 +123,14 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     
     func load(
         chart: Chart,
+        marketID: String,
         timeFrame: PerpetualTimeFrame,
         viewportState: CandleChartViewportState,
         priceScale: Int,
-        lastPrice: Decimal
+        lastPrice: Decimal,
     ) {
-        if timeFrame != self.timeFrame {
-            liveWick = nil
-        }
         self.chart = chart
+        self.marketID = marketID
         self.timeFrame = timeFrame
         self.priceScale = priceScale
         self.lastPrice = lastPrice
@@ -142,14 +138,14 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         case .candles(let candles) where candles.isEmpty:
             fallthrough
         case .unavailable:
-            liveWick = nil
+            viewportState.liveWick = nil
             showUnavailableView()
             loadingIndicatorView.stopAnimating()
         case .loading:
             hideUnavailableView()
             loadingIndicatorView.startAnimating()
         case .candles(let candles):
-            configureChart(candles: candles, viewportState: viewportState)
+            configureChart(candles: candles, marketID: marketID, viewportState: viewportState)
             hideUnavailableView()
             loadingIndicatorView.stopAnimating()
         }
@@ -157,9 +153,9 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     
     // Partial refresh for market polling, keeps viewport state and in-flight gestures untouched
     func updatePrice(viewModel: PerpetualMarketViewModel) {
-        if viewModel.market.marketID != marketID {
-            marketID = viewModel.market.marketID
-            liveWick = nil
+        let marketID = viewModel.market.marketID
+        guard marketID == self.marketID else {
+            return
         }
         changeLabel.text = viewModel.change
         changeLabel.marketColor = viewModel.changeColor
@@ -172,7 +168,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         self.priceScale = priceScale
         switch chart {
         case .candles(let candles) where !candles.isEmpty:
-            configureChart(candles: candles, viewportState: chartView.viewportState)
+            configureChart(candles: candles, marketID: marketID, viewportState: chartView.viewportState)
         case .candles, .unavailable, .loading, .none:
             break
         }
@@ -193,20 +189,24 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     
     private func configureChart(
         candles: [PerpetualCandleViewModel],
-        viewportState: CandleChartViewportState
+        marketID: String,
+        viewportState: CandleChartViewportState,
     ) {
+        let nowMillis = Int64(Date().timeIntervalSince1970 * 1000)
         let liveCandles = PerpetualCandleViewModel.withLivePrice(
             candles: candles,
             lastPrice: lastPrice,
             timeFrame: timeFrame,
-            nowMillis: Int64(Date().timeIntervalSince1970 * 1000)
+            nowMillis: nowMillis,
         )
         let (wickedCandles, wick) = PerpetualCandleViewModel.withLiveWick(
             candles: liveCandles,
+            marketID: marketID,
             timeFrame: timeFrame,
-            cachedWick: liveWick
+            nowMillis: nowMillis,
+            cachedWick: viewportState.liveWick,
         )
-        liveWick = wick
+        viewportState.liveWick = wick
         chartView.configure(
             candles: wickedCandles,
             timeFrame: timeFrame,

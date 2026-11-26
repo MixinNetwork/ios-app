@@ -17,6 +17,7 @@ final class CandleChartViewportState {
     
     var isScrolling: Bool = false
     var selectedIndex: Int?
+    var liveWick: PerpetualCandleViewModel.LiveWick?
     
     private var hasInitializedLargeScreenCount = false
     
@@ -100,22 +101,29 @@ final class CandleChartViewportState {
         return !hitBoundary
     }
     
-    func zoom(factor: CGFloat, anchorX: CGFloat) {
-        guard !candles.isEmpty, factor > 0, factor.isFinite, plotWidth > 0 else {
+    func zoom(factor: CGFloat, anchorX: CGFloat, panX: CGFloat) {
+        guard !candles.isEmpty,
+              factor > 0,
+              factor.isFinite,
+              anchorX.isFinite,
+              panX.isFinite,
+              plotWidth > 0
+        else {
             return
         }
         hasInitializedLargeScreenCount = true
         let oldStep = step
-        let newCount = max(Self.minVisibleCandles, min(maxVisibleCount, visibleCount / factor))
-        if followLatest {
-            visibleCount = newCount
-            end = maxEnd
+        let distanceFromRight = plotWidth - anchorX
+        let anchorPosition = end - distanceFromRight / oldStep
+        visibleCount = max(Self.minVisibleCandles, min(maxVisibleCount, visibleCount / factor))
+        let targetEnd = if followLatest {
+            maxEnd - panX / step
         } else {
-            let anchorPosition = end - (plotWidth - anchorX) / oldStep
-            visibleCount = newCount
-            let newStep = step
-            let targetEnd = anchorPosition + (plotWidth - anchorX) / newStep
-            end = max(minEnd, min(maxEnd, targetEnd))
+            anchorPosition + (distanceFromRight - panX) / step
+        }
+        end = max(minEnd, min(maxEnd, targetEnd))
+        if panX != 0 {
+            followLatest = end >= maxEnd - 0.5
         }
     }
     

@@ -727,10 +727,11 @@ extension PerpetualMarketViewController {
     private func loadChart(on cell: PerpetualMarketPriceCell, timeFrame: PerpetualTimeFrame) {
         cell.load(
             chart: charts[timeFrame] ?? .loading,
+            marketID: viewModel.market.marketID,
             timeFrame: timeFrame,
             viewportState: chartViewportState(for: timeFrame),
             priceScale: viewModel.market.priceScale,
-            lastPrice: viewModel.decimalLastPrice
+            lastPrice: viewModel.decimalLastPrice,
         )
     }
     
@@ -1239,8 +1240,7 @@ extension PerpetualMarketViewController: PerpetualMarketPriceCell.Delegate {
         self.selectedTimeFrame = timeFrame
         navigationItem.rightBarButtonItems?.first?.isEnabled = charts[timeFrame] != nil
         let viewportState = chartViewportState(for: timeFrame)
-        viewportState.clearSelection()
-        viewportState.scrollToLatest()
+        cell.chartView.scrollToLatest(in: viewportState)
         loadChart(on: cell, timeFrame: timeFrame)
         candleLoader.start(timeFrame: timeFrame)
         AppGroupUserDefaults.Wallet.perpsChartTimeFrame = timeFrame.rawValue

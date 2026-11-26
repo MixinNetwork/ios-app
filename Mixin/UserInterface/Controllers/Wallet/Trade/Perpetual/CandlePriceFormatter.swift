@@ -60,9 +60,22 @@ enum CandlePriceFormatter {
         }
         var maxFractionDigits = 0
         for candle in candles {
-            let digits = significantFractionDigits(of: candle.close.decimalValue)
-            if digits > maxFractionDigits {
-                maxFractionDigits = digits
+            let plain = candle.close.decimalValue.formatted(
+                Decimal.FormatStyle.number
+                    .locale(.enUSPOSIX)
+                    .grouping(.never)
+                    .sign(strategy: .never)
+                    .precision(.fractionLength(0...18))
+            )
+            guard let dotIndex = plain.firstIndex(of: ".") else {
+                continue
+            }
+            var fractional = plain[plain.index(after: dotIndex)...]
+            while fractional.last == "0" {
+                fractional = fractional.dropLast()
+            }
+            if fractional.count > maxFractionDigits {
+                maxFractionDigits = fractional.count
             }
         }
         return max(0, min(10, maxFractionDigits))
@@ -72,7 +85,7 @@ enum CandlePriceFormatter {
         _ value: Decimal,
         mode: CandlePriceFormatMode,
         candles: [PerpetualCandleViewModel],
-        locale: Locale = .current
+        locale: Locale
     ) -> String {
         switch mode {
         case .decimal(let priceScale):
@@ -89,7 +102,7 @@ enum CandlePriceFormatter {
     static func formatDecimal(
         _ value: Decimal,
         decimals: Int,
-        locale: Locale = .current
+        locale: Locale
     ) -> String {
         let clampedDecimals = max(0, min(18, decimals))
         let style = Decimal.FormatStyle.number
@@ -103,7 +116,7 @@ enum CandlePriceFormatter {
     static func formatChangePercentage(
         open: Decimal,
         close: Decimal,
-        locale: Locale = .current
+        locale: Locale
     ) -> String {
         let isRising = close >= open
         let prefix = isRising ? "↑" : "↓"
@@ -131,8 +144,8 @@ enum CandlePriceFormatter {
         candles: [PerpetualCandleViewModel],
         latestPrice: Decimal?,
         mode: CandlePriceFormatMode,
-        font: UIFont = .systemFont(ofSize: 11),
-        locale: Locale = .current
+        font: UIFont,
+        locale: Locale
     ) -> CGFloat {
         var candidates: [Decimal] = []
         if !candles.isEmpty {
@@ -167,24 +180,6 @@ enum CandlePriceFormatter {
             }
         }
         return max(ceil(widest) + axisHorizontalPadding, minimumAxisWidth)
-    }
-    
-    private static func significantFractionDigits(of decimal: Decimal) -> Int {
-        let plain = decimal.formatted(
-            Decimal.FormatStyle.number
-                .locale(.enUSPOSIX)
-                .grouping(.never)
-                .sign(strategy: .never)
-                .precision(.fractionLength(0...18))
-        )
-        guard let dotIndex = plain.firstIndex(of: ".") else {
-            return 0
-        }
-        var fractional = plain[plain.index(after: dotIndex)...]
-        while fractional.last == "0" {
-            fractional = fractional.dropLast()
-        }
-        return fractional.count
     }
     
 }

@@ -136,7 +136,7 @@ final class PriceRangeAnimator {
         visiblePriceRange(candles: candles, visibleIndices: visibleIndices, latestPrice: latestPrice)
     }
     
-    func update(target: PriceRange, hold: Bool, startDisplayLink: Bool = true) {
+    func update(target: PriceRange, hold: Bool, startDisplayLink: Bool) {
         guard let currentRange = current, let toRange = to else {
             snap(to: target)
             return
@@ -161,8 +161,12 @@ final class PriceRangeAnimator {
         from = currentRange
         to = next
         progress = 0.0
-        if startDisplayLink {
-            beginDisplayLink()
+        if startDisplayLink, displayLink == nil {
+            lastTimestamp = nil
+            let proxy = DisplayLinkProxy(target: self)
+            let link = CADisplayLink(target: proxy, selector: #selector(DisplayLinkProxy.step(_:)))
+            link.add(to: .main, forMode: .common)
+            displayLink = link
         }
     }
     
@@ -198,17 +202,6 @@ final class PriceRangeAnimator {
         displayLink?.invalidate()
         displayLink = nil
         lastTimestamp = nil
-    }
-    
-    private func beginDisplayLink() {
-        guard displayLink == nil else {
-            return
-        }
-        lastTimestamp = nil
-        let proxy = DisplayLinkProxy(target: self)
-        let link = CADisplayLink(target: proxy, selector: #selector(DisplayLinkProxy.step(_:)))
-        link.add(to: .main, forMode: .common)
-        displayLink = link
     }
     
     fileprivate func handleDisplayLink(_ link: CADisplayLink) {

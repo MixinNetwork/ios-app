@@ -49,9 +49,9 @@ final class CandleChartViewportState {
     }
     
     init(
-        candles: [PerpetualCandleViewModel] = [],
-        visibleCount: CGFloat = defaultVisibleCandles,
-        followLatest: Bool = true
+        candles: [PerpetualCandleViewModel],
+        visibleCount: CGFloat,
+        followLatest: Bool
     ) {
         self.candles = candles
         self.visibleCount = max(Self.minVisibleCandles, min(Self.maxVisibleCandles, visibleCount))
@@ -119,7 +119,7 @@ final class CandleChartViewportState {
         }
     }
     
-    func updateCandles(_ newCandles: [PerpetualCandleViewModel], isRegularWidth: Bool = false) {
+    func updateCandles(_ newCandles: [PerpetualCandleViewModel], isRegularWidth: Bool) {
         let oldCandles = candles
         let selectedTimestamp: Int64? = if let selectedIndex, selectedIndex >= 0, selectedIndex < oldCandles.count {
             oldCandles[selectedIndex].timestamp

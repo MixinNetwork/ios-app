@@ -731,5 +731,71 @@ final class PerpetualCandleChartTests: XCTestCase {
             XCTAssertNotEqual(value, key)
         }
     }
+
+    // MARK: - Time frame tab geometry
+
+    private func makeLaidOutPriceCell(width: CGFloat) -> PerpetualMarketPriceCell {
+        let cell = R.nib.perpetualMarketPriceCell.firstView(owner: nil)!
+        cell.frame = CGRect(x: 0, y: 0, width: width, height: 400)
+        cell.layoutIfNeeded()
+        return cell
+    }
+
+    private func assertTimeFrameIndicatorAligned(
+        on cell: PerpetualMarketPriceCell,
+        index: Int,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let buttons = cell.timeFrameStackView.arrangedSubviews.compactMap { $0 as? UIButton }
+        let button = buttons[index]
+        let buttonFrame = cell.contentView.convert(button.bounds, from: button)
+        let indicatorFrame = cell.contentView.convert(
+            cell.timeFrameIndicatorView.bounds,
+            from: cell.timeFrameIndicatorView
+        )
+        XCTAssertEqual(indicatorFrame.midX, buttonFrame.midX, accuracy: 0.5, file: file, line: line)
+        XCTAssertEqual(indicatorFrame.midY, buttonFrame.midY, accuracy: 0.5, file: file, line: line)
+        XCTAssertEqual(indicatorFrame.width, buttonFrame.width, accuracy: 0.5, file: file, line: line)
+        XCTAssertEqual(indicatorFrame.height, buttonFrame.height, accuracy: 0.5, file: file, line: line)
+        XCTAssertEqual(cell.timeFrameIndicatorView.layer.cornerRadius, indicatorFrame.height / 2, accuracy: 0.5, file: file, line: line)
+    }
+
+    func testTimeFrameIndicatorIsCenteredOnFirstFrame() {
+        let cell = makeLaidOutPriceCell(width: 390)
+        cell.setTimeFrame(frame: .fifteenMinutes)
+        cell.layoutIfNeeded()
+        assertTimeFrameIndicatorAligned(on: cell, index: 2)
+    }
+
+    func testTimeFrameIndicatorFollowsSelectionAndWidthChanges() {
+        let cell = makeLaidOutPriceCell(width: 390)
+        cell.setTimeFrame(frame: .oneDay)
+        cell.layoutIfNeeded()
+        assertTimeFrameIndicatorAligned(on: cell, index: 5)
+
+        cell.frame.size.width = 320
+        cell.layoutIfNeeded()
+        assertTimeFrameIndicatorAligned(on: cell, index: 5)
+
+        cell.setTimeFrame(frame: .oneMinute)
+        cell.layoutIfNeeded()
+        assertTimeFrameIndicatorAligned(on: cell, index: 0)
+
+        cell.frame.size.width = 390
+        cell.layoutIfNeeded()
+        assertTimeFrameIndicatorAligned(on: cell, index: 0)
+    }
+
+    func testTimeFrameTrackHasSymmetricHorizontalMarginsMatchingChart() {
+        let cell = makeLaidOutPriceCell(width: 390)
+        let trackFrame = cell.contentView.convert(cell.timeFrameScrollView.bounds, from: cell.timeFrameScrollView)
+        let chartFrame = cell.contentView.convert(cell.chartView.bounds, from: cell.chartView)
+        let contentWidth = cell.contentView.bounds.width
+        XCTAssertEqual(trackFrame.minX, 16, accuracy: 0.5)
+        XCTAssertEqual(contentWidth - trackFrame.maxX, 16, accuracy: 0.5)
+        XCTAssertEqual(trackFrame.minX, chartFrame.minX, accuracy: 0.5)
+        XCTAssertEqual(trackFrame.maxX, chartFrame.maxX, accuracy: 0.5)
+    }
     
 }

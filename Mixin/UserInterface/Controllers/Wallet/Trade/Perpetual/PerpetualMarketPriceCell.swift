@@ -30,9 +30,9 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     private var timeFrame: PerpetualTimeFrame = .oneMinute
     private var priceScale: Int?
     private var lastPrice: Decimal?
-    private var selectedTimeFrameIndex: Int?
     private var timeFrameDividers: [UIView] = []
-    private let timeFrameIndicatorView = UIView()
+    private var timeFrameIndicatorConstraints: [NSLayoutConstraint] = []
+    let timeFrameIndicatorView = UIView()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -61,7 +61,13 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         timeFrameScrollView.layer.cornerRadius = 21
         timeFrameIndicatorView.backgroundColor = R.color.background()
         timeFrameIndicatorView.layer.cornerRadius = 18
+        timeFrameIndicatorView.isHidden = true
+        timeFrameIndicatorView.translatesAutoresizingMaskIntoConstraints = false
         timeFrameScrollView.insertSubview(timeFrameIndicatorView, at: 0)
+        NSLayoutConstraint.activate([
+            timeFrameIndicatorView.topAnchor.constraint(equalTo: timeFrameScrollView.topAnchor, constant: 3),
+            timeFrameIndicatorView.bottomAnchor.constraint(equalTo: timeFrameScrollView.bottomAnchor, constant: -3),
+        ])
         timeFrameStackView.isLayoutMarginsRelativeArrangement = true
         timeFrameStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 3, leading: 3, bottom: 3, trailing: 3)
         for (i, timeFrame) in PerpetualTimeFrame.allCases.enumerated() {
@@ -188,13 +194,6 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         setTimeFrameSelection(index: index, animated: false)
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if let index = selectedTimeFrameIndex {
-            updateTimeFrameIndicator(index: index, animated: false)
-        }
-    }
-
     @objc private func changeTimeFrame(_ sender: UIButton) {
         setTimeFrameSelection(index: sender.tag, animated: true)
         let frame = PerpetualTimeFrame.allCases[sender.tag]
@@ -221,7 +220,6 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     }
     
     private func setTimeFrameSelection(index: Int, animated: Bool) {
-        selectedTimeFrameIndex = index
         for case let button as UIButton in timeFrameStackView.arrangedSubviews {
             button.isSelected = button.tag == index
         }
@@ -231,22 +229,28 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         updateTimeFrameIndicator(index: index, animated: animated)
     }
 
+    // The pill is pinned to the selected button with Auto Layout, so its first
+    // placement and every relayout (rotation, width change) stay in sync with the buttons.
     private func updateTimeFrameIndicator(index: Int, animated: Bool) {
-        timeFrameStackView.layoutIfNeeded()
         let buttons = timeFrameStackView.arrangedSubviews.compactMap { $0 as? UIButton }
         guard let button = buttons.first(where: { $0.tag == index }) else {
             return
         }
-        let frame = timeFrameScrollView.convert(button.bounds, from: button)
-        let update = {
-            self.timeFrameIndicatorView.frame = frame
-        }
+        NSLayoutConstraint.deactivate(timeFrameIndicatorConstraints)
+        timeFrameIndicatorConstraints = [
+            timeFrameIndicatorView.leadingAnchor.constraint(equalTo: button.leadingAnchor),
+            timeFrameIndicatorView.trailingAnchor.constraint(equalTo: button.trailingAnchor),
+        ]
+        NSLayoutConstraint.activate(timeFrameIndicatorConstraints)
+        timeFrameIndicatorView.isHidden = false
         if animated {
             UIView.animate(withDuration: 0.35, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0) {
-                update()
+                self.timeFrameScrollView.layoutIfNeeded()
             }
         } else {
-            update()
+            UIView.performWithoutAnimation {
+                self.timeFrameScrollView.layoutIfNeeded()
+            }
         }
     }
     

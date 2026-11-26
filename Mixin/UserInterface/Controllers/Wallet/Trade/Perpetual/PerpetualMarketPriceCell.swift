@@ -27,7 +27,9 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     private weak var unavailableView: UIView?
     
     private var chart: Chart?
-    private var timeFrameJustChanged = false
+    private var timeFrame: PerpetualTimeFrame = .oneMinute
+    private var priceScale: Int?
+    private var lastPrice: Decimal?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -51,6 +53,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )
+        chartView.labels = .localized
         timeFrameScrollView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         for (i, timeFrame) in PerpetualTimeFrame.allCases.enumerated() {
             var config: UIButton.Configuration = .filled()
@@ -107,7 +110,6 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         changeLabel.text = viewModel.change
         changeLabel.marketColor = viewModel.changeColor
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        chartView.currentPrice = viewModel.decimalLastPrice
     }
     
     func loadPrice(title: String, content: String) {
@@ -115,7 +117,17 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         priceLabel.text = content
     }
     
-    func load(chart: Chart, priceFormatStyle: Decimal.FormatStyle.Currency) {
+    func load(
+        chart: Chart,
+        timeFrame: PerpetualTimeFrame,
+        viewportState: CandleChartViewportState,
+        priceScale: Int,
+        lastPrice: Decimal
+    ) {
+        self.chart = chart
+        self.timeFrame = timeFrame
+        self.priceScale = priceScale
+        self.lastPrice = lastPrice
         switch chart {
         case .candles(let candles) where candles.isEmpty:
             fallthrough
@@ -126,22 +138,26 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
             hideUnavailableView()
             loadingIndicatorView.startAnimating()
         case .candles(let candles):
-            let scrollsToLast = switch self.chart {
-            case .unavailable, .loading, .none:
-                true
-            case .candles:
-                timeFrameJustChanged
-            }
-            chartView.setCandles(
-                candles,
-                priceFormatStyle: priceFormatStyle,
-                scrollsToLast: scrollsToLast
-            )
+            configureChart(candles: candles, viewportState: viewportState)
             hideUnavailableView()
             loadingIndicatorView.stopAnimating()
         }
-        self.chart = chart
-        self.timeFrameJustChanged = false
+    }
+    
+    // Partial refresh for market polling, keeps viewport state and in-flight gestures untouched
+    func updatePrice(viewModel: PerpetualMarketViewModel) {
+        changeLabel.text = viewModel.change
+        changeLabel.marketColor = viewModel.changeColor
+        let lastPrice = viewModel.decimalLastPrice
+        let priceScale = viewModel.market.priceScale
+        guard lastPrice != self.lastPrice || priceScale != self.priceScale else {
+            return
+        }
+        self.lastPrice = lastPrice
+        self.priceScale = priceScale
+        if case let .candles(candles) = chart, !candles.isEmpty {
+            configureChart(candles: candles, viewportState: chartView.viewportState)
+        }
     }
     
     func setTimeFrame(frame: PerpetualTimeFrame) {
@@ -152,10 +168,28 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     }
     
     @objc private func changeTimeFrame(_ sender: UIButton) {
-        timeFrameJustChanged = true
         setTimeFrameSelection(index: sender.tag)
         let frame = PerpetualTimeFrame.allCases[sender.tag]
         delegate?.perpetualMarketPriceCell(self, didSelectTimeFrame: frame)
+    }
+    
+    private func configureChart(
+        candles: [PerpetualCandleViewModel],
+        viewportState: CandleChartViewportState
+    ) {
+        let liveCandles = PerpetualCandleViewModel.withLivePrice(
+            candles: candles,
+            lastPrice: lastPrice,
+            timeFrame: timeFrame
+        )
+        chartView.configure(
+            candles: liveCandles,
+            timeFrame: timeFrame,
+            latestPrice: lastPrice,
+            priceFormatMode: .decimal(priceScale: priceScale),
+            viewportState: viewportState,
+            animated: true
+        )
     }
     
     private func setTimeFrameSelection(index: Int) {

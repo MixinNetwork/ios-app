@@ -109,12 +109,6 @@ final class CandlestickChartView: UIView {
         }
     }
     
-    // Transitional alias for Phase 1 callers
-    var currentPrice: Decimal? {
-        get { latestPrice }
-        set { latestPrice = newValue }
-    }
-    
     private let rangeAnimator = PriceRangeAnimator()
     private let selectionFeedback = UISelectionFeedbackGenerator()
     private lazy var chartGestureRecognizer = CandleChartGestureRecognizer(target: nil, action: nil)
@@ -197,20 +191,6 @@ final class CandlestickChartView: UIView {
     
     func snapPriceRangeWithoutAnimation() {
         syncLayoutAndRange(animated: false)
-    }
-    
-    // Transitional compile bridge for Phase 1; Phase 2 migrates callers to `configure(...)`.
-    func setCandles(
-        _ candles: [PerpetualCandleViewModel],
-        priceFormatStyle: Decimal.FormatStyle.Currency,
-        scrollsToLast: Bool
-    ) {
-        priceFormatMode = .currencyStyle(priceFormatStyle)
-        viewportState.updateCandles(candles, isRegularWidth: isRegularWidth)
-        if scrollsToLast {
-            viewportState.scrollToLatest()
-        }
-        syncLayoutAndRange(animated: isUserInteractionEnabled)
     }
     
     override func draw(_ rect: CGRect) {

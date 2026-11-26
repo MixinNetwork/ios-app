@@ -26,6 +26,16 @@ struct CandleChartLabels: Equatable {
         date: "Date"
     )
     
+    static var localized: CandleChartLabels {
+        CandleChartLabels(
+            open: R.string.localizable.kline_open(),
+            close: R.string.localizable.kline_close(),
+            high: R.string.localizable.kline_high(),
+            low: R.string.localizable.kline_low(),
+            date: R.string.localizable.date()
+        )
+    }
+    
     init(open: String, close: String, high: String, low: String, date: String) {
         self.open = open
         self.close = close

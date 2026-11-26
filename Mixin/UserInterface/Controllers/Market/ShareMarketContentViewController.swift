@@ -21,7 +21,7 @@ final class ShareMarketContentViewController: UIViewController {
     
     private enum Source {
         case spot(Market, [ChartView.Point])
-        case perpetual(PerpetualMarketViewModel, [PerpetualCandleViewModel], currentPrice: Decimal)
+        case perpetual(PerpetualMarketViewModel, [PerpetualCandleViewModel], PerpetualTimeFrame, latestPrice: Decimal)
     }
     
     private let source: Source
@@ -52,21 +52,20 @@ final class ShareMarketContentViewController: UIViewController {
     init(
         viewModel: PerpetualMarketViewModel,
         candles: [PerpetualCandleViewModel],
+        timeFrame: PerpetualTimeFrame,
+        latestPrice: Decimal,
         rebatingCode: Referral.RebatingCode?,
     ) {
         let priceDisplay = PerpetualMarketViewModel.PriceDisplay(
             rawValue: AppGroupUserDefaults.Wallet.perpsPriceDisplay
         ) ?? .lastPrice
-        let currentPrice: Decimal
         switch priceDisplay {
         case .lastPrice:
-            currentPrice = viewModel.decimalLastPrice
             self.localizedPrice = viewModel.localizedLastPrice
         case .markPrice:
-            currentPrice = viewModel.market.decimalMarkPrice
             self.localizedPrice = viewModel.market.localizedMarkPrice
         }
-        self.source = .perpetual(viewModel, candles, currentPrice: currentPrice)
+        self.source = .perpetual(viewModel, candles, timeFrame, latestPrice: latestPrice)
         self.symbol = viewModel.market.displaySymbol
         self.reportingType = "perps"
         self.obiContent = if let rebatingCode {
@@ -159,7 +158,7 @@ final class ShareMarketContentViewController: UIViewController {
                 chartWrapperView.addSubview(unavailableView)
                 unavailableView.snp.makeEdgesEqualToSuperview()
             }
-        case let .perpetual(viewModel, candles, currentPrice):
+        case let .perpetual(viewModel, candles, timeFrame, latestPrice):
             tagLabel.font = .condensed(size: 12)
             tagLabel.text = viewModel.leverage
             tagLabel.backgroundColor = R.color.background_quaternary()
@@ -175,15 +174,24 @@ final class ShareMarketContentViewController: UIViewController {
             } else {
                 let chartView = CandlestickChartView()
                 chartView.isUserInteractionEnabled = false
+                chartView.labels = .localized
                 chartWrapperView.addSubview(chartView)
                 chartView.snp.makeEdgesEqualToSuperview()
                 view.layoutIfNeeded()
-                chartView.currentPrice = currentPrice
-                chartView.setCandles(
-                    candles,
-                    priceFormatStyle: viewModel.userDisplayPriceFormatStyle,
-                    scrollsToLast: true
+                let liveCandles = PerpetualCandleViewModel.withLivePrice(
+                    candles: candles,
+                    lastPrice: latestPrice,
+                    timeFrame: timeFrame
                 )
+                chartView.configure(
+                    candles: liveCandles,
+                    timeFrame: timeFrame,
+                    latestPrice: latestPrice,
+                    priceFormatMode: .decimal(priceScale: viewModel.market.priceScale),
+                    animated: false
+                )
+                chartView.layoutIfNeeded()
+                chartView.snapPriceRangeWithoutAnimation()
             }
         }
         
@@ -239,7 +247,7 @@ extension ShareMarketContentViewController: ModernShareContentViewController {
             case let .spot(market, _):
                 link = "https://mixin.one/markets/\(market.coinID)"
                 referralParameter = "?ref="
-            case let .perpetual(viewModel, _, _):
+            case let .perpetual(viewModel, _, _, _):
                 link = "https://mixin.one/trade?type=perps&market=\(viewModel.market.marketID)"
                 referralParameter = "&referral="
             }
@@ -318,7 +326,7 @@ extension ShareMarketContentViewController: ModernShareContentViewController {
                     at: 0,
                 )
             }
-        case let .perpetual(viewModel, _, _):
+        case let .perpetual(viewModel, _, _, _):
             let market = viewModel.market
             let marketLink = "mixin://mixin.one/trade?type=perps&market=\(market.marketID)"
             description = [

@@ -3,6 +3,21 @@ import MixinServices
 
 final class CandlestickChartView: UIView {
     
+    struct RenderMetrics {
+        let plotTop: CGFloat
+        let plotBottom: CGFloat
+        let plotHeight: CGFloat
+        let axisWidth: CGFloat
+        let plotWidth: CGFloat
+        let axisTextX: CGFloat
+        let gridLabelFrames: [CGRect]
+        let latestLineY: CGFloat?
+        let latestTagRect: CGRect?
+        let startTimeFrame: CGRect
+        let endTimeFrame: CGRect?
+        let detailCardRect: CGRect?
+    }
+    
     private enum Config {
         static let plotTop: CGFloat = 8
         static let plotBottomInset: CGFloat = 24
@@ -214,83 +229,38 @@ final class CandlestickChartView: UIView {
             return
         }
         
-        // Layer 1: Plot geometry & monotonic axisWidth
-        let plotTop = Config.plotTop
-        let plotBottom = bounds.height - Config.plotBottomInset
-        let plotHeight = max(1, plotBottom - plotTop)
-        let axisWidth = currentAxisWidth()
-        let plotWidth = max(1, bounds.width - axisWidth)
-        let axisTextX = plotWidth + 8
-        
-        if abs(viewportState.plotWidth - plotWidth) > 0.5 {
-            viewportState.updateLayout(plotWidth: plotWidth, isRegularWidth: isRegularWidth)
-        }
-        
-        guard let visibleIndices = viewportState.visibleIndices else {
+        guard let metrics = prepareRenderMetrics() else {
             return
         }
         
-        let range: PriceRange
-        if let currentRange = rangeAnimator.current {
-            range = currentRange
-        } else if let immediate = PriceRangeAnimator.visiblePriceRange(
-            candles: candles,
-            visibleIndices: visibleIndices,
-            latestPrice: latestPriceDouble
-        ) {
-            rangeAnimator.snap(to: immediate)
-            range = immediate
-        } else {
-            return
+        if rangeAnimator.current == nil {
+            rangeAnimator.snap(to: metrics.range)
         }
         
         let textAssistColor = (R.color.text_tertiary() ?? .secondaryLabel).resolvedColor(with: traitCollection)
         let risingColor = MarketColor.rising.uiColor.resolvedColor(with: traitCollection)
         let fallingColor = MarketColor.falling.uiColor.resolvedColor(with: traitCollection)
         
-        let latestDecimal = latestPrice
-        let latestDouble = latestPriceDouble
-        let latestY = latestDouble.map { yCoordinate(for: $0, range: range, plotBottom: plotBottom, plotHeight: plotHeight) }
-        let showLatest = latestY.map { $0 >= plotTop && $0 <= plotBottom } ?? false
-        let sampleHeight = ("0" as NSString).size(withAttributes: [.font: Config.axisFont]).height
-        let latestTagHeight = sampleHeight + 4
-        
-        // Layer 2: 4 horizontal dashed grid lines & anti-collision Y-axis labels
-        let priceSpan = range.max - range.min
         let gridStrokeColor = textAssistColor.withAlphaComponent(0.3).cgColor
         let axisAttributes: [NSAttributedString.Key: Any] = [
             .font: Config.axisFont,
             .foregroundColor: textAssistColor,
         ]
         
-        for i in 0..<Config.gridLineCount {
-            let fraction = CGFloat(i) / CGFloat(Config.gridLineCount - 1)
-            let y = plotTop + plotHeight * fraction
-            
+        // Layer 2: 4 horizontal dashed grid lines & anti-collision Y-axis labels
+        for item in metrics.gridItems {
             context.saveGState()
             context.setStrokeColor(gridStrokeColor)
             context.setLineWidth(1)
             context.setLineDash(phase: 0, lengths: Config.gridDashLengths)
-            context.move(to: CGPoint(x: 0, y: y))
-            context.addLine(to: CGPoint(x: plotWidth, y: y))
+            context.move(to: CGPoint(x: 0, y: item.lineY))
+            context.addLine(to: CGPoint(x: metrics.plotWidth, y: item.lineY))
             context.strokePath()
             context.restoreGState()
             
-            let price = range.max - priceSpan * Double(fraction)
-            let priceText = formatPrice(Decimal(price))
-            let labelSize = (priceText as NSString).size(withAttributes: axisAttributes)
-            var labelCenterY = y
-            if showLatest, let latestY {
-                let minGap = (latestTagHeight + labelSize.height) / 2 + 2
-                if abs(labelCenterY - latestY) < minGap {
-                    labelCenterY = (labelCenterY < latestY) ? (latestY - minGap) : (latestY + minGap)
-                }
-            }
-            let labelTop = labelCenterY - labelSize.height / 2
-            let labelBottom = labelCenterY + labelSize.height / 2
-            if labelTop >= 0 && labelBottom <= bounds.height {
-                (priceText as NSString).draw(
-                    at: CGPoint(x: axisTextX, y: labelTop),
+            if let labelFrame = item.labelFrame {
+                (item.priceText as NSString).draw(
+                    at: labelFrame.origin,
                     withAttributes: axisAttributes
                 )
             }
@@ -298,23 +268,23 @@ final class CandlestickChartView: UIView {
         
         // Layer 3: Rounded candles using standard circular-arc CGPath
         context.saveGState()
-        context.clip(to: CGRect(x: 0, y: plotTop, width: plotWidth, height: plotHeight))
+        context.clip(to: CGRect(x: 0, y: metrics.plotTop, width: metrics.plotWidth, height: metrics.plotHeight))
         
         let step = viewportState.step
         let bodyWidth = step * 0.7
         let wickWidth = min(max(bodyWidth * 0.3, 1.5), 3.0)
         
-        for index in visibleIndices {
+        for index in metrics.visibleIndices {
             let candle = candles[index]
             let isBull = candle.close.compare(candle.open) != .orderedAscending
             let fillColor = (isBull ? risingColor : fallingColor).cgColor
             context.setFillColor(fillColor)
             
             let centerX = viewportState.centerX(forIndex: index)
-            let highY = yCoordinate(for: candle.high.doubleValue, range: range, plotBottom: plotBottom, plotHeight: plotHeight)
-            let lowY = yCoordinate(for: candle.low.doubleValue, range: range, plotBottom: plotBottom, plotHeight: plotHeight)
-            let openY = yCoordinate(for: candle.open.doubleValue, range: range, plotBottom: plotBottom, plotHeight: plotHeight)
-            let closeY = yCoordinate(for: candle.close.doubleValue, range: range, plotBottom: plotBottom, plotHeight: plotHeight)
+            let highY = yCoordinate(for: candle.high.doubleValue, range: metrics.range, plotBottom: metrics.plotBottom, plotHeight: metrics.plotHeight)
+            let lowY = yCoordinate(for: candle.low.doubleValue, range: metrics.range, plotBottom: metrics.plotBottom, plotHeight: metrics.plotHeight)
+            let openY = yCoordinate(for: candle.open.doubleValue, range: metrics.range, plotBottom: metrics.plotBottom, plotHeight: metrics.plotHeight)
+            let closeY = yCoordinate(for: candle.close.doubleValue, range: metrics.range, plotBottom: metrics.plotBottom, plotHeight: metrics.plotHeight)
             
             let wickTop = min(highY, lowY)
             let wickHeight = max(abs(lowY - highY), wickWidth)
@@ -346,78 +316,47 @@ final class CandlestickChartView: UIView {
         context.restoreGState()
         
         // Layer 4: Latest price solid line & capsule tag (stays visible during selection)
-        if showLatest, let latestY, let latestDecimal, let lastCandle = candles.last {
-            let isBull = latestDecimal >= lastCandle.open.decimalValue
-            let latestColor = isBull ? risingColor : fallingColor
+        if let latest = metrics.latestItem {
+            let latestColor = latest.isBull ? risingColor : fallingColor
             
             context.saveGState()
             context.setStrokeColor(latestColor.withAlphaComponent(0.5).cgColor)
             context.setLineWidth(1)
-            context.move(to: CGPoint(x: 0, y: latestY))
-            context.addLine(to: CGPoint(x: plotWidth, y: latestY))
+            context.move(to: CGPoint(x: 0, y: latest.lineY))
+            context.addLine(to: CGPoint(x: metrics.plotWidth, y: latest.lineY))
             context.strokePath()
             
-            let latestText = formatPrice(latestDecimal)
             let latestAttributes: [NSAttributedString.Key: Any] = [
                 .font: Config.axisFont,
                 .foregroundColor: latestColor,
             ]
-            let textSize = (latestText as NSString).size(withAttributes: latestAttributes)
-            let padH: CGFloat = 6
-            let padV: CGFloat = 2
-            let tagHeight = textSize.height + padV * 2
-            let tagWidth = textSize.width + padH * 2
-            let tagRect = CGRect(
-                x: axisTextX - padH,
-                y: latestY - tagHeight / 2,
-                width: tagWidth,
-                height: tagHeight
-            )
-            let tagRadius = safeCornerRadius(tagHeight / 2, for: tagRect)
-            let tagPath = CGPath(roundedRect: tagRect, cornerWidth: tagRadius, cornerHeight: tagRadius, transform: nil)
+            let tagRadius = safeCornerRadius(latest.tagRect.height / 2, for: latest.tagRect)
+            let tagPath = CGPath(roundedRect: latest.tagRect, cornerWidth: tagRadius, cornerHeight: tagRadius, transform: nil)
             context.setFillColor(latestColor.withAlphaComponent(0.12).cgColor)
             context.addPath(tagPath)
             context.fillPath()
             
-            (latestText as NSString).draw(
-                at: CGPoint(x: axisTextX, y: latestY - textSize.height / 2),
+            (latest.priceText as NSString).draw(
+                at: latest.textOrigin,
                 withAttributes: latestAttributes
             )
             context.restoreGState()
         }
         
         // Layer 5: Bottom first/last timestamps with overlap guard
-        let timeY = plotBottom + Config.timeBottomOffset
-        let firstTimeIndex = min(
-            max(visibleIndices.lowerBound, Int(ceil(viewportState.end - viewportState.visibleCount))),
-            visibleIndices.upperBound
-        )
-        let lastTimeIndex = visibleIndices.upperBound
-        let startTimeText = formatAxisTime(candles[firstTimeIndex].timestamp)
-        let startTimeSize = (startTimeText as NSString).size(withAttributes: axisAttributes)
-        (startTimeText as NSString).draw(at: CGPoint(x: 0, y: timeY), withAttributes: axisAttributes)
-        
-        if firstTimeIndex < lastTimeIndex {
-            let endTimeText = formatAxisTime(candles[lastTimeIndex].timestamp)
-            let endTimeSize = (endTimeText as NSString).size(withAttributes: axisAttributes)
-            let endX = max(startTimeSize.width + Config.timeMinGap, plotWidth - endTimeSize.width)
-            (endTimeText as NSString).draw(at: CGPoint(x: endX, y: timeY), withAttributes: axisAttributes)
+        (metrics.startTimeText as NSString).draw(at: metrics.startTimeFrame.origin, withAttributes: axisAttributes)
+        if let endTimeText = metrics.endTimeText, let endTimeFrame = metrics.endTimeFrame {
+            (endTimeText as NSString).draw(at: endTimeFrame.origin, withAttributes: axisAttributes)
         }
         
         // Layer 6: Crosshair (locked to closeY, no dot) & 5-row detail card
-        if let selectedIndex = viewportState.selectedIndex,
-           selectedIndex >= 0,
-           selectedIndex < candles.count
-        {
+        if let selection = metrics.selection {
             drawSelection(
                 in: context,
-                candle: candles[selectedIndex],
-                index: selectedIndex,
-                range: range,
-                plotTop: plotTop,
-                plotBottom: plotBottom,
-                plotHeight: plotHeight,
-                plotWidth: plotWidth,
+                selection: selection,
+                plotTop: metrics.plotTop,
+                plotBottom: metrics.plotBottom,
+                plotWidth: metrics.plotWidth,
                 textAssistColor: textAssistColor,
                 risingColor: risingColor,
                 fallingColor: fallingColor
@@ -545,47 +484,81 @@ final class CandlestickChartView: UIView {
         return formatter.string(from: date)
     }
     
+    private struct PreparedGridItem {
+        let lineY: CGFloat
+        let priceText: String
+        let labelFrame: CGRect?
+    }
+    
+    private struct PreparedLatestItem {
+        let lineY: CGFloat
+        let priceText: String
+        let isBull: Bool
+        let tagRect: CGRect
+        let textOrigin: CGPoint
+    }
+    
+    private struct PreparedSelectionRow {
+        let title: String
+        let value: String
+        let suffix: String?
+        let titleSize: CGSize
+        let valueSize: CGSize
+        let rowHeight: CGFloat
+    }
+    
+    private struct PreparedSelection {
+        let centerX: CGFloat
+        let closeY: CGFloat
+        let isRising: Bool
+        let cardRect: CGRect
+        let maxTitleWidth: CGFloat
+        let rows: [PreparedSelectionRow]
+    }
+    
+    private struct PreparedMetrics {
+        let plotTop: CGFloat
+        let plotBottom: CGFloat
+        let plotHeight: CGFloat
+        let axisWidth: CGFloat
+        let plotWidth: CGFloat
+        let axisTextX: CGFloat
+        let visibleIndices: ClosedRange<Int>
+        let range: PriceRange
+        let gridItems: [PreparedGridItem]
+        let latestItem: PreparedLatestItem?
+        let startTimeText: String
+        let startTimeFrame: CGRect
+        let endTimeText: String?
+        let endTimeFrame: CGRect?
+        let selection: PreparedSelection?
+    }
+    
     private func drawSelection(
         in context: CGContext,
-        candle: PerpetualCandleViewModel,
-        index: Int,
-        range: PriceRange,
+        selection: PreparedSelection,
         plotTop: CGFloat,
         plotBottom: CGFloat,
-        plotHeight: CGFloat,
         plotWidth: CGFloat,
         textAssistColor: UIColor,
         risingColor: UIColor,
         fallingColor: UIColor
     ) {
-        let centerX = viewportState.centerX(forIndex: index)
-        let rawCloseY = yCoordinate(
-            for: candle.close.doubleValue,
-            range: range,
-            plotBottom: plotBottom,
-            plotHeight: plotHeight
-        )
-        let closeY = max(plotTop, min(plotBottom, rawCloseY))
-        
         // Crosshair solid lines (locked to closeY, no dot)
         context.saveGState()
         context.setStrokeColor(textAssistColor.withAlphaComponent(0.7).cgColor)
         context.setLineWidth(1)
-        if centerX >= 0 && centerX <= plotWidth {
-            context.move(to: CGPoint(x: centerX, y: plotTop))
-            context.addLine(to: CGPoint(x: centerX, y: plotBottom))
+        if selection.centerX >= 0 && selection.centerX <= plotWidth {
+            context.move(to: CGPoint(x: selection.centerX, y: plotTop))
+            context.addLine(to: CGPoint(x: selection.centerX, y: plotBottom))
         }
-        context.move(to: CGPoint(x: 0, y: closeY))
-        context.addLine(to: CGPoint(x: plotWidth, y: closeY))
+        context.move(to: CGPoint(x: 0, y: selection.closeY))
+        context.addLine(to: CGPoint(x: plotWidth, y: selection.closeY))
         context.strokePath()
         context.restoreGState()
         
         // 5-row detail card
-        let openDecimal = candle.open.decimalValue
-        let closeDecimal = candle.close.decimalValue
-        let isRising = closeDecimal >= openDecimal
-        let changeColor = isRising ? risingColor : fallingColor
-        
+        let changeColor = selection.isRising ? risingColor : fallingColor
         let titleAttributes: [NSAttributedString.Key: Any] = [
             .font: Config.axisFont,
             .foregroundColor: Config.cardTitleColor,
@@ -599,60 +572,7 @@ final class CandlestickChartView: UIView {
             .foregroundColor: changeColor,
         ]
         
-        let changeText = CandlePriceFormatter.formatChangePercentage(open: openDecimal, close: closeDecimal)
-        let rows: [(title: String, value: String, suffix: String?)] = [
-            (labels.open, formatPrice(openDecimal), nil),
-            (labels.close, formatPrice(closeDecimal), changeText),
-            (labels.high, formatPrice(candle.high.decimalValue), nil),
-            (labels.low, formatPrice(candle.low.decimalValue), nil),
-            (labels.date, formatDetailDate(candle.timestamp), nil),
-        ]
-        
-        var maxTitleWidth: CGFloat = 0
-        var maxValueWidth: CGFloat = 0
-        var rowHeights: [CGFloat] = []
-        rowHeights.reserveCapacity(rows.count)
-        
-        for row in rows {
-            let titleSize = (row.title as NSString).size(withAttributes: titleAttributes)
-            let valueSize = (row.value as NSString).size(withAttributes: valueAttributes)
-            var totalValueWidth = valueSize.width
-            var rowHeight = max(titleSize.height, valueSize.height)
-            if let suffix = row.suffix {
-                let suffixSize = (suffix as NSString).size(withAttributes: changeAttributes)
-                totalValueWidth += Config.cardChangeGap + suffixSize.width
-                rowHeight = max(rowHeight, suffixSize.height)
-            }
-            maxTitleWidth = max(maxTitleWidth, titleSize.width)
-            maxValueWidth = max(maxValueWidth, totalValueWidth)
-            rowHeights.append(rowHeight)
-        }
-        
-        let cardWidth = Config.cardPadH * 2 + maxTitleWidth + Config.cardColumnGap + maxValueWidth
-        let totalRowHeight = rowHeights.reduce(0, +)
-        let cardHeight = Config.cardPadV * 2 + totalRowHeight + Config.cardRowSpacing * CGFloat(max(0, rows.count - 1))
-        
-        let cardY = plotTop
-        let leftX = centerX - Config.cardCrosshairGap - cardWidth
-        let rightX = centerX + Config.cardCrosshairGap
-        let fitsLeft = leftX >= 0
-        let fitsRight = rightX + cardWidth <= bounds.width
-        let preferLeft = centerX > plotWidth / 2
-        
-        let cardX: CGFloat
-        if preferLeft && fitsLeft {
-            cardX = leftX
-        } else if !preferLeft && fitsRight {
-            cardX = rightX
-        } else if fitsLeft {
-            cardX = leftX
-        } else if fitsRight {
-            cardX = rightX
-        } else {
-            cardX = preferLeft ? 0 : max(0, bounds.width - cardWidth)
-        }
-        
-        let cardRect = CGRect(x: cardX, y: cardY, width: cardWidth, height: cardHeight)
+        let cardRect = selection.cardRect
         let cardRadius = safeCornerRadius(Config.cardCornerRadius, for: cardRect)
         let cardPath = CGPath(roundedRect: cardRect, cornerWidth: cardRadius, cornerHeight: cardRadius, transform: nil)
         
@@ -661,16 +581,13 @@ final class CandlestickChartView: UIView {
         context.addPath(cardPath)
         context.fillPath()
         
-        let titleRightEdge = cardX + Config.cardPadH + maxTitleWidth
+        let titleRightEdge = cardRect.minX + Config.cardPadH + selection.maxTitleWidth
         let valueLeftEdge = titleRightEdge + Config.cardColumnGap
-        var currentY = cardY + Config.cardPadV
+        var currentY = cardRect.minY + Config.cardPadV
         
-        for (index, row) in rows.enumerated() {
-            let titleSize = (row.title as NSString).size(withAttributes: titleAttributes)
-            let valueSize = (row.value as NSString).size(withAttributes: valueAttributes)
-            
+        for row in selection.rows {
             (row.title as NSString).draw(
-                at: CGPoint(x: titleRightEdge - titleSize.width, y: currentY),
+                at: CGPoint(x: titleRightEdge - row.titleSize.width, y: currentY),
                 withAttributes: titleAttributes
             )
             (row.value as NSString).draw(
@@ -679,13 +596,236 @@ final class CandlestickChartView: UIView {
             )
             if let suffix = row.suffix {
                 (suffix as NSString).draw(
-                    at: CGPoint(x: valueLeftEdge + valueSize.width + Config.cardChangeGap, y: currentY),
+                    at: CGPoint(x: valueLeftEdge + row.valueSize.width + Config.cardChangeGap, y: currentY),
                     withAttributes: changeAttributes
                 )
             }
-            currentY += rowHeights[index] + Config.cardRowSpacing
+            currentY += row.rowHeight + Config.cardRowSpacing
         }
         context.restoreGState()
+    }
+    
+    func computeRenderMetrics() -> RenderMetrics? {
+        guard let prepared = prepareRenderMetrics() else {
+            return nil
+        }
+        return RenderMetrics(
+            plotTop: prepared.plotTop,
+            plotBottom: prepared.plotBottom,
+            plotHeight: prepared.plotHeight,
+            axisWidth: prepared.axisWidth,
+            plotWidth: prepared.plotWidth,
+            axisTextX: prepared.axisTextX,
+            gridLabelFrames: prepared.gridItems.compactMap(\.labelFrame),
+            latestLineY: prepared.latestItem?.lineY,
+            latestTagRect: prepared.latestItem?.tagRect,
+            startTimeFrame: prepared.startTimeFrame,
+            endTimeFrame: prepared.endTimeFrame,
+            detailCardRect: prepared.selection?.cardRect
+        )
+    }
+    
+    private func prepareRenderMetrics() -> PreparedMetrics? {
+        let candles = viewportState.candles
+        guard !candles.isEmpty,
+              bounds.width > 0,
+              bounds.height > Config.plotTop + Config.plotBottomInset
+        else {
+            return nil
+        }
+        let plotTop = Config.plotTop
+        let plotBottom = bounds.height - Config.plotBottomInset
+        let plotHeight = max(1, plotBottom - plotTop)
+        let axisWidth = currentAxisWidth()
+        let plotWidth = max(1, bounds.width - axisWidth)
+        let axisTextX = plotWidth + 8
+        if abs(viewportState.plotWidth - plotWidth) > 0.5 {
+            viewportState.updateLayout(plotWidth: plotWidth, isRegularWidth: isRegularWidth)
+        }
+        guard let visibleIndices = viewportState.visibleIndices else {
+            return nil
+        }
+        let range: PriceRange
+        if let currentRange = rangeAnimator.current {
+            range = currentRange
+        } else if let immediate = PriceRangeAnimator.visiblePriceRange(
+            candles: candles,
+            visibleIndices: visibleIndices,
+            latestPrice: latestPriceDouble
+        ) {
+            range = immediate
+        } else {
+            return nil
+        }
+        
+        let axisAttributes: [NSAttributedString.Key: Any] = [.font: Config.axisFont]
+        let sampleHeight = ("0" as NSString).size(withAttributes: axisAttributes).height
+        let latestTagHeight = sampleHeight + 4
+        let latestY = latestPriceDouble.map { yCoordinate(for: $0, range: range, plotBottom: plotBottom, plotHeight: plotHeight) }
+        let showLatest = latestY.map { $0 >= plotTop && $0 <= plotBottom } ?? false
+        
+        var gridItems: [PreparedGridItem] = []
+        gridItems.reserveCapacity(Config.gridLineCount)
+        let priceSpan = range.max - range.min
+        for i in 0..<Config.gridLineCount {
+            let fraction = CGFloat(i) / CGFloat(Config.gridLineCount - 1)
+            let lineY = plotTop + plotHeight * fraction
+            let price = range.max - priceSpan * Double(fraction)
+            let priceText = formatPrice(Decimal(price))
+            let labelSize = (priceText as NSString).size(withAttributes: axisAttributes)
+            var labelCenterY = lineY
+            if showLatest, let latestY {
+                let minGap = (latestTagHeight + labelSize.height) / 2 + 2
+                if abs(labelCenterY - latestY) < minGap {
+                    labelCenterY = (labelCenterY < latestY) ? (latestY - minGap) : (latestY + minGap)
+                }
+            }
+            let labelTop = labelCenterY - labelSize.height / 2
+            let labelBottom = labelCenterY + labelSize.height / 2
+            let labelFrame: CGRect? = if labelTop >= 0 && labelBottom <= bounds.height {
+                CGRect(x: axisTextX, y: labelTop, width: labelSize.width, height: labelSize.height)
+            } else {
+                nil
+            }
+            gridItems.append(PreparedGridItem(lineY: lineY, priceText: priceText, labelFrame: labelFrame))
+        }
+        
+        var latestItem: PreparedLatestItem?
+        if showLatest, let latestY, let latestDecimal = latestPrice, let lastCandle = candles.last {
+            let priceText = formatPrice(latestDecimal)
+            let textSize = (priceText as NSString).size(withAttributes: axisAttributes)
+            let padH: CGFloat = 6
+            let padV: CGFloat = 2
+            let tagHeight = textSize.height + padV * 2
+            let tagWidth = textSize.width + padH * 2
+            let tagY = max(0, min(bounds.height - tagHeight, latestY - tagHeight / 2))
+            let tagRect = CGRect(x: axisTextX - padH, y: tagY, width: tagWidth, height: tagHeight)
+            latestItem = PreparedLatestItem(
+                lineY: latestY,
+                priceText: priceText,
+                isBull: latestDecimal >= lastCandle.open.decimalValue,
+                tagRect: tagRect,
+                textOrigin: CGPoint(x: axisTextX, y: tagY + padV)
+            )
+        }
+        
+        let timeY = plotBottom + Config.timeBottomOffset
+        let firstTimeIndex = min(
+            max(visibleIndices.lowerBound, Int(ceil(viewportState.end - viewportState.visibleCount))),
+            visibleIndices.upperBound
+        )
+        let lastTimeIndex = visibleIndices.upperBound
+        let startTimeText = formatAxisTime(candles[firstTimeIndex].timestamp)
+        let startSize = (startTimeText as NSString).size(withAttributes: axisAttributes)
+        let startTimeFrame = CGRect(origin: CGPoint(x: 0, y: timeY), size: startSize)
+        var endTimeText: String?
+        var endTimeFrame: CGRect?
+        if firstTimeIndex < lastTimeIndex {
+            let text = formatAxisTime(candles[lastTimeIndex].timestamp)
+            let endSize = (text as NSString).size(withAttributes: axisAttributes)
+            let endX = max(startSize.width + Config.timeMinGap, plotWidth - endSize.width)
+            endTimeText = text
+            endTimeFrame = CGRect(origin: CGPoint(x: endX, y: timeY), size: endSize)
+        }
+        
+        var selection: PreparedSelection?
+        if let selectedIndex = viewportState.selectedIndex,
+           selectedIndex >= 0,
+           selectedIndex < candles.count
+        {
+            let selected = candles[selectedIndex]
+            let openDecimal = selected.open.decimalValue
+            let closeDecimal = selected.close.decimalValue
+            let isRising = closeDecimal >= openDecimal
+            let changeText = CandlePriceFormatter.formatChangePercentage(open: openDecimal, close: closeDecimal)
+            let rawRows: [(String, String, String?)] = [
+                (labels.open, formatPrice(openDecimal), nil),
+                (labels.close, formatPrice(closeDecimal), changeText),
+                (labels.high, formatPrice(selected.high.decimalValue), nil),
+                (labels.low, formatPrice(selected.low.decimalValue), nil),
+                (labels.date, formatDetailDate(selected.timestamp), nil),
+            ]
+            var rows: [PreparedSelectionRow] = []
+            rows.reserveCapacity(rawRows.count)
+            var maxTitleWidth: CGFloat = 0
+            var maxValueWidth: CGFloat = 0
+            var totalRowHeight: CGFloat = 0
+            for raw in rawRows {
+                let titleSize = (raw.0 as NSString).size(withAttributes: axisAttributes)
+                let valueSize = (raw.1 as NSString).size(withAttributes: axisAttributes)
+                var width = valueSize.width
+                var height = max(titleSize.height, valueSize.height)
+                if let suffix = raw.2 {
+                    let suffixSize = (suffix as NSString).size(withAttributes: axisAttributes)
+                    width += Config.cardChangeGap + suffixSize.width
+                    height = max(height, suffixSize.height)
+                }
+                maxTitleWidth = max(maxTitleWidth, titleSize.width)
+                maxValueWidth = max(maxValueWidth, width)
+                totalRowHeight += height
+                rows.append(PreparedSelectionRow(
+                    title: raw.0,
+                    value: raw.1,
+                    suffix: raw.2,
+                    titleSize: titleSize,
+                    valueSize: valueSize,
+                    rowHeight: height
+                ))
+            }
+            let cardWidth = Config.cardPadH * 2 + maxTitleWidth + Config.cardColumnGap + maxValueWidth
+            let cardHeight = Config.cardPadV * 2 + totalRowHeight + Config.cardRowSpacing * CGFloat(max(0, rows.count - 1))
+            let cardY = max(0, min(plotTop, plotBottom - cardHeight))
+            let centerX = viewportState.centerX(forIndex: selectedIndex)
+            let leftX = centerX - Config.cardCrosshairGap - cardWidth
+            let rightX = centerX + Config.cardCrosshairGap
+            let fitsLeft = leftX >= 0
+            let fitsRight = rightX + cardWidth <= bounds.width
+            let preferLeft = centerX > plotWidth / 2
+            let cardX: CGFloat = if preferLeft && fitsLeft {
+                leftX
+            } else if !preferLeft && fitsRight {
+                rightX
+            } else if fitsLeft {
+                leftX
+            } else if fitsRight {
+                rightX
+            } else {
+                preferLeft ? 0 : max(0, bounds.width - cardWidth)
+            }
+            let rawCloseY = yCoordinate(
+                for: selected.close.doubleValue,
+                range: range,
+                plotBottom: plotBottom,
+                plotHeight: plotHeight
+            )
+            let closeY = max(plotTop, min(plotBottom, rawCloseY))
+            selection = PreparedSelection(
+                centerX: centerX,
+                closeY: closeY,
+                isRising: isRising,
+                cardRect: CGRect(x: cardX, y: cardY, width: cardWidth, height: cardHeight),
+                maxTitleWidth: maxTitleWidth,
+                rows: rows
+            )
+        }
+        
+        return PreparedMetrics(
+            plotTop: plotTop,
+            plotBottom: plotBottom,
+            plotHeight: plotHeight,
+            axisWidth: axisWidth,
+            plotWidth: plotWidth,
+            axisTextX: axisTextX,
+            visibleIndices: visibleIndices,
+            range: range,
+            gridItems: gridItems,
+            latestItem: latestItem,
+            startTimeText: startTimeText,
+            startTimeFrame: startTimeFrame,
+            endTimeText: endTimeText,
+            endTimeFrame: endTimeFrame,
+            selection: selection
+        )
     }
     
 }

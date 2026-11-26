@@ -520,4 +520,57 @@ final class PerpetualCandleChartTests: XCTestCase {
         }
     }
     
+    func testCompact193ptLayoutBoundsAntiCollisionAndDetailCardFit() throws {
+        // Matches PerpetualMarketPriceCell.xib chart height (193pt) -> plotHeight = 161pt
+        let size = CGSize(width: 303, height: 193)
+        let chart = CandlestickChartView(frame: CGRect(origin: .zero, size: size))
+        let candles = makeCandles(count: 40)
+        
+        // Latest price near top grid line to verify anti-collision & top clamp
+        let topLatest = Decimal(string: candles.last!.high.stringValue)!
+        chart.configure(
+            candles: candles,
+            timeFrame: .oneMinute,
+            latestPrice: topLatest,
+            priceFormatMode: .decimal(priceScale: 2),
+            animated: false
+        )
+        chart.viewportState.selectedIndex = 35
+        chart.layoutIfNeeded()
+        
+        let metrics = try XCTUnwrap(chart.computeRenderMetrics())
+        XCTAssertEqual(metrics.plotTop, 8, accuracy: 0.001)
+        XCTAssertEqual(metrics.plotBottom, 169, accuracy: 0.001)
+        XCTAssertEqual(metrics.plotHeight, 161, accuracy: 0.001)
+        
+        // Latest capsule stays completely inside 193pt height
+        let tagRect = try XCTUnwrap(metrics.latestTagRect)
+        XCTAssertGreaterThanOrEqual(tagRect.minY, 0)
+        XCTAssertLessThanOrEqual(tagRect.maxY, size.height)
+        
+        // All visible Y-axis labels stay within [0, 193] and do not collide with latest capsule
+        for labelFrame in metrics.gridLabelFrames {
+            XCTAssertGreaterThanOrEqual(labelFrame.minY, 0)
+            XCTAssertLessThanOrEqual(labelFrame.maxY, size.height)
+            XCTAssertFalse(labelFrame.intersects(tagRect))
+        }
+        
+        // Bottom time labels sit below plotBottom (169), inside [169, 193], and do not overlap each other
+        XCTAssertGreaterThanOrEqual(metrics.startTimeFrame.minY, metrics.plotBottom)
+        XCTAssertLessThanOrEqual(metrics.startTimeFrame.maxY, size.height)
+        if let endTimeFrame = metrics.endTimeFrame {
+            XCTAssertGreaterThanOrEqual(endTimeFrame.minY, metrics.plotBottom)
+            XCTAssertLessThanOrEqual(endTimeFrame.maxY, size.height)
+            XCTAssertGreaterThanOrEqual(endTimeFrame.minX, metrics.startTimeFrame.maxX + 8 - 0.001)
+        }
+        
+        // 5-row detail card fits strictly inside [plotTop, plotBottom] (never overlaps bottom time area)
+        let cardRect = try XCTUnwrap(metrics.detailCardRect)
+        XCTAssertGreaterThanOrEqual(cardRect.minY, metrics.plotTop)
+        XCTAssertLessThanOrEqual(cardRect.maxY, metrics.plotBottom)
+        XCTAssertGreaterThanOrEqual(cardRect.minX, 0)
+        XCTAssertLessThanOrEqual(cardRect.maxX, size.width)
+        XCTAssertFalse(cardRect.intersects(metrics.startTimeFrame))
+    }
+    
 }

@@ -70,14 +70,14 @@
                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pf5-pn-AFm">
                         <rect key="frame" x="0.0" y="322" width="335" height="26"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="288" placeholderIntrinsicHeight="26" distribution="fill" spacing="0" translatesAutoresizingMaskIntoConstraints="NO" id="QXD-3f-oO9">
+                            <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="288" placeholderIntrinsicHeight="26" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="QXD-3f-oO9">
                                 <rect key="frame" x="0.0" y="0.0" width="335" height="26"/>
                             </stackView>
                         </subviews>
                         <constraints>
                             <constraint firstItem="QXD-3f-oO9" firstAttribute="top" secondItem="im3-4d-agR" secondAttribute="top" id="A6C-IZ-uPT"/>
                             <constraint firstItem="QXD-3f-oO9" firstAttribute="height" secondItem="p0g-ns-VGd" secondAttribute="height" id="BY7-x0-7lS"/>
-                            <constraint firstAttribute="height" constant="42" id="TKX-va-HYc"/>
+                            <constraint firstAttribute="height" constant="26" id="TKX-va-HYc"/>
                             <constraint firstItem="QXD-3f-oO9" firstAttribute="bottom" secondItem="im3-4d-agR" secondAttribute="bottom" id="TWT-zR-d29"/>
                             <constraint firstItem="QXD-3f-oO9" firstAttribute="width" secondItem="p0g-ns-VGd" secondAttribute="width" priority="999" id="UGg-Um-QQj"/>
                             <constraint firstItem="im3-4d-agR" firstAttribute="leading" secondItem="QXD-3f-oO9" secondAttribute="leading" id="kyY-wS-wwM"/>
@@ -89,7 +89,7 @@
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="Pf5-pn-AFm" secondAttribute="trailing" constant="16" id="1gC-6d-oWG"/>
+                    <constraint firstAttribute="trailing" secondItem="Pf5-pn-AFm" secondAttribute="trailing" id="1gC-6d-oWG"/>
                     <constraint firstItem="BPV-hX-IIc" firstAttribute="top" relation="greaterThanOrEqual" secondItem="zXK-72-1GI" secondAttribute="bottom" constant="12" id="6Pf-Ys-dQq"/>
                     <constraint firstAttribute="bottom" secondItem="Pf5-pn-AFm" secondAttribute="bottom" constant="20" id="AoN-0F-inc"/>
                     <constraint firstItem="zXK-72-1GI" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="FV8-Rj-brR" secondAttribute="trailing" id="DWt-TV-MNn"/>
@@ -97,7 +97,7 @@
                     <constraint firstItem="zXK-72-1GI" firstAttribute="leading" secondItem="qGY-tn-vsb" secondAttribute="trailing" constant="8" id="MG3-iV-6ws"/>
                     <constraint firstItem="BPV-hX-IIc" firstAttribute="top" secondItem="qGY-tn-vsb" secondAttribute="bottom" constant="12" id="PEV-XW-s7L"/>
                     <constraint firstItem="FV8-Rj-brR" firstAttribute="leading" secondItem="w39-xc-GJe" secondAttribute="leading" constant="8" id="Pc6-8Z-pog"/>
-                    <constraint firstItem="Pf5-pn-AFm" firstAttribute="leading" secondItem="w39-xc-GJe" secondAttribute="leading" constant="16" id="SRw-KO-Ta6"/>
+                    <constraint firstItem="Pf5-pn-AFm" firstAttribute="leading" secondItem="w39-xc-GJe" secondAttribute="leading" id="SRw-KO-Ta6"/>
                     <constraint firstItem="qGY-tn-vsb" firstAttribute="top" secondItem="FV8-Rj-brR" secondAttribute="bottom" id="T9b-Ws-2Qh"/>
                     <constraint firstItem="bpZ-1r-PgZ" firstAttribute="trailing" secondItem="BPV-hX-IIc" secondAttribute="trailing" id="ZkA-Zv-AEN"/>
                     <constraint firstItem="bpZ-1r-PgZ" firstAttribute="top" secondItem="BPV-hX-IIc" secondAttribute="top" id="aAg-4i-9RV"/>
@@ -107,7 +107,7 @@
                     <constraint firstItem="qGY-tn-vsb" firstAttribute="leading" secondItem="w39-xc-GJe" secondAttribute="leading" constant="16" id="faN-fi-0pd"/>
                     <constraint firstItem="BPV-hX-IIc" firstAttribute="leading" secondItem="w39-xc-GJe" secondAttribute="leading" constant="16" id="huT-Lk-cHn"/>
                     <constraint firstAttribute="trailing" secondItem="zXK-72-1GI" secondAttribute="trailing" constant="20" id="iNu-gW-d9d"/>
-                    <constraint firstItem="Pf5-pn-AFm" firstAttribute="top" secondItem="BPV-hX-IIc" secondAttribute="bottom" constant="16" id="lKW-J3-aHn"/>
+                    <constraint firstItem="Pf5-pn-AFm" firstAttribute="top" secondItem="BPV-hX-IIc" secondAttribute="bottom" constant="10" id="lKW-J3-aHn"/>
                     <constraint firstItem="bpZ-1r-PgZ" firstAttribute="bottom" secondItem="BPV-hX-IIc" secondAttribute="bottom" id="qqT-VW-YQ0"/>
                 </constraints>
             </collectionViewCellContentView>

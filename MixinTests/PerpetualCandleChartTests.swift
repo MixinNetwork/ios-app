@@ -1,3 +1,4 @@
+import Testing
 import XCTest
 @testable import Mixin
 @testable import MixinServices
@@ -41,7 +42,11 @@ final class PerpetualCandleChartTests: XCTestCase {
     
     func testViewportCoordinateMappingAndVisibleIndices() {
         let candles = makeCandles(count: 50)
-        let state = CandleChartViewportState(candles: candles)
+        let state = CandleChartViewportState(
+            candles: candles,
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
         state.updateLayout(plotWidth: 300, isRegularWidth: false)
         
         XCTAssertEqual(state.visibleCount, 30, accuracy: 0.001)
@@ -62,7 +67,11 @@ final class PerpetualCandleChartTests: XCTestCase {
     
     func testViewportScrollHardBoundsAndFollowLatest() {
         let candles = makeCandles(count: 50)
-        let state = CandleChartViewportState(candles: candles)
+        let state = CandleChartViewportState(
+            candles: candles,
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
         state.updateLayout(plotWidth: 300, isRegularWidth: false) // step = 10
         
         // Pushing past right edge clamps at maxEnd and returns false
@@ -88,7 +97,11 @@ final class PerpetualCandleChartTests: XCTestCase {
     
     func testViewportZoomBranches() {
         let candles = makeCandles(count: 60)
-        let state = CandleChartViewportState(candles: candles)
+        let state = CandleChartViewportState(
+            candles: candles,
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
         state.updateLayout(plotWidth: 300, isRegularWidth: false)
         
         // Branch A: followLatest == true keeps end pinned to maxEnd
@@ -118,7 +131,11 @@ final class PerpetualCandleChartTests: XCTestCase {
     
     func testViewportUpdateCandlesAnchoringAndSelectionPreservation() {
         let initial = makeCandles(count: 50, startMillis: 1_000_000_000_000, stepMillis: 60_000)
-        let state = CandleChartViewportState(candles: initial)
+        let state = CandleChartViewportState(
+            candles: initial,
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
         state.updateLayout(plotWidth: 300, isRegularWidth: false)
         
         // Scroll into history and select candle at timestamp for index 30
@@ -134,7 +151,7 @@ final class PerpetualCandleChartTests: XCTestCase {
         let appended = [makeCandle(timestamp: 1_000_000_000_000 + 50 * 60_000)]
         let updated = prepended + initial + appended
         
-        state.updateCandles(updated)
+        state.updateCandles(updated, isRegularWidth: false)
         XCTAssertEqual(state.selectedIndex, 33)
         XCTAssertEqual(state.candles[33].timestamp, selectedTimestamp)
         // Old last candle shifted by +3, so end shifted by +3 -> visual position unchanged
@@ -144,19 +161,27 @@ final class PerpetualCandleChartTests: XCTestCase {
         // Switching back to followLatest snaps to new maxEnd
         state.scrollToLatest()
         let more = updated + [makeCandle(timestamp: 1_000_000_000_000 + 51 * 60_000)]
-        state.updateCandles(more)
+        state.updateCandles(more, isRegularWidth: false)
         XCTAssertEqual(state.end, CGFloat(more.count) + 0.3, accuracy: 0.001)
     }
     
     func testViewportLargeScreenInitialSpacing() {
         let candles = makeCandles(count: 150)
-        let state = CandleChartViewportState(candles: candles)
+        let state = CandleChartViewportState(
+            candles: candles,
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
         state.updateLayout(plotWidth: 900, isRegularWidth: true) // 900 / 10 = 90
         XCTAssertEqual(state.visibleCount, 90, accuracy: 0.001)
         XCTAssertEqual(state.end, 150.3, accuracy: 0.001)
         
         // Narrow regular width still enforces default minimum of 30
-        let narrowState = CandleChartViewportState(candles: candles)
+        let narrowState = CandleChartViewportState(
+            candles: candles,
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
         narrowState.updateLayout(plotWidth: 250, isRegularWidth: true)
         XCTAssertEqual(narrowState.visibleCount, 30, accuracy: 0.001)
     }
@@ -260,6 +285,7 @@ final class PerpetualCandleChartTests: XCTestCase {
             timeFrame: .oneHour,
             latestPrice: 120,
             priceFormatMode: .decimal(priceScale: 2),
+            viewportState: nil,
             animated: false
         )
         chart.snapPriceRangeWithoutAnimation()
@@ -407,12 +433,18 @@ final class PerpetualCandleChartTests: XCTestCase {
     }
     
     func testAxisWidthMinimumMonotonicWithinTimeFrameAndResetOnSwitch() {
-        let state = CandleChartViewportState()
+        let state = CandleChartViewportState(
+            candles: [],
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
         let tinyCandles = [makeCandle(timestamp: 1_700_000_000_000, open: "1", high: "2", low: "1", close: "1")]
         let minWidth = CandlePriceFormatter.measureAxisWidth(
             candles: tinyCandles,
             latestPrice: 1,
-            mode: .decimal(priceScale: 0)
+            mode: .decimal(priceScale: 0),
+            font: .systemFont(ofSize: 11),
+            locale: .current
         )
         XCTAssertEqual(minWidth, 48)
         
@@ -420,7 +452,9 @@ final class PerpetualCandleChartTests: XCTestCase {
         let wideWidth = CandlePriceFormatter.measureAxisWidth(
             candles: wideCandles,
             latestPrice: 123456.7890,
-            mode: .decimal(priceScale: 4)
+            mode: .decimal(priceScale: 4),
+            font: .systemFont(ofSize: 11),
+            locale: .current
         )
         XCTAssertGreaterThan(wideWidth, 48)
         
@@ -435,6 +469,7 @@ final class PerpetualCandleChartTests: XCTestCase {
             timeFrame: .oneMinute,
             latestPrice: Decimal(string: "123456.7890"),
             priceFormatMode: .decimal(priceScale: 4),
+            viewportState: nil,
             animated: false
         )
         chart.layoutIfNeeded()
@@ -447,6 +482,7 @@ final class PerpetualCandleChartTests: XCTestCase {
             timeFrame: .oneMinute,
             latestPrice: 1,
             priceFormatMode: .decimal(priceScale: 4),
+            viewportState: nil,
             animated: false
         )
         XCTAssertEqual(chart.viewportState.maxAxisWidth, recordedWideAxis)
@@ -457,6 +493,7 @@ final class PerpetualCandleChartTests: XCTestCase {
             timeFrame: .oneHour,
             latestPrice: 1,
             priceFormatMode: .decimal(priceScale: 0),
+            viewportState: nil,
             animated: false
         )
         XCTAssertEqual(chart.viewportState.maxAxisWidth, 48)
@@ -467,6 +504,7 @@ final class PerpetualCandleChartTests: XCTestCase {
             timeFrame: .oneHour,
             latestPrice: Decimal(string: "123456.7890"),
             priceFormatMode: .decimal(priceScale: 4),
+            viewportState: nil,
             animated: false
         )
         XCTAssertGreaterThan(chart.viewportState.maxAxisWidth, 48)
@@ -475,6 +513,7 @@ final class PerpetualCandleChartTests: XCTestCase {
             timeFrame: .oneHour,
             latestPrice: nil,
             priceFormatMode: .decimal(priceScale: 4),
+            viewportState: nil,
             animated: false
         )
         XCTAssertEqual(chart.viewportState.maxAxisWidth, 0)
@@ -499,6 +538,7 @@ final class PerpetualCandleChartTests: XCTestCase {
                 timeFrame: timeFrame,
                 latestPrice: 141,
                 priceFormatMode: .decimal(priceScale: 2),
+                viewportState: nil,
                 animated: false
             )
             chart.labels = CandleChartLabels(open: "Open", close: "Close", high: "High", low: "Low", date: "Date")
@@ -533,6 +573,7 @@ final class PerpetualCandleChartTests: XCTestCase {
             timeFrame: .oneMinute,
             latestPrice: topLatest,
             priceFormatMode: .decimal(priceScale: 2),
+            viewportState: nil,
             animated: false
         )
         chart.viewportState.selectedIndex = 35
@@ -577,7 +618,11 @@ final class PerpetualCandleChartTests: XCTestCase {
     
     func testExternalViewportStateSurvivesReconfigureAndCellReuse() {
         let size = CGSize(width: 303, height: 193)
-        let state = CandleChartViewportState()
+        let state = CandleChartViewportState(
+            candles: [],
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
         let candles = makeCandles(count: 60)
         let chart = CandlestickChartView(frame: CGRect(origin: .zero, size: size))
         chart.configure(
@@ -662,6 +707,7 @@ final class PerpetualCandleChartTests: XCTestCase {
             timeFrame: .oneMinute,
             latestPrice: 120,
             priceFormatMode: .decimal(priceScale: 2),
+            viewportState: nil,
             animated: false
         )
         try assertLatestLineMatchesTarget(candles: lowCandles, latestPrice: 120)
@@ -672,6 +718,7 @@ final class PerpetualCandleChartTests: XCTestCase {
             timeFrame: .oneMinute,
             latestPrice: 1050,
             priceFormatMode: .decimal(priceScale: 2),
+            viewportState: nil,
             animated: false
         )
         try assertLatestLineMatchesTarget(candles: highCandles, latestPrice: 1050)
@@ -682,6 +729,7 @@ final class PerpetualCandleChartTests: XCTestCase {
             timeFrame: .oneMinute,
             latestPrice: 120,
             priceFormatMode: .decimal(priceScale: 2),
+            viewportState: nil,
             animated: true
         )
         chart.layoutIfNeeded()
@@ -731,16 +779,16 @@ final class PerpetualCandleChartTests: XCTestCase {
             XCTAssertNotEqual(value, key)
         }
     }
-
+    
     // MARK: - Time frame tab geometry
-
+    
     private func makeLaidOutPriceCell(width: CGFloat) -> PerpetualMarketPriceCell {
         let cell = R.nib.perpetualMarketPriceCell.firstView(owner: nil)!
         cell.frame = CGRect(x: 0, y: 0, width: width, height: 400)
         cell.layoutIfNeeded()
         return cell
     }
-
+    
     private func assertTimeFrameIndicatorAligned(
         on cell: PerpetualMarketPriceCell,
         index: Int,
@@ -760,33 +808,33 @@ final class PerpetualCandleChartTests: XCTestCase {
         XCTAssertEqual(indicatorFrame.height, buttonFrame.height, accuracy: 0.5, file: file, line: line)
         XCTAssertEqual(cell.timeFrameIndicatorView.layer.cornerRadius, indicatorFrame.height / 2, accuracy: 0.5, file: file, line: line)
     }
-
+    
     func testTimeFrameIndicatorIsCenteredOnFirstFrame() {
         let cell = makeLaidOutPriceCell(width: 390)
         cell.setTimeFrame(frame: .fifteenMinutes)
         cell.layoutIfNeeded()
         assertTimeFrameIndicatorAligned(on: cell, index: 2)
     }
-
+    
     func testTimeFrameIndicatorFollowsSelectionAndWidthChanges() {
         let cell = makeLaidOutPriceCell(width: 390)
         cell.setTimeFrame(frame: .oneDay)
         cell.layoutIfNeeded()
         assertTimeFrameIndicatorAligned(on: cell, index: 5)
-
+        
         cell.frame.size.width = 320
         cell.layoutIfNeeded()
         assertTimeFrameIndicatorAligned(on: cell, index: 5)
-
+        
         cell.setTimeFrame(frame: .oneMinute)
         cell.layoutIfNeeded()
         assertTimeFrameIndicatorAligned(on: cell, index: 0)
-
+        
         cell.frame.size.width = 390
         cell.layoutIfNeeded()
         assertTimeFrameIndicatorAligned(on: cell, index: 0)
     }
-
+    
     func testTimeFrameTrackHasSymmetricHorizontalMarginsMatchingChart() {
         let cell = makeLaidOutPriceCell(width: 390)
         let trackFrame = cell.contentView.convert(cell.timeFrameScrollView.bounds, from: cell.timeFrameScrollView)
@@ -797,7 +845,7 @@ final class PerpetualCandleChartTests: XCTestCase {
         XCTAssertEqual(trackFrame.minX, chartFrame.minX, accuracy: 0.5)
         XCTAssertEqual(trackFrame.maxX, chartFrame.maxX, accuracy: 0.5)
     }
-
+    
     // Price section uses 20pt section insets, so a 390pt iPhone gives a 350pt cell.
     private func makeSelfSizedPriceCell(width: CGFloat) -> PerpetualMarketPriceCell {
         let cell = R.nib.perpetualMarketPriceCell.firstView(owner: nil)!
@@ -810,7 +858,7 @@ final class PerpetualCandleChartTests: XCTestCase {
         cell.layoutIfNeeded()
         return cell
     }
-
+    
     // Cell widths for screen widths 320/343/375/390/430/768 (section insets already removed).
     func testTimeFrameTabsAcrossScreenWidthMatrix() {
         for width: CGFloat in [280, 303, 335, 350, 390, 728] {
@@ -826,7 +874,7 @@ final class PerpetualCandleChartTests: XCTestCase {
                 ).y
                 XCTAssertLessThanOrEqual(trackBottomInCard, cell.contentView.bounds.height - 20 + 0.5, context)
                 XCTAssertEqual(track.height, 42, accuracy: 0.5, context)
-
+                
                 let buttons = cell.timeFrameStackView.arrangedSubviews.compactMap { $0 as? UIButton }
                 XCTAssertEqual(buttons.count, 7, context)
                 let content = cell.timeFrameScrollView.contentSize.width
@@ -844,7 +892,7 @@ final class PerpetualCandleChartTests: XCTestCase {
                         XCTAssertLessThanOrEqual(labelWidth, button.bounds.width - 16 + 0.5, "title truncated \(context)")
                     }
                 }
-
+                
                 let selected = buttons.first { $0.isSelected }!
                 let selectedFrame = cell.timeFrameScrollView.convert(selected.bounds, from: selected)
                 let indicator = cell.timeFrameIndicatorView.frame
@@ -855,6 +903,403 @@ final class PerpetualCandleChartTests: XCTestCase {
                 XCTAssertGreaterThanOrEqual(visibleSelectedMidX, 0, context)
                 XCTAssertLessThanOrEqual(visibleSelectedMidX, track.width, context)
             }
+        }
+    }
+    
+}
+
+@MainActor
+struct PerpetualCandleChartInteractionTests {
+    
+    private final class FakeTouch: UITouch {
+        
+        var point: CGPoint
+        var time: TimeInterval
+        
+        init(point: CGPoint, time: TimeInterval) {
+            self.point = point
+            self.time = time
+            super.init()
+        }
+        
+        override var timestamp: TimeInterval {
+            time
+        }
+        
+        override func location(in view: UIView?) -> CGPoint {
+            point
+        }
+        
+    }
+    
+    private static let nowMillis = Int64(Date().timeIntervalSince1970 * 1000)
+    
+    private static func makeCandle(
+        timestamp: Int64,
+        high: String,
+        low: String,
+        close: String
+    ) -> PerpetualCandleViewModel {
+        PerpetualCandleViewModel(
+            timestamp: timestamp,
+            time: "",
+            open: NSDecimalNumber(string: "100", locale: Locale.enUSPOSIX),
+            high: NSDecimalNumber(string: high, locale: Locale.enUSPOSIX),
+            low: NSDecimalNumber(string: low, locale: Locale.enUSPOSIX),
+            close: NSDecimalNumber(string: close, locale: Locale.enUSPOSIX)
+        )
+    }
+    
+    private static func makeMarket(
+        marketID: String,
+        last: String,
+        markPrice: String
+    ) -> PerpetualMarket {
+        PerpetualMarket(
+            marketID: marketID,
+            displaySymbol: "BTC-USD",
+            tokenSymbol: "BTC",
+            quoteSymbol: "USD",
+            markPrice: markPrice,
+            leverage: 10,
+            iconURL: "",
+            fundingRate: "0.0001",
+            minAmount: "1",
+            maxAmount: "1000",
+            last: last,
+            volume: "1000",
+            high: "120",
+            low: "80",
+            openPrice: "100",
+            change: "0.01",
+            bidPrice: last,
+            askPrice: last,
+            createdAt: "2026-11-26T00:00:00.000Z",
+            updatedAt: "2026-11-26T00:00:00.000Z",
+            category: .known(.crypto),
+            tags: [],
+            priceScale: 2,
+            descriptions: nil,
+            fundingIntervalHours: 8,
+            nextFundingAt: "2026-11-26T08:00:00.000Z",
+            openInterest: "0",
+            tradeVolumeScore1D: 0,
+            quantityScale: 4,
+            minOrderValue: "1",
+            feeRate: "0.0005",
+        )
+    }
+    
+    // 200 one-minute candles scrolled 50 candles into history, so no gesture here hits a boundary
+    private static func makeScrolledChart() -> (CandlestickChartView, CandleChartViewportState, CandleChartGestureRecognizer) {
+        let candles = (0..<200).map { index in
+            makeCandle(
+                timestamp: 1_700_000_000_000 + Int64(index) * 60_000,
+                high: "\(110 + index)",
+                low: "\(90 + index)",
+                close: "\(100 + index)"
+            )
+        }
+        let state = CandleChartViewportState(
+            candles: [],
+            visibleCount: 40,
+            followLatest: true
+        )
+        let chart = CandlestickChartView(frame: CGRect(x: 0, y: 0, width: 303, height: 193))
+        chart.configure(
+            candles: candles,
+            timeFrame: .oneMinute,
+            latestPrice: 300,
+            priceFormatMode: .decimal(priceScale: 2),
+            viewportState: state,
+            animated: false
+        )
+        state.scrollByPx(state.step * 50)
+        let recognizer = chart.gestureRecognizers!.compactMap { $0 as? CandleChartGestureRecognizer }.first!
+        return (chart, state, recognizer)
+    }
+    
+    private static func drag(
+        recognizer: CandleChartGestureRecognizer,
+        moves: [(x: CGFloat, time: TimeInterval)],
+        releaseTime: TimeInterval
+    ) {
+        let touch = FakeTouch(point: CGPoint(x: 200, y: 100), time: 1)
+        recognizer.touchesBegan([touch], with: UIEvent())
+        for move in moves {
+            touch.point = CGPoint(x: move.x, y: 100)
+            touch.time = move.time
+            recognizer.touchesMoved([touch], with: UIEvent())
+        }
+        touch.time = releaseTime
+        recognizer.touchesEnded([touch], with: UIEvent())
+        recognizer.reset()
+    }
+    
+    // Fast swipe to the left: 100pt in 32ms
+    private static let flingMoves: [(x: CGFloat, time: TimeInterval)] = [
+        (x: 150, time: 1.016),
+        (x: 100, time: 1.032),
+    ]
+    
+    // MARK: - Live wick
+    
+    @Test func liveWickSurvivesPollingAndServerRefresh() {
+        let start = Self.nowMillis - 1000
+        let candles = [Self.makeCandle(timestamp: start, high: "110", low: "90", close: "105")]
+        var wick: PerpetualCandleViewModel.LiveWick?
+        func poll(candles: [PerpetualCandleViewModel], price: Decimal) -> PerpetualCandleViewModel {
+            let live = PerpetualCandleViewModel.withLivePrice(
+                candles: candles,
+                lastPrice: price,
+                timeFrame: .oneHour,
+                nowMillis: Self.nowMillis
+            )
+            let result = PerpetualCandleViewModel.withLiveWick(
+                candles: live,
+                timeFrame: .oneHour,
+                cachedWick: wick
+            )
+            wick = result.wick
+            return result.candles.last!
+        }
+        
+        #expect(poll(candles: candles, price: 130).high == 130)
+        let dropped = poll(candles: candles, price: 80)
+        #expect(dropped.high == 130)
+        #expect(dropped.low == 80)
+        #expect(dropped.close == 80)
+        
+        // Server refresh of the same candle doesn't know the live extremes yet
+        let refreshed = [Self.makeCandle(timestamp: start, high: "112", low: "95", close: "100")]
+        let merged = poll(candles: refreshed, price: 100)
+        #expect(merged.high == 130)
+        #expect(merged.low == 80)
+        #expect(merged.close == 100)
+    }
+    
+    @Test func liveWickResetsOnTimeFrameTimestampAndEmptyCandles() {
+        let start = Self.nowMillis - 1000
+        let candles = [Self.makeCandle(timestamp: start, high: "110", low: "90", close: "105")]
+        let wick = PerpetualCandleViewModel.LiveWick(
+            timeFrame: .oneMinute,
+            timestamp: start,
+            high: 130,
+            low: 70
+        )
+        
+        let otherTimeFrame = PerpetualCandleViewModel.withLiveWick(
+            candles: candles,
+            timeFrame: .fiveMinutes,
+            cachedWick: wick
+        )
+        #expect(otherTimeFrame.candles == candles)
+        #expect(otherTimeFrame.wick?.timeFrame == .fiveMinutes)
+        #expect(otherTimeFrame.wick?.high == 110)
+        
+        let nextCandles = [Self.makeCandle(timestamp: start + 60_000, high: "106", low: "104", close: "105")]
+        let nextCandle = PerpetualCandleViewModel.withLiveWick(
+            candles: nextCandles,
+            timeFrame: .oneMinute,
+            cachedWick: wick
+        )
+        #expect(nextCandle.candles == nextCandles)
+        #expect(nextCandle.wick?.timestamp == start + 60_000)
+        #expect(nextCandle.wick?.low == 104)
+        
+        let empty = PerpetualCandleViewModel.withLiveWick(
+            candles: [],
+            timeFrame: .oneMinute,
+            cachedWick: wick
+        )
+        #expect(empty.candles.isEmpty)
+        #expect(empty.wick == nil)
+    }
+    
+    @Test func priceCellKeepsLiveWickUntilReuseTimeFrameOrMarketChange() {
+        let cell = R.nib.perpetualMarketPriceCell.firstView(owner: nil)!
+        cell.frame = CGRect(x: 0, y: 0, width: 350, height: 400)
+        cell.layoutIfNeeded()
+        let state = CandleChartViewportState(
+            candles: [],
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
+        let candles = [Self.makeCandle(timestamp: Self.nowMillis - 1000, high: "110", low: "90", close: "105")]
+        func loadChart(timeFrame: PerpetualTimeFrame) {
+            cell.load(
+                chart: .candles(candles),
+                timeFrame: timeFrame,
+                viewportState: state,
+                priceScale: 2,
+                lastPrice: 105
+            )
+        }
+        func activeHigh() -> NSDecimalNumber? {
+            cell.chartView.viewportState.candles.last?.high
+        }
+        
+        cell.load(viewModel: PerpetualMarketViewModel(market: Self.makeMarket(marketID: "a", last: "105", markPrice: "105")))
+        loadChart(timeFrame: .oneHour)
+        cell.updatePrice(viewModel: PerpetualMarketViewModel(market: Self.makeMarket(marketID: "a", last: "150", markPrice: "150")))
+        cell.updatePrice(viewModel: PerpetualMarketViewModel(market: Self.makeMarket(marketID: "a", last: "120", markPrice: "120")))
+        #expect(activeHigh() == 150)
+        // Server refresh of the active candle keeps the live high
+        loadChart(timeFrame: .oneHour)
+        #expect(activeHigh() == 150)
+        
+        cell.prepareForReuse()
+        loadChart(timeFrame: .oneHour)
+        #expect(activeHigh() == 110)
+        
+        cell.updatePrice(viewModel: PerpetualMarketViewModel(market: Self.makeMarket(marketID: "a", last: "150", markPrice: "150")))
+        #expect(activeHigh() == 150)
+        loadChart(timeFrame: .oneDay)
+        loadChart(timeFrame: .oneHour)
+        #expect(activeHigh() == 110)
+        
+        cell.updatePrice(viewModel: PerpetualMarketViewModel(market: Self.makeMarket(marketID: "a", last: "150", markPrice: "150")))
+        #expect(activeHigh() == 150)
+        cell.load(viewModel: PerpetualMarketViewModel(market: Self.makeMarket(marketID: "b", last: "105", markPrice: "105")))
+        loadChart(timeFrame: .oneHour)
+        #expect(activeHigh() == 110)
+    }
+    
+    // MARK: - Fling
+    
+    @Test func tapDuringFlingEndsScrolling() {
+        let (chart, state, recognizer) = Self.makeScrolledChart()
+        withExtendedLifetime(chart) {
+            Self.drag(recognizer: recognizer, moves: Self.flingMoves, releaseTime: 1.04)
+            #expect(state.isScrolling)
+            
+            let tap = FakeTouch(point: CGPoint(x: 120, y: 100), time: 2)
+            recognizer.touchesBegan([tap], with: UIEvent())
+            #expect(!state.isScrolling)
+            recognizer.touchesEnded([tap], with: UIEvent())
+            recognizer.reset()
+        }
+    }
+    
+    @Test func swappingViewportStopsFlingAndResetsScrolling() {
+        let (chart, state, recognizer) = Self.makeScrolledChart()
+        withExtendedLifetime(chart) {
+            Self.drag(recognizer: recognizer, moves: Self.flingMoves, releaseTime: 1.04)
+            #expect(state.isScrolling)
+            
+            let candles = state.candles
+            let otherState = CandleChartViewportState(
+                candles: [],
+                visibleCount: CandleChartViewportState.defaultVisibleCandles,
+                followLatest: true
+            )
+            chart.configure(
+                candles: candles,
+                timeFrame: .oneMinute,
+                latestPrice: 300,
+                priceFormatMode: .decimal(priceScale: 2),
+                viewportState: otherState,
+                animated: false
+            )
+            #expect(!state.isScrolling)
+            let endAfterSwap = otherState.end
+            RunLoop.main.run(until: Date().addingTimeInterval(0.1))
+            #expect(otherState.end == endAfterSwap)
+            #expect(!otherState.isScrolling)
+        }
+    }
+    
+    @Test func switchingTimeFrameStopsFlingAndResetsScrolling() {
+        let (chart, state, recognizer) = Self.makeScrolledChart()
+        withExtendedLifetime(chart) {
+            Self.drag(recognizer: recognizer, moves: Self.flingMoves, releaseTime: 1.04)
+            #expect(state.isScrolling)
+            
+            chart.configure(
+                candles: state.candles,
+                timeFrame: .fiveMinutes,
+                latestPrice: 300,
+                priceFormatMode: .decimal(priceScale: 2),
+                viewportState: state,
+                animated: false
+            )
+            #expect(!state.isScrolling)
+            let endAfterSwitch = state.end
+            RunLoop.main.run(until: Date().addingTimeInterval(0.1))
+            #expect(state.end == endAfterSwitch)
+        }
+    }
+    
+    @Test func releaseAfterPauseDoesNotFling() {
+        let (chart, state, recognizer) = Self.makeScrolledChart()
+        withExtendedLifetime(chart) {
+            // Finger held still for 200ms after the swipe
+            Self.drag(recognizer: recognizer, moves: Self.flingMoves, releaseTime: 1.232)
+            #expect(!state.isScrolling)
+            
+            // Only one sample falls inside the window before release
+            Self.drag(recognizer: recognizer, moves: [(x: 100, time: 1.08)], releaseTime: 1.15)
+            #expect(!state.isScrolling)
+            
+            // A release right after the swipe still flings
+            Self.drag(recognizer: recognizer, moves: Self.flingMoves, releaseTime: 1.04)
+            #expect(state.isScrolling)
+            recognizer.stopFling()
+        }
+    }
+    
+    // MARK: - Pinch
+    
+    @Test func pinchKeepsCandleUnderFingers() {
+        let (chart, state, recognizer) = Self.makeScrolledChart()
+        withExtendedLifetime(chart) {
+            #expect(!state.followLatest)
+            let left = FakeTouch(point: CGPoint(x: 100, y: 100), time: 1)
+            let right = FakeTouch(point: CGPoint(x: 200, y: 100), time: 1)
+            recognizer.touchesBegan([left, right], with: UIEvent())
+            let anchorPosition = state.end - (state.plotWidth - 150) / state.step
+            let visibleCountBefore = state.visibleCount
+            
+            // Centroid moves 150 -> 210 while the span grows 1.6x
+            left.point = CGPoint(x: 130, y: 100)
+            right.point = CGPoint(x: 290, y: 100)
+            recognizer.touchesMoved([left, right], with: UIEvent())
+            
+            #expect(abs(state.visibleCount - visibleCountBefore / 1.6) < 0.001)
+            #expect(abs(state.xOf(anchorPosition) - 210) < 0.001)
+            recognizer.touchesEnded([left, right], with: UIEvent())
+            recognizer.reset()
+        }
+    }
+    
+    // MARK: - Share card
+    
+    @Test func shareCardTitleAndChartFollowPriceDisplay() {
+        let original = AppGroupUserDefaults.Wallet.perpsPriceDisplay
+        defer {
+            AppGroupUserDefaults.Wallet.perpsPriceDisplay = original
+        }
+        let candles = [Self.makeCandle(timestamp: Self.nowMillis - 1000, high: "110", low: "90", close: "105")]
+        for display in PerpetualMarketViewModel.PriceDisplay.allCases {
+            AppGroupUserDefaults.Wallet.perpsPriceDisplay = display.rawValue
+            let viewModel = PerpetualMarketViewModel(market: Self.makeMarket(marketID: "a", last: "100", markPrice: "101.5"))
+            let controller = ShareMarketContentViewController(
+                viewModel: viewModel,
+                candles: candles,
+                timeFrame: .oneHour,
+                rebatingCode: nil
+            )
+            controller.loadViewIfNeeded()
+            let chart = controller.chartWrapperView.subviews.compactMap { $0 as? CandlestickChartView }.first
+            let (title, price) = switch display {
+            case .lastPrice:
+                (viewModel.localizedLastPrice, viewModel.decimalLastPrice)
+            case .markPrice:
+                (viewModel.market.localizedMarkPrice, viewModel.market.decimalMarkPrice)
+            }
+            #expect(controller.priceLabel.text == title)
+            #expect(chart?.latestPrice == price)
+            #expect(chart?.viewportState.candles.last?.close == price as NSDecimalNumber)
         }
     }
     

@@ -58,6 +58,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         )
         chartView.labels = .localized
         timeFrameScrollView.backgroundColor = R.color.background_secondary()
+        timeFrameScrollView.clipsToBounds = true
         timeFrameScrollView.layer.cornerRadius = 21
         timeFrameIndicatorView.backgroundColor = R.color.background()
         timeFrameIndicatorView.layer.cornerRadius = 18
@@ -89,7 +90,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
                 timeFrameDividers.append(divider)
             }
             var config: UIButton.Configuration = .plain()
-            config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
+            config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
             config.background.backgroundColor = .clear
             let title = switch timeFrame {
             case .oneMinute:
@@ -114,7 +115,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
                 }
                 var attributes = AttributeContainer()
                 attributes.font = UIFontMetrics.default.scaledFont(
-                    for: .systemFont(ofSize: 14, weight: button.isSelected ? .semibold : .medium)
+                    for: .systemFont(ofSize: 13, weight: button.isSelected ? .semibold : .medium)
                 )
                 attributes.foregroundColor = R.color.text()
                 config.attributedTitle = AttributedString(title, attributes: attributes)
@@ -243,12 +244,20 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         ]
         NSLayoutConstraint.activate(timeFrameIndicatorConstraints)
         timeFrameIndicatorView.isHidden = false
+        timeFrameScrollView.layoutIfNeeded()
+        // Only scrolls when the tabs overflow the track (narrow screens or long localized labels).
+        let maxOffset = max(0, timeFrameScrollView.contentSize.width - timeFrameScrollView.bounds.width)
+        let buttonCenterX = timeFrameScrollView.convert(button.center, from: button.superview).x
+        let centeredOffset = buttonCenterX - timeFrameScrollView.bounds.width / 2
+        let targetOffset = CGPoint(x: min(max(0, centeredOffset), maxOffset), y: 0)
         if animated {
             UIView.animate(withDuration: 0.35, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0) {
+                self.timeFrameScrollView.contentOffset = targetOffset
                 self.timeFrameScrollView.layoutIfNeeded()
             }
         } else {
             UIView.performWithoutAnimation {
+                self.timeFrameScrollView.contentOffset = targetOffset
                 self.timeFrameScrollView.layoutIfNeeded()
             }
         }

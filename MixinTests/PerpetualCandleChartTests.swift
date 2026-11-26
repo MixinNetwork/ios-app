@@ -797,5 +797,65 @@ final class PerpetualCandleChartTests: XCTestCase {
         XCTAssertEqual(trackFrame.minX, chartFrame.minX, accuracy: 0.5)
         XCTAssertEqual(trackFrame.maxX, chartFrame.maxX, accuracy: 0.5)
     }
+
+    // Price section uses 20pt section insets, so a 390pt iPhone gives a 350pt cell.
+    private func makeSelfSizedPriceCell(width: CGFloat) -> PerpetualMarketPriceCell {
+        let cell = R.nib.perpetualMarketPriceCell.firstView(owner: nil)!
+        let height = cell.systemLayoutSizeFitting(
+            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
+        cell.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        cell.layoutIfNeeded()
+        return cell
+    }
+
+    // Cell widths for screen widths 320/343/375/390/430/768 (section insets already removed).
+    func testTimeFrameTabsAcrossScreenWidthMatrix() {
+        for width: CGFloat in [280, 303, 335, 350, 390, 728] {
+            let cell = makeSelfSizedPriceCell(width: width)
+            for frame in PerpetualTimeFrame.allCases {
+                cell.setTimeFrame(frame: frame)
+                cell.layoutIfNeeded()
+                let context = "cell \(width) \(frame)"
+                let track = cell.timeFrameScrollView.bounds
+                XCTAssertTrue(cell.timeFrameScrollView.clipsToBounds, context)
+                let trackBottomInCard = cell.contentView.convert(
+                    CGPoint(x: 0, y: track.maxY), from: cell.timeFrameScrollView
+                ).y
+                XCTAssertLessThanOrEqual(trackBottomInCard, cell.contentView.bounds.height - 20 + 0.5, context)
+                XCTAssertEqual(track.height, 42, accuracy: 0.5, context)
+
+                let buttons = cell.timeFrameStackView.arrangedSubviews.compactMap { $0 as? UIButton }
+                XCTAssertEqual(buttons.count, 7, context)
+                let content = cell.timeFrameScrollView.contentSize.width
+                let fitsWithoutScroll = content <= track.width + 0.5
+                for button in buttons {
+                    let buttonFrame = cell.timeFrameScrollView.convert(button.bounds, from: button)
+                    if fitsWithoutScroll {
+                        XCTAssertGreaterThanOrEqual(buttonFrame.minX, 3 - 0.5, context)
+                        XCTAssertLessThanOrEqual(buttonFrame.maxX, track.width - 3 + 0.5, context)
+                    }
+                    XCTAssertGreaterThanOrEqual(buttonFrame.minY, 3 - 0.5, context)
+                    XCTAssertLessThanOrEqual(buttonFrame.maxY, track.height - 3 + 0.5, context)
+                    if let label = button.titleLabel {
+                        let labelWidth = label.intrinsicContentSize.width
+                        XCTAssertLessThanOrEqual(labelWidth, button.bounds.width - 16 + 0.5, "title truncated \(context)")
+                    }
+                }
+
+                let selected = buttons.first { $0.isSelected }!
+                let selectedFrame = cell.timeFrameScrollView.convert(selected.bounds, from: selected)
+                let indicator = cell.timeFrameIndicatorView.frame
+                XCTAssertEqual(indicator.midX, selectedFrame.midX, accuracy: 0.5, context)
+                XCTAssertEqual(indicator.midY, selectedFrame.midY, accuracy: 0.5, context)
+                XCTAssertEqual(indicator.width, selectedFrame.width, accuracy: 0.5, context)
+                let visibleSelectedMidX = selectedFrame.midX - cell.timeFrameScrollView.contentOffset.x
+                XCTAssertGreaterThanOrEqual(visibleSelectedMidX, 0, context)
+                XCTAssertLessThanOrEqual(visibleSelectedMidX, track.width, context)
+            }
+        }
+    }
     
 }

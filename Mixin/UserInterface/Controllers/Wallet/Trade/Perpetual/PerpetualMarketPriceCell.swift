@@ -22,6 +22,8 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     @IBOutlet weak var timeFrameScrollView: UIScrollView!
     @IBOutlet weak var timeFrameStackView: UIStackView!
     
+    let timeFrameIndicatorView = UIView()
+    
     weak var delegate: Delegate?
     
     private weak var unavailableView: UIView?
@@ -30,9 +32,10 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     private var timeFrame: PerpetualTimeFrame = .oneMinute
     private var priceScale: Int?
     private var lastPrice: Decimal?
+    private var marketID: String?
+    private var liveWick: PerpetualCandleViewModel.LiveWick?
     private var timeFrameDividers: [UIView] = []
     private var timeFrameIndicatorConstraints: [NSLayoutConstraint] = []
-    let timeFrameIndicatorView = UIView()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -132,9 +135,14 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         iconView.prepareForReuse()
+        liveWick = nil
     }
     
     func load(viewModel: PerpetualMarketViewModel) {
+        if viewModel.market.marketID != marketID {
+            marketID = viewModel.market.marketID
+            liveWick = nil
+        }
         changeLabel.text = viewModel.change
         changeLabel.marketColor = viewModel.changeColor
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
@@ -152,6 +160,9 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         priceScale: Int,
         lastPrice: Decimal
     ) {
+        if timeFrame != self.timeFrame {
+            liveWick = nil
+        }
         self.chart = chart
         self.timeFrame = timeFrame
         self.priceScale = priceScale
@@ -160,6 +171,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         case .candles(let candles) where candles.isEmpty:
             fallthrough
         case .unavailable:
+            liveWick = nil
             showUnavailableView()
             loadingIndicatorView.stopAnimating()
         case .loading:
@@ -174,6 +186,10 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     
     // Partial refresh for market polling, keeps viewport state and in-flight gestures untouched
     func updatePrice(viewModel: PerpetualMarketViewModel) {
+        if viewModel.market.marketID != marketID {
+            marketID = viewModel.market.marketID
+            liveWick = nil
+        }
         changeLabel.text = viewModel.change
         changeLabel.marketColor = viewModel.changeColor
         let lastPrice = viewModel.decimalLastPrice
@@ -183,8 +199,11 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         }
         self.lastPrice = lastPrice
         self.priceScale = priceScale
-        if case let .candles(candles) = chart, !candles.isEmpty {
+        switch chart {
+        case .candles(let candles) where !candles.isEmpty:
             configureChart(candles: candles, viewportState: chartView.viewportState)
+        case .candles, .unavailable, .loading, .none:
+            break
         }
     }
     
@@ -194,7 +213,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         }
         setTimeFrameSelection(index: index, animated: false)
     }
-
+    
     @objc private func changeTimeFrame(_ sender: UIButton) {
         setTimeFrameSelection(index: sender.tag, animated: true)
         let frame = PerpetualTimeFrame.allCases[sender.tag]
@@ -208,10 +227,17 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         let liveCandles = PerpetualCandleViewModel.withLivePrice(
             candles: candles,
             lastPrice: lastPrice,
-            timeFrame: timeFrame
+            timeFrame: timeFrame,
+            nowMillis: Int64(Date().timeIntervalSince1970 * 1000)
         )
-        chartView.configure(
+        let (wickedCandles, wick) = PerpetualCandleViewModel.withLiveWick(
             candles: liveCandles,
+            timeFrame: timeFrame,
+            cachedWick: liveWick
+        )
+        liveWick = wick
+        chartView.configure(
+            candles: wickedCandles,
             timeFrame: timeFrame,
             latestPrice: lastPrice,
             priceFormatMode: .decimal(priceScale: priceScale),
@@ -227,12 +253,8 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         for (i, divider) in timeFrameDividers.enumerated() {
             divider.isHidden = i == index || i + 1 == index
         }
-        updateTimeFrameIndicator(index: index, animated: animated)
-    }
-
-    // The pill is pinned to the selected button with Auto Layout, so its first
-    // placement and every relayout (rotation, width change) stay in sync with the buttons.
-    private func updateTimeFrameIndicator(index: Int, animated: Bool) {
+        // The pill is pinned to the selected button with Auto Layout, so its first
+        // placement and every relayout (rotation, width change) stay in sync with the buttons.
         let buttons = timeFrameStackView.arrangedSubviews.compactMap { $0 as? UIButton }
         guard let button = buttons.first(where: { $0.tag == index }) else {
             return
@@ -251,7 +273,12 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         let centeredOffset = buttonCenterX - timeFrameScrollView.bounds.width / 2
         let targetOffset = CGPoint(x: min(max(0, centeredOffset), maxOffset), y: 0)
         if animated {
-            UIView.animate(withDuration: 0.35, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0) {
+            UIView.animate(
+                withDuration: 0.35,
+                delay: 0,
+                usingSpringWithDamping: 1,
+                initialSpringVelocity: 0
+            ) {
                 self.timeFrameScrollView.contentOffset = targetOffset
                 self.timeFrameScrollView.layoutIfNeeded()
             }

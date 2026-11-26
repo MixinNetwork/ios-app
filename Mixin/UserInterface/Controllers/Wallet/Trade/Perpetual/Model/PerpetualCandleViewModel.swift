@@ -31,6 +31,14 @@ struct PerpetualCandleViewModel: Equatable {
 
 extension PerpetualCandleViewModel {
     
+    // High and low reached so far by the active candle, including live prices
+    struct LiveWick: Equatable {
+        let timeFrame: PerpetualTimeFrame
+        let timestamp: Int64
+        let high: NSDecimalNumber
+        let low: NSDecimalNumber
+    }
+    
     static func normalizedTimestampMillis(_ rawTimestamp: Int64) -> Int64 {
         rawTimestamp < 1_000_000_000_000 ? rawTimestamp * 1000 : rawTimestamp
     }
@@ -81,7 +89,7 @@ extension PerpetualCandleViewModel {
         candles: [PerpetualCandleViewModel],
         lastPrice: Decimal?,
         timeFrame: PerpetualTimeFrame,
-        nowMillis: Int64 = Int64(Date().timeIntervalSince1970 * 1000)
+        nowMillis: Int64
     ) -> [PerpetualCandleViewModel] {
         guard let last = candles.last,
               let lastPrice,
@@ -109,6 +117,49 @@ extension PerpetualCandleViewModel {
         var result = candles
         result[result.count - 1] = updatedLast
         return result
+    }
+    
+    // Widens the active candle with the cached wick, so extremes pushed by earlier
+    // live prices survive later polls. The cache only applies to the same time frame and candle.
+    static func withLiveWick(
+        candles: [PerpetualCandleViewModel],
+        timeFrame: PerpetualTimeFrame,
+        cachedWick: LiveWick?
+    ) -> (candles: [PerpetualCandleViewModel], wick: LiveWick?) {
+        guard let last = candles.last else {
+            return (candles, nil)
+        }
+        guard let cachedWick,
+              cachedWick.timeFrame == timeFrame,
+              cachedWick.timestamp == last.timestamp
+        else {
+            let wick = LiveWick(
+                timeFrame: timeFrame,
+                timestamp: last.timestamp,
+                high: last.high,
+                low: last.low
+            )
+            return (candles, wick)
+        }
+        let high = last.high.compare(cachedWick.high) == .orderedAscending ? cachedWick.high : last.high
+        let low = last.low.compare(cachedWick.low) == .orderedDescending ? cachedWick.low : last.low
+        let wick = LiveWick(
+            timeFrame: timeFrame,
+            timestamp: last.timestamp,
+            high: high,
+            low: low
+        )
+        let updatedLast = PerpetualCandleViewModel(
+            timestamp: last.timestamp,
+            time: last.time,
+            open: last.open,
+            high: high,
+            low: low,
+            close: last.close
+        )
+        var result = candles
+        result[result.count - 1] = updatedLast
+        return (result, wick)
     }
     
 }

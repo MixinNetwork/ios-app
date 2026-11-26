@@ -117,13 +117,21 @@ final class CandlestickChartView: UIView {
     private var isApplyingConfiguration = false
     
     override init(frame: CGRect) {
-        self.viewportState = CandleChartViewportState()
+        self.viewportState = CandleChartViewportState(
+            candles: [],
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
         super.init(frame: frame)
         commonInit()
     }
     
     required init?(coder: NSCoder) {
-        self.viewportState = CandleChartViewportState()
+        self.viewportState = CandleChartViewportState(
+            candles: [],
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
         super.init(coder: coder)
         commonInit()
     }
@@ -153,12 +161,16 @@ final class CandlestickChartView: UIView {
         candles: [PerpetualCandleViewModel],
         timeFrame: PerpetualTimeFrame,
         latestPrice: Decimal?,
-        priceFormatMode: CandlePriceFormatMode? = nil,
-        viewportState: CandleChartViewportState? = nil,
-        animated: Bool = true
+        priceFormatMode: CandlePriceFormatMode?,
+        viewportState: CandleChartViewportState?,
+        animated: Bool
     ) {
-        isApplyingConfiguration = true
         let didSwapState = viewportState != nil && viewportState !== self.viewportState
+        if didSwapState || timeFrame != self.timeFrame {
+            // Stops the display link from driving the next viewport and resets isScrolling on the current one
+            chartGestureRecognizer.stopFling()
+        }
+        isApplyingConfiguration = true
         if let viewportState, viewportState !== self.viewportState {
             self.viewportState = viewportState
         } else if timeFrame != self.timeFrame {
@@ -166,7 +178,14 @@ final class CandlestickChartView: UIView {
         }
         self.timeFrame = timeFrame
         if let priceFormatMode {
-            let modeChanged = !Self.isSameFormatMode(self.priceFormatMode, priceFormatMode)
+            let modeChanged = switch (self.priceFormatMode, priceFormatMode) {
+            case let (.decimal(l), .decimal(r)):
+                l != r
+            case let (.currencyStyle(l), .currencyStyle(r)):
+                l != r
+            default:
+                true
+            }
             self.priceFormatMode = priceFormatMode
             if modeChanged && !didSwapState {
                 self.viewportState.resetAxisWidth()
@@ -176,17 +195,6 @@ final class CandlestickChartView: UIView {
         self.viewportState.updateCandles(candles, isRegularWidth: isRegularWidth)
         isApplyingConfiguration = false
         syncLayoutAndRange(animated: animated)
-    }
-    
-    private static func isSameFormatMode(_ lhs: CandlePriceFormatMode, _ rhs: CandlePriceFormatMode) -> Bool {
-        switch (lhs, rhs) {
-        case let (.decimal(l), .decimal(r)):
-            return l == r
-        case let (.currencyStyle(l), .currencyStyle(r)):
-            return l == r
-        default:
-            return false
-        }
     }
     
     func snapPriceRangeWithoutAnimation() {
@@ -386,7 +394,8 @@ final class CandlestickChartView: UIView {
             candles: viewportState.candles,
             latestPrice: latestPrice,
             mode: priceFormatMode,
-            font: Config.axisFont
+            font: Config.axisFont,
+            locale: .current
         )
         return viewportState.updateAxisWidth(measuredWidth: measured)
     }
@@ -415,7 +424,11 @@ final class CandlestickChartView: UIView {
             return
         }
         if animated {
-            rangeAnimator.update(target: target, hold: viewportState.isScrolling)
+            rangeAnimator.update(
+                target: target,
+                hold: viewportState.isScrolling,
+                startDisplayLink: true
+            )
         } else {
             rangeAnimator.snap(to: target)
         }
@@ -444,7 +457,8 @@ final class CandlestickChartView: UIView {
         CandlePriceFormatter.format(
             value,
             mode: priceFormatMode,
-            candles: viewportState.candles
+            candles: viewportState.candles,
+            locale: .current
         )
     }
     
@@ -453,14 +467,6 @@ final class CandlestickChartView: UIView {
         let formatter: DateFormatter = timeFrame.usesDateOnlyFormat
             ? Self.dailyAxisDateFormatter
             : Self.intradayAxisDateFormatter
-        return formatter.string(from: date)
-    }
-    
-    private func formatDetailDate(_ timestampMillis: Int64) -> String {
-        let date = Date(timeIntervalSince1970: TimeInterval(timestampMillis) / 1000)
-        let formatter: DateFormatter = timeFrame.usesDateOnlyFormat
-            ? Self.dailyDetailDateFormatter
-            : Self.intradayDetailDateFormatter
         return formatter.string(from: date)
     }
     
@@ -717,13 +723,21 @@ final class CandlestickChartView: UIView {
             let openDecimal = selected.open.decimalValue
             let closeDecimal = selected.close.decimalValue
             let isRising = closeDecimal >= openDecimal
-            let changeText = CandlePriceFormatter.formatChangePercentage(open: openDecimal, close: closeDecimal)
+            let changeText = CandlePriceFormatter.formatChangePercentage(
+                open: openDecimal,
+                close: closeDecimal,
+                locale: .current
+            )
+            let detailDateFormatter: DateFormatter = timeFrame.usesDateOnlyFormat
+                ? Self.dailyDetailDateFormatter
+                : Self.intradayDetailDateFormatter
+            let detailDate = Date(timeIntervalSince1970: TimeInterval(selected.timestamp) / 1000)
             let rawRows: [(String, String, String?)] = [
                 (labels.open, formatPrice(openDecimal), nil),
                 (labels.close, formatPrice(closeDecimal), changeText),
                 (labels.high, formatPrice(selected.high.decimalValue), nil),
                 (labels.low, formatPrice(selected.low.decimalValue), nil),
-                (labels.date, formatDetailDate(selected.timestamp), nil),
+                (labels.date, detailDateFormatter.string(from: detailDate), nil),
             ]
             var rows: [PreparedSelectionRow] = []
             rows.reserveCapacity(rawRows.count)

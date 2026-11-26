@@ -31,6 +31,7 @@ final class CandleChartGestureRecognizer: UIGestureRecognizer {
     private let minFlingVelocity: CGFloat = 60
     private let stopFlingVelocity: CGFloat = 15
     private let flingDecelerationRate: CGFloat = 4.5
+    private let velocitySampleWindow: TimeInterval = 0.1
     
     private var mode: Mode = .pending
     private var activeTouches: [UITouch] = []
@@ -77,7 +78,8 @@ final class CandleChartGestureRecognizer: UIGestureRecognizer {
         }
         
         if activeTouches.isEmpty {
-            stopFling(notifyScrollingEnded: false)
+            // A tap or vertical swipe never reaches .drag, so the fling must end scrolling here
+            stopFling(notifyScrollingEnded: true)
             chartDelegate?.candleChartGestureDidStartInteraction(self)
         }
         
@@ -91,7 +93,28 @@ final class CandleChartGestureRecognizer: UIGestureRecognizer {
             initialLocation = point
             velocitySamples = [VelocitySample(timestamp: activeTouches[0].timestamp, x: point.x)]
             heavyFeedback.prepare()
-            scheduleLongPressTimer()
+            cancelLongPressTimer()
+            let timer = Timer(timeInterval: longPressDuration, repeats: false) { [weak self] _ in
+                guard let self else {
+                    return
+                }
+                longPressTimer = nil
+                guard mode == .pending,
+                      activeTouches.count == 1,
+                      state == .possible,
+                      let view = self.view,
+                      let touch = activeTouches.first
+                else {
+                    return
+                }
+                mode = .select
+                state = .began
+                heavyFeedback.impactOccurred()
+                let x = touch.location(in: view).x
+                chartDelegate?.candleChartGesture(self, didStartSelectionAt: x)
+            }
+            RunLoop.main.add(timer, forMode: .common)
+            longPressTimer = timer
         } else if activeTouches.count > 1 {
             cancelLongPressTimer()
             if mode == .select {
@@ -173,10 +196,11 @@ final class CandleChartGestureRecognizer: UIGestureRecognizer {
                     zoomFactor = currSpan / prevSpan
                 }
             }
+            // Zoom around the previous centroid, then pan, so the candle under the fingers follows them
             chartDelegate?.candleChartGesture(
                 self,
                 didZoomBy: zoomFactor,
-                anchorX: currCentroid.x,
+                anchorX: prevCentroid.x,
                 panX: panX
             )
             if state == .began || state == .changed {
@@ -229,9 +253,16 @@ final class CandleChartGestureRecognizer: UIGestureRecognizer {
         case .pending:
             state = .failed
         case .drag:
-            let velocityX = cancelled ? 0 : computeHorizontalVelocity()
+            let releaseTimestamp = touches.map(\.timestamp).max() ?? 0
+            let velocityX = cancelled ? 0 : computeHorizontalVelocity(releaseTimestamp: releaseTimestamp)
             if abs(velocityX) >= minFlingVelocity {
-                startFling(velocityX: velocityX)
+                stopFling(notifyScrollingEnded: false)
+                flingVelocityX = velocityX
+                lastFlingTimestamp = nil
+                let proxy = FlingDisplayLinkProxy(target: self)
+                let link = CADisplayLink(target: proxy, selector: #selector(FlingDisplayLinkProxy.step(_:)))
+                link.add(to: .main, forMode: .common)
+                flingDisplayLink = link
             } else {
                 chartDelegate?.candleChartGesture(self, didChangeScrolling: false)
             }
@@ -245,47 +276,25 @@ final class CandleChartGestureRecognizer: UIGestureRecognizer {
         }
     }
     
-    private func scheduleLongPressTimer() {
-        cancelLongPressTimer()
-        let timer = Timer(timeInterval: longPressDuration, repeats: false) { [weak self] _ in
-            self?.triggerLongPressSelection()
-        }
-        RunLoop.main.add(timer, forMode: .common)
-        longPressTimer = timer
-    }
-    
     private func cancelLongPressTimer() {
         longPressTimer?.invalidate()
         longPressTimer = nil
     }
     
-    private func triggerLongPressSelection() {
-        longPressTimer = nil
-        guard mode == .pending,
-              activeTouches.count == 1,
-              state == .possible,
-              let view,
-              let touch = activeTouches.first
-        else {
-            return
-        }
-        mode = .select
-        state = .began
-        heavyFeedback.impactOccurred()
-        let x = touch.location(in: view).x
-        chartDelegate?.candleChartGesture(self, didStartSelectionAt: x)
-    }
-    
     private func recordVelocitySample(timestamp: TimeInterval, x: CGFloat) {
         velocitySamples.append(VelocitySample(timestamp: timestamp, x: x))
-        let cutoff = timestamp - 0.1
+        let cutoff = timestamp - velocitySampleWindow
         velocitySamples.removeAll { $0.timestamp < cutoff }
     }
     
-    private func computeHorizontalVelocity() -> CGFloat {
-        guard velocitySamples.count >= 2,
-              let first = velocitySamples.first,
-              let last = velocitySamples.last
+    // Samples older than the window before release are stale, e.g. the finger
+    // paused after a fast swipe, so they must not produce a fling
+    private func computeHorizontalVelocity(releaseTimestamp: TimeInterval) -> CGFloat {
+        let cutoff = releaseTimestamp - velocitySampleWindow
+        let samples = velocitySamples.filter { $0.timestamp >= cutoff }
+        guard samples.count >= 2,
+              let first = samples.first,
+              let last = samples.last
         else {
             return 0
         }
@@ -294,16 +303,6 @@ final class CandleChartGestureRecognizer: UIGestureRecognizer {
             return 0
         }
         return (last.x - first.x) / CGFloat(dt)
-    }
-    
-    private func startFling(velocityX: CGFloat) {
-        stopFling(notifyScrollingEnded: false)
-        flingVelocityX = velocityX
-        lastFlingTimestamp = nil
-        let proxy = FlingDisplayLinkProxy(target: self)
-        let link = CADisplayLink(target: proxy, selector: #selector(FlingDisplayLinkProxy.step(_:)))
-        link.add(to: .main, forMode: .common)
-        flingDisplayLink = link
     }
     
     private func stopFling(notifyScrollingEnded: Bool) {

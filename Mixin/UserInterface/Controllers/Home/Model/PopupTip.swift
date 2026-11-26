@@ -52,6 +52,14 @@ enum PopupTip {
 extension PopupTip {
     
     static func inspect() async -> PopupTip? {
+        guard let firstLaunchDate = AppGroupUserDefaults.firstLaunchDate else {
+            AppGroupUserDefaults.firstLaunchDate = Date()
+            return nil
+        }
+        guard -firstLaunchDate.timeIntervalSinceNow > .hour else {
+            return nil
+        }
+        
         guard let account = LoginManager.shared.account else {
             return nil
         }
@@ -80,7 +88,6 @@ extension PopupTip {
         
         if AppGroupUserDefaults.User.hasPerformedTransfer,
            userDismissalOutdates(tip: .appRating, dismissalDate: AppGroupUserDefaults.appRatingRequestDate),
-           let firstLaunchDate = AppGroupUserDefaults.firstLaunchDate,
            -firstLaunchDate.timeIntervalSinceNow > 7 * .day
         {
             return .appRating

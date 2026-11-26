@@ -47,7 +47,7 @@ class AttachmentUploadJob: AttachmentLoadingJob {
            UUID(uuidString: attachmentExtra.attachmentId) != nil,
            let createdAt = attachmentExtra.createdAt,
            !createdAt.isEmpty,
-           abs(createdAt.toUTCDate().timeIntervalSinceNow) < secondsPerDay
+           abs(createdAt.toUTCDate().timeIntervalSinceNow) < .day
         {
             Logger.general.debug(category: "AttachmentUploadJob", message: "Using existed attachment ID: \(attachmentExtra.attachmentId)")
             uploadFinished(attachmentId: attachmentExtra.attachmentId, key: message.mediaKey, digest: message.mediaDigest, createdAt: createdAt)

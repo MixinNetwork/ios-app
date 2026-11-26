@@ -8,8 +8,8 @@ extension Date {
         guard let base = DateComponents(calendar: .gregorian, timeZone: .current, year: thisYear, month: 12, day: 25).date else {
             return false
         }
-        let start = base.addingTimeInterval(-secondsPerDay).timeIntervalSince1970
-        let end = base.addingTimeInterval(secondsPerDay).timeIntervalSince1970
+        let start = base.addingTimeInterval(-.day).timeIntervalSince1970
+        let end = base.addingTimeInterval(.day).timeIntervalSince1970
         return (start...end).contains(self.timeIntervalSince1970)
     }
     
@@ -21,13 +21,13 @@ extension Date {
                 return false
             }
             let start = base.timeIntervalSince1970
-            let end = base.timeIntervalSince1970 + 6 * secondsPerDay
+            let end = base.timeIntervalSince1970 + 6 * .day
             return (start...end).contains(self.timeIntervalSince1970)
         case 12:
             guard let base = DateComponents(calendar: .chinese, timeZone: .current, year: thisYear + 1, month: 1, day: 1).date else {
                 return false
             }
-            let start = base.timeIntervalSince1970 - secondsPerDay
+            let start = base.timeIntervalSince1970 - .day
             let end = base.timeIntervalSince1970
             return (start...end).contains(self.timeIntervalSince1970)
         default:

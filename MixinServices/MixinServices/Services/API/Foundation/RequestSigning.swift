@@ -52,15 +52,17 @@ extension RequestSigning {
             return nil
         }
         let date = Date()
-        let claims = Jwt.Claims(uid: account.userID,
-                                sid: account.sessionID,
-                                iat: date,
-                                exp: date.addingTimeInterval(5 * secondsPerMinute),
-                                jti: requestId,
-                                sig: sig,
-                                scp: "FULL")
+        let claims = JWT.Claims(
+            uid: account.userID,
+            sid: account.sessionID,
+            iat: date,
+            exp: date.addingTimeInterval(5 * .minute),
+            jti: requestId,
+            sig: sig,
+            scp: "FULL"
+        )
         do {
-            let token = try Jwt.signedToken(claims: claims, key: key)
+            let token = try JWT.signedToken(claims: claims, key: key)
             return "Bearer " + token
         } catch {
             return nil

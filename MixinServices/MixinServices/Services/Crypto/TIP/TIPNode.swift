@@ -2,7 +2,7 @@ import Foundation
 import Alamofire
 import TIP
 
-fileprivate let ephemeralGrace = 128 * UInt64(secondsPerDay) * UInt64(NSEC_PER_SEC)
+fileprivate let ephemeralGrace = 128 * UInt64(TimeInterval.day) * UInt64(NSEC_PER_SEC)
 fileprivate let maximumRetries: UInt64 = 2
 
 public enum TIPNode {

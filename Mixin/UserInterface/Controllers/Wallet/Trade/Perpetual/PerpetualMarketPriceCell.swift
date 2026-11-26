@@ -30,6 +30,9 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     private var timeFrame: PerpetualTimeFrame = .oneMinute
     private var priceScale: Int?
     private var lastPrice: Decimal?
+    private var selectedTimeFrameIndex: Int?
+    private var timeFrameDividers: [UIView] = []
+    private let timeFrameIndicatorView = UIView()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -54,9 +57,34 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
             adjustForContentSize: true
         )
         chartView.labels = .localized
-        timeFrameScrollView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        timeFrameScrollView.backgroundColor = R.color.background_secondary()
+        timeFrameScrollView.layer.cornerRadius = 21
+        timeFrameIndicatorView.backgroundColor = R.color.background()
+        timeFrameIndicatorView.layer.cornerRadius = 18
+        timeFrameScrollView.insertSubview(timeFrameIndicatorView, at: 0)
+        timeFrameStackView.isLayoutMarginsRelativeArrangement = true
+        timeFrameStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 3, leading: 3, bottom: 3, trailing: 3)
         for (i, timeFrame) in PerpetualTimeFrame.allCases.enumerated() {
-            var config: UIButton.Configuration = .filled()
+            if i > 0 {
+                let divider = UIView()
+                divider.backgroundColor = R.color.time_frame_divider()
+                divider.translatesAutoresizingMaskIntoConstraints = false
+                let container = UIView()
+                container.addSubview(divider)
+                container.widthAnchor.constraint(equalToConstant: 1).isActive = true
+                NSLayoutConstraint.activate([
+                    divider.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+                    divider.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+                    divider.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+                    divider.heightAnchor.constraint(equalToConstant: 12),
+                ])
+                container.setContentHuggingPriority(.required, for: .horizontal)
+                timeFrameStackView.addArrangedSubview(container)
+                timeFrameDividers.append(divider)
+            }
+            var config: UIButton.Configuration = .plain()
+            config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
+            config.background.backgroundColor = .clear
             let title = switch timeFrame {
             case .oneMinute:
                 R.string.localizable.minutes_count_short(1)
@@ -73,29 +101,22 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
             case .oneWeek:
                 R.string.localizable.weeks_count_short(1)
             }
-            var attributes = AttributeContainer()
-            attributes.font = UIFontMetrics.default.scaledFont(
-                for: .systemFont(ofSize: 14)
-            )
-            config.attributedTitle = AttributedString(title, attributes: attributes)
-            config.cornerStyle = .capsule
-            config.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 6, bottom: 4, trailing: 6)
             let button = UIButton(configuration: config)
             button.configurationUpdateHandler = { button in
                 guard var config = button.configuration else {
                     return
                 }
-                if button.isSelected {
-                    config.baseForegroundColor = R.color.text()
-                    config.baseBackgroundColor = R.color.background_quaternary()
-                } else {
-                    config.baseForegroundColor = R.color.text_quaternary()
-                    config.baseBackgroundColor = .clear
-                }
+                var attributes = AttributeContainer()
+                attributes.font = UIFontMetrics.default.scaledFont(
+                    for: .systemFont(ofSize: 14, weight: button.isSelected ? .semibold : .medium)
+                )
+                attributes.foregroundColor = R.color.text()
+                config.attributedTitle = AttributedString(title, attributes: attributes)
                 button.configuration = config
             }
             button.tag = i
             button.setContentCompressionResistancePriority(.required, for: .horizontal)
+            button.setContentHuggingPriority(.defaultLow, for: .horizontal)
             timeFrameStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(changeTimeFrame(_:)), for: .touchUpInside)
         }
@@ -164,11 +185,18 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         guard let index = PerpetualTimeFrame.allCases.firstIndex(of: frame) else {
             return
         }
-        setTimeFrameSelection(index: index)
+        setTimeFrameSelection(index: index, animated: false)
     }
-    
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if let index = selectedTimeFrameIndex {
+            updateTimeFrameIndicator(index: index, animated: false)
+        }
+    }
+
     @objc private func changeTimeFrame(_ sender: UIButton) {
-        setTimeFrameSelection(index: sender.tag)
+        setTimeFrameSelection(index: sender.tag, animated: true)
         let frame = PerpetualTimeFrame.allCases[sender.tag]
         delegate?.perpetualMarketPriceCell(self, didSelectTimeFrame: frame)
     }
@@ -192,9 +220,33 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         )
     }
     
-    private func setTimeFrameSelection(index: Int) {
+    private func setTimeFrameSelection(index: Int, animated: Bool) {
+        selectedTimeFrameIndex = index
         for case let button as UIButton in timeFrameStackView.arrangedSubviews {
             button.isSelected = button.tag == index
+        }
+        for (i, divider) in timeFrameDividers.enumerated() {
+            divider.isHidden = i == index || i + 1 == index
+        }
+        updateTimeFrameIndicator(index: index, animated: animated)
+    }
+
+    private func updateTimeFrameIndicator(index: Int, animated: Bool) {
+        timeFrameStackView.layoutIfNeeded()
+        let buttons = timeFrameStackView.arrangedSubviews.compactMap { $0 as? UIButton }
+        guard let button = buttons.first(where: { $0.tag == index }) else {
+            return
+        }
+        let frame = timeFrameScrollView.convert(button.bounds, from: button)
+        let update = {
+            self.timeFrameIndicatorView.frame = frame
+        }
+        if animated {
+            UIView.animate(withDuration: 0.35, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0) {
+                update()
+            }
+        } else {
+            update()
         }
     }
     

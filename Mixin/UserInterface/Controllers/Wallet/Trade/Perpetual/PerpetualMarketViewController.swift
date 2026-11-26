@@ -319,7 +319,7 @@ extension PerpetualMarketViewController {
         case positionDetails
         case statistics
         case activities([PerpetualOrderViewModel])
-        case introduction
+        case introduction(PerpetualIntroductionCell.Guide)
         case description(String)
     }
     
@@ -591,6 +591,7 @@ extension PerpetualMarketViewController {
             } else {
                 nil
             }
+            let hasPositionHistory = PerpsOrderDAO.shared.hasPositionHistory()
             let activities = PerpsOrderDAO.shared.orderItems(
                 marketID: marketID,
                 limit: limit
@@ -600,7 +601,8 @@ extension PerpetualMarketViewController {
             DispatchQueue.main.async {
                 self?.reloadData(
                     openPosition: openPositionViewModel,
-                    activities: activities
+                    activities: activities,
+                    hasPositionHistory: hasPositionHistory,
                 )
             }
         }
@@ -608,8 +610,10 @@ extension PerpetualMarketViewController {
     
     private func reloadData(
         openPosition: PerpetualPositionViewModel?,
-        activities: [PerpetualOrderViewModel]
+        activities: [PerpetualOrderViewModel],
+        hasPositionHistory: Bool,
     ) {
+        let introduction: Section = .introduction(hasPositionHistory ? .pro : .manual)
         if let openPosition, openPosition.state != .opening {
             openPositionViewModel = openPosition
             sections = [.price]
@@ -650,13 +654,13 @@ extension PerpetualMarketViewController {
             if !activities.isEmpty {
                 sections.append(.activities(activities))
             }
-            sections.append(.introduction)
+            sections.append(introduction)
             loadActionView(state: .opened)
         } else {
             openPositionViewModel = nil
             sections = [
                 .price,
-                .introduction,
+                introduction,
                 .statistics,
             ]
             if !activities.isEmpty {
@@ -1089,8 +1093,13 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             let viewModel = viewModels[indexPath.item]
             cell.load(viewModel: viewModel)
             return cell
-        case .introduction:
-            return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_introduction, for: indexPath)!
+        case .introduction(let guide):
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: R.reuseIdentifier.perps_introduction,
+                for: indexPath,
+            )!
+            cell.configure(for: guide)
+            return cell
         case .description(let description):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_description, for: indexPath)!
             cell.contentLabel.text = description
@@ -1159,7 +1168,10 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
             let activity = PerpetualOrderViewController(wallet: wallet, viewModel: viewModel)
             navigationController?.pushViewController(activity, animated: true)
             reporter.report(event: .tradePerpsActivityDetail, tags: ["source": "perps_market"])
-        case .introduction:
+        case .introduction(.pro):
+            _ = UrlWindow.checkUrl(url: .perpsPro)
+            reporter.report(event: .tradeProClick, tags: ["source": "perps_detail_card"])
+        case .introduction(.manual):
             let manual = PerpsManual.viewController()
             present(manual, animated: true)
             reporter.report(event: .tradePerpsGuide, tags: ["source": "perps_detail_card"])

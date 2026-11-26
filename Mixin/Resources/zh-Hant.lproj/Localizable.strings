@@ -1898,6 +1898,7 @@
 "trade_pro_description" = "專業圖表、全倉保證金及限價訂單。";
 "trade_simple" = "閃兌";
 "trade_swap_orders" = "閃兌訂單";
+"trade_with_mixin_perps" = "使用 Mixin 永續合約";
 "trading_fee" = "手續費";
 "transaction" = "交易詳情";
 "transaction_approved" = "批准成功";

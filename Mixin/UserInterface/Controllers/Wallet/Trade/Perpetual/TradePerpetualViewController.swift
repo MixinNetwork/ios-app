@@ -451,7 +451,12 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 return cell
             }
         case .introduction:
-            return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_introduction, for: indexPath)!
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: R.reuseIdentifier.perps_introduction,
+                for: indexPath,
+            )!
+            cell.configure(for: .manual)
+            return cell
         }
     }
     

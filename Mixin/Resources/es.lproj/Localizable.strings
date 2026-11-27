@@ -1898,6 +1898,7 @@
 "trade_pro_description" = "Gráficos avanzados, margen cruzado y órdenes limitadas.";
 "trade_simple" = "Intercambio";
 "trade_swap_orders" = "Órdenes de intercambio";
+"trade_with_mixin_perps" = "Opere con Mixin Perps";
 "trading_fee" = "Comisión de trading";
 "transaction" = "Transacción";
 "transaction_approved" = "Transacción aprobada";

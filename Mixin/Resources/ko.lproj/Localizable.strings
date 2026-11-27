@@ -1898,6 +1898,7 @@
 "trade_pro_description" = "고급 차트, 교차 마진 및 지정가 주문.";
 "trade_simple" = "스왑";
 "trade_swap_orders" = "스왑 주문";
+"trade_with_mixin_perps" = "Mixin Perps에서 거래하세요";
 "trading_fee" = "거래 수수료";
 "transaction" = "거래";
 "transaction_approved" = "거래 승인됨";

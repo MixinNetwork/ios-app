@@ -19,6 +19,10 @@ public final class PerpsOrderDAO: PerpsDAO {
     
     """
     
+    public func hasPositionHistory() -> Bool {
+        db.select(with: "SELECT 1 FROM perps_orders") == 1
+    }
+    
     public func orderItems(marketID: String, limit: Int) -> [PerpetualOrderItem] {
         db.select(
             with: Self.itemSQL + "AND po.market_id = ? ORDER BY po.created_at DESC LIMIT ?",

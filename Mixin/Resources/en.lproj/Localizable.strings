@@ -1898,6 +1898,7 @@
 "trade_pro_description" = "Advanced charts, cross margin, and limit orders.";
 "trade_simple" = "Swap";
 "trade_swap_orders" = "Swap Orders";
+"trade_with_mixin_perps" = "Trade with Mixin Perps";
 "trading_fee" = "Trading Fee";
 "transaction" = "Transaction";
 "transaction_approved" = "Transaction Approved";

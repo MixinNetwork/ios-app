@@ -1898,6 +1898,7 @@
 "trade_pro_description" = "高度なチャート、クロスマージン、指値注文。";
 "trade_simple" = "スワップ";
 "trade_swap_orders" = "スワップ注文";
+"trade_with_mixin_perps" = "Mixin Perpsで取引";
 "trading_fee" = "取引手数料";
 "transaction" = "トランザクション";
 "transaction_approved" = "トランザクションが承認されました";

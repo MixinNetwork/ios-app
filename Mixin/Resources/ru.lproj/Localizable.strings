@@ -1898,6 +1898,7 @@
 "trade_pro_description" = "Расширенные графики, кросс-маржа и лимитные ордера.";
 "trade_simple" = "Обмен";
 "trade_swap_orders" = "Ордера на обмен";
+"trade_with_mixin_perps" = "Торгуйте с Mixin Perps";
 "trading_fee" = "Торговая комиссия";
 "transaction" = "Сделка";
 "transaction_approved" = "Транзакция одобрена";

@@ -354,6 +354,7 @@ extension AppDelegate: AppsFlyerDeepLinkDelegate {
                 Logger.general.error(category: "AppsFlyer", message: "Empty referral code")
                 return
             }
+            Logger.general.info(category: "AppsFlyer", message: "Referral code: \(referralCode)")
             AppGroupUserDefaults.appsFlyerReferralCode = referralCode
             AppGroupUserDefaults.appsFlyerReferralCodeSavedAt = Date()
             DispatchQueue.main.async {

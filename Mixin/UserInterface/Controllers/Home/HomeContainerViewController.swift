@@ -47,6 +47,7 @@ final class HomeContainerViewController: UIViewController {
     private let sessionReporter = SessionReporter()
     
     private var refreshAccountAfterViewAppears: Bool
+    private var isCheckingAppsFlyerReferral = false
     
     init(initialTab: HomeTabBarController.InitialTab) {
         homeTabBarController = HomeTabBarController(initialTab: initialTab)
@@ -91,6 +92,12 @@ final class HomeContainerViewController: UIViewController {
             self,
             selector: #selector(applicationDidBecomeActive(_:)),
             name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(presentAppsFlyerReferralCodeIfNeeded),
+            name: AppDelegate.didResolveDeepLinkNotification,
             object: nil
         )
         sessionReporter.reportIfOutdated()
@@ -143,6 +150,7 @@ final class HomeContainerViewController: UIViewController {
             name: Self.viewDidAppearNotification,
             object: self
         )
+        presentAppsFlyerReferralCodeIfNeeded()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -176,6 +184,45 @@ final class HomeContainerViewController: UIViewController {
     @objc private func applicationDidBecomeActive(_ sender: Notification) {
         initializeFTSIfNeeded()
         refreshExternalSchemesIfNeeded()
+    }
+    
+    @objc private func presentAppsFlyerReferralCodeIfNeeded() {
+        guard isViewLoaded, view.window != nil else {
+            return
+        }
+        guard presentedViewController == nil else {
+            return
+        }
+        guard !isCheckingAppsFlyerReferral else {
+            return
+        }
+        guard let code = AppGroupUserDefaults.appsFlyerReferralCode, !code.isEmpty else {
+            return
+        }
+        if let savedAt = AppGroupUserDefaults.appsFlyerReferralCodeSavedAt, -savedAt.timeIntervalSinceNow > 7 * .day {
+            AppGroupUserDefaults.appsFlyerReferralCode = nil
+            AppGroupUserDefaults.appsFlyerReferralCodeSavedAt = nil
+            return
+        }
+        isCheckingAppsFlyerReferral = true
+        RewardAPI.referral { [weak self] result in
+            guard let self else {
+                return
+            }
+            self.isCheckingAppsFlyerReferral = false
+            switch result {
+            case let .success(referral):
+                if referral.hasBeenInvited {
+                    AppGroupUserDefaults.appsFlyerReferralCode = nil
+                    AppGroupUserDefaults.appsFlyerReferralCodeSavedAt = nil
+                } else if self.isViewLoaded, self.view.window != nil, self.presentedViewController == nil {
+                    let input = InputReferralCodeViewController(code: code, source: .deeplink)
+                    self.present(input, animated: true)
+                }
+            case let .failure(error):
+                Logger.general.error(category: "HomeContainer", message: "Failed to load referral: \(error)")
+            }
+        }
     }
     
 }

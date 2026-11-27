@@ -1,4 +1,5 @@
 import UIKit
+import AppsFlyerLib
 import MixinServices
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -391,6 +392,10 @@ extension SceneDelegate {
     
     @discardableResult
     private func handleURL(_ url: URL, from source: UrlWindow.Source) -> Bool {
+        if url.host?.lowercased() == "mixin.onelink.me" {
+            AppsFlyerLib.shared().handleOpen(url, options: nil)
+            return true
+        }
         guard LoginManager.shared.isLoggedIn else {
             return false
         }
@@ -404,6 +409,11 @@ extension SceneDelegate {
     
     @discardableResult
     private func handleUserActivity(_ userActivity: NSUserActivity) -> Bool {
+        if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+           userActivity.webpageURL?.host?.lowercased() == "mixin.onelink.me"
+        {
+            return AppsFlyerLib.shared().continue(userActivity, restorationHandler: nil)
+        }
         guard LoginManager.shared.isLoggedIn else {
             return false
         }

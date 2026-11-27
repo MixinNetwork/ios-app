@@ -146,6 +146,12 @@ extension AppGroupUserDefaults {
     @Default(namespace: nil, key: "account_verification_intent", defaultValue: nil)
     public static var accountVerificationIntent: Int?
     
+    @Default(namespace: nil, key: "apps_flyer_ref_code", defaultValue: nil)
+    public static var appsFlyerReferralCode: String?
+    
+    @Default(namespace: nil, key: "apps_flyer_ref_code_date", defaultValue: nil)
+    public static var appsFlyerReferralCodeSavedAt: Date?
+    
 }
 
 extension AppGroupUserDefaults {

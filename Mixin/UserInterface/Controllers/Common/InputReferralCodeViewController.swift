@@ -3,6 +3,11 @@ import MixinServices
 
 final class InputReferralCodeViewController: UIViewController {
     
+    enum Source {
+        case manualSelection
+        case deeplink
+    }
+    
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var inputSectionView: UIView!
@@ -15,6 +20,7 @@ final class InputReferralCodeViewController: UIViewController {
     @IBOutlet weak var laterButton: UIButton!
     
     private let initialCode: String?
+    private let source: Source
     private let codeCharacters = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
     private let codeCount = 6
     private let legacyCodeCount = 8
@@ -26,8 +32,9 @@ final class InputReferralCodeViewController: UIViewController {
         }
     }
     
-    init(code: String?) {
+    init(code: String?, source: Source) {
         self.initialCode = code
+        self.source = source
         let nib = R.nib.inputReferralCodeView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -40,7 +47,12 @@ final class InputReferralCodeViewController: UIViewController {
         super.viewDidLoad()
         presentationController?.delegate = self
         
-        titleLabel.text = R.string.localizable.apply_referral_code()
+        titleLabel.text = switch source {
+        case .manualSelection:
+            R.string.localizable.apply_referral_code()
+        case .deeplink:
+            R.string.localizable.referred_by_a_friend()
+        }
         contentStackView.setCustomSpacing(32, after: titleLabel)
         
         inputSectionView.layer.cornerRadius = 8
@@ -76,15 +88,18 @@ final class InputReferralCodeViewController: UIViewController {
         confirmButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
         laterButton.configuration?.attributedTitle = {
+            let text = switch source {
+            case .manualSelection:
+                R.string.localizable.later()
+            case .deeplink:
+                R.string.localizable.cancel()
+            }
             var attributes = AttributeContainer()
             attributes.font = UIFontMetrics.default.scaledFont(
                 for: .systemFont(ofSize: 16, weight: .medium)
             )
             attributes.foregroundColor = R.color.theme()
-            return AttributedString(
-                R.string.localizable.later(),
-                attributes: attributes
-            )
+            return AttributedString(text, attributes: attributes)
         }()
         laterButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
@@ -152,6 +167,8 @@ final class InputReferralCodeViewController: UIViewController {
     
     @IBAction func close(_ sender: Any) {
         presentingViewController?.dismiss(animated: true)
+        AppGroupUserDefaults.appsFlyerReferralCode = nil
+        AppGroupUserDefaults.appsFlyerReferralCodeSavedAt = nil
     }
     
     @objc private func detectCode() {
@@ -195,7 +212,12 @@ extension InputReferralCodeViewController: UITextFieldDelegate {
 extension InputReferralCodeViewController: UIAdaptivePresentationControllerDelegate {
     
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-        !isBusy
+        switch source {
+        case .manualSelection:
+            !isBusy
+        case .deeplink:
+            false
+        }
     }
     
 }

@@ -160,7 +160,7 @@ class UrlWindow {
                 }
                 return true
             case let .referral(code):
-                let input = InputReferralCodeViewController(code: code)
+                let input = InputReferralCodeViewController(code: code, source: .manualSelection)
                 UIApplication.shared.homeContainerViewController?.present(input, animated: true)
                 return true
             }

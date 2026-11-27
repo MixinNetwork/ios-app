@@ -111,7 +111,7 @@ final class ReferralIntroductionViewController: UIViewController {
             return
         }
         presentingViewController.dismiss(animated: true) {
-            let input = InputReferralCodeViewController(code: nil)
+            let input = InputReferralCodeViewController(code: nil, source: .manualSelection)
             presentingViewController.present(input, animated: true)
         }
     }

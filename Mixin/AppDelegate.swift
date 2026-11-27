@@ -13,7 +13,8 @@ import MixinServices
 
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    static let protectedDataReadyNotification = Notification.Name("one.mixin.services.AppDelegate.ProtectedDataReady")
+    static let protectedDataReadyNotification = Notification.Name("one.mixin.messenger.AppDelegate.ProtectedDataReady")
+    static let didResolveDeepLinkNotification = Notification.Name("one.mixin.messenger.AppDelegate.didResolveDeepLink")
     
     static var current: AppDelegate {
         UIApplication.shared.delegate as! AppDelegate
@@ -58,6 +59,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         configAnalytics()
+        AppsFlyerLib.shared().deepLinkDelegate = self
+        AppsFlyerLib.shared().deepLinkTimeout = UInt(10 * MSEC_PER_SEC)
         if let key = MixinKeys.appsFlyer {
             AppsFlyerLib.shared().initialize(devKey: key, appId: appStoreAppID)
         } else {
@@ -330,6 +333,40 @@ extension AppDelegate : AppsFlyerLibDelegate {
  
     func onConversionDataFail(_ error: any Error) {
         Logger.general.error(category: "AppsFlyer", message: "onConversionDataFail: \(error)")
+    }
+    
+}
+
+extension AppDelegate: AppsFlyerDeepLinkDelegate {
+    
+    func didResolveDeepLink(_ result: DeepLinkResult) {
+        switch result.status {
+        case .found:
+            guard let deepLink = result.deepLink, deepLink.deeplinkValue?.lowercased() == "referral" else {
+                return
+            }
+            let referralCode: String
+            if let code = deepLink.clickEvent["deep_link_sub1"] as? String, !code.isEmpty {
+                referralCode = code
+            } else if let code = deepLink.afSub1, !code.isEmpty {
+                referralCode = code
+            } else {
+                Logger.general.error(category: "AppsFlyer", message: "Empty referral code")
+                return
+            }
+            Logger.general.info(category: "AppsFlyer", message: "Referral code: \(referralCode)")
+            AppGroupUserDefaults.appsFlyerReferralCode = referralCode
+            AppGroupUserDefaults.appsFlyerReferralCodeSavedAt = Date()
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Self.didResolveDeepLinkNotification, object: self)
+            }
+        case .failure:
+            Logger.general.error(category: "AppsFlyer", message: "Deeplink failed: \(String(describing: result.error))")
+        case .notFound:
+            Logger.general.debug(category: "AppsFlyer", message: "Deeplink not found")
+        @unknown default:
+            break
+        }
     }
     
 }

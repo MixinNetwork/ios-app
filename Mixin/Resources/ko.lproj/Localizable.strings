@@ -1508,6 +1508,7 @@
 "referral_program_introduction_header" = "추천 프로그램에 참여하고 친구를 초대하여 함께 암호화폐를 획득하세요.";
 "referral_share_desc" = "스캔하여 Mixin을 설치하세요. 이 추천 코드를 사용하여 %@ 리베이트를 받으세요";
 "referral_share_desc_zero" = "스캔하여 Mixin 설치";
+"referred_by_a_friend" = "친구의 추천을 받으셨나요?";
 "refresh" = "새로고침";
 "refunded" = "환불됨";
 "reject" = "거부";

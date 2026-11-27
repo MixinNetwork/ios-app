@@ -1508,6 +1508,7 @@
 "referral_program_introduction_header" = "Únase al programa de referencias e invite a amigos a ganar criptomonedas juntos:";
 "referral_share_desc" = "Escanee para instalar Mixin, use este código de referencia para obtener un reembolso de %@";
 "referral_share_desc_zero" = "Escanee para instalar Mixin";
+"referred_by_a_friend" = "¿Te invitó un amigo?";
 "refresh" = "Actualizar";
 "refunded" = "Reembolsado";
 "reject" = "Rechazar";

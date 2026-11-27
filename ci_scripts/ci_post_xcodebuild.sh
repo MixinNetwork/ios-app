@@ -61,11 +61,16 @@ upload_bugsnag() (
   trap 'rm -rf "$temp_directory"' EXIT
 
   local cli="$temp_directory/bugsnag-cli"
-  local version="v3.10.5"
+  local version="v3.10.7"
+  local expected_sha256="4b9ac73d411cb36feb85ff6db71b136124f60b2cd7352a678581f79629ca2b4e"
   curl --fail --silent --show-error --location \
     --retry 3 --retry-all-errors --connect-timeout 15 --max-time 60 \
     --output "$cli" \
     "https://github.com/bugsnag/bugsnag-cli/releases/download/$version/arm64-macos-bugsnag-cli" || return 1
+  if ! printf '%s  %s\n' "$expected_sha256" "$cli" | shasum -a 256 -c -; then
+    echo "error: SHA-256 verification failed for BugSnag CLI $version." >&2
+    return 1
+  fi
   chmod +x "$cli" || return 1
 
   # Redact the key even if the CLI includes it in a diagnostic.

@@ -38,7 +38,7 @@ final class ReloadWatchlistRecommendationJob: AsynchronousJob, @unchecked Sendab
         Logger.general.debug(category: "ReloadWatchlistRcmd", message: "Reload \(category.rawValue)")
         switch category {
         case .crypto:
-            RouteAPI.markets(category: .featured, queue: .global(), limit: nil) { result in
+            RouteAPI.markets(category: .featured, limit: nil, queue: .global()) { result in
                 switch result {
                 case let .success(markets):
                     MarketDAO.shared.save(markets: markets, dataSource: .categorized(.featured))

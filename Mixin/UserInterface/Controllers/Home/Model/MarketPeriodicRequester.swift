@@ -77,10 +77,17 @@ final class MarketPeriodicRequester {
         guard LoginManager.shared.isLoggedIn else {
             return
         }
+        let topMoversDuration: MarketChangePeriod? = switch category {
+        case .topGainers, .topLosers:
+            AppGroupUserDefaults.User.cryptoMarketChangePeriod
+        case .all, .favorite, .trending, .stocks, .featured:
+            nil
+        }
         RouteAPI.markets(
             category: category,
-            queue: .global(),
+            topMoversDuration: topMoversDuration,
             limit: limit,
+            queue: .global(),
         ) { [category, modelName] result in
             switch result {
             case let .success(markets):

@@ -864,6 +864,10 @@
 "joined_in" = "Se ha unido en %@";
 "keep_running_foreground" = "No cierres la pantalla y mantén Mixin ejecutándose en primer plano.";
 "keep_waiting" = "Sigue esperando";
+"kline_close" = "Cierre";
+"kline_high" = "Máximo";
+"kline_low" = "Mínimo";
+"kline_open" = "Apertura";
 "label" = "Etiqueta";
 "landing_delete_content" = "Solicitaste eliminar tu cuenta en %1$@. La cuenta se eliminará el %2$@. Si continúa iniciando sesión, se cancelará la eliminación de su cuenta.";
 "landing_have_account" = "Ya tengo una cuenta";

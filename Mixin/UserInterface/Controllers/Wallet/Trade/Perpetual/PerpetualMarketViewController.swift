@@ -31,6 +31,7 @@ final class PerpetualMarketViewController: UIViewController {
         }
     }()
     private var charts: [PerpetualTimeFrame: PerpetualMarketPriceCell.Chart] = [:]
+    private var chartViewportStates: [PerpetualTimeFrame: CandleChartViewportState] = [:]
     
     private weak var favoriteButton: FavoriteButton!
     private weak var collectionView: UICollectionView!
@@ -466,6 +467,7 @@ extension PerpetualMarketViewController {
             candles = loadedCandles
         }
         let viewModel = self.viewModel
+        let timeFrame = selectedTimeFrame
         let hud = Hud()
         hud.show(style: .busy, text: "")
         Referral.loadAvailableCode { [weak self] code in
@@ -477,6 +479,7 @@ extension PerpetualMarketViewController {
                 contentViewController: ShareMarketContentViewController(
                     viewModel: viewModel,
                     candles: candles,
+                    timeFrame: timeFrame,
                     rebatingCode: code
                 ),
                 rebatingCode: code
@@ -576,7 +579,14 @@ extension PerpetualMarketViewController {
                 }
                 self.viewModel = viewModel
                 self.statisticItems = statisticItems
-                UIView.performWithoutAnimation(self.collectionView.reloadData)
+                // Never reload the price section here, it would interrupt chart gestures every 3s
+                if let cell = self.priceCell {
+                    self.loadPriceText(on: cell, by: self.priceDisplay)
+                    cell.updatePrice(viewModel: viewModel)
+                }
+                self.reloadSections { section in
+                    if case .statistics = section { true } else { false }
+                }
             }
         }
     }
@@ -607,6 +617,21 @@ extension PerpetualMarketViewController {
     }
     
     private func reloadData(
+        openPosition: PerpetualPositionViewModel?,
+        activities: [PerpetualOrderViewModel]
+    ) {
+        // The price section always stays at index 0; only the sections below it are replaced
+        let oldSectionCount = sections.count
+        UIView.performWithoutAnimation {
+            collectionView.performBatchUpdates {
+                self.updateSections(openPosition: openPosition, activities: activities)
+                self.collectionView.deleteSections(IndexSet(1..<oldSectionCount))
+                self.collectionView.insertSections(IndexSet(1..<self.sections.count))
+            }
+        }
+    }
+    
+    private func updateSections(
         openPosition: PerpetualPositionViewModel?,
         activities: [PerpetualOrderViewModel]
     ) {
@@ -674,8 +699,40 @@ extension PerpetualMarketViewController {
         
         positionDetailItems = PositionDetailItem.items(viewModel: openPositionViewModel)
         statisticItems = StatisticItem.availableItems(in: viewModel)
-        
-        collectionView.reloadData()
+    }
+    
+    private func reloadSections(where predicate: (Section) -> Bool) {
+        let indices = IndexSet(sections.indices.filter { predicate(sections[$0]) })
+        guard !indices.isEmpty else {
+            return
+        }
+        UIView.performWithoutAnimation {
+            collectionView.reloadSections(indices)
+        }
+    }
+    
+    private func chartViewportState(for timeFrame: PerpetualTimeFrame) -> CandleChartViewportState {
+        if let state = chartViewportStates[timeFrame] {
+            return state
+        }
+        let state = CandleChartViewportState(
+            candles: [],
+            visibleCount: CandleChartViewportState.defaultVisibleCandles,
+            followLatest: true
+        )
+        chartViewportStates[timeFrame] = state
+        return state
+    }
+    
+    private func loadChart(on cell: PerpetualMarketPriceCell, timeFrame: PerpetualTimeFrame) {
+        cell.load(
+            chart: charts[timeFrame] ?? .loading,
+            marketID: viewModel.market.marketID,
+            timeFrame: timeFrame,
+            viewportState: chartViewportState(for: timeFrame),
+            priceScale: viewModel.market.priceScale,
+            lastPrice: viewModel.decimalLastPrice,
+        )
     }
     
     private func viewActivities() {
@@ -705,8 +762,13 @@ extension PerpetualMarketViewController {
             if let item, openPositionIndexPath != nil {
                 openPositionViewModel = PerpetualPositionViewModel(wallet: wallet, position: item)
                 positionDetailItems = PositionDetailItem.items(viewModel: openPositionViewModel)
-                UIView.performWithoutAnimation {
-                    collectionView.reloadData()
+                reloadSections { section in
+                    switch section {
+                    case .openPosition, .positionDetails:
+                        true
+                    default:
+                        false
+                    }
                 }
             } else {
                 var message = "TPSL: Item: \(item != nil), indexPath: \(openPositionIndexPath != nil)"
@@ -924,6 +986,24 @@ extension PerpetualMarketViewController {
         }
     }
     
+    private func loadPriceText(
+        on cell: PerpetualMarketPriceCell,
+        by display: PerpetualMarketViewModel.PriceDisplay
+    ) {
+        switch display {
+        case .lastPrice:
+            cell.loadPrice(
+                title: R.string.localizable.perps_last_price(),
+                content: viewModel.localizedLastPrice
+            )
+        case .markPrice:
+            cell.loadPrice(
+                title: R.string.localizable.perps_mark_price(),
+                content: viewModel.market.localizedMarkPrice
+            )
+        }
+    }
+    
     private func updatePrice(
         on cell: PerpetualMarketPriceCell,
         by display: PerpetualMarketViewModel.PriceDisplay
@@ -948,18 +1028,7 @@ extension PerpetualMarketViewController {
             )
         }
         cell.priceSelectorButton.menu = UIMenu(children: actions)
-        switch display {
-        case .lastPrice:
-            cell.loadPrice(
-                title: R.string.localizable.perps_last_price(),
-                content: viewModel.localizedLastPrice
-            )
-        case .markPrice:
-            cell.loadPrice(
-                title: R.string.localizable.perps_mark_price(),
-                content: viewModel.market.localizedMarkPrice
-            )
-        }
+        loadPriceText(on: cell, by: display)
     }
     
 }
@@ -997,10 +1066,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_price, for: indexPath)!
             cell.load(viewModel: viewModel)
             updatePrice(on: cell, by: priceDisplay)
-            cell.load(
-                chart: charts[selectedTimeFrame] ?? .loading,
-                priceFormatStyle: viewModel.userDisplayPriceFormatStyle
-            )
+            loadChart(on: cell, timeFrame: selectedTimeFrame)
             cell.setTimeFrame(frame: selectedTimeFrame)
             cell.delegate = self
             priceCell = cell
@@ -1173,10 +1239,9 @@ extension PerpetualMarketViewController: PerpetualMarketPriceCell.Delegate {
     func perpetualMarketPriceCell(_ cell: PerpetualMarketPriceCell, didSelectTimeFrame timeFrame: PerpetualTimeFrame) {
         self.selectedTimeFrame = timeFrame
         navigationItem.rightBarButtonItems?.first?.isEnabled = charts[timeFrame] != nil
-        cell.load(
-            chart: charts[timeFrame] ?? .loading,
-            priceFormatStyle: viewModel.userDisplayPriceFormatStyle
-        )
+        let viewportState = chartViewportState(for: timeFrame)
+        cell.chartView.scrollToLatest(in: viewportState)
+        loadChart(on: cell, timeFrame: timeFrame)
         candleLoader.start(timeFrame: timeFrame)
         AppGroupUserDefaults.Wallet.perpsChartTimeFrame = timeFrame.rawValue
     }
@@ -1327,10 +1392,9 @@ extension PerpetualMarketViewController: PerpetualCandleLoader.Delegate {
         charts[timeFrame] = chart
         if selectedTimeFrame == timeFrame {
             navigationItem.rightBarButtonItems?.first?.isEnabled = true
-            priceCell?.load(
-                chart: chart,
-                priceFormatStyle: viewModel.userDisplayPriceFormatStyle
-            )
+            if let priceCell {
+                loadChart(on: priceCell, timeFrame: timeFrame)
+            }
         }
     }
     

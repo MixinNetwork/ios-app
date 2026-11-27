@@ -4,33 +4,37 @@ import MixinServices
 final class TradeSpotMarketCell: UICollectionViewCell {
     
     @IBOutlet weak var iconView: PlainTokenIconView!
-    @IBOutlet weak var changeLabel: InsetLabel!
     @IBOutlet weak var symbolLabel: UILabel!
+    @IBOutlet weak var volumeLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var changeLabel: MarketColoredLabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        changeLabel.contentInset = UIEdgeInsets(top: 1, left: 3, bottom: 1, right: 3)
-        changeLabel.layer.cornerRadius = 4
-        changeLabel.layer.masksToBounds = true
-        symbolLabel.setFont(
-            scaledFor: .systemFont(ofSize: 14),
-            adjustForContentSize: true
-        )
-        changeLabel.setFont(
-            scaledFor: .monospacedDigitSystemFont(ofSize: 10, weight: .medium),
-            adjustForContentSize: true
-        )
+        let labels: [UILabel] = [volumeLabel, priceLabel, changeLabel]
+        for label in labels {
+            label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        }
     }
     
-    func load(market: Market) {
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        iconView.prepareForReuse()
+    }
+    
+    func load(market: FavorableMarket) {
         iconView.setIcon(market: market)
-        changeLabel.text = market.localizedPriceChangePercentage24HAlwaysSign
-        changeLabel.backgroundColor = market.decimalPriceChangePercentage24H >= 0
-        ? MarketColor.rising.uiColor
-        : MarketColor.falling.uiColor
         symbolLabel.text = market.symbol
-        priceLabel.text = market.shortPrice
+        volumeLabel.text = R.string.localizable.volume_label(market.prettyVolume)
+        priceLabel.text = market.localizedPrice
+        switch AppGroupUserDefaults.User.cryptoMarketChangePeriod {
+        case .twentyFourHours:
+            changeLabel.text = market.localizedPriceChangePercentage24H
+            changeLabel.marketColor = .byValue(market.decimalPriceChangePercentage24H)
+        case .sevenDays:
+            changeLabel.text = market.localizedPriceChangePercentage7D
+            changeLabel.marketColor = .byValue(market.decimalPriceChangePercentage7D)
+        }
     }
     
 }

@@ -455,13 +455,23 @@ extension RouteAPI {
     @discardableResult
     static func markets(
         category: Market.RequestCategory,
-        queue: DispatchQueue = .main,
+        topMoversDuration: MarketChangePeriod? = nil,
         limit: Int?,
+        queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<[Market]>) -> Void
     ) -> Request {
         var path = "/markets?category=\(category.rawValue)"
         if let limit {
             path += "&limit=\(limit)"
+        }
+        if let topMoversDuration {
+            assert(category == .topGainers || category == .topLosers)
+            switch topMoversDuration {
+            case .twentyFourHours:
+                path += "&duration=24H"
+            case .sevenDays:
+                path += "&duration=7D"
+            }
         }
         return request(method: .get, path: path, queue: queue, completion: completion)
     }

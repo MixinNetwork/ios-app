@@ -1,0 +1,65 @@
+name: Publish GitHub Release
+
+on:
+  pull_request:
+    branches: [master]
+    types: [closed]
+
+concurrency:
+  group: publish-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      github.event.pull_request.merged &&
+      github.event.pull_request.head.ref == 'production' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out the merged production commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Tag the production commit and publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(python3 -c 'import plistlib, sys; print(plistlib.load(sys.stdin.buffer)["CFBundleShortVersionString"])' < "Mixin/Supporting Files/Info.plist")
+          if [[ ! "$version" =~ ^[0-9]+(\.[0-9]+){1,2}$ ]]; then
+            echo "::error::Invalid marketing version in the app Info.plist"
+            exit 1
+          fi
+
+          tag="v$version"
+          if git show-ref --verify --quiet "refs/tags/$tag"; then
+            if [[ "$(git rev-parse "refs/tags/$tag^{commit}")" != "$(git rev-parse HEAD)" ]]; then
+              echo "::error::Tag $tag already points to a different commit"
+              exit 1
+            fi
+          else
+            git push origin "HEAD:refs/tags/$tag"
+          fi
+
+          set +e
+          release_json=$(gh release view "$tag" --json isDraft --jq '.isDraft' 2>&1)
+          view_status=$?
+          set -e
+
+          if [[ $view_status -eq 0 ]]; then
+            if [[ "$release_json" == true ]]; then
+              gh release edit "$tag" --draft=false --target "$(git rev-parse HEAD)"
+            else
+              echo "Release $tag is already published"
+            fi
+          elif [[ "$release_json" == *"release not found"* ]]; then
+            gh release create "$tag" --verify-tag --title "$tag" --generate-notes
+          else
+            echo "::error::$release_json"
+            exit "$view_status"
+          fi

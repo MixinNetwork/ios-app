@@ -135,7 +135,7 @@ public final class WebSocketService {
     ) throws(SendingError) -> BlazeMessage {
         do {
             return try messageQueue.sync {
-                guard LoginManager.shared.isLoggedIn else {
+                guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.isUpdateRequired else {
                     throw SendingError.timedOut
                 }
                 guard isConnected else {
@@ -201,7 +201,7 @@ public final class WebSocketService {
         timeout: TimeInterval?,
         completion: @escaping (Result<BlazeMessage, SendingError>) -> Void,
     ) {
-        guard LoginManager.shared.isLoggedIn, isConnected else {
+        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.isUpdateRequired, isConnected else {
             completion(.failure(.timedOut))
             return
         }
@@ -293,7 +293,7 @@ public final class WebSocketService {
                 self.queue.asyncAfter(
                     deadline: .now() + 2,
                     execute: { [weak self] in
-                        guard let self, self.isConnected else {
+                        guard let self, self.isConnected, !AppGroupUserDefaults.isUpdateRequired else {
                             return
                         }
                         self.requestListPendingMessages()
@@ -342,7 +342,7 @@ extension WebSocketService {
             }
             self.updateStatus(.disconnected)
             
-            if ReachabilityManger.shared.isReachable {
+            if canProcessMessages, ReachabilityManger.shared.isReachable {
                 if -self.lastConnectionDate.timeIntervalSinceNow >= 2 {
                     self.connect()
                 } else {
@@ -425,7 +425,9 @@ extension WebSocketService: WebSocketConnectionDelegate {
         }
         requestManager.resolve(with: message)
         if let error = message.error {
-            if case .unauthorized = error, message.action == BlazeMessageAction.error.rawValue, !AppGroupUserDefaults.isClockSkewed {
+            if error.code == MixinAPIResponseError.requiresUpdate.code {
+                MixinAPI.handleRequiresUpdate()
+            } else if case .unauthorized = error, message.action == BlazeMessageAction.error.rawValue, !AppGroupUserDefaults.isClockSkewed {
                 LoginManager.shared.logout(reason: "WS access unauthorized: \(message.id)")
             }
         } else if message.data != nil {

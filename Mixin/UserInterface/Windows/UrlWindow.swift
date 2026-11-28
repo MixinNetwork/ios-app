@@ -997,7 +997,7 @@ extension UrlWindow {
         guard !userID.isEmpty, UUID(uuidString: userID) != nil else {
             return false
         }
-        guard LoginManager.shared.isLoggedIn else {
+        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.isUpdateRequired else {
             switch action {
             case .presentProfile, .presentHomePage:
                 break

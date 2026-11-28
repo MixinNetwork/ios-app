@@ -401,10 +401,7 @@ extension HomeViewController {
             guard case .failure(.requiresUpdate) = result else {
                 return
             }
-            WebSocketService.shared.disconnect()
-            self.view.window?.rootViewController = GeneralAppearanceNavigationController(
-                rootViewController: UpdateViewController()
-            )
+            MixinAPI.handleRequiresUpdate()
         }
     }
     

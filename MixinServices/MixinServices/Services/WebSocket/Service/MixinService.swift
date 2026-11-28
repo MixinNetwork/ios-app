@@ -14,6 +14,7 @@ public class MixinService {
     public static let willRecallMessageNotification = Notification.Name(rawValue: "one.mixin.services.will.recall.msg")
     public static let messageReadStatusDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.msg.read.did.change")
     public static let clockSkewDetectedNotification = Notification.Name(rawValue: "one.mixin.services.clock.skew.detected")
+    public static let requiresUpdateNotification = Notification.Name(rawValue: "one.mixin.services.requires.update")
     
     public static var callMessageCoordinator: CallMessageCoordinator!
 
@@ -117,12 +118,15 @@ public class MixinService {
 
     internal func syncConversation(conversationId: String) {
         repeat {
+            guard !AppGroupUserDefaults.isUpdateRequired else {
+                return
+            }
             switch ConversationAPI.getConversation(conversationId: conversationId) {
             case let .success(response):
                 ParticipantSessionDAO.shared.syncConversationParticipantSession(conversation: response)
                 CircleConversationDAO.shared.update(conversation: response)
                 return
-            case .failure(.unauthorized):
+            case .failure(.unauthorized), .failure(.requiresUpdate):
                 return
             case .failure:
                 checkNetworkAndWebSocket()
@@ -196,7 +200,7 @@ public class MixinService {
     func refreshParticipantSession(conversationId: String, userId: String, retry: Bool) -> Bool {
         Logger.conversation(id: conversationId).info(category: "RefreshSession", message: "Start refreshing session for: \(userId), retry: \(retry)")
         repeat {
-            guard LoginManager.shared.isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.isUpdateRequired else {
                 return false
             }
 
@@ -212,7 +216,7 @@ public class MixinService {
                 }
                 UserDatabase.current.save(participantSessions)
                 return true
-            case .failure(.unauthorized):
+            case .failure(.unauthorized), .failure(.requiresUpdate):
                 return false
             case .failure:
                 if retry {
@@ -232,7 +236,7 @@ public class MixinService {
     @discardableResult
     internal func deliverKeys(blazeMessage: BlazeMessage) -> BlazeMessage? {
         repeat {
-            guard LoginManager.shared.isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.isUpdateRequired else {
                 return nil
             }
             
@@ -243,7 +247,7 @@ public class MixinService {
                 )
             } catch let .response(error) {
                 switch error {
-                case .unauthorized, .forbidden:
+                case .unauthorized, .forbidden, .requiresUpdate:
                     return nil
                 default:
                     checkNetworkAndWebSocket()
@@ -261,7 +265,7 @@ public class MixinService {
     @discardableResult
     internal func deliverNoThrow(blazeMessage: BlazeMessage) -> (success: Bool, responseMessage: BlazeMessage?, retry: Bool) {
         repeat {
-            guard LoginManager.shared.isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.isUpdateRequired else {
                 return (false, nil, false)
             }
             
@@ -273,7 +277,7 @@ public class MixinService {
                 return (true, response, false)
             } catch let .response(error) {
                 switch error {
-                case .unauthorized:
+                case .unauthorized, .requiresUpdate:
                     return (false, nil, false)
                 case .forbidden:
                     return (true, nil, false)
@@ -303,7 +307,7 @@ public class MixinService {
             blazeMessage.params?.conversationChecksum = checksum
         }
         repeat {
-            guard LoginManager.shared.isLoggedIn else {
+            guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.isUpdateRequired else {
                 return (false, nil)
             }
             
@@ -315,7 +319,7 @@ public class MixinService {
                 print("======SendMessaegService...deliver...error:\(error)")
                 #endif
                 switch error {
-                case .unauthorized:
+                case .unauthorized, .requiresUpdate:
                     return (false, nil)
                 case .forbidden:
                     return (true, nil)
@@ -351,13 +355,13 @@ public class MixinService {
     internal func checkNetworkAndWebSocket() {
         repeat {
             Thread.sleep(forTimeInterval: 2)
-        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && (!ReachabilityManger.shared.isReachable || !WebSocketService.shared.isConnected)
+        } while LoginManager.shared.isLoggedIn && !AppGroupUserDefaults.isUpdateRequired && !MixinService.isStopProcessMessages && (!ReachabilityManger.shared.isReachable || !WebSocketService.shared.isConnected)
     }
 
     internal func checkNetwork() {
         repeat {
             Thread.sleep(forTimeInterval: 2)
-        } while LoginManager.shared.isLoggedIn && !MixinService.isStopProcessMessages && !ReachabilityManger.shared.isReachable
+        } while LoginManager.shared.isLoggedIn && !AppGroupUserDefaults.isUpdateRequired && !MixinService.isStopProcessMessages && !ReachabilityManger.shared.isReachable
     }
     
     public func stopRecallMessage(item: MessageItem, childMessageIds: [String]? = nil) {

@@ -1,4 +1,5 @@
 import UIKit
+import Alamofire
 import MixinServices
 
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -29,6 +30,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self,
             selector: #selector(handleClockSkew),
             name: MixinService.clockSkewDetectedNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleRequiresUpdate),
+            name: MixinService.requiresUpdateNotification,
             object: nil
         )
         NotificationCenter.default.addObserver(
@@ -308,7 +315,11 @@ extension SceneDelegate {
             return
         }
         tearDownGalleryWindow()
-        if let account = LoginManager.shared.account {
+        if AppGroupUserDefaults.isUpdateRequired {
+            mainWindow.rootViewController = GeneralAppearanceNavigationController(
+                rootViewController: UpdateViewController()
+            )
+        } else if let account = LoginManager.shared.account {
             mainWindow.rootViewController = CheckSessionEnvironmentViewController(localAccount: account)
             if ContactsManager.shared.authorization == .authorized && AppGroupUserDefaults.User.autoUploadsContacts {
                 DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
@@ -357,6 +368,25 @@ extension SceneDelegate {
         } else {
             mainWindow.rootViewController = LoginNavigationController()
         }
+    }
+    
+    @objc private func handleRequiresUpdate() {
+        AF.cancelAllRequests()
+        BackupJobQueue.shared.cancelAllOperations()
+        guard let mainWindow else {
+            return
+        }
+        tearDownGalleryWindow()
+        if let navigation = mainWindow.rootViewController as? UINavigationController,
+           navigation.viewControllers.first is UpdateViewController
+        {
+            return
+        }
+        mainWindow.endEditing(true)
+        mainWindow.rootViewController = GeneralAppearanceNavigationController(
+            rootViewController: UpdateViewController()
+        )
+        updateKeyWindow()
     }
     
 }

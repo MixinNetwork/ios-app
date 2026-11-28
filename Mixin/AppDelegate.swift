@@ -95,6 +95,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        guard !AppGroupUserDefaults.isUpdateRequired else {
+            return
+        }
         PushNotificationDiagnostic.global.token = .sent(Date())
         AccountAPI.updateSession(notificationToken: deviceToken.hexEncodedString()) { result in
             switch result {
@@ -103,7 +106,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             case .failure(let error):
                 PushNotificationDiagnostic.global.registration = .failed(error)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
-                    guard LoginManager.shared.isLoggedIn else {
+                    guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.isUpdateRequired else {
                         return
                     }
                     self?.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
@@ -136,7 +139,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         let isActive = UIApplication.shared.applicationState == .active
         Logger.general.info(category: "AppDelegate", message: "Received remote notification, app is active: \(isActive)")
 
-        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp else {
+        guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp, !AppGroupUserDefaults.isUpdateRequired else {
             completionHandler(.noData)
             return
         }
@@ -186,7 +189,7 @@ extension AppDelegate {
     
     @objc func updateApplicationIconBadgeNumber() {
         DispatchQueue.global().async {
-            guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp, !MixinService.isStopProcessMessages else {
+            guard LoginManager.shared.isLoggedIn, !AppGroupUserDefaults.User.needsUpgradeInMainApp, !AppGroupUserDefaults.isUpdateRequired, !MixinService.isStopProcessMessages else {
                 return
             }
             let number = min(99, ConversationDAO.shared.getUnreadMessageCountWithoutMuted())

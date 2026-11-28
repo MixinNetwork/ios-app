@@ -154,7 +154,10 @@ final class CheckSessionEnvironmentViewController: LoginLoadingViewController {
         // manually executed by the child, after it finishes its job
         
         Logger.login.info(category: "CheckSessionEnv", message: "Check environments")
-        if AppGroupUserDefaults.isClockSkewed {
+        if AppGroupUserDefaults.isUpdateRequired {
+            Logger.login.info(category: "CheckSessionEnv", message: "Requires update")
+            NotificationCenter.default.post(name: MixinService.requiresUpdateNotification, object: self)
+        } else if AppGroupUserDefaults.isClockSkewed {
             Logger.login.info(category: "CheckSessionEnv", message: "Clock skewed")
             if presentedViewController != nil {
                 dismiss(animated: false)

@@ -1301,6 +1301,10 @@ extension RouteAPI {
             for session: Alamofire.Session,
             completion: @escaping (Result<URLRequest, Swift.Error>) -> Void
         ) {
+            guard !AppGroupUserDefaults.isUpdateRequired else {
+                completion(.failure(MixinAPIError.response(.requiresUpdate)))
+                return
+            }
             do {
                 let signature = try RouteAPI.sign(
                     appID: config.botUserID,
@@ -1472,6 +1476,9 @@ extension RouteAPI {
                     if let data = response.data {
                         result = .success(data)
                     } else if let error = response.error {
+                        if error.code == MixinAPIResponseError.requiresUpdate.code {
+                            MixinAPI.handleRequiresUpdate()
+                        }
                         result = .failure(.response(error))
                     } else if Response.self == Empty.self {
                         result = .success(Empty.value as! Response)

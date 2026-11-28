@@ -218,7 +218,7 @@ final class Web3DepositDataSource: DepositDataSource {
                         amount: "0",
                         usdPrice: mixinToken.usdPrice,
                         usdChange: mixinToken.usdChange,
-                        level: Web3Reputation.Level.unknown.rawValue,
+                        level: Reputation.Level.unknown.rawValue,
                     ),
                     hidden: false,
                     chain: nil

@@ -166,7 +166,7 @@ extension Web3Transaction: TableRecord, PersistableRecord, MixinFetchableRecord,
 extension Web3Transaction: MaliciousDistinguishable {
     
     public var isMalicious: Bool {
-        level <= Web3Reputation.Level.spam.rawValue
+        level <= Reputation.Level.spam.rawValue
     }
     
 }
@@ -303,7 +303,7 @@ extension Web3Transaction {
         
         public var type: DisplayType?
         public var tokens: [Web3TokenItem]
-        public var reputationOptions: Set<Web3Reputation.FilterOption>
+        public var reputationOptions: Set<Reputation.FilterOption>
         public var addresses: [AddressItem]
         public var startDate: Date?
         public var endDate: Date?
@@ -315,7 +315,7 @@ extension Web3Transaction {
         public init(
             type: DisplayType? = nil,
             tokens: [Web3TokenItem] = [],
-            reputationOptions: Set<Web3Reputation.FilterOption> = [],
+            reputationOptions: Set<Reputation.FilterOption> = [],
             addresses: [AddressItem] = [],
             startDate: Date? = nil,
             endDate: Date? = nil

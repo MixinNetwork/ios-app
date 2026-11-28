@@ -152,7 +152,7 @@ extension Web3Token: TableRecord, PersistableRecord, MixinFetchableRecord, Mixin
 extension Web3Token: MaliciousDistinguishable {
     
     public var isMalicious: Bool {
-        level <= Web3Reputation.Level.spam.rawValue
+        level <= Reputation.Level.spam.rawValue
     }
     
 }

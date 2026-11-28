@@ -143,13 +143,13 @@ public final class Web3Database: Database {
             let tokenInfos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(tokens)")
             let tokenColumnNames = tokenInfos.map(\.name)
             if !tokenColumnNames.contains("level") {
-                sqls.append("ALTER TABLE tokens ADD COLUMN level INTEGER NOT NULL DEFAULT \(Web3Reputation.Level.verified.rawValue)")
+                sqls.append("ALTER TABLE tokens ADD COLUMN level INTEGER NOT NULL DEFAULT \(Reputation.Level.verified.rawValue)")
             }
             
             let transactionInfos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(transactions)")
             let transactionColumnNames = transactionInfos.map(\.name)
             if !transactionColumnNames.contains("level") {
-                sqls.append("ALTER TABLE transactions ADD COLUMN level INTEGER NOT NULL DEFAULT \(Web3Reputation.Level.unknown.rawValue)")
+                sqls.append("ALTER TABLE transactions ADD COLUMN level INTEGER NOT NULL DEFAULT \(Reputation.Level.unknown.rawValue)")
             }
             
             sqls.append(contentsOf: [

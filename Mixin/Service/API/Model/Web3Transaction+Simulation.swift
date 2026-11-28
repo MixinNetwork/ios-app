@@ -156,7 +156,7 @@ extension Web3Transaction {
             transactionAt: rawTransaction.createdAt,
             createdAt: rawTransaction.createdAt,
             updatedAt: rawTransaction.createdAt,
-            level: Web3Reputation.Level.good.rawValue,
+            level: Reputation.Level.good.rawValue,
             sponsorFeeAssetID: sponsorFeeAssetID,
             sponsorFeeAmount: sponsorFeeAmount,
         )

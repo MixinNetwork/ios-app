@@ -235,7 +235,6 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
                 }
                 let assetID = token.assetID
                 let amount = Web3TokenDAO.shared.amount(walletID: walletID, assetID: assetID)
-                let level = Web3TokenDAO.shared.level(walletID: walletID, assetID: assetID)
                 let web3Token = Web3Token(
                     walletID: walletID,
                     assetID: assetID,
@@ -249,7 +248,7 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
                     amount: amount ?? "0",
                     usdPrice: token.usdPrice,
                     usdChange: token.usdChange,
-                    level: level ?? Web3Reputation.Level.verified.rawValue,
+                    level: token.level,
                 )
                 let isHidden = Web3TokenExtraDAO.shared.isHidden(walletID: walletID, assetID: assetID)
                 result[assetID] = Web3TokenItem(token: web3Token, hidden: isHidden, chain: chain)

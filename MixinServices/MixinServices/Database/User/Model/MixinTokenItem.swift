@@ -43,6 +43,7 @@ public final class MixinTokenItem: MixinToken, ValuableToken, ChangeReportingTok
             precision: token.precision,
             collectionHash: token.collectionHash,
             primitiveAssetID: token.primitiveAssetID,
+            level: token.level,
         )
     }
     

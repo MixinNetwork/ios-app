@@ -127,6 +127,7 @@ extension Web3TokenSenderSelectorViewController: WalletSelectorViewController.De
                     precision: receivingToken.precision,
                     collectionHash: nil,
                     primitiveAssetID: nil,
+                    level: receivingToken.level,
                 )
                 tokenItem = MixinTokenItem(
                     token: mixinToken,
